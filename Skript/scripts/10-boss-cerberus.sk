@@ -1,0 +1,276 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-boss-cerberus.sk  -  케르베로스: 세 머리가 역할을 나눈다
+# -------------------------------------------------------------------------------------
+#  의존: 10-bossfx, 10-monsters
+#  머리 A (파츠 9~12)  = 화염   : 지옥불 숨결
+#  가운데 (파츠 13~16) = 포효   : 저승의 충격파 (안 → 가운데 → 바깥 고리)
+#  머리 B (파츠 17~20) = 추적   : 사냥개의 물기 3연속
+#  공통                : 지옥문 (끌어당김 + 중심 시듦)
+#  35% 이하            : 삼두의 분노 → 삼두 연격 (셋 동시에)
+#  연출   데이터팩 oly:boss/cerberus/fx/{head_a,head_m,head_b,breath_a,breath_a_soul,roar_m,bite_b,glow,unglow}
+#         리소스팩 oly:fx/hellgate, oly:fx/ring
+# =====================================================================================
+
+on load:
+    olyModReady("boss_cerberus")
+
+function olyCbAI(e: entity, t: player, d: number):
+    if {oly::m::cerberus::sk::fury} is true:
+        if {_d} <= 14:
+            if olySkCd("cerberus", "combo", 16) is true:
+                olyCbCombo({_e}, {_t})
+                stop
+    if {_d} <= 8:
+        if olySkCd("cerberus", "hunt", 9) is true:
+            olyCbHunt({_e}, {_t})
+            stop
+    if {_d} <= 14:
+        if olySkCd("cerberus", "flame", 9) is true:
+            olyCbFlame({_e}, {_t})
+            stop
+    if olySkCd("cerberus", "howl", 14) is true:
+        olyCbHowl({_e})
+        stop
+    if olySkCd("cerberus", "gate", 20) is true:
+        olyCbGate({_e}, {_t})
+
+function olyCbCast(e: entity, t: player, d: number, sk: text) :: text:
+    if {_sk} is "flame":
+        olyCbFlame({_e}, {_t})
+    else if {_sk} is "howl":
+        olyCbHowl({_e})
+    else if {_sk} is "hunt":
+        olyCbHunt({_e}, {_t})
+    else if {_sk} is "gate":
+        olyCbGate({_e}, {_t})
+    else if {_sk} is "fury":
+        olyCbFury({_e})
+    else if {_sk} is "combo":
+        olyCbCombo({_e}, {_t})
+    else:
+        return "&7flame · howl · hunt · gate · fury · combo"
+    return "&a케르베로스 %{_sk}%"
+
+# ── 머리 발광을 끄되, 분노 중이면 전신 발광으로 되돌린다
+function olyCbGlowReset():
+    if {oly::m::cerberus::sk::fury} is true:
+        olyCmd("function oly:boss/cerberus/fx/glow {c:11141120}")
+    else:
+        olyCmd("function oly:boss/cerberus/fx/unglow")
+
+
+# ── 화염의 머리: 머리 A 가 주황색으로 빛나고 그 입에서 불길이 뿜어진다
+function olyCbFlame(e: entity, t: player):
+    set {_ep} to olySkBegin("cerberus", "flame")
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    olyCmd("function oly:boss/cerberus/fx/head_a {c:16744448}")
+    olyBossFace("cerberus", {_e}, location of {_t})
+    set {_k} to olyTeleKey("cerberus")
+    olyTeleRect("cerberus", {_k}, {_s}, {_dx}, {_dz}, 4.5, 12, 24)
+    olySkCast("cerberus", {_e}, "flame", 24, "화염의 머리 — 정면에서 벗어나라")
+    olySfx("cerberus.bark", {_s}, 2, 1.1)
+    wait 20 ticks
+    set {oly::rt::bpose::cerberus} to "attack"
+    wait 4 ticks
+    if olySkGo("cerberus", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k})
+    olySfx("cerberus.fire", {_s}, 2.2, 1)
+    set {_fn} to "breath_a"
+    if {oly::m::cerberus::sk::fury} is true:
+        set {_fn} to "breath_a_soul"
+    loop all players in radius 14 around {_s}:
+        if olyFighter(loop-player) is true:
+            if olyInRect(location of loop-player, {_s}, {_dx}, {_dz}, 4.5, 12) is true:
+                olyBossTouch("cerberus", loop-player)
+                ignite loop-player for 5 seconds
+                damage loop-player by 7 / 2 * olyBossM("cerberus")
+    loop 8 times:
+        if olySkGo("cerberus", {_e}, {_ep}) is false:
+            stop
+        olyCmd("function oly:boss/cerberus/fx/%{_fn}%")
+        wait 2 ticks
+    olyCbGlowReset()
+    olySkEnd("cerberus", {_ep})
+
+# ── 포효의 머리: 안(0~4) → 가운데(4~8) → 바깥(8~12) 고리가 차례로 터진다
+function olyCbHowl(e: entity):
+    set {_ep} to olySkBegin("cerberus", "howl")
+    set {_c} to location of {_e}
+    olyCmd("function oly:boss/cerberus/fx/head_m {c:11163135}")
+    olySkCast("cerberus", {_e}, "howl", 20, "고리가 퍼진다 — 이미 터진 안쪽으로 들어가라")
+    set {oly::rt::bpose::cerberus} to "roar"
+    set {_k1} to olyTeleKey("cerberus")
+    olyTeleCircle("cerberus", {_k1}, {_c}, 4, 20)
+    wait 20 ticks
+    loop 3 times:
+        if olySkGo("cerberus", {_e}, {_ep}) is false:
+            stop
+        set {_r1} to (loop-number - 1) * 4
+        set {_r2} to loop-number * 4
+        if loop-number is 1:
+            olyTeleClear({_k1})
+        else:
+            olyTeleClear({_kr})
+        olyCmd("function oly:boss/cerberus/fx/roar_m")
+        olySfx("cerberus.quake", {_c}, 2.5, 0.8 + loop-number * 0.12)
+        olyFxDecal("cerberus", "oly:fx/ring", {_c}, {_r2} * 2, 11163135, 3, 3)
+        olyHitRing("cerberus", {_c}, {_r1}, {_r2}, 8, 0.55)
+        loop all players in radius {_r2} + 1 around {_c}:
+            if olyFighter(loop-player) is true:
+                if olyNearXZ(location of loop-player, {_c}, {_r2}, 3) is true:
+                    if olyNearXZ(location of loop-player, {_c}, {_r1}, 3) is false:
+                        olyBossTouch("cerberus", loop-player)
+                        apply nausea 1 to loop-player for 3 seconds
+        if loop-number < 3:
+            set {_kr} to olyTeleKey("cerberus")
+            olyTeleRing("cerberus", {_kr}, {_c}, {_r2}, {_r2} + 4, 14)
+            wait 14 ticks
+    olyCbGlowReset()
+    olySkEnd("cerberus", {_ep})
+
+# ── 추적의 머리: 매번 가장 가까운 사람에게 짧은 돌진 물기 3연속
+function olyCbHunt(e: entity, t: player):
+    set {_ep} to olySkBegin("cerberus", "hunt")
+    olyCmd("function oly:boss/cerberus/fx/head_b {c:16711680}")
+    olySkCast("cerberus", {_e}, "hunt", 36, "추적의 머리 — 계속 움직여라")
+    set {_tt} to {_t}
+    loop 3 times:
+        set {_s} to location of {_e}
+        set {_n} to olyNearest({_s}, 14)
+        if {_n} is set:
+            set {_tt} to {_n}
+        set {_dx} to olyDirX({_s}, location of {_tt})
+        set {_dz} to olyDirZ({_s}, location of {_tt})
+        olyBossFace("cerberus", {_e}, location of {_tt})
+        set {_k} to olyTeleKey("cerberus")
+        olyTeleRect("cerberus", {_k}, {_s}, {_dx}, {_dz}, 3, 7, 12)
+        wait 12 ticks
+        if olySkGo("cerberus", {_e}, {_ep}) is false:
+            stop
+        olyTeleClear({_k})
+        set {oly::rt::bpose::cerberus} to "attack"
+        push {_e} vector({_dx}, 0.1, {_dz}) at speed 1.0
+        olyCmd("function oly:boss/cerberus/fx/bite_b")
+        olySfx("cerberus.bark", {_s}, 2, 0.8 + loop-number * 0.1)
+        olyHitRect("cerberus", {_s}, {_dx}, {_dz}, 3, 7, 8)
+        wait 4 ticks
+    olyCbGlowReset()
+    olySkEnd("cerberus", {_ep})
+
+# ── 지옥문: 목표 발밑에 문이 열리고 6초간 빨아들인다. 중심 2.2 칸은 시듦
+function olyCbGate(e: entity, t: player):
+    set {_ep} to olySkBegin("cerberus", "gate")
+    set {_c} to location of {_t}
+    set {_k} to olyTeleKey("cerberus")
+    olyTeleCircle("cerberus", {_k}, {_c}, 2.2, 30)
+    olySkCast("cerberus", {_e}, "gate", 30, "지옥문이 열린다 — 멀리 달아나라!")
+    set {oly::rt::bpose::cerberus} to "roar"
+    olySfx("cerberus.gate", {_c}, 2.5, 1)
+    set {_g} to olyFxKey("cerberus")
+    olyFxSpawn("cerberus", {_g}, "oly:fx/hellgate", location((x-coordinate of {_c}), (floor(y-coordinate of {_c})) + 0.1, (z-coordinate of {_c}), world of {_c}), 0, 0, 0, -1, "fixed")
+    wait 2 ticks
+    olyFxTf({_g}, 14, 1, 14, 0, 0, 28)
+    wait 28 ticks
+    if olySkGo("cerberus", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k})
+    # 문이 열려 있는 동안 보스는 다른 스킬을 쓴다 (바쁨 해제)
+    olySkEnd("cerberus", {_ep})
+    set {_yaw} to 0
+    loop 30 times:
+        if olySkOn("cerberus", {_ep}) is not true:
+            olyFxKill({_g})
+            stop
+        add 12 to {_yaw}
+        olyFxTp({_g}, location((x-coordinate of {_c}), (floor(y-coordinate of {_c})) + 0.1, (z-coordinate of {_c}), world of {_c}), {_yaw})
+        olyPt("minecraft:soul", {_c} ~ vector(0, 0.4, 0), 3, 0.2, 3, 0.02, 10)
+        olyPt("minecraft:portal", {_c} ~ vector(0, 0.6, 0), 4, 0.3, 4, 1, 25)
+        loop all players in radius 8 around {_c}:
+            if olyFighter(loop-player) is true:
+                if olyNearXZ(location of loop-player, {_c}, 7, 3) is true:
+                    olyBossTouch("cerberus", loop-player)
+                    push loop-player (vector from location of loop-player to {_c}) at speed 0.22
+                    if olyNearXZ(location of loop-player, {_c}, 2.2, 3) is true:
+                        if mod(loop-number, 5) is 0:
+                            apply wither 2 to loop-player for 2 seconds
+                            damage loop-player by 1.5 * olyBossM("cerberus")
+        wait 4 ticks
+    olyFxTf({_g}, 0, 1, 0, 0, 0, 10)
+    olyCmd("stopsound @a hostile oly:boss.cerberus.gate")
+    wait 10 ticks
+    olyFxKill({_g})
+
+# ── 체력 35% 이하에서 한 번: 삼두의 분노
+function olyCbPhase(e: entity):
+    if {oly::m::cerberus::sk::fury} is true:
+        stop
+    if health of {_e} > (max health of {_e}) * 0.35:
+        stop
+    olyCbFury({_e})
+
+function olyCbFury(e: entity):
+    set {oly::m::cerberus::sk::fury} to true
+    set {oly::m::cerberus::sk::rage} to true
+    set {oly::m::cerberus::sk::cdm} to 0.7
+    olyCmd("function oly:boss/cerberus/fx/glow {c:11141120}")
+    olyCmd("bossbar set oly:b_cerberus color purple")
+    set {oly::rt::bpose::cerberus} to "roar"
+    olySfx("cerberus.fury", location of {_e}, 3, 1)
+    olyCmd("function oly:boss/cerberus/fx/roar_m")
+    olyFxIconAbove("cerberus", {_e}, "cerberus_fury", 50)
+    olyTitleNear(location of {_e}, 48, "삼두의 분노", "dark_red", "cerberus_fury", "이제 세 머리가 동시에 문다", "red", 50)
+
+# ── 삼두 연격: 화염(목표) + 충격파(주변) + 물기(두 번째 목표) 동시에
+function olyCbCombo(e: entity, t: player):
+    set {_ep} to olySkBegin("cerberus", "fury")
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    set {_t2} to olyFarthest({_s}, 14) ? {_t}
+    set {_bx} to olyDirX({_s}, location of {_t2})
+    set {_bz} to olyDirZ({_s}, location of {_t2})
+    olyCmd("function oly:boss/cerberus/fx/head_a {c:16744448}")
+    olyCmd("function oly:boss/cerberus/fx/head_m {c:11163135}")
+    olyCmd("function oly:boss/cerberus/fx/head_b {c:16711680}")
+    olyBossFace("cerberus", {_e}, location of {_t})
+    set {_k1} to olyTeleKey("cerberus")
+    set {_k2} to olyTeleKey("cerberus")
+    set {_k3} to olyTeleKey("cerberus")
+    olyTeleRect("cerberus", {_k1}, {_s}, {_dx}, {_dz}, 4.5, 12, 30)
+    olyTeleCircle("cerberus", {_k2}, {_s}, 5, 30)
+    olyTeleRect("cerberus", {_k3}, {_s}, {_bx}, {_bz}, 3, 9, 30)
+    olySkCast("cerberus", {_e}, "fury", 30, "화염 · 충격파 · 물기가 동시에!")
+    olySfx("cerberus.bark", {_s}, 2.5, 0.7)
+    wait 24 ticks
+    set {oly::rt::bpose::cerberus} to "attack"
+    wait 6 ticks
+    if olySkGo("cerberus", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k1})
+    olyTeleClear({_k2})
+    olyTeleClear({_k3})
+    olySfx("cerberus.fire", {_s}, 2, 1)
+    olySfx("cerberus.quake", {_s}, 2.5, 1)
+    olyCmd("function oly:boss/cerberus/fx/roar_m")
+    olyCmd("function oly:boss/cerberus/fx/bite_b")
+    olyFxDecal("cerberus", "oly:fx/ring", {_s}, 10, 11163135, 3, 3)
+    loop all players in radius 14 around {_s}:
+        if olyFighter(loop-player) is true:
+            set {_pl} to location of loop-player
+            if olyInRect({_pl}, {_s}, {_dx}, {_dz}, 4.5, 12) is true:
+                olyBossTouch("cerberus", loop-player)
+                ignite loop-player for 5 seconds
+                damage loop-player by 7 / 2 * olyBossM("cerberus")
+            if olyNearXZ({_pl}, {_s}, 5, 3) is true:
+                damage loop-player by 6 / 2 * olyBossM("cerberus")
+                push loop-player (vector from {_s} to {_pl}) at speed 0.9
+            if olyInRect({_pl}, {_s}, {_bx}, {_bz}, 3, 9) is true:
+                damage loop-player by 8 / 2 * olyBossM("cerberus")
+    loop 6 times:
+        olyCmd("function oly:boss/cerberus/fx/breath_a_soul")
+        wait 2 ticks
+    olyCbGlowReset()
+    olySkEnd("cerberus", {_ep})

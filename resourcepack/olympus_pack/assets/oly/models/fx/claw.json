@@ -1,0 +1,1 @@
+{"textures":{"0":"oly:item/fx/claw","particle":"oly:item/fx/claw"},"elements":[{"from":[0,0,7.95],"to":[16,16,8.05],"shade":false,"faces":{"north":{"uv":[0,0,16,16],"texture":"#0"},"south":{"uv":[0,0,16,16],"texture":"#0"}}}]}

@@ -1,0 +1,310 @@
+{
+ "providers": [
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/minotaur_charge.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/minotaur_frenzy.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/minotaur_quake.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/minotaur_horn.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/minotaur_rage.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/nemean_lion_pounce.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/nemean_lion_roar.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/nemean_lion_hunt.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/nemean_lion_claw.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/chimera_breath.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/chimera_venom.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/chimera_spikes.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/chimera_triple.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/cerberus_flame.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/cerberus_howl.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/cerberus_hunt.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/cerberus_gate.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/cerberus_fury.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/hydra_bite.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/hydra_venom.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/hydra_tempest.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/hydra_regrow.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/hydra_sever.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/medusa_gaze.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/medusa_zone.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/medusa_serpent.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/medusa_tail.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/medusa_mirror.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/scylla_slam.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/scylla_hounds.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/scylla_cage.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/scylla_maelstrom.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/common_warn.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:item/icon/common_stun.png",
+   "ascent": 8,
+   "height": 9,
+   "chars": [
+    ""
+   ]
+  }
+ ]
+}

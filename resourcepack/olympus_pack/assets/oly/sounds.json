@@ -1,0 +1,420 @@
+{
+ "boss.warn": {
+  "sounds": [
+   {
+    "name": "oly:boss/warn"
+   }
+  ]
+ },
+ "boss.cast": {
+  "sounds": [
+   {
+    "name": "oly:boss/cast"
+   }
+  ]
+ },
+ "boss.stun": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/ravager/stun1",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/ravager/stun2",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/ravager/stun3",
+    "pitch": 0.8
+   }
+  ]
+ },
+ "boss.minotaur.snort": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/hoglin/angry1",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:mob/hoglin/angry2",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:mob/hoglin/angry3",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:mob/hoglin/angry4",
+    "pitch": 0.55
+   }
+  ]
+ },
+ "boss.minotaur.stomp": {
+  "sounds": [
+   {
+    "name": "oly:boss/minotaur_stomp"
+   }
+  ]
+ },
+ "boss.minotaur.whirl": {
+  "sounds": [
+   {
+    "name": "oly:boss/minotaur_whirl"
+   }
+  ]
+ },
+ "boss.minotaur.wallhit": {
+  "sounds": [
+   {
+    "name": "oly:boss/minotaur_wallhit"
+   }
+  ]
+ },
+ "boss.minotaur.rage": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/ravager/roar1",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:mob/ravager/roar2",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:mob/ravager/roar3",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:mob/ravager/roar4",
+    "pitch": 0.55
+   }
+  ]
+ },
+ "boss.nemean_lion.growl": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/wolf/big/growl1",
+    "pitch": 0.45
+   },
+   {
+    "name": "minecraft:mob/wolf/big/growl2",
+    "pitch": 0.45
+   },
+   {
+    "name": "minecraft:mob/wolf/big/growl3",
+    "pitch": 0.45
+   }
+  ]
+ },
+ "boss.nemean_lion.roar": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/ravager/roar1",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/ravager/roar2",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/ravager/roar3",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/ravager/roar4",
+    "pitch": 0.8
+   }
+  ]
+ },
+ "boss.nemean_lion.claw": {
+  "sounds": [
+   {
+    "name": "oly:boss/nemean_lion_claw"
+   }
+  ]
+ },
+ "boss.nemean_lion.mark": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/warden/heartbeat_1",
+    "pitch": 0.9
+   },
+   {
+    "name": "minecraft:mob/warden/heartbeat_2",
+    "pitch": 0.9
+   },
+   {
+    "name": "minecraft:mob/warden/heartbeat_3",
+    "pitch": 0.9
+   },
+   {
+    "name": "minecraft:mob/warden/heartbeat_4",
+    "pitch": 0.9
+   }
+  ]
+ },
+ "boss.chimera.breath": {
+  "sounds": [
+   {
+    "name": "oly:boss/chimera_breath"
+   }
+  ]
+ },
+ "boss.chimera.hiss": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/cat/hiss1",
+    "pitch": 0.5
+   },
+   {
+    "name": "minecraft:mob/cat/hiss2",
+    "pitch": 0.5
+   },
+   {
+    "name": "minecraft:mob/cat/hiss3",
+    "pitch": 0.5
+   }
+  ]
+ },
+ "boss.chimera.spit": {
+  "sounds": [
+   {
+    "name": "oly:boss/chimera_spit"
+   }
+  ]
+ },
+ "boss.chimera.splat": {
+  "sounds": [
+   {
+    "name": "oly:boss/chimera_splat"
+   }
+  ]
+ },
+ "boss.chimera.bleat": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/goat/screaming_pre_ram1",
+    "pitch": 0.6
+   },
+   {
+    "name": "minecraft:mob/goat/screaming_pre_ram2",
+    "pitch": 0.6
+   },
+   {
+    "name": "minecraft:mob/goat/screaming_pre_ram3",
+    "pitch": 0.6
+   },
+   {
+    "name": "minecraft:mob/goat/screaming_pre_ram4",
+    "pitch": 0.6
+   },
+   {
+    "name": "minecraft:mob/goat/screaming_pre_ram5",
+    "pitch": 0.6
+   }
+  ]
+ },
+ "boss.chimera.spike": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/evocation_illager/fangs",
+    "pitch": 0.7
+   }
+  ]
+ },
+ "boss.cerberus.bark": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/wolf/big/bark1",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:mob/wolf/big/bark2",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:mob/wolf/big/bark3",
+    "pitch": 0.55
+   }
+  ]
+ },
+ "boss.cerberus.quake": {
+  "sounds": [
+   {
+    "name": "oly:boss/cerberus_quake"
+   }
+  ]
+ },
+ "boss.cerberus.fire": {
+  "sounds": [
+   {
+    "name": "oly:boss/cerberus_fire"
+   }
+  ]
+ },
+ "boss.cerberus.gate": {
+  "sounds": [
+   {
+    "name": "oly:boss/cerberus_gate"
+   }
+  ]
+ },
+ "boss.cerberus.fury": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/warden/roar_1",
+    "pitch": 0.75
+   },
+   {
+    "name": "minecraft:mob/warden/roar_2",
+    "pitch": 0.75
+   },
+   {
+    "name": "minecraft:mob/warden/roar_3",
+    "pitch": 0.75
+   },
+   {
+    "name": "minecraft:mob/warden/roar_4",
+    "pitch": 0.75
+   },
+   {
+    "name": "minecraft:mob/warden/roar_5",
+    "pitch": 0.75
+   }
+  ]
+ },
+ "boss.hydra.hiss": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/cat/hiss1",
+    "pitch": 0.35
+   },
+   {
+    "name": "minecraft:mob/cat/hiss2",
+    "pitch": 0.35
+   },
+   {
+    "name": "minecraft:mob/cat/hiss3",
+    "pitch": 0.35
+   }
+  ]
+ },
+ "boss.hydra.spit": {
+  "sounds": [
+   {
+    "name": "oly:boss/chimera_spit",
+    "pitch": 0.7
+   }
+  ]
+ },
+ "boss.hydra.splat": {
+  "sounds": [
+   {
+    "name": "oly:boss/chimera_splat",
+    "pitch": 0.8
+   }
+  ]
+ },
+ "boss.hydra.regrow": {
+  "sounds": [
+   {
+    "name": "oly:boss/hydra_regrow"
+   }
+  ]
+ },
+ "boss.hydra.sever": {
+  "sounds": [
+   {
+    "name": "oly:boss/hydra_sever"
+   }
+  ]
+ },
+ "boss.hydra.sear": {
+  "sounds": [
+   {
+    "name": "oly:boss/hydra_sear"
+   }
+  ]
+ },
+ "boss.medusa.gaze": {
+  "sounds": [
+   {
+    "name": "oly:boss/medusa_gaze"
+   }
+  ]
+ },
+ "boss.medusa.petrify": {
+  "sounds": [
+   {
+    "name": "oly:boss/medusa_petrify"
+   }
+  ]
+ },
+ "boss.medusa.reflect": {
+  "sounds": [
+   {
+    "name": "oly:boss/medusa_reflect"
+   }
+  ]
+ },
+ "boss.medusa.hiss": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/cat/hiss1",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/cat/hiss2",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/cat/hiss3",
+    "pitch": 0.8
+   }
+  ]
+ },
+ "boss.medusa.zone": {
+  "sounds": [
+   {
+    "name": "oly:boss/medusa_zone"
+   }
+  ]
+ },
+ "boss.scylla.slam": {
+  "sounds": [
+   {
+    "name": "oly:boss/scylla_slam"
+   }
+  ]
+ },
+ "boss.scylla.bark": {
+  "sounds": [
+   {
+    "name": "minecraft:mob/wolf/big/bark1",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/wolf/big/bark2",
+    "pitch": 0.8
+   },
+   {
+    "name": "minecraft:mob/wolf/big/bark3",
+    "pitch": 0.8
+   }
+  ]
+ },
+ "boss.scylla.whirl": {
+  "sounds": [
+   {
+    "name": "oly:boss/scylla_whirl"
+   }
+  ]
+ },
+ "boss.scylla.cage": {
+  "sounds": [
+   {
+    "name": "oly:boss/scylla_cage"
+   }
+  ]
+ }
+}

@@ -1,0 +1,218 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-boss-minotaur.sk  -  미노타우로스: 힘으로 밀어붙이는 근접전
+# -------------------------------------------------------------------------------------
+#  의존: 10-bossfx (공통), 10-monsters (예고 장판 · 판정)
+#  스킬   황소의 돌진 · 도끼 난무 · 지면 강타 · 뿔 치받기 · (40%) 광폭화
+#  반격   돌진이 벽에 박히면 2.5초 기절, 받는 피해 1.5배
+#  연출   데이터팩 oly:boss/minotaur/fx/{glow,eyes,clear} · 리소스팩 oly:fx/crack, oly:fx/ring, oly:minotaur/axe
+# =====================================================================================
+
+on load:
+    olyModReady("boss_minotaur")
+
+function olyMnAI(e: entity, t: player, d: number):
+    if {_d} <= 4.5:
+        if olySkCd("minotaur", "horn", 5) is true:
+            olyMnHorn({_e}, {_t})
+            stop
+    if {_d} >= 7:
+        if {_d} <= 24:
+            if olySkCd("minotaur", "charge", 11) is true:
+                olyMnCharge({_e}, {_t}, false)
+                stop
+    if {_d} <= 9:
+        if olySkCd("minotaur", "frenzy", 16) is true:
+            olyMnFrenzy({_e})
+            stop
+    if {_d} >= 4:
+        if {_d} <= 20:
+            if olySkCd("minotaur", "quake", 13) is true:
+                olyMnQuake({_e}, {_t})
+                stop
+    if {_d} <= 6:
+        if olySkCd("minotaur", "swing", 4) is true:
+            olySkCircle("minotaur", {_e}, location of {_e}, 4.5, 22, 12, 0.5, "attack")
+
+function olyMnCast(e: entity, t: player, d: number, sk: text) :: text:
+    if {_sk} is "charge":
+        olyMnCharge({_e}, {_t}, false)
+    else if {_sk} is "frenzy":
+        olyMnFrenzy({_e})
+    else if {_sk} is "quake":
+        olyMnQuake({_e}, {_t})
+    else if {_sk} is "horn":
+        olyMnHorn({_e}, {_t})
+    else if {_sk} is "rage":
+        olyMnRage({_e})
+    else:
+        return "&7charge · frenzy · quake · horn · rage"
+    return "&a미노타우로스 %{_sk}%"
+
+
+# ── 황소의 돌진: 발 긁기(콧김 3번) + 직선 장판 → 돌격. 벽에 박히면 기절
+function olyMnCharge(e: entity, t: player, again: boolean):
+    set {_ep} to olySkBegin("minotaur", "charge")
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    set {_len} to min(26, (distance between {_s} and location of {_t}) + 5)
+    set {_k} to olyTeleKey("minotaur")
+    olyBossFace("minotaur", {_e}, location of {_t})
+    olyTeleRect("minotaur", {_k}, {_s}, {_dx}, {_dz}, 3.4, {_len}, 30)
+    olySkCast("minotaur", {_e}, "charge", 30, "직선 위에서 비켜라!")
+    set {oly::rt::bpose::minotaur} to "roar"
+    loop 3 times:
+        olySfx("minotaur.snort", {_s}, 2, 1)
+        olyPt("minecraft:cloud", {_s} ~ vector(0 - {_dx}, 0.2, 0 - {_dz}), 0.7, 0.1, 0.7, 0.03, 12)
+        olyCmd("particle minecraft:block{block_state:""minecraft:coarse_dirt""} %x-coordinate of {_s}% %(y-coordinate of {_s}) + 0.1% %z-coordinate of {_s}% 0.8 0.1 0.8 0 20 force")
+        wait 10 ticks
+        if olySkGo("minotaur", {_e}, {_ep}) is false:
+            stop
+    olyTeleClear({_k})
+    set {oly::rt::bpose::minotaur} to "charge"
+    olyHitRect("minotaur", {_s}, {_dx}, {_dz}, 3.4, {_len}, 14)
+    set {_end} to {_s} ~ vector({_dx} * ({_len} - 1), 0, {_dz} * ({_len} - 1))
+    set {_prev} to location of {_e}
+    set {_wall} to false
+    loop 9 times:
+        if olySkGo("minotaur", {_e}, {_ep}) is false:
+            stop
+        push {_e} (vector from location of {_e} to {_end}) at speed 1.15
+        olyPt("minecraft:cloud", (location of {_e}) ~ vector(0, 0.3, 0), 0.7, 0.1, 0.7, 0.02, 8)
+        wait 2 ticks
+        if loop-number >= 3:
+            if distance between location of {_e} and {_prev} < 0.3:
+                if distance between location of {_e} and {_end} > 3:
+                    set {_wall} to true
+                    exit loop
+        set {_prev} to location of {_e}
+    if {_wall} is true:
+        set {_l} to location of {_e}
+        olySfx("minotaur.wallhit", {_l}, 2.5, 1)
+        olyCmd("particle minecraft:block{block_state:""minecraft:cobblestone""} %x-coordinate of {_l}% %(y-coordinate of {_l}) + 2% %z-coordinate of {_l}% 1.2 1.2 1.2 0 80 force")
+        olySkEnd("minotaur", {_ep})
+        olyBossStun("minotaur", {_e}, 50)
+        stop
+    olySkEnd("minotaur", {_ep})
+    # 광폭화: 다른 사람에게 한 번 더
+    if {_again} is false:
+        if {oly::m::minotaur::sk::rage} is true:
+            wait 12 ticks
+            if olySkOk("minotaur", {_e}, {_ep}) is not true:
+                stop
+            set {_t2} to olyFarthest(location of {_e}, 24)
+            if {_t2} is set:
+                olyMnCharge({_e}, {_t2}, true)
+
+# ── 도끼 난무: 반경 5.5 장판 → 2.5초 회전, 도끼 둘이 궤도를 돈다
+function olyMnFrenzy(e: entity):
+    set {_ep} to olySkBegin("minotaur", "frenzy")
+    set {_r} to 5.5
+    set {_k} to olyTeleKey("minotaur")
+    olyTeleCircle("minotaur", {_k}, location of {_e}, {_r}, 24)
+    olySkCast("minotaur", {_e}, "frenzy", 24, "원 밖으로 벗어나라!")
+    set {oly::rt::bpose::minotaur} to "roar"
+    set {_ax1} to olyFxKey("minotaur")
+    set {_ax2} to olyFxKey("minotaur")
+    olyFxSpawn("minotaur", {_ax1}, "oly:minotaur/axe", (location of {_e}) ~ vector(3, 2, 0), 0, 1.6, 0, -1, "fixed")
+    olyFxSpawn("minotaur", {_ax2}, "oly:minotaur/axe", (location of {_e}) ~ vector(-3, 2, 0), 180, 1.6, 0, -1, "fixed")
+    wait 24 ticks
+    if olySkGo("minotaur", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k})
+    set {_ring} to olyFxKey("minotaur")
+    olyFxSpawn("minotaur", {_ring}, "oly:fx/ring", location of {_e}, 0, {_r} * 2, 0, 13382451, "fixed")
+    olySfx("minotaur.whirl", location of {_e}, 2.2, 1)
+    set {_a} to 0
+    loop 25 times:
+        if olySkGo("minotaur", {_e}, {_ep}) is false:
+            stop
+        add 38 to {_a}
+        set {_c} to location of {_e}
+        olyFxTp({_ax1}, {_c} ~ vector(cos({_a}) * 3, 2, sin({_a}) * 3), {_a} + 90)
+        olyFxTp({_ax2}, {_c} ~ vector(cos({_a} + 180) * 3, 2, sin({_a} + 180) * 3), {_a} + 270)
+        olyFxTp({_ring}, location((x-coordinate of {_c}), (floor(y-coordinate of {_c})) + 0.09, (z-coordinate of {_c}), world of {_c}), 0)
+        if mod(loop-number, 5) is 0:
+            set {oly::rt::bpose::minotaur} to "attack"
+            olyHitCircle("minotaur", {_c}, {_r}, 5, 0.3)
+            olyPt("minecraft:sweep_attack", {_c} ~ vector(0, 1.5, 0), 3, 0.5, 3, 0, 10)
+        wait 2 ticks
+    olyFxKill({_ax1})
+    olyFxKill({_ax2})
+    olyFxKill({_ring})
+    olySkEnd("minotaur", {_ep})
+
+# ── 지면 강타: 목표 쪽으로 균열 원 5개가 차례로 터진다
+function olyMnQuake(e: entity, t: player):
+    set {_ep} to olySkBegin("minotaur", "quake")
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    olyBossFace("minotaur", {_e}, location of {_t})
+    loop 5 times:
+        set {_i} to loop-number - 1
+        set {_p::%loop-number%} to {_s} ~ vector({_dx} * (2.5 + {_i} * 3.2), 0, {_dz} * (2.5 + {_i} * 3.2))
+        set {_k::%loop-number%} to olyTeleKey("minotaur")
+        olyTeleCircle("minotaur", {_k::%loop-number%}, {_p::%loop-number%}, 2.3, 22 + {_i} * 5)
+    olySkCast("minotaur", {_e}, "quake", 22, "균열이 달려온다 — 옆으로 비켜라!")
+    wait 16 ticks
+    set {oly::rt::bpose::minotaur} to "attack"
+    wait 6 ticks
+    loop 5 times:
+        if olySkGo("minotaur", {_e}, {_ep}) is false:
+            stop
+        set {_c} to {_p::%loop-number%}
+        olyTeleClear({_k::%loop-number%})
+        olyFxDecal("minotaur", "oly:fx/crack", {_c}, 5, -1, 3, 50)
+        olyHitCircle("minotaur", {_c}, 2.3, 9, 0.75)
+        olySfx("minotaur.stomp", {_c}, 1.6, 0.9 + loop-number * 0.05)
+        olyPt("minecraft:explosion", {_c} ~ vector(0, 0.3, 0), 1, 0.2, 1, 0, 3)
+        olyCmd("particle minecraft:block{block_state:""minecraft:stone""} %x-coordinate of {_c}% %(y-coordinate of {_c}) + 0.3% %z-coordinate of {_c}% 1.2 0.3 1.2 0 40 force")
+        wait 5 ticks
+    olySkEnd("minotaur", {_ep})
+
+# ── 뿔 치받기: 근접 전방 짧은 직선, 공중으로 튕겨 오른다
+function olyMnHorn(e: entity, t: player):
+    set {_ep} to olySkBegin("minotaur", "horn")
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    set {_k} to olyTeleKey("minotaur")
+    olyBossFace("minotaur", {_e}, location of {_t})
+    olyTeleRect("minotaur", {_k}, {_s}, {_dx}, {_dz}, 3, 5.5, 14)
+    olySkCast("minotaur", {_e}, "horn", 14, "")
+    wait 9 ticks
+    set {oly::rt::bpose::minotaur} to "attack"
+    wait 5 ticks
+    if olySkGo("minotaur", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k})
+    olySfx("minotaur.snort", {_s}, 2, 1.3)
+    loop all players in radius 8 around {_s}:
+        if olyFighter(loop-player) is true:
+            if olyInRect(location of loop-player, {_s}, {_dx}, {_dz}, 3, 5.5) is true:
+                damage loop-player by 8 / 2 * olyBossM("minotaur")
+                set velocity of loop-player to vector({_dx} * 0.9, 1.15, {_dz} * 0.9)
+                olyPt("minecraft:crit", (location of loop-player) ~ vector(0, 1, 0), 0.3, 0.5, 0.3, 0.3, 15)
+    olySkEnd("minotaur", {_ep})
+
+# ── 체력 40% 이하에서 한 번: 광폭화
+function olyMnPhase(e: entity):
+    if {oly::m::minotaur::sk::rage} is true:
+        stop
+    if health of {_e} > (max health of {_e}) * 0.4:
+        stop
+    olyMnRage({_e})
+
+function olyMnRage(e: entity):
+    set {oly::m::minotaur::sk::rage} to true
+    set {oly::m::minotaur::sk::cdm} to 0.65
+    olyCmd("function oly:boss/minotaur/fx/glow {c:13369344}")
+    olyCmd("function oly:boss/minotaur/fx/eyes {c:16755200}")
+    olyCmd("attribute %uuid of {_e}% minecraft:movement_speed modifier add oly:boss_rage 0.35 add_multiplied_base")
+    olyCmd("bossbar set oly:b_minotaur color purple")
+    set {oly::rt::bpose::minotaur} to "roar"
+    olySfx("minotaur.rage", location of {_e}, 3, 1)
+    olyFxIconAbove("minotaur", {_e}, "minotaur_rage", 50)
+    olyTitleNear(location of {_e}, 48, "미노타우로스 광폭화", "dark_red", "minotaur_rage", "돌진이 두 번 온다 — 벽을 등지고 유인하라", "red", 50)
+    olyPt("minecraft:dust{color:[0.8,0.05,0.05],scale:2.5}", (location of {_e}) ~ vector(0, 2.5, 0), 1.5, 2, 1.5, 0, 120)

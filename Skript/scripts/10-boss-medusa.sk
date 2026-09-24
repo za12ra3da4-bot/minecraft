@@ -1,0 +1,214 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-boss-medusa.sk  -  메두사: 시선과 석화
+# -------------------------------------------------------------------------------------
+#  의존: 10-bossfx, 10-monsters, skript-reflect (hasLineOfSight · getDirection)
+#  스킬   석화의 시선 · 석화 지대 · 뱀머리 화살 · 꼬리 휘감기
+#  피하기  시선: 고개를 돌리거나(시야 46도 밖), 지형 뒤에 숨거나(시야 차단),
+#              방패를 들고 정면으로 막으면 → 반사 (메두사 3초 기절 + 피해)
+#          화살: 줄에서 벗어나거나 블록 뒤로 — 뱀 머리는 블록에 막히면 멈춘다
+#  연출   데이터팩 oly:boss/medusa/fx/{eyes,gaze_charge,unglow} · 리소스팩 oly:fx/sigil, oly:fx/serpent, oly:fx/shell
+# =====================================================================================
+
+on load:
+    olyModReady("boss_medusa")
+
+function olyMdAI(e: entity, t: player, d: number):
+    if {_d} <= 4.5:
+        if olySkCd("medusa", "tail", 6) is true:
+            olyMdTail({_e})
+            stop
+    if {_d} <= 20:
+        if olySkCd("medusa", "gaze", 13) is true:
+            olyMdGaze({_e})
+            stop
+    if olySkCd("medusa", "zone", 15) is true:
+        olyMdZone({_e})
+        stop
+    if {_d} <= 22:
+        if olySkCd("medusa", "serpent", 7) is true:
+            olyMdSerpent({_e})
+
+function olyMdCast(e: entity, t: player, d: number, sk: text) :: text:
+    if {_sk} is "gaze":
+        olyMdGaze({_e})
+    else if {_sk} is "zone":
+        olyMdZone({_e})
+    else if {_sk} is "serpent":
+        olyMdSerpent({_e})
+    else if {_sk} is "tail":
+        olyMdTail({_e})
+    else:
+        return "&7gaze · zone · serpent · tail"
+    return "&a메두사 %{_sk}%"
+
+
+# ── 이 플레이어가 메두사의 머리를 '보고' 있는가 (시야 46도 안 + 가리는 블록 없음)
+function olyMdSees(p: player, e: entity) :: boolean:
+    set {_eye} to {_p}.getEyeLocation()
+    set {_head} to (location of {_e}) ~ vector(0, olyBossH("medusa") * 0.85, 0)
+    set {_to} to vector from {_eye} to {_head}
+    set {_dir} to {_eye}.getDirection()
+    set {_ang} to {_dir}.angle({_to})
+    if {_ang} > 0.8:
+        return false
+    if {_p}.hasLineOfSight({_e}) is not true:
+        return false
+    return true
+
+# ── 석화의 시선
+function olyMdGaze(e: entity):
+    set {_ep} to olySkBegin("medusa", "gaze")
+    set {oly::rt::bpose::medusa} to "gaze"
+    olyCmd("function oly:boss/medusa/fx/eyes {c:5635925}")
+    olySkCast("medusa", {_e}, "gaze", 32, "방패로 막으면 반사된다")
+    olyTitleNear(location of {_e}, 30, "눈을 돌려라!", "dark_purple", "medusa_gaze", "메두사가 응시한다 — 고개를 돌리거나 숨어라", "light_purple", 32)
+    olySfx("medusa.gaze", location of {_e}, 2.2, 1)
+    loop 16 times:
+        olyCmd("function oly:boss/medusa/fx/gaze_charge")
+        wait 2 ticks
+        if olySkGo("medusa", {_e}, {_ep}) is false:
+            stop
+    set {_head} to (location of {_e}) ~ vector(0, olyBossH("medusa") * 0.85, 0)
+    set {_ref} to 0
+    loop all players in radius 22 around location of {_e}:
+        if olyFighter(loop-player) is true:
+            if olyMdSees(loop-player, {_e}) is true:
+                if loop-player is blocking:
+                    add 1 to {_ref}
+                    olyAbIcon(loop-player, "medusa_mirror", "반사! 페르세우스의 방패", "yellow", 3)
+                    set {_a} to (location of loop-player) ~ vector(0, 1.4, 0)
+                    loop 10 times:
+                        set {_f} to loop-number-2 / 10
+                        olyPt("minecraft:end_rod", location((x-coordinate of {_a}) + ((x-coordinate of {_head}) - (x-coordinate of {_a})) * {_f}, (y-coordinate of {_a}) + ((y-coordinate of {_head}) - (y-coordinate of {_a})) * {_f}, (z-coordinate of {_a}) + ((z-coordinate of {_head}) - (z-coordinate of {_a})) * {_f}, world of {_a}), 0.05, 0.05, 0.05, 0, 2)
+                else:
+                    olyPetrify("medusa", loop-player, 60)
+                    damage loop-player by 3 / 2 * olyBossM("medusa")
+    olyCmd("function oly:boss/medusa/fx/unglow")
+    if {_ref} > 0:
+        olySfx("medusa.reflect", {_head}, 2.5, 1)
+        damage {_e} by (max health of {_e}) * 0.05 / 2
+        olySkEnd("medusa", {_ep})
+        olyBossStun("medusa", {_e}, 60)
+        stop
+    olySkEnd("medusa", {_ep})
+
+# ── 석화 지대: 돌 문양 3개 (사람 둘 + 무작위 하나), 6초 유지. 오래 머물면 석화
+function olyMdZone(e: entity):
+    set {_ep} to olySkBegin("medusa", "zone")
+    olySkCast("medusa", {_e}, "zone", 20, "돌 문양 안에 오래 머물지 마라")
+    set {_ts::*} to olyTargets(location of {_e}, 20, 2)
+    loop {_ts::*}:
+        add location of loop-value to {_c::*}
+    add olyRandAround(location of {_e}, 9) to {_c::*}
+    loop {_c::*}:
+        set {_k::%loop-index%} to olyTeleKey("medusa")
+        olyTeleCircle("medusa", {_k::%loop-index%}, loop-value, 3, 20)
+    olySfx("medusa.zone", location of {_e}, 2, 1)
+    wait 20 ticks
+    if olySkGo("medusa", {_e}, {_ep}) is false:
+        stop
+    loop {_c::*}:
+        olyTeleClear({_k::%loop-index%})
+        olyMdZoneRun({_ep}, loop-value)
+    olySkEnd("medusa", {_ep})
+
+function olyMdZoneRun(ep: number, c: location):
+    set {_r} to 3
+    olyFxDecal("medusa", "oly:fx/sigil", {_c}, {_r} * 2, -1, 4, 120)
+    olySfx("medusa.zone", {_c}, 1.4, 0.8)
+    loop 12 times:
+        wait 10 ticks
+        if olySkOn("medusa", {_ep}) is not true:
+            stop
+        olyCmd("particle minecraft:block{block_state:""minecraft:stone""} %x-coordinate of {_c}% %(y-coordinate of {_c}) + 0.2% %z-coordinate of {_c}% 1.3 0.1 1.3 0 8 force")
+        loop all players in radius {_r} + 1 around {_c}:
+            if olyFighter(loop-player) is true:
+                set {_u} to "%uuid of loop-player%"
+                if olyNearXZ(location of loop-player, {_c}, {_r}, 3) is true:
+                    add 1 to {_st::%{_u}%}
+                    olyBossTouch("medusa", loop-player)
+                    apply slowness 2 to loop-player for 1 second
+                    if {_st::%{_u}%} >= 6:
+                        delete {_st::%{_u}%}
+                        olyPetrify("medusa", loop-player, 40)
+                    else:
+                        olyAbIcon(loop-player, "medusa_zone", "몸이 굳어 간다 %{_st::%{_u}%}%/6", "gray", 1)
+
+# ── 뱀머리 화살: 최대 3명에게 가는 줄 예고 → 뱀 머리가 날아간다. 블록에 막히면 멈춘다
+function olyMdSerpent(e: entity):
+    set {_ep} to olySkBegin("medusa", "serpent")
+    olySkCast("medusa", {_e}, "serpent", 20, "줄에서 벗어나거나 엄폐하라")
+    olySfx("medusa.hiss", location of {_e}, 2, 1)
+    set {_ts::*} to olyTargets(location of {_e}, 22, 3)
+    set {_s} to location of {_e}
+    loop {_ts::*}:
+        set {_dx::%loop-index%} to olyDirX({_s}, location of loop-value)
+        set {_dz::%loop-index%} to olyDirZ({_s}, location of loop-value)
+        set {_len::%loop-index%} to min(22, (distance between {_s} and location of loop-value) + 4)
+        set {_k::%loop-index%} to olyTeleKey("medusa")
+        olyTeleRect("medusa", {_k::%loop-index%}, {_s}, {_dx::%loop-index%}, {_dz::%loop-index%}, 1.6, {_len::%loop-index%}, 20)
+    wait 14 ticks
+    set {oly::rt::bpose::medusa} to "attack"
+    wait 6 ticks
+    if olySkGo("medusa", {_e}, {_ep}) is false:
+        stop
+    loop {_ts::*}:
+        olyTeleClear({_k::%loop-index%})
+        olyMdSerpentFly({_ep}, {_s} ~ vector(0, 2, 0), {_dx::%loop-index%}, {_dz::%loop-index%}, {_len::%loop-index%})
+    olySkEnd("medusa", {_ep})
+
+function olyMdSerpentFly(ep: number, a: location, dx: number, dz: number, len: number):
+    set {_k} to olyFxKey("medusa")
+    olyFxSpawn("medusa", {_k}, "oly:fx/serpent", {_a}, olyYaw({_dx}, {_dz}), 1.4, 0, -1, "fixed")
+    set {_steps} to ceil({_len} / 1.4)
+    set {_p} to {_a}
+    loop {_steps} times:
+        wait 1 tick
+        if olySkOn("medusa", {_ep}) is not true:
+            exit loop
+        set {_q} to {_p} ~ vector({_dx} * 1.4, 0, {_dz} * 1.4)
+        # 엄폐: 머리 높이나 발 높이의 블록이 막히면 멈춘다
+        if block at {_q} is solid:
+            olyCmd("particle minecraft:block{block_state:""minecraft:stone""} %x-coordinate of {_q}% %y-coordinate of {_q}% %z-coordinate of {_q}% 0.3 0.3 0.3 0 20 force")
+            exit loop
+        if block at ({_q} ~ vector(0, -1, 0)) is solid:
+            if block at ({_q} ~ vector(0, -1.8, 0)) is solid:
+                exit loop
+        set {_p} to {_q}
+        olyFxTp({_k}, {_p}, olyYaw({_dx}, {_dz}))
+        olyPt("minecraft:dust{color:[0.25,0.7,0.3],scale:1.2}", {_p}, 0.1, 0.1, 0.1, 0, 3)
+        set {_hit} to false
+        loop all players in radius 2.2 around {_p}:
+            if olyFighter(loop-player) is true:
+                if abs((y-coordinate of loop-player) + 1 - (y-coordinate of {_p})) <= 1.6:
+                    olyBossTouch("medusa", loop-player)
+                    damage loop-player by 6 / 2 * olyBossM("medusa")
+                    apply poison 2 to loop-player for 4 seconds
+                    olySfx("medusa.hiss", {_p}, 1, 1.4)
+                    set {_hit} to true
+        if {_hit} is true:
+            exit loop
+    olyFxKill({_k})
+
+# ── 꼬리 휘감기: 근접 원 — 밀려나며 1초 속박
+function olyMdTail(e: entity):
+    set {_ep} to olySkBegin("medusa", "tail")
+    set {_c} to location of {_e}
+    set {_k} to olyTeleKey("medusa")
+    olyTeleCircle("medusa", {_k}, {_c}, 4.5, 14)
+    olySkCast("medusa", {_e}, "tail", 14, "")
+    wait 9 ticks
+    set {oly::rt::bpose::medusa} to "attack"
+    wait 5 ticks
+    if olySkGo("medusa", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k})
+    olySfx("medusa.hiss", {_c}, 2, 0.7)
+    olyPt("minecraft:sweep_attack", {_c} ~ vector(0, 0.8, 0), 2.5, 0.2, 2.5, 0, 12)
+    loop all players in radius 5.5 around {_c}:
+        if olyFighter(loop-player) is true:
+            if olyNearXZ(location of loop-player, {_c}, 4.5, 3) is true:
+                damage loop-player by 7 / 2 * olyBossM("medusa")
+                push loop-player (vector from {_c} to location of loop-player) at speed 0.9
+                olySnare("medusa", loop-player, 20)
+    olySkEnd("medusa", {_ep})

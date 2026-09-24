@@ -1,0 +1,225 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-boss-hydra.sk  -  히드라: 머리 수가 곧 패턴
+# -------------------------------------------------------------------------------------
+#  의존: 10-bossfx, 10-monsters (목 성장 olyHydraGrow · 불타면 피해 1.5배)
+#  머리 수 = {oly::m::hydra::grown} (3~7). 목 k 번 = 데이터팩 파츠 14+7k … 20+7k
+#  스킬   다두 연쇄 물기(머리 수만큼 방향) · 독액 비(머리 수만큼 원 + 웅덩이)
+#         칠두 폭풍(머리 5개 이상, 방사형 N줄 / 7개면 두 번) · 머리 재생(3초 시전, 불·큰 피해로 끊김)
+#  절단   머리 4개 이상일 때 6초 안에 최대 체력 7% 피해 → 목 하나가 잘린다 (fx/cut_N)
+#         8초 안에 불로 지지면(보스가 불타는 중) 다시 자라지 않는다. 못 지지면 둘이 자란다.
+# =====================================================================================
+
+on load:
+    olyModReady("boss_hydra")
+
+function olyHyHeads() :: number:
+    return {oly::m::hydra::grown} ? 3
+
+function olyHyAI(e: entity, t: player, d: number):
+    set {_h} to olyHyHeads()
+    if {_h} >= 4:
+        if health of {_e} < (max health of {_e}) * 0.85:
+            if olySkCd("hydra", "regrow", 28) is true:
+                olyHyRegrow({_e})
+                stop
+    if {_h} >= 5:
+        if olySkCd("hydra", "tempest", 15) is true:
+            olyHyTempest({_e}, {_t})
+            stop
+    if {_d} <= 9:
+        if olySkCd("hydra", "bite", 7) is true:
+            olyHyBite({_e}, {_t})
+            stop
+    if olySkCd("hydra", "venom", 9) is true:
+        olyHyVenom({_e})
+        stop
+    if {_d} <= 7:
+        if olySkCd("hydra", "slam", 5) is true:
+            olySkCircle("hydra", {_e}, location of {_e}, 6, 20, 10, 0.4, "attack")
+
+function olyHyCast(e: entity, t: player, d: number, sk: text) :: text:
+    if {_sk} is "bite":
+        olyHyBite({_e}, {_t})
+    else if {_sk} is "venom":
+        olyHyVenom({_e})
+    else if {_sk} is "tempest":
+        olyHyTempest({_e}, {_t})
+    else if {_sk} is "regrow":
+        olyHyRegrow({_e})
+    else if {_sk} is "sever":
+        olyHyCut({_e})
+    else:
+        return "&7bite · venom · tempest · regrow · sever"
+    return "&a히드라 %{_sk}% (머리 %olyHyHeads()%)"
+
+
+# ── 다두 연쇄 물기: 머리 수만큼 방향으로, 목표 쪽부터 차례로
+function olyHyBite(e: entity, t: player):
+    set {_ep} to olySkBegin("hydra", "bite")
+    set {_h} to olyHyHeads()
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    olySkCast("hydra", {_e}, "bite", 14, "머리 %{_h}%개가 사방으로 문다 — 틈으로 피하라")
+    olySfx("hydra.hiss", {_s}, 2, 1)
+    loop {_h} times:
+        set {_i} to loop-number
+        set {_a} to ({_i} - 1) * 360 / {_h}
+        set {_ax::%{_i}%} to olyRotX({_dx}, {_dz}, {_a})
+        set {_az::%{_i}%} to olyRotZ({_dx}, {_dz}, {_a})
+        set {_k::%{_i}%} to olyTeleKey("hydra")
+        olyTeleRect("hydra", {_k::%{_i}%}, {_s}, {_ax::%{_i}%}, {_az::%{_i}%}, 2.6, 7, 14 + ({_i} - 1) * 6)
+    wait 14 ticks
+    loop {_h} times:
+        if olySkGo("hydra", {_e}, {_ep}) is false:
+            stop
+        set {_i} to loop-number
+        olyTeleClear({_k::%{_i}%})
+        set {oly::rt::bpose::hydra} to "attack"
+        olyCmd("function oly:boss/hydra/fx/neck_%{_i} - 1% {c:5635925}")
+        olySfx("hydra.hiss", {_s}, 1.4, 1.2 + {_i} * 0.05)
+        loop all players in radius 9 around {_s}:
+            if olyFighter(loop-player) is true:
+                if olyInRect(location of loop-player, {_s}, {_ax::%{_i}%}, {_az::%{_i}%}, 2.6, 7) is true:
+                    olyBossTouch("hydra", loop-player)
+                    damage loop-player by 7 / 2 * olyBossM("hydra")
+                    apply poison 1 to loop-player for 3 seconds
+        olyPt("minecraft:crit", {_s} ~ vector({_ax::%{_i}%} * 4, 1, {_az::%{_i}%} * 4), 0.6, 0.4, 0.6, 0.2, 10)
+        wait 6 ticks
+    olyCmd("function oly:boss/hydra/fx/unglow")
+    olySkEnd("hydra", {_ep})
+
+# ── 독액 비: (머리 수 - 1)개 원 — 사람 발밑 먼저, 남으면 주변 무작위. 떨어진 자리는 5초 웅덩이
+function olyHyVenom(e: entity):
+    set {_ep} to olySkBegin("hydra", "venom")
+    set {_n} to olyHyHeads() - 1
+    olySkCast("hydra", {_e}, "venom", 16, "독 웅덩이 %{_n}%개 — 발밑을 봐라")
+    olySfx("hydra.hiss", location of {_e}, 2, 0.8)
+    set {_ts::*} to olyTargets(location of {_e}, 20, {_n})
+    loop {_ts::*}:
+        add location of loop-value to {_c::*}
+    loop ({_n} - size of {_c::*}) times:
+        add olyRandAround(location of {_e}, 10) to {_c::*}
+    wait 16 ticks
+    if olySkGo("hydra", {_e}, {_ep}) is false:
+        stop
+    set {oly::rt::bpose::hydra} to "attack"
+    loop {_c::*}:
+        olyVenomShot("hydra", {_e}, {_ep}, (location of {_e}) ~ vector(0, olyBossH("hydra"), 0), loop-value, 2.5, 5025616)
+    wait 30 ticks
+    olySkEnd("hydra", {_ep})
+
+# ── 칠두 폭풍 (머리 5개 이상): 방사형 N줄 동시에. 7개면 엇갈린 두 번째 파도
+function olyHyTempest(e: entity, t: player):
+    set {_ep} to olySkBegin("hydra", "tempest")
+    set {_h} to olyHyHeads()
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    olyCmd("function oly:boss/hydra/fx/glow {c:5635925}")
+    olySkCast("hydra", {_e}, "tempest", 30, "선과 선 사이에 서라")
+    olySfx("hydra.hiss", {_s}, 2.5, 0.6)
+    set {_waves} to 1
+    if {_h} >= 7:
+        set {_waves} to 2
+    loop {_waves} times:
+        set {_off} to (loop-number - 1) * 180 / {_h}
+        set {_tt} to 30
+        if loop-number is 2:
+            set {_tt} to 20
+        delete {_k::*}
+        loop {_h} times:
+            set {_i} to loop-number-2
+            set {_a} to ({_i} - 1) * 360 / {_h} + {_off}
+            set {_ax::%{_i}%} to olyRotX({_dx}, {_dz}, {_a})
+            set {_az::%{_i}%} to olyRotZ({_dx}, {_dz}, {_a})
+            set {_k::%{_i}%} to olyTeleKey("hydra")
+            olyTeleRect("hydra", {_k::%{_i}%}, {_s}, {_ax::%{_i}%}, {_az::%{_i}%}, 2.2, 14, {_tt})
+        wait olyTicks({_tt})
+        if olySkGo("hydra", {_e}, {_ep}) is false:
+            stop
+        set {oly::rt::bpose::hydra} to "attack"
+        olySfx("hydra.splat", {_s}, 2.5, 0.7)
+        loop {_h} times:
+            set {_i} to loop-number-2
+            olyTeleClear({_k::%{_i}%})
+            olyHitRect("hydra", {_s}, {_ax::%{_i}%}, {_az::%{_i}%}, 2.2, 14, 10)
+            loop 4 times:
+                olyPt("minecraft:item_slime", {_s} ~ vector({_ax::%{_i}%} * loop-number-3 * 3.2, 0.6, {_az::%{_i}%} * loop-number-3 * 3.2), 0.4, 0.3, 0.4, 0.05, 6)
+    olyCmd("function oly:boss/hydra/fx/unglow")
+    olySkEnd("hydra", {_ep})
+
+# ── 머리 재생: 3초 시전. 그동안 불타거나 최대 체력 5% 이상 맞으면 끊기고 기절, 아니면 6% 회복
+function olyHyRegrow(e: entity):
+    set {_ep} to olySkBegin("hydra", "regrow")
+    set {_hp0} to health of {_e}
+    set {_mx} to max health of {_e}
+    olySkCast("hydra", {_e}, "regrow", 60, "재생 중 — 불로 지지거나 크게 베어 끊어라!")
+    olySfx("hydra.regrow", location of {_e}, 2, 1)
+    set {_cut} to false
+    loop 12 times:
+        wait 5 ticks
+        if olySkGo("hydra", {_e}, {_ep}) is false:
+            stop
+        set {_l} to location of {_e}
+        set {_a} to loop-number * 30
+        olyPt("minecraft:happy_villager", {_l} ~ vector(cos({_a}) * 2, 1 + loop-number * 0.2, sin({_a}) * 2), 0.2, 0.2, 0.2, 0, 4)
+        olyPt("minecraft:dust{color:[0.3,0.9,0.3],scale:1.8}", {_l} ~ vector(0, 2, 0), 1.2, 1, 1.2, 0, 10)
+        if {_e} is burning:
+            set {_cut} to true
+            exit loop
+        if {_hp0} - (health of {_e}) >= {_mx} * 0.05:
+            set {_cut} to true
+            exit loop
+    if {_cut} is true:
+        olySfx("hydra.sear", location of {_e}, 2, 1)
+        olyTitleNear(location of {_e}, 36, "", "white", "hydra_regrow", "재생이 끊겼다!", "green", 30)
+        olySkEnd("hydra", {_ep})
+        olyBossStun("hydra", {_e}, 40)
+        stop
+    set {_nh} to min({_mx}, (health of {_e}) + {_mx} * 0.06)
+    set health of {_e} to {_nh}
+    olySfx("hydra.regrow", location of {_e}, 2, 1.4)
+    olyPt("minecraft:heart", (location of {_e}) ~ vector(0, 3, 0), 1, 0.5, 1, 0, 8)
+    olySkEnd("hydra", {_ep})
+
+# ── 피해가 들어올 때마다 (10-monsters on damage → olyBossOnHit)
+function olyHyOnHit(v: entity, dmg: number):
+    if olyHyHeads() < 4:
+        stop
+    if {oly::m::hydra::sk::cutAt} is set:
+        stop
+    if olySec() - ({oly::m::hydra::sk::accT} ? 0) > 6:
+        set {oly::m::hydra::sk::acc} to 0
+        set {oly::m::hydra::sk::accT} to olySec()
+    add {_dmg} to {oly::m::hydra::sk::acc}
+    if {oly::m::hydra::sk::acc} >= (max health of {_v}) * 0.07:
+        olyHyCut({_v})
+
+# ── 머리 절단: 가장 마지막에 자란 목을 숨긴다 → 8초 뒤 olyHydraGrow 가 판정
+function olyHyCut(e: entity):
+    set {_g} to olyHyHeads()
+    if {_g} <= 3:
+        stop
+    set {oly::m::hydra::sk::acc} to 0
+    set {oly::m::hydra::grown} to {_g} - 1
+    olyCmd("function oly:boss/hydra/fx/cut_%{_g} - 1%")
+    set {oly::m::hydra::sk::cutAt} to olySec() + 8
+    set {_l} to location of {_e}
+    olySfx("hydra.sever", {_l}, 2.5, 1)
+    olyCmd("particle minecraft:block{block_state:""minecraft:redstone_block""} %x-coordinate of {_l}% %(y-coordinate of {_l}) + 3% %z-coordinate of {_l}% 0.8 0.8 0.8 0 60 force")
+    olyFxIconAbove("hydra", {_e}, "hydra_sever", 40)
+    olyTitleNear({_l}, 40, "", "white", "hydra_sever", "머리를 베었다! 8초 안에 불로 지져라 (못 지지면 둘이 자란다)", "green", 50)
+
+# ── olyHydraGrow 가 부른다: 절단 뒤 8초가 지났을 때의 판정
+function olyHyRegrowCheck(e: entity):
+    delete {oly::m::hydra::sk::cutAt}
+    set {_l} to location of {_e}
+    if {_e} is burning:
+        set {oly::m::hydra::sk::seared} to ({oly::m::hydra::sk::seared} ? 0) + 1
+        olySfx("hydra.sear", {_l}, 2.5, 1)
+        olyPt("minecraft:large_smoke", {_l} ~ vector(0, 3, 0), 0.8, 0.6, 0.8, 0.02, 30)
+        olyBc("&2[히드라] &a잘린 목을 불로 지졌다! &7그 머리는 다시 자라지 않는다")
+    else:
+        set {oly::m::hydra::sk::bonus} to ({oly::m::hydra::sk::bonus} ? 0) + 1
+        olyBc("&2[히드라] &c지지지 못했다 — 잘린 자리에서 머리 둘이 돋아난다!")

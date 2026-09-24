@@ -1,0 +1,691 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-bossfx.sk  -  보스 스킬 공통 (시전 연출 · 연출 엔티티 · 정리)
+# -------------------------------------------------------------------------------------
+#  의존: 01-data (olyCmd, olyAB, olySec, olyLive), 10-monsters (예고 장판, 판정, 쿨타임)
+#  보스별 스킬 = 10-boss-<id>.sk, 연출 함수 = 데이터팩 oly:boss/<id>/fx/..., 리소스 = 리소스팩 oly:fx/..., oly:icon/...
+#
+#  ■ 스킬이 보스보다 오래 사는 버그를 막는 규칙
+#    1) 에폭 {oly::m::<id>::ep} : 소환 · 잠듦 · 사라짐마다 +1.
+#       스킬은 시작할 때 olySkBegin() 으로 에폭을 받고, wait 뒤마다 olySkGo() 로 확인한다.
+#       (보스 죽음 / 잠듦 / 게임 정지·종료 / 에폭 바뀜 → false 를 돌려주고 바쁨을 푼다 → 스킬은 stop)
+#    2) 연출 엔티티는 전부 태그 oly · olyfx · olyfx_<id> · olyfx_<key> → 한 번에 지운다.
+#    3) 석화·속박은 attribute modifier(oly:boss_petrify, oly:boss_snare)로만 → 정확히 떼어낸다.
+#    4) 보스가 상태이상을 건 플레이어는 {oly::bfx::<id>::touch::<uuid>} 에 적어 두고, 보스가 사라지면 복구한다.
+# =====================================================================================
+
+on load:
+    olyModReady("bossfx")
+    # 재시작 전에 남은 연출 · 석화 정리 (보스 자체는 10-monsters 의 on load 가 정리한다)
+    olyCmd("kill @e[tag=olyfx]")
+    loop all players:
+        olyPRestore(loop-player)
+    delete {oly::bfx::*}
+
+on join:
+    olyPRestore(player)
+
+on respawn:
+    olyPRestore(player)
+
+
+# =====================================================================================
+#  1. 아이콘 글리프 (리소스팩 font oly:icons, U+E100~) · 스킬 이름
+# =====================================================================================
+
+# 글리프 = 리소스팩 assets/oly/font/icons.json (tools/boss_fx/build_icons.py 가 같은 순서로 만든다)
+function olyIcon(k: text) :: text:
+    if {_k} is "minotaur_charge":
+        return ""
+    if {_k} is "minotaur_frenzy":
+        return ""
+    if {_k} is "minotaur_quake":
+        return ""
+    if {_k} is "minotaur_horn":
+        return ""
+    if {_k} is "minotaur_rage":
+        return ""
+    if {_k} is "nemean_lion_pounce":
+        return ""
+    if {_k} is "nemean_lion_roar":
+        return ""
+    if {_k} is "nemean_lion_hunt":
+        return ""
+    if {_k} is "nemean_lion_claw":
+        return ""
+    if {_k} is "chimera_breath":
+        return ""
+    if {_k} is "chimera_venom":
+        return ""
+    if {_k} is "chimera_spikes":
+        return ""
+    if {_k} is "chimera_triple":
+        return ""
+    if {_k} is "cerberus_flame":
+        return ""
+    if {_k} is "cerberus_howl":
+        return ""
+    if {_k} is "cerberus_hunt":
+        return ""
+    if {_k} is "cerberus_gate":
+        return ""
+    if {_k} is "cerberus_fury":
+        return ""
+    if {_k} is "hydra_bite":
+        return ""
+    if {_k} is "hydra_venom":
+        return ""
+    if {_k} is "hydra_tempest":
+        return ""
+    if {_k} is "hydra_regrow":
+        return ""
+    if {_k} is "hydra_sever":
+        return ""
+    if {_k} is "medusa_gaze":
+        return ""
+    if {_k} is "medusa_zone":
+        return ""
+    if {_k} is "medusa_serpent":
+        return ""
+    if {_k} is "medusa_tail":
+        return ""
+    if {_k} is "medusa_mirror":
+        return ""
+    if {_k} is "scylla_slam":
+        return ""
+    if {_k} is "scylla_hounds":
+        return ""
+    if {_k} is "scylla_cage":
+        return ""
+    if {_k} is "scylla_maelstrom":
+        return ""
+    if {_k} is "common_warn":
+        return ""
+    if {_k} is "common_stun":
+        return ""
+    return ""
+
+function olySkName(k: text) :: text:
+    if {_k} is "minotaur_charge":
+        return "황소의 돌진"
+    if {_k} is "minotaur_frenzy":
+        return "도끼 난무"
+    if {_k} is "minotaur_quake":
+        return "지면 강타"
+    if {_k} is "minotaur_horn":
+        return "뿔 치받기"
+    if {_k} is "minotaur_rage":
+        return "광폭화"
+    if {_k} is "nemean_lion_pounce":
+        return "포식자의 도약"
+    if {_k} is "nemean_lion_roar":
+        return "사자의 포효"
+    if {_k} is "nemean_lion_hunt":
+        return "사냥 본능"
+    if {_k} is "nemean_lion_claw":
+        return "발톱 연격"
+    if {_k} is "chimera_breath":
+        return "화염 브레스"
+    if {_k} is "chimera_venom":
+        return "독성 투사체"
+    if {_k} is "chimera_spikes":
+        return "뿔가시"
+    if {_k} is "chimera_triple":
+        return "삼중 공격"
+    if {_k} is "cerberus_flame":
+        return "지옥불 숨결"
+    if {_k} is "cerberus_howl":
+        return "저승의 충격파"
+    if {_k} is "cerberus_hunt":
+        return "사냥개의 물기"
+    if {_k} is "cerberus_gate":
+        return "지옥문"
+    if {_k} is "cerberus_fury":
+        return "삼두의 분노"
+    if {_k} is "hydra_bite":
+        return "다두 연쇄 물기"
+    if {_k} is "hydra_venom":
+        return "독액 비"
+    if {_k} is "hydra_tempest":
+        return "칠두 폭풍"
+    if {_k} is "hydra_regrow":
+        return "머리 재생"
+    if {_k} is "hydra_sever":
+        return "머리 절단"
+    if {_k} is "medusa_gaze":
+        return "석화의 시선"
+    if {_k} is "medusa_zone":
+        return "석화 지대"
+    if {_k} is "medusa_serpent":
+        return "뱀머리 화살"
+    if {_k} is "medusa_tail":
+        return "꼬리 휘감기"
+    if {_k} is "medusa_mirror":
+        return "반사"
+    if {_k} is "scylla_slam":
+        return "촉수 강타"
+    if {_k} is "scylla_hounds":
+        return "여섯 개의 머리"
+    if {_k} is "scylla_cage":
+        return "촉수 울타리"
+    if {_k} is "scylla_maelstrom":
+        return "소용돌이"
+    if {_k} is "common_warn":
+        return "경고"
+    if {_k} is "common_stun":
+        return "기절"
+    return {_k}
+
+function olyBossH(id: text) :: number:
+    if {_id} is "minotaur":
+        return 5
+    if {_id} is "scylla":
+        return 2.6
+    if {_id} is "nemean_lion" or "chimera":
+        return 3.2
+    return 3.6
+
+
+# =====================================================================================
+#  2. 에폭 · 바쁨 · 쿨타임
+# =====================================================================================
+
+function olySkEp(id: text) :: number:
+    return {oly::m::%{_id}%::ep} ? 0
+
+function olySkBump(id: text):
+    set {oly::m::%{_id}%::ep} to olySkEp({_id}) + 1
+    delete {oly::rt::bbusy::%{_id}%}
+    delete {oly::rt::bbusyAt::%{_id}%}
+    delete {oly::rt::bcast::%{_id}%}
+
+# ── 보스가 아직 이 스킬을 이어가도 되는가
+function olySkOk(id: text, e: entity, ep: number) :: boolean:
+    if olySkOn({_id}, {_ep}) is not true:
+        return false
+    if {oly::m::%{_id}%::awake} is not true:
+        return false
+    if {_e} is not alive:
+        return false
+    return true
+
+# ── 엔티티 없이 (남아 있는 장판 · 지대 등)
+function olySkOn(id: text, ep: number) :: boolean:
+    if olyLive() is not true:
+        return false
+    if {oly::m::%{_id}%::alive} is not true:
+        return false
+    if olySkEp({_id}) is not {_ep}:
+        return false
+    return true
+
+# ── wait 뒤에 부른다. false 면 바쁨을 풀어 두었으니 호출한 쪽은 stop 만 하면 된다
+function olySkGo(id: text, e: entity, ep: number) :: boolean:
+    if olySkOk({_id}, {_e}, {_ep}) is true:
+        return true
+    # 끊긴 스킬의 장판 · 연출. 에폭이 바뀐 경우(잠듦/사라짐)는 그때 이미 지웠고,
+    # 다시 깨어난 뒤의 새 스킬 연출을 지우면 안 되므로 에폭이 그대로일 때(일시정지·종료)만 지운다
+    if olySkEp({_id}) is {_ep}:
+        olyCmd("kill @e[tag=olyt_%{_id}%]")
+        olyCmd("kill @e[tag=olyfx_%{_id}%]")
+    olySkEnd({_id}, {_ep})
+    return false
+
+function olySkBegin(id: text, sk: text) :: number:
+    set {oly::rt::bbusy::%{_id}%} to true
+    set {oly::rt::bbusyAt::%{_id}%} to olySec()
+    set {oly::rt::bcast::%{_id}%} to "%{_id}%_%{_sk}%"
+    olyCmd("bossbar set oly:b_%{_id}% color yellow")
+    olyBossBarNow({_id})
+    return olySkEp({_id})
+
+function olySkEnd(id: text, ep: number):
+    if olySkEp({_id}) is not {_ep}:
+        stop
+    delete {oly::rt::bbusy::%{_id}%}
+    delete {oly::rt::bbusyAt::%{_id}%}
+    delete {oly::rt::bcast::%{_id}%}
+    if {oly::m::%{_id}%::alive} is true:
+        olyCmd("bossbar set oly:b_%{_id}% color %olyBossBarColor({_id})%")
+        olyBossBarNow({_id})
+
+# ── 광폭화 등으로 줄어드는 쿨타임
+function olySkCd(id: text, k: text, sec: number) :: boolean:
+    return olyBossCd({_id}, {_k}, {_sec} * ({oly::m::%{_id}%::sk::cdm} ? 1))
+
+function olyBossBarColor(id: text) :: text:
+    if {oly::m::%{_id}%::sk::rage} is true:
+        return "purple"
+    return "red"
+
+
+# =====================================================================================
+#  3. 보스바 이름 (시전 중이면 [아이콘] 스킬명)
+# =====================================================================================
+
+function olyBossBarSet(id: text, hpv: number, mx: number):
+    set {_nm} to olyBossName({_id})
+    set {_col} to "white"
+    if {oly::m::%{_id}%::sk::rage} is true:
+        set {_col} to "red"
+    set {_s} to "[{""text"":""%{_nm}%   HP %{_hpv}% / %{_mx}%"",""color"":""%{_col}%""}"
+    if {oly::rt::bcast::%{_id}%} is set:
+        set {_k} to {oly::rt::bcast::%{_id}%}
+        set {_s} to "%{_s}%,{""text"":""     ""},{""text"":""%olyIcon({_k})%"",""font"":""oly:icons"",""color"":""white""},{""text"":"" %olySkName({_k})%"",""color"":""yellow"",""bold"":true}"
+    olyCmd("bossbar set oly:b_%{_id}% name %{_s}%]")
+
+# ── 1초를 기다리지 않고 지금 바로 갱신
+function olyBossBarNow(id: text):
+    if {oly::m::%{_id}%::awake} is not true:
+        stop
+    set {_mx} to {oly::m::%{_id}%::maxhp} ? olyBossHp({_id})
+    olyBossBarSet({_id}, {oly::m::%{_id}%::sk::hpv} ? {_mx}, {_mx})
+
+
+# =====================================================================================
+#  4. 소리 · 파티클 · 글자
+# =====================================================================================
+
+# ── 리소스팩 sounds.json 의 oly:boss.<snd>
+function olySfx(snd: text, l: location, vol: number, pitch: number):
+    olyCmd("playsound oly:boss.%{_snd}% hostile @a %x-coordinate of {_l}% %y-coordinate of {_l}% %z-coordinate of {_l}% %{_vol}% %{_pitch}%")
+
+function olyPt(p: text, l: location, dx: number, dy: number, dz: number, sp: number, n: number):
+    olyCmd("particle %{_p}% %x-coordinate of {_l}% %y-coordinate of {_l}% %z-coordinate of {_l}% %{_dx}% %{_dy}% %{_dz}% %{_sp}% %{_n}% force")
+
+# ── 근처 플레이어 자막: 큰 글씨(선택) + [아이콘] 작은 글씨
+function olyTitleNear(c: location, r: number, main: text, mcol: text, ic: text, sub: text, scol: text, ticks: number):
+    set {_at} to "execute positioned %x-coordinate of {_c}% %y-coordinate of {_c}% %z-coordinate of {_c}% run title @a[distance=..%{_r}%]"
+    olyCmd("%{_at}% times 3 %max(10, {_ticks})% 8")
+    if {_ic} is "":
+        olyCmd("%{_at}% subtitle {""text"":""%{_sub}%"",""color"":""%{_scol}%""}")
+    else:
+        olyCmd("%{_at}% subtitle [{""text"":""%olyIcon({_ic})%"",""font"":""oly:icons"",""color"":""white""},{""text"":"" %{_sub}%"",""color"":""%{_scol}%""}]")
+    olyCmd("%{_at}% title {""text"":""%{_main}%"",""color"":""%{_mcol}%"",""bold"":true}")
+
+# ── 액션바 + 아이콘 (13-ui 의 상시 액션바가 sec 초 동안 덮지 않는다)
+function olyAbIcon(p: player, ic: text, msg: text, col: text, sec: number):
+    set {oly::rt::abhold::%uuid of {_p}%} to olySec() + {_sec}
+    olyCmd("title %uuid of {_p}% actionbar [{""text"":""%olyIcon({_ic})%"",""font"":""oly:icons"",""color"":""white""},{""text"":"" %{_msg}%"",""color"":""%{_col}%"",""bold"":true}]")
+
+
+# =====================================================================================
+#  5. 연출 엔티티 (아이템 디스플레이 + 리소스팩 item_model)
+# =====================================================================================
+
+function olyFxKey(id: text) :: text:
+    return olyTeleKey("fx%{_id}%")
+
+# model = "oly:fx/ring" 같은 item_model. tint = 색(정수) 또는 -1. bill = fixed / center / vertical
+function olyFxSpawn(id: text, key: text, model: text, l: location, yaw: number, s: number, ty: number, tint: number, bill: text):
+    set {_cmd} to ""
+    if {_tint} >= 0:
+        set {_cmd} to ",""minecraft:custom_model_data"":{colors:[%{_tint}%]}"
+    olyCmd("summon minecraft:item_display %x-coordinate of {_l}% %y-coordinate of {_l}% %z-coordinate of {_l}% {Tags:[""oly"",""olyfx"",""olyfx_%{_id}%"",""olyfx_%{_key}%""],Rotation:[%{_yaw}%f,0f],billboard:""%{_bill}%"",teleport_duration:2,brightness:{sky:15,block:15},view_range:3f,shadow_radius:0f,item_display:""none"",item:{id:""minecraft:paper"",count:1,components:{""minecraft:item_model"":""%{_model}%""%{_cmd}%}},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,%{_ty}%f,0f],scale:[%{_s}%f,%{_s}%f,%{_s}%f]}}")
+
+# ── 크기(및 기울기) 보간. q = 앞으로 기울이는 각도(도) — 촉수 내려찍기 등
+function olyFxTf(key: text, sx: number, sy: number, sz: number, ty: number, q: number, dur: number):
+    set {_qa} to sin({_q} / 2)
+    set {_qw} to cos({_q} / 2)
+    olyCmd("execute as @e[tag=olyfx_%{_key}%] run data merge entity @s {start_interpolation:0,interpolation_duration:%{_dur}%,transformation:{left_rotation:[%{_qa}%f,0f,0f,%{_qw}%f],right_rotation:[0f,0f,0f,1f],translation:[0f,%{_ty}%f,0f],scale:[%{_sx}%f,%{_sy}%f,%{_sz}%f]}}")
+
+function olyFxTp(key: text, l: location, yaw: number):
+    olyCmd("tp @e[tag=olyfx_%{_key}%] %x-coordinate of {_l}% %y-coordinate of {_l}% %z-coordinate of {_l}% %{_yaw}% 0")
+
+function olyFxKill(key: text):
+    olyCmd("kill @e[tag=olyfx_%{_key}%]")
+
+# ── 바닥 데칼: 0 에서 지름 size 로 grow 틱 동안 펼쳐지고 life 틱 뒤 오므라들며 사라진다
+function olyFxDecal(id: text, model: text, c: location, size: number, tint: number, grow: number, life: number) :: text:
+    set {_k} to olyFxKey({_id})
+    set {_l} to location((x-coordinate of {_c}), (floor(y-coordinate of {_c})) + 0.09, (z-coordinate of {_c}), world of {_c})
+    olyFxSpawn({_id}, {_k}, {_model}, {_l}, random number between 0 and 360, 0, 0, {_tint}, "fixed")
+    olyFxDecalRun({_k}, {_size}, {_grow}, {_life})
+    return {_k}
+
+function olyFxDecalRun(k: text, size: number, grow: number, life: number):
+    wait 2 ticks
+    olyFxTf({_k}, {_size}, 1, {_size}, 0, 0, max(1, {_grow}))
+    if {_life} <= 0:
+        stop
+    wait olyTicks({_life})
+    olyFxTf({_k}, 0, 1, 0, 0, 0, 6)
+    wait 6 ticks
+    olyFxKill({_k})
+
+# ── 보스 머리 위 시전 아이콘 (ticks 뒤 사라짐)
+function olyFxIconAbove(id: text, e: entity, ic: text, ticks: number):
+    set {_k} to olyFxKey({_id})
+    set {_l} to (location of {_e}) ~ vector(0, olyBossH({_id}) + 1, 0)
+    olyFxSpawn({_id}, {_k}, "oly:icon/%{_ic}%", {_l}, 0, 0, 0, -1, "center")
+    wait 2 ticks
+    olyFxTf({_k}, 1.6, 1.6, 1.6, 0, 0, 4)
+    wait olyTicks({_ticks})
+    olyFxTf({_k}, 0, 0, 0, 0, 0, 4)
+    wait 4 ticks
+    olyFxKill({_k})
+
+# ── 시전 한 번: 머리 위 아이콘 + 보스바(olySkBegin 이 이미) + 시전음 + 근처 자막
+function olySkCast(id: text, e: entity, sk: text, ticks: number, sub: text):
+    set {_ic} to "%{_id}%_%{_sk}%"
+    olyFxIconAbove({_id}, {_e}, {_ic}, {_ticks})
+    olySfx("cast", location of {_e}, 1.6, 1)
+    olySfx("warn", location of {_e}, 1.2, 1)
+    if {_sub} is not "":
+        olyTitleNear(location of {_e}, 36, "", "white", {_ic}, "%olySkName({_ic})% — %{_sub}%", "gold", {_ticks})
+
+# ── 보스가 한 지점을 보게 (파츠도 같이 돌린다 → 머리 위치 연출이 맞는다)
+function olyBossFace(id: text, e: entity, l: location):
+    olyCmd("rotate %uuid of {_e}% facing %x-coordinate of {_l}% %(y-coordinate of {_e}) + 1% %z-coordinate of {_l}%")
+    olyCmd("execute as %uuid of {_e}% run function oly:boss/%{_id}%/rot")
+
+# ── 수평 방향 → Minecraft yaw (10-monsters 의 olyTeleRect 와 같은 식)
+function olyYaw(dx: number, dz: number) :: number:
+    return atan2({_dz}, 0 - {_dx})
+
+# ── 기절: AI 정지 + 받는 피해 1.5배 (olyBossDmgMul)
+function olyBossStun(id: text, e: entity, ticks: number):
+    set {_ep} to olySkEp({_id})
+    set {oly::m::%{_id}%::sk::stun} to true
+    olyCmd("data merge entity %uuid of {_e}% {NoAI:1b}")
+    olySfx("stun", location of {_e}, 1.5, 1)
+    olyFxIconAbove({_id}, {_e}, "common_stun", {_ticks})
+    olyTitleNear(location of {_e}, 36, "", "white", "common_stun", "%olyBossName({_id})% 기절! 지금 공격하라 (피해 1.5배)", "yellow", 40)
+    set {_n} to floor({_ticks} / 10)
+    loop {_n} times:
+        wait 10 ticks
+        if olySkOn({_id}, {_ep}) is not true:
+            stop
+        olyPt("minecraft:crit", (location of {_e}) ~ vector(0, olyBossH({_id}), 0), 0.8, 0.3, 0.8, 0.1, 10)
+    if olySkOn({_id}, {_ep}) is not true:
+        stop
+    delete {oly::m::%{_id}%::sk::stun}
+    if {oly::m::%{_id}%::awake} is true:
+        if {_e} is alive:
+            olyCmd("data merge entity %uuid of {_e}% {NoAI:0b}")
+
+
+# =====================================================================================
+#  6. 플레이어 상태 (석화 · 속박 · 표식) — 전부 되돌릴 수 있게
+# =====================================================================================
+
+function olyFighter(p: player) :: boolean:
+    if {_p} is not online:
+        return false
+    if {_p}'s gamemode is survival or adventure:
+        return true
+    return false
+
+function olyBossTouch(id: text, p: player):
+    set {oly::bfx::%{_id}%::touch::%uuid of {_p}%} to true
+
+# ── 수정치만 떼기 (접속 · 부활 · 재시작 · 보스 정리)
+function olyPRestore(p: player):
+    set {_u} to "%uuid of {_p}%"
+    loop "movement_speed" and "jump_strength":
+        olyCmd("attribute %{_u}% minecraft:%loop-value% modifier remove oly:boss_petrify")
+        olyCmd("attribute %{_u}% minecraft:%loop-value% modifier remove oly:boss_snare")
+    delete {oly::bfx::pet::%{_u}%}
+    delete {oly::bfx::snare::%{_u}%}
+
+# ── 보스가 사라질 때: 그 보스가 건 것만 되돌린다 (접속하지 않은 사람은 on join 에서 수정치를 뗀다)
+function olyBossRestore(id: text):
+    loop all players:
+        set {_u} to "%uuid of loop-player%"
+        if {oly::bfx::%{_id}%::touch::%{_u}%} is set:
+            olyPRestore(loop-player)
+            loop "blindness", "darkness", "nausea", "poison", "wither", "slowness", "weakness", "mining_fatigue" and "levitation":
+                olyCmd("effect clear %{_u}% minecraft:%loop-value-2%")
+            if {oly::bfx::mark::%{_u}%} is {_id}:
+                olyCmd("effect clear %{_u}% minecraft:glowing")
+                delete {oly::bfx::mark::%{_u}%}
+            extinguish loop-player
+    delete {oly::bfx::%{_id}%::touch::*}
+
+# ── 석화: 이동·점프 0 + 돌 껍질 (ticks 틱)
+function olyPetrify(id: text, p: player, ticks: number):
+    set {_u} to "%uuid of {_p}%"
+    set {oly::bfx::pet::%{_u}%} to ({oly::bfx::pet::%{_u}%} ? 0) + 1
+    set {_tok} to {oly::bfx::pet::%{_u}%}
+    olyBossTouch({_id}, {_p})
+    olyCmd("attribute %{_u}% minecraft:movement_speed modifier add oly:boss_petrify -1 add_multiplied_total")
+    olyCmd("attribute %{_u}% minecraft:jump_strength modifier add oly:boss_petrify -1 add_multiplied_total")
+    apply mining fatigue 3 to {_p} for olyTicks({_ticks})
+    olySfx("medusa.petrify", location of {_p}, 1.2, 1)
+    olyCmd("execute at %{_u}% run particle minecraft:block{block_state:""minecraft:stone""} ~ ~1 ~ 0.3 0.8 0.3 0 50 force")
+    olyAbIcon({_p}, "common_stun", "석화! 움직일 수 없다", "gray", ceil({_ticks} / 20))
+    set {_k} to olyFxKey({_id})
+    olyFxSpawn({_id}, {_k}, "oly:fx/shell", (location of {_p}) ~ vector(0, 0.625, 0), yaw of {_p}, 0, 0, -1, "fixed")
+    wait 2 ticks
+    olyFxTf({_k}, 1.15, 1, 1.15, 0, 0, 4)
+    set {_n} to floor({_ticks} / 4)
+    loop {_n} times:
+        wait 4 ticks
+        if {_p} is not online:
+            exit loop
+        if {oly::bfx::pet::%{_u}%} is not {_tok}:
+            olyFxKill({_k})
+            stop
+        olyCmd("execute at %{_u}% run tp @e[tag=olyfx_%{_k}%] ~ ~0.625 ~")
+    olyFxKill({_k})
+    if {oly::bfx::pet::%{_u}%} is {_tok}:
+        olyCmd("attribute %{_u}% minecraft:movement_speed modifier remove oly:boss_petrify")
+        olyCmd("attribute %{_u}% minecraft:jump_strength modifier remove oly:boss_petrify")
+        delete {oly::bfx::pet::%{_u}%}
+        if {_p} is online:
+            olyCmd("execute at %{_u}% run particle minecraft:block{block_state:""minecraft:stone""} ~ ~1 ~ 0.4 0.8 0.4 0 30 force")
+
+# ── 속박: 이동 80% 감소 (촉수 · 착지 · 꼬리)
+function olySnare(id: text, p: player, ticks: number):
+    set {_u} to "%uuid of {_p}%"
+    set {oly::bfx::snare::%{_u}%} to ({oly::bfx::snare::%{_u}%} ? 0) + 1
+    set {_tok} to {oly::bfx::snare::%{_u}%}
+    olyBossTouch({_id}, {_p})
+    olyCmd("attribute %{_u}% minecraft:movement_speed modifier add oly:boss_snare -0.8 add_multiplied_total")
+    olyCmd("attribute %{_u}% minecraft:jump_strength modifier add oly:boss_snare -0.6 add_multiplied_total")
+    wait olyTicks({_ticks})
+    if {oly::bfx::snare::%{_u}%} is {_tok}:
+        olyCmd("attribute %{_u}% minecraft:movement_speed modifier remove oly:boss_snare")
+        olyCmd("attribute %{_u}% minecraft:jump_strength modifier remove oly:boss_snare")
+        delete {oly::bfx::snare::%{_u}%}
+
+# ── 표식: 발광 + 머리 위 아이콘이 따라다닌다
+function olyMark(id: text, p: player, ticks: number, ic: text):
+    set {_u} to "%uuid of {_p}%"
+    set {oly::bfx::mark::%{_u}%} to {_id}
+    olyBossTouch({_id}, {_p})
+    apply glowing to {_p} for olyTicks({_ticks})
+    set {_k} to olyFxKey({_id})
+    olyFxSpawn({_id}, {_k}, "oly:icon/%{_ic}%", (location of {_p}) ~ vector(0, 2.6, 0), 0, 1.2, 0, -1, "center")
+    set {_n} to floor({_ticks} / 2)
+    loop {_n} times:
+        wait 2 ticks
+        if {_p} is not online:
+            exit loop
+        if {oly::bfx::mark::%{_u}%} is not {_id}:
+            exit loop
+        olyCmd("execute at %{_u}% run tp @e[tag=olyfx_%{_k}%] ~ ~2.6 ~")
+    olyFxKill({_k})
+    delete {oly::bfx::mark::%{_u}%}
+
+
+# =====================================================================================
+#  7. 판정 보조
+# =====================================================================================
+
+# ── 도넛: r1 < 거리 <= r2
+function olyHitRing(id: text, c: location, r1: number, r2: number, hp: number, up: number) :: number:
+    set {_n} to 0
+    loop all players in radius {_r2} + 1 around {_c}:
+        if olyFighter(loop-player) is true:
+            if olyNearXZ(location of loop-player, {_c}, {_r2}, 3) is true:
+                if olyNearXZ(location of loop-player, {_c}, {_r1}, 3) is false:
+                    damage loop-player by {_hp} / 2 * olyBossM({_id})
+                    if {_up} > 0:
+                        push loop-player upwards at speed {_up}
+                    add 1 to {_n}
+    return {_n}
+
+# ── 도넛 예고: 바깥 원은 붉게 차오르고, 안쪽 r1 은 안전하다는 뜻으로 흰 유리판을 덮는다
+function olyTeleRing(id: text, key: text, c: location, r1: number, r2: number, ticks: number):
+    olyTeleCircle({_id}, {_key}, {_c}, {_r2}, {_ticks})
+    set {_s} to {_r1} * 2
+    set {_h} to 0 - {_r1}
+    set {_y} to (floor(y-coordinate of {_c})) + 0.07
+    loop 0, 30 and 60:
+        olyCmd("summon minecraft:block_display %x-coordinate of {_c}% %{_y}% %z-coordinate of {_c}% {Tags:[""oly"",""olytele"",""olyt_%{_id}%"",""olyt_%{_key}%""],Rotation:[%loop-value%f,0f],brightness:{sky:15,block:15},block_state:{Name:""minecraft:white_stained_glass""},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[%{_h}%f,0f,%{_h}%f],scale:[%{_s}%f,0.02f,%{_s}%f]}}")
+
+function olyNearest(l: location, r: number) :: player:
+    set {_best} to 9999
+    loop all players in radius {_r} around {_l}:
+        if olyFighter(loop-player) is true:
+            set {_d} to distance between {_l} and location of loop-player
+            if {_d} < {_best}:
+                set {_best} to {_d}
+                set {_t} to loop-player
+    return {_t}
+
+function olyFarthest(l: location, r: number) :: player:
+    set {_best} to -1
+    loop all players in radius {_r} around {_l}:
+        if olyFighter(loop-player) is true:
+            set {_d} to distance between {_l} and location of loop-player
+            if {_d} > {_best}:
+                set {_best} to {_d}
+                set {_t} to loop-player
+    return {_t}
+
+# ── 싸우는 플레이어 최대 n 명 (가까운 순)
+function olyTargets(l: location, r: number, n: number) :: players:
+    loop all players in radius {_r} around {_l}:
+        if olyFighter(loop-player) is true:
+            set {_d::%uuid of loop-player%} to distance between {_l} and location of loop-player
+            set {_p::%uuid of loop-player%} to loop-player
+    set {_out::*} to {_p::*}
+    set {_k} to size of {_out::*}
+    if {_k} <= {_n}:
+        return {_out::*}
+    delete {_out::*}
+    loop {_n} times:
+        set {_best} to 9999
+        delete {_bu}
+        loop {_d::*}:
+            if loop-value-2 < {_best}:
+                set {_best} to loop-value-2
+                set {_bu} to loop-index
+        if {_bu} is set:
+            add {_p::%{_bu}%} to {_out::*}
+            delete {_d::%{_bu}%}
+    return {_out::*}
+
+# ── 기준점 주변 무작위 지점 (같은 높이)
+function olyRandAround(c: location, r: number) :: location:
+    set {_a} to random number between 0 and 360
+    set {_d} to random number between 2 and {_r}
+    return {_c} ~ vector(cos({_a}) * {_d}, 0, sin({_a}) * {_d})
+
+# ── 방향 회전 (도)
+function olyRotX(dx: number, dz: number, deg: number) :: number:
+    return {_dx} * cos({_deg}) - {_dz} * sin({_deg})
+
+function olyRotZ(dx: number, dz: number, deg: number) :: number:
+    return {_dx} * sin({_deg}) + {_dz} * cos({_deg})
+
+
+# =====================================================================================
+#  8. 10-monsters 가 부르는 훅
+# =====================================================================================
+
+# ── 소환 직후
+function olyBossFxInit(id: text):
+    olySkBump({_id})
+    delete {oly::m::%{_id}%::sk::*}
+    delete {oly::bfx::%{_id}%::touch::*}
+
+# ── 처치 · 증발 · 리셋 · 재시작 (olyBossGone)
+function olyBossFxGone(id: text):
+    olySkBump({_id})
+    delete {oly::m::%{_id}%::sk::*}
+    olyCmd("function oly:boss/%{_id}%/fx/clear")
+    olyBossRestore({_id})
+
+# ── 둥지로 돌아가 잠든다 (olyBossSleep) — 체력이 가득 차므로 광폭화 등도 되돌린다
+function olyBossFxSleep(id: text, e: entity):
+    olySkBump({_id})
+    delete {oly::m::%{_id}%::sk::*}
+    olyCmd("function oly:boss/%{_id}%/fx/clear")
+    olyCmd("attribute %uuid of {_e}% minecraft:movement_speed modifier remove oly:boss_rage")
+    olyCmd("attribute %uuid of {_e}% minecraft:movement_speed modifier remove oly:boss_hunt")
+    olyCmd("bossbar set oly:b_%{_id}% color red")
+    olyBossRestore({_id})
+
+# ── 1초마다 (깨어 있을 때): 체력 단계 전환
+function olyBossFxTick(id: text, e: entity, hpv: number):
+    set {oly::m::%{_id}%::sk::hpv} to {_hpv}
+    if olyLive() is not true:
+        stop
+    if {_id} is "minotaur":
+        olyMnPhase({_e})
+    else if {_id} is "cerberus":
+        olyCbPhase({_e})
+
+# ── 피해 배율 (on damage 에서)
+function olyBossDmgMul(id: text, v: entity) :: number:
+    if {oly::m::%{_id}%::sk::stun} is true:
+        return 1.5
+    return 1
+
+# ── 피해가 들어간 뒤 (히드라 머리 절단 등)
+function olyBossOnHit(id: text, v: entity, dmg: number):
+    if {_id} is "hydra":
+        olyHyOnHit({_v}, {_dmg})
+
+# ── 패턴 선택 (10-monsters 의 olyBossSkill 이 부른다)
+function olyBossAI(id: text, e: entity, t: player, d: number):
+    if {_id} is "minotaur":
+        olyMnAI({_e}, {_t}, {_d})
+    else if {_id} is "nemean_lion":
+        olyLnAI({_e}, {_t}, {_d})
+    else if {_id} is "chimera":
+        olyChAI({_e}, {_t}, {_d})
+    else if {_id} is "cerberus":
+        olyCbAI({_e}, {_t}, {_d})
+    else if {_id} is "hydra":
+        olyHyAI({_e}, {_t}, {_d})
+    else if {_id} is "medusa":
+        olyMdAI({_e}, {_t}, {_d})
+    else if {_id} is "scylla":
+        olyScAI({_e}, {_t}, {_d})
+
+# ── 관리자 시험: /oly skill <id> <skill>
+function olyBossHitbox(id: text) :: entity:
+    loop all entities:
+        if loop-entity has scoreboard tag "olyb_%{_id}%_hb":
+            return loop-entity
+
+function olyBossForce(id: text, sk: text, p: player) :: text:
+    if {oly::m::%{_id}%::alive} is not true:
+        return "&c%olyBossName({_id})%이(가) 나와 있지 않습니다. &7/oly boss %{_id}%"
+    set {_e} to olyBossHitbox({_id})
+    if {_e} is not set:
+        return "&c히트박스를 찾지 못했습니다."
+    if olyLive() is not true:
+        return "&c게임이 진행 중일 때만 스킬이 나갑니다."
+    olyBossWake({_id}, {_e})
+    delete {oly::rt::bbusy::%{_id}%}
+    set {_t} to olyNearest(location of {_e}, 40)
+    if {_t} is not set:
+        set {_t} to {_p}
+    set {_d} to distance between location of {_e} and location of {_t}
+    if {_id} is "minotaur":
+        return olyMnCast({_e}, {_t}, {_d}, {_sk})
+    if {_id} is "nemean_lion":
+        return olyLnCast({_e}, {_t}, {_d}, {_sk})
+    if {_id} is "chimera":
+        return olyChCast({_e}, {_t}, {_d}, {_sk})
+    if {_id} is "cerberus":
+        return olyCbCast({_e}, {_t}, {_d}, {_sk})
+    if {_id} is "hydra":
+        return olyHyCast({_e}, {_t}, {_d}, {_sk})
+    if {_id} is "medusa":
+        return olyMdCast({_e}, {_t}, {_d}, {_sk})
+    return olyScCast({_e}, {_t}, {_d}, {_sk})

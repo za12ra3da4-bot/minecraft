@@ -106,6 +106,7 @@ function olyBossGone(id: text):
     olyCmd("function oly:boss/%{_id}%/remove")
     olyCmd("bossbar remove oly:b_%{_id}%")
     olyCmd("kill @e[tag=olyt_%{_id}%]")
+    olyBossFxGone({_id})
     olyBossChunks({_id}, "remove")
 
 function olyBossChunks(id: text, mode: text):
@@ -193,6 +194,7 @@ function olyBossSpawn(id: text):
     olyCmd("bossbar set oly:b_%{_id}% color red")
     olyCmd("bossbar set oly:b_%{_id}% style notched_10")
     olyCmd("bossbar set oly:b_%{_id}% max %{_hp}%")
+    olyBossFxInit({_id})
     set {oly::m::%{_id}%::alive} to true
     set {oly::m::%{_id}%::awake} to false
     set {oly::m::%{_id}%::grown} to 3
@@ -225,6 +227,7 @@ function olyBossSleep(id: text, e: entity):
     olyCmd("data merge entity %uuid of {_e}% {NoAI:1b}")
     heal {_e}
     olyCmd("kill @e[tag=olyt_%{_id}%]")
+    olyBossFxSleep({_id}, {_e})
 
 
 # =====================================================================================
@@ -304,11 +307,16 @@ function olyBossSecond(id: text, e: entity):
     set {_mx} to {oly::m::%{_id}%::maxhp} ? olyBossHp({_id})
     olyCmd("bossbar set oly:b_%{_id}% value %{_hpv}%")
     if {oly::m::%{_id}%::awake} is true:
-        olyCmd("bossbar set oly:b_%{_id}% name ""%olyBossName({_id})%   HP %{_hpv}% / %{_mx}%""")
+        # 시전 중이면 [아이콘] 스킬명까지 (10-bossfx)
+        olyBossBarSet({_id}, {_hpv}, {_mx})
     else:
         olyCmd("bossbar set oly:b_%{_id}% name ""%olyBossName({_id})%   (잠들어 있음 - 공격하면 깨어난다)""")
     olyCmd("bossbar set oly:b_%{_id}% players @a[x=%{_x}%,y=%{_y}%,z=%{_z}%,distance=..40]")
     if {oly::m::%{_id}%::awake} is not true:
+        stop
+    # 체력 단계 전환 (광폭화 · 삼두의 분노) — 게임이 멈춰 있으면 아무것도 하지 않는다
+    olyBossFxTick({_id}, {_e}, {_hpv})
+    if olyLive() is not true:
         stop
     if {_id} is "hydra":
         olyHydraGrow({_e})
@@ -442,61 +450,17 @@ function olyDirZ(a: location, b: location) :: number:
 # =====================================================================================
 
 function olyBossSkill(id: text, e: entity, t: player, d: number):
-    if {oly::rt::bbusy::%{_id}%} is true:
+    if olyLive() is not true:
         stop
-    if {_id} is "minotaur":
-        if {_d} >= 7:
-            if {_d} <= 24:
-                if olyBossCd({_id}, "charge", 10) is true:
-                    olyMinoCharge({_e}, {_t})
-                    stop
-        if {_d} <= 6:
-            if olyBossCd({_id}, "swing", 4) is true:
-                olySkCircle({_id}, {_e}, location of {_e}, 4.5, 22, 12, 0.5, "attack")
-    else if {_id} is "nemean_lion":
-        if {_d} <= 16:
-            if olyBossCd({_id}, "pounce", 7) is true:
-                olyLionPounce({_e}, {_t})
-                stop
-        if olyBossCd({_id}, "roar", 16) is true:
-            olyRoarCircle({_id}, {_e}, 13, 30)
-    else if {_id} is "chimera":
-        if {_d} <= 11:
-            if olyBossCd({_id}, "breath", 7) is true:
-                olyChimBreath({_e}, {_t})
-                stop
-        if olyBossCd({_id}, "fangs", 9) is true:
-            olyMultiCircle({_id}, {_e}, 2.5, 22, 7, "evoker")
-    else if {_id} is "cerberus":
-        if {_d} <= 7:
-            if olyBossCd({_id}, "bite", 4) is true:
-                olySkRect({_id}, {_e}, {_t}, 5, 7, 16, 12, "attack")
-                stop
-        if olyBossCd({_id}, "howl", 14) is true:
-            olyRoarCircle({_id}, {_e}, 12, 30)
-    else if {_id} is "hydra":
-        if {_d} <= 7:
-            if olyBossCd({_id}, "slam", 5) is true:
-                olySkCircle({_id}, {_e}, location of {_e}, 6, 20, 10, 0.4, "attack")
-                stop
-        if olyBossCd({_id}, "spit", 7) is true:
-            olyMultiCircle({_id}, {_e}, 3, 24, 6, "poison")
-    else if {_id} is "medusa":
-        if {_d} <= 18:
-            if olyBossCd({_id}, "gaze", 10) is true:
-                set {oly::rt::bpose::%{_id}%} to "gaze"
-                olyMedusaGaze({_e})
-                stop
-        if olyBossCd({_id}, "volley", 6) is true:
-            olyMultiCircle({_id}, {_e}, 3, 22, 8, "arrow")
-    else if {_id} is "scylla":
-        if {_d} <= 10:
-            if olyBossCd({_id}, "slam", 5) is true:
-                olySkCircle({_id}, {_e}, location of {_e}, 9, 26, 12, 0.8, "attack")
-                stop
-        if {_d} <= 24:
-            if olyBossCd({_id}, "pull", 11) is true:
-                olyScyllaPull({_e}, {_t})
+    if {oly::rt::bbusy::%{_id}%} is true:
+        # 감시: 어떤 이유로든 15초 넘게 바쁨이 풀리지 않으면 푼다 (스킬이 영영 멈추는 것 방지)
+        if olySec() - ({oly::rt::bbusyAt::%{_id}%} ? olySec()) < 15:
+            stop
+        delete {oly::rt::bbusy::%{_id}%}
+    if {oly::m::%{_id}%::sk::stun} is true:
+        stop
+    # 보스별 고유 패턴 → 10-boss-<id>.sk (예전 공통 패턴 함수들은 그대로 두고 일부를 재사용한다)
+    olyBossAI({_id}, {_e}, {_t}, {_d})
 
 # ── 원형 강타 (보스 자리 등)
 function olySkCircle(id: text, e: entity, c: location, r: number, ticks: number, hp: number, up: number, pose: text):
@@ -717,7 +681,13 @@ function olyScyllaPull(e: entity, t: player):
                 olyAB(loop-player, "&3스킬라의 촉수에 끌려간다!", 2)
 
 # ── 히드라: 체력 75/50/25/10% 마다 목이 하나씩 자란다 (최대 7) + 부하 둘
+#    머리 절단(10-boss-hydra): 잘린 뒤 8초 동안은 자라지 않고, 그 뒤 불타고 있으면 지져짐(seared -1),
+#    아니면 하나 더(bonus +1) → 목표 머리 수 = 체력 기준 + bonus - seared (3~7)
 function olyHydraGrow(e: entity):
+    if {oly::m::hydra::sk::cutAt} is set:
+        if olySec() < {oly::m::hydra::sk::cutAt}:
+            stop
+        olyHyRegrowCheck({_e})
     set {_hp} to health of {_e}
     set {_mx} to max health of {_e}
     set {_g} to {oly::m::hydra::grown} ? 3
@@ -730,15 +700,20 @@ function olyHydraGrow(e: entity):
         set {_want} to 6
     if {_hp} <= {_mx} * 0.1:
         set {_want} to 7
+    set {_want} to {_want} + ({oly::m::hydra::sk::bonus} ? 0) - ({oly::m::hydra::sk::seared} ? 0)
+    set {_want} to min(7, max(3, {_want}))
     if {_want} <= {_g}:
         stop
     set {oly::m::hydra::grown} to {_g} + 1
     olyCmd("function oly:boss/hydra/grow_%{_g}%")
     play sound "entity.ender_dragon.growl" with volume 2 with pitch 1.4 at location of {_e}
+    olySfx("hydra.regrow", location of {_e}, 2, 1)
     olyBc("&2[히드라] &a잘린 자리에서 새 머리가 자라납니다! &7(불로 지져라 — 불타는 히드라는 피해 1.5배)")
     loop 2 times:
         spawn a bogged at location of {_e}
         add "oly" to scoreboard tags of last spawned entity
+        # 보스가 사라지면 oly:boss/hydra/fx/clear 가 함께 치운다
+        add "olyb_hydra_add" to scoreboard tags of last spawned entity
 
 
 # =====================================================================================
@@ -768,7 +743,10 @@ on damage:
     if {_id} is "hydra":
         if victim is burning:
             set {_m} to {_m} * 1.5
+    # 기절 중 1.5배 등 (10-bossfx)
+    set {_m} to {_m} * olyBossDmgMul({_id}, victim)
     set damage to damage * {_m}
+    olyBossOnHit({_id}, victim, damage)
 
 on death:
     victim has scoreboard tag "olyb_hb"

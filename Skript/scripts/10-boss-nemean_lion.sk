@@ -1,0 +1,158 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-boss-nemean_lion.sk  -  네메아의 사자: 빠른 사냥꾼
+# -------------------------------------------------------------------------------------
+#  의존: 10-bossfx, 10-monsters (화살 무효는 10-monsters 의 on damage 가 그대로 맡는다)
+#  스킬   포식자의 도약 · 사자의 포효 · 사냥 본능(표식 → 처형 도약) · 발톱 연격
+#  연출   데이터팩 oly:boss/nemean_lion/fx/{eyes,clear} · 리소스팩 oly:fx/claw, oly:fx/ring, oly:icon/nemean_lion_hunt
+# =====================================================================================
+
+on load:
+    olyModReady("boss_nemean_lion")
+
+function olyLnAI(e: entity, t: player, d: number):
+    if {_d} <= 5:
+        if olySkCd("nemean_lion", "claw", 6) is true:
+            olyLnClaw({_e}, {_t})
+            stop
+    if {_d} >= 6:
+        if {_d} <= 16:
+            if olySkCd("nemean_lion", "pounce", 8) is true:
+                olyLnPounce({_e}, location of {_t}, "pounce", 26)
+                stop
+    if olySkCd("nemean_lion", "hunt", 22) is true:
+        set {_m} to olyFarthest(location of {_e}, 28)
+        if {_m} is set:
+            olyLnHunt({_e}, {_m})
+            stop
+    if olySkCd("nemean_lion", "roar", 16) is true:
+        olyLnRoar({_e})
+
+function olyLnCast(e: entity, t: player, d: number, sk: text) :: text:
+    if {_sk} is "pounce":
+        olyLnPounce({_e}, location of {_t}, "pounce", 26)
+    else if {_sk} is "roar":
+        olyLnRoar({_e})
+    else if {_sk} is "hunt":
+        olyLnHunt({_e}, olyFarthest(location of {_e}, 28) ? {_t})
+    else if {_sk} is "claw":
+        olyLnClaw({_e}, {_t})
+    else:
+        return "&7pounce · roar · hunt · claw"
+    return "&a네메아의 사자 %{_sk}%"
+
+
+# ── 포식자의 도약: 웅크림 → 착지 원 → 도약, 원 안이면 1초 속박
+function olyLnPounce(e: entity, c: location, sk: text, tele: number):
+    set {_ep} to olySkBegin("nemean_lion", {_sk})
+    set {_k} to olyTeleKey("nemean_lion")
+    olyTeleCircle("nemean_lion", {_k}, {_c}, 3.5, {_tele})
+    olySkCast("nemean_lion", {_e}, {_sk}, {_tele}, "착지 지점에서 벗어나라")
+    olySfx("nemean_lion.growl", location of {_e}, 2.2, 1)
+    olyCmd("function oly:boss/nemean_lion/fx/eyes {c:16766720}")
+    olyBossFace("nemean_lion", {_e}, {_c})
+    wait olyTicks({_tele} - 14)
+    if olySkGo("nemean_lion", {_e}, {_ep}) is false:
+        stop
+    set {oly::rt::bpose::nemean_lion} to "attack"
+    push {_e} upwards at speed 0.85
+    push {_e} (vector from location of {_e} to {_c}) at speed 1.35
+    olyPt("minecraft:cloud", location of {_e}, 0.8, 0.1, 0.8, 0.05, 15)
+    wait 14 ticks
+    if olySkGo("nemean_lion", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k})
+    olyCmd("function oly:boss/nemean_lion/fx/unglow")
+    olyFxDecal("nemean_lion", "oly:fx/ring", {_c}, 8, 16755200, 4, 6)
+    olySfx("minotaur.stomp", {_c}, 1.4, 1.4)
+    loop all players in radius 4.5 around {_c}:
+        if olyFighter(loop-player) is true:
+            if olyNearXZ(location of loop-player, {_c}, 3.5, 3) is true:
+                damage loop-player by 12 / 2 * olyBossM("nemean_lion")
+                push loop-player upwards at speed 0.5
+                olySnare("nemean_lion", loop-player, 20)
+    olySkEnd("nemean_lion", {_ep})
+
+# ── 사자의 포효: 반경 13 장판 + 충격 고리. 실명 · 둔화 · 나약함
+function olyLnRoar(e: entity):
+    set {_ep} to olySkBegin("nemean_lion", "roar")
+    set {_c} to location of {_e}
+    set {_r} to 13
+    set {_k} to olyTeleKey("nemean_lion")
+    olyTeleCircle("nemean_lion", {_k}, {_c}, {_r}, 30)
+    olySkCast("nemean_lion", {_e}, "roar", 30, "원 밖으로 달려라!")
+    olySfx("nemean_lion.growl", {_c}, 2.5, 0.8)
+    set {oly::rt::bpose::nemean_lion} to "roar"
+    wait 30 ticks
+    if olySkGo("nemean_lion", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k})
+    olySfx("nemean_lion.roar", {_c}, 3, 0.9)
+    set {_w} to olyFxDecal("nemean_lion", "oly:fx/ring", {_c}, {_r} * 2, 16755200, 6, 4)
+    olyPt("minecraft:sonic_boom", {_c} ~ vector(0, 1.5, 0), 0, 0, 0, 0, 1)
+    loop all players in radius {_r} + 1 around {_c}:
+        if olyFighter(loop-player) is true:
+            if olyNearXZ(location of loop-player, {_c}, {_r}, 4) is true:
+                olyBossTouch("nemean_lion", loop-player)
+                apply blindness 1 to loop-player for 3 seconds
+                apply slowness 2 to loop-player for 4 seconds
+                apply weakness 1 to loop-player for 5 seconds
+                damage loop-player by 2 * olyBossM("nemean_lion")
+                push loop-player (vector from {_c} to location of loop-player) at speed 0.6
+    olySkEnd("nemean_lion", {_ep})
+
+# ── 사냥 본능: 가장 멀리 있는 사람을 5초 표식 → 사자 가속 → 그 사람의 '지금' 위치로 처형 도약
+function olyLnHunt(e: entity, m: player):
+    set {_ep} to olySkBegin("nemean_lion", "hunt")
+    set {_u} to "%uuid of {_m}%"
+    olySkCast("nemean_lion", {_e}, "hunt", 30, "%{_m}%이(가) 사냥감이 되었다 — 계속 움직여라")
+    olyAbIcon({_m}, "nemean_lion_hunt", "네가 사냥감이다! 멈추지 마라", "gold", 5)
+    olyMark("nemean_lion", {_m}, 100, "nemean_lion_hunt")
+    olyCmd("function oly:boss/nemean_lion/fx/eyes {c:16711680}")
+    olyCmd("attribute %uuid of {_e}% minecraft:movement_speed modifier add oly:boss_hunt 0.45 add_multiplied_base")
+    set target of {_e} to {_m}
+    loop 5 times:
+        olyCmd("execute as %{_u}% at @s run playsound oly:boss.nemean_lion.mark hostile @s ~ ~ ~ 1 %0.9 + loop-number * 0.08%")
+        wait 20 ticks
+        if olySkGo("nemean_lion", {_e}, {_ep}) is false:
+            olyCmd("attribute %uuid of {_e}% minecraft:movement_speed modifier remove oly:boss_hunt")
+            stop
+        if olyFighter({_m}) is false:
+            exit loop
+        set target of {_e} to {_m}
+    olyCmd("attribute %uuid of {_e}% minecraft:movement_speed modifier remove oly:boss_hunt")
+    if olyFighter({_m}) is false:
+        olyCmd("function oly:boss/nemean_lion/fx/unglow")
+        olySkEnd("nemean_lion", {_ep})
+        stop
+    # 처형 도약 — 예고는 짧다 (0.8초)
+    set {_c} to location of {_m}
+    olySkEnd("nemean_lion", {_ep})
+    olyLnPounce({_e}, {_c}, "hunt", 16)
+
+# ── 발톱 연격: 빠른 3연속 전방 할퀴기 (매번 가장 가까운 사람을 다시 조준)
+function olyLnClaw(e: entity, t: player):
+    set {_ep} to olySkBegin("nemean_lion", "claw")
+    olySkCast("nemean_lion", {_e}, "claw", 30, "")
+    set {_tt} to {_t}
+    loop 3 times:
+        set {_s} to location of {_e}
+        set {_n} to olyNearest({_s}, 10)
+        if {_n} is set:
+            set {_tt} to {_n}
+        set {_dx} to olyDirX({_s}, location of {_tt})
+        set {_dz} to olyDirZ({_s}, location of {_tt})
+        olyBossFace("nemean_lion", {_e}, location of {_tt})
+        set {_k} to olyTeleKey("nemean_lion")
+        olyTeleRect("nemean_lion", {_k}, {_s}, {_dx}, {_dz}, 3.4, 4.8, 10)
+        wait 10 ticks
+        if olySkGo("nemean_lion", {_e}, {_ep}) is false:
+            stop
+        olyTeleClear({_k})
+        set {oly::rt::bpose::nemean_lion} to "attack"
+        set {_ck} to olyFxKey("nemean_lion")
+        olyFxSpawn("nemean_lion", {_ck}, "oly:fx/claw", {_s} ~ vector({_dx} * 2.2, 1.4, {_dz} * 2.2), olyYaw({_dx}, {_dz}), 3, 0, -1, "fixed")
+        olySfx("nemean_lion.claw", {_s}, 1.8, 0.9 + loop-number * 0.1)
+        olyHitRect("nemean_lion", {_s}, {_dx}, {_dz}, 3.4, 4.8, 6)
+        wait 5 ticks
+        olyFxKill({_ck})
+    olySkEnd("nemean_lion", {_ep})

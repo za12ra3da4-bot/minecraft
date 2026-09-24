@@ -243,7 +243,7 @@ command /oly [<text>] [<text>] [<text>]:
 
         if {_a} is "mods":
             send "&6[올림포스] 모듈 로드 상태"
-            loop "config", "data", "game", "factions", "economy", "territory", "army", "city", "heroes", "gods", "bossdata", "monsters", "war", "diplomacy", "ui", "events" and "admin":
+            loop "config", "data", "game", "factions", "economy", "territory", "army", "city", "heroes", "gods", "bossdata", "monsters", "bossfx", "boss_minotaur", "boss_nemean_lion", "boss_chimera", "boss_cerberus", "boss_hydra", "boss_medusa", "boss_scylla", "war", "diplomacy", "ui", "events" and "admin":
                 if {oly::mod::%loop-value%} is true:
                     send "  &a[O] &7%loop-value%"
                 else:
@@ -284,6 +284,16 @@ command /oly [<text>] [<text>] [<text>]:
                 send "&c이미 깨어 있습니다."
                 stop
             olyBossSpawn(arg-2)
+            stop
+
+        if {_a} is "skill":
+            if olyBossList() does not contain arg-2:
+                send "&7사용법 &f/oly skill <보스> <스킬> &8(보스를 먼저 /oly boss <id> 로 소환)"
+                send "&7스킬 &f미노타우로스 charge frenzy quake horn rage &8| &f사자 pounce roar hunt claw"
+                send "&f키메라 breath venom spikes triple &8| &f케르베로스 flame howl hunt gate fury combo"
+                send "&f히드라 bite venom tempest regrow sever &8| &f메두사 gaze zone serpent tail &8| &f스킬라 slam hounds cage maelstrom"
+                stop
+            send olyBossForce(arg-2, arg-3 ? "", player)
             stop
 
         if {_a} is "event":

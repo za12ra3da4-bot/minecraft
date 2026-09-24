@@ -1,0 +1,220 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-boss-chimera.sk  -  키메라: 세 머리 (사자 · 염소 · 뱀)
+# -------------------------------------------------------------------------------------
+#  의존: 10-bossfx, 10-monsters
+#  스킬   사자 머리 화염 브레스(3갈래 훑기) · 뱀 꼬리 독성 투사체(웅덩이) · 염소 머리 뿔가시 · 삼중 공격
+#  연출   데이터팩 oly:boss/chimera/fx/{head_lion,head_goat,head_snake,breath_lion,spit_snake,bleat_goat,unglow}
+#         리소스팩 oly:fx/venom, oly:fx/pool, oly:fx/spike, oly:fx/fireball
+# =====================================================================================
+
+on load:
+    olyModReady("boss_chimera")
+
+function olyChAI(e: entity, t: player, d: number):
+    if {_d} <= 12:
+        if olySkCd("chimera", "breath", 8) is true:
+            olyChBreath({_e}, {_t})
+            stop
+    if {_d} <= 10:
+        if olySkCd("chimera", "triple", 18) is true:
+            olyChTriple({_e}, {_t})
+            stop
+    if olySkCd("chimera", "venom", 9) is true:
+        olyChVenom({_e})
+        stop
+    if {_d} <= 20:
+        if olySkCd("chimera", "spikes", 11) is true:
+            olyChSpikes({_e}, {_t})
+
+function olyChCast(e: entity, t: player, d: number, sk: text) :: text:
+    if {_sk} is "breath":
+        olyChBreath({_e}, {_t})
+    else if {_sk} is "venom":
+        olyChVenom({_e})
+    else if {_sk} is "spikes":
+        olyChSpikes({_e}, {_t})
+    else if {_sk} is "triple":
+        olyChTriple({_e}, {_t})
+    else:
+        return "&7breath · venom · spikes · triple"
+    return "&a키메라 %{_sk}%"
+
+
+# ── 사자 머리 · 화염 브레스: 왼쪽 → 가운데 → 오른쪽 차례로 훑는다
+function olyChBreath(e: entity, t: player):
+    set {_ep} to olySkBegin("chimera", "breath")
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    olyCmd("function oly:boss/chimera/fx/head_lion {c:16744448}")
+    olySkCast("chimera", {_e}, "breath", 22, "불길이 훑는다 — 옆이 아니라 뒤로!")
+    set {_i} to 0
+    loop -35, 0 and 35:
+        add 1 to {_i}
+        set {_ax::%{_i}%} to olyRotX({_dx}, {_dz}, loop-value)
+        set {_az::%{_i}%} to olyRotZ({_dx}, {_dz}, loop-value)
+        set {_k::%{_i}%} to olyTeleKey("chimera")
+        olyTeleRect("chimera", {_k::%{_i}%}, {_s}, {_ax::%{_i}%}, {_az::%{_i}%}, 4, 11, 22 + ({_i} - 1) * 7)
+    wait 18 ticks
+    set {oly::rt::bpose::chimera} to "breath"
+    wait 4 ticks
+    olySfx("chimera.breath", {_s}, 2, 1)
+    loop 3 times:
+        if olySkGo("chimera", {_e}, {_ep}) is false:
+            stop
+        set {_i} to loop-number
+        olyTeleClear({_k::%{_i}%})
+        olyBossFace("chimera", {_e}, {_s} ~ vector({_ax::%{_i}%} * 6, 0, {_az::%{_i}%} * 6))
+        loop 3 times:
+            olyCmd("function oly:boss/chimera/fx/breath_lion")
+            wait 2 ticks
+        loop all players in radius 13 around {_s}:
+            if olyFighter(loop-player) is true:
+                if olyInRect(location of loop-player, {_s}, {_ax::%{_i}%}, {_az::%{_i}%}, 4, 11) is true:
+                    olyBossTouch("chimera", loop-player)
+                    ignite loop-player for 4 seconds
+                    damage loop-player by 7 / 2 * olyBossM("chimera")
+        wait 1 tick
+    olyCmd("function oly:boss/chimera/fx/unglow")
+    olySkEnd("chimera", {_ep})
+
+# ── 뱀 꼬리 · 독성 투사체: 최대 3명 발밑으로 독 덩어리 → 5초 웅덩이
+function olyChVenom(e: entity):
+    set {_ep} to olySkBegin("chimera", "venom")
+    olyCmd("function oly:boss/chimera/fx/head_snake {c:5635925}")
+    olySkCast("chimera", {_e}, "venom", 16, "독 웅덩이를 피하라")
+    olySfx("chimera.hiss", location of {_e}, 2, 1)
+    set {_ts::*} to olyTargets(location of {_e}, 18, 3)
+    wait 16 ticks
+    if olySkGo("chimera", {_e}, {_ep}) is false:
+        stop
+    set {oly::rt::bpose::chimera} to "attack"
+    olyCmd("function oly:boss/chimera/fx/spit_snake")
+    loop {_ts::*}:
+        olyVenomShot("chimera", {_e}, {_ep}, (location of {_e}) ~ vector(0, olyBossH("chimera") * 0.8, 0), location of loop-value, 2.8, 5635925)
+    wait 30 ticks
+    olyCmd("function oly:boss/chimera/fx/unglow")
+    olySkEnd("chimera", {_ep})
+
+# ── 공용(키메라 · 히드라): 독 덩어리 한 발 — 포물선 비행 → 웅덩이 5초
+function olyVenomShot(id: text, e: entity, ep: number, a: location, c: location, r: number, tint: number):
+    set {_k} to olyTeleKey({_id})
+    olyTeleCircle({_id}, {_k}, {_c}, {_r}, 24)
+    set {_fk} to olyFxKey({_id})
+    olyFxSpawn({_id}, {_fk}, "oly:fx/venom", {_a}, 0, 1.2, 0, -1, "fixed")
+    olySfx("%{_id}%.spit", {_a}, 1.5, 1)
+    loop 12 times:
+        wait 2 ticks
+        if olySkOn({_id}, {_ep}) is not true:
+            olyFxKill({_fk})
+            olyTeleClear({_k})
+            stop
+        set {_f} to loop-number / 12
+        set {_x} to (x-coordinate of {_a}) + ((x-coordinate of {_c}) - (x-coordinate of {_a})) * {_f}
+        set {_z} to (z-coordinate of {_a}) + ((z-coordinate of {_c}) - (z-coordinate of {_a})) * {_f}
+        set {_y} to (y-coordinate of {_a}) + ((y-coordinate of {_c}) - (y-coordinate of {_a})) * {_f} + sin({_f} * 180) * 4
+        olyFxTp({_fk}, location({_x}, {_y}, {_z}, world of {_c}), loop-number * 30)
+        olyPt("minecraft:item_slime", location({_x}, {_y}, {_z}, world of {_c}), 0.1, 0.1, 0.1, 0, 2)
+    olyFxKill({_fk})
+    olyTeleClear({_k})
+    olySfx("%{_id}%.splat", {_c}, 1.6, 1)
+    olyFxDecal({_id}, "oly:fx/pool", {_c}, {_r} * 2, {_tint}, 3, 100)
+    olyHitCircle({_id}, {_c}, {_r}, 6, 0)
+    loop 5 times:
+        loop all players in radius {_r} + 1 around {_c}:
+            if olyFighter(loop-player) is true:
+                if olyNearXZ(location of loop-player, {_c}, {_r}, 3) is true:
+                    olyBossTouch({_id}, loop-player)
+                    apply poison 2 to loop-player for 2 seconds
+        olyPt("minecraft:dust{color:[0.35,0.85,0.2],scale:1.6}", {_c} ~ vector(0, 0.3, 0), {_r} / 2, 0.2, {_r} / 2, 0, 12)
+        wait 20 ticks
+        if olySkOn({_id}, {_ep}) is not true:
+            stop
+
+# ── 염소 머리 · 뿔가시: 목표 방향으로 가시 줄기가 차례로 솟는다
+function olyChSpikes(e: entity, t: player):
+    set {_ep} to olySkBegin("chimera", "spikes")
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    olyCmd("function oly:boss/chimera/fx/head_goat {c:11141375}")
+    olyCmd("function oly:boss/chimera/fx/bleat_goat")
+    olySfx("chimera.bleat", {_s}, 2, 1)
+    olySkCast("chimera", {_e}, "spikes", 20, "땅이 솟는다 — 줄에서 옆으로")
+    loop 6 times:
+        set {_i} to loop-number - 1
+        set {_p::%loop-number%} to {_s} ~ vector({_dx} * (2.5 + {_i} * 2.3), 0, {_dz} * (2.5 + {_i} * 2.3))
+        set {_k::%loop-number%} to olyTeleKey("chimera")
+        olyTeleCircle("chimera", {_k::%loop-number%}, {_p::%loop-number%}, 1.7, 20 + {_i} * 4)
+    wait 20 ticks
+    loop 6 times:
+        if olySkGo("chimera", {_e}, {_ep}) is false:
+            stop
+        set {_c} to {_p::%loop-number%}
+        olyTeleClear({_k::%loop-number%})
+        set {_sk} to olyFxKey("chimera")
+        olyFxSpawn("chimera", {_sk}, "oly:fx/spike", {_c} ~ vector(0, 0.5, 0), random number between 0 and 360, 0, 0, -1, "fixed")
+        olyChSpikeLife({_sk})
+        olySfx("chimera.spike", {_c}, 1.5, 1)
+        olyHitCircle("chimera", {_c}, 1.7, 8, 0.9)
+        wait 4 ticks
+    olyCmd("function oly:boss/chimera/fx/unglow")
+    olySkEnd("chimera", {_ep})
+
+function olyChSpikeLife(k: text):
+    wait 2 ticks
+    olyFxTf({_k}, 1.8, 2.2, 1.8, 0.4, 0, 3)
+    wait 24 ticks
+    olyFxTf({_k}, 1.8, 0, 1.8, -0.6, 0, 6)
+    wait 6 ticks
+    olyFxKill({_k})
+
+# ── 삼중 공격: 앞(사자 물기) + 주변 원(염소 들이받기) + 뒤(뱀 꼬리 독침) 동시에
+function olyChTriple(e: entity, t: player):
+    set {_ep} to olySkBegin("chimera", "triple")
+    set {_s} to location of {_e}
+    set {_dx} to olyDirX({_s}, location of {_t})
+    set {_dz} to olyDirZ({_s}, location of {_t})
+    olyCmd("function oly:boss/chimera/fx/head_lion {c:16744448}")
+    olyCmd("function oly:boss/chimera/fx/head_goat {c:11141375}")
+    olyCmd("function oly:boss/chimera/fx/head_snake {c:5635925}")
+    olySkCast("chimera", {_e}, "triple", 30, "앞 · 주변 · 뒤가 동시에 — 옆으로 빠져라")
+    set {_k1} to olyTeleKey("chimera")
+    set {_k2} to olyTeleKey("chimera")
+    set {_k3} to olyTeleKey("chimera")
+    olyTeleRect("chimera", {_k1}, {_s}, {_dx}, {_dz}, 4, 8, 30)
+    olyTeleCircle("chimera", {_k2}, {_s}, 4, 30)
+    olyTeleRect("chimera", {_k3}, {_s}, 0 - {_dx}, 0 - {_dz}, 3, 9, 30)
+    olySfx("chimera.hiss", {_s}, 2, 0.8)
+    wait 24 ticks
+    set {oly::rt::bpose::chimera} to "attack"
+    wait 6 ticks
+    if olySkGo("chimera", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k1})
+    olyTeleClear({_k2})
+    olyTeleClear({_k3})
+    olySfx("chimera.breath", {_s}, 1.4, 1.3)
+    olySfx("chimera.bleat", {_s}, 2, 0.8)
+    olySfx("chimera.spit", {_s}, 2, 0.8)
+    olyCmd("function oly:boss/chimera/fx/breath_lion")
+    olyCmd("function oly:boss/chimera/fx/spit_snake")
+    loop all players in radius 12 around {_s}:
+        if olyFighter(loop-player) is true:
+            set {_pl} to location of loop-player
+            if olyInRect({_pl}, {_s}, {_dx}, {_dz}, 4, 8) is true:
+                olyBossTouch("chimera", loop-player)
+                damage loop-player by 10 / 2 * olyBossM("chimera")
+                ignite loop-player for 2 seconds
+            if olyNearXZ({_pl}, {_s}, 4, 3) is true:
+                damage loop-player by 6 / 2 * olyBossM("chimera")
+                push loop-player (vector from {_s} to {_pl}) at speed 1.1
+                push loop-player upwards at speed 0.4
+            if olyInRect({_pl}, {_s}, 0 - {_dx}, 0 - {_dz}, 3, 9) is true:
+                olyBossTouch("chimera", loop-player)
+                damage loop-player by 4 / 2 * olyBossM("chimera")
+                apply poison 3 to loop-player for 4 seconds
+    olyFxDecal("chimera", "oly:fx/ring", {_s}, 8, 16744448, 3, 4)
+    wait 6 ticks
+    olyCmd("function oly:boss/chimera/fx/unglow")
+    olySkEnd("chimera", {_ep})

@@ -257,6 +257,7 @@ function olyHelp(p: player):
     send "  &f/oly mods &8- &7모듈 로드 상태" to {_p}
     send "  &f/oly log &8- &7게임 기록" to {_p}
     send "  &f/oly boss [id] &8- &7보스 일정 / 즉시 소환" to {_p}
+    send "  &f/oly skill <id> <스킬> &8- &7보스 스킬 즉시 시전 (시험용)" to {_p}
     send "  &f/oly event <id> &8- &7신탁 사건 즉시 발생" to {_p}
     send "  &f/oly join <플레이어> <세력> &8| &f/oly leader <세력> <플레이어>" to {_p}
     send "  &f/oly res <세력> <자원>:<양> &8| &f/oly renown <세력> <양> &8| &f/oly war <a> <b>" to {_p}

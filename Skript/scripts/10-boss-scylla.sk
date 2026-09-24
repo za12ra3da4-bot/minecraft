@@ -1,0 +1,207 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-boss-scylla.sk  -  스킬라: 촉수와 개 머리 여섯, 지역 장악
+# -------------------------------------------------------------------------------------
+#  의존: 10-bossfx, 10-monsters
+#  스킬   촉수 강타(최대 4명 동시) · 여섯 개의 머리(최대 6명 동시) · 촉수 울타리(8초 영역 제한) · 소용돌이
+#  연출   데이터팩 oly:boss/scylla/fx/{arm_0..7, dog_0..5, eyes, unglow} (spawn.mcfunction 의 파츠 순서)
+#         리소스팩 oly:fx/tentacle, oly:fx/whirlpool, oly:fx/ring
+# =====================================================================================
+
+on load:
+    olyModReady("boss_scylla")
+
+function olyScAI(e: entity, t: player, d: number):
+    if olySkCd("scylla", "cage", 26) is true:
+        olyScCage({_e})
+        stop
+    if olySkCd("scylla", "hounds", 9) is true:
+        olyScHounds({_e})
+        stop
+    if {_d} <= 20:
+        if olySkCd("scylla", "slam", 8) is true:
+            olyScSlam({_e})
+            stop
+    if {_d} <= 14:
+        if olySkCd("scylla", "maelstrom", 16) is true:
+            olyScMaelstrom({_e})
+            stop
+    if {_d} <= 8:
+        if olySkCd("scylla", "crush", 5) is true:
+            olySkCircle("scylla", {_e}, location of {_e}, 7, 22, 10, 0.6, "attack")
+
+function olyScCast(e: entity, t: player, d: number, sk: text) :: text:
+    if {_sk} is "slam":
+        olyScSlam({_e})
+    else if {_sk} is "hounds":
+        olyScHounds({_e})
+    else if {_sk} is "cage":
+        olyScCage({_e})
+    else if {_sk} is "maelstrom":
+        olyScMaelstrom({_e})
+    else:
+        return "&7slam · hounds · cage · maelstrom"
+    return "&a스킬라 %{_sk}%"
+
+
+# ── 촉수 한 개: 땅에서 솟았다가(rise) → 앞으로 내려찍고(slam) → 가라앉는다
+function olyScTentacle(k: text, rise: number, hold: number):
+    wait 2 ticks
+    olyFxTf({_k}, 2.4, 2.4, 2.4, 0.9, 0, {_rise})
+    wait olyTicks({_rise} + {_hold})
+    olyFxTf({_k}, 2.4, 2.4, 2.4, 0.2, 80, 3)
+    wait 16 ticks
+    olyFxTf({_k}, 2.4, 0, 2.4, -1, 80, 8)
+    wait 8 ticks
+    olyFxKill({_k})
+
+# ── 촉수 강타: 최대 4명에게 동시에, 사람을 지나는 방사 방향 직선
+function olyScSlam(e: entity):
+    set {_ep} to olySkBegin("scylla", "slam")
+    set {_s} to location of {_e}
+    set {_ts::*} to olyTargets({_s}, 22, 4)
+    olySkCast("scylla", {_e}, "slam", 26, "촉수가 내려친다 — 줄에서 벗어나라")
+    set {_i} to 0
+    loop {_ts::*}:
+        add 1 to {_i}
+        set {_pl} to location of loop-value
+        set {_dx::%{_i}%} to olyDirX({_s}, {_pl})
+        set {_dz::%{_i}%} to olyDirZ({_s}, {_pl})
+        set {_st::%{_i}%} to {_pl} ~ vector(0 - {_dx::%{_i}%} * 4, 0, 0 - {_dz::%{_i}%} * 4)
+        set {_k::%{_i}%} to olyTeleKey("scylla")
+        olyTeleRect("scylla", {_k::%{_i}%}, {_st::%{_i}%}, {_dx::%{_i}%}, {_dz::%{_i}%}, 2.8, 8, 26)
+        set {_fk} to olyFxKey("scylla")
+        olyFxSpawn("scylla", {_fk}, "oly:fx/tentacle", {_st::%{_i}%}, olyYaw({_dx::%{_i}%}, {_dz::%{_i}%}), 0, 0, -1, "fixed")
+        olyScTentacle({_fk}, 12, 12)
+        olyCmd("function oly:boss/scylla/fx/arm_%{_i} - 1% {c:43690}")
+    olySfx("scylla.cage", {_s}, 2, 1.2)
+    wait 26 ticks
+    if olySkGo("scylla", {_e}, {_ep}) is false:
+        stop
+    set {oly::rt::bpose::scylla} to "attack"
+    loop {_i} times:
+        olyTeleClear({_k::%loop-number%})
+        olySfx("scylla.slam", {_st::%loop-number%}, 1.8, 1)
+        olyPt("minecraft:splash", {_st::%loop-number%} ~ vector({_dx::%loop-number%} * 4, 0.3, {_dz::%loop-number%} * 4), 1.2, 0.2, 1.2, 0.3, 40)
+        loop all players in radius 10 around {_st::%loop-number%}:
+            if olyFighter(loop-player) is true:
+                if olyInRect(location of loop-player, {_st::%loop-number%}, {_dx::%loop-number%}, {_dz::%loop-number%}, 2.8, 8) is true:
+                    damage loop-player by 9 / 2 * olyBossM("scylla")
+                    push loop-player upwards at speed 0.7
+    wait 6 ticks
+    olyCmd("function oly:boss/scylla/fx/unglow")
+    olySkEnd("scylla", {_ep})
+
+# ── 여섯 개의 머리: 최대 6명(모자라면 주변 무작위)을 동시에 문다 — 예고 0.8초
+function olyScHounds(e: entity):
+    set {_ep} to olySkBegin("scylla", "hounds")
+    set {_s} to location of {_e}
+    set {_ts::*} to olyTargets({_s}, 20, 6)
+    loop {_ts::*}:
+        add location of loop-value to {_c::*}
+    loop (6 - size of {_c::*}) times:
+        add olyRandAround({_s}, 8) to {_c::*}
+    olySkCast("scylla", {_e}, "hounds", 16, "여섯 개의 머리가 동시에 문다!")
+    set {_i} to 0
+    loop {_c::*}:
+        add 1 to {_i}
+        set {_k::%{_i}%} to olyTeleKey("scylla")
+        olyTeleCircle("scylla", {_k::%{_i}%}, loop-value, 2, 16)
+        olyCmd("function oly:boss/scylla/fx/dog_%{_i} - 1% {c:16733525}")
+    olySfx("scylla.bark", {_s}, 2.2, 0.8)
+    wait 16 ticks
+    if olySkGo("scylla", {_e}, {_ep}) is false:
+        stop
+    set {oly::rt::bpose::scylla} to "attack"
+    set {_i} to 0
+    loop {_c::*}:
+        add 1 to {_i}
+        olyTeleClear({_k::%{_i}%})
+        olyPt("minecraft:crit", loop-value ~ vector(0, 0.8, 0), 0.7, 0.4, 0.7, 0.3, 14)
+        olyHitCircle("scylla", loop-value, 2, 6, 0)
+    olySfx("scylla.bark", {_s}, 2.2, 1.1)
+    olySfx("scylla.bark", {_s}, 2.2, 0.6)
+    wait 4 ticks
+    olyCmd("function oly:boss/scylla/fx/unglow")
+    olySkEnd("scylla", {_ep})
+
+# ── 촉수 울타리: 반경 10 고리에 촉수 8개. 8초간 고리 밖(10~22)은 피해 + 안으로 밀려난다
+function olyScCage(e: entity):
+    set {_ep} to olySkBegin("scylla", "cage")
+    set {_c} to location of {_e}
+    set {_r} to 10
+    set {_k} to olyTeleKey("scylla")
+    olyTeleRing("scylla", {_k}, {_c}, {_r}, {_r} + 6, 30)
+    olySkCast("scylla", {_e}, "cage", 30, "고리 안에 머물러라 — 밖은 조여든다")
+    olySfx("scylla.cage", {_c}, 2.5, 1)
+    loop 8 times:
+        set {_a} to loop-number * 45
+        set {_p} to {_c} ~ vector(cos({_a}) * {_r}, 0, sin({_a}) * {_r})
+        set {_fk::%loop-number%} to olyFxKey("scylla")
+        olyFxSpawn("scylla", {_fk::%loop-number%}, "oly:fx/tentacle", {_p}, olyYaw(0 - cos({_a}), 0 - sin({_a})), 0, 0, -1, "fixed")
+    wait 2 ticks
+    loop 8 times:
+        olyFxTf({_fk::%loop-number%}, 2.6, 3, 2.6, 1, 0, 26)
+    set {_ring} to olyFxDecal("scylla", "oly:fx/ring", {_c}, {_r} * 2, 2254540, 26, 0)
+    wait 28 ticks
+    if olySkGo("scylla", {_e}, {_ep}) is false:
+        stop
+    olyTeleClear({_k})
+    # 울타리가 서 있는 동안 스킬라는 다른 공격을 한다 (바쁨 해제)
+    olySkEnd("scylla", {_ep})
+    loop 16 times:
+        if olySkOn("scylla", {_ep}) is not true:
+            exit loop
+        loop all players in radius 22 around {_c}:
+            if olyFighter(loop-player) is true:
+                if olyNearXZ(location of loop-player, {_c}, {_r}, 4) is false:
+                    olyBossTouch("scylla", loop-player)
+                    damage loop-player by 1 * olyBossM("scylla")
+                    push loop-player (vector from location of loop-player to {_c}) at speed 0.8
+                    apply slowness 1 to loop-player for 1 second
+                    olyAbIcon(loop-player, "scylla_cage", "촉수 울타리 밖 — 안으로 들어가라!", "aqua", 1)
+        loop 8 times:
+            set {_a} to loop-number-2 * 45
+            olyPt("minecraft:bubble_pop", {_c} ~ vector(cos({_a}) * {_r}, 0.5, sin({_a}) * {_r}), 0.4, 0.4, 0.4, 0.02, 6)
+        wait 10 ticks
+    loop 8 times:
+        olyFxTf({_fk::%loop-number%}, 2.6, 0, 2.6, -1, 0, 10)
+    olyFxTf({_ring}, 0, 1, 0, 0, 0, 10)
+    wait 10 ticks
+    loop 8 times:
+        olyFxKill({_fk::%loop-number%})
+    olyFxKill({_ring})
+
+# ── 소용돌이: 2초간 반경 14 를 빨아들인 뒤 중심 반경 4 내려찍기
+function olyScMaelstrom(e: entity):
+    set {_ep} to olySkBegin("scylla", "maelstrom")
+    set {_c} to location of {_e}
+    olySkCast("scylla", {_e}, "maelstrom", 20, "소용돌이 — 바깥으로 달려라!")
+    olySfx("scylla.whirl", {_c}, 2.5, 1)
+    set {_w} to olyFxKey("scylla")
+    set {_gl} to location((x-coordinate of {_c}), (floor(y-coordinate of {_c})) + 0.1, (z-coordinate of {_c}), world of {_c})
+    olyFxSpawn("scylla", {_w}, "oly:fx/whirlpool", {_gl}, 0, 0, 0, -1, "fixed")
+    wait 2 ticks
+    olyFxTf({_w}, 28, 1, 28, 0, 0, 18)
+    set {_k} to olyTeleKey("scylla")
+    olyTeleCircle("scylla", {_k}, {_c}, 4, 60)
+    set {_yaw} to 0
+    loop 15 times:
+        wait 4 ticks
+        if olySkGo("scylla", {_e}, {_ep}) is false:
+            stop
+        subtract 24 from {_yaw}
+        olyFxTp({_w}, {_gl}, {_yaw})
+        loop all players in radius 15 around {_c}:
+            if olyFighter(loop-player) is true:
+                if olyNearXZ(location of loop-player, {_c}, 14, 4) is true:
+                    push loop-player (vector from location of loop-player to {_c}) at speed 0.2
+        olyPt("minecraft:bubble", {_c} ~ vector(0, 0.4, 0), 5, 0.3, 5, 0.1, 30)
+    olyTeleClear({_k})
+    set {oly::rt::bpose::scylla} to "attack"
+    olySfx("scylla.slam", {_c}, 2.5, 0.8)
+    olyPt("minecraft:splash", {_c} ~ vector(0, 0.5, 0), 3, 0.5, 3, 0.4, 120)
+    olyHitCircle("scylla", {_c}, 4, 12, 0.6)
+    olyFxTf({_w}, 0, 1, 0, 0, 0, 10)
+    wait 10 ticks
+    olyFxKill({_w})
+    olySkEnd("scylla", {_ep})
