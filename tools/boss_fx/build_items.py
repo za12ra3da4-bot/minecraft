@@ -11,8 +11,8 @@ import copy
 import json
 import os
 
-from items3d import BUILDERS
-from items_art import ITEMS, hoplon_back, hoplon_face
+from illus_items import SPRITES, hoplon_back, hoplon_face
+from items_art import ITEMS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..", "..", "resourcepack", "olympus_pack", "assets")
@@ -48,8 +48,8 @@ def simple(name, parent):
 
 
 def shield_models():
-    tex("hoplon_face", hoplon_face(64))
-    tex("hoplon_back", hoplon_back(64))
+    tex("hoplon_face", hoplon_face(128))
+    tex("hoplon_back", hoplon_back(128))
     rim = {"uv": [0, 7, 1, 9], "texture": "#back"}
     els = [
         # 앞 · 뒤 판 (원형은 텍스처 투명도로)
@@ -73,10 +73,17 @@ def shield_models():
 
 
 def entry_for(key, kind):
-    """입체 모델(items3d.BUILDERS 가 models/gear/<이름>.json 을 쓴다)을 상태별로 묶는다"""
-    if kind in ("handheld", "trident", "generated"):
+    """일러스트 스프라이트(128px) 를 바닐라와 같은 부모 모델(손 자세)로 감싼다"""
+    if kind in ("handheld", "trident"):
+        simple(key, "minecraft:item/handheld")
+        return ref(key)
+    if kind == "generated":
+        simple(key, "minecraft:item/generated")
         return ref(key)
     if kind == "bow":
+        simple(key, "minecraft:item/bow")
+        for i in range(3):
+            simple(f"{key}_pulling_{i}", "minecraft:item/bow")
         return {"type": "minecraft:condition", "property": "minecraft:using_item",
                 "on_false": ref(key),
                 "on_true": {"type": "minecraft:range_dispatch", "property": "minecraft:use_duration", "scale": 0.05,
@@ -84,6 +91,10 @@ def entry_for(key, kind):
                                         {"threshold": 0.9, "model": ref(f"{key}_pulling_2")}],
                             "fallback": ref(f"{key}_pulling_0")}}
     if kind == "crossbow":
+        simple(key, "minecraft:item/crossbow")
+        for i in range(3):
+            simple(f"{key}_pulling_{i}", "minecraft:item/crossbow")
+        simple(f"{key}_arrow", "minecraft:item/crossbow")
         return {"type": "minecraft:select", "property": "minecraft:charge_type",
                 "cases": [{"when": "arrow", "model": ref(f"{key}_arrow")},
                           {"when": "rocket", "model": ref(f"{key}_arrow")}],
@@ -94,6 +105,8 @@ def entry_for(key, kind):
                                                      {"threshold": 1.0, "model": ref(f"{key}_pulling_2")}],
                                          "fallback": ref(f"{key}_pulling_0")}}}
     if kind == "spear":
+        simple(key, "minecraft:item/generated")
+        simple(f"{key}_in_hand", "minecraft:item/spear_in_hand")
         return {"type": "minecraft:select", "property": "minecraft:display_context",
                 "cases": [{"when": ["gui", "ground", "fixed", "on_shelf"], "model": ref(key)}],
                 "fallback": ref(f"{key}_in_hand")}
@@ -105,14 +118,15 @@ def entry_for(key, kind):
 
 
 def build():
-    # 예전 평면 스프라이트 정리 (방패 텍스처만 남긴다)
-    gdir = os.path.join(ROOT, "oly", "textures", "item", "gear")
-    if os.path.isdir(gdir):
-        for f in os.listdir(gdir):
-            if not f.startswith("hoplon"):
-                os.remove(os.path.join(gdir, f))
-    for name, fn in BUILDERS.items():
-        fn()
+    # 예전 입체 모델 텍스처 정리 → 일러스트 스프라이트 (128px)
+    import shutil
+    shutil.rmtree(os.path.join(ROOT, "oly", "textures", "item", "gear3d"), ignore_errors=True)
+    mdir = os.path.join(ROOT, "oly", "models", "gear")
+    if os.path.isdir(mdir):
+        for f in os.listdir(mdir):
+            os.remove(os.path.join(mdir, f))
+    for name, fn in SPRITES.items():
+        tex(name, fn())
     by_base = {}
     for key, (base, cmd, kind) in ITEMS.items():
         by_base.setdefault(base, []).append((cmd, key, entry_for(key, kind)))

@@ -5,8 +5,7 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 
 from icons import ICONS, render
-from items3d import BUILDERS
-from render_item import render_model
+from illus_items import SPRITES
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PACK = os.path.join(HERE, "..", "..", "resourcepack", "olympus_pack", "assets", "oly")
@@ -47,8 +46,9 @@ def main():
     lf = ImageFont.truetype(FONT, 11)
     draw.text((20, 14), "Olympus resource pack — boss skill expansion (added files only)", font=ImageFont.truetype(FONTB, 26), fill=GOLD)
     y = 60
-    y = section(draw, y, "Skill icons 64x64 (item) + 32x32 (font)  →  font oly:icons (bossbar / title / actionbar) + item model oly:icon/<name> (floating over the boss)", W)
-    icons = [(f"{b[:5]}_{k}", render(b, fn, i)) for i, (b, k, fn, _) in enumerate(ICONS)]
+    y = section(draw, y, "Skill icons (illustrated) 64x64 item + 32x32 font  →  font oly:icons (bossbar / title / actionbar) + item model oly:icon/<name> (floating over the boss)", W)
+    icons = [(f"{b[:5]}_{k}", Image.open(os.path.join(PACK, "textures", "item", "icon", f"{b}_{k}.png")).convert("RGBA"))
+             for i, (b, k, fn, _) in enumerate(ICONS)]
     y = grid(canvas, draw, y, icons, 136, 2, W, lf)
     y = section(draw, y, "Skill effect textures  →  models oly:fx/<name> (item_display decals, projectiles, tentacles, stone shell)", W)
     fx = []
@@ -57,18 +57,9 @@ def main():
         s = 96 // im.width if im.width <= 96 else 1
         fx.append((os.path.basename(p)[:-4], im.resize((im.width * max(1, s) // 1, im.height * max(1, s) // 1), Image.NEAREST)))
     y = grid(canvas, draw, y, fx, 116, 1, W, lf)
-    y = section(draw, y, "Player items — 3D models (cuboids)  →  custom_model_data 7101-7404 on the vanilla item  (inventory view / 3-4 view)", W)
-    items = []
-    for n in BUILDERS:
-        mp = os.path.join(PACK, "models", "gear", n + ".json")
-        a = render_model(mp, 104, "gui")
-        b = render_model(mp, 104, "34", yaw=-35, pitch=20)
-        im = Image.new("RGBA", (104, 104), (0, 0, 0, 0))
-        im.alpha_composite(a.resize((66, 66), Image.LANCZOS), (0, 0))
-        im.alpha_composite(b.resize((66, 66), Image.LANCZOS), (38, 38))
-        items.append((n, im))
-    for n in ("hoplon", "hoplon_blocking"):
-        items.append((n, render_model(os.path.join(PACK, "models", "gear", n + ".json"), 104, "34", yaw=150, pitch=20)))
+    y = section(draw, y, "Player items — 128px illustrations  →  custom_model_data 7101-7404 on the vanilla item", W)
+    items = [(n, Image.open(os.path.join(PACK, "textures", "item", "gear", n + ".png")).convert("RGBA")) for n in SPRITES]
+    items += [(n, Image.open(os.path.join(PACK, "textures", "item", "gear", n + ".png")).convert("RGBA")) for n in ("hoplon_face", "hoplon_back")]
     y = grid(canvas, draw, y, items, 136, 1, W, lf)
     y = section(draw, y, "Menu windows (font oly:gui over the chest)  —  Olympus menu 6 rows = temple facade  |  other menus 3/4/6 rows", W)
     x = 24
