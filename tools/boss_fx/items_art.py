@@ -59,8 +59,9 @@ def guard(d, c, a, b, half, th):
     poly(d, pts)
 
 
-def bake(fn):
-    sh = Sheet(32)
+def bake(fn, size=64):
+    """플레이어 아이템은 64px (GUI 배율 4 에서 1:1)"""
+    sh = Sheet(size)
     fn(sh)
     return sh.bake()
 

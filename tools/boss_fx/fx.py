@@ -341,6 +341,25 @@ def box(frm, to, uv=(0, 0, 16, 16), tint=False, rot=None, shade=False, faces="al
     return e
 
 
+def mirror_z(elements):
+    """모델을 앞뒤로 뒤집는다 (z → 16 - z). 게임의 item_display 는 모델을 Y 축 180° 돌려 그리므로,
+    '앞(+z)'이 보스가 보는 방향이 되어야 하는 모델(뱀 머리 · 촉수 · 뿔가시)은 -z 쪽으로 만들어 둔다."""
+    out = []
+    swap = {"north": "south", "south": "north"}
+    for e in elements:
+        e = json.loads(json.dumps(e))
+        f, t = e["from"], e["to"]
+        f[2], t[2] = 16 - t[2], 16 - f[2]
+        e["faces"] = {swap.get(k, k): v for k, v in e["faces"].items()}
+        r = e.get("rotation")
+        if r:
+            r["origin"][2] = 16 - r["origin"][2]
+            if r["axis"] in ("x", "y"):
+                r["angle"] = -r["angle"]
+        out.append(e)
+    return out
+
+
 def model(name, elements, tex):
     wjson(os.path.join(ROOT, "models", "fx", name + ".json"),
           {"textures": {"0": f"oly:item/fx/{tex}", "particle": f"oly:item/fx/{tex}"}, "elements": elements})
@@ -373,31 +392,31 @@ def build_models():
     model("venom", blob + [box((10, 10, 9), (13, 13, 12)), box((3, 3, 5), (6, 6, 8))], "venom")
     item("venom")
     # 뱀 머리 화살 — 앞(+z)이 주둥이
-    model("serpent", [
+    model("serpent", mirror_z([
         box((5, 6, 4), (11, 11, 14), uv=(0, 0, 8, 8)),        # 머리
         box((5.5, 4, 5), (10.5, 6, 14), uv=(4, 12, 16, 16)),  # 벌린 아래턱
         box((4.5, 9, 9), (5.5, 10, 10), uv=(0, 12, 2, 14)),   # 눈
         box((10.5, 9, 9), (11.5, 10, 10), uv=(0, 12, 2, 14)),
         box((6, 6.5, -6), (10, 10, 4), uv=(0, 0, 16, 4)),     # 목
         box((6.5, 7, 13.5), (9.5, 7.5, 16.5), uv=(8, 12, 12, 14)),  # 혀
-    ], "serpent")
+    ]), "serpent")
     item("serpent")
     # 뿔가시 — 땅에서 솟는 휘어진 뿔
-    model("spike", [
+    model("spike", mirror_z([
         box((4, 0, 4), (12, 7, 12)),
         box((5, 6, 5), (11, 13, 11), rot={"angle": 22.5, "axis": "x", "origin": [8, 6, 8]}),
         box((6, 12, 7), (10, 19, 11), rot={"angle": 22.5, "axis": "x", "origin": [8, 12, 9]}),
         box((7, 18, 9), (9, 25, 11), rot={"angle": 45, "axis": "x", "origin": [8, 18, 10]}),
-    ], "spike")
+    ]), "spike")
     item("spike")
     # 촉수 — 네 마디, 위로 갈수록 가늘고 앞으로 굽는다
-    model("tentacle", [
+    model("tentacle", mirror_z([
         box((4, -8, 4), (12, 2, 12), uv=(0, 0, 8, 10)),
         box((4.5, 1, 4.5), (11.5, 10, 11.5), uv=(8, 0, 16, 10), rot={"angle": 22.5, "axis": "x", "origin": [8, 1, 8]}),
         box((5.5, 9, 7.5), (10.5, 18, 12.5), uv=(0, 8, 8, 16), rot={"angle": 22.5, "axis": "x", "origin": [8, 9, 10]}),
         box((6.5, 17, 11), (9.5, 25, 14), uv=(8, 8, 16, 16), rot={"angle": 45, "axis": "x", "origin": [8, 17, 12.5]}),
         box((7, 24, 15), (9, 29, 17), uv=(4, 4, 8, 8), rot={"angle": 45, "axis": "x", "origin": [8, 24, 16]}),
-    ], "tentacle")
+    ]), "tentacle")
     item("tentacle")
     # 석화 껍질 — 플레이어를 감싸는 네 벽 + 뚜껑 (y -2..30 = 2블록)
     model("shell", [

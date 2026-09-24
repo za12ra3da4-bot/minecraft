@@ -33,6 +33,8 @@ RAMP = {
 }
 
 OUTLINE = (18, 12, 14, 255)
+GLOW = {"fire", "hellfire", "soul", "eye", "poison"}
+METAL = {"steel", "bronze", "gold", "white"}
 
 
 def micro(mat, n):
@@ -50,8 +52,10 @@ def micro(mat, n):
         return np.where((v > 0.72) | ((np.abs(u - 0.5) > 0.42) & (v > 0.4)), -0.9, 0.15)
     if mat in ("fur", "gold") and mat == "fur":
         return np.sin((xs * 0.7 + ys * 1.9) / k * 1.3 + noise * 2) * 0.45
-    if mat in ("steel", "bronze", "gold", "white"):
-        return (np.sin(ys / k * 2.3) * 0.12 + noise * 0.12) * (1 if mat != "white" else 0.5)
+    if mat == "steel":
+        return np.sin((xs + ys) / k * 1.6) * 0.1 + noise * 0.1
+    if mat in ("bronze", "gold", "white"):
+        return noise * 0.14
     if mat in ("fire", "hellfire", "soul"):
         return np.sin(xs / k * 1.7 + np.sin(ys / k * 0.9) * 2) * 0.35
     if mat in ("stone", "dark", "bone"):
@@ -100,6 +104,9 @@ class Sheet:
         n = self.size
         out = np.zeros((n, n, 4))
         owner = -np.ones((n, n), dtype=int)
+        darkmap = np.zeros((n, n, 3))
+        glowmask = np.zeros((n, n), dtype=bool)
+        glowcol = np.zeros((n, n, 3))
         bay = np.array([[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]]) / 16.0 - 0.5
         L = np.array([-0.55, -0.65, 0.52])
         L = L / np.linalg.norm(L)
@@ -111,11 +118,12 @@ class Sheet:
                 continue
             # 고해상도 거리장 → 높이 (반지름 R 픽셀 베벨)
             dist = ndimage.distance_transform_edt(big >= 0.5) / SS
-            R = max(1.2, min(3.2, dist.max() * 0.8))
+            kk = n / 32.0
+            R = max(1.2 * kk, min(3.4 * kk, dist.max() * 0.8))
             h = np.clip(dist / R, 0, 1)
             h = np.sqrt(1 - (1 - h) ** 2)
             hs = np.asarray(Image.fromarray((h * 255).astype(np.uint8)).resize((n, n), Image.BOX), dtype=float) / 255.0
-            gy, gx = np.gradient(hs * 2.2)
+            gy, gx = np.gradient(hs * 2.2 * kk)
             nz = np.ones_like(hs)
             nrm = np.sqrt(gx ** 2 + gy ** 2 + nz ** 2)
             dot = (-gx * L[0] - gy * L[1] + nz * L[2]) / nrm
@@ -127,12 +135,24 @@ class Sheet:
             ys, xs = np.nonzero(m)
             dith = 0.12 if n <= 32 else 0.18
             mt = micro(mat, n)
+            # 림라이트: 오른쪽 아래 가장자리 (광원 반대편에 얇은 반사광)
+            er = np.zeros_like(m)
+            er[:-1, :-1] = m[:-1, :-1] & ~m[1:, 1:]
             for y, x in zip(ys, xs):
                 t = 0.6 + shade[y, x] * 4.9 + spec[y, x] * 1.6 + bay[y % 4, x % 4] * dith + mt[y, x]
                 k = int(np.clip(round(t), 1, 6))
-                out[y, x, :3] = tones[k]
+                if er[y, x] and k < 4 and n > 32:
+                    k = 4
+                c = tones[k]
+                if mat in METAL and spec[y, x] > 0.55:
+                    c = np.minimum(255, ramp[3] * 1.12 + 18)
+                out[y, x, :3] = c
                 out[y, x, 3] = 255
                 owner[y, x] = li
+                darkmap[y, x] = dark * 0.55
+            if mat in GLOW:
+                glowmask |= m
+                glowcol[m] = ramp[2]
             # 재질 안쪽 경계선: 다른 레이어와 닿는 쪽을 그 재질의 가장 어두운 색으로
             edge = m & ~ndimage.binary_erosion(m, structure=np.ones((3, 3)), border_value=0)
             for y, x in zip(*np.nonzero(edge)):
@@ -143,7 +163,24 @@ class Sheet:
         if outline:
             filled = out[..., 3] > 0
             ring = ndimage.binary_dilation(filled, structure=np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]])) & ~filled
-            out[ring] = OUTLINE
+            # 재질색 외곽선: 닿아 있는 재질의 가장 어두운 색 (아주 어두우면 기본 검정)
+            for y, x in zip(*np.nonzero(ring)):
+                cs = [darkmap[yy, xx] for yy, xx in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1))
+                      if 0 <= yy < n and 0 <= xx < n and filled[yy, xx]]
+                c = np.mean(cs, axis=0) if cs else np.array(OUTLINE[:3], dtype=float)
+                out[y, x, :3] = np.maximum(c, np.array(OUTLINE[:3], dtype=float))
+                out[y, x, 3] = 255
+        self.glow = None
+        if glowmask.any():
+            # 발광 후광 (아이콘 판 위에 따로 합성한다 — compose_glow)
+            a = ndimage.gaussian_filter(glowmask.astype(float), sigma=max(1.0, n / 22))
+            col = np.zeros((n, n, 3))
+            for ch in range(3):
+                col[..., ch] = ndimage.gaussian_filter(glowcol[..., ch], sigma=max(1.0, n / 22)) / np.maximum(a, 1e-4)
+            g = np.zeros((n, n, 4))
+            g[..., :3] = np.clip(col * 1.1 + 20, 0, 255)
+            g[..., 3] = np.clip(a * 330, 0, 170)
+            self.glow = Image.fromarray(g.astype(np.uint8), "RGBA")
         img = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), "RGBA")
         return img
 

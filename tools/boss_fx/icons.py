@@ -595,6 +595,8 @@ def render(boss, fn, seed=0, size=64):
     shadow.putalpha(a)
     base = plate(FIELD[boss], size, seed)
     k = max(1, size // 32)
+    if sh.glow is not None:
+        base.alpha_composite(sh.glow)
     base.alpha_composite(Image.merge("RGBA", (a.point(lambda v: 10), a.point(lambda v: 6), a.point(lambda v: 6), a)), (k, k))
     base.alpha_composite(fg)
     return base
