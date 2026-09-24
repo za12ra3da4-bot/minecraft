@@ -180,7 +180,7 @@ function olyMnHorn(e: entity, t: player):
     set {_k} to olyTeleKey("minotaur")
     olyBossFace("minotaur", {_e}, location of {_t})
     olyTeleRect("minotaur", {_k}, {_s}, {_dx}, {_dz}, 3, 5.5, 14)
-    olySkCast("minotaur", {_e}, "horn", 14, "")
+    olySkCast("minotaur", {_e}, "horn", 14, "뿔로 치받는다 — 정면에서 비켜라")
     wait 9 ticks
     set {oly::rt::bpose::minotaur} to "attack"
     wait 5 ticks

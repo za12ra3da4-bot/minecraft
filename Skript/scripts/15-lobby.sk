@@ -1,0 +1,301 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  15-lobby.sk  -  대기실 (접속 · 게임 종료 후)
+# -------------------------------------------------------------------------------------
+#  의존: 00-config, 01-data, 02-game, 03-factions, 10-bossfx(olyPRestore), 13-ui(메뉴)
+#
+#  구름 위 떠 있는 대리석 원형 신전 (톨로스). 맵 모서리 하늘 (x 360, z -360, 바닥 y 290) —
+#  월드 경계(±384) 안, 맵 바깥이라 그림자가 맵에 지지 않는다.
+#  처음 로드될 때 한 번 스스로 짓는다. /oly lobby set 으로 옮기고 /oly lobby build 로 다시 짓는다.
+#
+#  들어오는 때
+#    - 게임이 없을 때 접속 (정지 · 종료 · 대기)
+#    - 게임이 끝나고 10초 뒤: 결과를 남기고 게임 데이터 초기화 (세력 소속 · 팀 색 해제) → 모두 대기실
+#  대기실에서는 피해 · 배고픔 · 아이템 버리기가 없고, 떨어지면 다시 올려 보낸다.
+#  세력은 네더의 별(올림포스 메뉴)로 미리 고른다 → /oly start 때 그대로 배정된다.
+# =====================================================================================
+
+on load:
+    olyModReady("lobby")
+    olyLobbyEnsure()
+
+# ── 위치
+function olyLbC() :: location:
+    if {oly::lobby::c} is set:
+        return {oly::lobby::c}
+    return location(360, 290, -360, world("world"))
+
+function olyLobbySpawn() :: location:
+    set {_c} to olyLbC()
+    return location((x-coordinate of {_c}) + 0.5, (y-coordinate of {_c}) + 1, (z-coordinate of {_c}) + 7.5, world of {_c}, 180, 0)
+
+# 게임이 없는 때 (일시 정지는 제외: 그때는 원래 자리에서 기다린다)
+function olyLobbyTime() :: boolean:
+    if olyLive() is true:
+        return false
+    set {_ph} to olyPhase()
+    if {_ph} is "off" or "lobby" or "end":
+        return true
+    return false
+
+function olyInLobby(p: player) :: boolean:
+    if olyLobbyTime() is not true:
+        return false
+    set {_c} to olyLbC()
+    if world of {_p} is not world of {_c}:
+        return false
+    set {_dx} to (x-coordinate of {_p}) - (x-coordinate of {_c})
+    set {_dz} to (z-coordinate of {_p}) - (z-coordinate of {_c})
+    if ({_dx} * {_dx}) + ({_dz} * {_dz}) > 1600:
+        return false
+    return true
+
+
+# =====================================================================================
+#  1. 짓기 (바닐라 fill · setblock — 좌표는 모두 정수)
+# =====================================================================================
+
+function olyLbFill(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, b: text):
+    olyCmd("execute in minecraft:overworld run fill %{_x1}% %{_y1}% %{_z1}% %{_x2}% %{_y2}% %{_z2}% %{_b}%")
+
+function olyLbSet(x: number, y: number, z: number, b: text):
+    olyCmd("execute in minecraft:overworld run setblock %{_x}% %{_y}% %{_z}% %{_b}%")
+
+# 원판 (반지름 r)
+function olyLbDisc(dy: number, r: number, b: text):
+    set {_c} to olyLbC()
+    set {_cx} to x-coordinate of {_c}
+    set {_cz} to z-coordinate of {_c}
+    set {_y} to (y-coordinate of {_c}) + {_dy}
+    set {_ri} to floor({_r})
+    set {_dz} to 0 - {_ri}
+    while {_dz} <= {_ri}:
+        set {_w} to floor(sqrt(({_r} * {_r}) - ({_dz} * {_dz})))
+        olyLbFill({_cx} - {_w}, {_y}, {_cz} + {_dz}, {_cx} + {_w}, {_y}, {_cz} + {_dz}, {_b})
+        add 1 to {_dz}
+
+# 고리 (r0 <= 거리 < r1)
+function olyLbRing(dy: number, r0: number, r1: number, b: text):
+    set {_c} to olyLbC()
+    set {_cx} to x-coordinate of {_c}
+    set {_cz} to z-coordinate of {_c}
+    set {_y} to (y-coordinate of {_c}) + {_dy}
+    set {_ri} to ceil({_r1})
+    set {_dz} to 0 - {_ri}
+    while {_dz} <= {_ri}:
+        set {_dx} to 0 - {_ri}
+        while {_dx} <= {_ri}:
+            set {_d} to sqrt(({_dx} * {_dx}) + ({_dz} * {_dz}))
+            if {_d} >= {_r0}:
+                if {_d} < {_r1}:
+                    olyLbSet({_cx} + {_dx}, {_y}, {_cz} + {_dz}, {_b})
+            add 1 to {_dx}
+        add 1 to {_dz}
+
+# 각도(도) · 반지름 자리 한 칸
+function olyLbAt(a: number, r: number, dy: number, b: text):
+    set {_c} to olyLbC()
+    olyLbSet((x-coordinate of {_c}) + round({_r} * cos({_a})), (y-coordinate of {_c}) + {_dy}, (z-coordinate of {_c}) + round({_r} * sin({_a})), {_b})
+
+function olyLobbyEnsure():
+    wait 5 seconds
+    if {oly::lobby::ver} is not "1":
+        olyLobbyBuild()
+
+function olyLobbyBuild():
+    if {oly::rt::lobby::building} is true:
+        stop
+    set {oly::rt::lobby::building} to true
+    set {_c} to olyLbC()
+    set {_cx} to x-coordinate of {_c}
+    set {_cy} to y-coordinate of {_c}
+    set {_cz} to z-coordinate of {_c}
+    olyLog("대기실 짓기 %{_cx}% %{_cy}% %{_cz}%")
+    olyCmd("execute in minecraft:overworld run forceload add %{_cx} - 24% %{_cz} - 24% %{_cx} + 24% %{_cz} + 24%")
+    wait 3 seconds
+    olyCmd("execute in minecraft:overworld positioned %{_cx}% %{_cy}% %{_cz}% run kill @e[tag=olylobby,distance=..48]")
+    olyLbFill({_cx} - 18, {_cy} - 13, {_cz} - 18, {_cx} + 18, {_cy}, {_cz} + 18, "minecraft:air")
+    olyLbFill({_cx} - 18, {_cy} + 1, {_cz} - 18, {_cx} + 18, {_cy} + 14, {_cz} + 18, "minecraft:air")
+
+    # 떠 있는 섬 (아래로 좁아지는 바위)
+    olyLbDisc(-1, 15.5, "minecraft:calcite")
+    olyLbDisc(-2, 14.6, "minecraft:calcite")
+    olyLbDisc(-3, 13.4, "minecraft:stone")
+    olyLbDisc(-4, 12.0, "minecraft:stone")
+    olyLbDisc(-5, 10.5, "minecraft:andesite")
+    olyLbDisc(-6, 9.0, "minecraft:tuff")
+    olyLbDisc(-7, 7.5, "minecraft:tuff")
+    olyLbDisc(-8, 6.0, "minecraft:stone")
+    olyLbDisc(-9, 4.5, "minecraft:deepslate")
+    olyLbDisc(-10, 3.0, "minecraft:deepslate")
+    olyLbDisc(-11, 1.6, "minecraft:deepslate")
+    wait 5 ticks
+
+    # 대리석 바닥 · 무늬
+    olyLbDisc(0, 15.5, "minecraft:smooth_quartz")
+    olyLbRing(0, 14.6, 15.6, "minecraft:quartz_bricks")
+    olyLbRing(0, 13.3, 14.6, "minecraft:moss_block")
+    olyLbRing(0, 8.5, 9.4, "minecraft:chiseled_quartz_block")
+    olyLbRing(0, 4.4, 5.3, "minecraft:gold_block")
+    olyLbDisc(0, 2.4, "minecraft:quartz_bricks")
+    wait 5 ticks
+
+    # 기둥 12개 · 들보 · 처마 · 등불
+    set {_k} to 0
+    while {_k} < 12:
+        set {_a} to {_k} * 30
+        olyLbAt({_a}, 12, 1, "minecraft:quartz_bricks")
+        olyLbAt({_a}, 12, 2, "minecraft:quartz_pillar")
+        olyLbAt({_a}, 12, 3, "minecraft:quartz_pillar")
+        olyLbAt({_a}, 12, 4, "minecraft:quartz_pillar")
+        olyLbAt({_a}, 12, 5, "minecraft:quartz_pillar")
+        olyLbAt({_a}, 12, 6, "minecraft:quartz_pillar")
+        olyLbAt({_a}, 12, 7, "minecraft:chiseled_quartz_block")
+        add 1 to {_k}
+    olyLbRing(8, 11.2, 12.8, "minecraft:quartz_bricks")
+    olyLbRing(9, 11.6, 13.3, "minecraft:smooth_quartz_slab")
+    set {_k} to 0
+    while {_k} < 12:
+        set {_a} to ({_k} * 30) + 15
+        olyLbAt({_a}, 12, 7, "minecraft:lantern[hanging=true]")
+        olyLbAt({_a}, 14, 1, "minecraft:flowering_azalea")
+        olyLbAt({_a} + 7, 14, 1, "minecraft:azure_bluet")
+        olyLbAt({_a} - 7, 14, 1, "minecraft:lily_of_the_valley")
+        add 1 to {_k}
+    loop 0, 90, 180 and 270:
+        olyLbAt(loop-value, 12, 8, "minecraft:gold_block")
+    wait 5 ticks
+
+    # 가운데 성화 제단 · 네 화로
+    olyLbSet({_cx}, {_cy} + 1, {_cz}, "minecraft:chiseled_quartz_block")
+    olyLbSet({_cx}, {_cy} + 2, {_cz}, "minecraft:quartz_pillar")
+    olyLbSet({_cx}, {_cy} + 3, {_cz}, "minecraft:gold_block")
+    olyLbSet({_cx}, {_cy} + 4, {_cz}, "minecraft:campfire")
+    loop 45, 135, 225 and 315:
+        olyLbAt(loop-value, 7, 1, "minecraft:polished_blackstone")
+        olyLbAt(loop-value, 7, 2, "minecraft:campfire")
+
+    # 떨어짐 방지 (보이지 않는 벽)
+    olyLbRing(1, 15.2, 16.8, "minecraft:barrier")
+    olyLbRing(2, 15.2, 16.8, "minecraft:barrier")
+    olyLbRing(3, 15.2, 16.8, "minecraft:barrier")
+
+    # 글씨 (태그 olylobby — 게임 정리(태그 oly)에 지워지지 않는다)
+    set {_tf} to "transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[2f,2f,2f]}"
+    olyCmd("execute in minecraft:overworld run summon minecraft:text_display %{_cx} + 0.5% %{_cy} + 7.2% %{_cz} + 0.5% {Tags:[""olylobby""],billboard:""center"",background:0,shadow:1b,%{_tf}%,text:{text:""신들의 전쟁: 올림포스"",color:""gold"",bold:true,extra:[{text:""\n대 기 실"",color:""yellow"",bold:false}]}}")
+    olyCmd("execute in minecraft:overworld run summon minecraft:text_display %{_cx} + 0.5% %{_cy} + 6.1% %{_cz} + 0.5% {Tags:[""olylobby"",""olylobby_res""],billboard:""center"",background:0,shadow:1b,text:{text:""""}}")
+    olyCmd("execute in minecraft:overworld run summon minecraft:text_display %{_cx} + 0.5% %{_cy} + 3.2% %{_cz} + 6.5% {Tags:[""olylobby""],billboard:""center"",background:1275068416,text:{text:""네더의 별(올림포스 메뉴) 우클릭 → 세력 선택"",color:""white"",extra:[{text:""\n게임이 시작되면 고른 세력의 수도로 이동합니다"",color:""gray""}]}}")
+    wait 2 ticks
+    olyLobbyResText()
+    set {oly::lobby::ver} to "1"
+    delete {oly::rt::lobby::building}
+    wait 3 seconds
+    olyCmd("execute in minecraft:overworld run forceload remove %{_cx} - 24% %{_cz} - 24% %{_cx} + 24% %{_cz} + 24%")
+    olyLog("대기실 완성")
+
+# ── 지난 게임 결과 (가운데 글씨)
+function olyLobbyResText():
+    set {_c} to olyLbC()
+    set {_t} to {oly::lobby::last} ? "아직 치러진 전쟁이 없습니다"
+    olyCmd("execute in minecraft:overworld positioned %x-coordinate of {_c}% %y-coordinate of {_c}% %z-coordinate of {_c}% run data merge entity @e[tag=olylobby_res,distance=..48,limit=1] {text:{text:""%{_t}%"",color:""white""}}")
+
+
+# =====================================================================================
+#  2. 들여보내기
+# =====================================================================================
+
+function olyLobbySend(p: player):
+    if {_p} is not online:
+        stop
+    if {oly::lobby::ver} is not "1":
+        olyLobbyBuild()
+        wait 6 seconds
+        if {_p} is not online:
+            stop
+    olyPRestore({_p})
+    olyCmd("effect clear %uuid of {_p}%")
+    if {_p} is not op:
+        set gamemode of {_p} to adventure
+    clear {_p}'s inventory
+    heal {_p}
+    set {_p}'s food level to 20
+    extinguish {_p}
+    set slot 4 of {_p}'s inventory to olyCmdl(nether star named "&6&l올림포스 메뉴 &7(우클릭)" with lore "&7대기실에서는 세력을 고를 수 있습니다", 7301)
+    teleport {_p} to olyLobbySpawn()
+    send title "&6&l대 기 실" with subtitle "&7세력을 고르고 게임 시작을 기다리세요" to {_p} for 3 seconds
+    play sound "block.beacon.activate" with volume 0.8 with pitch 1.4 at location of {_p} for {_p}
+    send "&8&m                                                  " to {_p}
+    send "  &6&l신들의 전쟁: 올림포스 &8- &e대기실" to {_p}
+    if {oly::lobby::last} is set:
+        send "  &7지난 게임 &f%{oly::lobby::last}%" to {_p}
+    send "  &e5번 칸 네더의 별&7을 우클릭해 세력을 미리 고르세요. &8(/세력)" to {_p}
+    send "&8&m                                                  " to {_p}
+    wait 1 second
+    olyLobbyResText()
+
+# ── 게임이 끝나면 (90-flow 의 시대 전환 훅이 부른다): 10초 결과 → 초기화 → 모두 대기실
+function olyLobbyAfterEnd():
+    set {_w} to olyTopFaction()
+    if {_w} is "none":
+        set {oly::lobby::last} to "승자 없음"
+    else:
+        set {oly::lobby::last} to "%olyFacName({_w})% 승리 (명성 %olyRenown({_w})%)"
+    set {_tok} to olySec()
+    olyBc("&7[올림포스] &f10초 뒤 &e대기실&f로 이동합니다. 세력 소속은 초기화됩니다.")
+    wait 10 seconds
+    if olyPhase() is not "end":
+        stop
+    if olyLive() is true:
+        stop
+    olyLobbyReset()
+    loop all players:
+        olyLobbySend(loop-player)
+
+# ── 게임 데이터 초기화 + 세력 팀 비우기 (이름 색 · 머리말 제거)
+function olyLobbyReset():
+    olyWipeGame()
+    loop {oly::flist::*}:
+        olyCmd("team empty oly_%loop-value%")
+        delete {oly::f::%loop-value%::leader}
+    olyCmd("bossbar set oly:main visible false")
+    set {oly::state::phase} to "lobby"
+
+
+# =====================================================================================
+#  3. 대기실 안
+# =====================================================================================
+
+on respawn:
+    if olyLobbyTime() is true:
+        set respawn location to olyLobbySpawn()
+        wait 2 ticks
+        if player is online:
+            olyLobbySend(player)
+
+on damage:
+    victim is a player
+    if olyInLobby(victim) is true:
+        cancel event
+
+on drop:
+    if player is not op:
+        if olyInLobby(player) is true:
+            cancel event
+
+every second:
+    if olyLobbyTime() is not true:
+        stop
+    set {_c} to olyLbC()
+    set {_y} to y-coordinate of {_c}
+    set {_n} to number of all players
+    loop all players:
+        if olyInLobby(loop-player) is true:
+            if y-coordinate of loop-player < {_y} - 6:
+                teleport loop-player to olyLobbySpawn()
+                play sound "entity.enderman.teleport" with volume 0.6 with pitch 1.2 at location of loop-player for loop-player
+            set loop-player's food level to 20
+            set {_f} to olyFacOf(loop-player)
+            if {_f} is "none":
+                set {_fn} to "&7미선택 &8(네더의 별 우클릭)"
+            else:
+                set {_fn} to olyFacFull({_f})
+            send action bar "&6◆ 대기실 &8| &f접속 %{_n}%명 &8| &7내 세력 %{_fn}%" to loop-player

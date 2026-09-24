@@ -196,7 +196,7 @@ function olyMdTail(e: entity):
     set {_c} to location of {_e}
     set {_k} to olyTeleKey("medusa")
     olyTeleCircle("medusa", {_k}, {_c}, 4.5, 14)
-    olySkCast("medusa", {_e}, "tail", 14, "")
+    olySkCast("medusa", {_e}, "tail", 14, "꼬리가 휘감는다 — 가까이 붙지 마라")
     wait 9 ticks
     set {oly::rt::bpose::medusa} to "attack"
     wait 5 ticks

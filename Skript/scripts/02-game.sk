@@ -232,7 +232,7 @@ function olyBarUpdate():
     if {oly::rt::barN} is not {_n}:
         set {oly::rt::barN} to {_n}
         olyCmd("bossbar set oly:main players @a")
-every 2 seconds:
+every second:
     if olyLive() is true:
         olyBarUpdate()
 
@@ -261,6 +261,7 @@ function olyHelp(p: player):
     send "  &f/oly event <id> &8- &7신탁 사건 즉시 발생" to {_p}
     send "  &f/oly join <플레이어> <세력> &8| &f/oly leader <세력> <플레이어>" to {_p}
     send "  &f/oly res <세력> <자원>:<양> &8| &f/oly renown <세력> <양> &8| &f/oly war <a> <b>" to {_p}
+    send "  &f/oly lobby [set|build] &8- &7대기실로 이동 / 지금 자리를 대기실로 / 대기실 다시 짓기" to {_p}
     send "  &f/oly reset confirm &8- &7게임 데이터 초기화" to {_p}
     send "&8&m                                                  " to {_p}
 

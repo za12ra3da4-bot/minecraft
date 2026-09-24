@@ -132,7 +132,7 @@ function olyLnHunt(e: entity, m: player):
 # ── 발톱 연격: 빠른 3연속 전방 할퀴기 (매번 가장 가까운 사람을 다시 조준)
 function olyLnClaw(e: entity, t: player):
     set {_ep} to olySkBegin("nemean_lion", "claw")
-    olySkCast("nemean_lion", {_e}, "claw", 30, "")
+    olySkCast("nemean_lion", {_e}, "claw", 30, "발톱이 연달아 할퀸다 — 거리를 벌려라")
     set {_tt} to {_t}
     loop 3 times:
         set {_s} to location of {_e}

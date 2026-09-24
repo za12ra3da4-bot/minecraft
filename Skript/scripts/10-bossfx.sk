@@ -370,8 +370,39 @@ function olySkCast(id: text, e: entity, sk: text, ticks: number, sub: text):
     olyFxIconAbove({_id}, {_e}, {_ic}, {_ticks})
     olySfx("cast", location of {_e}, 1.6, 1)
     olySfx("warn", location of {_e}, 1.2, 1)
+    olySkType(location of {_e}, 36, {_ic}, {_sub}, {_ticks})
+
+# ── 시전 자막: [아이콘] 스킬 이름 — 설명 이 한 글자씩 타닥타닥 찍힌다 (1틱에 1글자 + 타자 소리)
+function olySkType(c: location, r: number, ic: text, sub: text, ticks: number):
+    set {_nm} to olySkName({_ic})
+    set {_full} to {_nm}
     if {_sub} is not "":
-        olyTitleNear(location of {_e}, 36, "", "white", {_ic}, "%olySkName({_ic})% — %{_sub}%", "gold", {_ticks})
+        set {_full} to "%{_nm}% — %{_sub}%"
+    set {_ln} to length of {_nm}
+    set {_n} to length of {_full}
+    set {_at} to "execute positioned %x-coordinate of {_c}% %y-coordinate of {_c}% %z-coordinate of {_c}% run"
+    set {_sel} to "@a[distance=..%{_r}%]"
+    set {_icon} to "{""text"":""%olyIcon({_ic})%"",""font"":""oly:icons"",""color"":""white""},{""text"":"" ""}"
+    olyCmd("%{_at}% title %{_sel}% times 0 %max(30, {_ticks} + 30)% 10")
+    olyCmd("%{_at}% playsound minecraft:block.note_block.bit hostile %{_sel}% ~ ~ ~ 0.6 0.7")
+    set {_i} to 0
+    while {_i} < {_n}:
+        add 1 to {_i}
+        if {_i} <= {_ln}:
+            set {_a} to first {_i} characters of {_full}
+            set {_b} to ""
+        else:
+            set {_a} to {_nm}
+            set {_b} to subtext of {_full} from characters ({_ln} + 1) to {_i}
+        set {_cur} to ",{""text"":""▌"",""color"":""gray""}"
+        if {_i} >= {_n}:
+            set {_cur} to ""
+        olyCmd("%{_at}% title %{_sel}% subtitle [%{_icon}%,{""text"":""%{_a}%"",""color"":""gold"",""bold"":true},{""text"":""%{_b}%"",""color"":""white""}%{_cur}%]")
+        olyCmd("%{_at}% title %{_sel}% title """"")
+        if mod({_i}, 2) is 1:
+            olyCmd("%{_at}% playsound minecraft:block.note_block.hat hostile %{_sel}% ~ ~ ~ 0.35 1.9")
+        wait 1 tick
+    olyCmd("%{_at}% playsound minecraft:block.note_block.bell hostile %{_sel}% ~ ~ ~ 0.4 1.5")
 
 # ── 보스가 한 지점을 보게 (파츠도 같이 돌린다 → 머리 위치 연출이 맞는다)
 function olyBossFace(id: text, e: entity, l: location):

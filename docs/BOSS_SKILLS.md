@@ -170,7 +170,7 @@ UUID 규칙 `6f6c7962-0000-000B-0000-0000000000PP` (`6f6c7962` = "olyb")
 
 | 무엇 | 어디에 |
 |---|---|
-| `Skript/scripts/*.sk` (새 파일: `10-bossfx.sk`, `10-boss-<id>.sk` 7개 / 수정: `10-monsters.sk`, `90-flow.sk`, `02-game.sk`, `06-army.sk`, `08-heroes.sk`, `13-ui.sk`, `14-events.sk`) | `plugins/Skript/scripts/` 에 덮어쓰기 → `/sk reload all` |
+| `Skript/scripts/*.sk` (새 파일: `10-bossfx.sk`, `10-boss-<id>.sk` 7개, `15-lobby.sk` / 수정: `10-monsters.sk`, `90-flow.sk`, `02-game.sk`, `06-army.sk`, `08-heroes.sk`, `13-ui.sk`, `14-events.sk`, `10-boss-medusa/minotaur/nemean_lion.sk`) | `plugins/Skript/scripts/` 에 덮어쓰기 → `/sk reload all` |
 | 저장소 최상위 `<id>/fx/`, `fx/` (데이터팩 함수) | `world/datapacks/olympus_bosses/data/oly/function/boss/` 아래 같은 자리 → `/reload` |
 | `resourcepack/olympus_pack.zip` | 서버 리소스팩으로 교체 (원본 524개 파일 포함, 추가·교체분 포함) |
 
@@ -210,3 +210,14 @@ UUID 규칙 `6f6c7962-0000-000B-0000-0000000000PP` (`6f6c7962` = "olyb")
 
 `build_icons.py` 아이콘 → `fx.py` 이펙트 → `sounds.py` 사운드 → `build_items.py` 아이템 → `gui.py` 메뉴 →
 `boss_paint.py` + `boss_detail.py` 보스 → `datapack.py` 연출 함수 → `build_pack.py` zip (검사 포함) → `sklint.py` Skript 검사.
+
+## 대기실 (15-lobby.sk)
+
+- 위치: 맵 모서리 하늘 (x 360, z -360, 바닥 y 290), 월드 경계 안 · 맵 밖. 처음 로드 때 스스로 짓는다 (구름 위 대리석 원형 신전 + 떠 있는 섬).
+- 게임이 없을 때 접속 → 대기실. 게임 종료 10초 뒤 → 결과 기록 · 게임 데이터 초기화 (세력 소속 · 팀 색 해제) → 모두 대기실.
+- 대기실: 피해 · 배고픔 · 아이템 버리기 없음, 떨어지면 되돌림, 네더의 별로 세력 미리 선택 → `/oly start` 때 그대로 배정.
+- 관리자: `/oly lobby` (이동) · `/oly lobby set` (발밑을 바닥으로 옮겨 새로 짓기) · `/oly lobby build` (다시 짓기).
+
+## 보스 스킬 자막
+
+시전 때 주변 36칸 플레이어에게 `[아이콘] 스킬 이름 — 설명` 이 1틱에 한 글자씩 타자 소리와 함께 찍힌다 (`olySkType`).

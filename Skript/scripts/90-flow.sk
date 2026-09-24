@@ -89,8 +89,9 @@ function olyOnPhase(ph: text):
         olyOracle("올림포스의 봉인이 풀렸습니다", "산문이 열렸습니다. 올림포스 신전을 차지한 세력만이 제우스를 부를 수 있습니다.")
         stop
     if {_ph} is "end":
-        # 남은 보스 모델 정리
+        # 남은 보스 모델 정리 → 10초 뒤 초기화 · 대기실 (15-lobby)
         olyBossReset()
+        olyLobbyAfterEnd()
         stop
     olySeal(true)
 
@@ -116,6 +117,10 @@ on join:
     if player is not online:
         stop
     set {_f} to olyFacOf(player)
+    # 게임이 없으면 대기실 (15-lobby). 일시 정지 중이면 예전처럼 제단에서 기다린다
+    if olyLobbyTime() is true:
+        olyLobbySend(player)
+        stop
     if olyLive() is not true:
         if player is not op:
             set gamemode of player to adventure
@@ -167,8 +172,8 @@ command /oly [<text>] [<text>] [<text>]:
             if olyLive() is true:
                 send "&c이미 진행 중입니다."
                 stop
-            if olyPhase() is "end":
-                send "&c끝난 게임입니다. &7/oly start"
+            if olyPhase() is "end" or "lobby" or "off":
+                send "&c진행 중인 게임이 없습니다. &7/oly start"
                 stop
             set {oly::state::running} to true
             olyBarInit()
@@ -189,6 +194,20 @@ command /oly [<text>] [<text>] [<text>]:
                 send "&c진행 중이 아닙니다."
                 stop
             olyEnd("관리자 종료")
+            stop
+
+        if {_a} is "lobby":
+            if arg-2 is "set":
+                set {oly::lobby::c} to location(floor(x-coordinate of player), floor(y-coordinate of player) - 1, floor(z-coordinate of player), world of player)
+                delete {oly::lobby::ver}
+                send "&a[올림포스] &7발밑을 대기실 바닥으로 정했습니다. 새로 짓습니다… &8(반지름 17 · 위 14칸 · 아래 13칸을 비움)"
+                olyLobbyBuild()
+                stop
+            if arg-2 is "build":
+                send "&a[올림포스] &7대기실을 다시 짓습니다…"
+                olyLobbyBuild()
+                stop
+            olyLobbySend(player)
             stop
 
         if {_a} is "status":
@@ -243,7 +262,7 @@ command /oly [<text>] [<text>] [<text>]:
 
         if {_a} is "mods":
             send "&6[올림포스] 모듈 로드 상태"
-            loop "config", "data", "game", "factions", "economy", "territory", "army", "city", "heroes", "gods", "bossdata", "monsters", "bossfx", "boss_minotaur", "boss_nemean_lion", "boss_chimera", "boss_cerberus", "boss_hydra", "boss_medusa", "boss_scylla", "war", "diplomacy", "ui", "events" and "admin":
+            loop "config", "data", "game", "factions", "economy", "territory", "army", "city", "heroes", "gods", "bossdata", "monsters", "bossfx", "boss_minotaur", "boss_nemean_lion", "boss_chimera", "boss_cerberus", "boss_hydra", "boss_medusa", "boss_scylla", "war", "diplomacy", "ui", "events", "lobby" and "admin":
                 if {oly::mod::%loop-value%} is true:
                     send "  &a[O] &7%loop-value%"
                 else:
