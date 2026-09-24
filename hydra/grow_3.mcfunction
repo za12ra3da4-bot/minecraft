@@ -1,0 +1,14 @@
+tag 6f6c7962-0000-0005-0000-000000000023 remove oly_hidden
+data merge entity 6f6c7962-0000-0005-0000-000000000023 {transformation:[-0.5299f,0.7072f,0.4680f,-0.8056f,0.0000f,0.5518f,-0.8340f,-1.5014f,-0.8480f,-0.4419f,-0.2924f,1.3672f,0.0000f,0.0000f,0.0000f,1.0000f],start_interpolation:0,interpolation_duration:20}
+tag 6f6c7962-0000-0005-0000-000000000024 remove oly_hidden
+data merge entity 6f6c7962-0000-0005-0000-000000000024 {transformation:[-0.5299f,0.5915f,0.6077f,-1.1426f,0.0000f,0.7166f,-0.6975f,-0.9010f,-0.8480f,-0.3696f,-0.3797f,1.5778f,0.0000f,0.0000f,0.0000f,1.0000f],start_interpolation:0,interpolation_duration:20}
+tag 6f6c7962-0000-0005-0000-000000000025 remove oly_hidden
+data merge entity 6f6c7962-0000-0005-0000-000000000025 {transformation:[-0.5299f,0.4673f,0.7077f,-1.5801f,0.0000f,0.8345f,-0.5510f,-0.3988f,-0.8480f,-0.2920f,-0.4422f,1.8512f,0.0000f,0.0000f,0.0000f,1.0000f],start_interpolation:0,interpolation_duration:20}
+tag 6f6c7962-0000-0005-0000-000000000026 remove oly_hidden
+data merge entity 6f6c7962-0000-0005-0000-000000000026 {transformation:[-0.5299f,0.2822f,0.7997f,-2.0897f,0.0000f,0.9430f,-0.3327f,-0.0021f,-0.8480f,-0.1763f,-0.4997f,2.1696f,0.0000f,0.0000f,0.0000f,1.0000f],start_interpolation:0,interpolation_duration:20}
+tag 6f6c7962-0000-0005-0000-000000000027 remove oly_hidden
+data merge entity 6f6c7962-0000-0005-0000-000000000027 {transformation:[-0.5299f,-0.0380f,0.8472f,-2.6655f,0.0000f,0.9990f,0.0448f,0.2375f,-0.8480f,0.0237f,-0.5294f,2.5294f,0.0000f,0.0000f,0.0000f,1.0000f],start_interpolation:0,interpolation_duration:20}
+tag 6f6c7962-0000-0005-0000-000000000028 remove oly_hidden
+data merge entity 6f6c7962-0000-0005-0000-000000000028 {transformation:[-0.5299f,-0.0380f,0.8472f,-2.6655f,0.0000f,0.9990f,0.0448f,0.2375f,-0.8480f,0.0237f,-0.5294f,2.5294f,0.0000f,0.0000f,0.0000f,1.0000f],start_interpolation:0,interpolation_duration:20}
+tag 6f6c7962-0000-0005-0000-000000000029 remove oly_hidden
+data merge entity 6f6c7962-0000-0005-0000-000000000029 {transformation:[-0.5299f,-0.1637f,0.8321f,-2.9136f,0.0000f,0.9812f,0.1930f,0.0642f,-0.8480f,0.1023f,-0.5200f,2.6844f,0.0000f,0.0000f,0.0000f,1.0000f],start_interpolation:0,interpolation_duration:20}
