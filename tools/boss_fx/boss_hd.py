@@ -52,8 +52,8 @@ def classify(boss, part, rgb):
         return "metal" if s < 0.2 else "wood"
     if boss == "medusa" and part == "bow":
         return "metal" if (s > 0.45 and 30 < hd < 60) else "wood"
-    if s > 0.45 and 32 < hd < 58 and v > 0.55:
-        return "metal"                       # 금 장식
+    if s > 0.6 and 38 < hd < 56 and v > 0.7 and boss in ("minotaur", "medusa", "scylla", "cerberus", "hydra"):
+        return "metal"                       # 금 장식 (네발 짐승의 황갈색 털은 제외)
     if s < 0.12 and v > 0.72 and boss not in ("medusa",):
         return "horn"                        # 발굽 · 발톱 · 이빨 (밝은 무채색)
     if 70 < hd < 170 and s > 0.2:
