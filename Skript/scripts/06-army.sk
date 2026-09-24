@@ -160,6 +160,12 @@ function olyDye(i: item, f: text) :: item:
         dye {_i} white
     return {_i}
 
+# ── 리소스팩 모델 번호 (custom_model_data). 번호표 = tools/boss_fx/build_items.py
+#    71xx 괴물 유물 · 72xx 병종 장비 · 73xx 메뉴 · 74xx 사건 유물. 번호가 없는 아이템은 바닐라 모습 그대로
+function olyCmdl(i: item, n: number) :: item:
+    set custom model data of {_i} to {_n}
+    return {_i}
+
 function olyAttr(p: player, a: text, v: number):
     olyCmd("attribute %{_p}% minecraft:%{_a}% base set %{_v}%")
 function olyKitGive(p: player):
@@ -179,39 +185,40 @@ function olyKitGive(p: player):
     set {_kb} to 0
     if {_c} is "infantry":
         set chestplate of {_p} to unbreakable chainmail chestplate named "%{_cn}%의 사슬 갑옷"
-        give {_p} unbreakable iron sword named "&f보병의 검"
-        set {_p}'s offhand tool to unbreakable shield named "&f호플론 방패"
+        give {_p} olyCmdl(unbreakable iron sword named "&f보병의 검", 7201)
+        set {_p}'s offhand tool to olyCmdl(unbreakable shield named "&f호플론 방패", 7207)
     else if {_c} is "spear":
         set leggings of {_p} to unbreakable chainmail leggings named "%{_cn}%의 사슬 각반"
-        give {_p} unbreakable iron spear named "&f도루 (창)"
-        give {_p} unbreakable stone sword named "&7단검"
+        give {_p} olyCmdl(unbreakable iron spear named "&f도루 (창)", 7202)
+        give {_p} olyCmdl(unbreakable stone sword named "&7단검", 7203)
     else if {_c} is "archer":
         set {_bow} to unbreakable bow named "&f궁병의 활" with lore "&7무한 — 화살 1개만 있으면 된다"
         enchant {_bow} with power 1
         enchant {_bow} with infinity 1
-        give {_p} {_bow}
+        give {_p} olyCmdl({_bow}, 7204)
         give {_p} 64 of arrow
-        give {_p} unbreakable stone sword named "&7단검"
+        give {_p} olyCmdl(unbreakable stone sword named "&7단검", 7203)
     else if {_c} is "cavalry":
         set helmet of {_p} to unbreakable iron helmet named "%{_cn}%의 기병 투구"
-        give {_p} unbreakable iron sword named "&f기병도"
+        give {_p} olyCmdl(unbreakable iron sword named "&f기병도", 7205)
         olyHorseGive({_p})
     else if {_c} is "hoplite":
-        set helmet of {_p} to unbreakable golden helmet named "&6코린트식 투구"
+        set helmet of {_p} to olyCmdl(unbreakable golden helmet named "&6코린트식 투구", 7209)
         set chestplate of {_p} to unbreakable iron chestplate named "%{_cn}%의 청동 흉갑"
         set leggings of {_p} to unbreakable iron leggings named "%{_cn}%의 정강이받이"
         set boots of {_p} to unbreakable iron boots named "%{_cn}%의 전투화"
-        give {_p} unbreakable iron sword named "&f크시포스"
-        set {_p}'s offhand tool to unbreakable shield named "&f호플론 방패"
+        give {_p} olyCmdl(unbreakable iron sword named "&f크시포스", 7206)
+        set {_p}'s offhand tool to olyCmdl(unbreakable shield named "&f호플론 방패", 7207)
         set {_kb} to 0.4
     else if {_c} is "siege":
         set chestplate of {_p} to unbreakable chainmail chestplate named "%{_cn}%의 사슬 갑옷"
-        give {_p} unbreakable iron axe named "&6공성 망치 &7(성문 피해 6배)"
+        give {_p} olyCmdl(unbreakable iron axe named "&6공성 망치 &7(성문 피해 6배)", 7208)
     give {_p} 12 bread
     # 괴물 유물은 병종을 바꾸거나 부활해도 유지 (10-monsters 가 목록에 넣는다)
     loop {oly::p::%uuid of {_p}%::relics::*}:
-        give {_p} loop-value
-    set slot 8 of {_p}'s inventory to nether star named "&6&l올림포스 메뉴 &7(우클릭)"
+        # 이전에 받은 유물도 새 모델로 (이름으로 판별)
+        give {_p} olyRelicCmdl(loop-value)
+    set slot 8 of {_p}'s inventory to olyCmdl(nether star named "&6&l올림포스 메뉴 &7(우클릭)", 7301)
     olyAttr({_p}, "max_health", olyN("army.hp.%{_c}%"))
     olyAttr({_p}, "movement_speed", olyN("army.spd.%{_c}%"))
     olyAttr({_p}, "knockback_resistance", {_kb})

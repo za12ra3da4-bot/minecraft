@@ -809,6 +809,25 @@ function olyRelic(id: text) :: item:
         set {_i} to unbreakable trident named "&3&l스킬라의 삼지창" with lore "&7바다 괴물의 촉수가 감긴 삼지창", "", "&3웅크리고 우클릭 &f소용돌이 — 주변 적을 끌어당김 &8(20초)" and "&8신화의 유물"
         enchant {_i} with loyalty 3
         enchant {_i} with impaling 3
+    return olyRelicCmdl({_i})
+
+# ── 유물 모델 번호 (리소스팩 oly:gear/*). 이름으로 판별하므로 예전에 받은 유물에도 붙일 수 있다
+function olyRelicCmdl(i: item) :: item:
+    set {_r} to olyRelicOf({_i})
+    if {_r} is "minotaur":
+        return olyCmdl({_i}, 7101)
+    if {_r} is "nemean_lion":
+        return olyCmdl({_i}, 7102)
+    if {_r} is "chimera":
+        return olyCmdl({_i}, 7103)
+    if {_r} is "cerberus":
+        return olyCmdl({_i}, 7104)
+    if {_r} is "hydra":
+        return olyCmdl({_i}, 7105)
+    if {_r} is "medusa":
+        return olyCmdl({_i}, 7106)
+    if {_r} is "scylla":
+        return olyCmdl({_i}, 7107)
     return {_i}
 
 function olyRelicGive(p: player, id: text):

@@ -1,0 +1,6 @@
+{
+ "parent": "minecraft:item/crossbow",
+ "textures": {
+  "layer0": "oly:item/gear/artemis_crossbow_pulling_2"
+ }
+}

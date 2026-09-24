@@ -1,0 +1,47 @@
+{
+ "providers": [
+  {
+   "type": "minecraft:space",
+   "advances": {
+    "": -8,
+    "": -169
+   }
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:gui/menu_main.png",
+   "ascent": 13,
+   "height": 222,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:gui/menu_grid3.png",
+   "ascent": 13,
+   "height": 168,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:gui/menu_grid4.png",
+   "ascent": 13,
+   "height": 186,
+   "chars": [
+    ""
+   ]
+  },
+  {
+   "type": "minecraft:bitmap",
+   "file": "oly:gui/menu_grid6.png",
+   "ascent": 13,
+   "height": 222,
+   "chars": [
+    ""
+   ]
+  }
+ ]
+}

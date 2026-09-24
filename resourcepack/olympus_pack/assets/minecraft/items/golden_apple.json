@@ -1,0 +1,1 @@
+{"model":{"type":"minecraft:range_dispatch","property":"minecraft:custom_model_data","index":0,"entries":[{"threshold":7404,"model":{"type":"minecraft:model","model":"oly:gear/golden_apple"}},{"threshold":7404.5,"model":{"type":"minecraft:model","model":"minecraft:item/golden_apple"}}],"fallback":{"type":"minecraft:model","model":"minecraft:item/golden_apple"}}}

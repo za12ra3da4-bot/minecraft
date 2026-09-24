@@ -230,16 +230,16 @@ function olyEvMob(e: entity):
 function olyEvRelic() :: item:
     set {_r} to random integer between 1 and 4
     if {_r} is 1:
-        set {_i} to unbreakable iron sword named "&b&l헤파이스토스의 검" with lore "&7대장장이 신이 벼린 칼" and "&8유물"
+        set {_i} to olyCmdl(unbreakable iron sword named "&b&l헤파이스토스의 검" with lore "&7대장장이 신이 벼린 칼" and "&8유물", 7401)
         enchant {_i} with sharpness 3
     else if {_r} is 2:
-        set {_i} to unbreakable golden helmet named "&b&l하데스의 투구" with lore "&7쓰는 자를 지켜준다" and "&8유물"
+        set {_i} to olyCmdl(unbreakable golden helmet named "&b&l하데스의 투구" with lore "&7쓰는 자를 지켜준다" and "&8유물", 7402)
         enchant {_i} with protection 3
     else if {_r} is 3:
-        set {_i} to unbreakable crossbow named "&b&l아르테미스의 석궁" with lore "&7달빛처럼 빠르다" and "&8유물"
+        set {_i} to olyCmdl(unbreakable crossbow named "&b&l아르테미스의 석궁" with lore "&7달빛처럼 빠르다" and "&8유물", 7403)
         enchant {_i} with quick charge 2
     else:
-        set {_i} to 3 golden apples named "&b&l헤스페리데스의 황금 사과" with lore "&7영원한 정원의 열매" and "&8유물"
+        set {_i} to olyCmdl(3 golden apples named "&b&l헤스페리데스의 황금 사과" with lore "&7영원한 정원의 열매" and "&8유물", 7404)
     return {_i}
 
 # ── 괴물 처치 명성

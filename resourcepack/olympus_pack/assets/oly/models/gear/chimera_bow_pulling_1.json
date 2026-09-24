@@ -1,0 +1,6 @@
+{
+ "parent": "minecraft:item/bow",
+ "textures": {
+  "layer0": "oly:item/gear/chimera_bow_pulling_1"
+ }
+}

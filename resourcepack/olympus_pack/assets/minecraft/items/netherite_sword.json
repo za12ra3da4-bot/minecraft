@@ -1,0 +1,1 @@
+{"model":{"type":"minecraft:range_dispatch","property":"minecraft:custom_model_data","index":0,"entries":[{"threshold":7105,"model":{"type":"minecraft:model","model":"oly:gear/hydra_fang"}},{"threshold":7105.5,"model":{"type":"minecraft:model","model":"minecraft:item/netherite_sword"}}],"fallback":{"type":"minecraft:model","model":"minecraft:item/netherite_sword"}}}

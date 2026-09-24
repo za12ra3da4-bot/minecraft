@@ -20,6 +20,13 @@
 #    /지휘관 <플레이어>  (지휘관 넘기기)
 # =====================================================================================
 
+import:
+    org.bukkit.Bukkit
+    net.kyori.adventure.text.Component
+    net.kyori.adventure.text.format.NamedTextColor
+    net.kyori.adventure.key.Key
+    net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+
 on load:
     olyModReady("ui")
 
@@ -281,10 +288,37 @@ every 5 seconds:
 # =====================================================================================
 
 function olyGuiNew(p: player, rows: number, title: text) :: inventory:
+    return olyGuiNewBg({_p}, {_rows}, {_title}, "grid")
+
+# ── 리소스팩 배경 (font oly:gui) 글리프: 왼쪽으로 8 당김 → 창 전체 그림 → 제목 자리로 되돌림
+function olyGuiGlyph(rows: number, bg: text) :: text:
+    if {_bg} is "main":
+        if {_rows} is 6:
+            return ""
+    if {_rows} is 3:
+        return ""
+    if {_rows} is 4:
+        return ""
+    if {_rows} is 6:
+        return ""
+    return ""
+
+# ── 메뉴 창. 제목 = [배경 그림(oly:gui, 흰색=원래 색)] + [원래 제목]
+#    Paper 의 Adventure 제목이 필요해서 skript-reflect 로 만든다. 실패하면 예전처럼 회색 유리판 창
+function olyGuiNewBg(p: player, rows: number, title: text, bg: text) :: inventory:
     delete {oly::rt::ga::%uuid of {_p}%::*}
-    set {_inv} to chest inventory with {_rows} rows named {_title}
-    loop {_rows} * 9 times:
-        set slot (loop-number - 1) of {_inv} to gray stained glass pane named "&8 "
+    set {_g} to olyGuiGlyph({_rows}, {_bg})
+    if {_g} is not "":
+        set {_t} to {_title}
+        replace all "§" with "&" in {_t}
+        set {_bgc} to Component.text({_g}).font(Key.key("oly", "gui")).color(NamedTextColor.WHITE)
+        set {_tc} to LegacyComponentSerializer.legacyAmpersand().deserialize({_t})
+        set {_full} to Component.text("").append({_bgc}).append({_tc})
+        set {_inv} to Bukkit.createInventory({_none}, {_rows} * 9, {_full})
+    if {_inv} is not set:
+        set {_inv} to chest inventory with {_rows} rows named {_title}
+        loop {_rows} * 9 times:
+            set slot (loop-number - 1) of {_inv} to gray stained glass pane named "&8 "
     return {_inv}
 
 function olyBtn(p: player, inv: inventory, slot: number, i: item, act: text):
@@ -310,11 +344,12 @@ function olyFacBanner(f: text) :: item:
 # ── 메인
 function olyMenuMain(p: player):
     set {_f} to olyFacOf({_p})
-    set {_inv} to olyGuiNew({_p}, 5, "&8올림포스 메뉴")
+    # 6줄 신전 배경: 메달 4 · 기둥머리 19~25 · 명판 31 · 기단 49 (tools/boss_fx/gui.py)
+    set {_inv} to olyGuiNewBg({_p}, 6, "&8올림포스 메뉴", "main")
     if {_f} is "none":
         set {_i} to white banner named "&e&l세력 선택" with lore "&7아테네 · 스파르타 · 코린토스 · 테베" and "&e클릭"
         olyBtn({_p}, {_inv}, 22, {_i}, "page:join")
-        olyBtn({_p}, {_inv}, 40, barrier named "&c닫기", "close")
+        olyBtn({_p}, {_inv}, 49, barrier named "&c닫기", "close")
         olyGuiShow({_p}, {_inv}, "main")
         stop
     # 세력 정보
@@ -346,7 +381,7 @@ function olyMenuMain(p: player):
     olyBtn({_p}, {_inv}, 25, {_i}, "repair")
     set {_i} to book named "&f&l전쟁 기록" with lore "&7지금까지의 선포 · 강화 · 배신" and "&e클릭"
     olyBtn({_p}, {_inv}, 31, {_i}, "log")
-    olyBtn({_p}, {_inv}, 40, barrier named "&c닫기", "close")
+    olyBtn({_p}, {_inv}, 49, barrier named "&c닫기", "close")
     olyGuiShow({_p}, {_inv}, "main")
 
 # ── 세력 선택

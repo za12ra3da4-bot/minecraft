@@ -1,0 +1,1 @@
+{"model":{"type":"minecraft:range_dispatch","property":"minecraft:custom_model_data","index":0,"entries":[{"threshold":7208,"model":{"type":"minecraft:model","model":"oly:gear/siege_hammer"}},{"threshold":7208.5,"model":{"type":"minecraft:model","model":"minecraft:item/iron_axe"}}],"fallback":{"type":"minecraft:model","model":"minecraft:item/iron_axe"}}}

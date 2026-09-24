@@ -584,8 +584,23 @@ ICONS = [
 ]
 
 
-def render(boss, fn, seed=0):
-    sh = Sheet(32)
+def render(boss, fn, seed=0, size=64):
+    sh = Sheet(size)
     fn(sh)
     fg = sh.bake()
-    return compose(plate(FIELD[boss], 32, seed), fg)
+    # 판 위에 1px 그림자 (아래·오른쪽)
+    from PIL import Image
+    shadow = Image.new("RGBA", fg.size, (0, 0, 0, 0))
+    a = fg.split()[3].point(lambda v: 110 if v > 0 else 0)
+    shadow.putalpha(a)
+    base = plate(FIELD[boss], size, seed)
+    k = max(1, size // 32)
+    base.alpha_composite(Image.merge("RGBA", (a.point(lambda v: 10), a.point(lambda v: 6), a.point(lambda v: 6), a)), (k, k))
+    base.alpha_composite(fg)
+    return base
+
+
+def render_small(boss, fn, seed=0):
+    """폰트 글리프용 32px: 64px 을 그려 면적 평균으로 줄인다"""
+    from PIL import Image
+    return render(boss, fn, seed, 64).resize((32, 32), Image.BOX)

@@ -128,7 +128,7 @@ on join:
         if {oly::map::tp::altar} is set:
             teleport player to {oly::map::tp::altar}
         clear player's inventory
-        set slot 8 of player's inventory to nether star named "&6&l올림포스 메뉴 &7(우클릭)"
+        set slot 8 of player's inventory to olyCmdl(nether star named "&6&l올림포스 메뉴 &7(우클릭)", 7301)
         send "&e게임이 진행 중입니다. 세력을 골라 합류하세요!"
         wait 2 seconds
         if player is online:

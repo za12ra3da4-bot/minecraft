@@ -1,0 +1,6 @@
+{
+ "parent": "minecraft:item/bow",
+ "textures": {
+  "layer0": "oly:item/gear/archer_bow_pulling_1"
+ }
+}

@@ -153,7 +153,7 @@ function olyHeroApply(p: player):
     else if {_h} is "leonidas":
         set {oly::rt::def::%{_u}%} to 0.65
     olyAttr({_p}, "max_health", olyN("hero.hp"))
-    set slot 7 of {_p}'s inventory to nether star named "&e&l영웅 권능: %olyHeroName({_h})% &7(우클릭)" with lore "&7%olyHeroSkill({_h})%" and "&8패시브: %olyHeroPassive({_h})%"
+    set slot 7 of {_p}'s inventory to olyCmdl(nether star named "&e&l영웅 권능: %olyHeroName({_h})% &7(우클릭)" with lore "&7%olyHeroSkill({_h})%" and "&8패시브: %olyHeroPassive({_h})%", 7302)
     wait 1 tick
     heal {_p}
 
