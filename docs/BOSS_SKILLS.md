@@ -163,3 +163,50 @@ UUID 규칙 `6f6c7962-0000-000B-0000-0000000000PP` (`6f6c7962` = "olyb")
 | 게임 종료 / 리셋 | 기존 흐름(`end` → `olyBossReset` → `olyBossGone`) 그대로 + 위 정리 + `oly:boss/fx/restore_players` |
 | 서버 재시작 | `on load`: `kill @e[tag=olyfx]` + 모든 접속자 복구. `on join` / `on respawn`: 석화·속박 수정치 제거 |
 | 플레이어 상태 | 석화·속박은 **attribute modifier** (`oly:boss_petrify`, `oly:boss_snare`) 로만 건다 → 병종의 base 이동속도를 건드리지 않고 정확히 떼어낼 수 있다 |
+
+---
+
+## 4. 설치
+
+| 무엇 | 어디에 |
+|---|---|
+| `Skript/scripts/*.sk` (새 파일: `10-bossfx.sk`, `10-boss-<id>.sk` 7개 / 수정: `10-monsters.sk`, `90-flow.sk`, `02-game.sk`, `06-army.sk`, `08-heroes.sk`, `13-ui.sk`, `14-events.sk`) | `plugins/Skript/scripts/` 에 덮어쓰기 → `/sk reload all` |
+| 저장소 최상위 `<id>/fx/`, `fx/` (데이터팩 함수) | `world/datapacks/olympus_bosses/data/oly/function/boss/` 아래 같은 자리 → `/reload` |
+| `resourcepack/olympus_pack.zip` | 서버 리소스팩으로 교체 (원본 524개 파일 포함, 추가·교체분 포함) |
+
+필요: Paper 1.21.11, Skript 2.15, skript-reflect (메뉴 창 배경의 Adventure 제목, 메두사 시선의 시야 판정).
+
+시험: `/oly boss <id>` 로 소환 → `/oly skill <id> <스킬>` 로 스킬을 바로 시전.
+
+## 5. 리소스팩 추가분
+
+| 경로 | 내용 | 쓰는 곳 |
+|---|---|---|
+| `oly:font/icons` (U+E100~E121) | 스킬 아이콘 글리프 (32px) | 보스바 이름 · 자막 · 액션바 |
+| `oly:icon/<보스>_<스킬>` | 스킬 아이콘 아이템 모델 (64px 일러스트) | 시전 중 보스 머리 위 · 사냥 표식 · 석화 표시 |
+| `oly:fx/*` | 이펙트 모델 13종 (ring · pool 은 `custom_model_data` 색 틴트) | 바닥 데칼 · 투사체 · 촉수 · 석화 껍질 |
+| `oly:boss.<id>.<소리>` | 사운드 38 이벤트 (합성 ogg 22 + 바닐라 음원) | 스킬 시전 · 예고 · 판정 |
+| `oly:font/gui` (U+E200, E203/E204/E206) | 메뉴 창 배경 | 올림포스 메뉴(6줄 신전) · 나머지 메뉴 |
+| `minecraft:items/<바닐라>.json` | `custom_model_data` 분기 (번호 없으면 바닐라 그대로) | 플레이어 아이템 |
+| `oly:item/boss/*.png` | 보스 아틀라스 1024 재도색 (UV 동일) + 파츠 디테일 요소 | 보스 모델 |
+
+### 플레이어 아이템 번호 (`custom_model_data` floats[0], Skript `olyCmdl()`)
+
+| 번호 | 바닐라 | 아이템 |
+|---|---|---|
+| 7101–7107 | 네더라이트 도끼 · 금 흉갑 · 활 · 불사의 토템 · 네더라이트 검 · 해골 머리 · 삼지창 | 괴물 유물 (라브리스 · 사자 가죽 · 키메라 활 · 케르베로스 목걸이 · 히드라 독니 · 메두사 머리 · 스킬라 삼지창) |
+| 7201–7209 | 철 검 · 철 창 · 돌 검 · 활 · 철 검 · 철 검 · 방패 · 철 도끼 · 금 투구 | 병종 장비 (보병의 검 · 도루 · 단검 · 궁병의 활 · 기병도 · 크시포스 · 호플론 · 공성 망치 · 코린트식 투구) |
+| 7301–7302 | 네더의 별 | 올림포스 메뉴 · 영웅 권능 |
+| 7401–7404 | 철 검 · 금 투구 · 석궁 · 황금 사과 | 사건 유물 (헤파이스토스 · 하데스 · 아르테미스 · 헤스페리데스) |
+
+## 6. 서버에서 꼭 확인할 것 (이 환경에선 서버를 돌릴 수 없었음)
+
+- Skript 파싱: `tools/boss_fx/sklint.py` 로 함수 정의/호출 · 인자 수 · 따옴표 · 리소스/함수 참조는 검사했지만,
+  Skript 자체 문법(`is blocking`, `custom model data`, skript-reflect 호출 등)은 `/sk reload` 로 확인이 필요하다.
+- 메뉴 창 배경: 제목 폰트 글리프 방식. 배경이 아이템 위에 덮이면 알려 줄 것 (1.21.6+ GUI 렌더 순서).
+- 발광 · 파티클 위치: 케르베로스 · 키메라 머리 파츠 번호는 프레임 좌표로 역산했다.
+
+## 7. 다시 만들기 (tools/boss_fx)
+
+`build_icons.py` 아이콘 → `fx.py` 이펙트 → `sounds.py` 사운드 → `build_items.py` 아이템 → `gui.py` 메뉴 →
+`boss_paint.py` + `boss_detail.py` 보스 → `datapack.py` 연출 함수 → `build_pack.py` zip (검사 포함) → `sklint.py` Skript 검사.
