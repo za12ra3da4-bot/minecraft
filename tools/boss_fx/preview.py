@@ -5,7 +5,8 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 
 from icons import ICONS, render
-from items_art import SPRITES, bake, hoplon_back, hoplon_face
+from items3d import BUILDERS
+from render_item import render_model
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PACK = os.path.join(HERE, "..", "..", "resourcepack", "olympus_pack", "assets", "oly")
@@ -56,10 +57,19 @@ def main():
         s = 96 // im.width if im.width <= 96 else 1
         fx.append((os.path.basename(p)[:-4], im.resize((im.width * max(1, s) // 1, im.height * max(1, s) // 1), Image.NEAREST)))
     y = grid(canvas, draw, y, fx, 116, 1, W, lf)
-    y = section(draw, y, "Player items 32x32 (2x vanilla)  →  custom_model_data 7101-7404 on the vanilla item", W)
-    items = [(n, bake(fn)) for n, fn in SPRITES.items()] + [("hoplon_face", hoplon_face()), ("hoplon_back", hoplon_back())]
-    items = [(n, im if im.width == 32 else im.resize((32, 32), Image.LANCZOS)) for n, im in items]
-    y = grid(canvas, draw, y, items, 116, 3, W, lf)
+    y = section(draw, y, "Player items — 3D models (cuboids)  →  custom_model_data 7101-7404 on the vanilla item  (inventory view / 3-4 view)", W)
+    items = []
+    for n in BUILDERS:
+        mp = os.path.join(PACK, "models", "gear", n + ".json")
+        a = render_model(mp, 104, "gui")
+        b = render_model(mp, 104, "34", yaw=-35, pitch=20)
+        im = Image.new("RGBA", (104, 104), (0, 0, 0, 0))
+        im.alpha_composite(a.resize((66, 66), Image.LANCZOS), (0, 0))
+        im.alpha_composite(b.resize((66, 66), Image.LANCZOS), (38, 38))
+        items.append((n, im))
+    for n in ("hoplon", "hoplon_blocking"):
+        items.append((n, render_model(os.path.join(PACK, "models", "gear", n + ".json"), 104, "34", yaw=150, pitch=20)))
+    y = grid(canvas, draw, y, items, 136, 1, W, lf)
     y = section(draw, y, "Menu windows (font oly:gui over the chest)  —  Olympus menu 6 rows = temple facade  |  other menus 3/4/6 rows", W)
     x = 24
     for f in ("menu_main", "menu_grid3", "menu_grid4"):
