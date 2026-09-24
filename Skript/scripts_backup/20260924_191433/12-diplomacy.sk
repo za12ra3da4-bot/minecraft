@@ -1,0 +1,162 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  12-diplomacy.sk  -  동맹 · 무역 협정 · 파기
+# -------------------------------------------------------------------------------------
+#  의존: 00~11
+#
+#  제안 → 상대 지휘관이 같은 제안을 되돌려 보내면 성립 (90초 안에)
+#    동맹: 서로 공격 불가(01 olyHostile), 서로의 성문 통과(07), 한 세력당 동맹 1개까지
+#          (4세력 게임에서 3:1 몰아가기 방지)
+#    무역: 양쪽 모두 10초마다 금 +3, 식량 +2 (04). 전쟁이 시작되면 자동 파기
+#  파기
+#    동맹을 정식으로 파기하면 명성 손실은 없지만 10분간 재동맹 불가
+#    동맹에게 바로 선전포고하면 '배신' (11-war: 명성 -30)
+#
+#  변수
+#    {oly::dip::<a>::<b>}                "ally" / "war" / "neutral" (양방향)
+#    {oly::dip::trade::<a>::<b>}         true (양방향)
+#    {oly::dip::allycd::<a>::<b>}        재동맹 가능해지는 초
+#    {oly::dip::offer::<kind>::<a>::<b>} a 가 b 에게 낸 제안의 만료 초
+# =====================================================================================
+
+on load:
+    olyModReady("diplomacy")
+
+function olyDipKindName(k: text) :: text:
+    if {_k} is "ally":
+        return "동맹"
+    if {_k} is "trade":
+        return "무역 협정"
+    return {_k}
+
+function olyDipAllyOf(f: text) :: text:
+    loop {oly::flist::*}:
+        if olyIsAlly({_f}, loop-value) is true:
+            return loop-value
+    return "none"
+
+function olyDipTrade(a: text, b: text) :: boolean:
+    if {oly::dip::trade::%{_a}%::%{_b}%} is true:
+        return true
+    return false
+
+# ── 제안 (상대가 먼저 같은 제안을 했으면 곧바로 성립)
+function olyDipPropose(p: player, t: text, k: text) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "&c세력에 먼저 가입하세요."
+    if olyIsLeader({_p}) is false:
+        return "&c외교는 지휘관만 할 수 있습니다."
+    set {_t} to olyFacParse({_t})
+    if {_t} is "none":
+        return "&c그런 세력이 없습니다."
+    if {_t} is {_f}:
+        return "&c자기 세력과는 협정을 맺을 수 없습니다."
+    if {_k} is not "ally":
+        if {_k} is not "trade":
+            return "&c제안 종류는 동맹 / 무역 입니다."
+    set {_st} to olyWarState({_f}, {_t})
+    if {_st} is "war":
+        return "&c전쟁 중인 세력입니다. 먼저 강화하세요."
+    if {_st} is "prep":
+        return "&c전쟁 준비 중인 세력입니다. 먼저 강화하세요."
+    set {_kn} to olyDipKindName({_k})
+    if {_k} is "ally":
+        if {_st} is "ally":
+            return "&c이미 동맹입니다."
+        if ({oly::dip::allycd::%{_f}%::%{_t}%} ? -1) >= olySec():
+            set {_l} to {oly::dip::allycd::%{_f}%::%{_t}%} - olySec()
+            return "&c동맹이 깨진 지 얼마 되지 않았습니다. &7(%olyTime({_l})% 남음)"
+        if olyDipAllyOf({_f}) is not "none":
+            return "&c이미 다른 동맹이 있습니다. (동맹은 하나만)"
+        if olyDipAllyOf({_t}) is not "none":
+            return "&c상대에게 이미 다른 동맹이 있습니다."
+    else:
+        if olyDipTrade({_f}, {_t}) is true:
+            return "&c이미 무역 협정이 있습니다."
+    # 상대가 먼저 제안해 두었다 → 성립
+    if ({oly::dip::offer::%{_k}%::%{_t}%::%{_f}%} ? -1) >= olySec():
+        delete {oly::dip::offer::%{_k}%::%{_t}%::%{_f}%}
+        delete {oly::dip::offer::%{_k}%::%{_f}%::%{_t}%}
+        olyDipMake({_f}, {_t}, {_k})
+        return "&a%{_kn}%이(가) 성립되었습니다."
+    set {oly::dip::offer::%{_k}%::%{_f}%::%{_t}%} to olySec() + 90
+    olyFacBc({_t}, "&b[외교] %olyFacFull({_f})%&b이(가) &f%{_kn}%&b을(를) 제안합니다.")
+    set {_fn} to olyFacName({_f})
+    if {_k} is "ally":
+        olyFacBc({_t}, "&7   지휘관이 90초 안에 &f/외교 동맹 %{_fn}% &7을(를) 입력하면 성립")
+    else:
+        olyFacBc({_t}, "&7   지휘관이 90초 안에 &f/외교 무역 %{_fn}% &7을(를) 입력하면 성립")
+    loop all players:
+        if olyFacOf(loop-player) is {_t}:
+            play sound "block.note_block.bell" with volume 1 with pitch 1.2 at location of loop-player for loop-player
+    return "&b%olyFacName({_t})%에게 %{_kn}%을(를) 제안했습니다."
+
+function olyDipMake(a: text, b: text, k: text):
+    if {_k} is "ally":
+        set {oly::dip::%{_a}%::%{_b}%} to "ally"
+        set {oly::dip::%{_b}%::%{_a}%} to "ally"
+        olyOracle("%olyFacName({_a})%과(와) %olyFacName({_b})%이(가) 동맹을 맺었습니다", "두 세력의 창은 이제 같은 적을 향합니다. 서로의 성문이 열립니다.")
+    else:
+        set {oly::dip::trade::%{_a}%::%{_b}%} to true
+        set {oly::dip::trade::%{_b}%::%{_a}%} to true
+        olyOracle("%olyFacName({_a})%과(와) %olyFacName({_b})%이(가) 무역 협정을 맺었습니다", "두 세력 모두 10초마다 금 +3, 식량 +2")
+    set {_kn} to olyDipKindName({_k})
+    olyWarLog("&b%{_kn}% &f%olyFacFull({_a})% &7- %olyFacFull({_b})%")
+
+# ── 파기
+function olyDipBreak(p: player, t: text, k: text) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "&c세력에 먼저 가입하세요."
+    if olyIsLeader({_p}) is false:
+        return "&c외교는 지휘관만 할 수 있습니다."
+    set {_t} to olyFacParse({_t})
+    if {_t} is "none":
+        return "&c그런 세력이 없습니다."
+    if {_k} is "ally":
+        if olyIsAlly({_f}, {_t}) is false:
+            return "&c동맹이 아닙니다."
+        set {oly::dip::%{_f}%::%{_t}%} to "neutral"
+        set {oly::dip::%{_t}%::%{_f}%} to "neutral"
+        set {oly::dip::allycd::%{_f}%::%{_t}%} to olySec() + olyN("dip.allyCdSec")
+        set {oly::dip::allycd::%{_t}%::%{_f}%} to olySec() + olyN("dip.allyCdSec")
+        olyOracle("%olyFacName({_f})%이(가) %olyFacName({_t})%과(와)의 동맹을 파기했습니다", "맹세는 정식으로 거두어졌습니다. 10분간 다시 맺을 수 없습니다.")
+        olyWarLog("&7동맹 파기 &f%olyFacFull({_f})% &7- %olyFacFull({_t})%")
+        return "&7동맹을 파기했습니다."
+    if {_k} is "trade":
+        if olyDipTrade({_f}, {_t}) is false:
+            return "&c무역 협정이 없습니다."
+        delete {oly::dip::trade::%{_f}%::%{_t}%}
+        delete {oly::dip::trade::%{_t}%::%{_f}%}
+        olyFacBc({_t}, "&7[외교] %olyFacFull({_f})%&7이(가) 무역 협정을 파기했습니다.")
+        olyWarLog("&7무역 파기 &f%olyFacFull({_f})% &7- %olyFacFull({_t})%")
+        return "&7무역 협정을 파기했습니다."
+    return "&c파기할 종류는 동맹 / 무역 입니다."
+
+function olyDipReset():
+    delete {oly::dip::*}
+    loop {oly::flist::*}:
+        loop {oly::flist::*}:
+            if loop-value-1 is not loop-value-2:
+                set {oly::dip::%loop-value-1%::%loop-value-2%} to "neutral"
+
+# ── 제안 만료 · 전쟁 중 무역 자동 파기
+every 2 seconds:
+    if olyLive() is not true:
+        stop
+    loop {oly::flist::*}:
+        set {_a} to loop-value
+        loop {oly::flist::*}:
+            set {_b} to loop-value-2
+            if {_a} is not {_b}:
+                if {oly::dip::trade::%{_a}%::%{_b}%} is true:
+                    if olyIsWar({_a}, {_b}) is true:
+                        delete {oly::dip::trade::%{_a}%::%{_b}%}
+                        delete {oly::dip::trade::%{_b}%::%{_a}%}
+                        olyBc("&7[외교] %olyFacFull({_a})% &7- %olyFacFull({_b})% &7무역로가 전쟁으로 끊겼습니다.")
+                loop "ally" and "trade":
+                    if {oly::dip::offer::%loop-value-3%::%{_a}%::%{_b}%} is set:
+                        if {oly::dip::offer::%loop-value-3%::%{_a}%::%{_b}%} < olySec():
+                            delete {oly::dip::offer::%loop-value-3%::%{_a}%::%{_b}%}
+                            set {_kn} to olyDipKindName(loop-value-3)
+                            olyFacBc({_a}, "&7[외교] %olyFacName({_b})%이(가) %{_kn}% 제안에 답하지 않았습니다.")

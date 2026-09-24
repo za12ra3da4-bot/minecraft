@@ -1,0 +1,127 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  04-economy.sk  -  자원 · 경제
+# -------------------------------------------------------------------------------------
+#  의존: 00-config, 01-data, 02-game, 03-factions
+#
+#  10초마다 세력별 정산
+#    수입 = 수도 기본 생산 + 소유 영토 생산(타입별) × 도시 충성도
+#         + 시장(금) · 신전(신앙) 건물 보너스 + 접속자 세금 + 무역로
+#    지출 = 접속 병사 1명당 식량 (유지비)
+#    보정 = 전쟁 피로도 70 이상이면 식량 수입 -20%, 가뭄 이벤트 중 식량 -30%
+#  마지막 정산값은 {oly::f::<fid>::inc::<자원>} 에 남겨 UI 가 표시한다.
+#
+#  상위 모듈이 남기는 값(변수로만 읽는다 → 계층 규칙 준수)
+#    {oly::c::<cid>::b::market / temple / warehouse}  (07-city)
+#    {oly::f::<fid>::weary}                             (11-war)
+#    {oly::dip::trade::<a>::<b>}                        (12-diplomacy)
+#    {oly::ev::drought::until}                          (14-events)
+# =====================================================================================
+
+on load:
+    olyModReady("economy")
+
+function olyResList() :: texts:
+    return "food", "wood", "stone", "iron", "gold" and "faith"
+
+# ── 게임 시작 시 초기 자원
+function olyEcoReset():
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        delete {oly::f::%{_f}%::res::*}
+        delete {oly::f::%{_f}%::inc::*}
+        delete {oly::f::%{_f}%::cap::*}
+        loop olyResList():
+            set {oly::f::%{_f}%::res::%loop-value-2%} to olyN("eco.start.%loop-value-2%")
+        olyEcoCaps({_f})
+
+# ── 저장 한도 = 기본 + 소유 도시 창고 레벨 합 × 증가량
+function olyEcoCaps(fid: text):
+    set {_lv} to 0
+    loop {oly::clist::*}:
+        if {oly::c::%loop-value%::owner} is {_fid}:
+            if {oly::c::%loop-value%::b::warehouse} is set:
+                add {oly::c::%loop-value%::b::warehouse} to {_lv}
+    set {_cap} to olyN("eco.cap.base") + {_lv} * olyN("eco.cap.perWarehouse")
+    loop olyResList():
+        set {oly::f::%{_fid}%::cap::%loop-value%} to {_cap}
+
+# ── 한 세력의 10초 수입 계산 (정산은 하지 않고 {_out::자원} 에 담아 돌려준다)
+function olyEcoIncome(fid: text) :: numbers:
+    set {_food} to 0
+    set {_wood} to 0
+    set {_stone} to 0
+    set {_iron} to 0
+    set {_gold} to 0
+    set {_faith} to 0
+    # 수도 기본 생산
+    if {oly::c::%{_fid}%::owner} is {_fid}:
+        add olyN("eco.capital.food") to {_food}
+        add olyN("eco.capital.wood") to {_wood}
+        add olyN("eco.capital.stone") to {_stone}
+        add olyN("eco.capital.iron") to {_iron}
+        add olyN("eco.capital.gold") to {_gold}
+    # 영토 생산
+    loop {oly::tlist::*}:
+        set {_t} to loop-value
+        if olyTerrOwner({_t}) is {_fid}:
+            set {_ty} to olyTerrType({_t})
+            set {_mul} to 1
+            if {oly::t::%{_t}%::city} is set:
+                set {_cid} to {oly::t::%{_t}%::city}
+                if {oly::c::%{_cid}%::loyalty} is set:
+                    set {_mul} to 0.4 + 0.6 * ({oly::c::%{_cid}%::loyalty} / 100)
+            add olyN("yield.%{_ty}%.food") * {_mul} to {_food}
+            add olyN("yield.%{_ty}%.wood") * {_mul} to {_wood}
+            add olyN("yield.%{_ty}%.stone") * {_mul} to {_stone}
+            add olyN("yield.%{_ty}%.iron") * {_mul} to {_iron}
+            add olyN("yield.%{_ty}%.gold") * {_mul} to {_gold}
+            add olyN("yield.%{_ty}%.faith") * {_mul} to {_faith}
+    # 도시 건물
+    loop {oly::clist::*}:
+        set {_c} to loop-value
+        if {oly::c::%{_c}%::owner} is {_fid}:
+            if {oly::c::%{_c}%::b::market} is set:
+                add {oly::c::%{_c}%::b::market} * 2 to {_gold}
+            if {oly::c::%{_c}%::b::temple} is set:
+                add {oly::c::%{_c}%::b::temple} to {_faith}
+    # 세금 · 유지비
+    set {_on} to olyFacOnline({_fid})
+    add {_on} * olyN("eco.tax.perPlayer") to {_gold}
+    remove {_on} * olyN("army.upkeep.food") from {_food}
+    # 무역로
+    loop {oly::flist::*}:
+        if {oly::dip::trade::%{_fid}%::%loop-value%} is true:
+            add 3 to {_gold}
+            add 2 to {_food}
+    # 전쟁 피로 · 가뭄
+    if {oly::f::%{_fid}%::weary} is set:
+        if {oly::f::%{_fid}%::weary} >= 70:
+            if {_food} > 0:
+                set {_food} to {_food} * 0.8
+    if {oly::ev::drought::until} is set:
+        if olySec() < {oly::ev::drought::until}:
+            if {_food} > 0:
+                set {_food} to {_food} * 0.7
+    return rounded {_food}, rounded {_wood}, rounded {_stone}, rounded {_iron}, rounded {_gold} and rounded {_faith}
+
+function olyEcoTick():
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        set {_inc::*} to olyEcoIncome({_f})
+        set {_i} to 0
+        loop olyResList():
+            add 1 to {_i}
+            set {_r} to loop-value-2
+            set {_v} to {_inc::%{_i}%}
+            olyResAdd({_f}, {_r}, {_v})
+            set {oly::f::%{_f}%::inc::%{_r}%} to {_v}
+        # 굶주림
+        if olyRes({_f}, "food") <= 0:
+            if {oly::f::%{_f}%::inc::food} < 0:
+                set {_m} to {oly::f::%{_f}%::morale} ? 70
+                set {oly::f::%{_f}%::morale} to max(0, {_m} - olyN("eco.starve.moraleHit"))
+                olyFacBc({_f}, "&c[경제] 식량이 바닥났습니다! 사기가 떨어집니다. &7(영토 확보·무역·병력 축소)")
+
+every 10 seconds:
+    if olyLive() is true:
+        olyEcoTick()

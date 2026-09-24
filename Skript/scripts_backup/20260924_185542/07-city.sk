@@ -1,0 +1,416 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  07-city.sk  -  도시 · 성문 · 공성 · 점령 · 충성도 · 건물
+# -------------------------------------------------------------------------------------
+#  의존: 00~06
+#
+#  성문 (맵 데이터 {oly::c::<cid>::gate::a/b} 상자)
+#    - 도시 주인이 누군가와 '전쟁 중'이면 닫힌다 (검은 떡갈나무 판자). 아니면 열린다.
+#    - 주인·동맹은 성문을 우클릭하면 5초간 열린다 (근처 6칸에 적이 없을 때)
+#    - 적은 성문을 좌클릭해 부순다: 기본 피해 × 병종 배율 (공성병 6배, 그 외 0.2배)
+#      × 영웅 보정 {oly::rt::gatemul::<uuid>}.  0 이 되면 부서져 뚫린다.
+#    - 주인은 /성문수리 (석재 40 → 체력 +300). 체력 30% 이상이면 다시 세운다.
+#
+#  점령대 ({oly::c::<cid>::capture}, 반경 4칸)
+#    - 수도: 그 세력과 전쟁 중일 때만.  중립 도시: 2시대(신들의 분노)부터.
+#    - 주인이 한 명이라도 올라와 있거나, 공격 세력이 둘 이상이면 멈춤.
+#    - 90초 버티면 함락 → 수도 +100 명성 (3시대엔 200), 도시 +40
+#
+#  충성도: 함락 직후 30 → 30초마다 +2.  20 이하면 반란 확률 (원래 주인에게 돌아감)
+#  건물 5종 (시장·병영·성벽·신전·창고) 레벨 1~5 → 경제·방어에 반영
+# =====================================================================================
+
+on load:
+    olyModReady("city")
+
+function olyBldList() :: texts:
+    return "market", "barracks", "walls", "temple" and "warehouse"
+
+function olyBldName(b: text) :: text:
+    if {_b} is "market":
+        return "시장"
+    if {_b} is "barracks":
+        return "병영"
+    if {_b} is "walls":
+        return "성벽"
+    if {_b} is "temple":
+        return "신전"
+    if {_b} is "warehouse":
+        return "창고"
+    return {_b}
+
+function olyBldDesc(b: text) :: text:
+    if {_b} is "market":
+        return "레벨당 금 +2 / 10초"
+    if {_b} is "barracks":
+        return "병종 비용은 그대로, 부활 보급 무료 확률 +10%%"
+    if {_b} is "walls":
+        return "레벨당 성문 체력 +500"
+    if {_b} is "temple":
+        return "레벨당 신앙 +1 / 10초"
+    if {_b} is "warehouse":
+        return "레벨당 자원 저장 한도 +800"
+    return ""
+
+function olyCityName(cid: text) :: text:
+    return {oly::c::%{_cid}%::name} ? {_cid}
+
+function olyCityOwner(cid: text) :: text:
+    return {oly::c::%{_cid}%::owner} ? "neutral"
+
+function olyCityGateMax(cid: text) :: number:
+    set {_w} to {oly::c::%{_cid}%::b::walls} ? 1
+    set {_hp} to olyN("city.gate.hp") + ({_w} - 1) * olyN("city.gate.perWallLv")
+    if {oly::c::%{_cid}%::capital} is not true:
+        set {_hp} to {_hp} * olyN("city.town.gateMul")
+    return {_hp}
+
+function olyCityReset():
+    loop {oly::clist::*}:
+        set {_c} to loop-value
+        set {oly::c::%{_c}%::owner} to {oly::c::%{_c}%::home} ? "neutral"
+        set {oly::c::%{_c}%::loyalty} to 100
+        loop olyBldList():
+            set {oly::c::%{_c}%::b::%loop-value-2%} to 1
+        set {oly::c::%{_c}%::gate::hp} to olyCityGateMax({_c})
+        set {oly::c::%{_c}%::gate::state} to "unknown"
+        delete {oly::c::%{_c}%::gate::broken}
+        delete {oly::c::%{_c}%::cap::*}
+        olyGateApply({_c}, "open")
+
+# ── 성문 블록 적용 (상태가 바뀔 때만 블록을 건드린다)
+function olyGateApply(cid: text, st: text):
+    if {oly::c::%{_cid}%::gate::state} is {_st}:
+        stop
+    set {oly::c::%{_cid}%::gate::state} to {_st}
+    set {_a} to {oly::c::%{_cid}%::gate::a}
+    set {_b} to {oly::c::%{_cid}%::gate::b}
+    if {_st} is "closed":
+        set blocks within {_a} and {_b} to dark oak planks
+        play sound "block.iron_door.close" with volume 1 with pitch 0.6 at {_a}
+    else:
+        set blocks within {_a} and {_b} to air
+        if {_st} is "open":
+            play sound "block.iron_door.open" with volume 1 with pitch 0.6 at {_a}
+
+# ── 지금 닫혀 있어야 하는가
+function olyGateWant(cid: text) :: text:
+    if {oly::c::%{_cid}%::gate::broken} is true:
+        return "broken"
+    if ({oly::rt::gopen::%{_cid}%} ? -1) >= olySec():
+        return "open"
+    set {_o} to olyCityOwner({_cid})
+    if {_o} is "neutral":
+        return "open"
+    loop {oly::flist::*}:
+        if olyIsWar({_o}, loop-value) is true:
+            return "closed"
+        if ({oly::war::prep::%{_o}%::%loop-value%} ? -1) >= olySec():
+            return "closed"
+        if ({oly::war::prep::%loop-value%::%{_o}%} ? -1) >= olySec():
+            return "closed"
+    return "open"
+
+# ── 블록 위치가 어느 도시의 성문인가 ("none")
+function olyGateAt(l: location) :: text:
+    loop {oly::clist::*}:
+        set {_a} to {oly::c::%loop-value%::gate::a}
+        set {_b} to {oly::c::%loop-value%::gate::b}
+        if x-coordinate of {_l} >= min(x-coordinate of {_a}, x-coordinate of {_b}) - 0.6:
+            if x-coordinate of {_l} <= max(x-coordinate of {_a}, x-coordinate of {_b}) + 0.6:
+                if z-coordinate of {_l} >= min(z-coordinate of {_a}, z-coordinate of {_b}) - 0.6:
+                    if z-coordinate of {_l} <= max(z-coordinate of {_a}, z-coordinate of {_b}) + 0.6:
+                        if y-coordinate of {_l} >= y-coordinate of {_a} - 0.6:
+                            if y-coordinate of {_l} <= y-coordinate of {_b} + 0.6:
+                                return loop-value
+    return "none"
+
+function olyHostileNear(fid: text, l: location, r: number) :: boolean:
+    loop all players in radius {_r} around {_l}:
+        set {_f} to olyFacOf(loop-player)
+        if {_f} is not "none":
+            if olyIsWar({_f}, {_fid}) is true:
+                return true
+    return false
+
+# ── 주인·동맹이 성문을 우클릭 → 5초 개방
+on right click on dark oak planks:
+    set {_c} to olyGateAt(location of event-block)
+    if {_c} is "none":
+        stop
+    cancel event
+    set {_f} to olyFacOf(player)
+    set {_o} to olyCityOwner({_c})
+    if {_f} is not {_o}:
+        if olyIsAlly({_f}, {_o}) is false:
+            send action bar "&c%olyCityName({_c})% 성문은 주인만 열 수 있습니다"
+            stop
+    if olyHostileNear({_o}, location of event-block, 6) is true:
+        send action bar "&c적이 성문 앞에 있어 열 수 없습니다!"
+        stop
+    set {oly::rt::gopen::%{_c}%} to olySec() + 5
+    olyGateApply({_c}, "open")
+    send action bar "&a성문을 5초간 엽니다"
+
+# ── 적이 성문을 좌클릭 → 피해
+on left click on dark oak planks:
+    set {_c} to olyGateAt(location of event-block)
+    if {_c} is "none":
+        stop
+    set {_f} to olyFacOf(player)
+    set {_o} to olyCityOwner({_c})
+    if {_f} is "none":
+        stop
+    if olyIsWar({_f}, {_o}) is false:
+        send action bar "&7%olyCityName({_c})%와(과) 전쟁 중이 아닙니다"
+        stop
+    set {_u} to "%uuid of player%"
+    if {oly::rt::gcd::%{_u}%} is set:
+        if difference between {oly::rt::gcd::%{_u}%} and now is less than 8 ticks:
+            stop
+    set {oly::rt::gcd::%{_u}%} to now
+    set {_cls} to olyClassOf(player)
+    if {_cls} is "siege":
+        set {_m} to olyN("cmb.siege.gate")
+    else:
+        set {_m} to olyN("cmb.other.gate")
+    set {_m} to {_m} * ({oly::rt::gatemul::%{_u}%} ? 1)
+    set {_d} to olyN("city.gate.base") * {_m}
+    olyGateDamage({_c}, {_d}, player)
+
+function olyGateDamage(cid: text, d: number, p: player):
+    set {_max} to olyCityGateMax({_cid})
+    set {_before} to {oly::c::%{_cid}%::gate::hp} ? {_max}
+    set {_hp} to max(0, {_before} - {_d})
+    set {oly::c::%{_cid}%::gate::hp} to {_hp}
+    set {_pct} to floor({_hp} / {_max} * 100)
+    set {_bar} to olyGauge({_pct}, 20, "&c", "&8")
+    send action bar "&6%olyCityName({_cid})% 성문 %{_bar}% &f%{_pct}%%%" to {_p}
+    play sound "entity.zombie.attack_wooden_door" with volume 0.8 with pitch 0.8 at location of {_p}
+    set {_o} to olyCityOwner({_cid})
+    # 25% 단위로 주인에게 경보
+    if floor({_before} / {_max} * 4) > floor({_hp} / {_max} * 4):
+        olyFacBc({_o}, "&c[공성] %olyCityName({_cid})% 성문 체력 %{_pct}%%%! &7(/성문수리)")
+    if {_hp} <= 0:
+        set {oly::c::%{_cid}%::gate::broken} to true
+        olyGateApply({_cid}, "broken")
+        set {_a} to {oly::c::%{_cid}%::gate::a}
+        olyCmd("particle minecraft:explosion_emitter %x-coordinate of {_a}% %(y-coordinate of {_a}) + 2% %z-coordinate of {_a}% 1 1 1 0 3 force")
+        loop all players:
+            play sound "entity.generic.explode" with volume 1 with pitch 0.7 at location of loop-player for loop-player
+        olyOracle("%olyCityName({_cid})%의 성문이 무너졌습니다", "%olyFacName(olyFacOf({_p}))%의 군대가 성 안으로 밀려듭니다!")
+
+# ── 성문 수리 (주인 세력, 성문 12칸 이내, 적 16칸 이내 없음)
+function olyGateRepair(p: player) :: text:
+    set {_f} to olyFacOf({_p})
+    set {_best} to "none"
+    loop {oly::clist::*}:
+        if olyCityOwner(loop-value) is {_f}:
+            if distance between location of {_p} and {oly::c::%loop-value%::gate::a} <= 12:
+                set {_best} to loop-value
+    if {_best} is "none":
+        return "&c자기 도시 성문 가까이(12칸)에서만 수리할 수 있습니다."
+    set {_u} to "%uuid of {_p}%"
+    set {_left} to olyCdLeft({_u}, "repair", olyN("def.gate.repairCdSec"))
+    if {_left} > 0:
+        return "&c수리 쿨타임 %{_left}%초"
+    if olyHostileNear({_f}, {oly::c::%{_best}%::gate::a}, 16) is true:
+        return "&c적이 가까이 있어 수리할 수 없습니다!"
+    set {_max} to olyCityGateMax({_best})
+    if ({oly::c::%{_best}%::gate::hp} ? {_max}) >= {_max}:
+        return "&7성문이 이미 멀쩡합니다."
+    set {_cost} to olyN("def.gate.repairStone")
+    if olyResPay({_f}, "stone", {_cost}) is false:
+        return "&c석재가 부족합니다 (%{_cost}% 필요)"
+    olyCd({_u}, "repair", olyN("def.gate.repairCdSec"))
+    set {oly::c::%{_best}%::gate::hp} to min({_max}, ({oly::c::%{_best}%::gate::hp} ? 0) + olyN("def.gate.repairHp"))
+    if {oly::c::%{_best}%::gate::broken} is true:
+        if {oly::c::%{_best}%::gate::hp} >= {_max} * 0.3:
+            delete {oly::c::%{_best}%::gate::broken}
+            set {oly::c::%{_best}%::gate::state} to "unknown"
+    play sound "block.anvil.use" with volume 0.8 with pitch 1.2 at location of {_p}
+    return "&a%olyCityName({_best})% 성문 수리 → %floor({oly::c::%{_best}%::gate::hp})% / %floor({_max})%"
+
+
+# =====================================================================================
+#  점령대
+# =====================================================================================
+
+function olyCityCanCap(cid: text, fid: text) :: boolean:
+    set {_o} to olyCityOwner({_cid})
+    if {_o} is {_fid}:
+        return false
+    if {_o} is "neutral":
+        return olyPhaseAtLeast("wrath")
+    return olyIsWar({_fid}, {_o})
+
+function olyCityTick():
+    loop {oly::clist::*}:
+        set {_c} to loop-value
+        olyGateApply({_c}, olyGateWant({_c}))
+        set {_cap} to {oly::c::%{_c}%::capture}
+        delete {_n::*}
+        loop all players in radius 4.5 around {_cap}:
+            if loop-player's gamemode is not spectator:
+                if abs((y-coordinate of location of loop-player) - (y-coordinate of {_cap})) <= 3:
+                    set {_f} to olyFacOf(loop-player)
+                    if {_f} is not "none":
+                        add 1 to {_n::%{_f}%}
+        set {_o} to olyCityOwner({_c})
+        set {_def} to {_n::%{_o}%} ? 0
+        set {_atk} to "none"
+        set {_atks} to 0
+        loop {oly::flist::*}:
+            if ({_n::%loop-value-2%} ? 0) > 0:
+                if olyCityCanCap({_c}, loop-value-2) is true:
+                    add 1 to {_atks}
+                    set {_atk} to loop-value-2
+        if {_atks} = 0:
+            if ({oly::c::%{_c}%::cap::pct} ? 0) > 0:
+                set {oly::c::%{_c}%::cap::pct} to max(0, {oly::c::%{_c}%::cap::pct} - 2)
+            delete {oly::c::%{_c}%::cap::contested}
+            continue
+        if {_atks} > 1:
+            set {oly::c::%{_c}%::cap::contested} to true
+            continue
+        if {_def} > 0:
+            set {oly::c::%{_c}%::cap::contested} to true
+            continue
+        delete {oly::c::%{_c}%::cap::contested}
+        if {oly::c::%{_c}%::cap::by} is not {_atk}:
+            set {oly::c::%{_c}%::cap::by} to {_atk}
+            set {oly::c::%{_c}%::cap::pct} to 0
+            if {_o} is not "neutral":
+                olyFacBc({_o}, "&4[경보] %olyFacFull({_atk})%&c이(가) &f%olyCityName({_c})% &c점령대를 차지하려 합니다!")
+                loop all players:
+                    if olyFacOf(loop-player) is {_o}:
+                        send title "&4&l점령 경보" with subtitle "&c%olyCityName({_c})%" to loop-player for 3 seconds
+                        play sound "event.raid.horn" with volume 1 with pitch 1 at location of loop-player for loop-player
+        set {_k} to min(1.75, 1 + 0.25 * (({_n::%{_atk}%} ? 1) - 1))
+        set {oly::c::%{_c}%::cap::pct} to ({oly::c::%{_c}%::cap::pct} ? 0) + 100 / olyN("city.captureSec") * {_k}
+        if {oly::c::%{_c}%::cap::pct} >= 100:
+            olyCityCapture({_c}, {_atk}, true)
+
+# ── 도시 소유권 이전
+function olyCityCapture(cid: text, fid: text, renown: boolean):
+    set {_old} to olyCityOwner({_cid})
+    set {oly::c::%{_cid}%::owner} to {_fid}
+    set {oly::c::%{_cid}%::loyalty} to 30
+    delete {oly::c::%{_cid}%::cap::*}
+    set {oly::c::%{_cid}%::gate::hp} to olyCityGateMax({_cid}) * 0.5
+    delete {oly::c::%{_cid}%::gate::broken}
+    set {oly::c::%{_cid}%::gate::state} to "unknown"
+    if {oly::c::%{_cid}%::terr} is set:
+        olyTerrCapture({oly::c::%{_cid}%::terr}, {_fid}, false)
+    olyEcoCaps({_fid})
+    if {_old} is not "neutral":
+        olyEcoCaps({_old})
+    if {_renown} is false:
+        stop
+    # 전쟁 점수 (11-war 가 읽는다)
+    if {_old} is not "neutral":
+        if olyIsWar({_fid}, {_old}) is true:
+            if {oly::c::%{_cid}%::capital} is true:
+                add 20 to {oly::war::score::%{_fid}%::%{_old}%}
+            else:
+                add 8 to {oly::war::score::%{_fid}%::%{_old}%}
+    set {_nm} to olyCityName({_cid})
+    if {oly::c::%{_cid}%::capital} is true:
+        set {_r} to olyN("renown.capital")
+        if olyPhase() is "war":
+            set {_r} to {_r} * 2
+        olyRenownAdd({_fid}, {_r}, "수도 함락: %{_nm}%")
+        olyOracle("%{_nm}%이(가) 함락되었습니다!", "%olyFacName({_fid})%의 깃발이 %{_nm}%의 왕궁에 꽂혔습니다.")
+        loop all players:
+            play sound "entity.wither.spawn" with volume 0.8 with pitch 0.8 at location of loop-player for loop-player
+        if {_old} is not "neutral":
+            olyFacBc({_old}, "&4[수도 함락] &c부활 지점이 다른 도시로 옮겨졌습니다. 수도를 되찾으십시오!")
+    else:
+        olyRenownAdd({_fid}, olyN("renown.city"), "도시 점령: %{_nm}%")
+        olyOracle("%olyFacName({_fid})%이(가) %{_nm}%을(를) 점령했습니다", "새로운 주인의 깃발이 올라갑니다.")
+        loop all players:
+            play sound "ui.toast.challenge_complete" with volume 0.7 with pitch 1 at location of loop-player for loop-player
+    loop all players:
+        if olyFacOf(loop-player) is {_fid}:
+            send title "&6&l점령 성공" with subtitle "&f%{_nm}%" to loop-player for 4 seconds
+        else if olyFacOf(loop-player) is {_old}:
+            send title "&4&l함락" with subtitle "&c%{_nm}%" to loop-player for 4 seconds
+    olyLog("도시 %{_nm}% : %{_old}% → %{_fid}%")
+
+every second:
+    if olyLive() is true:
+        olyCityTick()
+
+# ── 침입 경보 (도시 반경 안에 전쟁 중인 적)
+every 5 seconds:
+    if olyLive() is not true:
+        stop
+    loop {oly::clist::*}:
+        set {_c} to loop-value
+        set {_o} to olyCityOwner({_c})
+        if {_o} is "neutral":
+            continue
+        if olySec() - ({oly::rt::calert::%{_c}%} ? -999) < olyN("city.alert.sec"):
+            continue
+        if olyHostileNear({_o}, {oly::c::%{_c}%::center}, olyN("city.alertRange")) is true:
+            set {oly::rt::calert::%{_c}%} to olySec()
+            olyFacBc({_o}, "&c[경보] 적이 &f%olyCityName({_c})% &c근처에 나타났습니다!")
+            loop all players:
+                if olyFacOf(loop-player) is {_o}:
+                    play sound "block.bell.use" with volume 1 with pitch 0.7 at location of loop-player for loop-player
+
+# ── 충성도 · 반란
+every 30 seconds:
+    if olyLive() is not true:
+        stop
+    loop {oly::clist::*}:
+        set {_c} to loop-value
+        set {_l} to min(100, ({oly::c::%{_c}%::loyalty} ? 100) + 2)
+        set {oly::c::%{_c}%::loyalty} to {_l}
+        if {_l} <= olyN("city.revolt.at"):
+            if random number between 0 and 1 < 0.15:
+                set {_home} to {oly::c::%{_c}%::home} ? "neutral"
+                if {_home} is not olyCityOwner({_c}):
+                    olyOracle("%olyCityName({_c})%에서 반란이 일어났습니다", "시민들이 옛 주인에게 성문을 열었습니다.")
+                    olyCityCapture({_c}, {_home}, false)
+
+
+# =====================================================================================
+#  건물 업그레이드 (지휘관)
+# =====================================================================================
+
+function olyBldCost(cid: text, b: text, r: text) :: number:
+    set {_lv} to {oly::c::%{_cid}%::b::%{_b}%} ? 1
+    return olyN("city.up.%{_r}%") * {_lv}
+
+function olyCityUpgrade(p: player, cid: text, b: text) :: text:
+    set {_f} to olyFacOf({_p})
+    if olyCityOwner({_cid}) is not {_f}:
+        return "&c우리 세력의 도시가 아닙니다."
+    set {_lv} to {oly::c::%{_cid}%::b::%{_b}%} ? 1
+    if {_lv} >= olyN("city.maxLevel"):
+        return "&7%olyBldName({_b})%은(는) 이미 최고 레벨입니다."
+    set {_s} to olyBldCost({_cid}, {_b}, "stone")
+    set {_w} to olyBldCost({_cid}, {_b}, "wood")
+    set {_g} to olyBldCost({_cid}, {_b}, "gold")
+    if olyCanPay({_f}, "stone", {_s}) is false:
+        return "&c석재가 부족합니다 (%{_s}%)"
+    if olyCanPay({_f}, "wood", {_w}) is false:
+        return "&c목재가 부족합니다 (%{_w}%)"
+    if olyCanPay({_f}, "gold", {_g}) is false:
+        return "&c금이 부족합니다 (%{_g}%)"
+    olyResPay({_f}, "stone", {_s})
+    olyResPay({_f}, "wood", {_w})
+    olyResPay({_f}, "gold", {_g})
+    set {oly::c::%{_cid}%::b::%{_b}%} to {_lv} + 1
+    if {_b} is "walls":
+        set {oly::c::%{_cid}%::gate::hp} to ({oly::c::%{_cid}%::gate::hp} ? 0) + olyN("city.gate.perWallLv")
+    if {_b} is "warehouse":
+        olyEcoCaps({_f})
+    olyRenownAdd({_f}, olyN("renown.cityLevel"), "%olyCityName({_cid})% %olyBldName({_b})% Lv.%{_lv} + 1%")
+    return "&a%olyCityName({_cid})% %olyBldName({_b})% → Lv.%{_lv} + 1%"
+
+function olyCityLevel(cid: text) :: number:
+    set {_s} to 0
+    loop olyBldList():
+        add ({oly::c::%{_cid}%::b::%loop-value%} ? 1) to {_s}
+    return {_s} - 4

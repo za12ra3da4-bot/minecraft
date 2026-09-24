@@ -1,0 +1,469 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  01-data.sk  -  데이터 접근자 + 공용 유틸
+# -------------------------------------------------------------------------------------
+#  의존: 00-config
+#
+#  이 파일의 역할
+#    1) 변수 스키마를 숨긴다. 다른 모듈은 {oly::f::...} 를 직접 건드리지 않고 함수를 쓴다.
+#       → 나중에 스키마를 바꿔도 이 파일만 고치면 된다.
+#    2) 역인덱스({oly::idx::*})를 유일하게 수정하는 곳이다.
+#    3) 방송/사운드/시간표시 같은 공용 유틸을 제공한다.
+#
+#  ※ 상위 모듈(03~15)은 이 파일의 함수를 자유롭게 호출한다.
+#    반대로 이 파일은 그 어떤 상위 모듈 함수도 부르지 않는다.
+# =====================================================================================
+
+on load:
+    if {oly::state::running} is not set:
+        set {oly::state::running} to false
+    if {oly::state::phase} is not set:
+        set {oly::state::phase} to "off"
+    if {oly::state::sec} is not set:
+        set {oly::state::sec} to 0
+    set {oly::mod::data} to true
+
+
+# =====================================================================================
+#  1. 게임 상태
+# =====================================================================================
+
+function olyLive() :: boolean:
+    if {oly::state::running} is true:
+        return true
+    return false
+
+function olyPhase() :: text:
+    if {oly::state::phase} is not set:
+        return "off"
+    return {oly::state::phase}
+
+function olySec() :: number:
+    if {oly::state::sec} is not set:
+        return 0
+    return {oly::state::sec}
+
+# ── 시대 순서. 해금 조건 판정에 쓴다
+function olyPhaseIdx(ph: text) :: number:
+    if {_ph} is "peace":
+        return 1
+    if {_ph} is "wrath":
+        return 2
+    if {_ph} is "war":
+        return 3
+    return 0
+
+# ── "지금이 wrath 이상인가?" → olyPhaseAtLeast("wrath")
+function olyPhaseAtLeast(ph: text) :: boolean:
+    set {_a} to olyPhaseIdx(olyPhase())
+    set {_b} to olyPhaseIdx({_ph})
+    if {_a} >= {_b}:
+        return true
+    return false
+
+function olyModReady(m: text):
+    set {oly::mod::%{_m}%} to true
+
+
+# =====================================================================================
+#  2. 공용 유틸
+# =====================================================================================
+
+# ── 초 → "12:34"
+function olyTime(sec: number) :: text:
+    set {_s} to floor({_sec})
+    if {_s} < 0:
+        set {_s} to 0
+    set {_m} to floor({_s} / 60)
+    set {_r} to {_s} - ({_m} * 60)
+    if {_r} < 10:
+        return "%{_m}%:0%{_r}%"
+    return "%{_m}%:%{_r}%"
+
+# ── 퍼센트 → 텍스트 게이지 "■■■■□□□□"
+function olyGauge(pct: number, len: number, on: text, off: text) :: text:
+    set {_f} to floor({_pct} / 100 * {_len})
+    if {_f} < 0:
+        set {_f} to 0
+    if {_f} > {_len}:
+        set {_f} to {_len}
+    set {_out} to ""
+    loop {_len} times:
+        if loop-number <= {_f}:
+            set {_out} to "%{_out}%%{_on}%■"
+        else:
+            set {_out} to "%{_out}%%{_off}%■"
+    return {_out}
+
+function olyBc(msg: text):
+    loop all players:
+        send "%{_msg}%" to loop-player
+
+function olySnd(p: player, s: text, v: number, pi: number):
+    play sound "%{_s}%" with volume {_v} with pitch {_pi} at location of {_p} for {_p}
+
+function olySndAll(s: text, v: number, pi: number):
+    loop all players:
+        play sound "%{_s}%" with volume {_v} with pitch {_pi} at location of loop-player for loop-player
+
+function olyLog(msg: text):
+    add "&8[%olyTime(olySec())%] &7%{_msg}%" to {oly::log::*}
+    if size of {oly::log::*} > 200:
+        delete {oly::log::1}
+
+# ── 델포이의 신탁 스타일 전체 방송. 굵직한 사건은 전부 이걸로 알린다
+function olyOracle(title: text, body: text):
+    olyBc("")
+    olyBc("  &6&l[ 신 탁 ]  &e%{_title}%")
+    olyBc("  &7%{_body}%")
+    olyBc("")
+    olySndAll("block.bell.use", 0.7, 1.2)
+    olyLog("%{_title}% / %{_body}%")
+
+# ── 개인 쿨타임. true 를 돌려주면 "지금 써도 된다"는 뜻이고 그 시점을 기록한다
+function olyCd(u: text, k: text, sec: number) :: boolean:
+    if {oly::p::%{_u}%::cd::%{_k}%} is set:
+        if (olySec() - {oly::p::%{_u}%::cd::%{_k}%}) < {_sec}:
+            return false
+    set {oly::p::%{_u}%::cd::%{_k}%} to olySec()
+    return true
+
+# ── 쿨타임 남은 초
+function olyCdLeft(u: text, k: text, sec: number) :: number:
+    if {oly::p::%{_u}%::cd::%{_k}%} is not set:
+        return 0
+    set {_d} to {_sec} - (olySec() - {oly::p::%{_u}%::cd::%{_k}%})
+    if {_d} < 0:
+        return 0
+    return {_d}
+
+
+# =====================================================================================
+#  3. 세력
+# =====================================================================================
+
+function olyFacOfU(u: text) :: text:
+    if {oly::p::%{_u}%::faction} is not set:
+        return "none"
+    return {oly::p::%{_u}%::faction}
+
+function olyFacOf(p: player) :: text:
+    return olyFacOfU("%uuid of {_p}%")
+
+function olyFacName(fid: text) :: text:
+    if {oly::f::%{_fid}%::name} is not set:
+        return "무소속"
+    return {oly::f::%{_fid}%::name}
+
+function olyFacColor(fid: text) :: text:
+    if {oly::f::%{_fid}%::color} is not set:
+        return "&7"
+    return {oly::f::%{_fid}%::color}
+
+# ── "&c스파르타" 형태. 메시지에는 항상 이걸 쓴다
+function olyFacFull(fid: text) :: text:
+    return "%olyFacColor({_fid})%%olyFacName({_fid})%"
+
+function olyFacGod(fid: text) :: text:
+    if {oly::f::%{_fid}%::god} is not set:
+        return "none"
+    return {oly::f::%{_fid}%::god}
+
+function olyFacSize(fid: text) :: number:
+    return size of {oly::fmem::%{_fid}%::*}
+
+# ── 소속 변경. 멤버 목록 인덱스를 같이 갱신하는 유일한 함수
+function olySetFac(u: text, fid: text):
+    set {_old} to olyFacOfU({_u})
+    if {_old} is not "none":
+        remove {_u} from {oly::fmem::%{_old}%::*}
+    if {_fid} is "none":
+        delete {oly::p::%{_u}%::faction}
+        stop
+    set {oly::p::%{_u}%::faction} to {_fid}
+    if {oly::fmem::%{_fid}%::*} does not contain {_u}:
+        add {_u} to {oly::fmem::%{_fid}%::*}
+
+# ── 세력원 중 접속 중인 사람에게만 알림
+function olyFacBc(fid: text, msg: text):
+    loop all players:
+        if olyFacOf(loop-player) is {_fid}:
+            send "%{_msg}%" to loop-player
+
+function olyFacOnline(fid: text) :: number:
+    set {_n} to 0
+    loop all players:
+        if olyFacOf(loop-player) is {_fid}:
+            add 1 to {_n}
+    return {_n}
+
+
+# =====================================================================================
+#  4. 자원
+# =====================================================================================
+
+function olyResName(r: text) :: text:
+    if {_r} is "food":
+        return "식량"
+    if {_r} is "wood":
+        return "목재"
+    if {_r} is "stone":
+        return "석재"
+    if {_r} is "iron":
+        return "철"
+    if {_r} is "gold":
+        return "금"
+    if {_r} is "faith":
+        return "신앙"
+    return {_r}
+
+function olyResColor(r: text) :: text:
+    if {_r} is "food":
+        return "&a"
+    if {_r} is "wood":
+        return "&6"
+    if {_r} is "stone":
+        return "&7"
+    if {_r} is "iron":
+        return "&f"
+    if {_r} is "gold":
+        return "&e"
+    if {_r} is "faith":
+        return "&d"
+    return "&7"
+
+function olyResIcon(r: text) :: itemtype:
+    if {_r} is "food":
+        return bread
+    if {_r} is "wood":
+        return oak log
+    if {_r} is "stone":
+        return stone bricks
+    if {_r} is "iron":
+        return iron ingot
+    if {_r} is "gold":
+        return gold ingot
+    if {_r} is "faith":
+        return amethyst shard
+    return paper
+
+function olyRes(fid: text, r: text) :: number:
+    if {oly::f::%{_fid}%::res::%{_r}%} is not set:
+        return 0
+    return floor({oly::f::%{_fid}%::res::%{_r}%})
+
+function olyResCap(fid: text, r: text) :: number:
+    if {oly::f::%{_fid}%::cap::%{_r}%} is not set:
+        return olyN("eco.cap.base")
+    return {oly::f::%{_fid}%::cap::%{_r}%}
+
+# ── 저장 한도를 넘지 않게 더한다. 음수를 넣으면 0 아래로 내려가지 않게 뺀다
+function olyResAdd(fid: text, r: text, n: number):
+    set {_v} to olyRes({_fid}, {_r}) + {_n}
+    set {_cap} to olyResCap({_fid}, {_r})
+    if {_v} > {_cap}:
+        set {_v} to {_cap}
+    if {_v} < 0:
+        set {_v} to 0
+    set {oly::f::%{_fid}%::res::%{_r}%} to {_v}
+
+function olyCanPay(fid: text, r: text, n: number) :: boolean:
+    if olyRes({_fid}, {_r}) >= {_n}:
+        return true
+    return false
+
+# ── 지불 성공 시 true. 실패하면 아무것도 차감하지 않는다
+function olyResPay(fid: text, r: text, n: number) :: boolean:
+    if olyRes({_fid}, {_r}) < {_n}:
+        return false
+    olyResAdd({_fid}, {_r}, 0 - {_n})
+    return true
+
+
+# =====================================================================================
+#  5. 명성
+# =====================================================================================
+
+function olyRenown(fid: text) :: number:
+    if {oly::f::%{_fid}%::renown} is not set:
+        return 0
+    return floor({oly::f::%{_fid}%::renown})
+
+function olyRenownAdd(fid: text, n: number, reason: text):
+    if {_fid} is "none":
+        stop
+    if {_n} is 0:
+        stop
+    set {_v} to olyRenown({_fid}) + {_n}
+    if {_v} < 0:
+        set {_v} to 0
+    set {oly::f::%{_fid}%::renown} to {_v}
+    if {_n} > 0:
+        olyBc("&6[명성] %olyFacFull({_fid})% &e+%{_n}% &7(%{_reason}%) &8→ &f%{_v}%")
+    else:
+        olyBc("&6[명성] %olyFacFull({_fid})% &c%{_n}% &7(%{_reason}%) &8→ &f%{_v}%")
+    olyLog("명성 %olyFacName({_fid})% %{_n}% (%{_reason}%)")
+
+# ── 명성 1위 세력 id. 동점이면 먼저 등록된 쪽
+function olyTopFaction() :: text:
+    set {_best} to "none"
+    set {_bv} to -1
+    loop {oly::flist::*}:
+        set {_r} to olyRenown(loop-value)
+        if {_r} > {_bv}:
+            set {_bv} to {_r}
+            set {_best} to loop-value
+    return {_best}
+
+
+# =====================================================================================
+#  6. 영토 (청크 역인덱스)
+# =====================================================================================
+
+function olyChunkKeyX(l: location) :: number:
+    return floor(x-coordinate of {_l} / 16)
+
+function olyChunkKeyZ(l: location) :: number:
+    return floor(z-coordinate of {_l} / 16)
+
+# ── ★ O(1) 영토 판정. 전체 영토를 도는 코드는 만들지 않는다
+function olyTerrAt(w: text, cx: number, cz: number) :: text:
+    if {oly::idx::chunk::%{_w}%::%{_cx}%::%{_cz}%} is not set:
+        return "none"
+    return {oly::idx::chunk::%{_w}%::%{_cx}%::%{_cz}%}
+
+function olyTerrAtLoc(l: location) :: text:
+    return olyTerrAt("%world of {_l}%", olyChunkKeyX({_l}), olyChunkKeyZ({_l}))
+
+function olyTerrOf(p: player) :: text:
+    return olyTerrAtLoc(location of {_p})
+
+function olyTerrName(tid: text) :: text:
+    if {oly::t::%{_tid}%::name} is not set:
+        return "미지의 땅"
+    return {oly::t::%{_tid}%::name}
+
+function olyTerrOwner(tid: text) :: text:
+    if {oly::t::%{_tid}%::owner} is not set:
+        return "neutral"
+    return {oly::t::%{_tid}%::owner}
+
+function olyTerrType(tid: text) :: text:
+    if {oly::t::%{_tid}%::type} is not set:
+        return "plain"
+    return {oly::t::%{_tid}%::type}
+
+# ── 청크 하나를 영토에 묶는다 (인덱스 + 역방향 목록 동시 기록)
+function olyTerrBind(tid: text, w: text, cx: number, cz: number):
+    set {oly::idx::chunk::%{_w}%::%{_cx}%::%{_cz}%} to {_tid}
+    if {oly::t::%{_tid}%::chunks::*} does not contain "%{_w}%;%{_cx}%;%{_cz}%":
+        add "%{_w}%;%{_cx}%;%{_cz}%" to {oly::t::%{_tid}%::chunks::*}
+
+# ── 영토가 가진 청크 전부를 인덱스에서 떼어낸다 (영토 삭제 시)
+function olyTerrUnbindAll(tid: text):
+    loop {oly::t::%{_tid}%::chunks::*}:
+        set {_part::*} to "%loop-value%" split at ";"
+        set {_cx} to "%{_part::2}%" parsed as number
+        set {_cz} to "%{_part::3}%" parsed as number
+        delete {oly::idx::chunk::%{_part::1}%::%{_cx}%::%{_cz}%}
+    delete {oly::t::%{_tid}%::chunks::*}
+
+function olyTerrSize(tid: text) :: number:
+    return size of {oly::t::%{_tid}%::chunks::*}
+
+function olyTerrCount(fid: text) :: number:
+    set {_n} to 0
+    loop {oly::tlist::*}:
+        if olyTerrOwner(loop-value) is {_fid}:
+            add 1 to {_n}
+    return {_n}
+
+
+# =====================================================================================
+#  7. 외교 상태 읽기
+# -------------------------------------------------------------------------------------
+#  쓰기는 12-diplomacy 가 담당한다. 여기서는 전투 판정용 읽기 전용 함수만 둔다.
+#  (전투 판정은 06-army, 08-heroes 등 12보다 낮은 번호에서도 필요하므로 여기 있어야 한다)
+# =====================================================================================
+
+function olyDip(a: text, b: text) :: text:
+    if {_a} is {_b}:
+        return "self"
+    if {oly::dip::%{_a}%::%{_b}%} is not set:
+        return "neutral"
+    return {oly::dip::%{_a}%::%{_b}%}
+
+function olyIsAlly(a: text, b: text) :: boolean:
+    if olyDip({_a}, {_b}) is "ally":
+        return true
+    return false
+
+function olyIsWar(a: text, b: text) :: boolean:
+    if olyDip({_a}, {_b}) is "war":
+        return true
+    return false
+
+# ── 두 플레이어가 서로 때릴 수 있는 사이인가
+function olyHostile(p1: player, p2: player) :: boolean:
+    set {_a} to olyFacOf({_p1})
+    set {_b} to olyFacOf({_p2})
+    if {_a} is {_b}:
+        return false
+    if {_a} is "none":
+        return false
+    if {_b} is "none":
+        return false
+    if olyIsAlly({_a}, {_b}) is true:
+        return false
+    return true
+
+
+# =====================================================================================
+#  8. 정리 / 초기화
+# =====================================================================================
+
+# ── 게임 엔티티(병력·몬스터·영웅NPC) 전부 제거 + 런타임 변수 삭제
+function olyRtSweep():
+    set {_n} to 0
+    loop all entities:
+        if metadata value "oly" of loop-entity is set:
+            kill loop-entity
+            add 1 to {_n}
+    delete {oly::rt::*}
+    olyLog("런타임 정리 - 엔티티 %{_n}%기 제거")
+
+# ── 게임 데이터 전체 초기화. 맵 설정({oly::t::*}, {oly::c::*})은 남긴다
+function olyWipeGame():
+    olyRtSweep()
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        delete {oly::f::%{_f}%::renown}
+        delete {oly::f::%{_f}%::res::*}
+        delete {oly::f::%{_f}%::weary}
+        delete {oly::f::%{_f}%::favor::*}
+        delete {oly::f::%{_f}%::tech::*}
+        delete {oly::fmem::%{_f}%::*}
+    loop {oly::tlist::*}:
+        set {oly::t::%loop-value%::owner} to "neutral"
+        delete {oly::t::%loop-value%::cap::*}
+    delete {oly::p::*}
+    delete {oly::dip::*}
+    delete {oly::war::*}
+    delete {oly::h::*}
+    delete {oly::g::*}
+    delete {oly::log::*}
+    delete {oly::state::sec}
+    delete {oly::state::left}
+    set {oly::state::running} to false
+    set {oly::state::phase} to "off"
+
+# ── 맵 설정까지 포함한 완전 초기화 (맵을 새로 깔 때만)
+function olyWipeAll():
+    olyWipeGame()
+    loop {oly::tlist::*}:
+        olyTerrUnbindAll(loop-value)
+    delete {oly::t::*}
+    delete {oly::tlist::*}
+    delete {oly::c::*}
+    delete {oly::clist::*}
+    delete {oly::idx::*}
+    delete {oly::m::*}

@@ -1,0 +1,998 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  13-ui.sk  -  화면 · 메뉴 · 플레이어 명령
+# -------------------------------------------------------------------------------------
+#  의존: 00~12
+#
+#  화면 (추가 플러그인 없이 바닐라 명령만 사용)
+#    액션바     : 병종 · 지금 서 있는 땅(주인) · 점령 진행 게이지
+#    보스바     : 맨 위 = 시대(02) / 그 아래 = 우리 세력 명성 → 목표 (세력원에게만)
+#    사이드바   : 세력(팀)마다 다른 사이드바 (sidebar.team.<색>)
+#                 자원+수입 / 명성 순위 / 다른 세력과의 관계 / 시대
+#    TAB        : 이름 앞 세력 · 영웅 표시, 머리말·꼬리말
+#  메뉴 (올림포스 메뉴 = 9번 칸 네더의 별 우클릭, 또는 /메뉴)
+#    세력 선택 · 병종 · 도시 건물 · 영웅 · 신전(권능/제물) · 외교 · 집결 · 성문 수리 · 전쟁 기록
+#    GUI 는 "플레이어별 화면 종류 + 칸→동작" 표로 처리한다.
+#      {oly::rt::gui::<uuid>}          열려 있는 화면 종류
+#      {oly::rt::ga::<uuid>::<칸>}     그 칸을 눌렀을 때의 동작 문자열 ("cls:archer" 등)
+#  명령
+#    /메뉴  /세력 [이름]  /병종 [이름]  /도시  /영웅 [이름]  /신전 [하급|상급|제우스]  /제물
+#    /외교 <선포|강화|항복|동맹|무역|동맹파기|무역파기> <세력>  /집결  /성문수리  /전쟁기록
+#    /지휘관 <플레이어>  (지휘관 넘기기)
+# =====================================================================================
+
+on load:
+    olyModReady("ui")
+
+
+# =====================================================================================
+#  1. 사이드바 (세력별)
+# =====================================================================================
+
+function olySbObj(f: text) :: text:
+    return "oly_sb_%{_f}%"
+
+function olyUiInit():
+    delete {oly::rt::sb::*}
+    olySbMake("all", "&6&l신들의 전쟁", 8)
+    olyCmd("scoreboard objectives setdisplay sidebar oly_sb_all")
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        set {_t} to "&6&l올림포스 &8| %olyFacFull({_f})%"
+        olySbMake({_f}, {_t}, 14)
+        olyCmd("scoreboard objectives setdisplay sidebar.team.%{oly::f::%{_f}%::team}% oly_sb_%{_f}%")
+        olyCmd("bossbar add oly:fr_%{_f}% ""명성""")
+        olyCmd("bossbar set oly:fr_%{_f}% style notched_10")
+        olyCmd("bossbar set oly:fr_%{_f}% color %{oly::f::%{_f}%::bar}%")
+        set {_goal} to olyN("renown.winGoal")
+        olyCmd("bossbar set oly:fr_%{_f}% max %{_goal}%")
+    olyUiTick()
+
+function olySbMake(f: text, title: text, lines: number):
+    set {_o} to "oly_sb_%{_f}%"
+    set {_ct} to olyLegacy({_title})
+    olyCmd("scoreboard objectives remove %{_o}%")
+    olyCmd("scoreboard objectives add %{_o}% dummy '%{_ct}%'")
+    olyCmd("scoreboard objectives modify %{_o}% numberformat blank")
+    loop {_lines} times:
+        set {_s} to {_lines} + 1 - loop-number
+        olyCmd("scoreboard players set #l%loop-number% %{_o}% %{_s}%")
+        olyCmd("scoreboard players display name #l%loop-number% %{_o}% ''")
+function olyUiOff():
+    olyCmd("scoreboard objectives remove oly_sb_all")
+    loop {oly::flist::*}:
+        olyCmd("scoreboard objectives remove oly_sb_%loop-value%")
+        olyCmd("bossbar remove oly:fr_%loop-value%")
+    delete {oly::rt::sb::*}
+
+# ── "&6글자" → "§6글자"  (명령 인자용. Skript 의 colored 는 <gold> 같은 태그 문자열이 되어 그대로 보인다)
+function olyLegacy(t: text) :: text:
+    set {_s} to {_t}
+    replace all "&" with "§" in {_s}
+    replace all "'" with "" in {_s}
+    return {_s}
+
+# ── 한 줄 갱신 (바뀌었을 때만 명령을 보낸다)
+function olySbLine(f: text, n: number, t: text):
+    set {_c} to olyLegacy({_t})
+    if {oly::rt::sb::%{_f}%::%{_n}%} is {_c}:
+        stop
+    set {oly::rt::sb::%{_f}%::%{_n}%} to {_c}
+    olyCmd("scoreboard players display name #l%{_n}% oly_sb_%{_f}% '%{_c}%'")
+# ── 명성 순위 (높은 순)
+function olyRankList() :: texts:
+    set {_left::*} to {oly::flist::*}
+    loop size of {oly::flist::*} times:
+        set {_best} to "none"
+        set {_bv} to -1
+        loop {_left::*}:
+            if olyRenown(loop-value-2) > {_bv}:
+                set {_bv} to olyRenown(loop-value-2)
+                set {_best} to loop-value-2
+        if {_best} is not "none":
+            add {_best} to {_out::*}
+            remove {_best} from {_left::*}
+    return {_out::*}
+
+function olyResLine(f: text, a: text, b: text) :: text:
+    set {_ia} to {oly::f::%{_f}%::inc::%{_a}%} ? 0
+    set {_ib} to {oly::f::%{_f}%::inc::%{_b}%} ? 0
+    set {_sa} to "+%{_ia}%"
+    if {_ia} < 0:
+        set {_sa} to "&c%{_ia}%"
+    set {_sb} to "+%{_ib}%"
+    if {_ib} < 0:
+        set {_sb} to "&c%{_ib}%"
+    return "%olyResColor({_a})%%olyResName({_a})% &f%olyRes({_f}, {_a})% &8%{_sa}%  %olyResColor({_b})%%olyResName({_b})% &f%olyRes({_f}, {_b})% &8%{_sb}%"
+
+function olyUiTick():
+    set {_rank::*} to olyRankList()
+    set {_goal} to olyN("renown.winGoal")
+    set {_era} to "&7%olyPhaseName(olyPhase())% &f%olyTime(olyLeft())%"
+    if olyLive() is not true:
+        set {_era} to "&8대기 중"
+    # 공용 (세력 없는 사람)
+    olySbLine("all", 1, "&8&m              ")
+    olySbLine("all", 2, {_era})
+    olySbLine("all", 3, "&f명성 순위 &8(목표 %{_goal}%)")
+    set {_i} to 0
+    loop {_rank::*}:
+        add 1 to {_i}
+        olySbLine("all", 3 + {_i}, " &7%{_i}%. %olyFacFull(loop-value)% &f%olyRenown(loop-value)%")
+    olySbLine("all", 8, "&e/세력 &7으로 가입")
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        olySbLine({_f}, 1, "&8&m              ")
+        olySbLine({_f}, 2, {_era})
+        olySbLine({_f}, 3, olyResLine({_f}, "food", "wood"))
+        olySbLine({_f}, 4, olyResLine({_f}, "stone", "iron"))
+        olySbLine({_f}, 5, olyResLine({_f}, "gold", "faith"))
+        set {_w} to {oly::f::%{_f}%::weary} ? 0
+        set {_mo} to {oly::f::%{_f}%::morale} ? 70
+        olySbLine({_f}, 6, "&7사기 &f%floor({_mo})% &8| &7피로 &f%floor({_w})% &8| &7영토 &f%olyTerrCount({_f})%")
+        olySbLine({_f}, 7, "&f명성 순위 &8(목표 %{_goal}%)")
+        set {_i} to 0
+        loop {_rank::*}:
+            add 1 to {_i}
+            if loop-value-2 is {_f}:
+                olySbLine({_f}, 7 + {_i}, " &e%{_i}%. %olyFacFull(loop-value-2)% &f%olyRenown(loop-value-2)% &e(우리)")
+            else:
+                olySbLine({_f}, 7 + {_i}, " &7%{_i}%. %olyFacFull(loop-value-2)% &f%olyRenown(loop-value-2)%")
+        set {_j} to 11
+        loop {oly::flist::*}:
+            if loop-value-2 is not {_f}:
+                add 1 to {_j}
+                set {_st} to olyWarState({_f}, loop-value-2)
+                set {_sn} to olyWarStateName({_st})
+                if {_st} is "war":
+                    set {_sn} to "%{_sn}% &7%olyWarScore({_f}, loop-value-2)%:%olyWarScore(loop-value-2, {_f})%"
+                else if {_st} is "prep":
+                    set {_sn} to "%{_sn}% &7%olyTime(olyWarPrepLeft({_f}, loop-value-2))%"
+                if olyDipTrade({_f}, loop-value-2) is true:
+                    set {_sn} to "%{_sn}% &6+무역"
+                olySbLine({_f}, {_j}, " %olyFacFull(loop-value-2)% &8- %{_sn}%")
+        # 명성 보스바 (세력원에게만)
+        set {_r} to min(olyRenown({_f}), {_goal})
+        set {_wn::*} to olyWarEnemies({_f})
+        set {_ws} to "평화"
+        if size of {_wn::*} > 0:
+            set {_ws} to "전쟁 중 %size of {_wn::*}%곳"
+        olyCmd("bossbar set oly:fr_%{_f}% value %{_r}%")
+        olyCmd("bossbar set oly:fr_%{_f}% name ""%olyFacName({_f})% 명성 %olyRenown({_f})% / %{_goal}%  ·  %{_ws}%""")
+        olyCmd("bossbar set oly:fr_%{_f}% players @a[team=oly_%{_f}%]")
+every 3 seconds:
+    if {oly::mod::ui} is not true:
+        stop
+    if {oly::rt::sb::all::1} is not set:
+        # 리로드·런타임 정리 직후 → 다시 만든다
+        if size of {oly::flist::*} > 0:
+            olyUiInit()
+        stop
+    olyUiTick()
+
+
+# =====================================================================================
+#  2. 액션바 · TAB
+# =====================================================================================
+
+function olyActionText(p: player) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "&e/세력 &7또는 &e/메뉴 &7로 세력을 고르세요"
+    set {_t} to olyTerrOf({_p})
+    set {_o} to olyTerrOwner({_t})
+    set {_where} to "&7%olyTerrName({_t})%"
+    if {_t} is "none":
+        set {_where} to "&8바다·황무지"
+    else if {_o} is not "neutral":
+        set {_where} to "%olyFacColor({_o})%%olyTerrName({_t})%"
+    set {_s} to "&f%olyClsName(olyClassOf({_p}))% &8| %{_where}%"
+    set {_h} to olyHeroOf({_p})
+    if {_h} is not "none":
+        set {_s} to "&6%olyHeroName({_h})% &8| %{_s}%"
+    # 도시 점령 진행
+    if {_t} is not "none":
+        set {_c} to {oly::t::%{_t}%::city}
+        if {_c} is set:
+            set {_pct} to {oly::c::%{_c}%::cap::pct} ? 0
+            if {_pct} > 0:
+                set {_by} to {oly::c::%{_c}%::cap::by} ? "none"
+                set {_g} to olyGauge({_pct}, 10, olyFacColor({_by}), "&8")
+                set {_s} to "%{_s}% &8| &f점령 %{_g}% &f%floor({_pct})%%%"
+                if {oly::c::%{_c}%::cap::contested} is true:
+                    set {_s} to "%{_s}% &c(경합)"
+                return {_s}
+        set {_pct} to olyTerrCapPct({_t})
+        if {_pct} > 0:
+            set {_by} to olyTerrCapBy({_t})
+            set {_g} to olyGauge({_pct}, 10, olyFacColor({_by}), "&8")
+            set {_s} to "%{_s}% &8| &f점령 %{_g}% &f%{_pct}%%%"
+        else if olyTerrCanCap({_t}, {_f}) is true:
+            if olyTerrNear({_p}, {_t}) is false:
+                set {_sc} to {oly::t::%{_t}%::center}
+                if {_sc} is set:
+                    set {_s} to "%{_s}% &8| &7점령 석단 %olyArrow({_p}, {_sc})%"
+    # 집결 명령
+    if {oly::f::%{_f}%::rally} is set:
+        if olySec() <= ({oly::f::%{_f}%::rallyUntil} ? 0):
+            set {_s} to "%{_s}% &8| &6&l집결 %olyArrow({_p}, {oly::f::%{_f}%::rally})%"
+    return {_s}
+
+# ── 목표 쪽 화살표 + 거리 ("↗ 45m"). 플레이어가 바라보는 방향 기준
+function olyArrow(p: player, t: location) :: text:
+    set {_l} to location of {_p}
+    set {_dx} to (x-coordinate of {_t}) - (x-coordinate of {_l})
+    set {_dz} to (z-coordinate of {_t}) - (z-coordinate of {_l})
+    set {_d} to round(sqrt(({_dx} * {_dx}) + ({_dz} * {_dz})))
+    if {_d} < 3:
+        return "&a도착"
+    # 마인크래프트 yaw: 0 = +z(남), 90 = -x(서), 시계 방향으로 증가
+    set {_want} to atan2({_dz}, 0 - {_dx})
+    set {_rel} to {_want} - (yaw of {_p})
+    set {_rel} to mod({_rel} + 540, 360) - 180
+    set {_k} to mod(round({_rel} / 45) + 8, 8)
+    set {_ar::*} to "↑", "↗", "→", "↘", "↓", "↙", "←" and "↖"
+    set {_a} to {_ar::%{_k} + 1%}
+    return "&e%{_a}% &f%{_d}%m"
+
+every second:
+    loop all players:
+        if olyLive() is true:
+            if ({oly::rt::abhold::%uuid of loop-player%} ? -1) <= olySec():
+                send action bar olyActionText(loop-player) to loop-player
+    if olyLive() is not true:
+        stop
+    # 집결 지점: 그 세력에게만 보이는 빛기둥 + 바닥 고리
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        if {oly::f::%{_f}%::rally} is set:
+            if olySec() <= ({oly::f::%{_f}%::rallyUntil} ? 0):
+                set {_l} to {oly::f::%{_f}%::rally}
+                set {_x} to x-coordinate of {_l}
+                set {_y} to y-coordinate of {_l}
+                set {_z} to z-coordinate of {_l}
+                olyCmd("particle minecraft:end_rod %{_x}% %{_y} + 14% %{_z}% 0.1 12 0.1 0 70 force @a[team=oly_%{_f}%]")
+                olyCmd("particle minecraft:dust{color:[1.0,0.75,0.1],scale:2.5} %{_x}% %{_y} + 0.3% %{_z}% 1.6 0.05 1.6 0 40 force @a[team=oly_%{_f}%]")
+
+every 5 seconds:
+    set {_top} to "&6&l신들의 전쟁: 올림포스"
+    set {_era} to "&7%olyPhaseName(olyPhase())%  &f%olyTime(olyLeft())%"
+    if olyLive() is not true:
+        set {_era} to "&8게임 대기 중"
+    set {_rank::*} to olyRankList()
+    set {_foot} to ""
+    loop {_rank::*}:
+        set {_foot} to "%{_foot}%%olyFacFull(loop-value)% &f%olyRenown(loop-value)%   "
+    loop all players:
+        set {_f} to olyFacOf(loop-player)
+        set {_nm} to "&7%loop-player%"
+        if {_f} is not "none":
+            set {_nm} to "%olyFacColor({_f})%[%olyFacName({_f})%] &f%loop-player%"
+            if olyIsLeader(loop-player) is true:
+                set {_nm} to "%olyFacColor({_f})%[%olyFacName({_f})%] &e[지휘관] &f%loop-player%"
+            if olyHeroOf(loop-player) is not "none":
+                set {_nm} to "%{_nm}% &6(%olyHeroName(olyHeroOf(loop-player))%)"
+        set tab list name of loop-player to {_nm}
+        set tab list header of loop-player to "%{_top}%%nl%%{_era}%"
+        set tab list footer of loop-player to {_foot}
+
+
+# =====================================================================================
+#  3. 메뉴 (상자 GUI)
+# =====================================================================================
+
+function olyGuiNew(p: player, rows: number, title: text) :: inventory:
+    delete {oly::rt::ga::%uuid of {_p}%::*}
+    set {_inv} to chest inventory with {_rows} rows named {_title}
+    loop {_rows} * 9 times:
+        set slot (loop-number - 1) of {_inv} to gray stained glass pane named "&8 "
+    return {_inv}
+
+function olyBtn(p: player, inv: inventory, slot: number, i: item, act: text):
+    set slot {_slot} of {_inv} to {_i}
+    set {oly::rt::ga::%uuid of {_p}%::%{_slot}%} to {_act}
+
+function olyGuiShow(p: player, inv: inventory, kind: text):
+    open {_inv} to {_p}
+    set {oly::rt::gui::%uuid of {_p}%} to {_kind}
+    play sound "ui.button.click" with volume 0.4 with pitch 1.4 at location of {_p} for {_p}
+
+function olyFacBanner(f: text) :: item:
+    if {_f} is "athens":
+        return blue banner
+    if {_f} is "sparta":
+        return red banner
+    if {_f} is "corinth":
+        return green banner
+    if {_f} is "thebes":
+        return purple banner
+    return white banner
+
+# ── 메인
+function olyMenuMain(p: player):
+    set {_f} to olyFacOf({_p})
+    set {_inv} to olyGuiNew({_p}, 5, "&8올림포스 메뉴")
+    if {_f} is "none":
+        set {_i} to white banner named "&e&l세력 선택" with lore "&7아테네 · 스파르타 · 코린토스 · 테베" and "&e클릭"
+        olyBtn({_p}, {_inv}, 22, {_i}, "page:join")
+        olyBtn({_p}, {_inv}, 40, barrier named "&c닫기", "close")
+        olyGuiShow({_p}, {_inv}, "main")
+        stop
+    # 세력 정보
+    set {_i} to olyFacBanner({_f})
+    set name of {_i} to "%olyFacFull({_f})% &7- %{oly::f::%{_f}%::motto}%"
+    set {_lr} to "&7지휘관 &f%olyFacLeaderName({_f})% &8| &7인원 &f%olyFacSize({_f})%"
+    set {_ln} to "&7명성 &f%olyRenown({_f})% &8| &7영토 &f%olyTerrCount({_f})%"
+    set {_l1} to olyResLine({_f}, "food", "wood")
+    set {_l2} to olyResLine({_f}, "stone", "iron")
+    set {_l3} to olyResLine({_f}, "gold", "faith")
+    set lore of {_i} to {_lr}, {_ln}, "", {_l1}, {_l2} and {_l3}
+    olyBtn({_p}, {_inv}, 4, {_i}, "none")
+    set {_c} to olyClassOf({_p})
+    set {_i} to (olyClsIcon({_c})) named "&f&l병종 &7(지금: %olyClsName({_c})%)" with lore "&7자기 세력 도시 안에서 바꿀 수 있다" and "&e클릭"
+    olyBtn({_p}, {_inv}, 19, {_i}, "page:cls")
+    set {_i} to bricks named "&f&l도시 건물" with lore "&7시장 · 병영 · 성벽 · 신전 · 창고" and "&7(업그레이드는 지휘관)" and "&e클릭"
+    olyBtn({_p}, {_inv}, 20, {_i}, "page:cities")
+    set {_i} to golden sword named "&6&l영웅" with lore "&7금으로 전설의 영웅을 부른다" and "&e클릭"
+    olyBtn({_p}, {_inv}, 21, {_i}, "page:hero")
+    set {_gn} to olyGodName(olyFacGod({_f}))
+    set {_i} to enchanting table named "&d&l신전 &7(%{_gn}%)" with lore "&7권능 · 제물" and "&e클릭"
+    olyBtn({_p}, {_inv}, 22, {_i}, "page:god")
+    set {_i} to writable book named "&b&l외교 · 전쟁" with lore "&7선전포고 · 강화 · 동맹 · 무역" and "&e클릭"
+    olyBtn({_p}, {_inv}, 23, {_i}, "page:dip")
+    set {_i} to bell named "&6&l집결 명령" with lore "&7지금 서 있는 곳을 집결 지점으로 (지휘관)" and "&e클릭"
+    olyBtn({_p}, {_inv}, 24, {_i}, "rally")
+    set {_rs} to olyN("def.gate.repairStone")
+    set {_i} to anvil named "&7&l성문 수리" with lore "&7자기 도시 성문 12칸 안에서" and "&7석재 %{_rs}%" and "&e클릭"
+    olyBtn({_p}, {_inv}, 25, {_i}, "repair")
+    set {_i} to book named "&f&l전쟁 기록" with lore "&7지금까지의 선포 · 강화 · 배신" and "&e클릭"
+    olyBtn({_p}, {_inv}, 31, {_i}, "log")
+    olyBtn({_p}, {_inv}, 40, barrier named "&c닫기", "close")
+    olyGuiShow({_p}, {_inv}, "main")
+
+# ── 세력 선택
+function olyMenuJoin(p: player):
+    set {_inv} to olyGuiNew({_p}, 3, "&8세력 선택")
+    set {_k} to 10
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        set {_i} to olyFacBanner({_f})
+        set name of {_i} to olyFacFull({_f})
+        set {_l1} to "&7%{oly::f::%{_f}%::motto}%"
+        set {_l2} to "&7수호신 &f%olyGodName(olyFacGod({_f}))%"
+        set {_l3} to "&7인원 &f%olyFacSize({_f})% &8| &7명성 &f%olyRenown({_f})%"
+        set {_l4} to "&e클릭하여 가입"
+        if olyFacCanJoin({_f}) is false:
+            set {_l4} to "&c인원이 너무 많습니다"
+        set lore of {_i} to {_l1}, {_l2}, {_l3} and {_l4}
+        olyBtn({_p}, {_inv}, {_k}, {_i}, "join:%{_f}%")
+        add 2 to {_k}
+    set {_i} to compass named "&f&l자동 배정" with lore "&7인원이 가장 적은 세력으로" and "&e클릭"
+    olyBtn({_p}, {_inv}, 22, {_i}, "join:auto")
+    olyGuiShow({_p}, {_inv}, "join")
+
+# ── 병종
+function olyMenuClass(p: player):
+    set {_f} to olyFacOf({_p})
+    set {_inv} to olyGuiNew({_p}, 4, "&8병종 선택")
+    set {_k} to 10
+    loop olyClsList():
+        set {_c} to loop-value
+        set {_i} to (olyClsIcon({_c})) named "&f&l%olyClsName({_c})%"
+        set {_l1} to "&7%olyClsDesc({_c})%"
+        set {_l2} to "&7비용 %olyClsCostText({_c})%"
+        set {_lim} to olyN("army.limit.%{_c}%")
+        set {_l3} to "&7세력 안 &f%olyClsCount({_f}, {_c})% / %{_lim}%"
+        set {_l4} to "&e클릭"
+        if olyClassOf({_p}) is {_c}:
+            set {_l4} to "&a지금 병종"
+        set lore of {_i} to {_l1}, {_l2}, {_l3} and {_l4}
+        olyBtn({_p}, {_inv}, {_k}, {_i}, "cls:%{_c}%")
+        add 1 to {_k}
+    olyBtn({_p}, {_inv}, 31, arrow named "&7뒤로", "page:main")
+    olyGuiShow({_p}, {_inv}, "cls")
+
+# ── 우리 도시 목록
+function olyMenuCities(p: player):
+    set {_f} to olyFacOf({_p})
+    set {_inv} to olyGuiNew({_p}, 3, "&8우리 도시")
+    set {_k} to 10
+    loop {oly::clist::*}:
+        if olyCityOwner(loop-value) is {_f}:
+            set {_c} to loop-value
+            set {_i} to bricks named "&f&l%olyCityName({_c})%"
+            if {oly::c::%{_c}%::capital} is true:
+                set {_i} to gold block named "&6&l%olyCityName({_c})% &7(수도)"
+            set {_gm} to olyCityGateMax({_c})
+            set {_l1} to "&7도시 레벨 &f%olyCityLevel({_c})% &8| &7충성도 &f%{oly::c::%{_c}%::loyalty} ? 100%"
+            set {_l2} to "&7성문 &f%floor({oly::c::%{_c}%::gate::hp} ? {_gm})% / %floor({_gm})%"
+            set lore of {_i} to {_l1}, {_l2} and "&e클릭: 건물"
+            olyBtn({_p}, {_inv}, {_k}, {_i}, "city:%{_c}%")
+            add 1 to {_k}
+    if {_k} is 10:
+        olyBtn({_p}, {_inv}, 13, barrier named "&c도시가 없습니다" with lore "&7도시를 되찾으십시오", "none")
+    olyBtn({_p}, {_inv}, 22, arrow named "&7뒤로", "page:main")
+    olyGuiShow({_p}, {_inv}, "cities")
+
+# ── 도시 건물
+function olyMenuCity(p: player, cid: text):
+    set {_inv} to olyGuiNew({_p}, 3, "&8%olyCityName({_cid})% 건물")
+    set {_k} to 11
+    loop olyBldList():
+        set {_b} to loop-value
+        set {_lv} to {oly::c::%{_cid}%::b::%{_b}%} ? 1
+        set {_i} to paper named "&f&l%olyBldName({_b})% &7Lv.%{_lv}%"
+        if {_b} is "market":
+            set {_i} to emerald named "&f&l%olyBldName({_b})% &7Lv.%{_lv}%"
+        else if {_b} is "barracks":
+            set {_i} to iron sword named "&f&l%olyBldName({_b})% &7Lv.%{_lv}%"
+        else if {_b} is "walls":
+            set {_i} to stone bricks named "&f&l%olyBldName({_b})% &7Lv.%{_lv}%"
+        else if {_b} is "temple":
+            set {_i} to quartz pillar named "&f&l%olyBldName({_b})% &7Lv.%{_lv}%"
+        else if {_b} is "warehouse":
+            set {_i} to barrel named "&f&l%olyBldName({_b})% &7Lv.%{_lv}%"
+        set {_l1} to "&7%olyBldDesc({_b})%"
+        set {_cs} to olyBldCost({_cid}, {_b}, "stone")
+        set {_cw} to olyBldCost({_cid}, {_b}, "wood")
+        set {_cg} to olyBldCost({_cid}, {_b}, "gold")
+        set {_l2} to "&7비용 &7석재 %{_cs}% &6목재 %{_cw}% &e금 %{_cg}%"
+        set {_l3} to "&e클릭: 업그레이드 (지휘관)"
+        if {_lv} >= olyN("city.maxLevel"):
+            set {_l2} to "&a최고 레벨"
+            set {_l3} to ""
+        set lore of {_i} to {_l1}, {_l2} and {_l3}
+        olyBtn({_p}, {_inv}, {_k}, {_i}, "up:%{_cid}%:%{_b}%")
+        add 1 to {_k}
+    olyBtn({_p}, {_inv}, 22, arrow named "&7뒤로", "page:cities")
+    olyGuiShow({_p}, {_inv}, "city")
+
+# ── 영웅
+function olyMenuHero(p: player):
+    set {_f} to olyFacOf({_p})
+    set {_inv} to olyGuiNew({_p}, 3, "&8영웅")
+    set {_cost} to olyN("hero.cost.gold")
+    if ({oly::ev::herosale::until} ? -1) > olySec():
+        set {_cost} to {_cost} * 0.5
+    set {_k} to 10
+    loop olyHeroList():
+        set {_h} to loop-value
+        set {_i} to golden sword named "&6&l%olyHeroName({_h})%"
+        set {_l1} to "&7권능: %olyHeroSkill({_h})%"
+        set {_l2} to "&7패시브: %olyHeroPassive({_h})%"
+        set {_l3} to "&e클릭: 고용 (금 %{_cost}%)"
+        if olyHeroFac({_h}) is not "any":
+            set {_l2} to "%{_l2}% &8(%olyFacName(olyHeroFac({_h}))% 전용)"
+        if {oly::h::%{_h}%::player} is set:
+            set {_hp} to {oly::h::%{_h}%::player} parsed as offline player
+            set {_l3} to "&c%olyFacName({oly::h::%{_h}%::fid})%의 %{_hp}%이(가) 맡고 있음"
+        else if olyHeroDeadLeft({_h}) > 0:
+            set {_l3} to "&8저승에서 돌아오는 중 %olyTime(olyHeroDeadLeft({_h}))%"
+        set lore of {_i} to {_l1}, {_l2} and {_l3}
+        olyBtn({_p}, {_inv}, {_k}, {_i}, "hero:%{_h}%")
+        add 1 to {_k}
+    olyBtn({_p}, {_inv}, 22, arrow named "&7뒤로", "page:main")
+    olyGuiShow({_p}, {_inv}, "hero")
+
+# ── 신전
+function olyMenuGod(p: player):
+    set {_f} to olyFacOf({_p})
+    set {_g} to olyFacGod({_f})
+    set {_inv} to olyGuiNew({_p}, 3, "&8%olyGodName({_g})%의 신전")
+    set {_k} to 11
+    loop "minor", "major" and "zeus":
+        set {_t} to loop-value
+        set {_gg} to {_g}
+        set {_cn} to "god.power.cost.%{_t}%"
+        if {_t} is "zeus":
+            set {_gg} to "zeus"
+            set {_cn} to "god.power.cost.major"
+        set {_i} to glowstone dust named "&d&l%olyPowerName({_gg}, {_t})%"
+        if {_t} is "major":
+            set {_i} to blaze powder named "&d&l%olyPowerName({_gg}, {_t})%"
+        else if {_t} is "zeus":
+            set {_i} to lightning rod named "&e&l%olyPowerName({_gg}, {_t})% &7(제우스)"
+        set {_l1} to "&7%olyPowerDesc({_gg}, {_t})%"
+        set {_l2} to "&7신앙 %olyN({_cn})% &8| &7대기 %olyTime(olyPowerLeft({_f}, {_t}))%"
+        set {_l3} to "&e클릭: 권능 (지휘관)"
+        set lore of {_i} to {_l1}, {_l2} and {_l3}
+        olyBtn({_p}, {_inv}, {_k}, {_i}, "god:%{_t}%")
+        add 2 to {_k}
+    set {_og} to olyN("god.offer.gold")
+    set {_of} to olyN("god.offer.faith")
+    set {_i} to gold ingot named "&6&l제물 바치기" with lore "&7금 %{_og}% → 신앙 %{_of}% + 호감도" and "&7호감도 &f%olyFavor({_f})% &8(권능 대기 최대 -30%%)" and "&7우리 신전 제단 8칸 안에서" and "&e클릭"
+    olyBtn({_p}, {_inv}, 17, {_i}, "offer")
+    olyBtn({_p}, {_inv}, 22, arrow named "&7뒤로", "page:main")
+    olyGuiShow({_p}, {_inv}, "god")
+
+# ── 외교: 다른 세력 목록
+function olyMenuDip(p: player):
+    set {_f} to olyFacOf({_p})
+    set {_inv} to olyGuiNew({_p}, 3, "&8외교 · 전쟁")
+    set {_k} to 11
+    loop {oly::flist::*}:
+        if loop-value is not {_f}:
+            set {_t} to loop-value
+            set {_i} to olyFacBanner({_t})
+            set name of {_i} to olyFacFull({_t})
+            set {_st} to olyWarState({_f}, {_t})
+            set {_l1} to "&7관계 %olyWarStateName({_st})%"
+            set {_l2} to "&7명성 &f%olyRenown({_t})% &8| &7인원 &f%olyFacSize({_t})%"
+            set {_l3} to "&7무역 &f없음"
+            if olyDipTrade({_f}, {_t}) is true:
+                set {_l3} to "&7무역 &6협정 중"
+            if {_st} is "war":
+                set {_l3} to "&7전쟁 점수 &f%olyWarScore({_f}, {_t})% : %olyWarScore({_t}, {_f})%"
+            set lore of {_i} to {_l1}, {_l2}, {_l3} and "&e클릭: 외교 행동"
+            olyBtn({_p}, {_inv}, {_k}, {_i}, "dipf:%{_t}%")
+            add 2 to {_k}
+    set {_we} to olyN("war.declareGold")
+    set {_wp} to olyTime(olyN("war.prepSec"))
+    set {_bp} to olyN("dip.betrayPenalty")
+    set {_i} to paper named "&f&l외교 규칙" with lore "&7선전포고: 금 %{_we}%, 준비 %{_wp}%" and "&7동맹은 하나만 / 동맹에게 선포하면 배신 (명성 -%{_bp}%)" and "&7강화: 양쪽 지휘관이 모두 제안해야 성립" and "&7점수 5 이상 앞선 쪽이 승전 명성 + 배상금"
+    olyBtn({_p}, {_inv}, 4, {_i}, "none")
+    olyBtn({_p}, {_inv}, 22, arrow named "&7뒤로", "page:main")
+    olyGuiShow({_p}, {_inv}, "dip")
+
+# ── 외교: 한 세력에게 할 행동
+function olyMenuDipF(p: player, t: text):
+    set {_f} to olyFacOf({_p})
+    set {_st} to olyWarState({_f}, {_t})
+    set {_inv} to olyGuiNew({_p}, 3, "&8%olyFacName({_t})% 에게")
+    set {_i} to olyFacBanner({_t})
+    set name of {_i} to "%olyFacFull({_t})% &8- %olyWarStateName({_st})%"
+    olyBtn({_p}, {_inv}, 4, {_i}, "none")
+    if {_st} is "war":
+        olyBtn({_p}, {_inv}, 11, white banner named "&e&l강화 제안" with lore "&7상대 지휘관도 제안하면 성립", "peace:%{_t}%")
+        olyBtn({_p}, {_inv}, 15, white wool named "&7&l항복" with lore "&c즉시 종전, 상대 승리 · 배상금 2배", "surr:%{_t}%")
+    else if {_st} is "prep":
+        olyBtn({_p}, {_inv}, 11, white banner named "&e&l강화 제안" with lore "&7준비 중인 전쟁을 거둔다", "peace:%{_t}%")
+    else:
+        set {_we} to olyN("war.declareGold")
+        set {_wp} to olyTime(olyN("war.prepSec"))
+        set {_bp} to olyN("dip.betrayPenalty")
+        set {_i} to iron sword named "&c&l선전포고" with lore "&7금 %{_we}%" and "&7준비 %{_wp}% 뒤 전쟁"
+        if {_st} is "ally":
+            set {_i} to iron sword named "&4&l선전포고 (배신)" with lore "&c동맹을 깨고 선포합니다" and "&c명성 -%{_bp}%"
+        olyBtn({_p}, {_inv}, 10, {_i}, "war:%{_t}%")
+        if {_st} is "ally":
+            olyBtn({_p}, {_inv}, 12, shield named "&7&l동맹 파기" with lore "&7명성 손실 없음 · 10분간 재동맹 불가", "brka:%{_t}%")
+        else:
+            olyBtn({_p}, {_inv}, 12, shield named "&b&l동맹 제안" with lore "&7서로 공격 불가 · 성문 통과" and "&7동맹은 하나만", "ally:%{_t}%")
+        if olyDipTrade({_f}, {_t}) is true:
+            olyBtn({_p}, {_inv}, 14, emerald named "&7&l무역 파기", "brkt:%{_t}%")
+        else:
+            olyBtn({_p}, {_inv}, 14, emerald named "&6&l무역 제안" with lore "&7양쪽 모두 10초마다 금 +3, 식량 +2", "trade:%{_t}%")
+    olyBtn({_p}, {_inv}, 22, arrow named "&7뒤로", "page:dip")
+    olyGuiShow({_p}, {_inv}, "dipf")
+
+
+# =====================================================================================
+#  4. 동작 실행 (GUI 와 명령이 함께 쓴다)
+# =====================================================================================
+
+# ── 가입 직후 / 게임 시작 때 한 사람을 전장에 세운다
+function olyPlayerSetup(p: player):
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        stop
+    olyCmd("team join oly_%{_f}% %{_p}%")
+    if olyLive() is not true:
+        stop
+    set {_l} to olyFacSpawn({_f})
+    if {_l} is set:
+        teleport {_p} to {_l}
+    set gamemode of {_p} to adventure
+    olyKitGive({_p})
+
+function olyJoinMsg(r: text, f: text) :: text:
+    if {_r} is "ok":
+        return "&a%olyFacFull({_f})%&a에 가입했습니다!"
+    if {_r} is "full":
+        return "&c%olyFacName({_f})%은(는) 인원이 너무 많습니다. 다른 세력을 고르세요."
+    if {_r} is "same":
+        return "&7이미 %olyFacName({_f})% 소속입니다."
+    if {_r} is "locked":
+        return "&c게임 중에는 세력을 옮길 수 없습니다."
+    return "&c그런 세력이 없습니다."
+
+function olyDoJoin(p: player, f: text):
+    if {_f} is "auto":
+        set {_f} to olyFacSmallest()
+    set {_r} to olyFacJoin({_p}, {_f}, false)
+    send olyJoinMsg({_r}, {_f}) to {_p}
+    if {_r} is "ok":
+        olyFacBc({_f}, "&7[세력] &f%{_p}%&7이(가) 합류했습니다.")
+        olyPlayerSetup({_p})
+
+function olyClsMsg(r: text, c: text, p: player) :: text:
+    if {_r} is "ok":
+        return "&a병종 변경: %olyClsName({_c})%"
+    if {_r} is "nofac":
+        return "&c세력에 먼저 가입하세요."
+    if {_r} is "notown":
+        return "&c병종은 우리 세력 도시 안에서만 바꿀 수 있습니다."
+    if {_r} is "cd":
+        set {_l} to ceil(olyCdLeft("%uuid of {_p}%", "cls", olyN("army.switchCdSec")))
+        return "&c병종 변경 대기 %{_l}%초"
+    if {_r} is "limit":
+        return "&c우리 세력의 %olyClsName({_c})% 정원이 찼습니다."
+    if {_r} is "cost":
+        return "&c세력 자원이 부족합니다. (%olyClsCostText({_c})%&c)"
+    if {_r} is "same":
+        return "&7이미 %olyClsName({_c})%입니다."
+    return "&c알 수 없는 병종"
+
+function olyDoRally(p: player):
+    if olyIsLeader({_p}) is false:
+        send "&c집결은 지휘관만 명할 수 있습니다." to {_p}
+        stop
+    set {_u} to "%uuid of {_p}%"
+    set {_rl} to ceil(olyCdLeft({_u}, "rally", 30))
+    if {_rl} > 0:
+        send "&c집결 명령 대기 %{_rl}%초" to {_p}
+        stop
+    olyCd({_u}, "rally", 30)
+    olyRallySet({_p})
+
+function olyShowLog(p: player):
+    send "&6&l[ 전쟁 기록 ]" to {_p}
+    if size of {oly::war::log::*} is 0:
+        send "  &8아직 기록이 없습니다." to {_p}
+        stop
+    set {_n} to size of {oly::war::log::*}
+    set {_i} to 0
+    loop {oly::war::log::*}:
+        add 1 to {_i}
+        if {_i} > {_n} - 15:
+            send "  %loop-value%" to {_p}
+
+# ── 동작 문자열 실행
+function olyGuiAct(p: player, a: text):
+    set {_x::*} to {_a} split at ":"
+    set {_k} to {_x::1}
+    set {_v} to {_x::2} ? ""
+    if {_k} is "none":
+        stop
+    if {_k} is "close":
+        close {_p}'s inventory
+        stop
+    if {_k} is "page":
+        olyMenuPage({_p}, {_v})
+        stop
+    if {_k} is "join":
+        close {_p}'s inventory
+        olyDoJoin({_p}, {_v})
+        stop
+    if olyFacOf({_p}) is "none":
+        olyMenuJoin({_p})
+        stop
+    if {_k} is "cls":
+        set {_r} to olyClassSet({_p}, {_v}, false)
+        send olyClsMsg({_r}, {_v}, {_p}) to {_p}
+        if {_r} is "ok":
+            close {_p}'s inventory
+        else:
+            play sound "entity.villager.no" with volume 0.6 with pitch 1 at location of {_p} for {_p}
+        stop
+    if {_k} is "city":
+        olyMenuCity({_p}, {_v})
+        stop
+    if {_k} is "up":
+        if olyIsLeader({_p}) is false:
+            send "&c건물 업그레이드는 지휘관만 할 수 있습니다." to {_p}
+            stop
+        send olyCityUpgrade({_p}, {_v}, {_x::3}) to {_p}
+        olyMenuCity({_p}, {_v})
+        stop
+    if {_k} is "hero":
+        send olyHeroHire({_p}, {_v}) to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "god":
+        send olyGodCast({_p}, {_v}) to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "offer":
+        send olyOffer({_p}) to {_p}
+        olyMenuGod({_p})
+        stop
+    if {_k} is "dipf":
+        olyMenuDipF({_p}, {_v})
+        stop
+    if {_k} is "war":
+        send olyWarDeclare({_p}, {_v}) to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "peace":
+        send olyWarPeace({_p}, {_v}) to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "surr":
+        send olyWarSurrender({_p}, {_v}) to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "ally":
+        send olyDipPropose({_p}, {_v}, "ally") to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "trade":
+        send olyDipPropose({_p}, {_v}, "trade") to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "brka":
+        send olyDipBreak({_p}, {_v}, "ally") to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "brkt":
+        send olyDipBreak({_p}, {_v}, "trade") to {_p}
+        close {_p}'s inventory
+        stop
+    if {_k} is "rally":
+        close {_p}'s inventory
+        olyDoRally({_p})
+        stop
+    if {_k} is "repair":
+        close {_p}'s inventory
+        send olyGateRepair({_p}) to {_p}
+        stop
+    if {_k} is "log":
+        close {_p}'s inventory
+        olyShowLog({_p})
+        stop
+
+function olyMenuPage(p: player, pg: text):
+    if {_pg} is "join":
+        olyMenuJoin({_p})
+        stop
+    if olyFacOf({_p}) is "none":
+        olyMenuMain({_p})
+        stop
+    if {_pg} is "cls":
+        olyMenuClass({_p})
+    else if {_pg} is "cities":
+        olyMenuCities({_p})
+    else if {_pg} is "hero":
+        olyMenuHero({_p})
+    else if {_pg} is "god":
+        olyMenuGod({_p})
+    else if {_pg} is "dip":
+        olyMenuDip({_p})
+    else:
+        olyMenuMain({_p})
+
+on inventory click:
+    set {_u} to "%uuid of player%"
+    if {oly::rt::gui::%{_u}%} is not set:
+        stop
+    cancel event
+    set {_s} to raw index of event-slot
+    set {_a} to {oly::rt::ga::%{_u}%::%{_s}%}
+    if {_a} is not set:
+        stop
+    wait 1 tick
+    olyGuiAct(player, {_a})
+
+on inventory close:
+    delete {oly::rt::gui::%uuid of player%}
+
+on inventory drag:
+    if {oly::rt::gui::%uuid of player%} is set:
+        cancel event
+
+# ── 올림포스 메뉴 (네더의 별)
+on right click with nether star:
+    set {_n} to name of player's tool
+    if {_n} is not set:
+        stop
+    if "%{_n}%" does not contain "올림포스 메뉴":
+        stop
+    cancel event
+    olyMenuMain(player)
+
+on drop:
+    set {_n} to name of event-item
+    if {_n} is set:
+        if "%{_n}%" contains "올림포스 메뉴":
+            cancel event
+        if "%{_n}%" contains "영웅 권능":
+            cancel event
+
+
+# =====================================================================================
+#  5. 명령
+# =====================================================================================
+
+command /메뉴:
+    aliases: /menu, /올림포스
+    executable by: players
+    trigger:
+        olyMenuMain(player)
+
+command /세력 [<text>]:
+    aliases: /faction
+    executable by: players
+    trigger:
+        if arg-1 is set:
+            set {_f} to olyFacParse(arg-1)
+            if arg-1 is "자동":
+                set {_f} to "auto"
+            if {_f} is "none":
+                send "&c그런 세력이 없습니다. &7(아테네 · 스파르타 · 코린토스 · 테베 · 자동)"
+                stop
+            olyDoJoin(player, {_f})
+            stop
+        set {_f} to olyFacOf(player)
+        if {_f} is "none":
+            olyMenuJoin(player)
+            stop
+        send "&8&m                                        "
+        send "  %olyFacFull({_f})% &7- %{oly::f::%{_f}%::motto}%"
+        send "  &7지휘관 &f%olyFacLeaderName({_f})% &8| &7명성 &f%olyRenown({_f})% &8| &7영토 &f%olyTerrCount({_f})%"
+        set {_r1} to olyResLine({_f}, "food", "wood")
+        set {_r2} to olyResLine({_f}, "stone", "iron")
+        set {_r3} to olyResLine({_f}, "gold", "faith")
+        send "  %{_r1}%"
+        send "  %{_r2}%"
+        send "  %{_r3}%"
+        set {_m} to ""
+        loop all players:
+            if olyFacOf(loop-player) is {_f}:
+                set {_m} to "%{_m}%&f%loop-player% &7(%olyClsName(olyClassOf(loop-player))%)  "
+        send "  &7접속 %{_m}%"
+        send "&8&m                                        "
+
+command /병종 [<text>]:
+    executable by: players
+    trigger:
+        if arg-1 is not set:
+            olyMenuClass(player)
+            stop
+        set {_c} to "none"
+        loop olyClsList():
+            if arg-1 is loop-value:
+                set {_c} to loop-value
+            if arg-1 is olyClsName(loop-value):
+                set {_c} to loop-value
+        if {_c} is "none":
+            send "&c병종: 보병 · 창병 · 궁병 · 기병 · 중장보병 · 공성병"
+            stop
+        send olyClsMsg(olyClassSet(player, {_c}, false), {_c}, player)
+
+command /도시:
+    executable by: players
+    trigger:
+        if olyFacOf(player) is "none":
+            send "&c세력에 먼저 가입하세요."
+            stop
+        olyMenuCities(player)
+
+command /영웅 [<text>]:
+    executable by: players
+    trigger:
+        if olyFacOf(player) is "none":
+            send "&c세력에 먼저 가입하세요."
+            stop
+        if arg-1 is not set:
+            olyMenuHero(player)
+            stop
+        set {_h} to "none"
+        loop olyHeroList():
+            if arg-1 is loop-value:
+                set {_h} to loop-value
+            if arg-1 is olyHeroName(loop-value):
+                set {_h} to loop-value
+        if {_h} is "none":
+            send "&c그런 영웅이 없습니다."
+            stop
+        send olyHeroHire(player, {_h})
+
+command /신전 [<text>]:
+    executable by: players
+    trigger:
+        if olyFacOf(player) is "none":
+            send "&c세력에 먼저 가입하세요."
+            stop
+        if arg-1 is not set:
+            olyMenuGod(player)
+            stop
+        set {_t} to "none"
+        if arg-1 is "하급" or "minor":
+            set {_t} to "minor"
+        if arg-1 is "상급" or "major":
+            set {_t} to "major"
+        if arg-1 is "제우스" or "zeus":
+            set {_t} to "zeus"
+        if {_t} is "none":
+            send "&7사용법 &f/신전 [하급|상급|제우스]"
+            stop
+        send olyGodCast(player, {_t})
+
+command /제물:
+    executable by: players
+    trigger:
+        send olyOffer(player)
+
+command /외교 [<text>] [<text>]:
+    aliases: /diplomacy
+    executable by: players
+    trigger:
+        if olyFacOf(player) is "none":
+            send "&c세력에 먼저 가입하세요."
+            stop
+        if arg-1 is not set:
+            olyMenuDip(player)
+            stop
+        if arg-2 is not set:
+            send "&7사용법 &f/외교 <선포|강화|항복|동맹|무역|동맹파기|무역파기> <세력>"
+            stop
+        set {_k} to arg-1
+        if {_k} is "선포":
+            send olyWarDeclare(player, arg-2)
+        else if {_k} is "강화":
+            send olyWarPeace(player, arg-2)
+        else if {_k} is "항복":
+            send olyWarSurrender(player, arg-2)
+        else if {_k} is "동맹":
+            send olyDipPropose(player, arg-2, "ally")
+        else if {_k} is "무역":
+            send olyDipPropose(player, arg-2, "trade")
+        else if {_k} is "동맹파기":
+            send olyDipBreak(player, arg-2, "ally")
+        else if {_k} is "무역파기":
+            send olyDipBreak(player, arg-2, "trade")
+        else:
+            send "&7사용법 &f/외교 <선포|강화|항복|동맹|무역|동맹파기|무역파기> <세력>"
+
+command /전쟁 [<text>] [<text>]:
+    executable by: players
+    trigger:
+        if arg-1 is not set:
+            olyShowLog(player)
+            stop
+        if arg-2 is not set:
+            send "&7사용법 &f/전쟁 <선포|강화|항복> <세력>"
+            stop
+        if arg-1 is "선포":
+            send olyWarDeclare(player, arg-2)
+        else if arg-1 is "강화":
+            send olyWarPeace(player, arg-2)
+        else if arg-1 is "항복":
+            send olyWarSurrender(player, arg-2)
+        else:
+            send "&7사용법 &f/전쟁 <선포|강화|항복> <세력>"
+
+command /집결:
+    executable by: players
+    trigger:
+        olyDoRally(player)
+
+command /성문수리:
+    executable by: players
+    trigger:
+        send olyGateRepair(player)
+
+command /전쟁기록:
+    executable by: players
+    trigger:
+        olyShowLog(player)
+
+command /지휘관 [<offline player>]:
+    executable by: players
+    trigger:
+        set {_f} to olyFacOf(player)
+        if {_f} is "none":
+            send "&c세력에 먼저 가입하세요."
+            stop
+        if arg-1 is not set:
+            send "&7우리 지휘관: &f%olyFacLeaderName({_f})% &8(넘기기: /지휘관 <이름>)"
+            stop
+        if olyIsLeader(player) is false:
+            if player is not op:
+                send "&c지휘관만 넘길 수 있습니다."
+                stop
+        set {_u} to "%uuid of arg-1%"
+        if olyFacOfU({_u}) is not {_f}:
+            send "&c우리 세력 사람이 아닙니다."
+            stop
+        olyFacSetLeader({_f}, {_u})
+        olyFacBc({_f}, "&6[세력] &f%arg-1%&6이(가) 새 지휘관이 되었습니다.")

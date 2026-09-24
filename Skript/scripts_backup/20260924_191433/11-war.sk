@@ -1,0 +1,356 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  11-war.sk  -  선전포고 · 준비 · 전쟁 · 피로도 · 강화 · 전쟁 기록
+# -------------------------------------------------------------------------------------
+#  의존: 00~10
+#
+#  흐름
+#    선전포고 (지휘관, 신들의 분노 시대부터, 금 100)
+#      → 준비 120초 : 성문이 닫히고(07), 양측에 경보. 아직 서로 때릴 수 없다.
+#      → 전쟁      : 서로 공격·점령 가능. 1분마다 전쟁 피로도 +2 (전쟁 수만큼)
+#      → 끝        : 강화(양쪽 지휘관이 모두 /전쟁 강화) 또는 항복
+#                    전쟁 점수가 높은 쪽이 '승전 명성'을 받고, 진 쪽은 금 배상
+#                    이후 300초 휴전 (재선포 불가)
+#
+#  전쟁 점수 {oly::war::score::<a>::<b>}  (a 가 b 상대로 얻은 점수)
+#    적 처치 +1 (여기) / 영토 점령 +2 (05) / 도시 +8 · 수도 +20 (07)
+#
+#  동맹에게 선전포고 = 배신: 명성 -30, 동맹·무역 즉시 파기, 10분간 재동맹 불가
+#
+#  피로도 {oly::f::<fid>::weary} 0~100
+#    70 이상: 식량 수입 -20% (04) / 90 이상: 우리 도시 충성도 1분마다 -5
+#    평화 중에는 1분마다 -4 씩 회복
+#
+#  변수
+#    {oly::war::prep::<a>::<b>}     준비가 끝나는 게임 초 (a 가 b 에게 선포)
+#    {oly::war::start::<a>::<b>}    전쟁 시작 초 (양방향 동일)
+#    {oly::war::truce::<a>::<b>}    휴전이 끝나는 초 (양방향)
+#    {oly::war::peace::<a>::<b>}    a 가 b 에게 낸 강화 제안의 만료 초
+#    {oly::war::log::*}             전쟁 기록 (13-ui 의 /전쟁기록)
+#    {oly::war::count::<fid>}       치른 전쟁 수 / {oly::war::won::<fid>} 승전 수
+# =====================================================================================
+
+on load:
+    olyModReady("war")
+
+# ── "아테네" / "athens" / "아" → 세력 id ("none")
+function olyFacParse(t: text) :: text:
+    if {_t} is not set:
+        return "none"
+    loop {oly::flist::*}:
+        if {_t} is loop-value:
+            return loop-value
+        if {_t} is olyFacName(loop-value):
+            return loop-value
+    loop {oly::flist::*}:
+        if olyFacName(loop-value) starts with {_t}:
+            return loop-value
+    return "none"
+
+function olyWarLog(msg: text):
+    add "&8[%olyTime(olySec())%] &f%{_msg}%" to {oly::war::log::*}
+    if size of {oly::war::log::*} > 60:
+        delete {oly::war::log::1}
+    olyLog({_msg})
+
+# ── 두 세력의 관계: war / prep / truce / ally / neutral / self
+function olyWarState(a: text, b: text) :: text:
+    if {_a} is {_b}:
+        return "self"
+    if olyIsWar({_a}, {_b}) is true:
+        return "war"
+    if ({oly::war::prep::%{_a}%::%{_b}%} ? -1) >= olySec():
+        return "prep"
+    if ({oly::war::prep::%{_b}%::%{_a}%} ? -1) >= olySec():
+        return "prep"
+    if olyIsAlly({_a}, {_b}) is true:
+        return "ally"
+    if ({oly::war::truce::%{_a}%::%{_b}%} ? -1) >= olySec():
+        return "truce"
+    return "neutral"
+
+function olyWarStateName(st: text) :: text:
+    if {_st} is "war":
+        return "&c전쟁"
+    if {_st} is "prep":
+        return "&6전쟁 준비"
+    if {_st} is "ally":
+        return "&b동맹"
+    if {_st} is "truce":
+        return "&e휴전"
+    if {_st} is "self":
+        return "&7-"
+    return "&7중립"
+
+function olyWarPrepLeft(a: text, b: text) :: number:
+    set {_x} to max(({oly::war::prep::%{_a}%::%{_b}%} ? -1), ({oly::war::prep::%{_b}%::%{_a}%} ? -1))
+    return max(0, {_x} - olySec())
+
+function olyWarScore(a: text, b: text) :: number:
+    return {oly::war::score::%{_a}%::%{_b}%} ? 0
+
+# ── 지금 전쟁 중인 상대 목록
+function olyWarEnemies(f: text) :: texts:
+    loop {oly::flist::*}:
+        if olyIsWar({_f}, loop-value) is true:
+            add loop-value to {_out::*}
+    return {_out::*}
+
+function olyWarSide(v: text, a: text, b: text) :: boolean:
+    if {_v} is {_a}:
+        return true
+    if {_v} is {_b}:
+        return true
+    return false
+
+function olyWarCount(f: text) :: number:
+    return size of olyWarEnemies({_f})
+
+
+# =====================================================================================
+#  선전포고
+# =====================================================================================
+
+function olyWarDeclare(p: player, t: text) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "&c세력에 먼저 가입하세요."
+    if olyIsLeader({_p}) is false:
+        return "&c선전포고는 지휘관만 할 수 있습니다."
+    if olyPhaseAtLeast("wrath") is false:
+        return "&c평화의 시대에는 전쟁이 허락되지 않습니다. (신들의 분노 시대부터)"
+    set {_t} to olyFacParse({_t})
+    if {_t} is "none":
+        return "&c그런 세력이 없습니다."
+    if {_t} is {_f}:
+        return "&c자기 세력에게는 선포할 수 없습니다."
+    set {_st} to olyWarState({_f}, {_t})
+    if {_st} is "war":
+        return "&c이미 전쟁 중입니다."
+    if {_st} is "prep":
+        return "&c이미 전쟁을 준비 중입니다."
+    if {_st} is "truce":
+        set {_l} to ({oly::war::truce::%{_f}%::%{_t}%} ? 0) - olySec()
+        return "&c휴전 중입니다. &7(%olyTime({_l})% 남음)"
+    set {_g} to olyN("war.declareGold")
+    if olyCanPay({_f}, "gold", {_g}) is false:
+        return "&c금이 부족합니다 (%{_g}% 필요)"
+    olyResPay({_f}, "gold", {_g})
+    # 배신
+    if {_st} is "ally":
+        set {oly::dip::%{_f}%::%{_t}%} to "neutral"
+        set {oly::dip::%{_t}%::%{_f}%} to "neutral"
+        delete {oly::dip::trade::%{_f}%::%{_t}%}
+        delete {oly::dip::trade::%{_t}%::%{_f}%}
+        set {oly::dip::allycd::%{_f}%::%{_t}%} to olySec() + olyN("dip.allyCdSec")
+        set {oly::dip::allycd::%{_t}%::%{_f}%} to olySec() + olyN("dip.allyCdSec")
+        set {_pen} to olyN("dip.betrayPenalty")
+        olyRenownAdd({_f}, 0 - {_pen}, "동맹 배신")
+        olyOracle("배신! %olyFacName({_f})%이(가) 동맹을 깨뜨렸습니다", "%olyFacName({_t})%과(와)의 맹세가 부서졌습니다. 신들이 등을 돌립니다. (명성 -%{_pen}%)")
+        olyWarLog("%olyFacFull({_f})% &c배신 &f→ %olyFacFull({_t})%")
+    set {_ps} to olyN("war.prepSec")
+    set {oly::war::prep::%{_f}%::%{_t}%} to olySec() + {_ps}
+    delete {oly::war::peace::%{_f}%::%{_t}%}
+    delete {oly::war::peace::%{_t}%::%{_f}%}
+    olyOracle("%olyFacName({_f})%이(가) %olyFacName({_t})%에게 전쟁을 선포했습니다", "%olyTime({_ps})% 뒤 전쟁이 시작됩니다. 성문이 닫힙니다.")
+    olyWarLog("%olyFacFull({_f})% &f선전포고 → %olyFacFull({_t})%")
+    loop all players:
+        set {_vf} to olyFacOf(loop-player)
+        if {_vf} is {_t}:
+            send title "&4&l선전포고" with subtitle "%olyFacFull({_f})%&c이(가) 쳐들어옵니다 - %olyTime({_ps})%" to loop-player for 5 seconds
+            play sound "event.raid.horn" with volume 1 with pitch 1 at location of loop-player for loop-player
+        else if {_vf} is {_f}:
+            send title "&6&l선전포고" with subtitle "&7%olyTime({_ps})% 안에 병력을 모으십시오" to loop-player for 5 seconds
+            play sound "event.raid.horn" with volume 0.7 with pitch 1.2 at location of loop-player for loop-player
+    return "&a%olyFacName({_t})%에게 전쟁을 선포했습니다."
+
+# ── 준비가 끝나면 전쟁 시작
+function olyWarBegin(a: text, b: text):
+    delete {oly::war::prep::%{_a}%::%{_b}%}
+    delete {oly::war::prep::%{_b}%::%{_a}%}
+    set {oly::dip::%{_a}%::%{_b}%} to "war"
+    set {oly::dip::%{_b}%::%{_a}%} to "war"
+    set {oly::war::start::%{_a}%::%{_b}%} to olySec()
+    set {oly::war::start::%{_b}%::%{_a}%} to olySec()
+    set {oly::war::score::%{_a}%::%{_b}%} to 0
+    set {oly::war::score::%{_b}%::%{_a}%} to 0
+    add 1 to {oly::war::count::%{_a}%}
+    add 1 to {oly::war::count::%{_b}%}
+    olyOracle("%olyFacName({_a})%과(와) %olyFacName({_b})%의 전쟁이 시작되었습니다!", "이제 서로의 땅과 도시를 빼앗을 수 있습니다.")
+    olyWarLog("&c전쟁 개시 &f%olyFacFull({_a})% &7vs %olyFacFull({_b})%")
+    loop all players:
+        set {_vf} to olyFacOf(loop-player)
+        if olyWarSide({_vf}, {_a}, {_b}) is true:
+            send title "&c&l전 쟁" with subtitle "&7적을 쓰러뜨리고 도시를 빼앗아라" to loop-player for 4 seconds
+            play sound "entity.ender_dragon.growl" with volume 0.6 with pitch 0.8 at location of loop-player for loop-player
+
+
+# =====================================================================================
+#  강화 · 항복 · 종전
+# =====================================================================================
+
+# ── 강화 제안. 상대도 제안해 두었으면 즉시 성립
+function olyWarPeace(p: player, t: text) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "&c세력에 먼저 가입하세요."
+    if olyIsLeader({_p}) is false:
+        return "&c강화는 지휘관만 제안할 수 있습니다."
+    set {_t} to olyFacParse({_t})
+    if {_t} is "none":
+        return "&c그런 세력이 없습니다."
+    set {_st} to olyWarState({_f}, {_t})
+    if {_st} is not "war":
+        if {_st} is not "prep":
+            return "&c그 세력과는 전쟁 중이 아닙니다."
+    if ({oly::war::peace::%{_t}%::%{_f}%} ? -1) >= olySec():
+        olyWarFinish({_f}, {_t}, "peace")
+        return "&a강화가 성립되었습니다."
+    set {oly::war::peace::%{_f}%::%{_t}%} to olySec() + 90
+    olyFacBc({_t}, "&e[외교] %olyFacFull({_f})%&e이(가) 강화를 제안합니다. &7(90초 안에 지휘관이 &f/전쟁 강화 %olyFacName({_f})%&7)")
+    loop all players:
+        if olyFacOf(loop-player) is {_t}:
+            play sound "block.note_block.bell" with volume 1 with pitch 1.4 at location of loop-player for loop-player
+    return "&e%olyFacName({_t})%에게 강화를 제안했습니다. 상대 지휘관이 받아들이면 성립합니다."
+
+# ── 항복: 즉시 종전, 상대가 승리 (배상 2배)
+function olyWarSurrender(p: player, t: text) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "&c세력에 먼저 가입하세요."
+    if olyIsLeader({_p}) is false:
+        return "&c항복은 지휘관만 할 수 있습니다."
+    set {_t} to olyFacParse({_t})
+    if {_t} is "none":
+        return "&c그런 세력이 없습니다."
+    set {_st} to olyWarState({_f}, {_t})
+    if {_st} is not "war":
+        if {_st} is not "prep":
+            return "&c그 세력과는 전쟁 중이 아닙니다."
+    olyWarFinish({_t}, {_f}, "surrender")
+    return "&7항복했습니다."
+
+# ── 종전 처리. how = peace | surrender (surrender 이면 a 가 승자)
+function olyWarFinish(a: text, b: text, how: text):
+    set {_sa} to olyWarScore({_a}, {_b})
+    set {_sb} to olyWarScore({_b}, {_a})
+    set {_w} to "none"
+    set {_l} to "none"
+    if {_how} is "surrender":
+        set {_w} to {_a}
+        set {_l} to {_b}
+    else if {_sa} >= {_sb} + 5:
+        set {_w} to {_a}
+        set {_l} to {_b}
+    else if {_sb} >= {_sa} + 5:
+        set {_w} to {_b}
+        set {_l} to {_a}
+    delete {oly::war::prep::%{_a}%::%{_b}%}
+    delete {oly::war::prep::%{_b}%::%{_a}%}
+    delete {oly::war::peace::%{_a}%::%{_b}%}
+    delete {oly::war::peace::%{_b}%::%{_a}%}
+    set {oly::dip::%{_a}%::%{_b}%} to "neutral"
+    set {oly::dip::%{_b}%::%{_a}%} to "neutral"
+    set {_tr} to olySec() + olyN("war.truceSec")
+    set {oly::war::truce::%{_a}%::%{_b}%} to {_tr}
+    set {oly::war::truce::%{_b}%::%{_a}%} to {_tr}
+    if {_w} is "none":
+        olyOracle("%olyFacName({_a})%과(와) %olyFacName({_b})%이(가) 강화했습니다", "어느 쪽도 이기지 못했습니다. (점수 %{_sa}% : %{_sb}%)")
+        olyWarLog("&e강화 &f%olyFacFull({_a})% &7%{_sa}% : %{_sb}% %olyFacFull({_b})% &7(무승부)")
+        stop
+    set {_ws} to max({_sa}, {_sb})
+    set {_ls} to min({_sa}, {_sb})
+    set {_rw} to min(80, 10 + ({_ws} - {_ls}) * 2)
+    set {_gold} to 100
+    if {_how} is "surrender":
+        set {_rw} to min(100, {_rw} + 20)
+        set {_gold} to 200
+    # 배상: 가진 만큼만
+    set {_have} to olyRes({_l}, "gold")
+    set {_pay} to min({_gold}, {_have})
+    if {_pay} > 0:
+        olyResPay({_l}, "gold", {_pay})
+        olyResAdd({_w}, "gold", {_pay})
+    olyRenownAdd({_w}, {_rw}, "승전")
+    add 1 to {oly::war::won::%{_w}%}
+    if {_how} is "surrender":
+        olyOracle("%olyFacName({_l})%이(가) 항복했습니다!", "%olyFacName({_w})%의 승리 — 명성 +%{_rw}%, 배상금 %{_pay}%")
+        olyWarLog("&6항복 &f%olyFacFull({_l})% &7→ 승자 %olyFacFull({_w})% &7(명성 +%{_rw}%, 금 %{_pay}%)")
+    else:
+        olyOracle("전쟁이 끝났습니다 — %olyFacName({_w})%의 승리", "점수 %{_ws}% : %{_ls}% — 명성 +%{_rw}%, 배상금 %{_pay}%")
+        olyWarLog("&6승전 &f%olyFacFull({_w})% &7%{_ws}% : %{_ls}% %olyFacFull({_l})% &7(명성 +%{_rw}%, 금 %{_pay}%)")
+    loop all players:
+        set {_vf} to olyFacOf(loop-player)
+        if {_vf} is {_w}:
+            send title "&6&l승 전" with subtitle "&7명성 +%{_rw}%" to loop-player for 4 seconds
+            play sound "ui.toast.challenge_complete" with volume 1 with pitch 1 at location of loop-player for loop-player
+        else if {_vf} is {_l}:
+            send title "&8&l패 전" with subtitle "&7배상금 %{_pay}%" to loop-player for 4 seconds
+
+function olyWarReset():
+    delete {oly::war::*}
+    loop {oly::flist::*}:
+        set {oly::f::%loop-value%::weary} to 0
+        loop {oly::flist::*}:
+            if loop-value-1 is not loop-value-2:
+                set {oly::dip::%loop-value-1%::%loop-value-2%} to "neutral"
+
+
+# =====================================================================================
+#  시계
+# =====================================================================================
+
+# ── 준비 종료 → 전쟁 / 강화 제안 만료
+every second:
+    if olyLive() is not true:
+        stop
+    loop {oly::flist::*}:
+        set {_a} to loop-value
+        loop {oly::flist::*}:
+            set {_b} to loop-value-2
+            if {oly::war::prep::%{_a}%::%{_b}%} is set:
+                set {_left} to {oly::war::prep::%{_a}%::%{_b}%} - olySec()
+                if {_left} <= 0:
+                    olyWarBegin({_a}, {_b})
+                else if {_left} is 30:
+                    olyFacBc({_a}, "&6[전쟁] &f%olyFacName({_b})%&6과(와)의 전쟁까지 30초")
+                    olyFacBc({_b}, "&c[전쟁] &f%olyFacName({_a})%&c이(가) 30초 뒤 쳐들어옵니다!")
+            if {oly::war::peace::%{_a}%::%{_b}%} is set:
+                if {oly::war::peace::%{_a}%::%{_b}%} < olySec():
+                    delete {oly::war::peace::%{_a}%::%{_b}%}
+                    olyFacBc({_a}, "&7[외교] %olyFacName({_b})%이(가) 강화 제안에 답하지 않았습니다.")
+
+# ── 전쟁 피로도
+every 60 seconds:
+    if olyLive() is not true:
+        stop
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        set {_n} to olyWarCount({_f})
+        set {_w} to {oly::f::%{_f}%::weary} ? 0
+        if {_n} > 0:
+            set {_w} to min(olyN("war.weary.max"), {_w} + olyN("war.weary.perMin") * {_n})
+        else:
+            set {_w} to max(0, {_w} - 4)
+        set {_old} to {oly::f::%{_f}%::weary} ? 0
+        set {oly::f::%{_f}%::weary} to {_w}
+        if {_old} < 70:
+            if {_w} >= 70:
+                olyFacBc({_f}, "&6[전쟁 피로] &7백성들이 지쳐갑니다. 식량 수입 -20%%")
+        if {_w} >= 90:
+            loop {oly::clist::*}:
+                if {oly::c::%loop-value-2%::owner} is {_f}:
+                    set {oly::c::%loop-value-2%::loyalty} to max(0, ({oly::c::%loop-value-2%::loyalty} ? 100) - 5)
+            if {_old} < 90:
+                olyOracle("%olyFacName({_f})%의 백성들이 전쟁에 지쳤습니다", "도시들의 충성이 흔들립니다. 강화를 서두르십시오.")
+
+# ── 처치 점수
+on death of player:
+    attacker is a player
+    set {_fa} to olyFacOf(attacker)
+    set {_fv} to olyFacOf(victim)
+    if {_fa} is "none":
+        stop
+    if {_fv} is "none":
+        stop
+    if olyIsWar({_fa}, {_fv}) is true:
+        add 1 to {oly::war::score::%{_fa}%::%{_fv}%}

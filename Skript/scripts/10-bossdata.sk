@@ -1,0 +1,175 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-bossdata.sk  -  보스 모델 정보 (자동 생성)
+# -------------------------------------------------------------------------------------
+#  직접 고치지 말 것. mc-olympus/bossgen/export3.py 가 다시 만든다.
+#  모델·애니메이션 본체 = 데이터팩 oly:boss/<id>/... (world/datapacks/olympus_bosses)
+# =====================================================================================
+
+on load:
+    olyModReady("bossdata")
+
+function olyBossAnimN(id: text, anim: text) :: number:
+    if {_id} is "minotaur":
+        if {_anim} is "idle":
+            return 16
+        if {_anim} is "walk":
+            return 12
+        if {_anim} is "attack":
+            return 12
+        if {_anim} is "charge":
+            return 8
+        if {_anim} is "roar":
+            return 14
+    if {_id} is "nemean_lion":
+        if {_anim} is "idle":
+            return 16
+        if {_anim} is "walk":
+            return 12
+        if {_anim} is "attack":
+            return 12
+        if {_anim} is "roar":
+            return 14
+    if {_id} is "chimera":
+        if {_anim} is "idle":
+            return 16
+        if {_anim} is "walk":
+            return 12
+        if {_anim} is "attack":
+            return 12
+        if {_anim} is "roar":
+            return 14
+        if {_anim} is "breath":
+            return 14
+    if {_id} is "cerberus":
+        if {_anim} is "idle":
+            return 16
+        if {_anim} is "walk":
+            return 12
+        if {_anim} is "attack":
+            return 12
+        if {_anim} is "roar":
+            return 14
+    if {_id} is "hydra":
+        if {_anim} is "idle":
+            return 16
+        if {_anim} is "walk":
+            return 12
+        if {_anim} is "attack":
+            return 12
+    if {_id} is "medusa":
+        if {_anim} is "idle":
+            return 16
+        if {_anim} is "walk":
+            return 16
+        if {_anim} is "attack":
+            return 12
+        if {_anim} is "gaze":
+            return 14
+    if {_id} is "scylla":
+        if {_anim} is "idle":
+            return 16
+        if {_anim} is "walk":
+            return 16
+        if {_anim} is "attack":
+            return 12
+    return 0
+
+function olyBossAnimT(id: text, anim: text) :: number:
+    if {_id} is "minotaur":
+        if {_anim} is "idle":
+            return 3
+        if {_anim} is "walk":
+            return 2
+        if {_anim} is "attack":
+            return 2
+        if {_anim} is "charge":
+            return 2
+        if {_anim} is "roar":
+            return 2
+    if {_id} is "nemean_lion":
+        if {_anim} is "idle":
+            return 3
+        if {_anim} is "walk":
+            return 2
+        if {_anim} is "attack":
+            return 2
+        if {_anim} is "roar":
+            return 2
+    if {_id} is "chimera":
+        if {_anim} is "idle":
+            return 3
+        if {_anim} is "walk":
+            return 2
+        if {_anim} is "attack":
+            return 2
+        if {_anim} is "roar":
+            return 2
+        if {_anim} is "breath":
+            return 2
+    if {_id} is "cerberus":
+        if {_anim} is "idle":
+            return 3
+        if {_anim} is "walk":
+            return 2
+        if {_anim} is "attack":
+            return 2
+        if {_anim} is "roar":
+            return 3
+    if {_id} is "hydra":
+        if {_anim} is "idle":
+            return 3
+        if {_anim} is "walk":
+            return 2
+        if {_anim} is "attack":
+            return 2
+    if {_id} is "medusa":
+        if {_anim} is "idle":
+            return 3
+        if {_anim} is "walk":
+            return 2
+        if {_anim} is "attack":
+            return 2
+        if {_anim} is "gaze":
+            return 3
+    if {_id} is "scylla":
+        if {_anim} is "idle":
+            return 3
+        if {_anim} is "walk":
+            return 2
+        if {_anim} is "attack":
+            return 2
+    return 4
+
+function olyBossEnt(id: text) :: text:
+    if {_id} is "minotaur":
+        return "husk"
+    if {_id} is "nemean_lion":
+        return "ravager"
+    if {_id} is "chimera":
+        return "ravager"
+    if {_id} is "cerberus":
+        return "ravager"
+    if {_id} is "hydra":
+        return "ravager"
+    if {_id} is "medusa":
+        return "witch"
+    if {_id} is "scylla":
+        return "elder_guardian"
+    return "ravager"
+
+function olyBossScale(id: text) :: number:
+    if {_id} is "minotaur":
+        return 2.564
+    if {_id} is "nemean_lion":
+        return 1.455
+    if {_id} is "chimera":
+        return 1.455
+    if {_id} is "cerberus":
+        return 1.591
+    if {_id} is "hydra":
+        return 1.636
+    if {_id} is "medusa":
+        return 1.846
+    if {_id} is "scylla":
+        return 1.202
+    return 1

@@ -1,0 +1,382 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  06-army.sk  -  병종 · 전투 규칙 · 사기 · 집결
+# -------------------------------------------------------------------------------------
+#  의존: 00~05
+#
+#  병력 = 플레이어.  병종 6종: 보병 / 창병 / 궁병 / 기병 / 중장보병 / 공성병
+#    - 선택은 자기 세력 도시 안에서만, 세력 금고에서 비용 차감, 90초 쿨타임
+#    - 부활하면 같은 병종으로 재보급 (원가의 50%) — 금고가 비면 무료 보병
+#    - 상성 배율은 00-config 의 cmb.<공격>.<피격>
+#
+#  전투 규칙 (유일한 PvP 판정 지점)
+#    같은 세력 / 동맹 / 무소속 / 전쟁 중이 아닌 상대 → 피해 없음
+#    피해 = 원래 피해 × 병종 상성 × 공격 보정 × 방어 보정 × 사기
+#    공격·방어 보정은 상위 모듈이 변수로 넘긴다 (계층 규칙):
+#      {oly::rt::atk::<uuid>}  {oly::rt::def::<uuid>}  {oly::rt::arrowdef::<uuid>}   (08 영웅, 09 신)
+# =====================================================================================
+
+on load:
+    olyModReady("army")
+
+function olyClsList() :: texts:
+    return "infantry", "spear", "archer", "cavalry", "hoplite" and "siege"
+
+function olyClsName(c: text) :: text:
+    if {_c} is "infantry":
+        return "보병"
+    if {_c} is "spear":
+        return "창병"
+    if {_c} is "archer":
+        return "궁병"
+    if {_c} is "cavalry":
+        return "기병"
+    if {_c} is "hoplite":
+        return "중장보병"
+    if {_c} is "siege":
+        return "공성병"
+    return "없음"
+
+function olyClsDesc(c: text) :: text:
+    if {_c} is "infantry":
+        return "균형 잡은 기본 병력. 창병에게 강하다"
+    if {_c} is "spear":
+        return "창 돌진. 기병의 천적 (피해 2배)"
+    if {_c} is "archer":
+        return "원거리. 보병에게 강하고 기병에게 약하다"
+    if {_c} is "cavalry":
+        return "전마 지급. 궁병을 짓밟지만 창병·중장보병에 약하다"
+    if {_c} is "hoplite":
+        return "느리지만 단단하다. 체력 28, 넉백 저항"
+    if {_c} is "siege":
+        return "성문 피해 6배. 대인전은 약하다"
+    return ""
+
+function olyClsIcon(c: text) :: itemtype:
+    if {_c} is "spear":
+        return iron spear
+    if {_c} is "archer":
+        return bow
+    if {_c} is "cavalry":
+        return saddle
+    if {_c} is "hoplite":
+        return golden helmet
+    if {_c} is "siege":
+        return iron axe
+    return iron sword
+
+function olyClassOf(p: player) :: text:
+    set {_c} to {oly::p::%uuid of {_p}%::cls}
+    if {_c} is not set:
+        return "infantry"
+    return {_c}
+
+# ── 비용 문자열 (UI 표시용)
+function olyClsCostText(c: text) :: text:
+    set {_s} to ""
+    loop "food", "wood", "stone", "iron", "gold" and "faith":
+        set {_v} to olyN("army.cost.%{_c}%.%loop-value%")
+        if {_v} > 0:
+            set {_s} to "%{_s}%%olyResColor(loop-value)%%olyResName(loop-value)% %{_v}% "
+    if {_s} is "":
+        return "&7무료"
+    return {_s}
+
+function olyClsCanPay(fid: text, c: text, pct: number) :: boolean:
+    loop "food", "wood", "stone", "iron", "gold" and "faith":
+        set {_v} to ceil(olyN("army.cost.%{_c}%.%loop-value%") * {_pct} / 100)
+        if olyRes({_fid}, loop-value) < {_v}:
+            return false
+    return true
+
+function olyClsPay(fid: text, c: text, pct: number):
+    loop "food", "wood", "stone", "iron", "gold" and "faith":
+        set {_v} to ceil(olyN("army.cost.%{_c}%.%loop-value%") * {_pct} / 100)
+        if {_v} > 0:
+            olyResAdd({_fid}, loop-value, 0 - {_v})
+
+# ── 세력 안에서 해당 병종을 쓰는 접속자 수
+function olyClsCount(fid: text, c: text) :: number:
+    set {_n} to 0
+    loop all players:
+        if olyFacOf(loop-player) is {_fid}:
+            if olyClassOf(loop-player) is {_c}:
+                add 1 to {_n}
+    return {_n}
+
+# ── 자기 세력 소유 도시 안에 서 있는가
+function olyInOwnCity(p: player) :: boolean:
+    set {_f} to olyFacOf({_p})
+    set {_t} to olyTerrOf({_p})
+    if {_t} is "none":
+        return false
+    if {oly::t::%{_t}%::city} is not set:
+        return false
+    set {_c} to {oly::t::%{_t}%::city}
+    if {oly::c::%{_c}%::owner} is {_f}:
+        return true
+    return false
+
+# ── 병종 변경.  결과: ok | nofac | notown | cd | limit | cost | same
+function olyClassSet(p: player, c: text, free: boolean) :: text:
+    set {_u} to "%uuid of {_p}%"
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "nofac"
+    if {_free} is false:
+        if olyClassOf({_p}) is {_c}:
+            if {oly::p::%{_u}%::cls} is set:
+                return "same"
+        if olyLive() is true:
+            if olyN("army.switchAtHome") is 1:
+                if olyInOwnCity({_p}) is false:
+                    return "notown"
+            if olyCdLeft({_u}, "cls", olyN("army.switchCdSec")) > 0:
+                return "cd"
+        if olyClsCount({_f}, {_c}) >= olyN("army.limit.%{_c}%"):
+            return "limit"
+        if olyClsCanPay({_f}, {_c}, 100) is false:
+            return "cost"
+        olyClsPay({_f}, {_c}, 100)
+        olyCd({_u}, "cls", olyN("army.switchCdSec"))
+    set {oly::p::%{_u}%::cls} to {_c}
+    olyKitGive({_p})
+    return "ok"
+
+
+# =====================================================================================
+#  장비 지급
+# =====================================================================================
+
+function olyDye(i: item, f: text) :: item:
+    if {_f} is "athens":
+        dye {_i} blue
+    else if {_f} is "sparta":
+        dye {_i} red
+    else if {_f} is "corinth":
+        dye {_i} green
+    else if {_f} is "thebes":
+        dye {_i} purple
+    else:
+        dye {_i} white
+    return {_i}
+
+function olyAttr(p: player, a: text, v: number):
+    olyCmd("attribute %{_p}% minecraft:%{_a}% base set %{_v}%")
+function olyKitGive(p: player):
+    set {_f} to olyFacOf({_p})
+    set {_c} to olyClassOf({_p})
+    set {_cn} to "%olyFacColor({_f})%%olyFacName({_f})% %olyClsName({_c})%"
+    olyHorseRemove({_p})
+    clear {_p}'s inventory
+    set {_lh} to olyDye(unbreakable leather helmet named "%{_cn}%의 투구", {_f})
+    set {_lc} to olyDye(unbreakable leather chestplate named "%{_cn}%의 흉갑", {_f})
+    set {_ll} to olyDye(unbreakable leather leggings named "%{_cn}%의 각반", {_f})
+    set {_lb} to olyDye(unbreakable leather boots named "%{_cn}%의 신발", {_f})
+    set helmet of {_p} to {_lh}
+    set chestplate of {_p} to {_lc}
+    set leggings of {_p} to {_ll}
+    set boots of {_p} to {_lb}
+    set {_kb} to 0
+    if {_c} is "infantry":
+        set chestplate of {_p} to unbreakable chainmail chestplate named "%{_cn}%의 사슬 갑옷"
+        give {_p} unbreakable iron sword named "&f보병의 검"
+        set {_p}'s offhand tool to unbreakable shield named "&f호플론 방패"
+    else if {_c} is "spear":
+        set leggings of {_p} to unbreakable chainmail leggings named "%{_cn}%의 사슬 각반"
+        give {_p} unbreakable iron spear named "&f도루 (창)"
+        give {_p} unbreakable stone sword named "&7단검"
+    else if {_c} is "archer":
+        set {_bow} to unbreakable bow named "&f궁병의 활"
+        enchant {_bow} with power 1
+        give {_p} {_bow}
+        give {_p} 48 arrows
+        give {_p} unbreakable stone sword named "&7단검"
+    else if {_c} is "cavalry":
+        set helmet of {_p} to unbreakable iron helmet named "%{_cn}%의 기병 투구"
+        give {_p} unbreakable iron sword named "&f기병도"
+        olyHorseGive({_p})
+    else if {_c} is "hoplite":
+        set helmet of {_p} to unbreakable golden helmet named "&6코린트식 투구"
+        set chestplate of {_p} to unbreakable iron chestplate named "%{_cn}%의 청동 흉갑"
+        set leggings of {_p} to unbreakable iron leggings named "%{_cn}%의 정강이받이"
+        set boots of {_p} to unbreakable iron boots named "%{_cn}%의 전투화"
+        give {_p} unbreakable iron sword named "&f크시포스"
+        set {_p}'s offhand tool to unbreakable shield named "&f호플론 방패"
+        set {_kb} to 0.4
+    else if {_c} is "siege":
+        set chestplate of {_p} to unbreakable chainmail chestplate named "%{_cn}%의 사슬 갑옷"
+        give {_p} unbreakable iron axe named "&6공성 망치 &7(성문 피해 6배)"
+    give {_p} 12 bread
+    # 괴물 유물은 병종을 바꾸거나 부활해도 유지 (10-monsters 가 목록에 넣는다)
+    loop {oly::p::%uuid of {_p}%::relics::*}:
+        give {_p} loop-value
+    set slot 8 of {_p}'s inventory to nether star named "&6&l올림포스 메뉴 &7(우클릭)"
+    olyAttr({_p}, "max_health", olyN("army.hp.%{_c}%"))
+    olyAttr({_p}, "movement_speed", olyN("army.spd.%{_c}%"))
+    olyAttr({_p}, "knockback_resistance", {_kb})
+    wait 1 tick
+    heal {_p}
+
+# ── 기병 전마
+function olyHorseGive(p: player):
+    set {_u} to "%uuid of {_p}%"
+    spawn a horse at location of {_p}
+    set {_h} to last spawned entity
+    set name of {_h} to "&7%{_p}%의 전마"
+    add "oly" to scoreboard tags of {_h}
+    set {_hu} to "%uuid of {_h}%"
+    set {oly::p::%{_u}%::horse} to {_hu}
+    olyCmd("data merge entity %{_hu}% {Tame:1b,PersistenceRequired:1b}")
+    olyCmd("item replace entity %{_hu}% saddle with minecraft:saddle")
+    olyCmd("item replace entity %{_hu}% armor.body with minecraft:iron_horse_armor")
+    olyCmd("attribute %{_hu}% minecraft:movement_speed base set 0.3")
+    olyCmd("attribute %{_hu}% minecraft:max_health base set 30")
+    olyCmd("attribute %{_hu}% minecraft:jump_strength base set 0.8")
+    heal {_h}
+    make {_p} ride {_h}
+
+function olyHorseRemove(p: player):
+    set {_u} to "%uuid of {_p}%"
+    if {oly::p::%{_u}%::horse} is set:
+        olyCmd("kill %{oly::p::%{_u}%::horse}%")
+        delete {oly::p::%{_u}%::horse}
+
+on respawn:
+    if olyLive() is not true:
+        stop
+    set {_f} to olyFacOf(player)
+    if {_f} is "none":
+        stop
+    wait 2 ticks
+    set {_c} to olyClassOf(player)
+    if olyClsCanPay({_f}, {_c}, olyN("army.supplyPct")) is true:
+        olyClsPay({_f}, {_c}, olyN("army.supplyPct"))
+    else:
+        set {oly::p::%uuid of player%::cls} to "infantry"
+        send "&c[보급] 금고가 부족해 %olyClsName({_c})% 장비를 받지 못했습니다. &7보병으로 재배치됩니다."
+    olyKitGive(player)
+    apply resistance 3 to player for 4 seconds
+
+
+# =====================================================================================
+#  전투 규칙 (PvP 판정 · 상성 · 보정)
+# =====================================================================================
+
+on damage:
+    victim is a player
+    attacker is a player
+    set {_a} to attacker
+    set {_v} to victim
+    if olyLive() is not true:
+        cancel event
+        stop
+    set {_fa} to olyFacOf({_a})
+    set {_fv} to olyFacOf({_v})
+    if {_fa} is "none":
+        cancel event
+        stop
+    if {_fv} is "none":
+        cancel event
+        stop
+    if {_fa} is {_fv}:
+        cancel event
+        stop
+    if olyIsWar({_fa}, {_fv}) is false:
+        cancel event
+        send action bar "&7%olyFacFull({_fv})%&7와(과)는 전쟁 중이 아닙니다" to {_a}
+        stop
+    set {_ac} to olyClassOf({_a})
+    set {_vc} to olyClassOf({_v})
+    if vehicle of {_v} is set:
+        set {_vc} to "cavalry"
+    set {_m} to 1
+    if {oly::cfg::cmb.%{_ac}%.%{_vc}%} is set:
+        set {_m} to {oly::cfg::cmb.%{_ac}%.%{_vc}%}
+    else if {_ac} is "siege":
+        set {_m} to olyN("cmb.siege.player")
+    set {_ua} to "%uuid of {_a}%"
+    set {_uv} to "%uuid of {_v}%"
+    set {_m} to {_m} * ({oly::rt::atk::%{_ua}%} ? 1) * ({oly::rt::def::%{_uv}%} ? 1)
+    if damage cause is projectile:
+        set {_m} to {_m} * ({oly::rt::arrowdef::%{_uv}%} ? 1)
+    set {_mo} to {oly::f::%{_fa}%::morale} ? 70
+    if {_mo} >= 80:
+        set {_m} to {_m} * 1.1
+    else if {_mo} <= olyN("army.morale.rout"):
+        set {_m} to {_m} * 0.85
+    set damage to damage * {_m}
+    set {oly::rt::lasthit::%{_uv}%} to {_ua}
+
+on death of player:
+    clear drops
+    set {_uv} to "%uuid of victim%"
+    set {_fv} to olyFacOf(victim)
+    add 1 to {oly::p::%{_uv}%::deaths}
+    olyHorseRemove(victim)
+    if {_fv} is not "none":
+        set {oly::f::%{_fv}%::morale} to max(0, ({oly::f::%{_fv}%::morale} ? 70) - 3)
+    if attacker is not a player:
+        stop
+    set {_ua} to "%uuid of attacker%"
+    set {_fa} to olyFacOf(attacker)
+    if {_fa} is "none":
+        stop
+    if {_fa} is {_fv}:
+        stop
+    add 1 to {oly::p::%{_ua}%::kills}
+    add 1 to {oly::p::%{_ua}%::contrib}
+    # 같은 상대를 짧은 시간에 반복 처치하면 명성 없음 (킬 파밍 방지)
+    if olyCd({_ua}, "kill_%{_uv}%", olyN("renown.killCdSec")) is true:
+        olyRenownAdd({_fa}, olyN("renown.kill"), "처치")
+    set {oly::f::%{_fa}%::morale} to min(100, ({oly::f::%{_fa}%::morale} ? 70) + 1)
+
+
+# =====================================================================================
+#  사기 · 집결
+# =====================================================================================
+
+function olyMoraleReset():
+    loop {oly::flist::*}:
+        set {oly::f::%loop-value%::morale} to 70
+        delete {oly::f::%loop-value%::rally}
+
+every 30 seconds:
+    if olyLive() is not true:
+        stop
+    loop {oly::flist::*}:
+        set {_m} to {oly::f::%loop-value%::morale} ? 70
+        if {_m} < 70:
+            set {oly::f::%loop-value%::morale} to min(70, {_m} + 2)
+        else if {_m} > 70:
+            set {oly::f::%loop-value%::morale} to max(70, {_m} - 1)
+
+# ── 지휘관이 서 있는 곳을 집결 지점으로 (3분 유지)
+function olyRallySet(p: player) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "nofac"
+    set {oly::f::%{_f}%::rally} to location of {_p}
+    set {oly::f::%{_f}%::rallyUntil} to olySec() + olyN("army.rallySec")
+    set {_l} to location of {_p}
+    olyFacBc({_f}, "&6[집결] &f%{_p}% &6지휘관이 집결을 명했습니다! &7(x %rounded x-coordinate of {_l}%, z %rounded z-coordinate of {_l}%)")
+    loop all players:
+        if olyFacOf(loop-player) is {_f}:
+            play sound "event.raid.horn" with volume 0.7 with pitch 1.2 at location of loop-player for loop-player
+    return "ok"
+
+every 5 seconds:
+    if olyLive() is not true:
+        stop
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        if {oly::f::%{_f}%::rally} is not set:
+            continue
+        if olySec() > ({oly::f::%{_f}%::rallyUntil} ? 0):
+            delete {oly::f::%{_f}%::rally}
+            continue
+        set {_l} to {oly::f::%{_f}%::rally}
+        olyCmd("particle minecraft:end_rod %x-coordinate of {_l}% %(y-coordinate of {_l}) + 1% %z-coordinate of {_l}% 0.4 3 0.4 0.02 40 force")
+        loop all players:
+            if olyFacOf(loop-player) is {_f}:
+                if distance between location of loop-player and {_l} <= olyN("army.rallyRange"):
+                    apply regeneration 1 to loop-player for 6 seconds

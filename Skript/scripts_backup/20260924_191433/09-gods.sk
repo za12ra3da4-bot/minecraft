@@ -1,0 +1,226 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  09-gods.sk  -  신 · 신앙 · 권능 · 제물 · 호감도
+# -------------------------------------------------------------------------------------
+#  의존: 00~08
+#
+#  신앙은 04-economy 가 신전 영토·신전 건물에서 쌓는다. 여기서는 '쓴다'.
+#    하급 권능: 2시대(신들의 분노)부터 / 상급 권능: 3시대(신들의 전쟁)부터
+#    지휘관만 사용 (무분별한 사용 방지). 세력 공용 쿨타임.
+#    호감도(0~100): 제물을 바칠수록 오르고, 쿨타임이 최대 30% 줄어든다.
+#  제우스의 권능: 3시대에 '올림포스 신전' 영토를 가진 세력만.
+#
+#  아테나(아테네)  하급 아이기스: 전원 저항 I 60초 / 상급 올빼미의 눈: 전쟁 중인 적 발광 30초 + 전원 신속
+#  아레스(스파르타) 하급 전쟁의 광기: 전원 힘 I 45초 / 상급 피의 축제: 전원 힘 II + 신속 I 30초
+#  포세이돈(코린토스) 하급 파도의 축복: 전원 회복 + 돌고래의 가호 / 상급 대지진: 시전자 30칸 적 구속 III·멀미·피해
+#  헤라(테베)      하급 여왕의 권위: 가장 가까운 적 도시 충성도 -25 / 상급 질투: 전쟁 중인 적 전원 나약함 II 30초
+#  제우스          하늘의 심판: 전쟁 중인 적 최대 6명에게 번개
+# =====================================================================================
+
+on load:
+    olyModReady("gods")
+
+function olyGodName(g: text) :: text:
+    if {_g} is "athena":
+        return "아테나"
+    if {_g} is "ares":
+        return "아레스"
+    if {_g} is "poseidon":
+        return "포세이돈"
+    if {_g} is "hera":
+        return "헤라"
+    if {_g} is "zeus":
+        return "제우스"
+    return "?"
+
+function olyPowerName(g: text, tier: text) :: text:
+    if {_g} is "athena":
+        if {_tier} is "minor":
+            return "아이기스"
+        return "올빼미의 눈"
+    if {_g} is "ares":
+        if {_tier} is "minor":
+            return "전쟁의 광기"
+        return "피의 축제"
+    if {_g} is "poseidon":
+        if {_tier} is "minor":
+            return "파도의 축복"
+        return "대지진"
+    if {_g} is "hera":
+        if {_tier} is "minor":
+            return "여왕의 권위"
+        return "질투"
+    if {_g} is "zeus":
+        return "하늘의 심판"
+    return "?"
+
+function olyPowerDesc(g: text, tier: text) :: text:
+    if {_g} is "athena":
+        if {_tier} is "minor":
+            return "세력 전원 저항 I (60초)"
+        return "전쟁 중인 적 전원 발광 30초 + 세력 전원 신속 I"
+    if {_g} is "ares":
+        if {_tier} is "minor":
+            return "세력 전원 힘 I (45초)"
+        return "세력 전원 힘 II + 신속 I (30초)"
+    if {_g} is "poseidon":
+        if {_tier} is "minor":
+            return "세력 전원 즉시 회복 + 돌고래의 가호 (60초)"
+        return "시전자 주변 30칸의 적: 구속 III · 멀미 · 피해 6"
+    if {_g} is "hera":
+        if {_tier} is "minor":
+            return "가장 가까운 적 도시 충성도 -25"
+        return "전쟁 중인 적 전원 나약함 II (30초)"
+    if {_g} is "zeus":
+        return "전쟁 중인 적 최대 6명에게 번개"
+    return ""
+
+function olyFavor(fid: text) :: number:
+    return {oly::f::%{_fid}%::favor} ? 0
+
+function olyPowerCd(fid: text, tier: text) :: number:
+    set {_base} to olyN("god.power.cd.%{_tier}%")
+    if {_tier} is "zeus":
+        set {_base} to olyN("god.power.cd.major")
+    return {_base} * (1 - 0.3 * olyFavor({_fid}) / 100)
+
+function olyPowerLeft(fid: text, tier: text) :: number:
+    return max(0, ({oly::g::%{_fid}%::cd::%{_tier}%} ? 0) - olySec())
+
+# ── 권능 사용.  결과 메시지
+function olyGodCast(p: player, tier: text) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "&c세력에 먼저 가입하세요."
+    if olyIsLeader({_p}) is false:
+        return "&c신의 권능은 지휘관만 청할 수 있습니다."
+    set {_g} to olyFacGod({_f})
+    if {_tier} is "zeus":
+        if olyPhase() is not "war":
+            return "&c제우스는 신들의 전쟁 시대에만 응답합니다."
+        if olyTerrOwner("olympus") is not {_f}:
+            return "&c올림포스 신전을 차지한 세력만 제우스를 부를 수 있습니다."
+        set {_g} to "zeus"
+    else if {_tier} is "minor":
+        if olyPhaseAtLeast("wrath") is false:
+            return "&c하급 권능은 신들의 분노 시대부터 열립니다."
+    else:
+        if olyPhaseAtLeast("war") is false:
+            return "&c상급 권능은 신들의 전쟁 시대에만 열립니다."
+    set {_left} to olyPowerLeft({_f}, {_tier})
+    if {_left} > 0:
+        return "&c%olyPowerName({_g}, {_tier})% 대기 %olyTime({_left})%"
+    set {_cost} to olyN("god.power.cost.%{_tier}%")
+    if {_tier} is "zeus":
+        set {_cost} to olyN("god.power.cost.major")
+    if olyResPay({_f}, "faith", {_cost}) is false:
+        return "&c신앙이 부족합니다 (%{_cost}% 필요)"
+    set {oly::g::%{_f}%::cd::%{_tier}%} to olySec() + olyPowerCd({_f}, {_tier})
+    olyGodEffect({_p}, {_f}, {_g}, {_tier})
+    olyOracle("%olyGodName({_g})%의 권능 — %olyPowerName({_g}, {_tier})%", "%olyFacName({_f})%의 기도가 올림포스에 닿았습니다.")
+    loop all players:
+        play sound "entity.lightning_bolt.thunder" with volume 0.5 with pitch 1.3 at location of loop-player for loop-player
+    return "&6%olyPowerName({_g}, {_tier})% 발동!"
+
+function olyGodEffect(p: player, f: text, g: text, tier: text):
+    if {_g} is "athena":
+        if {_tier} is "minor":
+            loop all players:
+                if olyFacOf(loop-player) is {_f}:
+                    apply resistance 1 to loop-player for 60 seconds
+        else:
+            loop all players:
+                set {_vf} to olyFacOf(loop-player)
+                if {_vf} is {_f}:
+                    apply speed 1 to loop-player for 30 seconds
+                else if {_vf} is not "none":
+                    if olyIsWar({_f}, {_vf}) is true:
+                        apply glowing to loop-player for 30 seconds
+    else if {_g} is "ares":
+        loop all players:
+            if olyFacOf(loop-player) is {_f}:
+                if {_tier} is "minor":
+                    apply strength 1 to loop-player for 45 seconds
+                else:
+                    apply strength 2 to loop-player for 30 seconds
+                    apply speed 1 to loop-player for 30 seconds
+    else if {_g} is "poseidon":
+        if {_tier} is "minor":
+            loop all players:
+                if olyFacOf(loop-player) is {_f}:
+                    heal loop-player
+                    apply dolphins grace to loop-player for 60 seconds
+        else:
+            set {_l} to location of {_p}
+            olyCmd("particle minecraft:campfire_cosy_smoke %x-coordinate of {_l}% %y-coordinate of {_l}% %z-coordinate of {_l}% 8 1 8 0.02 200 force")
+            loop all players in radius 30 around {_l}:
+                set {_vf} to olyFacOf(loop-player)
+                if {_vf} is not "none":
+                    if olyIsWar({_f}, {_vf}) is true:
+                        apply slowness 3 to loop-player for 8 seconds
+                        apply nausea 1 to loop-player for 8 seconds
+                        damage loop-player by 3
+                        push loop-player upwards at speed 0.5
+    else if {_g} is "hera":
+        if {_tier} is "minor":
+            set {_best} to "none"
+            set {_bd} to 99999
+            loop {oly::clist::*}:
+                set {_o} to {oly::c::%loop-value%::owner} ? "neutral"
+                if {_o} is not "neutral":
+                    if {_o} is not {_f}:
+                        set {_d} to distance between location of {_p} and {oly::c::%loop-value%::center}
+                        if {_d} < {_bd}:
+                            set {_bd} to {_d}
+                            set {_best} to loop-value
+            if {_best} is not "none":
+                set {oly::c::%{_best}%::loyalty} to max(0, ({oly::c::%{_best}%::loyalty} ? 100) - 25)
+                olyBc("&d[헤라] &f%{oly::c::%{_best}%::name}%&d의 충성도가 흔들립니다 → %{oly::c::%{_best}%::loyalty}%")
+        else:
+            loop all players:
+                set {_vf} to olyFacOf(loop-player)
+                if {_vf} is not "none":
+                    if olyIsWar({_f}, {_vf}) is true:
+                        apply weakness 2 to loop-player for 30 seconds
+    else if {_g} is "zeus":
+        set {_n} to 0
+        loop all players:
+            if {_n} < 6:
+                set {_vf} to olyFacOf(loop-player)
+                if {_vf} is not "none":
+                    if olyIsWar({_f}, {_vf}) is true:
+                        strike lightning at location of loop-player
+                        add 1 to {_n}
+
+# ── 제물: 금 → 신앙 + 호감도 (자기 신전 제단 8칸 이내)
+function olyOffer(p: player) :: text:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return "&c세력에 먼저 가입하세요."
+    set {_near} to false
+    loop {oly::clist::*}:
+        if {oly::c::%loop-value%::owner} is {_f}:
+            if {oly::c::%loop-value%::altar} is set:
+                if distance between location of {_p} and {oly::c::%loop-value%::altar} <= 8:
+                    set {_near} to true
+    loop "olympus", "altar" and "sounion":
+        if olyTerrOwner(loop-value) is {_f}:
+            if {oly::map::temple::%loop-value%} is set:
+                if distance between location of {_p} and {oly::map::temple::%loop-value%} <= 8:
+                    set {_near} to true
+    if {_near} is false:
+        return "&c우리 세력 신전의 제단 가까이(8칸)에서만 제물을 바칠 수 있습니다."
+    set {_g} to olyN("god.offer.gold")
+    if olyResPay({_f}, "gold", {_g}) is false:
+        return "&c금이 부족합니다 (%{_g}% 필요)"
+    olyResAdd({_f}, "faith", olyN("god.offer.faith"))
+    set {oly::f::%{_f}%::favor} to min(olyN("god.favor.max"), olyFavor({_f}) + olyN("god.favor.perOffer"))
+    set {_l} to location of {_p}
+    olyCmd("particle minecraft:enchant %x-coordinate of {_l}% %(y-coordinate of {_l}) + 1% %z-coordinate of {_l}% 0.5 1 0.5 1 80 force")
+    play sound "block.enchantment_table.use" with volume 1 with pitch 1 at {_l}
+    set {_fa} to olyN("god.offer.faith")
+    return "&d제물을 바쳤습니다. 신앙 +%{_fa}%, %olyGodName(olyFacGod({_f}))%의 호감도 %olyFavor({_f})%"
+
+function olyGodReset():
+    loop {oly::flist::*}:
+        delete {oly::g::%loop-value%::cd::*}
+        set {oly::f::%loop-value%::favor} to 0

@@ -1,0 +1,171 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  00-config.sk  -  밸런스 상수 테이블
+# -------------------------------------------------------------------------------------
+#  이 파일에만 숫자가 있다. 14단계(밸런스 조정)에서는 여기만 수정한다.
+#  다른 파일은 절대 숫자를 하드코딩하지 않고 olyN("키") 로 읽는다.
+#
+#  options: 블록을 쓰지 않는 이유
+#    {@X} 는 파일 스코프라서, 나중에 전체를 한 파일로 합칠 때 이름이 충돌한다.
+#    대신 변수 {oly::cfg::<키>} 에 담고 함수로 읽는다. 로드 순서와 무관해진다.
+#
+#  런타임 수정:  /oly cfg <키> <값>   (서버 재시작/리로드하면 아래 값으로 되돌아감)
+#  값 확인:      /oly cfg <키>
+# =====================================================================================
+
+on load:
+    olyCfgInit()
+    set {oly::mod::config} to true
+
+function olyCfgPut(k: text, v: object):
+    set {oly::cfg::%{_k}%} to {_v}
+
+# ── 숫자 상수 읽기 (없으면 0)
+function olyN(k: text) :: number:
+    if {oly::cfg::%{_k}%} is not set:
+        return 0
+    return {oly::cfg::%{_k}%}
+
+# ── 문자 상수 읽기 (없으면 빈 문자열)
+function olyT(k: text) :: text:
+    if {oly::cfg::%{_k}%} is not set:
+        return ""
+    return "%{oly::cfg::%{_k}%}%"
+
+function olyCfgInit():
+
+    # ═══════════════════════════════════════════════════════════════
+    #  게임 진행
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("game.minPlayers",     4)        # 최소 인원 (미만이면 /oly start 경고)
+    olyCfgPut("game.maxPlayers",     20)
+    olyCfgPut("game.respawnSec",     8)        # 사망 후 부활 대기
+    olyCfgPut("game.autoEnd",        1)        # 1 = 목표 명성 도달 시 즉시 종료
+
+    # 시대 길이 (초).  8인이면 0.7배, 20인이면 1.3배 정도가 적당
+    olyCfgPut("phase.peace.sec",     1500)     # 평화의 시대   25분
+    olyCfgPut("phase.wrath.sec",     1800)     # 신들의 분노   30분
+    olyCfgPut("phase.war.sec",       1200)     # 신들의 전쟁   20분
+
+    # ═══════════════════════════════════════════════════════════════
+    #  경제 (자원 6종: food wood stone iron gold faith)
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("eco.tickSec",         10)       # 자원 정산 주기
+    olyCfgPut("eco.cap.base",        2000)     # 기본 저장 한도
+    olyCfgPut("eco.cap.perWarehouse",800)      # 창고 레벨당 한도 증가
+
+    olyCfgPut("eco.start.food",      400)
+    olyCfgPut("eco.start.wood",      300)
+    olyCfgPut("eco.start.stone",     200)
+    olyCfgPut("eco.start.iron",      100)
+    olyCfgPut("eco.start.gold",      150)
+    olyCfgPut("eco.start.faith",     0)
+
+    # 수도가 기본으로 뽑아내는 양 (영토가 0개여도 굶어죽지 않게)
+    olyCfgPut("eco.capital.food",    6)
+    olyCfgPut("eco.capital.wood",    3)
+    olyCfgPut("eco.capital.stone",   2)
+    olyCfgPut("eco.capital.iron",    1)
+    olyCfgPut("eco.capital.gold",    2)
+
+    # 영토 타입별 생산량 (10초당)
+    olyCfgPut("yield.plain.food",    5)
+    olyCfgPut("yield.forest.wood",   5)
+    olyCfgPut("yield.mountain.stone",4)
+    olyCfgPut("yield.mountain.iron", 3)
+    olyCfgPut("yield.coast.food",    3)
+    olyCfgPut("yield.coast.gold",    3)
+    olyCfgPut("yield.ruin.gold",     2)
+    olyCfgPut("yield.temple.faith",  4)
+
+    olyCfgPut("eco.tax.perPlayer",   2)        # 접속 중인 소속 플레이어 1명당 금
+    olyCfgPut("eco.starve.moraleHit",10)       # 식량 0일 때 사기 감소
+
+    # ═══════════════════════════════════════════════════════════════
+    #  영토
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("terr.tickSec",        2)
+    olyCfgPut("terr.capPerTick",     4)        # 플레이어 1명이 2초마다 올리는 게이지
+    olyCfgPut("terr.capMaxBonus",    3)        # 인원 보너스 상한 (4명 이상 = 동일)
+    olyCfgPut("terr.decayPerTick",   2)        # 아무도 없을 때 게이지 감소
+    olyCfgPut("terr.contestBlock",   1)        # 1 = 적이 같이 있으면 점령 정지
+
+    # ═══════════════════════════════════════════════════════════════
+    #  도시
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("city.gate.hp",        3000)
+    olyCfgPut("city.wall.hp",        1500)
+    olyCfgPut("city.gate.perWallLv", 500)      # 성벽 레벨당 성문 HP 증가
+    olyCfgPut("city.loyalty.max",    100)
+    olyCfgPut("city.loyalty.decay",  1)        # 10초마다 (점령 직후 도시)
+    olyCfgPut("city.revolt.at",      20)       # 이하로 떨어지면 반란
+    olyCfgPut("city.maxLevel",       5)
+
+    # ═══════════════════════════════════════════════════════════════
+    #  병력
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("army.capPerFaction",  40)       # ★ 성능 안전장치. 넘기지 말 것
+    olyCfgPut("army.capServer",      200)
+    olyCfgPut("army.upkeep.food",    1)        # 유닛 1기당 10초마다 식량
+    olyCfgPut("army.commandRange",   40)       # 명령 전달 반경
+    olyCfgPut("army.morale.max",     100)
+    olyCfgPut("army.morale.rout",    25)       # 이하면 도주
+
+    # ═══════════════════════════════════════════════════════════════
+    #  영웅
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("hero.reviveSec",      300)      # 사망 후 부활 불가 시간
+    olyCfgPut("hero.maxLevel",       10)
+    olyCfgPut("hero.expPerLevel",    100)
+    olyCfgPut("hero.skill.cdSec",    60)
+
+    # ═══════════════════════════════════════════════════════════════
+    #  신 / 신앙
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("god.tickSec",         15)
+    olyCfgPut("god.faith.perTemple", 3)        # 신전 1개당 15초마다
+    olyCfgPut("god.power.cd.minor",  180)
+    olyCfgPut("god.power.cd.major",  480)
+    olyCfgPut("god.power.cost.minor",120)
+    olyCfgPut("god.power.cost.major",400)
+    olyCfgPut("god.favor.max",       100)
+    olyCfgPut("god.favor.perOffer",  5)
+
+    # ═══════════════════════════════════════════════════════════════
+    #  몬스터
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("mon.tickSec",         60)
+    olyCfgPut("mon.respawnSec",      900)
+    olyCfgPut("mon.aiRange",         64)       # 이 반경에 플레이어 있을 때만 AI 가동
+    olyCfgPut("mon.faithReward",     60)
+
+    # ═══════════════════════════════════════════════════════════════
+    #  전쟁 / 외교
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("war.declareGold",     100)      # 선전포고 비용
+    olyCfgPut("war.prepSec",         120)      # 선포 후 실제 전쟁까지 준비 기간
+    olyCfgPut("war.weary.perMin",    2)        # 전쟁 지속 1분당 피로도
+    olyCfgPut("war.weary.max",       100)
+    olyCfgPut("war.truceSec",        300)      # 평화 후 재선포 금지 시간
+    olyCfgPut("dip.allyCdSec",       600)      # 동맹 파기 후 재동맹 금지
+    olyCfgPut("dip.betrayPenalty",   30)       # 배신 시 명성 감소
+
+    # ═══════════════════════════════════════════════════════════════
+    #  명성 (승리 조건)
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("renown.winGoal",      800)
+    olyCfgPut("renown.city",         40)
+    olyCfgPut("renown.capital",      100)
+    olyCfgPut("renown.temple",       30)
+    olyCfgPut("renown.hero",         20)
+    olyCfgPut("renown.monster",      15)
+    olyCfgPut("renown.territory",    5)
+    olyCfgPut("renown.cityLevel",    10)
+    olyCfgPut("renown.kill",         1)
+    olyCfgPut("renown.killCdSec",    180)      # 같은 상대 반복 킬 명성 차단
+
+    # ═══════════════════════════════════════════════════════════════
+    #  UI
+    # ═══════════════════════════════════════════════════════════════
+    olyCfgPut("ui.barTickSec",       2)
+    olyCfgPut("ui.actionTickSec",    1)
+    olyCfgPut("ui.barLen",           20)       # 텍스트 게이지 칸 수

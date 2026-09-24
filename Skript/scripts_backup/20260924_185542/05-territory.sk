@@ -1,0 +1,171 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  05-territory.sk  -  영토 점령
+# -------------------------------------------------------------------------------------
+#  의존: 00-config, 01-data, 02-game, 03-factions, 04-economy
+#
+#  2초마다 모든 플레이어의 영토(청크 역인덱스, O(1))를 세서 점령 게이지를 움직인다.
+#    - 중립 영토: 어느 시대든 점령 가능
+#    - 남의 영토: 그 세력과 '전쟁 중'일 때만
+#    - 올림포스 신전: 3시대(신들의 전쟁)에만
+#    - 도시 영토(city): 여기서 다루지 않는다 → 07-city 의 점령대
+#    - 소유 세력이 한 명이라도 있으면 '분쟁' → 게이지 정지 (지키는 쪽 우위)
+#    - 공격 세력이 둘 이상이면 '분쟁'
+#  점령하면 영토 +5 명성, 신전 +30 명성
+# =====================================================================================
+
+on load:
+    olyModReady("territory")
+
+function olyTerrReset():
+    loop {oly::tlist::*}:
+        set {_t} to loop-value
+        if {oly::t::%{_t}%::home} is set:
+            set {oly::t::%{_t}%::owner} to {oly::t::%{_t}%::home}
+        else:
+            set {oly::t::%{_t}%::owner} to "neutral"
+        delete {oly::t::%{_t}%::cap::*}
+        delete {oly::t::%{_t}%::contested}
+
+# ── fid 가 tid 를 점령할 자격이 있는가
+function olyTerrCanCap(tid: text, fid: text) :: boolean:
+    set {_ty} to olyTerrType({_tid})
+    if {_ty} is "city":
+        return false
+    if {_tid} is "olympus":
+        if olyPhase() is not "war":
+            return false
+    set {_o} to olyTerrOwner({_tid})
+    if {_o} is {_fid}:
+        return false
+    if {_o} is "neutral":
+        return true
+    if olyIsWar({_fid}, {_o}) is true:
+        return true
+    return false
+
+# ── 소유권 이전. renown=true 면 명성 지급 + 방송
+function olyTerrCapture(tid: text, fid: text, renown: boolean):
+    set {_old} to olyTerrOwner({_tid})
+    set {oly::t::%{_tid}%::owner} to {_fid}
+    delete {oly::t::%{_tid}%::cap::*}
+    delete {oly::t::%{_tid}%::contested}
+    if {_renown} is false:
+        stop
+    # 전쟁 점수 (11-war 가 읽는다)
+    if {_old} is not "neutral":
+        if olyIsWar({_fid}, {_old}) is true:
+            add 2 to {oly::war::score::%{_fid}%::%{_old}%}
+    set {_nm} to olyTerrName({_tid})
+    if olyTerrType({_tid}) is "temple":
+        olyRenownAdd({_fid}, olyN("renown.temple"), "신전 점령: %{_nm}%")
+        olyOracle("%olyFacName({_fid})%이(가) %{_nm}%을(를) 차지했습니다", "신들이 그들의 제물을 받기 시작합니다.")
+    else:
+        olyRenownAdd({_fid}, olyN("renown.territory"), "영토 점령: %{_nm}%")
+    if {_old} is not "neutral":
+        olyFacBc({_old}, "&c[영토] &f%{_nm}% &c을(를) %olyFacFull({_fid})%&c에게 빼앗겼습니다!")
+    olyFacBc({_fid}, "&a[영토] &f%{_nm}% &a점령 완료!")
+    loop all players:
+        if olyFacOf(loop-player) is {_fid}:
+            play sound "ui.toast.challenge_complete" with volume 0.6 with pitch 1.3 at location of loop-player for loop-player
+    olyLog("영토 %{_nm}% : %{_old}% → %{_fid}%")
+
+function olyTerrTick():
+    # ── 1. 영토별 세력 인원 집계 → {oly::rt::cnt::<tid>::<fid>}
+    delete {oly::rt::cnt::*}
+    loop all players:
+        set {_p} to loop-player
+        set {_f} to olyFacOf({_p})
+        if {_f} is "none":
+            continue
+        if {_p}'s gamemode is spectator:
+            continue
+        set {_t} to olyTerrOf({_p})
+        set {_u} to "%uuid of {_p}%"
+        # 영토 경계를 넘으면 안내
+        if {oly::rt::pt::%{_u}%} is not {_t}:
+            set {oly::rt::pt::%{_u}%} to {_t}
+            if {_t} is not "none":
+                set {_o} to olyTerrOwner({_t})
+                if {_o} is "neutral":
+                    set {_on} to "&7중립"
+                else:
+                    set {_on} to "%olyFacFull({_o})% &7영토"
+                send title "" with subtitle "&6〔%olyTerrName({_t})%〕 %{_on}%" to {_p} for 2 seconds
+                # 적이 들어오면 소유 세력에 경보 (영토당 20초)
+                if {_o} is not "neutral":
+                    if olyIsWar({_f}, {_o}) is true:
+                        if (olySec() - ({oly::rt::talert::%{_t}%} ? -999)) >= 20:
+                            set {oly::rt::talert::%{_t}%} to olySec()
+                            olyFacBc({_o}, "&c[경계] %olyFacFull({_f})%&c 병력이 &f%olyTerrName({_t})%&c에 들어왔습니다!")
+        if {_t} is "none":
+            continue
+        add 1 to {oly::rt::cnt::%{_t}%::%{_f}%}
+        if {_ts::*} does not contain {_t}:
+            add {_t} to {_ts::*}
+    # ── 2. 게이지 처리 (사람이 있는 영토)
+    loop {_ts::*}:
+        set {_t} to loop-value
+        olyTerrStep({_t})
+    # ── 3. 아무도 없는 영토의 게이지 감소
+    loop {oly::tlist::*}:
+        set {_t} to loop-value
+        if {_ts::*} does not contain {_t}:
+            if {oly::t::%{_t}%::cap::pct} is set:
+                set {oly::t::%{_t}%::cap::pct} to {oly::t::%{_t}%::cap::pct} - olyN("terr.decayPerTick")
+                if {oly::t::%{_t}%::cap::pct} <= 0:
+                    delete {oly::t::%{_t}%::cap::*}
+            delete {oly::t::%{_t}%::contested}
+
+# ── 한 영토의 점령 판정.  인원은 {oly::rt::cnt::<tid>::<fid>} 에서 읽는다 (세력 수와 무관)
+function olyTerrStep(tid: text):
+    loop {oly::flist::*}:
+        set {_n::%loop-value%} to {oly::rt::cnt::%{_tid}%::%loop-value%} ? 0
+    set {_o} to olyTerrOwner({_tid})
+    set {_def} to 0
+    if {_o} is not "neutral":
+        set {_def} to {_n::%{_o}%} ? 0
+    set {_atk} to "none"
+    set {_atks} to 0
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        if ({_n::%{_f}%} ? 0) > 0:
+            if olyTerrCanCap({_tid}, {_f}) is true:
+                add 1 to {_atks}
+                set {_atk} to {_f}
+    if {_atks} = 0:
+        delete {oly::t::%{_tid}%::contested}
+        if {oly::t::%{_tid}%::cap::pct} is set:
+            set {oly::t::%{_tid}%::cap::pct} to {oly::t::%{_tid}%::cap::pct} - olyN("terr.decayPerTick")
+            if {oly::t::%{_tid}%::cap::pct} <= 0:
+                delete {oly::t::%{_tid}%::cap::*}
+        stop
+    if {_atks} > 1:
+        set {oly::t::%{_tid}%::contested} to true
+        stop
+    if {_def} > 0:
+        if olyN("terr.contestBlock") is 1:
+            set {oly::t::%{_tid}%::contested} to true
+            stop
+    delete {oly::t::%{_tid}%::contested}
+    if {oly::t::%{_tid}%::cap::by} is not {_atk}:
+        set {oly::t::%{_tid}%::cap::by} to {_atk}
+        set {oly::t::%{_tid}%::cap::pct} to 0
+    set {_k} to min({_n::%{_atk}%}, olyN("terr.capMaxBonus"))
+    set {oly::t::%{_tid}%::cap::pct} to {oly::t::%{_tid}%::cap::pct} + olyN("terr.capPerTick") * {_k}
+    if {oly::t::%{_tid}%::cap::pct} >= 100:
+        olyTerrCapture({_tid}, {_atk}, true)
+
+every 2 seconds:
+    if olyLive() is true:
+        olyTerrTick()
+
+# ── UI 용: 점령 게이지 (0~100, 없으면 0)
+function olyTerrCapPct(tid: text) :: number:
+    if {oly::t::%{_tid}%::cap::pct} is not set:
+        return 0
+    return floor({oly::t::%{_tid}%::cap::pct})
+
+function olyTerrCapBy(tid: text) :: text:
+    if {oly::t::%{_tid}%::cap::by} is not set:
+        return "none"
+    return {oly::t::%{_tid}%::cap::by}

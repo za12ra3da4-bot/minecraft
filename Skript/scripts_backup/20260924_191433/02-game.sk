@@ -1,0 +1,290 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  02-game.sk  -  게임 상태머신 · 시대 · 승리 판정 · 관리 명령
+# -------------------------------------------------------------------------------------
+#  의존: 00-config, 01-data
+#
+#  담당
+#    - 게임 시작/정지/종료
+#    - 시대 진행 (평화 → 신들의 분노 → 신들의 전쟁 → 종료)
+#    - 메인 보스바 (시대 + 남은 시간 + 선두 세력)
+#    - 승리 판정
+#    - /oly 관리자 명령의 도움말·상태 출력 (명령 본체는 90-flow)
+#
+#  담당하지 않는 것
+#    - 세력별 명성 보스바, 액션바, TAB  → 13-ui.sk
+#    - 시대별 해금 판정은 각 모듈이 olyPhaseAtLeast() 로 스스로 확인한다.
+#      (이 파일이 상위 모듈 함수를 호출하지 않기 위한 규칙)
+# =====================================================================================
+
+on load:
+    olyModReady("game")
+
+on join:
+    if olyLive() is true:
+        wait 1 second
+        send "&8&m                                                  " to player
+        send "  &6&l신들의 전쟁: 올림포스" to player
+        send "  &7현재 시대 &f%olyPhaseName(olyPhase())% &8| &7남은 시간 &f%olyTime(olyLeft())%" to player
+        send "&8&m                                                  " to player
+
+
+# =====================================================================================
+#  1. 시대 정의
+# =====================================================================================
+
+function olyLeft() :: number:
+    if {oly::state::left} is not set:
+        return 0
+    return {oly::state::left}
+
+function olyPhaseName(ph: text) :: text:
+    if {_ph} is "lobby":
+        return "대기"
+    if {_ph} is "peace":
+        return "평화의 시대"
+    if {_ph} is "wrath":
+        return "신들의 분노"
+    if {_ph} is "war":
+        return "신들의 전쟁"
+    if {_ph} is "end":
+        return "종료"
+    return "정지"
+
+function olyPhaseLen(ph: text) :: number:
+    if {_ph} is "peace":
+        return olyN("phase.peace.sec")
+    if {_ph} is "wrath":
+        return olyN("phase.wrath.sec")
+    if {_ph} is "war":
+        return olyN("phase.war.sec")
+    return 0
+
+function olyPhaseBarColor(ph: text) :: text:
+    if {_ph} is "peace":
+        return "green"
+    if {_ph} is "wrath":
+        return "yellow"
+    if {_ph} is "war":
+        return "red"
+    return "white"
+
+
+# =====================================================================================
+#  2. 상태머신
+# =====================================================================================
+
+function olyStart():
+    set {oly::state::running} to true
+    set {oly::state::sec} to 0
+    delete {oly::log::*}
+    olyRtSweep()
+    olyBarInit()
+    olyPhaseSet("peace")
+
+function olyStop():
+    set {oly::state::running} to false
+    olyBarOff()
+    olyBc("&8[올림포스] &7게임이 일시 정지되었습니다. &8(/oly start 로 재개)")
+
+function olyPhaseSet(ph: text):
+    set {oly::state::phase} to {_ph}
+    set {oly::state::left} to olyPhaseLen({_ph})
+    set {oly::state::phaseLen} to {oly::state::left}
+    olyPhaseIntro({_ph})
+    olyBarStyle({_ph})
+    olyBarUpdate()
+
+function olyPhaseNext():
+    set {_p} to olyPhase()
+    if {_p} is "peace":
+        olyPhaseSet("wrath")
+        stop
+    if {_p} is "wrath":
+        olyPhaseSet("war")
+        stop
+    olyEnd("시대의 끝")
+
+# ── 시대 전환 연출
+function olyPhaseIntro(ph: text):
+    if {_ph} is "peace":
+        olyOracle("평화의 시대가 열렸습니다", "도시를 세우고 땅을 넓히십시오. 아직 전쟁은 허락되지 않았습니다.")
+        loop all players:
+            send title "&a&l평화의 시대" with subtitle "&7도시를 발전시키고 동맹을 맺으십시오" to loop-player for 5 seconds
+        olySndAll("ui.toast.challenge_complete", 0.8, 1.2)
+        stop
+    if {_ph} is "wrath":
+        olyOracle("신들이 분노하기 시작했습니다", "이제 선전포고가 가능합니다. 신의 권능이 해금되었습니다.")
+        loop all players:
+            send title "&e&l신들의 분노" with subtitle "&7전쟁이 허락되었다" to loop-player for 5 seconds
+        olySndAll("entity.lightning_bolt.thunder", 0.9, 1)
+        stop
+    if {_ph} is "war":
+        olyOracle("신들의 전쟁이 시작되었습니다", "올림포스 신전이 열렸습니다. 수도를 함락한 자가 모든 것을 가집니다.")
+        loop all players:
+            send title "&c&l신들의 전쟁" with subtitle "&7수도 점령 명성 2배" to loop-player for 6 seconds
+        olySndAll("entity.wither.spawn", 0.7, 1)
+        stop
+
+# ── 게임 종료 + 승리 판정
+function olyEnd(reason: text):
+    set {oly::state::running} to false
+    set {oly::state::phase} to "end"
+    set {_w} to olyTopFaction()
+    olyBarOff()
+    olyBc("")
+    olyBc("  &6&l━━━━━━━━  신들의 전쟁: 종료  ━━━━━━━━")
+    olyBc("  &7사유 &f%{_reason}%")
+    olyBc("")
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        olyBc("   %olyFacFull({_f})% &8- &f명성 %olyRenown({_f})% &8| &7영토 %olyTerrCount({_f})% &8| &7인원 %olyFacSize({_f})%")
+    olyBc("")
+    if {_w} is "none":
+        olyBc("  &7승자가 없습니다.")
+    else:
+        olyBc("  &e&l승리 &8- %olyFacFull({_w})% &f(명성 %olyRenown({_w})%)")
+    olyBc("")
+    loop all players:
+        if {_w} is olyFacOf(loop-player):
+            send title "&6&l승 리" with subtitle olyFacFull({_w}) to loop-player for 8 seconds
+            play sound "ui.toast.challenge_complete" with volume 1 with pitch 1.2 at location of loop-player for loop-player
+        else:
+            send title "&8&l패 배" with subtitle "%olyFacFull({_w})% &7의 승리" to loop-player for 8 seconds
+            play sound "entity.wither.death" with volume 0.5 with pitch 1 at location of loop-player for loop-player
+    olyLog("게임 종료 - 승자 %{_w}% (%{_reason}%)")
+
+
+# =====================================================================================
+#  3. 메인 시계 (1초)
+# =====================================================================================
+
+every second:
+    if olyLive() is not true:
+        stop
+    add 1 to {oly::state::sec}
+    remove 1 from {oly::state::left}
+
+    # 목표 명성 도달 시 즉시 종료
+    if olyN("game.autoEnd") is 1:
+        set {_top} to olyTopFaction()
+        if {_top} is not "none":
+            if olyRenown({_top}) >= olyN("renown.winGoal"):
+                olyEnd("목표 명성 달성")
+                stop
+
+    # 남은 시간 경고
+    if {oly::state::left} is 300:
+        olyOracle("시대가 저물어 갑니다", "%olyPhaseName(olyPhase())% 종료까지 5분")
+    if {oly::state::left} is 60:
+        olyBc("&e[올림포스] &7%olyPhaseName(olyPhase())% &7종료까지 &f1분")
+    if {oly::state::left} <= 5:
+        if {oly::state::left} > 0:
+            olyBc("&e[올림포스] &f%{oly::state::left}%")
+            olySndAll("block.note_block.hat", 0.6, 1.6)
+
+    if {oly::state::left} <= 0:
+        olyPhaseNext()
+
+
+# =====================================================================================
+#  4. 메인 보스바 (바닐라 /bossbar 사용 - 추가 플러그인 불필요)
+# =====================================================================================
+
+function olyBarInit():
+    olyCmd("bossbar remove oly:main")
+    olyCmd("bossbar add oly:main {""text"":""신들의 전쟁: 올림포스""}")
+    olyCmd("bossbar set oly:main max 100")
+    olyCmd("bossbar set oly:main style notched_10")
+    olyCmd("bossbar set oly:main players @a")
+    olyCmd("bossbar set oly:main visible true")
+    set {oly::rt::barN} to number of all players
+
+function olyBarStyle(ph: text):
+    olyCmd("bossbar set oly:main color %olyPhaseBarColor({_ph})%")
+function olyBarOff():
+    olyCmd("bossbar set oly:main visible false")
+function olyBarUpdate():
+    if olyLive() is not true:
+        stop
+    set {_len} to {oly::state::phaseLen}
+    if {_len} is not set:
+        set {_len} to 1
+    if {_len} <= 0:
+        set {_len} to 1
+    set {_done} to {_len} - olyLeft()
+    set {_pct} to floor({_done} / {_len} * 100)
+    if {_pct} < 0:
+        set {_pct} to 0
+    if {_pct} > 100:
+        set {_pct} to 100
+
+    set {_top} to olyTopFaction()
+    if {_top} is "none":
+        set {_lead} to "선두 없음"
+    else:
+        set {_lead} to "선두 %olyFacName({_top})% %olyRenown({_top})%"
+
+    set {_txt} to "%olyPhaseName(olyPhase())%   남은 시간 %olyTime(olyLeft())%   %{_lead}%"
+    olyCmd("bossbar set oly:main value %{_pct}%")
+    olyCmd("bossbar set oly:main name {""text"":""%{_txt}%""}")
+    # 새로 접속한 사람이 있을 때만 대상 갱신 (콘솔 스팸 방지)
+    set {_n} to number of all players
+    if {oly::rt::barN} is not {_n}:
+        set {oly::rt::barN} to {_n}
+        olyCmd("bossbar set oly:main players @a")
+every 2 seconds:
+    if olyLive() is true:
+        olyBarUpdate()
+
+
+# =====================================================================================
+#  5. 관리자 명령
+# =====================================================================================
+
+# /oly 명령 본체는 90-flow.sk 에 있다 (게임 시작 절차가 모든 모듈을 부르기 때문)
+# 여기에는 도움말·상태 출력 함수만 둔다.
+
+function olyHelp(p: player):
+    send "&8&m                                                  " to {_p}
+    send "  &6&l신들의 전쟁: 올림포스 &8- 관리자" to {_p}
+    send "  &f/oly start [force] &8- &7새 게임 (초기화 → 배정 → 평화의 시대)" to {_p}
+    send "  &f/oly stop &8- &7일시 정지 &8/ &f/oly resume &8- &7재개" to {_p}
+    send "  &f/oly end &8- &7즉시 종료 + 승리 판정" to {_p}
+    send "  &f/oly status &8- &7현재 상황 요약" to {_p}
+    send "  &f/oly phase <peace|wrath|war> &8- &7시대 강제 변경" to {_p}
+    send "  &f/oly time <초> &8- &7남은 시간 조정" to {_p}
+    send "  &f/oly cfg <키> [값] &8- &7밸런스 상수 조회/변경" to {_p}
+    send "  &f/oly mods &8- &7모듈 로드 상태" to {_p}
+    send "  &f/oly log &8- &7게임 기록" to {_p}
+    send "  &f/oly boss [id] &8- &7보스 일정 / 즉시 소환" to {_p}
+    send "  &f/oly event <id> &8- &7신탁 사건 즉시 발생" to {_p}
+    send "  &f/oly join <플레이어> <세력> &8| &f/oly leader <세력> <플레이어>" to {_p}
+    send "  &f/oly res <세력> <자원>:<양> &8| &f/oly renown <세력> <양> &8| &f/oly war <a> <b>" to {_p}
+    send "  &f/oly reset confirm &8- &7게임 데이터 초기화" to {_p}
+    send "&8&m                                                  " to {_p}
+
+function olyStatus(p: player):
+    set {_goal} to olyN("renown.winGoal")
+    send "&8&m                                                  " to {_p}
+    send "  &6&l올림포스 &8- &7상태" to {_p}
+    if olyLive() is true:
+        send "  &7진행 &a진행 중" to {_p}
+    else:
+        send "  &7진행 &c정지" to {_p}
+    send "  &7시대 &f%olyPhaseName(olyPhase())% &8| &7남은 시간 &f%olyTime(olyLeft())% &8| &7경과 &f%olyTime(olySec())%" to {_p}
+    send "  &7접속 &f%number of all players%명 &8| &7목표 명성 &f%{_goal}%" to {_p}
+    send "" to {_p}
+    if size of {oly::flist::*} is 0:
+        send "  &8등록된 세력이 없습니다 (3단계에서 추가)" to {_p}
+    else:
+        loop {oly::flist::*}:
+            set {_f} to loop-value
+            set {_fd} to olyRes({_f}, "food")
+            set {_wd} to olyRes({_f}, "wood")
+            set {_st} to olyRes({_f}, "stone")
+            set {_ir} to olyRes({_f}, "iron")
+            set {_gd} to olyRes({_f}, "gold")
+            set {_fa} to olyRes({_f}, "faith")
+            send "  %olyFacFull({_f})% &8| &f명성 %olyRenown({_f})% &8| &7영토 %olyTerrCount({_f})% &8| &7인원 %olyFacSize({_f})%" to {_p}
+            send "     &a식 %{_fd}% &6목 %{_wd}% &7석 %{_st}% &f철 %{_ir}% &e금 %{_gd}% &d신앙 %{_fa}%" to {_p}
+    send "&8&m                                                  " to {_p}

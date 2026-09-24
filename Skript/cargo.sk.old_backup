@@ -1,0 +1,1127 @@
+# =====================================================================================
+#  📦  물류 대란 (CARGO RUN)  -  20인 배달 경쟁 · 약탈 허용 미니게임          v1.0
+# -------------------------------------------------------------------------------------
+#  요구 환경 : Paper 1.21+  ·  Skript 2.9 이상  ·  애드온 불필요
+#  설계 방침 : (1) 강도가 배달보다 이득이면 게임이 붕괴한다 → 70/10 분배로 기생 구조 유지
+#              (2) 털려도 재기 가능해야 한다 → 은행 자동 입금 + 피해자 보험 10%
+#              (3) 욕심의 값이 눈에 보여야 한다 → 적재 4개부터 점프 봉쇄
+#              (4) 안전 구역이 없으면 목적지 캠핑으로 게임이 정지한다 → 반경 20 PvP 금지
+# -------------------------------------------------------------------------------------
+#  [ 전역 변수 설계도 ]
+#   {cg::state}                  : "off" | "run"            - 게임 진행 상태
+#   {cg::t}                      : number                   - 경과 시간(초)
+#   {cg::phase}                  : "open"|"peak"|"rush"|"close"
+#   {cg::seq}                    : number                   - 주문 번호 채번기
+#   {cg::players::<uuid>}        : player                   - 참가자 명단
+#
+#   {cg::mv}                     : location                 - 마을(주문판) 좌표
+#   {cg::wh::<1~n>}              : location                 - 창고 좌표
+#   {cg::whname::<n>}            : text                     - 창고 이름
+#   {cg::ds::<1~n>}              : location                 - 목적지 좌표
+#   {cg::dsname::<n>}            : text                     - 목적지 이름
+#
+#   {cg::open::<id>}             : true                     - 게시판에 떠 있는 주문
+#   {cg::live::<id>}             : true                     - 수락되어 운송 중인 주문
+#   {cg::o::<id>::type}          : "normal"|"anon"|"urgent"|"secret"|"high"
+#   {cg::o::<id>::from}          : number                   - 출발 창고 번호
+#   {cg::o::<id>::to}            : number                   - 목적지 번호
+#   {cg::o::<id>::value}         : number                   - 확정 보상(EM)
+#   {cg::o::<id>::owner}         : text(uuid)               - 최초 수령자 (보험 대상)
+#   {cg::o::<id>::due}           : number                   - 긴급 주문 마감 시각(초)
+#
+#   {cg::bank::<uuid>}           : number                   - 은행 잔고 (사망해도 안전)
+#   {cg::load::<uuid>}           : number                   - 현재 적재량 캐시
+#   {cg::dead::<uuid>}           : number                   - 리스폰 대기 남은 초
+#   {cg::inv::<uuid>}            : inventory                - 열려 있는 우리 GUI
+#   {cg::gui::<uuid>}            : "board" | "shop"         - GUI 종류
+#   {cg::bmap::<uuid>::<slot>}   : number                   - 게시판 슬롯 → 주문 id
+#   {cg::smap::<uuid>::<slot>}   : text                     - 상점 슬롯 → 품목 코드
+#
+#  ※ 화물의 정체성은 전부 아이템 이름에 들어 있습니다. "&6화물 #17" 의 17이 주문 id 이며,
+#     아이템이 손을 떠나 남에게 넘어가도 id 는 그대로이므로 강도 정산이 자동으로 성립합니다.
+# =====================================================================================
+
+
+options:
+    # ── 경제 ──────────────────────────────────────────────────────────────────────
+    # 보상 = BASE + (출발지~목적지 거리 × PERBLOCK) 을 반올림한 값
+    BASE: 20
+    PERBLOCK: 0.4
+    # 남의 화물을 대신 배달했을 때 받는 비율. 100%로 두면 아무도 배달하지 않습니다.
+    # 70에서 시작해, 강도가 거의 안 나오면 80까지만 올리세요. 90 이상은 금물.
+    ROBRATE: 0.7
+    # 털린 사람에게 자동 지급되는 보험 비율. 이게 없으면 하위권이 20분부터 이탈합니다.
+    INSRATE: 0.1
+    # 익명 배송 보상 비율 (게시판에 뜨지 않는 대신 깎임)
+    ANONRATE: 0.6
+    URGENTMUL: 3
+    SECRETMUL: 2
+    HIGHMUL: 10
+    # 긴급 주문 실패 위약금
+    URGENTFEE: 50
+    # 긴급 주문 제한 시간(초)
+    URGENTSEC: 120
+
+    # ── 적재 ──────────────────────────────────────────────────────────────────────
+    MAXLOAD: 6
+    # 화물 1개당 이동속도 감소율
+    SPEEDPER: 0.07
+    # 이 개수부터 점프 봉쇄. 속도만 깎으면 그냥 느리게 많이 나릅니다.
+    JUMPLOCK: 4
+    # 바닐라 기본 걷기 속도
+    BASESPEED: 0.2
+
+    # ── 주문 ──────────────────────────────────────────────────────────────────────
+    # 주문 생성 간격(초). 10인 리허설이면 60으로 늘리세요.
+    ORDERSEC: 30
+    # 게시판 최대 대기 건수
+    MAXBOARD: 8
+
+    # ── 페이즈 길이(초)  합계 1800 = 30분 ────────────────────────────────────────
+    POPEN: 300
+    PPEAK: 900
+    PRUSH: 360
+    PCLOSE: 240
+
+    # ── 기타 ──────────────────────────────────────────────────────────────────────
+    # 안전 구역 반경. 타협 불가 항목입니다. 없으면 목적지 캠핑으로 게임이 정지합니다.
+    SAFER: 20
+    # 목적지 인정 반경
+    DELIVR: 5
+    # 사망 후 리스폰 대기(초)
+    RESPAWN: 30
+    PF: &8[&6물류&8] &f
+    ADMIN: cargo.admin
+
+
+# =====================================================================================
+#  0. 초기화
+# =====================================================================================
+
+on load:
+    if {cg::state} is not set:
+        set {cg::state} to "off"
+    if {cg::seq} is not set:
+        set {cg::seq} to 0
+    # 재시작 시점에 진행 중이던 판은 안전하게 접습니다. 좌표 설정은 유지됩니다.
+    if {cg::state} is "run":
+        cgStop(false)
+    delete {cg::open::*}
+    delete {cg::live::*}
+    delete {cg::o::*}
+    delete {cg::load::*}
+    delete {cg::dead::*}
+    delete {cg::inv::*}
+    delete {cg::gui::*}
+    delete {cg::bmap::*}
+    delete {cg::smap::*}
+
+
+# =====================================================================================
+#  1. 유틸리티
+# =====================================================================================
+
+function cgOn() :: boolean:
+    if {cg::state} is "run":
+        return true
+    return false
+
+function cgPlaying(p: player) :: boolean:
+    if {cg::players::%uuid of {_p}%} is set:
+        return true
+    return false
+
+function cgAll() :: players:
+    set {_out::*} to {cg::players::*}
+    return {_out::*}
+
+# ── 같은 월드일 때만 거리를 잰다. 월드가 다르면 아주 큰 값을 돌려준다.
+function cgDist(a: location, b: location) :: number:
+    if {_a} is not set:
+        return 99999
+    if {_b} is not set:
+        return 99999
+    if world of {_a} is not world of {_b}:
+        return 99999
+    return distance between {_a} and {_b}
+
+function cgMoney(n: number) :: text:
+    return "%{_n}% EM"
+
+# ── 안전 구역 : 마을 · 모든 창고 · 모든 목적지 반경 {@SAFER}
+function cgSafe(l: location) :: boolean:
+    if cgDist({_l}, {cg::mv}) <= {@SAFER}:
+        return true
+    loop {cg::wh::*}:
+        if cgDist({_l}, loop-value) <= {@SAFER}:
+            return true
+    loop {cg::ds::*}:
+        if cgDist({_l}, loop-value) <= {@SAFER}:
+            return true
+    return false
+
+function cgMapReady() :: boolean:
+    if {cg::mv} is not set:
+        return false
+    if size of {cg::wh::*} < 1:
+        return false
+    if size of {cg::ds::*} < 1:
+        return false
+    return true
+
+function cgBroadcast(msg: text):
+    loop cgAll():
+        send "{@PF}%{_msg}%" to loop-value
+
+function cgSound(s: text, pit: number):
+    loop cgAll():
+        play sound {_s} with volume 0.6 with pitch {_pit} at location of loop-value for loop-value
+
+
+# =====================================================================================
+#  2. 은행 / 현금
+# -------------------------------------------------------------------------------------
+#  은행 잔고는 사망해도 사라지지 않습니다. 상점에서 쓰려면 현금(에메랄드)으로 인출해야 하고,
+#  인출한 순간부터 그 돈은 죽으면 잃습니다. 이 구조가 "장비에 투자할 것인가"를 만듭니다.
+# =====================================================================================
+
+function cgBank(p: player) :: number:
+    if {cg::bank::%uuid of {_p}%} is not set:
+        set {cg::bank::%uuid of {_p}%} to 0
+    return {cg::bank::%uuid of {_p}%}
+
+function cgBankAdd(p: player, n: number):
+    set {cg::bank::%uuid of {_p}%} to cgBank({_p}) + {_n}
+
+function cgCash(p: player) :: number:
+    set {_n} to 0
+    loop 36 times:
+        set {_it} to slot (loop-number - 1) of {_p}'s inventory
+        if {_it} is emerald:
+            add (item amount of {_it}) to {_n}
+    return {_n}
+
+
+# =====================================================================================
+#  3. 화물 아이템
+# -------------------------------------------------------------------------------------
+#  화물의 모든 정체성은 이름의 "#숫자" 에 들어 있습니다. 아이템이 강도의 손으로 넘어가도
+#  id 가 그대로라서, 배달 시점에 최초 수령자와 배달자를 비교하는 것만으로 정산이 끝납니다.
+# =====================================================================================
+
+function cgTypeName(t: text) :: text:
+    if {_t} is "anon":
+        return "&8익명"
+    if {_t} is "urgent":
+        return "&c긴급"
+    if {_t} is "secret":
+        return "&5극비"
+    if {_t} is "high":
+        return "&6&l고가"
+    return "&7일반"
+
+function cgTypeColor(t: text) :: text:
+    if {_t} is "urgent":
+        return "&c"
+    if {_t} is "secret":
+        return "&5"
+    if {_t} is "high":
+        return "&6"
+    if {_t} is "anon":
+        return "&8"
+    return "&e"
+
+# ── 주문 id 로부터 실제 화물 아이템을 만든다
+function cgMakeCargo(id: number) :: item:
+    set {_t} to {cg::o::%{_id}%::type}
+    set {_to} to {cg::o::%{_id}%::to}
+    set {_i} to red shulker box
+    if {_t} is "high":
+        set {_i} to orange shulker box
+    if {_t} is "secret":
+        set {_i} to purple shulker box
+    if {_t} is "anon":
+        set {_i} to gray shulker box
+    set name of {_i} to "&6화물 #%{_id}%"
+    # 극비 주문은 목적지를 로어에 적지 않습니다. 수령자만 알고 있어야 매복이 불가능해집니다.
+    if {_t} is "secret":
+        set lore of {_i} to "%cgTypeName({_t})%" and "&7목적지 &f???" and "&7보상 &a%{cg::o::%{_id}%::value}% EM" and "&8내려놓을 수 없음"
+    else:
+        set lore of {_i} to "%cgTypeName({_t})%" and "&7목적지 &f%{cg::dsname::%{_to}%}%" and "&7보상 &a%{cg::o::%{_id}%::value}% EM" and "&8내려놓을 수 없음"
+    return {_i}
+
+# ── 아이템에서 주문 id 를 뽑아낸다. 화물이 아니면 0
+function cgCargoId(i: item) :: number:
+    if {_i} is not set:
+        return 0
+    set {_n} to uncolored (name of {_i})
+    if {_n} is not set:
+        return 0
+    if {_n} does not contain "화물 #":
+        return 0
+    set {_parts::*} to {_n} split at "#"
+    if {_parts::2} is not set:
+        return 0
+    set {_id} to "%{_parts::2}%" parsed as number
+    if {_id} is not set:
+        return 0
+    return {_id}
+
+# ── 인벤토리에 든 화물 개수
+function cgLoad(p: player) :: number:
+    set {_n} to 0
+    loop 36 times:
+        set {_it} to slot (loop-number - 1) of {_p}'s inventory
+        if cgCargoId({_it}) > 0:
+            add 1 to {_n}
+    return {_n}
+
+# ── 인벤토리에서 특정 주문 id 의 화물을 제거. 있었으면 true
+function cgTakeCargo(p: player, id: number) :: boolean:
+    loop 36 times:
+        set {_s} to loop-number - 1
+        set {_it} to slot {_s} of {_p}'s inventory
+        if cgCargoId({_it}) is {_id}:
+            set slot {_s} of {_p}'s inventory to air
+            return true
+    return false
+
+# ── 인벤토리의 모든 화물을 꺼내 목록으로. (사망 드롭용)
+function cgStripCargo(p: player) :: numbers:
+    loop 36 times:
+        set {_s} to loop-number - 1
+        set {_it} to slot {_s} of {_p}'s inventory
+        set {_id} to cgCargoId({_it})
+        if {_id} > 0:
+            add {_id} to {_out::*}
+            set slot {_s} of {_p}'s inventory to air
+    return {_out::*}
+
+
+# =====================================================================================
+#  4. 적재 페널티
+# -------------------------------------------------------------------------------------
+#  4개째의 점프 봉쇄가 이 설계의 핵심입니다. 속도만 깎으면 참가자는 그냥 느리게 많이 나릅니다.
+#  점프가 막히면 지름길과 우회로가 통째로 닫히고, 정해진 노선(=매복 구간)으로만 다니게 됩니다.
+# =====================================================================================
+
+function cgApplyLoad(p: player):
+    set {_u} to uuid of {_p}
+    set {_n} to cgLoad({_p})
+    if {cg::load::%{_u}%} is {_n}:
+        stop
+    set {cg::load::%{_u}%} to {_n}
+
+    set {_mul} to 1 - ({@SPEEDPER} * {_n})
+    if {_mul} < 0.3:
+        set {_mul} to 0.3
+    set walk speed of {_p} to {@BASESPEED} * {_mul}
+
+    if {_n} >= {@JUMPLOCK}:
+        # 증폭 200은 음수 점프로 처리되어 점프가 완전히 막힙니다.
+        make console execute command "effect give %name of {_p}% minecraft:jump_boost 999999 200 true"
+        send action bar "&c과적 %{_n}%/{@MAXLOAD}  &7이동 %floor({_mul} * 100)%%  &c점프 불가" to {_p}
+    else:
+        make console execute command "effect clear %name of {_p}% minecraft:jump_boost"
+        if {_n} > 0:
+            send action bar "&6적재 %{_n}%/{@MAXLOAD}  &7이동 %floor({_mul} * 100)%%" to {_p}
+
+function cgClearLoad(p: player):
+    delete {cg::load::%uuid of {_p}%}
+    set walk speed of {_p} to {@BASESPEED}
+    make console execute command "effect clear %name of {_p}% minecraft:jump_boost"
+
+
+# =====================================================================================
+#  5. 주문 생성 / 게시판
+# -------------------------------------------------------------------------------------
+#  주문판은 전원이 봅니다. 내가 무엇을 어디로 나르는지 스무 명이 아는 것,
+#  그 정보 공개가 강도를 만들어내는 엔진입니다. 익명 배송은 그 엔진을 끄는 대신 40%를 깎습니다.
+# =====================================================================================
+
+# ── 유형 추첨. 일반 6 : 익명 2 : 긴급 1.5 : 극비 0.4 : 고가 0.1
+function cgRollType() :: text:
+    set {_r} to random number between 0 and 10
+    if {_r} < 6:
+        return "normal"
+    if {_r} < 8:
+        return "anon"
+    if {_r} < 9.5:
+        return "urgent"
+    if {_r} < 9.9:
+        return "secret"
+    return "high"
+
+function cgSpawnOrder(force: text):
+    if cgMapReady() is false:
+        stop
+    if size of {cg::open::*} >= {@MAXBOARD}:
+        stop
+
+    set {_type} to {_force}
+    if {_type} is "":
+        set {_type} to cgRollType()
+
+    # 출발 창고와 목적지를 뽑되, 노선이 짧으면 다시 뽑는다. (동선이 겹쳐야 사건이 생긴다)
+    set {_fi} to random integer between 1 and (size of {cg::wh::*})
+    set {_from} to {cg::wh::%{_fi}%}
+    set {_best} to 0
+    set {_ti} to 1
+    loop {cg::ds::*}:
+        set {_d} to cgDist({_from}, loop-value)
+        if {_d} > {_best}:
+            if {_d} < 99999:
+                set {_best} to {_d}
+                set {_ti} to loop-index parsed as number
+    # 가장 먼 목적지만 쓰면 노선이 굳으므로, 절반 확률로 무작위 목적지를 쓴다
+    if (random number between 0 and 1) < 0.5:
+        set {_ti} to random integer between 1 and (size of {cg::ds::*})
+        set {_best} to cgDist({_from}, {cg::ds::%{_ti}%})
+    if {_best} >= 99999:
+        stop
+    if {_best} > 300:
+        set {_best} to 300
+
+    set {_val} to floor({@BASE} + ({_best} * {@PERBLOCK}))
+    if {_type} is "anon":
+        set {_val} to floor({_val} * {@ANONRATE})
+    if {_type} is "urgent":
+        set {_val} to floor({_val} * {@URGENTMUL})
+    if {_type} is "secret":
+        set {_val} to floor({_val} * {@SECRETMUL})
+    if {_type} is "high":
+        set {_val} to floor({_val} * {@HIGHMUL})
+    # 대란 페이즈에는 전 주문 보상이 2배
+    if {cg::phase} is "rush":
+        set {_val} to {_val} * 2
+
+    add 1 to {cg::seq}
+    set {_id} to {cg::seq}
+    set {cg::o::%{_id}%::type} to {_type}
+    set {cg::o::%{_id}%::from} to {_fi}
+    set {cg::o::%{_id}%::to} to {_ti}
+    set {cg::o::%{_id}%::value} to {_val}
+    set {cg::open::%{_id}%} to true
+
+    if {_type} is "high":
+        cgBroadcast("&6&l[고가 화물] &f%{cg::whname::%{_fi}%}% &7→ &f%{cg::dsname::%{_ti}%}% &7· 보상 &a%{_val}% EM")
+        cgBroadcast("&7  주문판에서 먼저 잡는 사람이 표적이 됩니다.")
+        cgSound("entity.ender_dragon.growl", 1.2)
+
+function cgOrderLabel(id: number) :: text:
+    set {_t} to {cg::o::%{_id}%::type}
+    set {_f} to {cg::whname::%{cg::o::%{_id}%::from}%}
+    set {_d} to {cg::dsname::%{cg::o::%{_id}%::to}%}
+    if {_t} is "secret":
+        set {_d} to "???"
+    if {_t} is "anon":
+        set {_f} to "???"
+    return "%cgTypeColor({_t})%#%{_id}%  &f%{_f}% &7→ &f%{_d}%"
+
+# ── 게시판 GUI
+function cgOpenBoard(p: player):
+    set {_u} to uuid of {_p}
+    delete {cg::bmap::%{_u}%::*}
+    set {_inv} to chest inventory with 3 rows named "&8주문판  &7게시 %size of {cg::open::*}%건"
+    set {_s} to 0
+    loop {cg::open::*}:
+        set {_id} to loop-index parsed as number
+        set {_it} to cgMakeCargo({_id})
+        set name of {_it} to cgOrderLabel({_id})
+        set {_t} to {cg::o::%{_id}%::type}
+        set {_lore::*} to "%cgTypeName({_t})%" and "&7보상 &a%{cg::o::%{_id}%::value}% EM"
+        if {_t} is "urgent":
+            add "&c제한 {@URGENTSEC}초 · 실패 시 &4-{@URGENTFEE} EM" to {_lore::*}
+        if {_t} is "anon":
+            add "&8게시판에 이름이 뜨지 않습니다" to {_lore::*}
+        if {_t} is "secret":
+            add "&5목적지는 수령자만 볼 수 있습니다" to {_lore::*}
+        if {_t} is "high":
+            add "&6&l전원에게 공지된 화물입니다" to {_lore::*}
+        add "" to {_lore::*}
+        add "&e클릭하여 수령" to {_lore::*}
+        set lore of {_it} to {_lore::*}
+        set slot {_s} of {_inv} to {_it}
+        set {cg::bmap::%{_u}%::%{_s}%} to {_id}
+        add 1 to {_s}
+        if {_s} >= 27:
+            exit loop
+    set {cg::inv::%{_u}%} to {_inv}
+    set {cg::gui::%{_u}%} to "board"
+    open {_inv} to {_p}
+
+function cgAccept(p: player, id: number):
+    if {cg::open::%{_id}%} is not set:
+        send "{@PF}&c이미 다른 사람이 가져간 주문입니다." to {_p}
+        stop
+    if cgLoad({_p}) >= {@MAXLOAD}:
+        send "{@PF}&c적재 한계입니다. ({@MAXLOAD}개)" to {_p}
+        stop
+    set {_u} to uuid of {_p}
+    delete {cg::open::%{_id}%}
+    set {cg::live::%{_id}%} to true
+    set {cg::o::%{_id}%::owner} to {_u}
+    if {cg::o::%{_id}%::type} is "urgent":
+        set {cg::o::%{_id}%::due} to {cg::t} + {@URGENTSEC}
+    give cgMakeCargo({_id}) to {_p}
+    cgApplyLoad({_p})
+
+    set {_t} to {cg::o::%{_id}%::type}
+    set {_d} to {cg::dsname::%{cg::o::%{_id}%::to}%}
+    send "{@PF}&a화물 #%{_id}% &f수령 &7· 목적지 &f%{_d}% &7· 보상 &a%{cg::o::%{_id}%::value}% EM" to {_p}
+    play sound "entity.item.pickup" with volume 0.7 with pitch 1.2 at location of {_p} for {_p}
+
+    # 익명 배송만 전체 공지에서 빠집니다. 그 대가로 보상이 40% 깎여 있습니다.
+    if {_t} is not "anon":
+        loop cgAll():
+            if loop-value is not {_p}:
+                send "{@PF}&7%name of {_p}% &f→ %cgTypeColor({_t})%%{_d}% &7(#%{_id}%)" to loop-value
+
+
+# =====================================================================================
+#  6. 배달 정산
+# -------------------------------------------------------------------------------------
+#  70/10 분배가 이 게임의 급소입니다. 뺏은 화물은 70%만 받고, 10%는 최초 수령자에게 갑니다.
+#  털려도 0이 아니어야 피해자가 다시 화물을 듭니다.
+# =====================================================================================
+
+function cgDeliver(p: player, id: number):
+    set {_u} to uuid of {_p}
+    set {_own} to {cg::o::%{_id}%::owner}
+    set {_val} to {cg::o::%{_id}%::value}
+    set {_t} to {cg::o::%{_id}%::type}
+
+    cgTakeCargo({_p}, {_id})
+    delete {cg::live::%{_id}%}
+
+    if {_own} is {_u}:
+        # 본인 배달 : 전액
+        cgBankAdd({_p}, {_val})
+        send "{@PF}&a배달 완료 &7#%{_id}%  &a+%{_val}% EM" to {_p}
+        play sound "entity.player.levelup" with volume 0.5 with pitch 1.4 at location of {_p} for {_p}
+        cgBroadcast("&7[배달] &f%name of {_p}% &7· #%{_id}% &7· &a%{_val}% EM")
+    else:
+        # 강도 배달 : 70% / 최초 수령자 10%
+        set {_get} to floor({_val} * {@ROBRATE})
+        set {_ins} to floor({_val} * {@INSRATE})
+        cgBankAdd({_p}, {_get})
+        send "{@PF}&6장물 배달 &7#%{_id}%  &a+%{_get}% EM &8(정가의 {@ROBRATE}배)" to {_p}
+        play sound "entity.player.levelup" with volume 0.5 with pitch 0.8 at location of {_p} for {_p}
+        loop all players:
+            if uuid of loop-player is {_own}:
+                set {cg::bank::%{_own}%} to cgBank(loop-player) + {_ins}
+                send "{@PF}&7화물 #%{_id}% 이(가) &f%name of {_p}% &7에게 배달되었습니다. 보험금 &a+%{_ins}% EM" to loop-player
+        cgBroadcast("&7[장물] &f%name of {_p}% &7· #%{_id}% &7· &6%{_get}% EM")
+
+    delete {cg::o::%{_id}%::type}
+    delete {cg::o::%{_id}%::from}
+    delete {cg::o::%{_id}%::to}
+    delete {cg::o::%{_id}%::value}
+    delete {cg::o::%{_id}%::owner}
+    delete {cg::o::%{_id}%::due}
+    cgApplyLoad({_p})
+
+# ── 목적지 근처에 있으면 해당 화물을 자동 정산한다
+function cgCheckDeliver(p: player):
+    set {_n} to cgLoad({_p})
+    if {_n} is 0:
+        stop
+    loop {cg::ds::*}:
+        set {_di} to loop-index parsed as number
+        if cgDist(location of {_p}, loop-value) <= {@DELIVR}:
+            loop 36 times:
+                set {_it} to slot (loop-number - 1) of {_p}'s inventory
+                set {_id} to cgCargoId({_it})
+                if {_id} > 0:
+                    if {cg::o::%{_id}%::to} is {_di}:
+                        cgDeliver({_p}, {_id})
+            stop
+
+
+# =====================================================================================
+#  7. 전투 / 사망
+# -------------------------------------------------------------------------------------
+#  안전 구역은 타협 불가입니다. 없으면 두 명이 목적지 앞에 앉아 모든 배달을 차단하고
+#  게임이 10분 만에 정지합니다.
+# =====================================================================================
+
+on damage:
+    cgOn() is true
+    victim is a player
+    cgPlaying(victim) is true
+    # 개장 페이즈에는 PvP 자체가 없습니다. 자본 격차부터 만들어야 합니다.
+    if {cg::phase} is "open":
+        if attacker is a player:
+            cancel event
+            send action bar "&7개장 시간에는 공격할 수 없습니다" to attacker
+            stop
+    if attacker is a player:
+        if cgSafe(location of victim) is true:
+            cancel event
+            send action bar "&a안전 구역입니다" to attacker
+            stop
+        if cgSafe(location of attacker) is true:
+            cancel event
+            send action bar "&a안전 구역에서는 공격할 수 없습니다" to attacker
+            stop
+
+on death of player:
+    cgOn() is true
+    cgPlaying(victim) is true
+    set {_u} to uuid of victim
+    set {_loc} to location of victim
+    # 화물은 전부 바닥에 떨어집니다. 잃는 것은 손에 든 것과 30초뿐입니다.
+    set {_ids::*} to cgStripCargo(victim)
+    loop {_ids::*}:
+        drop cgMakeCargo(loop-value) at {_loc}
+    # 인출해 둔 현금도 함께 떨어집니다. 은행 잔고는 안전합니다.
+    set {_cash} to cgCash(victim)
+    if {_cash} > 0:
+        remove all emerald from victim's inventory
+        drop {_cash} of emerald at {_loc}
+    if size of {_ids::*} > 0:
+        cgBroadcast("&c%name of victim% &7이(가) 쓰러지며 화물 %size of {_ids::*}%개를 흘렸습니다.")
+    set {cg::dead::%{_u}%} to {@RESPAWN}
+    cgClearLoad(victim)
+
+on respawn:
+    cgOn() is true
+    cgPlaying(player) is true
+    # 가장 가까운 창고에서 부활합니다.
+    set {_best} to 99999
+    set {_l} to {cg::mv}
+    loop {cg::wh::*}:
+        set {_d} to cgDist(location of player, loop-value)
+        if {_d} < {_best}:
+            set {_best} to {_d}
+            set {_l} to loop-value
+    wait 2 ticks
+    teleport player to {_l}
+    cgApplyLoad(player)
+
+# ── 화물은 내려놓을 수 없습니다. 버려서 증거를 없애는 플레이를 막습니다.
+on drop:
+    cgOn() is true
+    cgPlaying(player) is true
+    if cgCargoId(event-item) > 0:
+        cancel event
+        send action bar "&c화물은 내려놓을 수 없습니다" to player
+
+
+# =====================================================================================
+#  8. 상점
+# -------------------------------------------------------------------------------------
+#  현금(에메랄드)으로만 삽니다. 즉 은행에서 인출해야 하고, 인출한 순간부터 죽으면 잃습니다.
+#  "장비에 투자할 것인가, 잔고를 지킬 것인가" 가 여기서 갈립니다.
+# =====================================================================================
+
+function cgShopPrice(code: text) :: number:
+    if {_code} is "sword":
+        return 60
+    if {_code} is "armor":
+        return 80
+    if {_code} is "bow":
+        return 50
+    if {_code} is "speed":
+        return 40
+    return 0
+
+function cgShopName(code: text) :: text:
+    if {_code} is "sword":
+        return "&f철검"
+    if {_code} is "armor":
+        return "&f가죽 갑옷 세트"
+    if {_code} is "bow":
+        return "&f활 + 화살 16"
+    if {_code} is "speed":
+        return "&f신속 물약 II"
+    return "&7?"
+
+function cgOpenShop(p: player):
+    set {_u} to uuid of {_p}
+    delete {cg::smap::%{_u}%::*}
+    set {_inv} to chest inventory with 1 row named "&8상점  &7현금 %cgCash({_p})% EM"
+    set {_codes::*} to "sword", "armor", "bow" and "speed"
+    set {_icons::*} to iron sword, leather chestplate, bow and potion
+    set {_s} to 1
+    loop {_codes::*}:
+        set {_c} to loop-value
+        set {_it} to {_icons::%loop-index%}
+        set name of {_it} to cgShopName({_c})
+        set lore of {_it} to "&7가격 &a%cgShopPrice({_c})% EM" and "" and "&e클릭하여 구매"
+        set slot {_s} of {_inv} to {_it}
+        set {cg::smap::%{_u}%::%{_s}%} to {_c}
+        add 2 to {_s}
+    set {cg::inv::%{_u}%} to {_inv}
+    set {cg::gui::%{_u}%} to "shop"
+    open {_inv} to {_p}
+
+function cgBuy(p: player, code: text):
+    set {_price} to cgShopPrice({_code})
+    if cgCash({_p}) < {_price}:
+        send "{@PF}&c현금이 부족합니다. &7( &f/물류 인출 <금액> &7)" to {_p}
+        stop
+    remove {_price} of emerald from {_p}'s inventory
+    if {_code} is "sword":
+        give iron sword to {_p}
+    if {_code} is "armor":
+        give leather helmet to {_p}
+        give leather chestplate to {_p}
+        give leather leggings to {_p}
+        give leather boots to {_p}
+    if {_code} is "bow":
+        give bow to {_p}
+        give 16 of arrow to {_p}
+    if {_code} is "speed":
+        make console execute command "give %name of {_p}% minecraft:potion[potion_contents={potion:\"minecraft:swiftness\"}] 1"
+    send "{@PF}&a%cgShopName({_code})% &f구매 &7-%{_price}% EM" to {_p}
+    play sound "entity.villager.yes" with volume 0.6 with pitch 1.1 at location of {_p} for {_p}
+    cgOpenShop({_p})
+
+
+# =====================================================================================
+#  9. GUI 클릭
+# =====================================================================================
+
+on inventory click:
+    set {_u} to uuid of player
+    if {cg::inv::%{_u}%} is not set:
+        stop
+    if clicked inventory is not {cg::inv::%{_u}%}:
+        stop
+    cancel event
+    set {_s} to "%clicked slot%" parsed as number
+    if {_s} is not set:
+        stop
+    set {_g} to {cg::gui::%{_u}%}
+
+    if {_g} is "board":
+        set {_id} to {cg::bmap::%{_u}%::%{_s}%}
+        if {_id} is not set:
+            stop
+        close player's inventory
+        cgAccept(player, {_id})
+        stop
+
+    if {_g} is "shop":
+        set {_c} to {cg::smap::%{_u}%::%{_s}%}
+        if {_c} is not set:
+            stop
+        cgBuy(player, {_c})
+        stop
+
+on inventory close:
+    delete {cg::inv::%uuid of player%}
+    delete {cg::gui::%uuid of player%}
+
+
+# =====================================================================================
+#  10. HUD  -  바닐라 /bossbar · /scoreboard 로 그린다 (애드온 불필요)
+# =====================================================================================
+
+function cgPhaseName(ph: text) :: text:
+    if {_ph} is "open":
+        return "개장"
+    if {_ph} is "peak":
+        return "성수기"
+    if {_ph} is "rush":
+        return "&6대란"
+    if {_ph} is "close":
+        return "&c마감"
+    return "-"
+
+function cgBarInit():
+    make console execute command "bossbar remove cargo:main"
+    make console execute command "bossbar add cargo:main {""text"":""물류 대란""}"
+    make console execute command "bossbar set cargo:main max 1800"
+    make console execute command "bossbar set cargo:main style notched_10"
+    make console execute command "bossbar set cargo:main color yellow"
+    make console execute command "bossbar set cargo:main players @a"
+    make console execute command "bossbar set cargo:main visible true"
+
+function cgBarUpdate():
+    set {_left} to 1800 - {cg::t}
+    if {_left} < 0:
+        set {_left} to 0
+    set {_m} to floor({_left} / 60)
+    set {_s} to {_left} mod 60
+    set {_sv} to "%{_s}%"
+    if {_s} < 10:
+        set {_sv} to "0%{_s}%"
+    set {_txt} to "%cgPhaseName({cg::phase})%   %{_m}%:%{_sv}%   게시 %size of {cg::open::*}%건   운송중 %size of {cg::live::*}%건"
+    make console execute command "bossbar set cargo:main value %{_left}%"
+    make console execute command "bossbar set cargo:main name {""text"":""%{_txt}%""}"
+    if {cg::phase} is "rush":
+        make console execute command "bossbar set cargo:main color red"
+    if {cg::phase} is "close":
+        make console execute command "bossbar set cargo:main color purple"
+
+function cgBarOff():
+    make console execute command "bossbar remove cargo:main"
+
+function cgBoardInit():
+    make console execute command "scoreboard objectives remove cgbank"
+    make console execute command "scoreboard objectives add cgbank dummy {""text"":""은행 잔고 (EM)"",""color"":""gold""}"
+    make console execute command "scoreboard objectives setdisplay sidebar cgbank"
+
+function cgBoardUpdate():
+    loop cgAll():
+        make console execute command "scoreboard players set %name of loop-value% cgbank %cgBank(loop-value)%"
+
+function cgBoardOff():
+    make console execute command "scoreboard objectives remove cgbank"
+
+
+# =====================================================================================
+#  11. 페이즈 / 메인 루프
+# =====================================================================================
+
+function cgPhaseOf(t: number) :: text:
+    if {_t} < {@POPEN}:
+        return "open"
+    if {_t} < ({@POPEN} + {@PPEAK}):
+        return "peak"
+    if {_t} < ({@POPEN} + {@PPEAK} + {@PRUSH}):
+        return "rush"
+    return "close"
+
+# ── 1초 루프 : 주문 생성 · 페이즈 · 긴급 만료 · 리스폰 카운트 · HUD
+every 1 second:
+    if cgOn() is false:
+        stop
+    add 1 to {cg::t}
+
+    # 페이즈 전환
+    set {_ph} to cgPhaseOf({cg::t})
+    if {_ph} is not {cg::phase}:
+        set {cg::phase} to {_ph}
+        if {_ph} is "peak":
+            cgBroadcast("&e&l성수기 시작 &7· PvP 가 열렸습니다. 안전 구역 밖은 위험합니다.")
+            cgSound("block.note_block.bell", 1.0)
+        if {_ph} is "rush":
+            cgBroadcast("&6&l대란 &7· 지금부터 모든 주문 보상이 &c2배&7입니다.")
+            cgSound("entity.ender_dragon.growl", 0.8)
+        if {_ph} is "close":
+            cgBroadcast("&c&l마감 4분 전 &7· 신규 주문이 끊겼습니다.")
+            cgBroadcast("&c  손에 든 화물은 배달하지 못하면 &l0원&c입니다.")
+            cgSound("block.note_block.pling", 0.6)
+
+    # 주문 생성 (마감 페이즈에는 신규 주문 없음)
+    if {cg::phase} is not "close":
+        if ({cg::t} mod {@ORDERSEC}) is 0:
+            cgSpawnOrder("")
+
+    # 긴급 주문 만료
+    loop {cg::live::*}:
+        set {_id} to loop-index parsed as number
+        if {cg::o::%{_id}%::due} is set:
+            if {cg::t} > {cg::o::%{_id}%::due}:
+                set {_own} to {cg::o::%{_id}%::owner}
+                loop all players:
+                    if uuid of loop-player is {_own}:
+                        cgTakeCargo(loop-player, {_id})
+                        cgBankAdd(loop-player, 0 - {@URGENTFEE})
+                        send "{@PF}&c긴급 주문 #%{_id}% 실패 &7· 위약금 &c-{@URGENTFEE} EM" to loop-player
+                        cgApplyLoad(loop-player)
+                delete {cg::live::%{_id}%}
+                delete {cg::o::%{_id}%::type}
+                delete {cg::o::%{_id}%::from}
+                delete {cg::o::%{_id}%::to}
+                delete {cg::o::%{_id}%::value}
+                delete {cg::o::%{_id}%::owner}
+                delete {cg::o::%{_id}%::due}
+
+    # 리스폰 카운트다운
+    loop {cg::dead::*}:
+        set {_u} to loop-index
+        remove 1 from {cg::dead::%{_u}%}
+        if {cg::dead::%{_u}%} <= 0:
+            delete {cg::dead::%{_u}%}
+
+    cgBarUpdate()
+    cgBoardUpdate()
+
+    # 종료
+    if {cg::t} >= 1800:
+        cgStop(true)
+
+# ── 0.5초 루프 : 적재 페널티 · 자동 배달 판정 · 안전 구역 안내
+every 10 ticks:
+    if cgOn() is false:
+        stop
+    loop cgAll():
+        if loop-value is online:
+            set {_p} to loop-value
+            cgApplyLoad({_p})
+            cgCheckDeliver({_p})
+
+
+# =====================================================================================
+#  12. 참가 / 시작 / 종료
+# =====================================================================================
+
+function cgJoin(p: player):
+    set {cg::players::%uuid of {_p}%} to {_p}
+    send "{@PF}&a참가했습니다. &7(%size of {cg::players::*}%명)" to {_p}
+
+function cgLeave(p: player):
+    delete {cg::players::%uuid of {_p}%}
+    cgClearLoad({_p})
+    send "{@PF}&7참가를 취소했습니다." to {_p}
+
+function cgStart(p: player):
+    if cgMapReady() is false:
+        send "{@PF}&c맵 설정이 끝나지 않았습니다. &7/물류 설정 &c으로 확인하세요." to {_p}
+        stop
+    if size of {cg::players::*} < 2:
+        send "{@PF}&c참가자가 2명 이상이어야 합니다." to {_p}
+        stop
+
+    set {cg::state} to "run"
+    set {cg::t} to 0
+    set {cg::phase} to "open"
+    delete {cg::open::*}
+    delete {cg::live::*}
+    delete {cg::o::*}
+    delete {cg::dead::*}
+
+    make console execute command "gamerule keepInventory true"
+    cgBarInit()
+    cgBoardInit()
+
+    loop cgAll():
+        set {cg::bank::%uuid of loop-value%} to 0
+        clear loop-value's inventory
+        set gamemode of loop-value to survival
+        heal loop-value
+        give wooden sword to loop-value
+        give 16 of bread to loop-value
+        teleport loop-value to {cg::mv}
+        cgClearLoad(loop-value)
+        send title "&6물류 대란" with subtitle "&f개장 5분 · PvP 없음" to loop-value for 3 seconds
+
+    cgBroadcast("&6&l물류 대란 시작")
+    cgBroadcast("&7 · 주문판은 마을 중앙. &f/물류 주문&7 으로도 열립니다.")
+    cgBroadcast("&7 · 화물을 많이 들수록 느려지고, {@JUMPLOCK}개부터는 &c점프가 막힙니다&7.")
+    cgBroadcast("&7 · 남의 화물을 배달하면 정가의 &f{@ROBRATE}배&7, 원 수령자에게 &f{@INSRATE}배&7가 갑니다.")
+
+    # 개장 첫 주문 3건을 미리 깔아 둔다
+    cgSpawnOrder("normal")
+    cgSpawnOrder("normal")
+    cgSpawnOrder("anon")
+
+function cgStop(announce: boolean):
+    set {cg::state} to "off"
+    cgBarOff()
+    if {_announce} is true:
+        # 최종 순위
+        cgBroadcast("&6&l최종 정산")
+        set {_best} to -1
+        set {_win} to "-"
+        loop cgAll():
+            set {_v} to cgBank(loop-value)
+            cgBroadcast("&7  %name of loop-value% &f%{_v}% EM")
+            if {_v} > {_best}:
+                set {_best} to {_v}
+                set {_win} to name of loop-value
+        cgBroadcast("&6&l우승 &f%{_win}%  &a%{_best}% EM")
+        loop cgAll():
+            send title "&6%{_win}%" with subtitle "&f%{_best}% EM" to loop-value for 5 seconds
+    loop cgAll():
+        if loop-value is online:
+            cgClearLoad(loop-value)
+    delete {cg::open::*}
+    delete {cg::live::*}
+    delete {cg::o::*}
+    delete {cg::dead::*}
+
+
+# =====================================================================================
+#  13. 맵 설정
+# =====================================================================================
+
+function cgSetupInfo(p: player):
+    send "&8&m                                                   " to {_p}
+    send "&6 맵 설정 상태" to {_p}
+    if {cg::mv} is set:
+        send "&a  ✔ 마을(주문판)" to {_p}
+    else:
+        send "&c  ✘ 마을(주문판)  &7/물류 마을" to {_p}
+    send "&7  창고 &f%size of {cg::wh::*}%개&7 · 목적지 &f%size of {cg::ds::*}%개" to {_p}
+    loop {cg::wh::*}:
+        send "&8    창고 %loop-index%. &7%{cg::whname::%loop-index%}%" to {_p}
+    loop {cg::ds::*}:
+        send "&8    목적지 %loop-index%. &7%{cg::dsname::%loop-index%}%" to {_p}
+    send "" to {_p}
+    send "&7  권장 : 창고 4곳 · 목적지 6곳 · 모든 노선이 마을을 가로지르게 배치" to {_p}
+    send "&8&m                                                   " to {_p}
+
+
+# =====================================================================================
+#  14. 명령어
+# =====================================================================================
+
+function cgHelp(p: player):
+    send "&8&m                                                   " to {_p}
+    send "&6 물류 대란 &7- 명령어" to {_p}
+    send "&f /물류 참가 &8| &f/물류 나가기" to {_p}
+    send "&f /물류 주문 &7- 주문판 열기" to {_p}
+    send "&f /물류 상점 &7- 상점 열기 (현금 필요)" to {_p}
+    send "&f /물류 인출 <금액> &7- 은행 → 현금. 인출한 돈은 죽으면 잃습니다" to {_p}
+    send "&f /물류 잔고" to {_p}
+    if {_p} has permission "{@ADMIN}":
+        send "&8 ── 운영 ──" to {_p}
+        send "&e /물류 마을 &7- 선 자리를 주문판으로" to {_p}
+        send "&e /물류 창고 <이름> &7- 선 자리를 창고로 추가" to {_p}
+        send "&e /물류 목적지 <이름> &7- 선 자리를 목적지로 추가" to {_p}
+        send "&e /물류 설정 &7- 맵 설정 상태 확인" to {_p}
+        send "&e /물류 초기화맵 &7- 창고/목적지 전부 삭제" to {_p}
+        send "&e /물류 시작 &8| &e/물류 종료" to {_p}
+        send "&e /물류 주문생성 [유형] &7- normal/anon/urgent/secret/high" to {_p}
+        send "&e /물류 페이즈 <open|peak|rush|close>" to {_p}
+    send "&8&m                                                   " to {_p}
+
+command /물류 [<text>] [<text>] [<text>]:
+    aliases: /cg, /cargo
+    trigger:
+        set {_a} to arg-1
+        if {_a} is not set:
+            cgHelp(player)
+            stop
+
+        # ── 참가자 명령 ────────────────────────────────────────────────────────
+        if {_a} is "참가":
+            cgJoin(player)
+            stop
+        if {_a} is "나가기":
+            cgLeave(player)
+            stop
+        if {_a} is "주문":
+            if cgOn() is false:
+                send "{@PF}&c게임이 진행 중이 아닙니다." to player
+                stop
+            if cgPlaying(player) is false:
+                send "{@PF}&c참가자가 아닙니다." to player
+                stop
+            if cgDist(location of player, {cg::mv}) > {@SAFER}:
+                send "{@PF}&c주문판은 마을에서만 열 수 있습니다." to player
+                stop
+            cgOpenBoard(player)
+            stop
+        if {_a} is "상점":
+            if cgPlaying(player) is false:
+                send "{@PF}&c참가자가 아닙니다." to player
+                stop
+            if cgDist(location of player, {cg::mv}) > {@SAFER}:
+                send "{@PF}&c상점은 마을에서만 이용할 수 있습니다." to player
+                stop
+            cgOpenShop(player)
+            stop
+        if {_a} is "잔고":
+            send "{@PF}&7은행 &a%cgBank(player)% EM &8| &7현금 &f%cgCash(player)% EM" to player
+            stop
+        if {_a} is "인출":
+            set {_n} to "%arg-2%" parsed as number
+            if {_n} is not set:
+                send "{@PF}&c/물류 인출 <금액>" to player
+                stop
+            if {_n} < 1:
+                stop
+            if cgBank(player) < {_n}:
+                send "{@PF}&c잔고가 부족합니다." to player
+                stop
+            cgBankAdd(player, 0 - {_n})
+            give {_n} of emerald to player
+            send "{@PF}&a%{_n}% EM &f인출 &8· 이 돈은 죽으면 잃습니다" to player
+            stop
+
+        # ── 운영 명령 ──────────────────────────────────────────────────────────
+        if player doesn't have permission "{@ADMIN}":
+            send "{@PF}&c권한이 없습니다." to player
+            stop
+
+        if {_a} is "마을":
+            set {cg::mv} to location of player
+            send "{@PF}&a마을(주문판) 등록" to player
+            stop
+        if {_a} is "창고":
+            set {_nm} to arg-2
+            if {_nm} is not set:
+                set {_nm} to "창고%size of {cg::wh::*} + 1%"
+            set {_i} to (size of {cg::wh::*}) + 1
+            set {cg::wh::%{_i}%} to location of player
+            set {cg::whname::%{_i}%} to {_nm}
+            send "{@PF}&a창고 %{_i}%. &f%{_nm}% &7등록" to player
+            stop
+        if {_a} is "목적지":
+            set {_nm} to arg-2
+            if {_nm} is not set:
+                set {_nm} to "목적지%size of {cg::ds::*} + 1%"
+            set {_i} to (size of {cg::ds::*}) + 1
+            set {cg::ds::%{_i}%} to location of player
+            set {cg::dsname::%{_i}%} to {_nm}
+            send "{@PF}&a목적지 %{_i}%. &f%{_nm}% &7등록" to player
+            stop
+        if {_a} is "설정":
+            cgSetupInfo(player)
+            stop
+        if {_a} is "초기화맵":
+            delete {cg::wh::*}
+            delete {cg::whname::*}
+            delete {cg::ds::*}
+            delete {cg::dsname::*}
+            send "{@PF}&7창고/목적지를 전부 지웠습니다." to player
+            stop
+        if {_a} is "시작":
+            cgStart(player)
+            stop
+        if {_a} is "종료":
+            cgStop(true)
+            send "{@PF}&7게임을 종료했습니다." to player
+            stop
+        if {_a} is "주문생성":
+            set {_t} to arg-2
+            if {_t} is not set:
+                set {_t} to ""
+            cgSpawnOrder({_t})
+            send "{@PF}&7주문을 생성했습니다." to player
+            stop
+        if {_a} is "페이즈":
+            set {_t} to arg-2
+            if {_t} is "open":
+                set {cg::t} to 0
+            if {_t} is "peak":
+                set {cg::t} to {@POPEN}
+            if {_t} is "rush":
+                set {cg::t} to {@POPEN} + {@PPEAK}
+            if {_t} is "close":
+                set {cg::t} to {@POPEN} + {@PPEAK} + {@PRUSH}
+            set {cg::phase} to cgPhaseOf({cg::t})
+            send "{@PF}&7페이즈를 &f%{cg::phase}% &7로 옮겼습니다." to player
+            stop
+
+        cgHelp(player)
+
+
+# =====================================================================================
+#  15. 접속 / 종료 처리
+# =====================================================================================
+
+on quit:
+    if cgOn() is true:
+        if cgPlaying(player) is true:
+            # 들고 있던 화물을 그 자리에 떨군다. 접속을 끊어 화물을 숨기는 것을 막습니다.
+            set {_loc} to location of player
+            set {_ids::*} to cgStripCargo(player)
+            loop {_ids::*}:
+                drop cgMakeCargo(loop-value) at {_loc}
+            if size of {_ids::*} > 0:
+                cgBroadcast("&7%name of player% &8접속 종료 &7· 화물 %size of {_ids::*}%개를 흘렸습니다.")
+    delete {cg::inv::%uuid of player%}
+    delete {cg::gui::%uuid of player%}
+
+on join:
+    if cgOn() is true:
+        if cgPlaying(player) is true:
+            wait 20 ticks
+            cgApplyLoad(player)

@@ -1,0 +1,270 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  14-events.sk  -  델포이의 신탁 (무작위 사건)
+# -------------------------------------------------------------------------------------
+#  의존: 00~13
+#
+#  4~7분(ev.minGap ~ ev.maxGap)마다 사건 하나. 같은 사건이 연달아 나오지 않는다.
+#    풍년        무작위 세력 식량 +150
+#    가뭄        3분간 모든 세력 식량 수입 -30% (04 가 {oly::ev::drought::until} 을 읽는다)
+#    역병        인원이 가장 많은 세력: 사기 -15, 접속자 허기
+#    제우스의 번개 명성 1위 세력 병사 셋에게 번개 (오만을 벌한다)
+#    축복        명성 꼴찌 세력: 신앙 +80, 전원 재생·신속 60초 (역전 기회)
+#    괴물 습격    (분노 시대부터) 세력 평원 하나에 괴물 무리
+#    해적        (분노 시대부터) 항구 하나에 해적 상륙
+#    신전 발견    중립 들판에 보물 상자 → 먼저 여는 자가 금·신앙
+#    영웅 등장    3분간 영웅 고용비 절반 (08 이 {oly::ev::herosale::until} 을 읽는다)
+#    유물        하늘에서 유물이 떨어진다 → 주워 가는 자의 것
+#  보상 상자: {oly::ev::chest::loc} 의 상자를 연 플레이어의 세력에게 지급
+# =====================================================================================
+
+on load:
+    olyModReady("events")
+
+function olyEvList() :: texts:
+    return "harvest", "drought", "plague", "zeus", "blessing", "raid", "pirates", "temple", "herosale" and "relic"
+
+function olyEvReset():
+    delete {oly::ev::*}
+    set {oly::ev::next} to olySec() + olyN("ev.minGap")
+
+# ── 가중치 (0 = 지금은 나오지 않음)
+function olyEvWeight(e: text) :: number:
+    if {_e} is {oly::ev::last}:
+        return 0
+    if {_e} is "raid" or "pirates":
+        if olyPhaseAtLeast("wrath") is false:
+            return 0
+        return 12
+    if {_e} is "drought":
+        if ({oly::ev::drought::until} ? -1) > olySec():
+            return 0
+        return 8
+    if {_e} is "zeus":
+        if olyRenown(olyTopFaction()) < 60:
+            return 0
+        return 8
+    if {_e} is "temple" or "relic":
+        return 12
+    return 10
+
+function olyEvPick() :: text:
+    set {_sum} to 0
+    loop olyEvList():
+        add olyEvWeight(loop-value) to {_sum}
+    if {_sum} <= 0:
+        return "harvest"
+    set {_r} to random number between 0 and {_sum}
+    loop olyEvList():
+        remove olyEvWeight(loop-value) from {_r}
+        if {_r} <= 0:
+            if olyEvWeight(loop-value) > 0:
+                return loop-value
+    return "harvest"
+
+every second:
+    if olyLive() is not true:
+        stop
+    if {oly::ev::next} is not set:
+        set {oly::ev::next} to olySec() + olyN("ev.minGap")
+    if olySec() < {oly::ev::next}:
+        stop
+    set {oly::ev::next} to olySec() + random integer between olyN("ev.minGap") and olyN("ev.maxGap")
+    set {_e} to olyEvPick()
+    set {oly::ev::last} to {_e}
+    olyEvRun({_e})
+
+# ── 무작위 세력 (접속자 있는 세력 우선)
+function olyEvRandFac() :: text:
+    loop {oly::flist::*}:
+        if olyFacOnline(loop-value) > 0:
+            add loop-value to {_on::*}
+    if size of {_on::*} is 0:
+        return random element out of {oly::flist::*}
+    return random element out of {_on::*}
+
+function olyEvBottomFac() :: text:
+    set {_best} to "none"
+    set {_bv} to 999999
+    loop {oly::flist::*}:
+        if olyFacOnline(loop-value) > 0:
+            if olyRenown(loop-value) < {_bv}:
+                set {_bv} to olyRenown(loop-value)
+                set {_best} to loop-value
+    return {_best}
+
+# ── 사건이 일어날 들판 (평원·숲·산·유적 중 도시·괴물섬이 아닌 곳)
+function olyEvField(owned: text) :: text:
+    loop {oly::tlist::*}:
+        set {_ty} to olyTerrType(loop-value)
+        if {_ty} is "plain" or "forest" or "mountain":
+            if {_owned} is "any":
+                add loop-value to {_c::*}
+            else if olyTerrOwner(loop-value) is {_owned}:
+                add loop-value to {_c::*}
+        else if loop-value is "troy" or "laurion":
+            if {_owned} is "any":
+                add loop-value to {_c::*}
+    if size of {_c::*} is 0:
+        return "none"
+    return random element out of {_c::*}
+
+# ── 영토 중심 근처의 땅 위 한 점
+function olyEvGround(tid: text) :: location:
+    set {_c} to {oly::t::%{_tid}%::center}
+    set {_dx} to random integer between -12 and 12
+    set {_dz} to random integer between -12 and 12
+    set {_l} to {_c} ~ vector({_dx}, 0, {_dz})
+    set {_b} to highest solid block at {_l}
+    set {_g} to (location of {_b}) ~ vector(0.5, 1, 0.5)
+    return {_g}
+
+function olyEvRun(e: text):
+    delete {oly::ev::lastloc}
+    if {_e} is "harvest":
+        set {_f} to olyEvRandFac()
+        olyResAdd({_f}, "food", 150)
+        olyOracle("데메테르의 풍년", "%olyFacName({_f})%의 들판이 황금빛으로 물듭니다. (식량 +150)")
+    else if {_e} is "drought":
+        set {oly::ev::drought::until} to olySec() + 180
+        olyOracle("헬리오스의 가뭄", "3분 동안 모든 세력의 식량 수입이 30%% 줄어듭니다.")
+    else if {_e} is "plague":
+        set {_best} to "none"
+        set {_bn} to 0
+        loop {oly::flist::*}:
+            if olyFacOnline(loop-value) > {_bn}:
+                set {_bn} to olyFacOnline(loop-value)
+                set {_best} to loop-value
+        if {_best} is "none":
+            stop
+        set {oly::f::%{_best}%::morale} to max(0, ({oly::f::%{_best}%::morale} ? 70) - 15)
+        loop all players:
+            if olyFacOf(loop-player) is {_best}:
+                apply hunger 2 to loop-player for 30 seconds
+        olyOracle("아폴론의 역병 화살", "%olyFacName({_best})%에 역병이 돕니다. (사기 -15)")
+    else if {_e} is "zeus":
+        set {_top} to olyTopFaction()
+        set {_n} to 0
+        loop all players:
+            if {_n} < 3:
+                if olyFacOf(loop-player) is {_top}:
+                    if olyInOwnCity(loop-player) is false:
+                        strike lightning effect at location of loop-player
+                        damage loop-player by 2
+                        add 1 to {_n}
+        olyOracle("제우스가 오만을 벌합니다", "명성 1위 %olyFacName({_top})%의 머리 위로 번개가 떨어집니다.")
+    else if {_e} is "blessing":
+        set {_f} to olyEvBottomFac()
+        if {_f} is "none":
+            stop
+        olyResAdd({_f}, "faith", 80)
+        loop all players:
+            if olyFacOf(loop-player) is {_f}:
+                apply regeneration 1 to loop-player for 60 seconds
+                apply speed 1 to loop-player for 60 seconds
+        olyOracle("신들이 약자를 굽어봅니다", "%olyFacName({_f})%에게 축복이 내립니다. (신앙 +80, 재생·신속 60초)")
+    else if {_e} is "raid":
+        set {_f} to olyEvRandFac()
+        set {_t} to olyEvField({_f})
+        if {_t} is "none":
+            set {_t} to olyEvField("any")
+        if {_t} is "none":
+            stop
+        set {_l} to olyEvGround({_t})
+        set {oly::ev::lastloc} to {_l}
+        loop 5 times:
+            spawn a husk at {_l}
+            olyEvMob(last spawned entity)
+        loop 2 times:
+            spawn a stray at {_l}
+            olyEvMob(last spawned entity)
+        olyOracle("괴물 무리가 %olyTerrName({_t})%을(를) 습격합니다", "쓰러뜨린 괴물 하나마다 명성 +1.")
+    else if {_e} is "pirates":
+        set {_ports::*} to "piraeus", "gytheio", "lechaion" and "aulis"
+        set {_pt} to random element out of {_ports::*}
+        set {_l} to {oly::map::port::%{_pt}%}
+        if {_l} is not set:
+            stop
+        set {_b} to highest solid block at {_l}
+        set {_g} to (location of {_b}) ~ vector(0.5, 1, 0.5)
+        set {oly::ev::lastloc} to {_g}
+        loop 4 times:
+            spawn a pillager at {_g}
+            olyEvMob(last spawned entity)
+        spawn a vindicator at {_g}
+        olyEvMob(last spawned entity)
+        olyOracle("해적이 %olyTerrName({_pt})%에 상륙했습니다!", "%olyFacName(olyTerrOwner({_pt}))%의 항구가 약탈당합니다. 쫓아내십시오.")
+    else if {_e} is "temple":
+        set {_t} to olyEvField("any")
+        if {_t} is "none":
+            stop
+        set {_l} to olyEvGround({_t})
+        set block at {_l} to chest
+        set {oly::ev::lastloc} to {_l}
+        set {oly::ev::chest::loc} to {_l}
+        set {_x} to rounded x-coordinate of {_l}
+        set {_z} to rounded z-coordinate of {_l}
+        olyCmd("particle minecraft:end_rod %x-coordinate of {_l}% %(y-coordinate of {_l}) + 2% %z-coordinate of {_l}% 0.3 4 0.3 0.02 150 force")
+        olyOracle("%olyTerrName({_t})%에서 잊힌 신전이 발견되었습니다", "보물 상자 (x %{_x}%, z %{_z}%) - 먼저 여는 세력이 금 150 · 신앙 60")
+    else if {_e} is "herosale":
+        set {oly::ev::herosale::until} to olySec() + 180
+        olyOracle("영웅들이 모여듭니다", "3분 동안 영웅 고용비가 절반입니다. (/영웅)")
+    else if {_e} is "relic":
+        set {_t} to olyEvField("any")
+        if {_t} is "none":
+            stop
+        set {_l} to olyEvGround({_t})
+        set {_i} to olyEvRelic()
+        drop {_i} at {_l}
+        set {oly::ev::lastloc} to {_l}
+        strike lightning effect at {_l}
+        set {_x} to rounded x-coordinate of {_l}
+        set {_z} to rounded z-coordinate of {_l}
+        olyCmd("particle minecraft:totem_of_undying %x-coordinate of {_l}% %(y-coordinate of {_l}) + 1% %z-coordinate of {_l}% 0.5 3 0.5 0.1 200 force")
+        olyOracle("하늘에서 유물이 떨어졌습니다", "%olyTerrName({_t})% (x %{_x}%, z %{_z}%) — 주운 자의 것입니다.")
+    olyLog("신탁 사건: %{_e}%")
+
+function olyEvMob(e: entity):
+    add "oly" to scoreboard tags of {_e}
+    add "oly_evmob" to scoreboard tags of {_e}
+
+function olyEvRelic() :: item:
+    set {_r} to random integer between 1 and 4
+    if {_r} is 1:
+        set {_i} to unbreakable iron sword named "&b&l헤파이스토스의 검" with lore "&7대장장이 신이 벼린 칼" and "&8유물"
+        enchant {_i} with sharpness 3
+    else if {_r} is 2:
+        set {_i} to unbreakable golden helmet named "&b&l하데스의 투구" with lore "&7쓰는 자를 지켜준다" and "&8유물"
+        enchant {_i} with protection 3
+    else if {_r} is 3:
+        set {_i} to unbreakable crossbow named "&b&l아르테미스의 석궁" with lore "&7달빛처럼 빠르다" and "&8유물"
+        enchant {_i} with quick charge 2
+    else:
+        set {_i} to 3 golden apples named "&b&l헤스페리데스의 황금 사과" with lore "&7영원한 정원의 열매" and "&8유물"
+    return {_i}
+
+# ── 괴물 처치 명성
+on death:
+    victim has scoreboard tag "oly_evmob"
+    clear drops
+    if attacker is a player:
+        set {_f} to olyFacOf(attacker)
+        if {_f} is not "none":
+            olyRenownAdd({_f}, 1, "괴물 처치")
+
+# ── 신전 보물 상자
+on right click on chest:
+    if {oly::ev::chest::loc} is not set:
+        stop
+    if distance between location of event-block and {oly::ev::chest::loc} > 0.8:
+        stop
+    cancel event
+    set {_f} to olyFacOf(player)
+    if {_f} is "none":
+        send "&c세력에 먼저 가입하세요."
+        stop
+    set block at {oly::ev::chest::loc} to air
+    delete {oly::ev::chest::loc}
+    olyResAdd({_f}, "gold", 150)
+    olyResAdd({_f}, "faith", 60)
+    play sound "entity.player.levelup" with volume 1 with pitch 1 at location of player
+    olyOracle("잊힌 신전의 보물이 주인을 찾았습니다", "%olyFacName({_f})%의 %player% — 금 150 · 신앙 60")

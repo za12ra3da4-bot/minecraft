@@ -1,0 +1,268 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  08-heroes.sk  -  영웅
+# -------------------------------------------------------------------------------------
+#  의존: 00~07
+#
+#  영웅은 '플레이어가 입는 역할'이다. 세력 금고의 금으로 고용한다.
+#    - 세력당 동시에 1명, 같은 영웅은 서버 전체에 1명
+#    - 체력 40, 공격 ×1.25, 받는 피해 ×0.8 + 영웅별 고유 패시브
+#    - 영웅 권능 (네더의 별 우클릭, 60초 쿨타임)
+#    - 쓰러지면 5분간 같은 영웅 재고용 불가, 적 세력 +20 명성
+#
+#  영웅      전용 세력   패시브                        권능
+#  아킬레우스  모두       근접 ×1.4 / 화살 피해 ×1.6   분노: 힘 II · 신속 II · 저항 I 10초
+#  오디세우스  코린토스   받는 피해 ×0.75              트로이의 계략: 투명 10초 + 신속
+#  헤라클레스  테베       근접 ×1.5                     대지 강타: 5칸 적 피해 8 + 공중으로
+#  페르세우스  모두       괴물 피해 ×2                  날개신발: 점프 IV + 느린 낙하 12초
+#  테세우스    아테네     성문 피해 ×3                  미궁의 실: 집결지/수도로 귀환
+#  레오니다스  스파르타   받는 피해 ×0.65              방진: 8칸 아군 저항 II 12초
+# =====================================================================================
+
+on load:
+    olyModReady("heroes")
+
+function olyHeroList() :: texts:
+    return "achilles", "odysseus", "heracles", "perseus", "theseus" and "leonidas"
+
+function olyHeroName(h: text) :: text:
+    if {_h} is "achilles":
+        return "아킬레우스"
+    if {_h} is "odysseus":
+        return "오디세우스"
+    if {_h} is "heracles":
+        return "헤라클레스"
+    if {_h} is "perseus":
+        return "페르세우스"
+    if {_h} is "theseus":
+        return "테세우스"
+    if {_h} is "leonidas":
+        return "레오니다스"
+    return "?"
+
+function olyHeroFac(h: text) :: text:
+    if {_h} is "odysseus":
+        return "corinth"
+    if {_h} is "heracles":
+        return "thebes"
+    if {_h} is "theseus":
+        return "athens"
+    if {_h} is "leonidas":
+        return "sparta"
+    return "any"
+
+function olyHeroSkill(h: text) :: text:
+    if {_h} is "achilles":
+        return "분노 — 힘 II · 신속 II · 저항 I (10초)"
+    if {_h} is "odysseus":
+        return "트로이의 계략 — 투명 + 신속 (10초)"
+    if {_h} is "heracles":
+        return "대지 강타 — 주변 5칸 적에게 피해 8, 공중으로"
+    if {_h} is "perseus":
+        return "날개신발 — 점프 IV + 느린 낙하 (12초)"
+    if {_h} is "theseus":
+        return "미궁의 실 — 집결지(없으면 수도)로 귀환"
+    if {_h} is "leonidas":
+        return "방진 — 8칸 아군 저항 II (12초)"
+    return ""
+
+function olyHeroPassive(h: text) :: text:
+    if {_h} is "achilles":
+        return "근접 ×1.4, 대신 화살에 ×1.6 (발뒤꿈치)"
+    if {_h} is "odysseus":
+        return "받는 피해 ×0.75"
+    if {_h} is "heracles":
+        return "근접 ×1.5"
+    if {_h} is "perseus":
+        return "괴물에게 주는 피해 ×2"
+    if {_h} is "theseus":
+        return "성문 피해 ×3"
+    if {_h} is "leonidas":
+        return "받는 피해 ×0.65"
+    return ""
+
+function olyHeroOf(p: player) :: text:
+    return {oly::p::%uuid of {_p}%::hero} ? "none"
+
+# ── 세력이 지금 거느린 영웅 ("none")
+function olyFacHero(fid: text) :: text:
+    loop olyHeroList():
+        if {oly::h::%loop-value%::fid} is {_fid}:
+            return loop-value
+    return "none"
+
+function olyHeroDeadLeft(h: text) :: number:
+    return max(0, ({oly::h::%{_h}%::deadUntil} ? 0) - olySec())
+
+# ── 고용.  결과 메시지
+function olyHeroHire(p: player, h: text) :: text:
+    set {_f} to olyFacOf({_p})
+    set {_u} to "%uuid of {_p}%"
+    if {_f} is "none":
+        return "&c세력에 먼저 가입하세요."
+    if olyHeroFac({_h}) is not "any":
+        if olyHeroFac({_h}) is not {_f}:
+            return "&c%olyHeroName({_h})%은(는) %olyFacName(olyHeroFac({_h}))% 전용 영웅입니다."
+    if {oly::h::%{_h}%::player} is set:
+        return "&c%olyHeroName({_h})%은(는) 이미 누군가가 맡고 있습니다."
+    if olyFacHero({_f}) is not "none":
+        return "&c우리 세력에는 이미 영웅 %olyHeroName(olyFacHero({_f}))%이(가) 있습니다."
+    if olyHeroOf({_p}) is not "none":
+        return "&c이미 영웅입니다."
+    set {_left} to olyHeroDeadLeft({_h})
+    if {_left} > 0:
+        return "&c%olyHeroName({_h})%은(는) 저승에서 돌아오는 중입니다 (%olyTime({_left})%)"
+    set {_cost} to olyN("hero.cost.gold")
+    if {oly::ev::herosale::until} is set:
+        if olySec() < {oly::ev::herosale::until}:
+            set {_cost} to {_cost} * 0.5
+    if olyResPay({_f}, "gold", {_cost}) is false:
+        return "&c금이 부족합니다 (%{_cost}% 필요)"
+    set {oly::p::%{_u}%::hero} to {_h}
+    set {oly::h::%{_h}%::player} to {_u}
+    set {oly::h::%{_h}%::fid} to {_f}
+    olyHeroApply({_p})
+    olyOracle("영웅 %olyHeroName({_h})%이(가) 나타났습니다", "%olyFacName({_f})%의 %{_p}%이(가) 영웅의 이름을 짊어졌습니다.")
+    loop all players:
+        play sound "item.totem.use" with volume 0.5 with pitch 1.1 at location of loop-player for loop-player
+    return "&6영웅 %olyHeroName({_h})% 고용 완료!"
+
+# ── 영웅 보정 적용 (변수로 06·07·10 에 전달)
+function olyHeroApply(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_h} to olyHeroOf({_p})
+    delete {oly::rt::atk::%{_u}%}
+    delete {oly::rt::def::%{_u}%}
+    delete {oly::rt::arrowdef::%{_u}%}
+    delete {oly::rt::gatemul::%{_u}%}
+    delete {oly::rt::monmul::%{_u}%}
+    if {_h} is "none":
+        stop
+    set {oly::rt::atk::%{_u}%} to 1.25
+    set {oly::rt::def::%{_u}%} to 0.8
+    if {_h} is "achilles":
+        set {oly::rt::atk::%{_u}%} to 1.4
+        set {oly::rt::arrowdef::%{_u}%} to 1.6
+    else if {_h} is "odysseus":
+        set {oly::rt::def::%{_u}%} to 0.75
+    else if {_h} is "heracles":
+        set {oly::rt::atk::%{_u}%} to 1.5
+    else if {_h} is "perseus":
+        set {oly::rt::monmul::%{_u}%} to 2
+    else if {_h} is "theseus":
+        set {oly::rt::gatemul::%{_u}%} to 3
+    else if {_h} is "leonidas":
+        set {oly::rt::def::%{_u}%} to 0.65
+    olyAttr({_p}, "max_health", olyN("hero.hp"))
+    set slot 7 of {_p}'s inventory to nether star named "&e&l영웅 권능: %olyHeroName({_h})% &7(우클릭)" with lore "&7%olyHeroSkill({_h})%" and "&8패시브: %olyHeroPassive({_h})%"
+    wait 1 tick
+    heal {_p}
+
+# ── 부활·재지급 뒤에도 영웅 상태 유지
+on respawn:
+    if olyHeroOf(player) is not "none":
+        wait 5 ticks
+        olyHeroApply(player)
+
+function olyHeroRelease(p: player, died: boolean):
+    set {_u} to "%uuid of {_p}%"
+    set {_h} to olyHeroOf({_p})
+    if {_h} is "none":
+        stop
+    delete {oly::p::%{_u}%::hero}
+    delete {oly::h::%{_h}%::player}
+    delete {oly::h::%{_h}%::fid}
+    if {_died} is true:
+        set {oly::h::%{_h}%::deadUntil} to olySec() + olyN("hero.reviveSec")
+    olyHeroApply({_p})
+    olyAttr({_p}, "max_health", olyN("army.hp.%olyClassOf({_p})%"))
+
+on death of player:
+    set {_h} to olyHeroOf(victim)
+    if {_h} is "none":
+        stop
+    set {_fv} to olyFacOf(victim)
+    olyHeroRelease(victim, true)
+    loop all players:
+        play sound "entity.wither.death" with volume 0.4 with pitch 1.4 at location of loop-player for loop-player
+    if attacker is a player:
+        set {_fa} to olyFacOf(attacker)
+        if {_fa} is not "none":
+            if {_fa} is not {_fv}:
+                olyRenownAdd({_fa}, olyN("renown.hero"), "영웅 %olyHeroName({_h})% 처치")
+                olyOracle("영웅 %olyHeroName({_h})%이(가) 쓰러졌습니다", "%attacker%의 손에. 5분 동안 그 이름은 저승에 머뭅니다.")
+                stop
+    olyOracle("영웅 %olyHeroName({_h})%이(가) 쓰러졌습니다", "5분 동안 그 이름은 저승에 머뭅니다.")
+
+on quit:
+    if olyHeroOf(player) is not "none":
+        olyHeroRelease(player, false)
+
+# ── 권능
+on right click with nether star:
+    set {_n} to name of player's tool
+    if {_n} is not set:
+        stop
+    if "%{_n}%" does not contain "영웅 권능":
+        stop
+    cancel event
+    set {_h} to olyHeroOf(player)
+    if {_h} is "none":
+        remove player's tool from player
+        stop
+    set {_u} to "%uuid of player%"
+    set {_left} to olyCdLeft({_u}, "hero", olyN("hero.skill.cdSec"))
+    if {_left} > 0:
+        olyAB(player, "&c영웅 권능 대기 %{_left}%초", 2)
+        stop
+    olyCd({_u}, "hero", olyN("hero.skill.cdSec"))
+    olyHeroSkillUse(player, {_h})
+
+function olyHeroSkillUse(p: player, h: text):
+    set {_f} to olyFacOf({_p})
+    set {_l} to location of {_p}
+    if {_h} is "achilles":
+        apply strength 2 to {_p} for 10 seconds
+        apply speed 2 to {_p} for 10 seconds
+        apply resistance 1 to {_p} for 10 seconds
+        play sound "entity.ravager.roar" with volume 1 with pitch 1.4 at {_l}
+        olyCmd("particle minecraft:angry_villager %x-coordinate of {_l}% %(y-coordinate of {_l}) + 1% %z-coordinate of {_l}% 0.6 0.8 0.6 0 20 force")
+    else if {_h} is "odysseus":
+        apply invisibility 1 to {_p} for 10 seconds
+        apply speed 2 to {_p} for 10 seconds
+        play sound "entity.illusioner.cast_spell" with volume 1 with pitch 1 at {_l}
+    else if {_h} is "heracles":
+        play sound "entity.generic.explode" with volume 1 with pitch 0.6 at {_l}
+        olyCmd("particle minecraft:explosion %x-coordinate of {_l}% %y-coordinate of {_l}% %z-coordinate of {_l}% 2 0.5 2 0 12 force")
+        loop all players in radius 5 around {_l}:
+            set {_vf} to olyFacOf(loop-player)
+            if {_vf} is not "none":
+                if olyIsWar({_f}, {_vf}) is true:
+                    damage loop-player by 4
+                    push loop-player upwards at speed 0.9
+                    apply slowness 2 to loop-player for 3 seconds
+    else if {_h} is "perseus":
+        apply jump boost 4 to {_p} for 12 seconds
+        apply slow falling 1 to {_p} for 12 seconds
+        play sound "entity.phantom.flap" with volume 1 with pitch 1.2 at {_l}
+    else if {_h} is "theseus":
+        if {oly::f::%{_f}%::rally} is set:
+            teleport {_p} to {oly::f::%{_f}%::rally}
+        else:
+            teleport {_p} to olyFacSpawn({_f})
+        play sound "entity.enderman.teleport" with volume 1 with pitch 1 at location of {_p}
+    else if {_h} is "leonidas":
+        play sound "event.raid.horn" with volume 1 with pitch 1.4 at {_l}
+        loop all players in radius 8 around {_l}:
+            if olyFacOf(loop-player) is {_f}:
+                apply resistance 2 to loop-player for 12 seconds
+                olyAB(loop-player, "&6레오니다스의 방진! &7(저항 II)", 2)
+    olyAB({_p}, "&e영웅 권능 발동: %olyHeroSkill({_h})%", 2)
+
+function olyHeroReset():
+    loop olyHeroList():
+        delete {oly::h::%loop-value%::player}
+        delete {oly::h::%loop-value%::fid}
+        delete {oly::h::%loop-value%::deadUntil}
+    loop all players:
+        delete {oly::p::%uuid of loop-player%::hero}
+        olyHeroApply(loop-player)

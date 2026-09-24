@@ -1,0 +1,269 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  99-mapdata.sk  -  맵 좌표 데이터 (자동 생성)
+# -------------------------------------------------------------------------------------
+#  ★ 직접 고치지 말 것. mc-olympus/mapgen/generate.py 가 맵과 함께 다시 만든다.
+#  의존: 00-config, 01-data   (그 외 모듈의 함수는 부르지 않고 변수로만 넘긴다)
+#
+#  등록하는 변수
+#    {oly::tlist::*} {oly::t::<tid>::name/type/home/owner/center}  + 청크 인덱스
+#    {oly::clist::*} {oly::c::<cid>::name/capital/owner/home/terr/center/capture/spawn/gate::a/gate::b/altar}
+#    {oly::map::spawn::<fid>}  {oly::map::temple::<id>}  {oly::map::lair::<id>::spawn/entrance/radius/name}
+#    {oly::map::port::<id>}  {oly::map::olympus::seal::a/b}  {oly::map::tp::<이름>}
+#
+#  관리자 명령:  /olymap reload | tp <장소> | list | here
+#  맵 버전: 8b2d32abf3
+# =====================================================================================
+
+on load:
+    olyModReady("mapdata")
+    if {oly::map::ver} is not "8b2d32abf3":
+        olyMapLoad()
+
+function olyMapLoc(x: number, y: number, z: number) :: location:
+    return location({_x} + 0.5, {_y}, {_z} + 0.5, world("world"))
+
+function olyMapClear():
+    loop {oly::tlist::*}:
+        olyTerrUnbindAll(loop-value)
+    delete {oly::t::*}
+    delete {oly::tlist::*}
+    delete {oly::c::*}
+    delete {oly::clist::*}
+    delete {oly::idx::chunk::*}
+    delete {oly::map::*}
+
+function olyMapTerr(tid: text, name: text, type: text, home: text, center: location):
+    if {oly::tlist::*} does not contain {_tid}:
+        add {_tid} to {oly::tlist::*}
+    set {oly::t::%{_tid}%::name} to {_name}
+    set {oly::t::%{_tid}%::type} to {_type}
+    set {oly::t::%{_tid}%::home} to {_home}
+    set {oly::t::%{_tid}%::owner} to {_home}
+    set {oly::t::%{_tid}%::center} to {_center}
+
+# ── 'cz,x0,x1;cz,x0,x1' 형식의 청크 행을 영토에 묶는다
+function olyMapRows(tid: text, rows: text):
+    set {_r::*} to {_rows} split at ";"
+    loop {_r::*}:
+        set {_p::*} to loop-value split at ","
+        set {_cz} to {_p::1} parsed as number
+        set {_a} to {_p::2} parsed as number
+        set {_b} to {_p::3} parsed as number
+        loop integers between {_a} and {_b}:
+            olyTerrBind({_tid}, "world", loop-value-2, {_cz})
+
+function olyMapCity(cid: text, name: text, capital: boolean, home: text, terr: text, center: location, capture: location, spawn: location, ga: location, gb: location):
+    if {oly::clist::*} does not contain {_cid}:
+        add {_cid} to {oly::clist::*}
+    set {oly::c::%{_cid}%::name} to {_name}
+    set {oly::c::%{_cid}%::capital} to {_capital}
+    set {oly::c::%{_cid}%::home} to {_home}
+    set {oly::c::%{_cid}%::owner} to {_home}
+    set {oly::c::%{_cid}%::terr} to {_terr}
+    set {oly::c::%{_cid}%::center} to {_center}
+    set {oly::c::%{_cid}%::capture} to {_capture}
+    set {oly::c::%{_cid}%::spawn} to {_spawn}
+    set {oly::c::%{_cid}%::gate::a} to {_ga}
+    set {oly::c::%{_cid}%::gate::b} to {_gb}
+    set {oly::c::%{_cid}%::level} to 1
+    set {oly::t::%{_terr}%::city} to {_cid}
+    set {oly::map::tp::%{_cid}%} to {_spawn}
+
+function olyMapLair(id: text, name: text, spawn: location, entrance: location, radius: number):
+    set {oly::map::lair::%{_id}%::name} to {_name}
+    set {oly::map::lair::%{_id}%::spawn} to {_spawn}
+    set {oly::map::lair::%{_id}%::entrance} to {_entrance}
+    set {oly::map::lair::%{_id}%::radius} to {_radius}
+    set {oly::map::tp::%{_id}%} to {_entrance}
+
+function olyMapLoad():
+    olyMapClear()
+    set {oly::map::ver} to "8b2d32abf3"
+    set {oly::state::world} to "world"
+
+    # ── 영토 31개
+    olyMapTerr("athens", "아테네", "city", "athens", olyMapLoc(-240, 77, -110))
+    olyMapRows("athens", "-13,-16,-14;-12,-18,-13;-11,-20,-12;-10,-20,-12;-9,-20,-12;-8,-21,-12;-7,-21,-12;-6,-21,-12;-5,-22,-12;-4,-21,-12;-3,-19,-13;-2,-18,-14;-1,-16,-14;0,-14,-14")
+    olyMapTerr("piraeus", "피레우스", "coast", "athens", olyMapLoc(-410, 70, -150))
+    olyMapRows("piraeus", "-15,-26,-26;-14,-26,-25;-13,-27,-23;-12,-27,-22;-11,-28,-21;-10,-28,-21;-9,-28,-21;-8,-29,-22;-7,-29,-22;-6,-28,-22;-5,-28,-23;-4,-28,-23;-3,-28,-26")
+    olyMapTerr("attica", "아티카 평원", "plain", "athens", olyMapLoc(-150, 73, -88))
+    olyMapRows("attica", "-10,-11,-9;-9,-11,-5;-8,-11,-4;-7,-11,-5;-6,-11,-5;-5,-11,-5;-4,-11,-6;-3,-12,-6;-2,-13,-7;-1,-13,-7;0,-13,-9;1,-12,-11")
+    olyMapTerr("sparta", "스파르타", "city", "sparta", olyMapLoc(236, 75, -118))
+    olyMapRows("sparta", "-18,11,11;-17,11,12;-16,11,13;-15,10,14;-14,10,15;-13,10,16;-12,10,18;-11,10,18;-10,10,19;-9,10,19;-8,10,20;-7,10,20;-6,10,20;-5,10,20;-4,11,18;-3,13,16;-2,13,15;-1,13,13")
+    olyMapTerr("gytheio", "기테이온", "coast", "sparta", olyMapLoc(402, 66, -160))
+    olyMapRows("gytheio", "-13,23,23;-12,22,24;-11,21,26;-10,20,26;-9,20,26;-8,21,27;-7,21,27;-6,21,27;-5,22,27;-4,25,27")
+    olyMapTerr("laconia", "라코니아 평원", "plain", "sparta", olyMapLoc(150, 77, -96))
+    olyMapRows("laconia", "-13,9,9;-12,8,9;-11,7,9;-10,6,9;-9,5,9;-8,3,9;-7,4,9;-6,4,9;-5,5,9;-4,5,10;-3,6,12;-2,7,12;-1,9,12;0,11,12")
+    olyMapTerr("corinth", "코린토스", "city", "corinth", olyMapLoc(-214, 69, 204))
+    olyMapRows("corinth", "5,-14,-13;6,-15,-13;7,-16,-13;8,-17,-11;9,-18,-10;10,-18,-10;11,-18,-10;12,-18,-10;13,-18,-10;14,-18,-9;15,-19,-9;16,-19,-10;17,-20,-10;18,-20,-11;19,-20,-12;20,-19,-12")
+    olyMapTerr("lechaion", "레카이온", "coast", "corinth", olyMapLoc(-330, 70, 168))
+    olyMapRows("lechaion", "7,-24,-18;8,-24,-18;9,-24,-19;10,-23,-19;11,-23,-19;12,-23,-19;13,-23,-19;14,-23,-19;15,-22,-20;16,-22,-20;17,-21,-21;18,-21,-21")
+    olyMapTerr("isthmus", "코린토스 숲", "forest", "corinth", olyMapLoc(-110, 71, 150))
+    olyMapRows("isthmus", "3,-12,-12;4,-12,-10;5,-12,-9;6,-12,-7;7,-12,-6;8,-10,-4;9,-9,-5;10,-9,-5;11,-9,-5;12,-9,-5;13,-9,-6;14,-8,-6")
+    olyMapTerr("thebes", "테베", "city", "thebes", olyMapLoc(200, 73, 190))
+    olyMapRows("thebes", "4,13,13;5,12,14;6,12,14;7,11,14;8,8,16;9,8,16;10,8,16;11,8,16;12,8,16;13,7,16;14,8,17;15,8,16;16,14,14")
+    olyMapTerr("aulis", "아울리스", "coast", "thebes", olyMapLoc(300, 65, 318))
+    olyMapRows("aulis", "15,17,24;16,15,24;17,15,23;18,15,23;19,14,22;20,14,21;21,15,21")
+    olyMapTerr("boeotia", "보이오티아 평원", "plain", "thebes", olyMapLoc(110, 70, 128))
+    olyMapRows("boeotia", "3,10,12;4,8,12;5,6,11;6,3,11;7,3,10;8,3,7;9,4,7;10,4,7;11,4,7;12,5,7;13,6,6")
+    olyMapTerr("delphi", "델포이", "city", "neutral", olyMapLoc(-122, 99, -226))
+    olyMapRows("delphi", "-27,-9,-9;-26,-12,-10;-25,-13,-10;-24,-13,-11;-23,-13,-11;-22,-13,-12;-21,-13,-12;-20,-13,-12;-19,-14,-12;-18,-14,-12;-18,-9,-7;-17,-14,-6;-16,-14,-5;-15,-14,-5;-14,-14,-5;-13,-13,-5;-12,-12,-6;-11,-11,-8;-10,-8,-7")
+    olyMapTerr("megara", "메가라", "city", "neutral", olyMapLoc(-330, 69, 58))
+    olyMapRows("megara", "-4,-22,-22;-3,-25,-20;-2,-29,-19;-1,-29,-17;0,-29,-15;1,-28,-13;2,-28,-13;3,-27,-13;4,-26,-13;5,-26,-15;6,-26,-16;7,-25,-25;7,-17,-17")
+    olyMapTerr("olympia", "올림피아", "city", "neutral", olyMapLoc(-4, 69, 178))
+    olyMapRows("olympia", "6,0,1;7,-1,2;8,-3,2;9,-4,3;10,-4,3;11,-4,3;12,-4,4;13,-5,5;14,-5,4;15,-3,4;16,0,3;17,2,2")
+    olyMapTerr("mycenae", "미케네", "city", "neutral", olyMapLoc(330, 91, 32))
+    olyMapRows("mycenae", "-5,21,21;-4,19,24;-3,17,28;-2,16,28;-1,14,28;0,13,28;1,12,28;2,12,28;3,13,28;4,14,27;5,18,27;6,22,27;7,25,27")
+    olyMapTerr("olympus", "올림포스 신전", "temple", "neutral", olyMapLoc(0, 209, -300))
+    olyMapRows("olympus", "-23,-1,0;-22,-3,2;-21,-3,3;-20,-4,3;-19,-4,3;-18,-4,3;-17,-3,2;-16,-2,1")
+    olyMapTerr("altar", "신들의 제단", "temple", "neutral", olyMapLoc(0, 81, -20))
+    olyMapRows("altar", "-8,-3,-3;-8,-1,2;-7,-4,3;-6,-4,3;-5,-4,4;-4,-5,4;-3,-5,5;-2,-6,4;-1,-6,3;0,-5,2;1,-3,1;2,-1,0")
+    olyMapTerr("sounion", "수니온 곶", "temple", "neutral", olyMapLoc(-62, 79, 326))
+    olyMapRows("sounion", "15,-8,-4;16,-9,-1;17,-9,1;18,-10,2;19,-11,2;20,-11,-11;20,-8,1;21,-6,-2;22,-6,-4")
+    olyMapTerr("slopes", "올림포스 기슭", "mountain", "neutral", olyMapLoc(0, 141, -200))
+    olyMapRows("slopes", "-28,-6,5;-27,-8,7;-26,-9,9;-25,-9,9;-24,-10,9;-23,-10,-2;-23,1,9;-22,-11,-4;-22,3,10;-21,-11,-4;-21,4,10;-20,-11,-5;-20,4,10;-19,-11,-5;-19,4,10;-18,-11,-10;-18,-6,-5;-18,4,10;-17,-5,-4;-17,3,10;-16,-4,-3;-16,2,10;-15,-4,9;-14,-4,9;-13,-4,8;-12,-5,7;-11,-7,6;-10,-6,5;-9,-4,4;-8,-2,-2")
+    olyMapTerr("eastn", "동부 산맥", "mountain", "neutral", olyMapLoc(336, 59, -236))
+    olyMapRows("eastn", "-25,10,10;-24,10,10;-23,10,13;-22,11,14;-21,11,15;-20,11,16;-19,11,17;-18,12,17;-17,13,18;-16,14,19;-15,15,21;-14,16,22;-13,17,22;-12,19,21;-11,19,20")
+    olyMapTerr("easts", "남동 산맥", "mountain", "neutral", olyMapLoc(306, 121, 150))
+    olyMapRows("easts", "5,15,17;6,15,21;7,15,24;8,17,26;9,17,25;10,17,25;11,17,25;12,17,24;13,17,24;14,18,24")
+    olyMapTerr("westr", "서부 산맥", "mountain", "neutral", olyMapLoc(-318, 105, -262))
+    olyMapRows("westr", "-25,-14,-14;-24,-15,-14;-23,-17,-14;-22,-19,-14;-21,-20,-14;-20,-22,-14;-19,-23,-15;-18,-24,-15;-17,-25,-15;-16,-25,-15;-15,-25,-15;-14,-24,-15;-13,-22,-17;-12,-21,-19")
+    olyMapTerr("arcadia", "아르카디아 숲", "forest", "neutral", olyMapLoc(-62, 68, 78))
+    olyMapRows("arcadia", "0,-8,-6;1,-10,-4;2,-12,-2;3,-11,-1;4,-9,0;5,-8,0;6,-6,-1;7,-5,-2")
+    olyMapTerr("elis", "엘리스 평원", "plain", "neutral", olyMapLoc(72, 67, 44))
+    olyMapRows("elis", "-2,5,6;-1,4,8;0,3,10;1,2,11;2,1,11;3,0,9;4,1,7;5,1,5;6,2,2")
+    olyMapTerr("laurion", "라우리온 광산", "ruin", "neutral", olyMapLoc(160, 82, 288))
+    olyMapRows("laurion", "14,5,7;15,5,7;16,4,13;17,3,14;18,3,14;19,3,13;20,13,13")
+    olyMapTerr("hydra", "히드라의 섬", "ruin", "neutral", olyMapLoc(-405, 67, -405))
+    olyMapRows("hydra", "-29,-28,-24;-28,-29,-23;-27,-29,-22;-26,-30,-22;-25,-29,-22;-24,-29,-23;-23,-28,-23;-22,-26,-24")
+    olyMapTerr("medusa", "메두사의 섬", "ruin", "neutral", olyMapLoc(402, 93, -405))
+    olyMapRows("medusa", "-29,23,26;-28,22,27;-27,22,28;-26,21,28;-25,21,28;-24,22,27;-23,22,27;-22,25,25")
+    olyMapTerr("labyrinth", "미궁의 섬", "ruin", "neutral", olyMapLoc(-418, 83, 382))
+    olyMapRows("labyrinth", "19,-28,-25;20,-30,-23;21,-31,-23;22,-31,-22;23,-31,-22;24,-31,-22;25,-31,-23;26,-30,-23;27,-29,-24;28,-27,-25")
+    olyMapTerr("cerberus", "케르베로스의 섬", "ruin", "neutral", olyMapLoc(418, 69, 398))
+    olyMapRows("cerberus", "21,24,27;22,23,29;23,22,29;24,22,29;25,22,29;26,22,29;27,23,28;28,24,27")
+    olyMapTerr("troy", "트로이 유적", "ruin", "neutral", olyMapLoc(-12, 73, 442))
+    olyMapRows("troy", "24,-2,0;25,-3,1;26,-4,2;27,-4,2;28,-4,2;29,-4,1;30,-3,0")
+
+    # ── 수도 4 + 중립 도시 4
+    olyMapCity("athens", "아테네", true, "athens", "athens", olyMapLoc(-240, 76, -110), olyMapLoc(-276, 86, -98), olyMapLoc(-263, 85, -110), olyMapLoc(-182, 77, -112), olyMapLoc(-182, 83, -108))
+    set {oly::c::athens::altar} to olyMapLoc(-277, 87, -123)
+    set {oly::c::athens::market} to olyMapLoc(-212, 77, -141)
+    set {oly::c::athens::barracks} to olyMapLoc(-222, 77, -77)
+    set {oly::c::athens::warehouse} to olyMapLoc(-194, 77, -144)
+    set {oly::c::athens::throne} to olyMapLoc(-284, 88, -98)
+    set {oly::map::spawn::athens} to olyMapLoc(-263, 85, -110)
+    set {oly::map::temple::athens} to olyMapLoc(-277, 87, -123)
+    set {oly::f::athens::capital} to "athens"
+    olyMapCity("sparta", "스파르타", true, "sparta", "sparta", olyMapLoc(236, 74, -118), olyMapLoc(272, 82, -130), olyMapLoc(259, 81, -118), olyMapLoc(178, 75, -120), olyMapLoc(178, 81, -116))
+    set {oly::c::sparta::altar} to olyMapLoc(273, 83, -105)
+    set {oly::c::sparta::market} to olyMapLoc(208, 75, -87)
+    set {oly::c::sparta::barracks} to olyMapLoc(218, 75, -151)
+    set {oly::c::sparta::warehouse} to olyMapLoc(190, 75, -84)
+    set {oly::c::sparta::throne} to olyMapLoc(280, 84, -130)
+    set {oly::map::spawn::sparta} to olyMapLoc(259, 81, -118)
+    set {oly::map::temple::sparta} to olyMapLoc(273, 83, -105)
+    set {oly::f::sparta::capital} to "sparta"
+    olyMapCity("corinth", "코린토스", true, "corinth", "corinth", olyMapLoc(-214, 68, 204), olyMapLoc(-202, 75, 240), olyMapLoc(-214, 74, 227), olyMapLoc(-216, 69, 146), olyMapLoc(-212, 75, 146))
+    set {oly::c::corinth::altar} to olyMapLoc(-227, 76, 241)
+    set {oly::c::corinth::market} to olyMapLoc(-245, 69, 176)
+    set {oly::c::corinth::barracks} to olyMapLoc(-181, 69, 186)
+    set {oly::c::corinth::warehouse} to olyMapLoc(-248, 69, 158)
+    set {oly::c::corinth::throne} to olyMapLoc(-202, 77, 248)
+    set {oly::map::spawn::corinth} to olyMapLoc(-214, 74, 227)
+    set {oly::map::temple::corinth} to olyMapLoc(-227, 76, 241)
+    set {oly::f::corinth::capital} to "corinth"
+    olyMapCity("thebes", "테베", true, "thebes", "thebes", olyMapLoc(200, 72, 190), olyMapLoc(212, 80, 226), olyMapLoc(200, 79, 213), olyMapLoc(198, 73, 132), olyMapLoc(202, 79, 132))
+    set {oly::c::thebes::altar} to olyMapLoc(187, 81, 227)
+    set {oly::c::thebes::market} to olyMapLoc(169, 73, 162)
+    set {oly::c::thebes::barracks} to olyMapLoc(233, 73, 172)
+    set {oly::c::thebes::warehouse} to olyMapLoc(166, 73, 144)
+    set {oly::c::thebes::throne} to olyMapLoc(212, 82, 234)
+    set {oly::map::spawn::thebes} to olyMapLoc(200, 79, 213)
+    set {oly::map::temple::thebes} to olyMapLoc(187, 81, 227)
+    set {oly::f::thebes::capital} to "thebes"
+    olyMapCity("delphi", "델포이", false, "neutral", "delphi", olyMapLoc(-122, 98, -226), olyMapLoc(-122, 99, -228), olyMapLoc(-122, 99, -220), olyMapLoc(-124, 99, -194), olyMapLoc(-120, 103, -194))
+    set {oly::c::delphi::altar} to olyMapLoc(-122, 101, -244)
+    set {oly::map::temple::delphi} to olyMapLoc(-122, 101, -244)
+    olyMapCity("megara", "메가라", false, "neutral", "megara", olyMapLoc(-330, 68, 58), olyMapLoc(-332, 69, 58), olyMapLoc(-324, 69, 58), olyMapLoc(-300, 69, 56), olyMapLoc(-300, 73, 60))
+    olyMapCity("olympia", "올림피아", false, "neutral", "olympia", olyMapLoc(-4, 68, 178), olyMapLoc(-4, 69, 180), olyMapLoc(-4, 69, 172), olyMapLoc(-6, 69, 146), olyMapLoc(-2, 73, 146))
+    set {oly::c::olympia::altar} to olyMapLoc(8, 71, 188)
+    set {oly::map::temple::olympia} to olyMapLoc(8, 71, 188)
+    olyMapCity("mycenae", "미케네", false, "neutral", "mycenae", olyMapLoc(330, 90, 32), olyMapLoc(332, 91, 32), olyMapLoc(324, 91, 32), olyMapLoc(300, 91, 30), olyMapLoc(300, 95, 34))
+
+    # ── 성소
+    set {oly::map::temple::olympus} to olyMapLoc(0, 209, -283)
+    set {oly::map::olympus::beacon} to olyMapLoc(0, 210, -286)
+    set {oly::map::tp::olympus} to olyMapLoc(0, 209, -264)
+    set {oly::map::olympus::seal::a} to olyMapLoc(-2, 77, -128)
+    set {oly::map::olympus::seal::b} to olyMapLoc(2, 82, -128)
+    set {oly::map::tp::olympus_gate} to olyMapLoc(0, 77, -128)
+    set {oly::map::temple::altar} to olyMapLoc(0, 81, -26)
+    set {oly::map::tp::altar} to olyMapLoc(0, 81, -20)
+    set {oly::map::temple::sounion} to olyMapLoc(-62, 81, 328)
+    set {oly::map::tp::sounion} to olyMapLoc(-62, 81, 328)
+    set {oly::map::tp::troy} to olyMapLoc(-12, 72, 440)
+    set {oly::map::troy::treasure} to olyMapLoc(-12, 73, 440)
+
+    # ── 괴물 둥지 7
+    olyMapLair("hydra", "히드라", olyMapLoc(-387, 52, -419), olyMapLoc(-404, 67, -402), 14)
+    olyMapLair("medusa", "메두사", olyMapLoc(405, 93, -405), olyMapLoc(405, 93, -405), 12)
+    olyMapLair("minotaur", "미노타우로스", olyMapLoc(-392, 67, 352), olyMapLoc(-392, 67, 327), 7)
+    olyMapLair("cerberus", "케르베로스", olyMapLoc(414, 46, 430), olyMapLoc(414, 69, 396), 12)
+    olyMapLair("nemean_lion", "네메아의 사자", olyMapLoc(344, 96, -211), olyMapLoc(354, 91, -214), 8)
+    olyMapLair("chimera", "키메라", olyMapLoc(-313, 107, -262), olyMapLoc(-313, 107, -262), 8)
+    olyMapLair("scylla", "스킬라", olyMapLoc(468, 63, 168), olyMapLoc(468, 63, 168), 10)
+
+    # ── 항구
+    set {oly::map::port::piraeus} to olyMapLoc(-453, 64, -130)
+    set {oly::map::tp::piraeus} to olyMapLoc(-453, 64, -130)
+    set {oly::map::port::gytheio} to olyMapLoc(429, 64, -140)
+    set {oly::map::tp::gytheio} to olyMapLoc(429, 64, -140)
+    set {oly::map::port::lechaion} to olyMapLoc(-358, 64, 196)
+    set {oly::map::tp::lechaion} to olyMapLoc(-358, 64, 196)
+    set {oly::map::port::aulis} to olyMapLoc(300, 64, 345)
+    set {oly::map::tp::aulis} to olyMapLoc(300, 64, 345)
+
+    # ── 월드 설정 (보더 ±512, 스폰 = 신들의 제단)
+    make console execute command "worldborder center 0 0"
+    make console execute command "worldborder set 1024"
+    make console execute command "worldborder damage buffer 2"
+    make console execute command "worldborder damage amount 1"
+    make console execute command "setworldspawn 0 81 -20"
+    send "[올림포스] 맵 데이터 등록 - 영토 %size of {oly::tlist::*}%개, 도시 %size of {oly::clist::*}%개" to console
+
+
+command /olymap [<text>] [<text>]:
+    executable by: players
+    trigger:
+        if player is not op:
+            send "&c관리자만 사용할 수 있습니다."
+            stop
+        if arg-1 is "reload":
+            olyMapLoad()
+            send "&a[올림포스] &7맵 데이터를 다시 등록했습니다. 영토 &f%size of {oly::tlist::*}%&7개, 도시 &f%size of {oly::clist::*}%&7개"
+            stop
+        if arg-1 is "tp":
+            if arg-2 is not set:
+                send "&7사용법 &f/olymap tp <장소>  &8(/olymap list 로 목록)"
+                stop
+            if {oly::map::tp::%arg-2%} is not set:
+                send "&c그런 장소가 없습니다. &7/olymap list"
+                stop
+            teleport player to {oly::map::tp::%arg-2%}
+            send "&a[올림포스] &f%arg-2% &7(으)로 이동"
+            stop
+        if arg-1 is "list":
+            send "&6[올림포스] 이동 가능한 장소"
+            loop {oly::map::tp::*}:
+                send "  &f%loop-index%"
+            stop
+        if arg-1 is "here":
+            set {_t} to olyTerrOf(player)
+            if {_t} is "none":
+                send "&7[올림포스] 이곳은 영토가 아닙니다 (바다/무인도)"
+                stop
+            send "&6[올림포스] &f%olyTerrName({_t})% &8(%{_t}%) &7타입 &f%olyTerrType({_t})% &7소유 &f%olyFacName(olyTerrOwner({_t}))%"
+            stop
+        send "&7/olymap reload | tp <장소> | list | here"
+

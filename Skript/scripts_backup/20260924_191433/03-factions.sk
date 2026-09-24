@@ -1,0 +1,199 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  03-factions.sk  -  세력
+# -------------------------------------------------------------------------------------
+#  의존: 00-config, 01-data, 02-game
+#
+#  담당
+#    - 4개 도시국가 등록 (이름·색·수호신·팀)
+#    - 가입 / 자동 배정 / 인원 균형
+#    - 지휘관(세력 대표) — 선전포고·외교·신권능·도시 업그레이드 권한
+#    - 부활 위치 (수도가 함락되면 다른 도시로)
+#    - 채팅 머리말, '@' 로 시작하면 세력 채팅
+#
+#  세력 추가 방법: olyFacInit() 안에 olyFacDef(...) 한 줄 + 99-mapdata 의 수도 좌표
+# =====================================================================================
+
+on load:
+    olyFacInit()
+    olyModReady("factions")
+
+function olyFacDef(fid: text, name: text, code: text, team: text, god: text, bar: text, motto: text):
+    if {oly::flist::*} does not contain {_fid}:
+        add {_fid} to {oly::flist::*}
+    set {oly::f::%{_fid}%::name} to {_name}
+    set {oly::f::%{_fid}%::color} to {_code}
+    set {oly::f::%{_fid}%::team} to {_team}
+    set {oly::f::%{_fid}%::god} to {_god}
+    set {oly::f::%{_fid}%::bar} to {_bar}
+    set {oly::f::%{_fid}%::motto} to {_motto}
+
+function olyFacInit():
+    olyFacDef("athens", "아테네", "&9", "blue", "athena", "blue", "지식과 전략 · 궁병과 방어")
+    olyFacDef("sparta", "스파르타", "&c", "red", "ares", "red", "용맹과 전투 · 중장보병")
+    olyFacDef("corinth", "코린토스", "&a", "green", "poseidon", "green", "무역과 해양 · 부의 도시")
+    olyFacDef("thebes", "테베", "&5", "dark_purple", "hera", "purple", "기동과 돌격 · 기병")
+
+# ── 바닐라 팀: 이름 색, 아군 공격 차단(화살 포함), 아군 투명 보기
+function olyFacTeamSetup():
+    loop {oly::flist::*}:
+        set {_f} to loop-value
+        set {_t} to "oly_%{_f}%"
+        olyCmd("team add %{_t}%")
+        olyCmd("team modify %{_t}% color %{oly::f::%{_f}%::team}%")
+        olyCmd("team modify %{_t}% friendlyFire false")
+        olyCmd("team modify %{_t}% seeFriendlyInvisibles true")
+        olyCmd("team modify %{_t}% prefix {""text"":""[%{oly::f::%{_f}%::name}%] "",""color"":""%{oly::f::%{_f}%::team}%""}")
+function olyFacName2(fid: text) :: text:
+    return olyFacFull({_fid})
+
+
+# =====================================================================================
+#  가입
+# =====================================================================================
+
+# ── 가장 인원이 적은 세력 (동점이면 명성 낮은 쪽 → 약자 보정)
+function olyFacSmallest() :: text:
+    set {_best} to "none"
+    set {_bn} to 9999
+    set {_br} to 999999
+    loop {oly::flist::*}:
+        set {_n} to olyFacSize(loop-value)
+        set {_r} to olyRenown(loop-value)
+        if {_n} < {_bn}:
+            set {_best} to loop-value
+            set {_bn} to {_n}
+            set {_br} to {_r}
+        else if {_n} = {_bn}:
+            if {_r} < {_br}:
+                set {_best} to loop-value
+                set {_br} to {_r}
+    return {_best}
+
+# ── 인원 균형: 가장 적은 세력보다 2명 이상 많아지면 가입 불가
+function olyFacCanJoin(fid: text) :: boolean:
+    set {_min} to 9999
+    loop {oly::flist::*}:
+        if olyFacSize(loop-value) < {_min}:
+            set {_min} to olyFacSize(loop-value)
+    if olyFacSize({_fid}) >= {_min} + 2:
+        return false
+    return true
+
+# ── 가입 처리. 결과 문자열: "ok" | "full" | "same" | "locked" | "bad"
+function olyFacJoin(p: player, fid: text, force: boolean) :: text:
+    if {oly::flist::*} does not contain {_fid}:
+        return "bad"
+    set {_u} to "%uuid of {_p}%"
+    set {_old} to olyFacOfU({_u})
+    if {_old} is {_fid}:
+        return "same"
+    if {_force} is false:
+        if {_old} is not "none":
+            if olyLive() is true:
+                return "locked"
+        if olyFacCanJoin({_fid}) is false:
+            return "full"
+    olySetFac({_u}, {_fid})
+    olyCmd("team join oly_%{_fid}% %{_p}%")
+    if {oly::f::%{_fid}%::leader} is not set:
+        olyFacSetLeader({_fid}, {_u})
+    olyLog("%{_p}% → %olyFacName({_fid})% 가입")
+    return "ok"
+
+function olyFacLeave(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_f} to olyFacOfU({_u})
+    if {_f} is "none":
+        stop
+    olySetFac({_u}, "none")
+    olyCmd("team leave %{_p}%")
+    if {oly::f::%{_f}%::leader} is {_u}:
+        delete {oly::f::%{_f}%::leader}
+        olyFacAutoLeader({_f})
+
+
+# =====================================================================================
+#  지휘관
+# =====================================================================================
+
+function olyFacSetLeader(fid: text, u: text):
+    set {oly::f::%{_fid}%::leader} to {_u}
+
+function olyFacLeader(fid: text) :: text:
+    if {oly::f::%{_fid}%::leader} is not set:
+        return "none"
+    return {oly::f::%{_fid}%::leader}
+
+function olyIsLeader(p: player) :: boolean:
+    set {_f} to olyFacOf({_p})
+    if {_f} is "none":
+        return false
+    if olyFacLeader({_f}) is "%uuid of {_p}%":
+        return true
+    return false
+
+# ── 지휘관이 없으면 접속 중인 세력원 중 첫 번째를 지휘관으로
+function olyFacAutoLeader(fid: text):
+    loop all players:
+        if olyFacOf(loop-player) is {_fid}:
+            olyFacSetLeader({_fid}, "%uuid of loop-player%")
+            olyFacBc({_fid}, "&6[세력] &f%loop-player% &7님이 새 지휘관이 되었습니다.")
+            stop
+
+function olyFacLeaderName(fid: text) :: text:
+    set {_u} to olyFacLeader({_fid})
+    if {_u} is "none":
+        return "없음"
+    loop all players:
+        if "%uuid of loop-player%" is {_u}:
+            return "%loop-player%"
+    return "(오프라인)"
+
+
+# =====================================================================================
+#  부활 위치 — 수도 → 다른 소유 도시 → 신들의 제단
+# =====================================================================================
+
+function olyFacSpawn(fid: text) :: location:
+    if {oly::c::%{_fid}%::owner} is {_fid}:
+        return {oly::c::%{_fid}%::spawn}
+    loop {oly::clist::*}:
+        if {oly::c::%loop-value%::owner} is {_fid}:
+            return {oly::c::%loop-value%::spawn}
+    return {oly::map::tp::altar}
+
+on respawn:
+    if olyLive() is not true:
+        stop
+    set {_f} to olyFacOf(player)
+    if {_f} is "none":
+        stop
+    set respawn location to olyFacSpawn({_f})
+
+on join:
+    set {_f} to olyFacOf(player)
+    if {_f} is not "none":
+        olyCmd("team join oly_%{_f}% %player%")
+        if {oly::f::%{_f}%::leader} is not set:
+            olyFacSetLeader({_f}, "%uuid of player%")
+
+
+# =====================================================================================
+#  채팅 — 머리말 + '@' 세력 채팅
+# =====================================================================================
+
+on chat:
+    set {_f} to olyFacOf(player)
+    if {_f} is "none":
+        set chat format to "&7[무소속] &f%player%&7: &f%message%"
+        stop
+    set {_m} to message
+    if {_m} starts with "@":
+        cancel event
+        set {_body} to subtext of {_m} from characters 2 to length of {_m}
+        olyFacBc({_f}, "%olyFacColor({_f})%[세력] &f%player%&7: &e%{_body}%")
+        stop
+    set {_tag} to ""
+    if olyIsLeader(player) is true:
+        set {_tag} to "&6★"
+    set chat format to "%olyFacColor({_f})%[%olyFacName({_f})%]%{_tag}% &f%player%&7: &f%message%"

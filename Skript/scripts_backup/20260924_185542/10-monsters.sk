@@ -1,0 +1,564 @@
+# =====================================================================================
+#  신들의 전쟁: 올림포스  /  10-monsters.sk  -  신화 보스 7종
+# -------------------------------------------------------------------------------------
+#  의존: 00~09, 10-bossdata (자동 생성 애니 정보)
+#
+#  보스 = 보이지 않는 히트박스 몹(AI·피격 담당) + 디스플레이 엔티티 모델(데이터팩)
+#    - 바로 나오지 않는다: 게임 시작 후 mon.first.<id> 초에 깨어나고, 60초 전에 신탁으로 예고
+#    - 처치 후 mon.respawnSec 초 뒤 다시 깨어난다
+#    - 보스마다 '구동 루프'가 매 틱 모델을 히트박스에 붙이고, 이동하면 걷기·서 있으면 대기 애니
+#      (엔티티를 전역 변수에 두지 않고 루프의 지역 변수로 쥔다 → 저장 오류 없음)
+#    - 1초마다 고유 패턴:
+#        미노타우로스  돌진 (포효 → 직선 돌격, 벽에 박으면 기절)
+#        네메아 사자   화살 면역, 도약 덮치기
+#        키메라        화염 숨결 + 염소 머리의 송곳니 소환
+#        케르베로스    세 머리 물어뜯기 + 지옥 울부짖음 (실명·구속)
+#        히드라        독 뿜기, 체력이 줄 때마다 목이 자라나고 부하 소환, 불에 타면 피해 ×1.5
+#        메두사        석화의 응시: 메두사를 '바라보고 있는' 플레이어만 석화
+#        스킬라        촉수 강타 + 끌어당기기
+#    - 처치: 세력 명성 +15, 신앙 +60, 금 +120, 처치자에게 유물
+# =====================================================================================
+
+on load:
+    olyModReady("monsters")
+
+function olyBossList() :: texts:
+    return "nemean_lion", "chimera", "scylla", "medusa", "minotaur", "hydra" and "cerberus"
+
+function olyBossName(id: text) :: text:
+    if {_id} is "minotaur":
+        return "미노타우로스"
+    if {_id} is "nemean_lion":
+        return "네메아의 사자"
+    if {_id} is "chimera":
+        return "키메라"
+    if {_id} is "cerberus":
+        return "케르베로스"
+    if {_id} is "hydra":
+        return "히드라"
+    if {_id} is "medusa":
+        return "메두사"
+    if {_id} is "scylla":
+        return "스킬라"
+    return {_id}
+
+function olyBossHp(id: text) :: number:
+    if {_id} is "minotaur":
+        return 420
+    if {_id} is "nemean_lion":
+        return 340
+    if {_id} is "chimera":
+        return 320
+    if {_id} is "cerberus":
+        return 560
+    if {_id} is "hydra":
+        return 620
+    if {_id} is "medusa":
+        return 320
+    return 480
+
+function olyBossWhere(id: text) :: text:
+    if {_id} is "minotaur":
+        return "남서쪽 화산섬의 미궁"
+    if {_id} is "nemean_lion":
+        return "동부 산맥의 동굴"
+    if {_id} is "chimera":
+        return "서부 산맥의 화구"
+    if {_id} is "cerberus":
+        return "남동쪽 섬 하데스의 문"
+    if {_id} is "hydra":
+        return "북서쪽 늪섬의 동굴"
+    if {_id} is "medusa":
+        return "북동쪽 바위섬의 폐신전"
+    return "동쪽 바다의 바위"
+
+function olyBossAlive(id: text) :: boolean:
+    if {oly::m::%{_id}%::alive} is true:
+        return true
+    return false
+
+function olyBossReset():
+    loop olyBossList():
+        set {_id} to loop-value
+        olyBossGone({_id})
+        olyCmd("kill @e[tag=olyb_%{_id}%_hb]")
+        set {oly::m::%{_id}%::next} to olyN("mon.first.%{_id}%")
+
+# ── 보스가 사라졌을 때의 공통 정리 (처치 · 증발 · 리셋 · 서버 재시작)
+function olyBossGone(id: text):
+    set {oly::m::%{_id}%::alive} to false
+    delete {oly::m::%{_id}%::warned}
+    delete {oly::m::%{_id}%::grown}
+    delete {oly::rt::bcd::%{_id}%::*}
+    delete {oly::rt::bpose::%{_id}%}
+    olyCmd("function oly:boss/%{_id}%/remove")
+    olyCmd("bossbar remove oly:b_%{_id}%")
+    olyBossChunks({_id}, "remove")
+
+# ── 둥지 주변 청크 강제 로드 (보스가 살아 있는 동안 AI·모델이 멈추지 않게)
+function olyBossChunks(id: text, mode: text):
+    set {_l} to {oly::map::lair::%{_id}%::spawn}
+    if {_l} is not set:
+        stop
+    set {_x1} to floor((x-coordinate of {_l}) - 32)
+    set {_z1} to floor((z-coordinate of {_l}) - 32)
+    set {_x2} to floor((x-coordinate of {_l}) + 32)
+    set {_z2} to floor((z-coordinate of {_l}) + 32)
+    olyCmd("forceload %{_mode}% %{_x1}% %{_z1}% %{_x2}% %{_z2}%")
+# ── 서버가 보스가 살아 있는 채로 꺼졌다 → 구동 루프가 없으니 정리하고 1분 뒤 다시
+on load:
+    loop olyBossList():
+        if {oly::m::%loop-value%::alive} is true:
+            olyBossGone(loop-value)
+            olyCmd("kill @e[tag=olyb_%loop-value%_hb]")
+            set {oly::m::%loop-value%::next} to olySec() + 60
+
+# ── 등장 일정 (1초마다)
+every second:
+    if olyLive() is not true:
+        stop
+    loop olyBossList():
+        set {_id} to loop-value
+        if {oly::m::%{_id}%::alive} is true:
+            continue
+        set {_next} to {oly::m::%{_id}%::next} ? olyN("mon.first.%{_id}%")
+        if olySec() >= {_next} - olyN("mon.warnSec"):
+            if {oly::m::%{_id}%::warned} is not true:
+                set {oly::m::%{_id}%::warned} to true
+                olyOracle("%olyBossName({_id})%이(가) 깨어나려 합니다", "%olyBossWhere({_id})%에서 땅이 울립니다. (1분 뒤)")
+        if olySec() >= {_next}:
+            olyBossSpawn({_id})
+
+
+# =====================================================================================
+#  소환
+# =====================================================================================
+
+function olyBossSpawn(id: text):
+    set {_l} to {oly::map::lair::%{_id}%::spawn}
+    if {_l} is not set:
+        stop
+    olyBossChunks({_id}, "add")
+    if {_id} is "minotaur":
+        spawn a ravager at {_l}
+    else if {_id} is "nemean_lion":
+        spawn a ravager at {_l}
+    else if {_id} is "chimera":
+        spawn a zoglin at {_l}
+    else if {_id} is "cerberus":
+        spawn a ravager at {_l}
+    else if {_id} is "hydra":
+        spawn a husk at {_l}
+    else if {_id} is "medusa":
+        spawn a witch at {_l}
+    else:
+        spawn an elder guardian at {_l}
+    set {_e} to last spawned entity
+    set {_u} to "%uuid of {_e}%"
+    add "oly" to scoreboard tags of {_e}
+    add "olyb_hb" to scoreboard tags of {_e}
+    add "olyb_%{_id}%_hb" to scoreboard tags of {_e}
+    set name of {_e} to olyBossName({_id})
+    set {_hp} to olyBossHp({_id})
+    # Skript 의 체력 단위는 하트(= HP/2)
+    set max health of {_e} to {_hp} / 2
+    heal {_e}
+    set {_sc} to 1.3
+    if {_id} is "chimera":
+        set {_sc} to 1.8
+    else if {_id} is "cerberus":
+        set {_sc} to 1.4
+    else if {_id} is "hydra":
+        set {_sc} to 2.6
+    else if {_id} is "medusa":
+        set {_sc} to 1.6
+    else if {_id} is "scylla":
+        set {_sc} to 1.0
+    else if {_id} is "nemean_lion":
+        set {_sc} to 1.2
+    olyCmd("attribute %{_u}% minecraft:scale base set %{_sc}%")
+    olyCmd("attribute %{_u}% minecraft:knockback_resistance base set 1")
+    olyCmd("attribute %{_u}% minecraft:follow_range base set 40")
+    olyCmd("attribute %{_u}% minecraft:attack_damage base set 10")
+    olyCmd("effect give %{_u}% minecraft:invisibility infinite 0 true")
+    olyCmd("data merge entity %{_u}% {Silent:1b,PersistenceRequired:1b}")
+    olyCmd("execute positioned %x-coordinate of {_l}% %y-coordinate of {_l}% %z-coordinate of {_l}% run function oly:boss/%{_id}%/spawn")
+    olyCmd("bossbar add oly:b_%{_id}% {""text"":""%olyBossName({_id})%"",""color"":""red""}")
+    olyCmd("bossbar set oly:b_%{_id}% color red")
+    olyCmd("bossbar set oly:b_%{_id}% style notched_10")
+    olyCmd("bossbar set oly:b_%{_id}% max %{_hp}%")
+    set {oly::m::%{_id}%::alive} to true
+    set {oly::m::%{_id}%::uuid} to {_u}
+    set {oly::m::%{_id}%::grown} to 3
+    olyOracle("%olyBossName({_id})%이(가) 깨어났습니다!", "%olyBossWhere({_id})% — 처치하면 명성과 유물을 얻습니다.")
+    loop all players:
+        play sound "entity.wither.spawn" with volume 0.6 with pitch 0.7 at location of loop-player for loop-player
+    olyBossRun({_id}, {_e})
+
+
+# =====================================================================================
+#  구동 루프 (보스마다 하나, 매 틱)
+# =====================================================================================
+
+function olyBossRun(id: text, e: entity):
+    set {_home} to {oly::map::lair::%{_id}%::spawn}
+    set {_anim} to "idle"
+    set {_frame} to 0
+    set {_tleft} to 0
+    set {_lock} to 0
+    set {_last} to location of {_e}
+    set {_sec} to 0
+    set {_near} to true
+    while {oly::m::%{_id}%::alive} is true:
+        if {_e} is not alive:
+            # 처치가 아닌데 사라졌다 (명령어로 제거 등) → 정리 후 다시 일정
+            wait 1 tick
+            if {oly::m::%{_id}%::alive} is true:
+                olyBossGone({_id})
+                set {oly::m::%{_id}%::next} to olySec() + olyN("mon.respawnSec")
+            stop
+        add 1 to {_sec}
+        if {_sec} >= 20:
+            set {_sec} to 0
+            set {_near} to false
+            loop all players in radius 64 around location of {_e}:
+                if loop-player's gamemode is survival or adventure:
+                    set {_near} to true
+            if olyN("mon.alwaysAnimate") is 1:
+                set {_near} to true
+            olyBossSecond({_id}, {_e}, {_home})
+            if {oly::rt::bpose::%{_id}%} is set:
+                # 패턴이 특수 동작을 요청했다
+                set {_anim} to {oly::rt::bpose::%{_id}%}
+                delete {oly::rt::bpose::%{_id}%}
+                set {_frame} to 0
+                set {_tleft} to 0
+                set {_lock} to olyBossAnimN({_id}, {_anim}) * olyBossAnimT({_id}, {_anim})
+        if {_near} is true:
+            olyCmd("function oly:boss/%{_id}%/sync")
+            if {_lock} > 0:
+                remove 1 from {_lock}
+            else:
+                set {_want} to "idle"
+                if distance between location of {_e} and {_last} > 0.06:
+                    set {_want} to "walk"
+                if {_want} is not {_anim}:
+                    set {_anim} to {_want}
+                    set {_frame} to 0
+                    set {_tleft} to 0
+            set {_last} to location of {_e}
+            remove 1 from {_tleft}
+            if {_tleft} <= 0:
+                set {_n} to olyBossAnimN({_id}, {_anim})
+                if {_n} <= 0:
+                    set {_anim} to "idle"
+                    set {_n} to olyBossAnimN({_id}, "idle")
+                if {_frame} >= {_n}:
+                    set {_frame} to 0
+                olyCmd("function oly:boss/%{_id}%/%{_anim}%/%{_frame}%")
+                set {_tleft} to olyBossAnimT({_id}, {_anim})
+                add 1 to {_frame}
+        wait 1 tick
+
+# ── 1초마다: 목표 · 귀환 · 체력바 · 패턴
+function olyBossSecond(id: text, e: entity, home: location):
+    set {_l} to location of {_e}
+    # 둥지에서 너무 멀어지면 귀환
+    if distance between {_l} and {_home} > 32:
+        teleport {_e} to {_home}
+        heal {_e} by 5
+    # 가장 가까운 플레이어를 노린다
+    set {_best} to 999
+    loop all players in radius 36 around {_l}:
+        if loop-player's gamemode is survival or adventure:
+            set {_d} to distance between {_l} and location of loop-player
+            if {_d} < {_best}:
+                set {_best} to {_d}
+                set {_t} to loop-player
+    if {_t} is set:
+        set target of {_e} to {_t}
+    # 체력바
+    set {_x} to rounded x-coordinate of {_l}
+    set {_y} to rounded y-coordinate of {_l}
+    set {_z} to rounded z-coordinate of {_l}
+    set {_hpv} to rounded (health of {_e}) * 2
+    olyCmd("bossbar set oly:b_%{_id}% value %{_hpv}%")
+    olyCmd("bossbar set oly:b_%{_id}% players @a[x=%{_x}%,y=%{_y}%,z=%{_z}%,distance=..48]")
+    if {_id} is "hydra":
+        olyHydraGrow({_e})
+    if {_t} is not set:
+        stop
+    olyBossSkill({_id}, {_e}, {_t}, {_best})
+
+function olyBossCd(id: text, k: text, sec: number) :: boolean:
+    if olySec() < ({oly::rt::bcd::%{_id}%::%{_k}%} ? 0):
+        return false
+    set {oly::rt::bcd::%{_id}%::%{_k}%} to olySec() + {_sec}
+    return true
+
+function olyBossHitArea(e: entity, r: number, dmg: number, up: number):
+    loop all players in radius {_r} around location of {_e}:
+        if loop-player's gamemode is survival or adventure:
+            # dmg 는 HP 단위 → 하트로
+            damage loop-player by {_dmg} / 2
+            if {_up} > 0:
+                push loop-player upwards at speed {_up}
+
+function olyBossSkill(id: text, e: entity, t: player, d: number):
+    set {_l} to location of {_e}
+    set {_u} to "%uuid of {_e}%"
+    if {_id} is "minotaur":
+        if {_d} >= 6:
+            if {_d} <= 26:
+                if olyBossCd({_id}, "charge", 9) is true:
+                    olyMinotaurCharge({_e}, {_t})
+                    stop
+        if {_d} <= 4:
+            if olyBossCd({_id}, "swing", 3) is true:
+                set {oly::rt::bpose::%{_id}%} to "attack"
+                olyBossHitArea({_e}, 4.5, 5, 0.4)
+    else if {_id} is "nemean_lion":
+        if {_d} <= 16:
+            if olyBossCd({_id}, "pounce", 7) is true:
+                set {oly::rt::bpose::%{_id}%} to "attack"
+                push {_e} upwards at speed 0.7
+                push {_e} (vector from location of {_e} to location of {_t}) at speed 1.2
+                olyLionLand({_e})
+        if {_d} >= 18:
+            if olyBossCd({_id}, "roar", 15) is true:
+                set {oly::rt::bpose::%{_id}%} to "roar"
+                play sound "entity.ravager.roar" with volume 2 with pitch 0.8 at {_l}
+    else if {_id} is "chimera":
+        if {_d} <= 9:
+            if olyBossCd({_id}, "breath", 6) is true:
+                set {oly::rt::bpose::%{_id}%} to "breath"
+                olyCmd("execute as %{_u}% at @s run particle minecraft:flame ^ ^1.5 ^3 1.2 0.6 1.2 0.06 160 force")
+                play sound "entity.blaze.shoot" with volume 1.5 with pitch 0.6 at {_l}
+                loop all players in radius 8 around {_l}:
+                    if loop-player's gamemode is survival or adventure:
+                        ignite loop-player for 4 seconds
+                        damage loop-player by 1
+        if olyBossCd({_id}, "fangs", 8) is true:
+            olyCmd("execute at %uuid of {_t}% run summon minecraft:evoker_fangs ~ ~ ~")
+            olyCmd("execute at %uuid of {_t}% run summon minecraft:evoker_fangs ~1 ~ ~")
+            olyCmd("execute at %uuid of {_t}% run summon minecraft:evoker_fangs ~-1 ~ ~")
+    else if {_id} is "cerberus":
+        if {_d} <= 5:
+            if olyBossCd({_id}, "bite", 4) is true:
+                set {oly::rt::bpose::%{_id}%} to "attack"
+                olyBossHitArea({_e}, 5, 5, 0)
+                play sound "entity.wolf.growl" with volume 2 with pitch 0.5 at {_l}
+        if olyBossCd({_id}, "howl", 12) is true:
+            set {oly::rt::bpose::%{_id}%} to "roar"
+            play sound "entity.wolf.howl" with volume 3 with pitch 0.5 at {_l}
+            olyCmd("particle minecraft:soul_fire_flame %x-coordinate of {_l}% %(y-coordinate of {_l}) + 1% %z-coordinate of {_l}% 5 0.3 5 0.02 250 force")
+            loop all players in radius 14 around {_l}:
+                if loop-player's gamemode is survival or adventure:
+                    apply blindness 1 to loop-player for 3 seconds
+                    apply slowness 2 to loop-player for 4 seconds
+    else if {_id} is "hydra":
+        if olyBossCd({_id}, "spit", 6) is true:
+            set {oly::rt::bpose::%{_id}%} to "attack"
+            olyCmd("particle minecraft:item_slime %x-coordinate of {_l}% %(y-coordinate of {_l}) + 3% %z-coordinate of {_l}% 5 1 5 0.2 120 force")
+            play sound "entity.slime.squish" with volume 2 with pitch 0.5 at {_l}
+            loop all players in radius 12 around {_l}:
+                if loop-player's gamemode is survival or adventure:
+                    apply poison 2 to loop-player for 5 seconds
+    else if {_id} is "medusa":
+        if {_d} <= 18:
+            if olyBossCd({_id}, "gaze", 7) is true:
+                set {oly::rt::bpose::%{_id}%} to "gaze"
+                play sound "entity.elder_guardian.curse" with volume 1.5 with pitch 1.4 at {_l}
+                olyMedusaGaze({_e})
+    else if {_id} is "scylla":
+        if {_d} <= 9:
+            if olyBossCd({_id}, "slam", 5) is true:
+                set {oly::rt::bpose::%{_id}%} to "attack"
+                olyBossHitArea({_e}, 9, 6, 0.8)
+                play sound "entity.elder_guardian.hurt" with volume 2 with pitch 0.5 at {_l}
+        if {_d} <= 22:
+            if olyBossCd({_id}, "pull", 11) is true:
+                push {_t} (vector from location of {_t} to location of {_e}) at speed 1.6
+                send title "" with subtitle "&3스킬라의 촉수가 당신을 끌어당깁니다!" to {_t} for 2 seconds
+
+# ── 미노타우로스 돌진: 포효 1초 → 2초간 목표 쪽으로 돌격, 부딪힌 플레이어 피해
+function olyMinotaurCharge(e: entity, t: player):
+    set {oly::rt::bpose::minotaur} to "roar"
+    play sound "entity.ravager.roar" with volume 2.5 with pitch 0.6 at location of {_e}
+    set {_tgt} to location of {_t}
+    wait 1 second
+    set {oly::rt::bpose::minotaur} to "charge"
+    set {_hitset::*} to "x"
+    loop 10 times:
+        if {_e} is not alive:
+            stop
+        push {_e} (vector from location of {_e} to {_tgt}) at speed 1.1
+        loop all players in radius 2.8 around location of {_e}:
+            if {_hitset::*} does not contain "%uuid of loop-player%":
+                add "%uuid of loop-player%" to {_hitset::*}
+                damage loop-player by 3.5
+                push loop-player upwards at speed 0.9
+                play sound "entity.player.hurt_sweet_berry_bush" with volume 1 with pitch 0.6 at location of loop-player
+        if distance between location of {_e} and {_tgt} < 2:
+            stop
+        wait 4 ticks
+    # 목표에 닿지 못하고 멈췄다 = 벽에 박았다 → 기절
+    apply slowness 10 to {_e} for 3 seconds
+    olyCmd("execute at %uuid of {_e}% run particle minecraft:crit ~ ~3 ~ 0.6 0.3 0.6 0.1 40 force")
+function olyLionLand(e: entity):
+    wait 1 second
+    if {_e} is alive:
+        olyBossHitArea({_e}, 4, 6, 0.5)
+        play sound "entity.generic.explode" with volume 0.8 with pitch 1.3 at location of {_e}
+
+# ── 히드라: 체력 75/50/25/10% 마다 목이 하나씩 자란다 (최대 7) + 부하 둘
+function olyHydraGrow(e: entity):
+    set {_hp} to health of {_e}
+    set {_mx} to max health of {_e}
+    set {_g} to {oly::m::hydra::grown} ? 3
+    set {_want} to 3
+    if {_hp} <= {_mx} * 0.75:
+        set {_want} to 4
+    if {_hp} <= {_mx} * 0.5:
+        set {_want} to 5
+    if {_hp} <= {_mx} * 0.25:
+        set {_want} to 6
+    if {_hp} <= {_mx} * 0.1:
+        set {_want} to 7
+    if {_want} <= {_g}:
+        stop
+    set {oly::m::hydra::grown} to {_g} + 1
+    olyCmd("function oly:boss/hydra/grow_%{_g}%")
+    play sound "entity.ender_dragon.growl" with volume 2 with pitch 1.4 at location of {_e}
+    olyBc("&2[히드라] &a잘린 자리에서 새 머리가 자라납니다! &7(불로 지져라 — 불타는 히드라는 피해 1.5배)")
+    loop 2 times:
+        spawn a bogged at location of {_e}
+        add "oly" to scoreboard tags of last spawned entity
+
+# ── 메두사의 응시: 메두사를 '바라보고 있는' 플레이어만 석화
+function olyMedusaGaze(e: entity):
+    loop all players in radius 18 around location of {_e}:
+        send title "&5&l눈을 돌려라!" with subtitle "&7메두사가 응시한다" to loop-player for 1 second
+    wait 1 second
+    if {_e} is not alive:
+        stop
+    loop all players in radius 18 around location of {_e}:
+        if loop-player's gamemode is survival or adventure:
+            if targeted entity of loop-player is {_e}:
+                apply slowness 10 to loop-player for 3 seconds
+                apply mining fatigue 3 to loop-player for 3 seconds
+                apply weakness 2 to loop-player for 3 seconds
+                damage loop-player by 1.5
+                send title "&7&l석 화" with subtitle "&8메두사와 눈이 마주쳤다" to loop-player for 2 seconds
+                olyCmd("execute at %uuid of loop-player% run particle minecraft:block{block_state:""minecraft:stone""} ~ ~1 ~ 0.3 0.8 0.3 0 60 force")
+                play sound "block.stone.place" with volume 1 with pitch 0.5 at location of loop-player
+
+
+# =====================================================================================
+#  피격 · 처치 · 유물
+# =====================================================================================
+
+on damage:
+    victim has scoreboard tag "olyb_hb"
+    if victim has scoreboard tag "olyb_nemean_lion_hb":
+        if damage cause is projectile:
+            cancel event
+            if attacker is a player:
+                send action bar "&6화살이 사자 가죽에 튕겨 나갑니다! &7(근접으로 싸워라)" to attacker
+            stop
+    set {_m} to 1
+    if attacker is a player:
+        set {_m} to {oly::rt::monmul::%uuid of attacker%} ? 1
+    if victim has scoreboard tag "olyb_hydra_hb":
+        if victim is burning:
+            set {_m} to {_m} * 1.5
+    set damage to damage * {_m}
+
+on death:
+    victim has scoreboard tag "olyb_hb"
+    clear drops
+    set {_id} to "none"
+    loop olyBossList():
+        if victim has scoreboard tag "olyb_%loop-value%_hb":
+            set {_id} to loop-value
+    if {_id} is "none":
+        stop
+    olyBossGone({_id})
+    set {oly::m::%{_id}%::next} to olySec() + olyN("mon.respawnSec")
+    set {_l} to location of victim
+    olyCmd("particle minecraft:totem_of_undying %x-coordinate of {_l}% %(y-coordinate of {_l}) + 2% %z-coordinate of {_l}% 2 2 2 0.4 300 force")
+    if attacker is not a player:
+        olyOracle("%olyBossName({_id})%이(가) 쓰러졌습니다", "누구의 공도 아니었습니다.")
+        stop
+    set {_f} to olyFacOf(attacker)
+    olyOracle("%olyBossName({_id})%이(가) 쓰러졌습니다!", "%olyFacName({_f})%의 %attacker%이(가) 신화를 끝냈습니다.")
+    loop all players:
+        play sound "ui.toast.challenge_complete" with volume 0.8 with pitch 0.8 at location of loop-player for loop-player
+    if {_f} is not "none":
+        olyRenownAdd({_f}, olyN("renown.monster"), "%olyBossName({_id})% 처치")
+        olyResAdd({_f}, "faith", olyN("mon.faithReward"))
+        olyResAdd({_f}, "gold", olyN("mon.goldReward"))
+    olyRelicGive(attacker, {_id})
+
+function olyRelic(id: text) :: item:
+    if {_id} is "nemean_lion":
+        set {_i} to unbreakable golden chestplate named "&6&l네메아 사자의 가죽" with lore "&7어떤 무기도 뚫지 못한 가죽" and "&8유물"
+        enchant {_i} with protection 4
+    else if {_id} is "minotaur":
+        set {_i} to unbreakable netherite axe named "&6&l미노타우로스의 라브리스" with lore "&7미궁의 왕이 휘두르던 양날 도끼" and "&8유물"
+        enchant {_i} with sharpness 4
+    else if {_id} is "chimera":
+        set {_i} to unbreakable bow named "&6&l키메라의 불꽃 활" with lore "&7화살에 불꽃이 깃든다" and "&8유물"
+        enchant {_i} with power 3
+        enchant {_i} with flame 1
+    else if {_id} is "cerberus":
+        set {_i} to totem of undying named "&6&l케르베로스의 목걸이" with lore "&7저승의 문지기가 한 번은 돌려보내 준다" and "&8유물"
+    else if {_id} is "hydra":
+        set {_i} to unbreakable iron sword named "&6&l히드라의 독니" with lore "&7베인 적은 독에 걸린다" and "&8유물"
+        enchant {_i} with sharpness 2
+    else if {_id} is "medusa":
+        set {_i} to skeleton skull named "&6&l메두사의 머리" with lore "&7우클릭: 앞의 적을 석화 (90초)" and "&8유물"
+    else:
+        set {_i} to unbreakable trident named "&6&l스킬라의 삼지창" with lore "&7던지면 돌아온다" and "&8유물"
+        enchant {_i} with loyalty 3
+        enchant {_i} with impaling 3
+    return {_i}
+
+function olyRelicGive(p: player, id: text):
+    set {_i} to olyRelic({_id})
+    add {_i} to {oly::p::%uuid of {_p}%::relics::*}
+    give {_p} {_i}
+    send title "&6&l유물 획득" with subtitle "%name of {_i}%" to {_p} for 4 seconds
+
+# ── 히드라의 독니: 벤 적에게 독
+on damage:
+    attacker is a player
+    victim is a player
+    set {_n} to name of attacker's tool
+    if {_n} is set:
+        if "%{_n}%" contains "히드라의 독니":
+            apply poison 2 to victim for 4 seconds
+
+# ── 메두사의 머리: 앞 10칸의 적 석화
+on right click with skeleton skull:
+    set {_n} to name of player's tool
+    if {_n} is not set:
+        stop
+    if "%{_n}%" does not contain "메두사의 머리":
+        stop
+    cancel event
+    set {_u} to "%uuid of player%"
+    set {_left} to olyCdLeft({_u}, "medusa", 90)
+    if {_left} > 0:
+        send action bar "&c메두사의 머리 대기 %{_left}%초"
+        stop
+    olyCd({_u}, "medusa", 90)
+    set {_f} to olyFacOf(player)
+    play sound "entity.elder_guardian.curse" with volume 1 with pitch 1.6 at location of player
+    loop all players in radius 10 around location of player:
+        set {_vf} to olyFacOf(loop-player)
+        if {_vf} is not "none":
+            if olyIsWar({_f}, {_vf}) is true:
+                apply slowness 10 to loop-player for 3 seconds
+                apply weakness 2 to loop-player for 3 seconds
+                send title "&7&l석 화" with subtitle "&8메두사의 머리를 보았다" to loop-player for 2 seconds
