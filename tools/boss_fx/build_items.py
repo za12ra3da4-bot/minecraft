@@ -1,6 +1,6 @@
 """플레이어 아이템 → 리소스팩
 
-- 텍스처  assets/oly/textures/item/gear/<name>.png (32x32)
+- 텍스처  assets/oly/textures/item/gear/<name>.png (32x32 도트, 투명 바탕)
 - 모델    assets/oly/models/gear/<name>.json
 - 연결    assets/minecraft/items/<바닐라>.json  —  minecraft:custom_model_data(floats[0]) 로 분기.
           번호가 N 이면 우리 모델, N+0.5 부터는 다시 바닐라 (다른 번호가 우연히 걸리지 않게).
@@ -11,7 +11,7 @@ import copy
 import json
 import os
 
-from illus_items import SPRITES, hoplon_back, hoplon_face
+from dot_items import SPRITES, hoplon_back, hoplon_face
 from items_art import ITEMS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -48,8 +48,8 @@ def simple(name, parent):
 
 
 def shield_models():
-    tex("hoplon_face", hoplon_face(128))
-    tex("hoplon_back", hoplon_back(128))
+    tex("hoplon_face", hoplon_face())
+    tex("hoplon_back", hoplon_back())
     rim = {"uv": [0, 7, 1, 9], "texture": "#back"}
     els = [
         # 앞 · 뒤 판 (원형은 텍스처 투명도로)
@@ -73,7 +73,7 @@ def shield_models():
 
 
 def entry_for(key, kind):
-    """일러스트 스프라이트(128px) 를 바닐라와 같은 부모 모델(손 자세)로 감싼다"""
+    """도트 스프라이트(32px) 를 바닐라와 같은 부모 모델(손 자세)로 감싼다"""
     if kind in ("handheld", "trident"):
         simple(key, "minecraft:item/handheld")
         return ref(key)
@@ -118,7 +118,7 @@ def entry_for(key, kind):
 
 
 def build():
-    # 예전 입체 모델 텍스처 정리 → 일러스트 스프라이트 (128px)
+    # 예전 입체 모델 텍스처 정리 → 도트 스프라이트 (32px)
     import shutil
     shutil.rmtree(os.path.join(ROOT, "oly", "textures", "item", "gear3d"), ignore_errors=True)
     mdir = os.path.join(ROOT, "oly", "models", "gear")
