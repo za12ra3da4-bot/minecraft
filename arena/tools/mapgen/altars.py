@@ -216,42 +216,12 @@ def athena(b, A, y, ov):
 def hermes(b, A, y, ov):
     x0, z0 = int(A[0]), int(A[1])
     rng = b.r
-    # 첨탑 둘레 옹벽 (협곡 벽을 층 무늬 암석으로)
-    # 다리 3개: 그린 본진 / 옐로 본진 / 중앙 방향
-    targets = [team_base("green"), team_base("yellow"), C]
-    for k, tgt in enumerate(targets):
-        v = (tgt[0] - x0, tgt[1] - z0)
-        L = math.hypot(*v); v = (v[0] / L, v[1] / L)
-        stone = (k == 2)
-        for s in range(6, 19):
-            for w_ in (-2, -1, 0, 1, 2) if stone else (-1, 0, 1):
-                px = round(x0 + v[0] * s - v[1] * w_)
-                pz = round(z0 + v[1] * s + v[0] * w_)
-                # 다리 높이: 첨탑 y → 바깥 y 로 완만히
-                outer = b.gy(round(x0 + v[0] * 20), round(z0 + v[1] * 20))
-                t = (s - 6) / 12
-                hy = round(y + (outer - y) * t)
-                edge = abs(w_) == (2 if stone else 1)
-                if stone:
-                    b.set(px, hy, pz, "stone_bricks" if not edge else "polished_andesite")
-                    b.set(px, hy - 1, pz, stairs("stone_brick", facing_to(-v[1] * w_, v[0] * w_) if edge else "north", "top") if edge else "stone_bricks")
-                    if edge:
-                        b.set(px, hy + 1, pz, wall("stone_brick"))
-                else:
-                    b.set(px, hy, pz, "spruce_planks" if not edge else "spruce_log[axis=y]")
-                    if edge:
-                        b.set(px, hy + 1, pz, "spruce_fence")
-                        if s % 4 == 0:
-                            b.set(px, hy + 2, pz, "spruce_fence")
-                            b.set(px, hy + 3, pz, "lantern[hanging=false,waterlogged=false]")
-                b.air(px, hy + 1 + (1 if edge else 0), pz, px, hy + 6, pz) if not edge else None
-        # 석교 아치 받침
+    # 다리 4개 (축 정렬): 북·동 = 석조 아치교, 남·서 = 사슬 난간 현수교
+    for (dx, dz), stone in (((0, -1), True), ((1, 0), True), ((0, 1), False), ((-1, 0), False)):
         if stone:
-            for s in (9, 15):
-                px, pz = round(x0 + v[0] * s), round(z0 + v[1] * s)
-                bot = b.gy(px, pz)
-                hy = b.top(px, pz)
-                b.fill(px, bot, pz, px, hy - 2, pz, "stone_bricks")
+            stone_bridge(b, x0, z0, dx, dz, y)
+        else:
+            rope_bridge(b, x0, z0, dx, dz, y)
     # 협곡 탈출 사다리 계단 (물 → 바깥)
     for k in range(3):
         a = k / 3 * 6.28 + 1.0
@@ -271,12 +241,102 @@ def hermes(b, A, y, ov):
         gy = b.gy(px, pz)
         b.fill(px, gy + 1, pz, px, gy + 6, pz, "birch_fence")
         b.w.display("item", px + 0.5, gy + 5.5, pz + 0.5, model="deco/wind_ribbon", scale=2.2, yaw=math.degrees(a), sway=True)
-    # 첨탑 가장자리 방어 난간
-    for i in range(180):
-        a = i / 180 * 6.28
-        px, pz = round(x0 + math.cos(a) * 7.6), round(z0 + math.sin(a) * 7.6)
-        if b.top(px, pz) == y and not any(abs(((math.degrees(a) - math.degrees(math.atan2(t[1] - z0, t[0] - x0)) + 540) % 360) - 180) < 14 for t in targets):
-            b.set(px, y + 1, pz, wall("stone_brick"))
+    # 첨탑 가장자리 난간 (다리 입구 제외)
+    for i in range(240):
+        a = i / 240 * 6.28
+        px, pz = round(x0 + math.cos(a) * 7.2), round(z0 + math.sin(a) * 7.2)
+        deg = math.degrees(a) % 90
+        if min(deg, 90 - deg) < 17:
+            continue
+        if b.top(px, pz) == y:
+            b.set(px, y + 1, pz, wall("stone_brick") if i % 7 else "chiseled_stone_bricks")
+
+
+def _bp(x0, z0, dx, dz, along, side):
+    """다리 좌표: along = 중심에서 바깥으로, side = 옆"""
+    return (x0 + dx * along + (-dz) * side, z0 + dz * along + dx * side)
+
+
+def stone_bridge(b, x0, z0, dx, dz, y):
+    """폭 5 (보도 3 + 난간), 협곡 중앙에 교각, 양쪽 아치"""
+    rng = b.r
+    along_f = facing_to(dx, dz)
+    for along in range(5, HERMES_BRIDGE_END + 2):
+        for side in range(-2, 3):
+            px, pz = _bp(x0, z0, dx, dz, along, side)
+            edge = abs(side) == 2
+            b.set(px, y, pz, "polished_andesite" if edge else b.mix([("stone_bricks", 5), ("mossy_stone_bricks", 2), ("cracked_stone_bricks", 1)]))
+            b.set(px, y - 1, pz, "stone_bricks")
+            b.air(px, y + 1, pz, px, y + 5, pz)
+            if edge:
+                b.set(px, y + 1, pz, wall("stone_brick"))
+    # 난간 기둥 + 등불
+    for along in (8, 12, 16):
+        for side in (-2, 2):
+            px, pz = _bp(x0, z0, dx, dz, along, side)
+            b.fill(px, y + 1, pz, px, y + 2, pz, "chiseled_stone_bricks")
+            b.set(px, y + 3, pz, "lantern[hanging=false,waterlogged=false]")
+    # 교각 (중앙) + 아치
+    mid = 12
+    bottom = G - 11
+    for along in range(8, 17):
+        dd = abs(along - mid)
+        for side in range(-2, 3):
+            px, pz = _bp(x0, z0, dx, dz, along, side)
+            if dd <= 1:
+                b.fill(px, bottom, pz, px, y - 1, pz, b.mix([("stone_bricks", 5), ("mossy_stone_bricks", 3), ("cracked_stone_bricks", 1)]))
+            else:
+                # 아치: 교각에서 멀어질수록 아래로 내려오는 곡면 (양 끝은 절벽에 닿음)
+                depth = {2: 4, 3: 2, 4: 1, 5: 1, 6: 2}.get(dd, 4)
+                b.fill(px, y - depth, pz, px, y - 1, pz, "stone_bricks")
+                if abs(side) == 2 or True:
+                    b.set(px, y - depth - 1, pz, stairs("stone_brick", facing_to(-(along - mid) * dx, -(along - mid) * dz) if False else OPP[along_f] if along > mid else along_f, "top"))
+    # 교각 머리 장식
+    px, pz = _bp(x0, z0, dx, dz, mid, 0)
+    for side in (-2, 2):
+        qx, qz = _bp(x0, z0, dx, dz, mid, side)
+        b.set(qx, y + 1, qz, "chiseled_stone_bricks")
+        b.set(qx, y + 2, qz, stairs("stone_brick", along_f))
+
+
+def rope_bridge(b, x0, z0, dx, dz, y):
+    """나무 현수교: 폭 3 보도, 사슬 난간, 기둥마다 등불"""
+    rng = b.r
+    across_axis = "x" if dz != 0 else "z"
+    along_axis = "z" if dz != 0 else "x"
+    for along in range(6, HERMES_BRIDGE_END + 2):
+        mid = abs(along - 12.5)
+        sag = 1 if mid < 3 else 0
+        for side in range(-1, 2):
+            px, pz = _bp(x0, z0, dx, dz, along, side)
+            if rng.random() < 0.06 and side != 0 and 8 < along < 17:
+                b.set(px, y - sag, pz, "spruce_slab[type=top,waterlogged=false]")
+            else:
+                b.set(px, y - sag, pz, "spruce_planks" if side == 0 or along % 2 else "stripped_spruce_log[axis=" + across_axis + "]")
+            b.air(px, y - sag + 1, pz, px, y + 4, pz)
+        # 가장자리 들보 + 사슬
+        for side in (-2, 2):
+            px, pz = _bp(x0, z0, dx, dz, along, side)
+            b.set(px, y - sag, pz, "spruce_log[axis=" + along_axis + "]")
+            b.air(px, y - sag + 1, pz, px, y + 4, pz)
+            if along % 3 == 0:
+                b.fill(px, y - sag + 1, pz, px, y - sag + 2, pz, "spruce_fence")
+                if along % 6 == 0:
+                    b.set(px, y - sag + 3, pz, "lantern[hanging=false,waterlogged=false]")
+            else:
+                b.set(px, y - sag + 2, pz, "iron_chain[axis=" + along_axis + ",waterlogged=false]")
+        # 처짐 이음새: 반 블록 계단
+        if mid < 3 and abs(along - 12.5) > 2:
+            for side in range(-1, 2):
+                px, pz = _bp(x0, z0, dx, dz, along, side)
+                b.set(px, y - sag, pz, "spruce_slab[type=top,waterlogged=false]")
+    # 양끝 큰 기둥 (다리 머리)
+    for along in (6, HERMES_BRIDGE_END + 1):
+        for side in (-2, 2):
+            px, pz = _bp(x0, z0, dx, dz, along, side)
+            b.fill(px, y + 1, pz, px, y + 2, pz, "spruce_fence")
+            b.set(px, y + 3, pz, "lantern[hanging=false,waterlogged=false]")
+            b.set(px, y + 3, pz, "lantern[hanging=false,waterlogged=false]") if False else None
 
 
 # ───────────────────────────────────────────── 데메테르: 풍요의 분지

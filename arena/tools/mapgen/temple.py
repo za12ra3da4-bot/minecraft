@@ -77,45 +77,121 @@ def moat(b):
         if (i // 30) % 5 == 3:
             continue  # 끊긴 구간
         b.set(x, y + 1, z, wall("stone_brick"))
-    # 다리
-    for k in range(8):
-        a = k * math.pi / 4
-        ux, uz = math.cos(a), math.sin(a)
-        main = (k % 2 == 0)
-        half = 4.5 if main else 2.6
-        for x in range(cx - MOAT_OUT - 4, cx + MOAT_OUT + 5):
-            for z in range(cz - MOAT_OUT - 4, cz + MOAT_OUT + 5):
-                px, pz = x - cx, z - cz
-                along = px * ux + pz * uz
-                side = -px * uz + pz * ux
-                if not (MOAT_IN - 2.5 <= along <= MOAT_OUT + 2.5):
-                    continue
-                if abs(side) > half + 0.3:
-                    continue
-                edge = abs(side) > half - 0.9
-                deck = "stone_bricks" if main else "polished_andesite"
-                mid = (MOAT_IN + MOAT_OUT) / 2
-                rise = 1 if abs(along - mid) < 2.6 else 0
-                b.fill(x, G - 1, z, x, y + rise, z, b.mix([(deck, 6), ("mossy_stone_bricks", 2), ("cracked_stone_bricks", 1)]))
-                if rise == 0 and abs(along - mid) < 4 and not edge:
-                    b.set(x, y + 1, z, slab("stone_brick"))
+    for f in DXZ:
+        grand_bridge(b, f)
+    for k in (1, 3, 5, 7):
+        ford(b, k * math.pi / 4)
+
+
+def grand_bridge(b, f):
+    """수로 대교: 폭 9, 가운데 아치 개구부, 양쪽 3단 계단, 난간 기둥 + 등불"""
+    ux, uz = DXZ[f]
+    top = G + 4                       # 다리 윗면 블록
+    mid = (MOAT_IN + MOAT_OUT) / 2    # 46
+    fo = f                            # 바깥을 향한 facing
+    fi = OPP[f]
+
+    def P(al, s):
+        return (cx + ux * al + (s if ux == 0 else 0), cz + uz * al + (s if uz == 0 else 0))
+
+    for al in range(MOAT_IN - 5, MOAT_OUT + 6):
+        for s in range(-4, 5):
+            x, z = P(al, s)
+            edge = abs(s) == 4
+            # 높이: 안쪽 계단 38~40, 바깥 계단 51~53
+            if al <= MOAT_IN - 2:
+                step = al - (MOAT_IN - 5)          # 0,1,2 → 계단
+                h = G + 1 + step
+                b.fill(x, G - 1, z, x, h - 1, z, "stone_bricks")
+                b.set(x, h, z, stairs("stone_brick", fo) if not edge else b.mix([("stone_bricks", 3), ("polished_andesite", 1)]))
                 if edge:
-                    b.set(x, y + 1 + rise, z, wall("stone_brick"))
-                    b.air(x, y + 2 + rise, z, x, y + 3 + rise, z)
-                else:
-                    b.air(x, y + 1 + rise + (0 if rise == 0 and abs(along - mid) < 4 else 0), z, x, y + 5, z)
-                    if rise == 0 and abs(along - mid) < 4:
-                        b.set(x, y + 1, z, slab("stone_brick"))
-                # 아치 (물 위)
-                if MOAT_IN + 0.5 < along < MOAT_OUT - 0.5 and not edge:
-                    b.set(x, G - 1, z, "water")
-                    b.set(x, G - 2, z, "water")
-        # 다리 양끝 등불 기둥
-        for s in (-1, 1):
-            for al in (MOAT_IN - 2, MOAT_OUT + 2):
-                x = round(cx + ux * al - uz * s * (half + 0.2)); z = round(cz + uz * al + ux * s * (half + 0.2))
-                b.fill(x, y + 1, z, x, y + 2, z, "chiseled_stone_bricks" if main else wall("stone_brick"))
-                b.set(x, y + 3, z, "lantern[hanging=false,waterlogged=false]")
+                    b.set(x, h + 1, z, wall("stone_brick"))
+                b.air(x, h + (2 if edge else 1), z, x, h + 6, z)
+                continue
+            if al >= MOAT_OUT + 2:
+                step = (MOAT_OUT + 5) - al
+                h = G + 1 + step
+                gy = b.gy(x, z)
+                b.fill(x, min(gy, G - 1), z, x, h - 1, z, "stone_bricks")
+                b.set(x, h, z, stairs("stone_brick", fi) if not edge else b.mix([("stone_bricks", 3), ("polished_andesite", 1)]))
+                if edge:
+                    b.set(x, h + 1, z, wall("stone_brick"))
+                b.air(x, h + (2 if edge else 1), z, x, h + 6, z)
+                continue
+            # 다리 상판
+            dd = abs(al - mid)
+            deck = "polished_andesite" if abs(s) <= 1 else b.mix([("stone_bricks", 6), ("mossy_stone_bricks", 2), ("cracked_stone_bricks", 1)])
+            if edge:
+                deck = "stone_bricks"
+            b.set(x, top, z, deck)
+            b.air(x, top + 1, z, x, top + 6, z)
+            # 아치 아랫면: 가운데 2칸 비고, 어깨는 거꾸로 계단
+            if dd <= 1.5:
+                under = top - 1
+                b.set(x, under, z, "stone_bricks")
+                for yy in range(G - 3, under):
+                    b.set(x, yy, z, "water" if yy <= G else "air")
+                b.set(x, top - 1, z, "chiseled_stone_bricks" if (dd < 0.6 and edge) else "stone_bricks")
+            elif dd <= 2.5:
+                b.set(x, top - 1, z, "stone_bricks")
+                b.set(x, top - 2, z, stairs("stone_brick", fi if al < mid else fo, "top"))
+                for yy in range(G - 3, top - 2):
+                    b.set(x, yy, z, "water" if yy <= G else "air")
+            elif dd <= 3.5:
+                b.fill(x, top - 2, z, x, top - 1, z, "stone_bricks")
+                b.set(x, G + 1, z, stairs("stone_brick", fi if al < mid else fo, "top"))
+                for yy in range(G - 3, G + 1):
+                    b.set(x, yy, z, "water")
+            else:
+                # 교대 (부두 위)
+                b.fill(x, G - 3, z, x, top - 1, z, b.mix([("stone_bricks", 6), ("mossy_stone_bricks", 3)]))
+            if edge:
+                b.set(x, top + 1, z, wall("stone_brick"))
+    # 난간 기둥 (양 끝 + 가운데) + 등불, 아치 머릿돌
+    for al in (MOAT_IN - 1, int(mid), MOAT_OUT + 1):
+        for s in (-4, 4):
+            x, z = P(al, s)
+            b.fill(x, top + 1, z, x, top + 2, z, "chiseled_stone_bricks")
+            b.set(x, top + 3, z, "lantern[hanging=false,waterlogged=false]")
+    # 다리 옆면 장식 띠
+    for al in range(MOAT_IN - 1, MOAT_OUT + 2):
+        for s in (-5, 5):
+            x, z = P(al, s)
+            if b.w.is_air(x, top, z) or b.w.get(x, top, z) == "water":
+                b.set(x, top, z, stairs("stone_brick", facing_to(-(x - P(al, 0)[0]), -(z - P(al, 0)[1])), "top"))
+
+
+def ford(b, a):
+    """대각선: 무너진 옛 다리 잔해 + 징검돌"""
+    ux, uz = math.cos(a), math.sin(a)
+    px_, pz_ = -uz, ux
+    rng = b.r
+    # 잔해 교각 (양쪽 부두 옆)
+    for r in (MOAT_IN + 0.8, MOAT_OUT - 0.8):
+        for s in (-2.5, 2.5):
+            x = round(cx + ux * r + px_ * s); z = round(cz + uz * r + pz_ * s)
+            h = G + int(rng.integers(1, 4))
+            b.fill(x, G - 3, z, x, h, z, b.mix([("stone_bricks", 4), ("mossy_stone_bricks", 4), ("cracked_stone_bricks", 2)]))
+            if rng.random() < 0.6:
+                b.set(x, h + 1, z, slab("mossy_stone_brick"))
+    # 징검돌
+    r = MOAT_IN - 0.2
+    i = 0
+    while r <= MOAT_OUT + 0.4:
+        x = round(cx + ux * r); z = round(cz + uz * r)
+        if b.w.get(x, G, z) == "water" or i == 0:
+            b.fill(x, G - 3, z, x, G + 1, z, b.mix([("mossy_stone_bricks", 3), ("mossy_cobblestone", 2), ("stone_bricks", 2)]))
+            b.set(x, G + 1, z, b.mix([("mossy_cobblestone", 3), ("stone_bricks", 2), ("chiseled_stone_bricks", 1)]))
+        r += 1.45
+        i += 1
+    # 물에 빠진 잔해
+    for k in range(5):
+        r = rng.uniform(MOAT_IN + 1, MOAT_OUT - 1)
+        s = rng.uniform(-4, 4)
+        x = round(cx + ux * r + px_ * s); z = round(cz + uz * r + pz_ * s)
+        if b.w.get(x, G, z) == "water" and abs(s) > 1.5:
+            b.set(x, G - 2, z, b.mix([("mossy_stone_bricks", 2), ("cracked_stone_bricks", 1)]))
+            b.set(x, G - 1, z, stairs("mossy_stone_brick", ["north", "east", "south", "west"][k % 4]))
 
 
 # ─────────────────────────────────────────────────────────────── 기단

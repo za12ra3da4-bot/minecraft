@@ -151,14 +151,18 @@ class Terrain:
         _, d = self.disc_w(a, 1, 1)
         self.zone[(d < 32) & (self.zone == "")] = "athena"
 
-        # 헤르메스: 협곡 속 첨탑
+        # 헤르메스: 협곡 속 자연 바위 첨탑 (첨탑 윗면 = 바깥 둔덕 높이 → 다리가 평평)
         a = altar_pos("hermes")
         _, d = self.disc_w(a, 1, 1)
-        rim = (d >= 8.5) & (d < 16.5)
+        ang = np.arctan2(self.Z - a[1], self.X - a[0])
         n = value_noise(S, 6, self.seed + 21)
-        self.stamp(a, 21, 6, G + 3)
+        wob = (np.sin(ang * 5 + 1.3) * 0.7 + np.sin(ang * 9 + 0.4) * 0.45 + (value_noise(S, 5, self.seed + 22) - 0.5) * 1.6)
+        r_in = 8.3 + wob
+        r_out = 16.5 + wob * 0.8
+        self.stamp(a, 22, 9, HERMES_TOP)
+        rim = (d >= r_in) & (d < r_out)
         self.H = np.where(rim, G - 10 + n * 2, self.H)
-        self.H = np.where(d < 8.5, G + 9 + (d < 6) * 0, self.H)
+        self.H = np.where(d < r_in, HERMES_TOP, self.H)
         self.water = np.where(rim, G - 8, self.water)
         self.zone[(d < 32) & (self.zone == "")] = "hermes"
         self.chasm = rim
@@ -220,15 +224,15 @@ class Terrain:
                 if dist(b, ap) < 90:
                     v = unit(ap[0] - b[0], ap[1] - b[1])
                     st = (b[0] + v[0] * (BASE_R + 3), b[1] + v[1] * (BASE_R + 3))
-                    en = (ap[0] - v[0] * 16, ap[1] - v[1] * 16)
+                    en = altar_exit(a_id, b)
                     seed += 1
                     P.append(("dirt", wiggle_path(st, en, seed, 5), 5))
         # 제단 → 중앙 (자갈길, 대각 다리까지)
         for a_id in ALTARS:
             ap = altar_pos(a_id)
             v = unit(C[0] - ap[0], C[1] - ap[1])
-            st = (ap[0] + v[0] * 16, ap[1] + v[1] * 16)
-            en = (C[0] - v[0] * (PLAZA_R - 1), C[1] - v[1] * (PLAZA_R - 1))
+            st = altar_exit(a_id, C)
+            en = (C[0] - v[0] * (MOAT_OUT + 3), C[1] - v[1] * (MOAT_OUT + 3))
             seed += 1
             P.append(("gravel", wiggle_path(st, en, seed, 3), 5))
         # 제단 → 보스 투기장
@@ -238,7 +242,7 @@ class Terrain:
                 ap = altar_pos(a_id)
                 if dist(lp, ap) < 60:
                     v = unit(lp[0] - ap[0], lp[1] - ap[1])
-                    st = (ap[0] + v[0] * 16, ap[1] + v[1] * 16)
+                    st = altar_exit(a_id, lp)
                     en = (lp[0] - v[0] * (LAIR_R + 14), lp[1] - v[1] * (LAIR_R + 14))
                     seed += 1
                     P.append(("dirt", wiggle_path(st, en, seed, 2, 10), 4))
@@ -277,6 +281,21 @@ class Terrain:
                 rw = self.road[x0:x1 + 1, z0:z1 + 1]
                 np.maximum(rw, (1 - smoothstep(width / 2 - 1, width / 2 + 1, d)).astype(np.float32), out=rw)
         self.no_veg |= self.road > 0.3
+
+
+def altar_exit(aid, target):
+    """제단에서 target 쪽으로 나가는 길의 시작점. 헤르메스는 다리 끝 (동서남북)"""
+    ap = altar_pos(aid)
+    if aid == "hermes":
+        best = None
+        for (dx, dz) in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            e = (ap[0] + dx * HERMES_BRIDGE_END, ap[1] + dz * HERMES_BRIDGE_END)
+            dd = dist(e, target)
+            if best is None or dd < best[0]:
+                best = (dd, e)
+        return best[1]
+    v = unit(target[0] - ap[0], target[1] - ap[1])
+    return (ap[0] + v[0] * 16, ap[1] + v[1] * 16)
 
 
 def unit(x, z):

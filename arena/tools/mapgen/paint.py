@@ -36,7 +36,7 @@ TOPS = {
     "default": [("grass_block", 74), ("coarse_dirt", 7), ("podzol", 5), ("moss_block", 3), ("rooted_dirt", 3), ("gravel", 2)],
     "ares": [("coarse_dirt", 40), ("blackstone", 18), ("basalt[axis=y]", 12), ("gravel", 12), ("tuff", 8), ("packed_mud", 6), ("magma_block", 1)],
     "athena": [("grass_block", 88), ("moss_block", 4), ("coarse_dirt", 3), ("calcite", 5)],
-    "hermes": [("grass_block", 46), ("stone", 22), ("andesite", 12), ("gravel", 12), ("coarse_dirt", 8)],
+    "hermes": [("grass_block", 72), ("stone", 10), ("andesite", 8), ("gravel", 5), ("coarse_dirt", 5)],
     "demeter": [("grass_block", 58), ("moss_block", 24), ("rooted_dirt", 8), ("podzol", 10)],
     "plaza": [("grass_block", 90), ("coarse_dirt", 6), ("moss_block", 4)],
     "base": [("grass_block", 80), ("coarse_dirt", 12), ("gravel", 8)],
@@ -119,7 +119,7 @@ def paint(w, T, seed=3):
                 if k == "sands":
                     top = pick(rnd[x, z], [("smooth_sandstone", 50), ("sandstone", 30), ("sand", 20)])
                 if T.road[x, z] < 0.75 and rnd2[x, z] < 0.5:
-                    top = "grass_block" if k not in ("ares", "forge", "sands", "quarry") else top
+                    top = "grass_block" if k not in ("ares", "forge", "sands", "quarry", "hermes") else top
                 w.vox[x, h, z] = w.id(top)
                 w.vox[x, max(floor, h - 3):h, z] = w.id("dirt")
                 continue
@@ -131,7 +131,7 @@ def paint(w, T, seed=3):
                 w.vox[x, max(floor, h - 3):h, z] = w.id("dirt")
                 continue
             table = TOPS.get(k, TOPS["default"])
-            r = (n1[x, z] * 0.6 + rnd[x, z] * 0.4) if k not in ("ares", "forge", "sands", "quarry") else (n1[x, z] * 0.85 + rnd[x, z] * 0.15)
+            r = (n1[x, z] * 0.6 + rnd[x, z] * 0.4) if k not in ("ares", "forge", "sands", "quarry", "hermes") else (n1[x, z] * 0.85 + rnd[x, z] * 0.15)
             top = pick(r, table)
             if k in ("default", "mount") and sl >= 2 and rnd2[x, z] < 0.45:
                 top = pick(rnd[x, z], [("stone", 4), ("andesite", 2), ("coarse_dirt", 2), ("gravel", 1)])

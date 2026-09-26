@@ -69,3 +69,6 @@ def lair_pos(l):
 
 def dist(a, b):
     return math.hypot(a[0] - b[0], a[1] - b[1])
+
+HERMES_TOP = G + 5            # 헤르메스 첨탑/둔덕 윗면
+HERMES_BRIDGE_END = 19        # 다리 끝 (첨탑 중심에서)
