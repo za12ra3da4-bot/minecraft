@@ -512,6 +512,42 @@ def ore_lines(world, n_spots=48, seed=77):
     return out
 
 
+def base_ore_lines(world, seed=93):
+    """본진마다 광석 바위 (병과 발판 줄의 상인 반대쪽 끝) — 캐면 코인, Skript 가 40초 뒤 다시 채움"""
+    import math as _m
+    import random
+    R = random.Random(seed)
+    at = "$execute positioned $(x) $(y) $(z) run setblock"
+    mk = world.markers
+    out = []
+    ores = ["minecraft:iron_ore", "minecraft:iron_ore", "minecraft:copper_ore", "minecraft:gold_ore", "minecraft:gold_ore",
+            "minecraft:gold_ore", "minecraft:emerald_ore", "minecraft:diamond_ore"]
+    rock = ["minecraft:stone", "minecraft:andesite", "minecraft:cobblestone", "minecraft:tuff"]
+    for t in ("red", "blue", "green", "yellow"):
+        c1, c2 = mk.get(f"base_{t}_class_1"), mk.get(f"base_{t}_class_2")
+        sp = mk.get(f"base_{t}_spawn_0")
+        if not (c1 and c2 and sp):
+            continue
+        c1, c2 = c1["pos"], c2["pos"]
+        dx, dz = c2[0] - c1[0], c2[2] - c1[2]
+        L = _m.hypot(dx, dz) or 1
+        want = (c2[0] + dx / L * 6.5, sp["pos"][1], c2[2] + dz / L * 6.5)
+        spot = find_spot(world, want, 0, 4, [(p["pos"][0], p["pos"][2], 2.5) for n, p in mk.items() if n.startswith(f"base_{t}_")])
+        if not spot:
+            print(f"[ore] {t} 본진 광석 바위 자리를 못 찾음")
+            continue
+        bx, by, bz = int(spot[0]), int(spot[1]), int(spot[2])
+        for ox in range(-2, 3):
+            for oz in range(-2, 3):
+                h = 4 - int((abs(ox) + abs(oz)) * 0.75)
+                if abs(ox) == 2 and abs(oz) == 2:
+                    h = 1
+                for oy in range(h):
+                    blk = R.choice(ores) if R.random() < 0.5 else R.choice(rock)
+                    out.append(f"{at} ~{bx + ox} ~{by + oy} ~{bz + oz} {blk}")
+    return out
+
+
 def mine_lines(world, seed=91):
     """보스 투기장마다 한쪽 옆에 광산 (13x11, 광석 벽 3면 + 나무 버팀목 + 레일 + 등불)"""
     import math as _m
@@ -629,9 +665,9 @@ def decor_functions(dp_root, world):
         nparts += len(out)
         lines += out
     # ── 광맥 (캐면 코인, Skript 가 다시 채움)
-    ore = mine_lines(world)
+    ore = base_ore_lines(world)
     lines += ore
-    print(f"[decor] 광산 명령 {len(ore)}개")
+    print(f"[decor] 본진 광석 바위 블록 {len(ore)}개")
     # ── 상점 상인 NPC (본진 4곳 + 대기실) · 병과 발판 표식
     extra = npc_and_class_lines(world, bdkit, bdmodels)
     lines += extra
