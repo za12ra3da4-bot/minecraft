@@ -257,6 +257,8 @@ function bgStun(ticks: number):
 
 # ─────────────────────────────────────────────────────────── 소환 / 제거
 function bgBossSpawn(id: text):
+    if {-bg::boss::spawning} is true:
+        stop
     if {-bg::boss::id} is set:
         bgBossRemove()
     set {_lair} to {-bg::bd::%{_id}%::lair}
@@ -283,6 +285,12 @@ function bgBossSpawn(id: text):
     set {_z} to floor(z-coordinate of {_c})
     set {-bg::boss::fl} to "%{_x} - 26% %{_z} - 26% %{_x} + 26% %{_z} + 26%"
     bgCmd("execute in %bgDim()% run forceload add %{-bg::boss::fl}%")
+    # 청크의 엔티티는 조금 늦게 불러와진다 → 기다렸다가 예전에 남은 파츠 · 히트박스를 지운다 (같은 UUID 충돌 방지)
+    set {-bg::boss::spawning} to true
+    wait 20 ticks
+    delete {-bg::boss::spawning}
+    bgBossPurge()
+    wait 2 ticks
     # 히트박스: Skript 가 직접 소환 (청크를 불러와서 소환한다) → 속성·태그는 UUID 로
     delete {-bg::boss::ent}
     # 적대 몹(허스크 등)은 '평화로움' 난이도에서 바로 사라진다 → 철 골렘 (NoAI · 투명)
@@ -308,7 +316,7 @@ function bgBossSpawn(id: text):
     bgCmd("attribute %{_u}% minecraft:max_health base set 1000")
     bgCmd("attribute %{_u}% minecraft:scale base set %{-bg::bd::%{_id}%::hitscale}%")
     bgCmd("attribute %{_u}% minecraft:knockback_resistance base set 1")
-    bgCmd("data merge entity %{_u}% {NoAI:1b,Silent:1b,PersistenceRequired:1b,CanPickUpLoot:0b,Health:1000f}")
+    bgCmd("data merge entity %{_u}% {NoAI:1b,Silent:1b,PersistenceRequired:1b,CanPickUpLoot:0b,Health:1000f,DeathLootTable:""minecraft:empty""}")
     bgCmd("effect give %{_u}% invisibility infinite 0 true")
     bgCmd("effect give %{_u}% fire_resistance infinite 0 true")
     set {-bg::boss::id} to {_id}
@@ -324,13 +332,26 @@ function bgBossSpawn(id: text):
     if {-bg::boss::id} is {_id}:
         set {-bg::boss::state} to "idle"
 
+# 남은 보스 히트박스 · 파츠 모두 제거 (재시작 · 청크 언로드로 남은 것 포함, 불러온 청크만)
+#  히트박스는 피해 이벤트가 피해를 0 으로 막으므로 kill 이 안 먹는다 → 태그를 떼고 전리품 없이 죽인다
+function bgBossPurge():
+    bgCmd("execute as @e[tag=bgb_hit] run data merge entity @s {DeathLootTable:""minecraft:empty"",Invulnerable:0b}")
+    bgCmd("tag @e[tag=bgb_hit] add bgb_dead")
+    bgCmd("tag @e[tag=bgb_dead] remove bgb_hit")
+    bgCmd("kill @e[tag=bgb_dead]")
+    bgCmd("kill @e[type=item_display,tag=bgb]")
+
+on load:
+    delete {-bg::boss::spawning}
+    bgBossPurge()
+
 function bgBossRemove():
     if {-bg::boss::id} is not set:
         stop
     set {_id} to {-bg::boss::id}
     add 1 to {-bg::boss::gen}
     bgCmd("function bg:boss/%{_id}%/remove")
-    bgCmd("kill @e[tag=bgb_hit]")
+    bgBossPurge()
     bgCmd("function bg:tele/clear_all")
     if {-bg::boss::fl} is set:
         bgCmd("execute in %bgDim()% run forceload remove %{-bg::boss::fl}%")
@@ -458,7 +479,7 @@ function bgBossTick():
         bgBossSync()
 
 function bgBossSync():
-    bgCmd("execute as @e[tag=bgb_hit,limit=1] at @s run function bg:boss/%{-bg::boss::id}%/tp")
+    bgCmd("execute as %{-bg::boss::uuid}% at @s run function bg:boss/%{-bg::boss::id}%/tp")
 
 function bgBossFace(yaw: number):
     bgCmd("execute as %{-bg::boss::uuid}% at @s run tp @s ~ ~ ~ %bgN({_yaw})% 0")
