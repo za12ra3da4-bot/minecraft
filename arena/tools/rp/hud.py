@@ -53,7 +53,7 @@ class Font:
             parts = []
             for i in range(n):
                 sub = img.crop((i * cw, 0, min(w, (i + 1) * cw), h))
-                k = f"{key}#{i}"
+                k = f"{key}_p{i}"
                 self.add(k, sub, x + i * cw / 2, y, widget)
                 parts.append(k)
             self.glyphs[key] = dict(parts=parts, widget=widget)

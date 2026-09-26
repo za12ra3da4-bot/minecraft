@@ -6,9 +6,6 @@ import:
     java.io.File
     org.bukkit.Bukkit
 
-# 접속자별 리소스팩 상태 기록
-on resource pack request response:
-    set {-bg::rp::%uuid of player%} to "%resource pack state%"
 
 function bgOk2(b: boolean) :: text:
     if {_b} is true:
@@ -40,11 +37,16 @@ function bgDiag(p: player):
     else:
         send "&c✘ 데이터팩이 안 읽힘 → 월드/datapacks/bg_arena 확인 후 /minecraft:reload" to {_p}
     # 3) 스크립트 데이터
-    send "&7 · HUD 글리프 데이터: %bgOk2({-bg::hud::ready} is true)%  &7· 맵 데이터: %bgOk2({-bg::mk::ready} is true)%" to {_p}
-    send "&7 · 원점: &f%{bg::cfg::ox}% %{bg::cfg::oy}% %{bg::cfg::oz}% &7(월드 %{bg::cfg::world}%)  &7· 게임 중: &f%{-bg::on} ? false%" to {_p}
-    # 4) 리소스팩 (접속할 때 받은 응답)
-    set {_rp} to {-bg::rp::%uuid of {_p}%} ? "기록 없음 (다시 접속해 보세요)"
-    send "&7 · 내 리소스팩 상태: &f%{_rp}%" to {_p}
+    set {_h} to "&c문제"
+    if {-bg::hud::ready} is true:
+        set {_h} to "&a정상"
+    set {_m} to "&c문제"
+    if {-bg::mk::ready} is true:
+        set {_m} to "&a정상"
+    send "&7 · HUD 글리프 데이터: %{_h}%  &7· 맵 데이터: %{_m}%" to {_p}
+    send "&7 · 원점: &f%{bg::cfg::ox}% %{bg::cfg::oy}% %{bg::cfg::oz}% &7(월드 %{bg::cfg::world}%)  " to {_p}
+    # 4) 리소스팩 글꼴: 채팅에 시계 틀 그림이 보이면 정상, 네모(□)면 리팩이 옛것
+    bgCmd("tellraw %name of {_p}% [{text:"" · 리팩 글꼴: "",color:""gray""},{text:""%{-bg::hud::timer}%"",font:""bg:hud"",color:""white""},{text:""  (네모 □ 가 보이면 /리팩)"",color:""gray""}]")
     # 5) 보스
     if {-bg::boss::id} is set:
         set {_al} to "없음"
@@ -52,7 +54,9 @@ function bgDiag(p: player):
             set {_al} to "있음"
         send "&7 · 보스: &f%{-bg::boss::id}% &7상태 &f%{-bg::boss::state}% &7체력 &f%{-bg::boss::hp}%/%{-bg::boss::max}% &7히트박스 &f%{_al}%" to {_p}
     else:
-        set {_nx} to {-bg::boss::next} ? 0
+        set {_nx} to 0
+        if {-bg::boss::next} is set:
+            set {_nx} to {-bg::boss::next}
         send "&7 · 보스: 없음 &7(다음까지 %{_nx}%초, 게임 중일 때만 줄어듦)" to {_p}
     # 6) 장식 · 명령 오류
     set {_nd} to 0
@@ -60,7 +64,9 @@ function bgDiag(p: player):
         if scoreboard tags of loop-entity contain "bg_deco":
             add 1 to {_nd}
     send "&7 · 장식 디스플레이: &f%{_nd}%개 &7(불러온 청크 안)" to {_p}
-    set {_ce} to {-bg::cmderr} ? 0
+    set {_ce} to 0
+    if {-bg::cmderr} is set:
+        set {_ce} to {-bg::cmderr}
     if {_ce} > 0:
         send "&c✘ 실패한 명령 %{_ce}%개 → 서버 콘솔의 '[전장] 명령 오류' 줄을 보내주세요" to {_p}
     else:
@@ -78,7 +84,6 @@ function bgHudTest(p: player):
     bgCmd("bossbar set bg:hudtest players %name of {_p}%")
     bgCmd("tellraw %name of {_p}% [{text:""[전장] 글꼴 시험 → "",color:""gold""},{text:""%{-bg::hud::timer}%"",font:""bg:hud"",color:""white""},{text:""  ← 여기 금색 시계 틀이 보이면 리소스팩 글꼴 정상"",color:""gray""}]")
     send "&7 · 화면 위에 점수판 4개 + 보스 틀이 10초 동안 보여야 합니다. 안 보이거나 네모(□)가 보이면 캡처해서 보내주세요." to {_p}
-    set {_rp} to {-bg::rp::%uuid of {_p}%} ? "기록 없음"
-    send "&7 · 글자 수: %length of {_s}%  · 리팩 상태: %{_rp}%" to {_p}
+    send "&7 · 글자 수: %length of {_s}%" to {_p}
     wait 10 seconds
     bgCmd("bossbar remove bg:hudtest")

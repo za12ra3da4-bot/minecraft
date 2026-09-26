@@ -89,6 +89,16 @@ def main(args):
     skgen.write_hud(os.path.join(OUT_SK, "a01-gen-hud.sk"), font)
     skgen.write_map(os.path.join(OUT_SK, "a02-gen-map.sk"), world)
     skgen.write_boss(os.path.join(OUT_SK, "a03-gen-boss.sk"), bmeta)
+    # 리소스팩 파일 이름 검사: 마크는 [a-z0-9_.-/] 만 허용 (하나라도 틀리면 그 폰트/모델 파일 전체가 무시됨)
+    import re as _re, zipfile as _zf
+    _bad = [n for n in _zf.ZipFile(OUT_RP).namelist()
+            if n.startswith("assets/") and not _re.fullmatch(r"assets/[a-z0-9_.-]+/[a-z0-9_./-]+", n)]
+    for _fn in [n for n in _zf.ZipFile(OUT_RP).namelist() if n.endswith(".json") and "/font/" in n]:
+        for _p in json.loads(_zf.ZipFile(OUT_RP).read(_fn)).get("providers", []):
+            if "file" in _p and not _re.fullmatch(r"[a-z0-9_.-]+:[a-z0-9_./-]+", _p["file"]):
+                _bad.append(_fn + " → " + _p["file"])
+    if _bad:
+        raise SystemExit("[rp] 잘못된 파일 이름: " + ", ".join(_bad[:10]))
     # 리소스팩 주소 + sha1 → 접속할 때 서버가 최신 팩을 직접 보낸다 (sha1 이 없으면 클라이언트가 옛 팩을 계속 씀)
     import hashlib
     h = hashlib.sha1(open(OUT_RP, "rb").read()).hexdigest()
