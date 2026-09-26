@@ -290,6 +290,7 @@ function bgBossSpawn(id: text):
     if {_e} is not set:
         bgSay("&c보스 히트박스를 만들지 못했습니다 &7(종류=%{_hb}% → %{_type} ? ""?""%, 위치=%{_c} ? ""없음""%, 월드=%{bg::cfg::world}%, 맵데이터=%{-bg::mk::ready} ? ""없음""%)")
         bgCmd("execute in %bgDim()% run forceload remove %{-bg::boss::fl}%")
+        set {-bg::boss::next} to 60
         stop
     set {-bg::boss::ent} to {_e}
     add "bg" to scoreboard tags of {_e}
