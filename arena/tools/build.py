@@ -23,7 +23,7 @@ import hud as H
 import telegraphs
 import bossgen
 import decor
-import weapons
+import weapons2d as weapons
 import skgen
 import portraits
 
