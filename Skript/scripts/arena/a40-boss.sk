@@ -620,8 +620,8 @@ function bgBossDie():
         stop
     bgParticle(bgBossPos(), "explosion_emitter", 1, 1, 1, 0, 2)
     # 보상 상자는 항상 (팀이 없으면 누구나 열 수 있는 상자)
-    set {_rc} to bgMk("temple_core")
-    set {_rc} to location(x-coordinate of {_rc}, y-coordinate of {_rc}, (z-coordinate of {_rc}) + 4, world of {_rc})
+    # 보상 상자는 보스가 소환된 투기장 가운데에
+    set {_rc} to {-bg::boss::home}
     bgRewardSpawn({_win}, {_id}, {_rc})
     if {_win} is not "none":
         bgAddScore({_win}, 150)
