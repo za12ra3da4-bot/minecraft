@@ -256,17 +256,13 @@ def export(pack):
         f = os.path.join(ART, f"{wid}.png")
         img = Image.open(f).convert("RGBA") if os.path.exists(f) else paint(wid)     # 직접 그린 그림 우선
         ref = pack.texture(f"weapon/{wid}", img)
-        gr = os.path.join(os.path.dirname(ART), "skills", f"{wid}_ground.png")
-        if os.path.exists(gr):
-            # 바닥 효과 (네 그림 아래쪽을 위에서 본 원형으로 편 것) — 기존 tele/wfx_* 를 덮어씀
-            pack.texture(f"tele/{WFX_OF[wid]}", Image.open(gr).convert("RGBA"))
-        sk = os.path.join(os.path.dirname(ART), "skills", f"{wid}.png")
-        if os.path.exists(sk):
-            # 스킬 연출 그림: 세로로 선 판 (가로 1 : 세로 2, 빛남) — 스킬 쓸 때 잠깐 솟아오름
-            r2 = pack.texture(f"skillart/{wid}", Image.open(sk).convert("RGBA"))
-            pack.item_model(f"fx/{wid}", {"textures": {"0": r2, "particle": r2}, "elements": [{
-                "from": [0, -8, 8], "to": [16, 24, 8], "shade": False, "light_emission": 15,
-                "faces": {"north": {"uv": [16, 0, 0, 16], "texture": "#0"}, "south": {"uv": [0, 0, 16, 16], "texture": "#0"}}}]})
+        # 스킬 효과: 직접 그린 빛 효과 (skillfx) — 바닥 마법진 (tele/wfx_* 덮어씀) + 솟아오르는 세로 효과
+        import skillfx
+        pack.texture(f"tele/{WFX_OF[wid]}", skillfx.ground(wid))
+        r2 = pack.texture(f"skillart/{wid}", skillfx.burst(wid))
+        pack.item_model(f"fx/{wid}", {"textures": {"0": r2, "particle": r2}, "elements": [{
+            "from": [0, -8, 8], "to": [16, 24, 8], "shade": False, "light_emission": 15,
+            "faces": {"north": {"uv": [16, 0, 0, 16], "texture": "#0"}, "south": {"uv": [0, 0, 16, 16], "texture": "#0"}}}]})
         pack.item_model(f"weapon/{wid}", {"parent": "minecraft:item/handheld", "textures": {"layer0": ref}})
 
 
