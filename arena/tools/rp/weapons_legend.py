@@ -246,12 +246,20 @@ def paint(wid, out=128):
 ART = __import__("os").path.join(__import__("os").path.dirname(__import__("os").path.dirname(__import__("os").path.dirname(__import__("os").path.abspath(__file__)))), "art", "weapons")
 
 
+WFX_OF = {"thunder": "wfx_thunder", "dragon": "wfx_crescent", "wind": "wfx_wind", "phoenix": "wfx_barrier",
+          "blackiron": "wfx_blood", "tiger": "wfx_claw", "staff": "wfx_staff", "peachwood": "wfx_fire"}
+
+
 def export(pack):
     import os
     for wid in WEAPONS:
         f = os.path.join(ART, f"{wid}.png")
         img = Image.open(f).convert("RGBA") if os.path.exists(f) else paint(wid)     # 직접 그린 그림 우선
         ref = pack.texture(f"weapon/{wid}", img)
+        gr = os.path.join(os.path.dirname(ART), "skills", f"{wid}_ground.png")
+        if os.path.exists(gr):
+            # 바닥 효과 (네 그림 아래쪽을 위에서 본 원형으로 편 것) — 기존 tele/wfx_* 를 덮어씀
+            pack.texture(f"tele/{WFX_OF[wid]}", Image.open(gr).convert("RGBA"))
         sk = os.path.join(os.path.dirname(ART), "skills", f"{wid}.png")
         if os.path.exists(sk):
             # 스킬 연출 그림: 세로로 선 판 (가로 1 : 세로 2, 빛남) — 스킬 쓸 때 잠깐 솟아오름
