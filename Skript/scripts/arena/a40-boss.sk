@@ -85,7 +85,9 @@ function bgYOk(p: player) :: boolean:
 function bgInCircle(p: player, c: location, r: number) :: boolean:
     if bgYOk({_p}) is false:
         return false
-    return bgDist2(location of {_p}, {_c}) <= {_r}
+    if bgDist2(location of {_p}, {_c}) <= {_r}:
+        return true
+    return false
 
 function bgInDonut(p: player, c: location, rin: number, rout: number) :: boolean:
     if bgYOk({_p}) is false:
@@ -122,7 +124,9 @@ function bgInCone(p: player, c: location, yaw: number, deg: number, r: number) :
     if {_d} < 1.2:
         return true
     set {_cos} to ({_dx} * bgFwdX({_yaw}) + {_dz} * bgFwdZ({_yaw})) / {_d}
-    return {_cos} >= cos({_deg} / 2)
+    if {_cos} >= cos({_deg} / 2):
+        return true
+    return false
 
 # 피해 (하트 단위) + 밀쳐내기
 function bgHit(p: player, hearts: number, from: location, kb: number, up: number):

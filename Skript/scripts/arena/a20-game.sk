@@ -322,7 +322,6 @@ on death of player:
     {-bg::on} is true
     bgTeam(victim) is not "none"
     clear drops
-    set dropped exp to 0
     if attacker is a player:
         if bgTeam(attacker) is not bgTeam(victim):
             if bgTeam(attacker) is not "none":

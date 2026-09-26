@@ -15,7 +15,7 @@ function bgFx(p: player, fx: text):
         bgCmd("effect give %name of {_p}% %{_fx}% true")
 
 function bgLateCircle(g: number, c: location, r: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
-    wait {_t} ticks
+    wait bgTicks({_t})
     if bgOk({_g}) is false:
         stop
     set {_ps::*} to bgLairPlayers()
@@ -27,7 +27,7 @@ function bgLateCircle(g: number, c: location, r: number, t: number, hearts: numb
     bgSoundAt({_c}, "entity.generic.explode", 1.5, 1.2)
 
 function bgLateDonut(g: number, c: location, rin: number, rout: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
-    wait {_t} ticks
+    wait bgTicks({_t})
     if bgOk({_g}) is false:
         stop
     set {_ps::*} to bgLairPlayers()
@@ -43,7 +43,7 @@ function bgLateDonut(g: number, c: location, rin: number, rout: number, t: numbe
     bgSoundAt({_c}, "entity.generic.explode", 2, 0.8)
 
 function bgLateRect(g: number, c: location, yaw: number, wd: number, len: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
-    wait {_t} ticks
+    wait bgTicks({_t})
     if bgOk({_g}) is false:
         stop
     set {_ps::*} to bgLairPlayers()
@@ -57,7 +57,7 @@ function bgLateRect(g: number, c: location, yaw: number, wd: number, len: number
     bgSoundAt({_c}, "entity.generic.explode", 1.5, 1)
 
 function bgLateCone(g: number, c: location, yaw: number, deg: number, r: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
-    wait {_t} ticks
+    wait bgTicks({_t})
     if bgOk({_g}) is false:
         stop
     set {_ps::*} to bgLairPlayers()
@@ -106,7 +106,7 @@ function bgRage(a: number, b: number) :: number:
 
 # 스킬이 끝날 때까지 기다렸다 상태 정리
 function bgSkillDone(g: number, t: number):
-    wait {_t} ticks
+    wait bgTicks({_t})
     if bgOk({_g}) is false:
         stop
     if {-bg::boss::state} is "cast":
@@ -144,7 +144,7 @@ function bgSkTalosRush(g: number):
     bgTRect({_pos}, {_yaw}, 5, {_len}, {_t})
     bgAnim("rush_windup")
     bgSoundAt({_pos}, "block.anvil.land", 2, 0.5)
-    wait {_t} ticks
+    wait bgTicks({_t})
     if bgOk({_g}) is false:
         stop
     bgAnim("rush")
@@ -201,7 +201,7 @@ function bgSkTalosOverheat(g: number):
     bgAnim("overheat")
     bgSoundAt({_pos}, "block.fire.ambient", 3, 0.5)
     bgLateCircle({_g}, {_pos}, 8, {_t}, 4.5, 1.4, 0.5, "flame", "")
-    wait {_t} ticks
+    wait bgTicks({_t})
     if bgOk({_g}) is false:
         stop
     bgCastEnd()
@@ -308,7 +308,7 @@ function bgSkLadonVenom(g: number):
     bgTCone({_pos}, {_yaw}, 90, 16, {_t})
     bgSoundAt({_pos}, "entity.ender_dragon.growl", 2, 1.4)
     bgLateCone({_g}, {_pos}, {_yaw}, 90, 16, {_t}, 2, 0.5, 0.2, "witch", "poison 5 1")
-    wait {_t} ticks
+    wait bgTicks({_t})
     if bgOk({_g}) is false:
         stop
     bgCastEnd()
@@ -339,7 +339,7 @@ function bgSkLadonApple(g: number):
             bgStun(50)
             set {_ps::*} to bgLairPlayers()
             loop {_ps::*}:
-                send action bar "&a저지 성공! &f구두룡이 비틀거립니다 (받는 피해 1.5배)" to loop-value
+                send action bar "&a저지 성공! &f구두룡이 비틀거립니다 (받는 피해 1.5배)" to loop-value-2
             stop
     set {-bg::boss::hp} to min({-bg::boss::max}, {-bg::boss::hp} + {-bg::boss::max} * 0.12)
     bgParticle(bgBossPos(), "wax_on", 2, 3, 2, 0.1, 60)
@@ -384,7 +384,7 @@ function bgSkCyclopsBoulder(g: number):
         bgTCircle({_l}, 6, {_t})
         bgLateCircle({_g}, {_l}, 3, {_t}, 3.5, 0.9, 0.5, "explosion", "")
         bgSoundAt({_l}, "block.stone.break", 2, 0.5)
-        wait {_gap} ticks
+        wait bgTicks({_gap})
     bgSkillDone({_g}, {_t})
 
 # 회전 강타: 곤봉을 휘둘러 주변 반지름 6.5 — 격노 시 한 번 더 (짧은 경고)
@@ -399,7 +399,7 @@ function bgSkCyclopsWhirl(g: number):
     bgTCircle({_pos}, 13, {_t})
     bgLateCircle({_g}, {_pos}, 6.5, {_t}, 4, 1.6, 0.5, "sweep_attack", "")
     if {-bg::boss::rage} is true:
-        wait {_t} ticks
+        wait bgTicks({_t})
         if bgOk({_g}) is false:
             stop
         bgAnim("whirl")

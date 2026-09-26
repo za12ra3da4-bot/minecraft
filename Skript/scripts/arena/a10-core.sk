@@ -120,9 +120,16 @@ function bgSetupTeams():
 function bgSay(msg: text):
     broadcast "&6[전장] &f%{_msg}%"
 
+# 숫자(틱) → 시간 (변수 뒤에 "ticks" 를 바로 붙일 수 없어서)
+function bgTicks(n: number) :: timespan:
+    return "%max(0, round({_n}))% ticks" parsed as timespan
+
 function bgTitle(t: text, s: text, fi: number, st: number, fo: number):
+    set {_a} to bgTicks({_st})
+    set {_b} to bgTicks({_fi})
+    set {_c} to bgTicks({_fo})
     loop all players:
-        send title {_t} with subtitle {_s} to loop-player for {_st} ticks with fade in {_fi} ticks and fade out {_fo} ticks
+        send title {_t} with subtitle {_s} to loop-player for {_a} with fade in {_b} and fade out {_c}
 
 function bgSound(s: text, vol: number, pitch: number):
     bgCmd("execute as @a at @s run playsound %{_s}% master @s ~ ~ ~ %bgN({_vol})% %bgN({_pitch})%")
