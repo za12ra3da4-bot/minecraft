@@ -102,7 +102,12 @@ on death of player:
 
 # ─────────────────────────────────────────────────────────── 장비 · 소모품 (상점 2~3줄)
 on load:
-    set {-bg::gear::list::*} to "iron", "diamond", "sword", "food", "arrows", "gapple" and "heal"
+    set {-bg::gear::list::*} to "iron", "diamond", "sword", "food", "arrows", "gapple", "heal" and "ward"
+    set {-bg::gear::ward::name} to "결계 부적"
+    set {-bg::gear::ward::desc} to "우클릭 → 60초 동안 적 본진 결계 피해 무시 (코어 공격용)"
+    set {-bg::gear::ward::price} to 35
+    set {-bg::gear::ward::icon} to echo shard
+    set {-bg::gear::ward::slot} to 44
     set {-bg::gear::food::name} to "구운 스테이크 16개"
     set {-bg::gear::food::desc} to "소모품 · 배고픔 회복"
     set {-bg::gear::food::price} to 5
@@ -166,6 +171,8 @@ function bgGiveGear(p: player, g: text):
         bgCmd("give %{_n}% golden_apple 1")
     else if {_g} is "food":
         bgCmd("give %{_n}% cooked_beef 16")
+    else if {_g} is "ward":
+        bgCmd("give %{_n}% echo_shard[custom_name={text:""결계 부적"",color:""aqua"",bold:true,italic:false},lore=[{text:""우클릭: 60초 동안 적 본진 결계 피해 무시"",color:""gray"",italic:false}],enchantment_glint_override=true] 1")
     else:
         bgCmd("give %{_n}% splash_potion[potion_contents={potion:""minecraft:strong_healing""}] 1")
 
@@ -322,6 +329,18 @@ function bgGiveWeapon(p: player, w: text):
     set {_nm} to {-bg::w::%{_w}%::name}
     bgCmd("give %name of {_p}% %{-bg::w::%{_w}%::base}%[item_model=""bg:weapon/%{_w}%"",custom_name={text:""%{_nm}%"",color:""%{-bg::w::%{_w}%::col}%"",bold:true,italic:false},lore=[{text:""%{-bg::w::%{_w}%::desc}%"",color:""gray"",italic:false}],custom_data={bgw:""%{_w}%""},unbreakable={},rarity=""epic""]")
 
+# 목록 루프 값(종류 모름)에도 확실히 먹도록 플레이어 인자로 받는 도우미
+function bgDmg(p: player, h: number):
+    # 전설 무기 스킬 피해 전체 1.6배
+    damage {_p} by {_h} * 1.6
+
+function bgIgnite(p: player, s: number):
+    set {_t} to "%{_s}% seconds" parsed as timespan
+    ignite {_p} for {_t}
+
+function bgVel(p: player, v: vector):
+    set velocity of {_p} to {_v}
+
 # ─────────────────────────────────────────────────────────── 바닥 효과
 function bgWfx(l: location, m: text, d: number, t: number, yaw: number):
     set {_id} to bgTid()
@@ -392,8 +411,8 @@ function bgSkThunder(p: player):
     bgWRune({_l}, "wfx_thunder", 5, 20)
     set {_es::*} to bgEnemies({_p}, {_l}, 3.5)
     loop {_es::*}:
-        damage loop-value by 3
-        ignite loop-value for 1 second
+        bgDmg(loop-value, 4)
+        bgIgnite(loop-value, 2)
         bgParticle(location of loop-value, "electric_spark", 0.4, 1, 0.4, 0.2, 20)
 
 # 대회전 베기: 앞쪽 120° 반경 5.5
@@ -417,8 +436,8 @@ function bgSkDragon(p: player):
         set {_dz} to (z-coordinate of loop-value) - (z-coordinate of {_l})
         set {_d} to max(0.4, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
         if ({_dx} * {_fx} + {_dz} * {_fz}) / {_d} >= 0.5:
-            damage loop-value by 3
-            set velocity of loop-value to vector({_dx} / {_d} * 1.1, 0.4, {_dz} / {_d} * 1.1)
+            bgDmg(loop-value, 3)
+            bgVel(loop-value, vector({_dx} / {_d} * 1.1, 0.4, {_dz} / {_d} * 1.1))
             bgParticle(location of loop-value, "crit", 0.3, 0.8, 0.3, 0.2, 12)
 
 function bgSkWind(p: player):
@@ -452,7 +471,7 @@ function bgSkPhoenix(p: player):
         set {_dx} to (x-coordinate of loop-value) - (x-coordinate of {_l})
         set {_dz} to (z-coordinate of loop-value) - (z-coordinate of {_l})
         set {_d} to max(0.5, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
-        set velocity of loop-value to vector({_dx} / {_d} * 1.3, 0.45, {_dz} / {_d} * 1.3)
+        bgVel(loop-value, vector({_dx} / {_d} * 1.3, 0.45, {_dz} / {_d} * 1.3))
 
 
 # 혈풍참: 바라보는 방향으로 8칸 돌진, 지나간 길 폭 2 안의 적 3하트 + 시듦
@@ -476,8 +495,8 @@ function bgSkBlood(p: player):
         if {_along} >= -0.5:
             if {_along} <= 9:
                 if {_perp} <= 2:
-                    damage loop-value by 3
-                    bgCmd("effect give %name of loop-value% wither 2 1 true")
+                    bgDmg(loop-value, 3)
+                    bgCmd("effect give %bgPName(loop-value)% wither 2 1 true")
                     bgParticle(location of loop-value, "damage_indicator", 0.3, 0.8, 0.3, 0.1, 8)
 
 # 호조연격: 앞쪽 100° 반경 3.5 — 3연속 (4틱 간격)
@@ -497,8 +516,8 @@ function bgSkClaw(p: player):
             set {_dz} to (z-coordinate of loop-value-2) - (z-coordinate of {_l})
             set {_d} to max(0.4, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
             if ({_dx} * {_fx} + {_dz} * {_fz}) / {_d} >= 0.64:
-                damage loop-value-2 by 1.2
-                bgCmd("effect give %name of loop-value-2% slowness 1 1 true")
+                bgDmg(loop-value-2, 1.2)
+                bgCmd("effect give %bgPName(loop-value-2)% slowness 1 1 true")
         wait 4 ticks
 
 # 여의천강: 봉으로 땅을 내리쳐 반경 4.5 적을 공중으로
@@ -510,8 +529,8 @@ function bgSkStaff(p: player):
     bgParticle({_l}, "explosion", 2, 0.2, 2, 0, 4)
     set {_es::*} to bgEnemies({_p}, {_l}, 4.5)
     loop {_es::*}:
-        damage loop-value by 2
-        set velocity of loop-value to vector(0, 1.1, 0)
+        bgDmg(loop-value, 2)
+        bgVel(loop-value, vector(0, 1.1, 0))
 
 # 화염부: 부적 불꽃 고리 — 반경 5 적 1.5하트 + 4초 화상
 function bgSkFire(p: player):
@@ -522,8 +541,8 @@ function bgSkFire(p: player):
     bgParticle({_l}, "flame", 3.5, 0.4, 3.5, 0.02, 80)
     set {_es::*} to bgEnemies({_p}, {_l}, 5)
     loop {_es::*}:
-        damage loop-value by 1.5
-        ignite loop-value for 4 seconds
+        bgDmg(loop-value, 1.5)
+        bgIgnite(loop-value, 4)
 
 # 죽으면 전설 무기는 그 자리에 떨어진다 (다른 사람이 주워 쓸 수 있음) — 산 갑옷·검은 부활 때 돌려받음
 function bgIsLegend(i: item) :: text:

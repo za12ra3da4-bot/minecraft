@@ -1,0 +1,91 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 본진 코어 (본진 앞 신호기) · 결계 부적
+#   적 코어를 30번 때리면 파괴: 그 팀 -100점 + 60초 약화 · 구속 · 발광. 90초 뒤 코어 복구
+#   결계 부적(상점): 우클릭하면 60초 동안 적 본진의 수호 결계 피해를 받지 않음
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgCoreReset():
+    loop {-bg::teams::*}:
+        set {-bg::core::%loop-value%::hits} to 0
+        set {-bg::core::%loop-value%::down} to false
+        if {-bg::mk::base_%loop-value%_beacon::x} is set:
+            set block at bgMk("base_%loop-value%_beacon") to beacon
+
+on left click on beacon:
+    bgIsFighter(player) is true
+    set {_me} to bgTeam(player)
+    loop {-bg::teams::*}:
+        set {_t} to loop-value
+        if {-bg::mk::base_%{_t}%_beacon::x} is set:
+            set {_m} to bgMk("base_%{_t}%_beacon")
+            if bgDist2(location of event-block, {_m}) < 1.2:
+                if abs((y-coordinate of event-block) - (y-coordinate of {_m})) < 1.5:
+                    bgCoreHit(player, {_t})
+                    stop
+
+function bgCoreHit(p: player, t: text):
+    if bgTeam({_p}) is {_t}:
+        send action bar "&7우리 팀 코어입니다 — 지켜야 합니다!" to {_p}
+        stop
+    if {-bg::core::%{_t}%::down} is true:
+        stop
+    # 너무 빠른 연타 방지 (0.3초)
+    if {-bg::corecd::%uuid of {_p}%} is set:
+        if difference between {-bg::corecd::%uuid of {_p}%} and now < 0.3 seconds:
+            stop
+    set {-bg::corecd::%uuid of {_p}%} to now
+    add 1 to {-bg::core::%{_t}%::hits}
+    set {_h} to {-bg::core::%{_t}%::hits}
+    set {_m} to bgMk("base_%{_t}%_beacon")
+    bgParticle({_m}, "crit", 0.6, 0.8, 0.6, 0.3, 12)
+    bgSoundAt({_m}, "block.anvil.land", 1, 1.6)
+    send action bar "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 코어 &f%{_h}%&7/30" to {_p}
+    if mod({_h}, 10) is 0:
+        if {_h} < 30:
+            loop all players:
+                if bgTeam(loop-player) is {_t}:
+                    send title "" with subtitle "&c&l우리 코어가 공격받고 있습니다! &7(%{_h}%/30)" to loop-player for 40 ticks
+                    play sound "block.bell.use" to loop-player
+    if {_h} >= 30:
+        bgCoreBreak({_t}, bgTeam({_p}))
+
+function bgCoreBreak(t: text, by: text):
+    set {-bg::core::%{_t}%::down} to true
+    set {_m} to bgMk("base_%{_t}%_beacon")
+    set block at {_m} to air
+    bgParticle({_m}, "explosion_emitter", 0.5, 0.5, 0.5, 0, 2)
+    bgParticle({_m}, "large_smoke", 1.5, 1.5, 1.5, 0.05, 60)
+    bgSoundAt({_m}, "entity.generic.explode", 4, 0.7)
+    bgSoundAt({_m}, "block.beacon.deactivate", 4, 0.6)
+    set {-bg::score::%{_t}%} to max(0, ({-bg::score::%{_t}%} ? 0) - 100)
+    bgCmd("effect give @a[team=bg_%{_t}%] weakness 60 0 true")
+    bgCmd("effect give @a[team=bg_%{_t}%] slowness 60 0 true")
+    bgCmd("effect give @a[team=bg_%{_t}%] glowing 60 0 true")
+    bgTitle("%{-bg::tcol::%{_t}%}%&l%{-bg::tname::%{_t}%}% 코어 파괴!", "%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 부쉈습니다 · &c-100점 · 60초 약화", 10, 60, 20)
+    bgSay("%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어를 파괴했습니다! &c(-100점, 60초 약화 · 구속 · 발광) &7— 90초 뒤 복구")
+    wait 90 seconds
+    if {-bg::on} is true:
+        set block at {_m} to beacon
+        set {-bg::core::%{_t}%::hits} to 0
+        set {-bg::core::%{_t}%::down} to false
+        bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어가 복구되었습니다.")
+
+# ─────────────────────────────────────────────────────────── 결계 부적
+on right click:
+    player's tool is echo shard
+    set {_nm} to uncolored name of player's tool
+    {_nm} is set
+    {_nm} contains "결계 부적"
+    cancel event
+    remove 1 of player's tool from player's tool
+    set {-bg::ward::%uuid of player%} to now
+    send title "&b&l결계 부적" with subtitle "&f60초 동안 적 본진의 수호 결계를 무시합니다" to player for 40 ticks
+    play sound "block.beacon.power_select" to player
+    bgParticle(location of player, "enchant", 0.6, 1, 0.6, 0.5, 60)
+
+function bgWardOn(p: player) :: boolean:
+    if {-bg::ward::%uuid of {_p}%} is not set:
+        return false
+    if difference between {-bg::ward::%uuid of {_p}%} and now < 60 seconds:
+        return true
+    return false

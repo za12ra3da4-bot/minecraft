@@ -57,6 +57,7 @@ function bgStart():
         set {-bg::capv::%loop-value%} to 0
         set {-bg::contest::%loop-value%} to false
     set {-bg::boss::next} to {bg::cfg::boss_first}
+    bgCoreReset()
     # 코인은 게임이 끝날 때 초기화된다 → 시작할 땐 최소 20 (관리자가 미리 준 코인은 유지)
     delete {bg::owned::*}
     loop all players:
@@ -84,6 +85,7 @@ function bgStop(reason: text):
         stop
     set {-bg::on} to false
     bgBossRemove()
+    bgCoreReset()
     bgRewardClear()
     bgCmd("function bg:tele/clear_all")
     set {_best} to -1
@@ -344,9 +346,11 @@ function bgBaseGuard():
                     if bgDist2(location of loop-player, {_b}) < 16:
                         if loop-value-2 is {_me}:
                             heal loop-player by 0.5
+                        else if bgWardOn(loop-player) is true:
+                            send action bar "&b결계 부적이 %{-bg::tname::%loop-value-2%}% 팀의 수호 결계를 막는 중" to loop-player
                         else:
                             damage loop-player by 2
-                            send action bar "&c%{-bg::tname::%loop-value-2%}% 팀 본진의 수호 결계! 물러나세요" to loop-player
+                            send action bar "&c%{-bg::tname::%loop-value-2%}% 팀 본진의 수호 결계! 물러나세요 &7(상점: 결계 부적)" to loop-player
 
 on death of player:
     {-bg::on} is true

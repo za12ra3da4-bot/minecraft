@@ -103,6 +103,10 @@ function bgDist2(a: location, b: location) :: number:
     set {_dz} to (z-coordinate of {_a}) - (z-coordinate of {_b})
     return sqrt({_dx} * {_dx} + {_dz} * {_dz})
 
+# 플레이어 이름 (목록 루프 값처럼 종류를 모르는 값도 안전하게)
+function bgPName(p: player) :: text:
+    return name of {_p}
+
 # ── 팀
 function bgTeam(p: player) :: text:
     if {bg::team::%uuid of {_p}%} is set:
