@@ -78,6 +78,22 @@ try {
     Copy-Item $srcDp $dp -Recurse -Force
 } catch { Fail "데이터팩 교체" $_ }
 
+# server.properties 에 최신 리소스팩 주소 + sha1 (sha1 이 있어야 클라이언트가 새 팩을 받는다) — 서버 재시작 후 적용
+try {
+    $gen = Get-Content (Join-Path $srcSk "a04-gen-pack.sk") -Raw -Encoding UTF8
+    $pu = [regex]::Match($gen, 'url\} to "([^"]+)"').Groups[1].Value
+    $ph = [regex]::Match($gen, 'sha1\} to "([0-9a-f]{40})"').Groups[1].Value
+    if ($pu -and $ph -and (Test-Path $props)) {
+        $lines = Get-Content $props -Encoding UTF8
+        $esc = $pu.Replace(':', '\:').Replace('=', '\=')
+        $lines = $lines | Where-Object { $_ -notmatch '^resource-pack=' -and $_ -notmatch '^resource-pack-sha1=' }
+        $lines += "resource-pack=$esc"
+        $lines += "resource-pack-sha1=$ph"
+        [IO.File]::WriteAllLines($props, $lines)
+        Say "   server.properties 리소스팩 갱신 (sha1 $($ph.Substring(0,8))...) — 서버를 재시작하면 적용"
+    }
+} catch { Say ("   (server.properties 갱신 실패: " + $_.Exception.Message + ")") }
+
 # 업데이트 도구 자신도 최신으로
 try {
     Copy-Item (Join-Path $root.FullName "arena\update\update.bat") (Join-Path $server "update.bat") -Force
@@ -85,4 +101,4 @@ try {
 } catch {}
 try { Remove-Item $tmp -Recurse -Force } catch {}
 Say ""
-Say "완료! 게임에서  /sk reload all  →  /minecraft:reload  (또는 서버 재시작)"
+Say "완료! 서버를 재시작하세요 (리소스팩 설정 적용). 재시작이 어려우면 게임에서  /sk reload all  →  /minecraft:reload  →  /리팩 @a"
