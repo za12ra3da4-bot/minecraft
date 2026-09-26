@@ -55,6 +55,12 @@ function bgN(n: number) :: text:
 function bgWorld() :: world:
     return world({bg::cfg::world})
 
+# 명령용 차원 이름 (기본 월드 = overworld, 그 외 = 월드 폴더 이름)
+function bgDim() :: text:
+    if {bg::cfg::world} is "world":
+        return "minecraft:overworld"
+    return "minecraft:%{bg::cfg::world}%"
+
 # ── 맵 로컬 → 월드 좌표
 function bgAt(x: number, y: number, z: number) :: location:
     return location({_x} + {bg::cfg::ox}, {_y} + {bg::cfg::oy}, {_z} + {bg::cfg::oz}, bgWorld())

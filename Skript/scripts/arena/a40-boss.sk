@@ -277,17 +277,33 @@ function bgBossSpawn(id: text):
     delete {-bg::boss::dmg::*}
     delete {-bg::boss::target}
     set {_hb} to {-bg::bd::%{_id}%::hitbox}
-    set {_xyz} to "%bgN(x-coordinate of {_c})% %bgN(y-coordinate of {_c})% %bgN(z-coordinate of {_c})%"
-    bgCmd("summon %{_hb}% %{_xyz}% {Tags:[""bg"",""bgb_hit"",""bgb_hit_%{_id}%""],NoAI:1b,Silent:1b,PersistenceRequired:1b,CanPickUpLoot:0b,attributes:[{id:""minecraft:scale"",base:%{-bg::bd::%{_id}%::hitscale}%},{id:""minecraft:max_health"",base:1000},{id:""minecraft:knockback_resistance"",base:1}],Health:1000f,active_effects:[{id:""minecraft:invisibility"",duration:-1,amplifier:0,show_particles:0b}]}")
-    loop all entities in radius 3 around {_c}:
-        if scoreboard tags of loop-entity contain "bgb_hit":
-            set {-bg::boss::ent} to loop-entity
-    if {-bg::boss::ent} is not set:
-        bgSay("&c보스 히트박스를 만들지 못했습니다 (청크가 로드되어 있나요?)")
-        delete {-bg::boss::id}
+    # 투기장 청크를 보스가 있는 동안 강제 로드 (맵 모서리라 근처에 사람이 없으면 언로드됨)
+    set {_x} to floor(x-coordinate of {_c})
+    set {_z} to floor(z-coordinate of {_c})
+    set {-bg::boss::fl} to "%{_x} - 26% %{_z} - 26% %{_x} + 26% %{_z} + 26%"
+    bgCmd("execute in %bgDim()% run forceload add %{-bg::boss::fl}%")
+    # 히트박스: Skript 가 직접 소환 (청크를 불러와서 소환한다) → 속성·태그는 UUID 로
+    delete {-bg::boss::ent}
+    set {_type} to "%{_hb}%" parsed as entity type
+    spawn 1 of {_type} at {_c}
+    set {_e} to last spawned entity
+    if {_e} is not set:
+        bgSay("&c보스 히트박스를 만들지 못했습니다 (월드 이름 설정 확인: /전장 월드 <이름>)")
+        bgCmd("execute in %bgDim()% run forceload remove %{-bg::boss::fl}%")
         stop
+    set {-bg::boss::ent} to {_e}
+    add "bg" to scoreboard tags of {_e}
+    add "bgb_hit" to scoreboard tags of {_e}
+    add "bgb_hit_%{_id}%" to scoreboard tags of {_e}
+    set {_u} to uuid of {_e}
+    bgCmd("attribute %{_u}% minecraft:max_health base set 1000")
+    bgCmd("attribute %{_u}% minecraft:scale base set %{-bg::bd::%{_id}%::hitscale}%")
+    bgCmd("attribute %{_u}% minecraft:knockback_resistance base set 1")
+    bgCmd("data merge entity %{_u}% {NoAI:1b,Silent:1b,PersistenceRequired:1b,CanPickUpLoot:0b,Health:1000f}")
+    bgCmd("effect give %{_u}% invisibility infinite 0 true")
+    bgCmd("effect give %{_u}% fire_resistance infinite 0 true")
     set {-bg::boss::id} to {_id}
-    bgCmd("execute as @e[tag=bgb_hit,limit=1] at @s run function bg:boss/%{_id}%/spawn")
+    bgCmd("execute as %{_u}% at @s run function bg:boss/%{_id}%/spawn")
     bgAnim("idle")
     bgTitle("&c&l⚠ %{-bg::bd::%{_id}%::name}%", "&f%{-bg::lairname::%{_lair}%}%에 나타났습니다!", 10, 60, 15)
     bgSay("&c&l보스 출현! &f%{-bg::bd::%{_id}%::name}% — &e%{-bg::lairname::%{_lair}%}%&f · 처치 팀 +150점 · %{-bg::blessname::%{_id}%}%")
@@ -306,6 +322,9 @@ function bgBossRemove():
     bgCmd("function bg:boss/%{_id}%/remove")
     bgCmd("kill @e[tag=bgb_hit]")
     bgCmd("function bg:tele/clear_all")
+    if {-bg::boss::fl} is set:
+        bgCmd("execute in %bgDim()% run forceload remove %{-bg::boss::fl}%")
+        delete {-bg::boss::fl}
     delete {-bg::boss::id}
     delete {-bg::boss::ent}
     delete {-bg::boss::skill}
@@ -563,7 +582,7 @@ function bgBossDie():
     bgParticle(bgBossPos(), "explosion_emitter", 1, 1, 1, 0, 2)
     if {_win} is not "none":
         bgAddScore({_win}, 150)
-        bgCoinTeam({_win}, 25, "보스 처치")
+        bgCoinTeam({_win}, 40, "보스 처치")
         set {-bg::bless::%{_win}%::until} to {-bg::sec} + 120
         set {-bg::bless::%{_win}%::boss} to {_id}
         bgTitle("&6&l%{-bg::bd::%{_id}%::name}% 처치!", "%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀 &f+150점 · %{-bg::blessname::%{_id}%}% 2분", 10, 70, 20)

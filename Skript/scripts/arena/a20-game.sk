@@ -53,6 +53,11 @@ function bgStart():
         set {-bg::capv::%loop-value%} to 0
         set {-bg::contest::%loop-value%} to false
     set {-bg::boss::next} to {bg::cfg::boss_first}
+    delete {bg::coin::*}
+    delete {bg::owned::*}
+    loop all players:
+        if bgTeam(loop-player) is not "none":
+            set {bg::coin::%uuid of loop-player%} to 20
     bgHudCreate()
     loop all players:
         if bgTeam(loop-player) is not "none":
@@ -66,6 +71,8 @@ function bgStart():
     bgSound("entity.ender_dragon.growl", 0.6, 1.2)
     set {-bg::on} to true
     bgSay("목표 &e%{bg::cfg::goal}%점&f · 제한 시간 &e%{bg::cfg::minutes}%분")
+    bgSay("&6코인 버는 법&f: 10초마다 +1 · 처치 +10 · 지점 점령 +15(팀 전원) · 점령한 지점 하나당 10초마다 +1 · 보스 처치 +40(팀 전원)")
+    bgSay("&6/상점&f (자기 본진에서) — 갑옷 · 소모품 · 전설 무기. &6/코인&f 으로 잔액 확인")
 
 function bgStop(reason: text):
     if {-bg::on} is not true:
@@ -178,7 +185,7 @@ function bgCapturePoint(p: text):
             bgSoundAt({_c}, "block.beacon.activate", 3, 1)
             bgSound("block.bell.use", 0.5, 1.4)
             bgPointVisual({_p}, {_who})
-            bgCoinTeam({_who}, 8, "점령")
+            bgCoinTeam({_who}, 15, "점령")
     else:
         set {_v} to min(100, {_v} + {_rate})
     set {-bg::capt::%{_p}%} to {_capt}
@@ -261,31 +268,27 @@ function bgKit(p: player):
     bgCmd("clear %{_n}%")
     bgCmd("effect clear %{_n}%")
     bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
+    # 시작 장비는 약하게 — 좋은 장비는 상점에서 코인으로
+    bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
     if {_c} is 0:
-        bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
-        bgCmd("give %{_n}% iron_sword[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.chest with chainmail_chestplate[unbreakable={}]")
+        bgCmd("give %{_n}% stone_sword[unbreakable={}]")
         bgCmd("item replace entity %{_n}% weapon.offhand with shield[unbreakable={}]")
         bgCmd("give %{_n}% bow[unbreakable={}]")
-        bgCmd("give %{_n}% arrow 16")
+        bgCmd("give %{_n}% arrow 8")
     else if {_c} is 1:
-        bgCmd("item replace entity %{_n}% armor.chest with chainmail_chestplate[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.legs with chainmail_leggings[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
-        bgCmd("give %{_n}% stone_sword[unbreakable={}]")
-        bgCmd("give %{_n}% bow[unbreakable={},enchantments={power:2,punch:1}]")
-        bgCmd("give %{_n}% crossbow[unbreakable={},enchantments={quick_charge:1}]")
-        bgCmd("give %{_n}% arrow 64")
+        bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
+        bgCmd("give %{_n}% wooden_sword[unbreakable={}]")
+        bgCmd("give %{_n}% bow[unbreakable={}]")
+        bgCmd("give %{_n}% arrow 24")
     else:
-        bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
-        bgCmd("give %{_n}% iron_axe[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
+        bgCmd("give %{_n}% stone_axe[unbreakable={}]")
         bgCmd("item replace entity %{_n}% weapon.offhand with shield[unbreakable={}]")
         bgCmd("effect give %{_n}% slowness infinite 0 true")
-    bgCmd("give %{_n}% cooked_beef 16")
-    bgCmd("give %{_n}% golden_apple 1")
+    bgCmd("give %{_n}% bread 8")
+    bgShopRestore({_p})
 
 # 본진의 병과 발판 (base_<팀>_class_0..2) 위에 서면 병과 변경
 function bgClassPads():

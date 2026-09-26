@@ -12,29 +12,29 @@
 on load:
     set {-bg::w::list::*} to "thunder", "dragon", "wind" and "phoenix"
     set {-bg::w::thunder::name} to "뇌정검"
-    set {-bg::w::thunder::base} to "netherite_sword"
-    set {-bg::w::thunder::price} to 60
+    set {-bg::w::thunder::base} to "iron_sword"
+    set {-bg::w::thunder::price} to 150
     set {-bg::w::thunder::cd} to 15
     set {-bg::w::thunder::col} to "light_purple"
     set {-bg::w::thunder::icon} to netherite sword
     set {-bg::w::thunder::desc} to "우클릭 뇌정일섬: 낙뢰 (반경 3.5, 3하트) · 15초"
     set {-bg::w::dragon::name} to "청룡언월도"
-    set {-bg::w::dragon::base} to "netherite_axe"
-    set {-bg::w::dragon::price} to 55
+    set {-bg::w::dragon::base} to "iron_axe"
+    set {-bg::w::dragon::price} to 130
     set {-bg::w::dragon::cd} to 12
     set {-bg::w::dragon::col} to "dark_aqua"
     set {-bg::w::dragon::icon} to netherite axe
     set {-bg::w::dragon::desc} to "우클릭 반월참: 앞 120° 베기 (3하트, 밀쳐냄) · 12초"
     set {-bg::w::wind::name} to "풍혼선"
-    set {-bg::w::wind::base} to "iron_sword"
-    set {-bg::w::wind::price} to 35
+    set {-bg::w::wind::base} to "stone_sword"
+    set {-bg::w::wind::price} to 90
     set {-bg::w::wind::cd} to 8
     set {-bg::w::wind::col} to "aqua"
     set {-bg::w::wind::icon} to iron sword
     set {-bg::w::wind::desc} to "우클릭 질풍보: 질주 + 신속 II · 8초"
     set {-bg::w::phoenix::name} to "방천화극"
-    set {-bg::w::phoenix::base} to "diamond_sword"
-    set {-bg::w::phoenix::price} to 45
+    set {-bg::w::phoenix::base} to "iron_sword"
+    set {-bg::w::phoenix::price} to 120
     set {-bg::w::phoenix::cd} to 18
     set {-bg::w::phoenix::col} to "gold"
     set {-bg::w::phoenix::icon} to diamond sword
@@ -50,18 +50,95 @@ function bgCoinTeam(t: text, n: number, why: text):
         if bgTeam(loop-player) is {_t}:
             bgCoin(loop-player, {_n}, {_why})
 
-every 20 seconds:
+every 10 seconds:
     {-bg::on} is true
     loop all players:
         if bgIsFighter(loop-player) is true:
-            add 1 to {bg::coin::%uuid of loop-player%}
+            set {_n} to 1
+            loop {-bg::pts::*}:
+                if {-bg::own::%loop-value-2%} is bgTeam(loop-player):
+                    add 1 to {_n}
+            add {_n} to {bg::coin::%uuid of loop-player%}
 
 on death of player:
     {-bg::on} is true
     attacker is a player
     bgTeam(attacker) is not bgTeam(victim)
     bgTeam(attacker) is not "none"
-    bgCoin(attacker, 5, "처치")
+    bgCoin(attacker, 10, "처치")
+
+# ─────────────────────────────────────────────────────────── 장비 · 소모품 (상점 2~3줄)
+on load:
+    set {-bg::gear::list::*} to "iron", "diamond", "sword", "arrows", "gapple" and "heal"
+    set {-bg::gear::iron::name} to "철 갑옷 (흉갑·각반·장화)"
+    set {-bg::gear::iron::desc} to "죽어도 유지됩니다"
+    set {-bg::gear::iron::price} to 40
+    set {-bg::gear::iron::icon} to iron chestplate
+    set {-bg::gear::iron::slot} to 10
+    set {-bg::gear::diamond::name} to "다이아몬드 흉갑"
+    set {-bg::gear::diamond::desc} to "죽어도 유지됩니다"
+    set {-bg::gear::diamond::price} to 80
+    set {-bg::gear::diamond::icon} to diamond chestplate
+    set {-bg::gear::diamond::slot} to 11
+    set {-bg::gear::sword::name} to "철 검"
+    set {-bg::gear::sword::desc} to "죽어도 유지됩니다"
+    set {-bg::gear::sword::price} to 25
+    set {-bg::gear::sword::icon} to iron sword
+    set {-bg::gear::sword::slot} to 12
+    set {-bg::gear::arrows::name} to "화살 32개"
+    set {-bg::gear::arrows::desc} to "소모품"
+    set {-bg::gear::arrows::price} to 8
+    set {-bg::gear::arrows::icon} to arrow
+    set {-bg::gear::arrows::slot} to 14
+    set {-bg::gear::gapple::name} to "황금 사과"
+    set {-bg::gear::gapple::desc} to "소모품"
+    set {-bg::gear::gapple::price} to 15
+    set {-bg::gear::gapple::icon} to golden apple
+    set {-bg::gear::gapple::slot} to 15
+    set {-bg::gear::heal::name} to "치유의 투척 물약 II"
+    set {-bg::gear::heal::desc} to "소모품"
+    set {-bg::gear::heal::price} to 12
+    set {-bg::gear::heal::icon} to splash potion
+    set {-bg::gear::heal::slot} to 16
+    loop {-bg::gear::list::*}:
+        set {-bg::gearslot::%{-bg::gear::%loop-value%::slot}%} to loop-value
+
+function bgGiveGear(p: player, g: text):
+    set {_n} to name of {_p}
+    if {_g} is "iron":
+        set {bg::owned::%uuid of {_p}%::iron} to true
+        bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
+    else if {_g} is "diamond":
+        set {bg::owned::%uuid of {_p}%::diamond} to true
+        bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={}]")
+    else if {_g} is "sword":
+        set {bg::owned::%uuid of {_p}%::sword} to true
+        bgCmd("give %{_n}% iron_sword[unbreakable={}]")
+    else if {_g} is "arrows":
+        bgCmd("give %{_n}% arrow 32")
+    else if {_g} is "gapple":
+        bgCmd("give %{_n}% golden_apple 1")
+    else:
+        bgCmd("give %{_n}% splash_potion[potion_contents={potion:""minecraft:strong_healing""}] 1")
+
+# 부활 때 산 장비·전설 무기를 다시 준다 (bgKit 끝에서 호출)
+function bgShopRestore(p: player):
+    set {_u} to uuid of {_p}
+    if {bg::owned::%{_u}%::iron} is true:
+        bgGiveGear({_p}, "iron")
+    if {bg::owned::%{_u}%::diamond} is true:
+        bgGiveGear({_p}, "diamond")
+    if {bg::owned::%{_u}%::sword} is true:
+        bgGiveGear({_p}, "sword")
+    loop {-bg::w::list::*}:
+        if {bg::owned::%{_u}%::%loop-value%} is true:
+            bgGiveWeapon({_p}, loop-value)
+
+command /코인:
+    trigger:
+        send "&6[코인] &f보유 &e%{bg::coin::%uuid of player%} ? 0% 코인 &7— 10초마다 +1 · 처치 +10 · 점령 +15 · 점령 지점당 10초마다 +1 · 보스 +40"
 
 # ─────────────────────────────────────────────────────────── 상점
 command /상점:
@@ -73,15 +150,21 @@ command /상점:
                     send "&6[상점] &f상점은 &e자기 본진&f에서만 열 수 있습니다."
                     stop
         set {_c} to {bg::coin::%uuid of player%} ? 0
-        set {_gui} to chest inventory with 1 row named "&6&l천하 병기고 &8| &e%{_c}% 코인"
+        set {_gui} to chest inventory with 3 rows named "&6&l천하 병기고 &8| &e%{_c}% 코인"
         set {_i} to 1
         loop {-bg::w::list::*}:
             set {_w} to loop-value
             set {_it} to {-bg::w::%{_w}%::icon}
-            set name of {_it} to "&6&l%{-bg::w::%{_w}%::name}%"
-            set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&e가격: %{-bg::w::%{_w}%::price}% 코인 &7(클릭해서 구매)"
+            set name of {_it} to "&6&l%{-bg::w::%{_w}%::name}% &7(전설)"
+            set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&e가격: %{-bg::w::%{_w}%::price}% 코인"
             set slot {_i} of {_gui} to {_it}
             add 2 to {_i}
+        loop {-bg::gear::list::*}:
+            set {_g} to loop-value
+            set {_it} to {-bg::gear::%{_g}%::icon}
+            set name of {_it} to "&f&l%{-bg::gear::%{_g}%::name}%"
+            set lore of {_it} to "&7%{-bg::gear::%{_g}%::desc}%", "" and "&e가격: %{-bg::gear::%{_g}%::price}% 코인"
+            set slot {-bg::gear::%{_g}%::slot} of {_gui} to {_it}
         set {-bg::shop::%uuid of player%} to true
         open {_gui} to player
         play sound "block.chest.open" to player
@@ -93,6 +176,18 @@ on inventory click:
     {-bg::shop::%uuid of player%} is true
     cancel event
     set {_s} to index of event-slot
+    if {-bg::gearslot::%{_s}%} is set:
+        set {_g} to {-bg::gearslot::%{_s}%}
+        set {_price} to {-bg::gear::%{_g}%::price}
+        if ({bg::coin::%uuid of player%} ? 0) < {_price}:
+            send "&6[상점] &c코인이 부족합니다. &7(필요 %{_price}%, 보유 %{bg::coin::%uuid of player%} ? 0%)" to player
+            play sound "entity.villager.no" to player
+            stop
+        remove {_price} from {bg::coin::%uuid of player%}
+        bgGiveGear(player, {_g})
+        send "&6[상점] &f%{-bg::gear::%{_g}%::name}% 구매 &7(남은 코인 %{bg::coin::%uuid of player%}%)" to player
+        play sound "entity.experience_orb.pickup" to player
+        stop
     if {_s} is not 1, 3, 5 or 7:
         stop
     set {_w} to {-bg::w::list::%({_s} + 1) / 2%}
@@ -101,6 +196,7 @@ on inventory click:
         send "&6[상점] &c코인이 부족합니다. &7(필요 %{_price}%, 보유 %{bg::coin::%uuid of player%} ? 0%)" to player
         play sound "entity.villager.no" to player
         stop
+    set {bg::owned::%uuid of player%::%{_w}%} to true
     remove {_price} from {bg::coin::%uuid of player%}
     bgGiveWeapon(player, {_w})
     close player's inventory
