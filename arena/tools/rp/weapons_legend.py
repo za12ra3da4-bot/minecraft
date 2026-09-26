@@ -243,9 +243,15 @@ def paint(wid, out=128):
     return WEAPONS[wid]().image(out=out, glow_strength=0.9)
 
 
+ART = __import__("os").path.join(__import__("os").path.dirname(__import__("os").path.dirname(__import__("os").path.dirname(__import__("os").path.abspath(__file__)))), "art", "weapons")
+
+
 def export(pack):
+    import os
     for wid in WEAPONS:
-        ref = pack.texture(f"weapon/{wid}", paint(wid))
+        f = os.path.join(ART, f"{wid}.png")
+        img = Image.open(f).convert("RGBA") if os.path.exists(f) else paint(wid)     # 직접 그린 그림 우선
+        ref = pack.texture(f"weapon/{wid}", img)
         pack.item_model(f"weapon/{wid}", {"parent": "minecraft:item/handheld", "textures": {"layer0": ref}})
 
 

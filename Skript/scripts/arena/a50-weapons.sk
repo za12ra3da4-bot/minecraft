@@ -3,8 +3,8 @@
 #
 #  코인: 시작 20 · 10초마다 +1(+점령 지점당 1) · 처치 +10 · 점령 +15 · 보스 +40
 #  무기 (리소스팩 2D 아이콘 bg:weapon/*, 스킬마다 빛나는 마법진 바닥 효과 bg:tele/wfx_*)
-#    폭풍의 검 150 · 처형자의 도끼 130 · 질풍의 단검 90 · 성기사의 망치 120
-#    흑기사의 대검 140 · 늑대 발톱 110 · 대마법사의 지팡이 100 · 불사조의 창 120
+#    천둥의 성검 150 · 용살자의 도끼 130 · 질풍의 레이피어 90 · 성기사의 전쟁망치 120
+#    흑기사의 대검 140 · 그림자 쌍단검 110 · 대마법사의 지팡이 100 · 불사조의 창 120
 # ═════════════════════════════════════════════════════════════════════════════
 
 import:
@@ -16,28 +16,28 @@ function bgShopInv(c: number) :: inventory:
 
 on load:
     set {-bg::w::list::*} to "thunder", "dragon", "wind", "phoenix", "blackiron", "tiger", "staff" and "peachwood"
-    set {-bg::w::thunder::name} to "폭풍의 검"
+    set {-bg::w::thunder::name} to "천둥의 성검"
     set {-bg::w::thunder::base} to "netherite_sword"
     set {-bg::w::thunder::price} to 150
     set {-bg::w::thunder::cd} to 15
     set {-bg::w::thunder::col} to "aqua"
     set {-bg::w::thunder::icon} to netherite sword
     set {-bg::w::thunder::desc} to "우클릭 뇌격: 바라보는 곳(24칸)에 낙뢰 — 반경 3.5 적 3하트 · 15초"
-    set {-bg::w::dragon::name} to "처형자의 도끼"
+    set {-bg::w::dragon::name} to "용살자의 도끼"
     set {-bg::w::dragon::base} to "iron_axe"
     set {-bg::w::dragon::price} to 130
     set {-bg::w::dragon::cd} to 12
     set {-bg::w::dragon::col} to "red"
     set {-bg::w::dragon::icon} to netherite axe
     set {-bg::w::dragon::desc} to "우클릭 대회전 베기: 앞 120° 반경 5.5 (3하트 + 밀쳐냄) · 12초"
-    set {-bg::w::wind::name} to "질풍의 단검"
+    set {-bg::w::wind::name} to "질풍의 레이피어"
     set {-bg::w::wind::base} to "iron_sword"
     set {-bg::w::wind::price} to 90
     set {-bg::w::wind::cd} to 8
     set {-bg::w::wind::col} to "green"
     set {-bg::w::wind::icon} to iron sword
     set {-bg::w::wind::desc} to "우클릭 질풍 도약: 질주 + 신속 II · 8초"
-    set {-bg::w::phoenix::name} to "성기사의 망치"
+    set {-bg::w::phoenix::name} to "성기사의 전쟁망치"
     set {-bg::w::phoenix::base} to "iron_sword"
     set {-bg::w::phoenix::price} to 120
     set {-bg::w::phoenix::cd} to 18
@@ -51,7 +51,7 @@ on load:
     set {-bg::w::blackiron::col} to "dark_red"
     set {-bg::w::blackiron::icon} to netherite sword
     set {-bg::w::blackiron::desc} to "우클릭 피의 돌진: 앞으로 8칸 돌진 베기 (3하트 + 시듦) · 12초"
-    set {-bg::w::tiger::name} to "늑대 발톱"
+    set {-bg::w::tiger::name} to "그림자 쌍단검"
     set {-bg::w::tiger::base} to "stone_sword"
     set {-bg::w::tiger::price} to 110
     set {-bg::w::tiger::cd} to 10
