@@ -83,18 +83,22 @@ function bgBarInit(id: text):
     bgCmd("bossbar set %{_id}% visible true")
 
 function bgHudCreate():
+    # 팀마다 두 개: bg:hud_<팀> (점수판 + 보스 체력) · bg:hud_<팀>_nb (점수판만) — 보스 근처에 있는 사람만 앞의 것
     loop "red", "blue", "green", "yellow" and "none":
         bgBarInit("bg:hud_%loop-value%")
+        bgBarInit("bg:hud_%loop-value%_nb")
         delete {-bg::hudlast::%loop-value%}
+        delete {-bg::hudlast::%loop-value%_nb}
     set {-bg::hudon} to true
-    # 게임 중엔 보스 체력이 팀 막대 안에 같이 그려진다 → 따로 띄운 보스 막대는 숨김
     bgCmd("bossbar set bg:boss players")
 
 function bgHudRemove():
     set {-bg::hudon} to false
     loop "red", "blue", "green", "yellow" and "none":
         bgCmd("bossbar remove bg:hud_%loop-value%")
+        bgCmd("bossbar remove bg:hud_%loop-value%_nb")
         delete {-bg::hudlast::%loop-value%}
+        delete {-bg::hudlast::%loop-value%_nb}
     delete {-bg::bosslast}
 
 function bgHudName(id: text, s: text):
@@ -109,37 +113,58 @@ every 4 ticks:
         set {_boss} to bgHudBoss()
     if {-bg::hudon} is true:
         loop "red", "blue", "green", "yellow" and "none":
-            set {_str} to "%bgHudTop(loop-value)%%{_boss}%"
+            set {_top} to bgHudTop(loop-value)
+            set {_str} to "%{_top}%%{_boss}%"
             # 바뀔 때만 보낸다 (깜빡임 방지)
             if {-bg::hudlast::%loop-value%} is not {_str}:
                 set {-bg::hudlast::%loop-value%} to {_str}
                 bgHudName("bg:hud_%loop-value%", {_str})
+            if {-bg::hudlast::%loop-value%_nb} is not {_top}:
+                set {-bg::hudlast::%loop-value%_nb} to {_top}
+                bgHudName("bg:hud_%loop-value%_nb", {_top})
     else if {-bg::boss::id} is set:
         if {-bg::bosslast} is not {_boss}:
             set {-bg::bosslast} to {_boss}
             bgHudName("bg:boss", {_boss})
 
-every 1 second:
+# 보스 체력은 보스 투기장 근처(40칸)에 있는 사람에게만
+function bgNearBossSel(extra: text, near: boolean) :: text:
+    if {_near} is true:
+        return "@a[%{_extra}%distance=..40]"
+    return "@a[%{_extra}%distance=40..]"
+
+every 10 ticks:
     {-bg::hudon} is true
-    loop "red", "blue", "green" and "yellow":
-        bgCmd("bossbar set bg:hud_%loop-value% players @a[team=bg_%loop-value%]")
-    bgCmd("bossbar set bg:hud_none players @a[team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow]")
+    loop "red", "blue", "green", "yellow" and "none":
+        set {_f} to "team=bg_%loop-value%,"
+        if loop-value is "none":
+            set {_f} to "team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow,"
+        if {-bg::boss::id} is set:
+            set {_h} to {-bg::boss::home}
+            set {_at} to "execute in %bgDim()% positioned %bgC(x-coordinate of {_h})% %bgN(y-coordinate of {_h})% %bgC(z-coordinate of {_h})% run"
+            bgCmd("%{_at}% bossbar set bg:hud_%loop-value% players %bgNearBossSel({_f}, true)%")
+            bgCmd("%{_at}% bossbar set bg:hud_%loop-value%_nb players %bgNearBossSel({_f}, false)%")
+        else:
+            set {_sel} to "@a[team=bg_%loop-value%]"
+            if loop-value is "none":
+                set {_sel} to "@a[team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow]"
+            bgCmd("bossbar set bg:hud_%loop-value% players")
+            bgCmd("bossbar set bg:hud_%loop-value%_nb players %{_sel}%")
 
 # ─────────────────────────────────────────────────────────── 게임 밖 보스 막대 (보스만)
 function bgBossBarShow():
     bgBarInit("bg:boss")
     delete {-bg::bosslast}
     set {-bg::boss::trail} to {-bg::boss::max}
-    if {-bg::hudon} is not true:
-        bgCmd("bossbar set bg:boss players @a")
 
 function bgBossBarHide():
     bgCmd("bossbar remove bg:boss")
     delete {-bg::bosslast}
 
-every 2 seconds:
+every 10 ticks:
     {-bg::boss::id} is set
     if {-bg::hudon} is true:
         bgCmd("bossbar set bg:boss players")
     else:
-        bgCmd("bossbar set bg:boss players @a")
+        set {_h} to {-bg::boss::home}
+        bgCmd("execute in %bgDim()% positioned %bgC(x-coordinate of {_h})% %bgN(y-coordinate of {_h})% %bgC(z-coordinate of {_h})% run bossbar set bg:boss players @a[distance=..40]")
