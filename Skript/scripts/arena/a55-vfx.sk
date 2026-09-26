@@ -1,0 +1,202 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 전설 무기 연출 (무기마다 전혀 다른 동작)
+#   무기 그림 그대로(bg:weapon/<무기>)를 크게 띄워 움직인다 + 파티클 · 소리 · 블록 디스플레이
+#   무기 그림은 손잡이 왼쪽 아래 → 날끝 오른쪽 위 (45°). Z 축 회전으로 방향을 잡는다:
+#     날끝 아래 = -135°   날끝 앞(+X) = -45°   날끝 위 = +45°
+#
+#   천둥의 성검    하늘에서 거대한 성검이 내리꽂히며 낙뢰
+#   용살자의 도끼  도끼가 몸 주위를 두 바퀴 돌며 화염을 뿌림
+#   질풍의 레이피어 레이피어 세 자루가 연달아 앞으로 찌르며 날아감
+#   성기사의 망치  하늘에서 거대한 망치가 떨어져 땅을 내리찍고 빛기둥 8개가 솟음
+#   흑기사의 대검  돌진 뒤 거대한 유령 대검이 앞을 크게 휩씀
+#   그림자 쌍단검  단검 두 자루가 회전하며 앞에서 X 자로 교차
+#   대마법사 지팡이 땅에서 자수정 가시가 솟아오름
+#   불사조의 창    불붙은 창 여섯 자루가 하늘에서 둥글게 쏟아짐
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgQz(deg: number) :: text:
+    set {_h} to {_deg} / 2
+    return "[0f,0f,%bgN(sin({_h}))%f,%bgN(cos({_h}))%f]"
+
+function bgVTag() :: text:
+    return "bgv%bgTid()%"
+
+# 무기 그림 띄우기 (크기 s, 방향 yaw, Z 회전 z, 모델 이동 tx/ty/tz, 순간이동 보간 dur)
+function bgWModel(l: location, w: text, s: number, yaw: number, z: number, tx: number, ty: number, tz: number, tag: text, dur: number):
+    bgCmd("execute in %bgDim()% run summon item_display %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bgfx"",""%{_tag}%""],Rotation:[%bgN({_yaw})%f,0f],item:{id:""minecraft:iron_sword"",count:1,components:{""minecraft:item_model"":""bg:weapon/%{_w}%""}},item_display:""none"",brightness:{sky:15,block:15},view_range:4f,teleport_duration:%{_dur}%,transformation:{left_rotation:%bgQz({_z})%,right_rotation:[0f,0f,0f,1f],translation:[%bgN({_tx})%f,%bgN({_ty})%f,%bgN({_tz})%f],scale:[%bgN({_s})%f,%bgN({_s})%f,%bgN({_s})%f]}}")
+
+function bgTpTag(tag: text, l: location, yaw: number):
+    bgCmd("execute in %bgDim()% run tp @e[tag=%{_tag}%,limit=1] %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% %bgN({_yaw})% 0")
+
+function bgShrinkKill(tag: text, t: number):
+    bgCmd("data merge entity @e[tag=%{_tag}%,limit=1] {start_interpolation:0,interpolation_duration:%{_t}%,transformation:{scale:[0f,0f,0f]}}")
+    wait bgTicks({_t})
+    bgCmd("kill @e[tag=%{_tag}%]")
+
+function bgUp(l: location, dy: number) :: location:
+    return location(x-coordinate of {_l}, (y-coordinate of {_l}) + {_dy}, z-coordinate of {_l}, world of {_l})
+
+function bgFwd(l: location, yaw: number, f: number, side: number, dy: number) :: location:
+    set {_x} to (x-coordinate of {_l}) - sin({_yaw}) * {_f} - cos({_yaw}) * {_side}
+    set {_z} to (z-coordinate of {_l}) + cos({_yaw}) * {_f} - sin({_yaw}) * {_side}
+    return location({_x}, (y-coordinate of {_l}) + {_dy}, {_z}, world of {_l})
+
+# ─────────────────────────────────────────── 천둥의 성검: 하늘에서 내리꽂히는 성검 (10틱 뒤 착지)
+function bgVfxThunder(l: location):
+    set {_t} to bgVTag()
+    set {_yaw} to random number between 0 and 360
+    bgWModel(bgUp({_l}, 16), "thunder", 6, {_yaw}, -135, 0, 0, 0, {_t}, 6)
+    bgParticle(bgUp({_l}, 16), "electric_spark", 1, 1, 1, 0.3, 40)
+    wait 4 ticks
+    bgTpTag({_t}, bgUp({_l}, 2.6), {_yaw})
+    loop 6 times:
+        bgParticle(bgUp({_l}, 16 - loop-number * 2.2), "end_rod", 0.3, 0.6, 0.3, 0.02, 6)
+        wait 1 tick
+    bgParticle({_l}, "firework", 0.3, 0.3, 0.3, 0.2, 25)
+    bgParticle(bgUp({_l}, 0.3), "electric_spark", 3, 0.3, 3, 0.6, 120)
+    bgParticle(bgUp({_l}, 0.2), "sonic_boom", 0, 0, 0, 0, 1)
+    bgSoundAt({_l}, "entity.lightning_bolt.impact", 2, 1.2)
+    wait 16 ticks
+    bgParticle(bgUp({_l}, 2), "electric_spark", 0.6, 1.5, 0.6, 0.3, 40)
+    bgShrinkKill({_t}, 5)
+
+# ─────────────────────────────────────────── 용살자의 도끼: 몸 주위를 두 바퀴 도는 화염 도끼
+function bgVfxDragon(p: player):
+    set {_t} to bgVTag()
+    set {_yaw} to yaw of {_p}
+    bgWModel(bgUp(location of {_p}, 1.1), "dragon", 3.2, {_yaw} - 90, 90, 0, 0, 2.4, {_t}, 1)
+    loop 12 times:
+        bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run tp @s ~ ~ ~ ~30 0")
+        bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle flame ^ ^ ^2.4 0.25 0.25 0.25 0.03 10 force")
+        bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle lava ^ ^ ^2.4 0.2 0.2 0.2 0 1 force")
+        wait 1 tick
+    bgSoundAt(location of {_p}, "item.firecharge.use", 1.5, 0.7)
+    bgShrinkKill({_t}, 4)
+
+# ─────────────────────────────────────────── 질풍의 레이피어: 세 번 연달아 앞으로 찌르는 레이피어
+function bgVfxWind(p: player):
+    loop 3 times:
+        set {_t} to bgVTag()
+        set {_yaw} to yaw of {_p}
+        set {_side} to (loop-number - 2) * 0.8
+        set {_a} to bgFwd(location of {_p}, {_yaw}, 0.6, {_side}, 1.3)
+        set {_b} to bgFwd(location of {_p}, {_yaw}, 6.5, {_side} * 0.3, 1.3)
+        bgWModel({_a}, "wind", 2.6, {_yaw} + 90, -45, 0, 0, 0, {_t}, 3)
+        bgSoundAt({_a}, "entity.breeze.shoot", 1.2, 1.6)
+        wait 1 tick
+        bgTpTag({_t}, {_b}, {_yaw} + 90)
+        bgParticle({_b}, "cloud", 0.3, 0.3, 0.3, 0.05, 8)
+        bgWindTrail({_a}, {_b})
+        wait 2 ticks
+        bgShrinkKill({_t}, 3)
+
+function bgWindTrail(a: location, b: location):
+    loop 8 times:
+        set {_f} to loop-number / 8
+        set {_q} to location((x-coordinate of {_a}) + ((x-coordinate of {_b}) - (x-coordinate of {_a})) * {_f}, y-coordinate of {_a}, (z-coordinate of {_a}) + ((z-coordinate of {_b}) - (z-coordinate of {_a})) * {_f}, world of {_a})
+        bgParticle({_q}, "end_rod", 0.05, 0.05, 0.05, 0, 1)
+        bgParticle({_q}, "white_ash", 0.2, 0.2, 0.2, 0, 4)
+
+# ─────────────────────────────────────────── 성기사의 망치: 떨어지는 거대한 망치 + 빛기둥 8개
+function bgVfxHammer(l: location, yaw: number):
+    set {_t} to bgVTag()
+    bgWModel(bgUp({_l}, 11), "phoenix", 7, {_yaw}, -135, 0, 0, 0, {_t}, 3)
+    bgSoundAt({_l}, "block.beacon.power_select", 2, 0.6)
+    wait 3 ticks
+    bgTpTag({_t}, bgUp({_l}, 3.2), {_yaw})
+    wait 3 ticks
+    bgParticle({_l}, "firework", 0.3, 0.3, 0.3, 0.2, 25)
+    bgParticle(bgUp({_l}, 0.2), "explosion", 1.5, 0.1, 1.5, 0, 3)
+    bgSoundAt({_l}, "item.mace.smash_ground_heavy", 2, 0.8)
+    bgSoundAt({_l}, "block.anvil.land", 1.5, 0.5)
+    loop 8 times:
+        set {_c} to bgFwd({_l}, loop-number * 45, 4.5, 0, 0)
+        bgLightPillar({_c})
+    wait 18 ticks
+    bgShrinkKill({_t}, 6)
+
+function bgLightPillar(c: location):
+    loop 8 times:
+        bgParticle(bgUp({_c}, loop-number * 0.6), "end_rod", 0.08, 0.2, 0.08, 0.01, 3)
+        bgParticle(bgUp({_c}, loop-number * 0.6), "wax_on", 0.15, 0.2, 0.15, 0.02, 2)
+    bgParticle({_c}, "firework", 0.3, 0.3, 0.3, 0.2, 25)
+
+# ─────────────────────────────────────────── 흑기사의 대검: 돌진 뒤 앞을 크게 휩쓰는 유령 대검
+function bgVfxGreatsword(p: player):
+    wait 5 ticks
+    set {_t} to bgVTag()
+    set {_yaw} to yaw of {_p}
+    bgWModel(bgUp(location of {_p}, 1.0), "blackiron", 5, {_yaw} - 70, -45, 0, 0, 2.6, {_t}, 1)
+    bgSoundAt(location of {_p}, "entity.wither.shoot", 1.2, 0.6)
+    loop 7 times:
+        bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run tp @s ~ ~ ~ ~20 0")
+        bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle dust_color_transition{from_color:[0.8,0.05,0.1],to_color:[0.1,0,0],scale:2.2} ^ ^ ^3 0.6 0.4 0.6 0 16 force")
+        bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle sweep_attack ^ ^ ^2.6 0.3 0.2 0.3 0 1 force")
+        wait 1 tick
+    bgShrinkKill({_t}, 5)
+
+# ─────────────────────────────────────────── 그림자 쌍단검: 회전하며 X 자로 교차하는 단검 두 자루
+function bgVfxDaggers(p: player):
+    set {_yaw} to yaw of {_p}
+    set {_o} to location of {_p}
+    set {_t1} to bgVTag()
+    set {_t2} to bgVTag()
+    bgWModel(bgFwd({_o}, {_yaw}, 0.8, -1.3, 1.2), "tiger", 1.8, {_yaw}, 0, 0, 0, 0, {_t1}, 1)
+    bgWModel(bgFwd({_o}, {_yaw}, 0.8, 1.3, 1.2), "tiger", 1.8, {_yaw}, 0, 0, 0, 0, {_t2}, 1)
+    loop 8 times:
+        set {_f} to loop-number / 8
+        set {_s} to 1.3 * (1 - 2 * {_f})
+        bgTpTag({_t1}, bgFwd({_o}, {_yaw}, 0.8 + {_f} * 5, -1 * {_s}, 1.2), {_yaw} + loop-number * 60)
+        bgTpTag({_t2}, bgFwd({_o}, {_yaw}, 0.8 + {_f} * 5, {_s}, 1.2), {_yaw} - loop-number * 60)
+        bgParticle(bgFwd({_o}, {_yaw}, 0.8 + {_f} * 5, 0, 1.2), "reverse_portal", 0.4, 0.3, 0.4, 0.05, 10)
+        wait 1 tick
+    bgParticle(bgFwd({_o}, {_yaw}, 3.3, 0, 1.2), "sweep_attack", 0.2, 0.2, 0.2, 0, 3)
+    bgShrinkKill({_t1}, 3)
+    bgShrinkKill({_t2}, 3)
+
+# ─────────────────────────────────────────── 대마법사의 지팡이: 땅에서 솟는 자수정 가시
+function bgVfxCrystals(l: location):
+    set {_t} to bgVTag()
+    loop 12 times:
+        set {_a} to loop-number * 30 + (random number between -10 and 10)
+        set {_r} to random number between 1.6 and 4.4
+        set {_h} to random number between 1.6 and 3.2
+        set {_c} to bgFwd({_l}, {_a}, {_r}, 0, -1 * {_h})
+        set {_blk} to "amethyst_block"
+        if mod(loop-number, 3) is 0:
+            set {_blk} to "purple_stained_glass"
+        bgCmd("execute in %bgDim()% run summon block_display %bgC(x-coordinate of {_c})% %bgN(y-coordinate of {_c})% %bgC(z-coordinate of {_c})% {Tags:[""bg"",""bgfx"",""%{_t}%""],Rotation:[%bgN({_a})%f,0f],block_state:{Name:""minecraft:%{_blk}%""},brightness:{sky:15,block:13},teleport_duration:3,transformation:{left_rotation:[0.1f,0f,0.1f,0.99f],right_rotation:[0f,0f,0f,1f],translation:[-0.25f,0f,-0.25f],scale:[0.5f,%bgN({_h})%f,0.5f]}}")
+    wait 1 tick
+    bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~2.9 ~")
+    bgSoundAt({_l}, "block.amethyst_cluster.break", 2, 0.6)
+    bgSoundAt({_l}, "block.amethyst_block.resonate", 2, 1.2)
+    loop 4 times:
+        bgParticle(bgUp({_l}, 1.2), "end_rod", 3, 1, 3, 0.05, 10)
+        bgParticle(bgUp({_l}, 0.5), "witch", 3, 0.5, 3, 0.05, 12)
+        wait 3 ticks
+    wait 10 ticks
+    bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~-3.2 ~")
+    wait 4 ticks
+    bgCmd("kill @e[tag=%{_t}%]")
+
+# ─────────────────────────────────────────── 불사조의 창: 하늘에서 둥글게 쏟아지는 불창 여섯 자루
+function bgVfxSpears(l: location):
+    loop 6 times:
+        set {_a} to loop-number * 60
+        set {_c} to bgFwd({_l}, {_a}, 3.6, 0, 0)
+        bgSpearDrop({_c}, {_a})
+        wait 2 ticks
+
+function bgSpearDrop(c: location, a: number):
+    set {_t} to bgVTag()
+    bgWModel(bgUp({_c}, 10), "peachwood", 3.4, {_a}, -135, 0, 0, 0, {_t}, 3)
+    bgParticle(bgUp({_c}, 10), "flame", 0.3, 0.3, 0.3, 0.05, 10)
+    wait 1 tick
+    bgTpTag({_t}, bgUp({_c}, 1.6), {_a})
+    wait 3 ticks
+    bgParticle(bgUp({_c}, 0.2), "flame", 0.8, 0.3, 0.8, 0.08, 30)
+    bgParticle(bgUp({_c}, 0.2), "lava", 0.5, 0.2, 0.5, 0, 4)
+    bgParticle(bgUp({_c}, 0.2), "explosion", 0, 0, 0, 0, 1)
+    bgSoundAt({_c}, "entity.blaze.shoot", 1.2, 0.8)
+    wait 16 ticks
+    bgShrinkKill({_t}, 5)
