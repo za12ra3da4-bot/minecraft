@@ -1,0 +1,227 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  신들의 전장 — 코인 · 무기 상점(/상점) · 전설 무기 전용 스킬 (우클릭)
+#
+#  코인: 처치 +5 · 지점 점령 +8(팀 전원) · 보스 처치 +25(팀 전원) · 20초마다 +1
+#  무기 (리소스팩 3D 모델 bg:weapon/*, 스킬마다 붓터치 바닥 효과 bg:tele/wfx_*)
+#    제우스의 뇌전검   60코인  우클릭: 바라보는 곳(24칸)에 낙뢰 — 반경 3.5 적 3하트        (15초)
+#    아레스의 전쟁도끼 50코인  우클릭: 도약 후 내려찍기 — 반경 4 적 2.5하트 + 띄우기     (12초)
+#    헤르메스의 날개단검 35코인 우클릭: 바라보는 방향으로 질주 + 신속 II 3초              (8초)
+#    아테나의 지혜의 창 45코인  우클릭: 방패 결계 — 나 저항 II 4초, 주변 아군 흡수, 적 밀침 (18초)
+# ═════════════════════════════════════════════════════════════════════════════
+
+on load:
+    set {-bg::w::list::*} to "zeus", "ares", "hermes" and "athena"
+    set {-bg::w::zeus::name} to "제우스의 뇌전검"
+    set {-bg::w::zeus::base} to "netherite_sword"
+    set {-bg::w::zeus::price} to 60
+    set {-bg::w::zeus::cd} to 15
+    set {-bg::w::zeus::col} to "gold"
+    set {-bg::w::zeus::icon} to golden sword
+    set {-bg::w::zeus::desc} to "우클릭: 낙뢰 (반경 3.5, 3하트) · 15초"
+    set {-bg::w::ares::name} to "아레스의 전쟁도끼"
+    set {-bg::w::ares::base} to "netherite_axe"
+    set {-bg::w::ares::price} to 50
+    set {-bg::w::ares::cd} to 12
+    set {-bg::w::ares::col} to "red"
+    set {-bg::w::ares::icon} to netherite axe
+    set {-bg::w::ares::desc} to "우클릭: 도약 내려찍기 (반경 4, 2.5하트) · 12초"
+    set {-bg::w::hermes::name} to "헤르메스의 날개단검"
+    set {-bg::w::hermes::base} to "iron_sword"
+    set {-bg::w::hermes::price} to 35
+    set {-bg::w::hermes::cd} to 8
+    set {-bg::w::hermes::col} to "aqua"
+    set {-bg::w::hermes::icon} to iron sword
+    set {-bg::w::hermes::desc} to "우클릭: 질주 + 신속 II · 8초"
+    set {-bg::w::athena::name} to "아테나의 지혜의 창"
+    set {-bg::w::athena::base} to "diamond_sword"
+    set {-bg::w::athena::price} to 45
+    set {-bg::w::athena::cd} to 18
+    set {-bg::w::athena::col} to "yellow"
+    set {-bg::w::athena::icon} to diamond sword
+    set {-bg::w::athena::desc} to "우클릭: 방패 결계 (저항 II · 아군 흡수 · 적 밀침) · 18초"
+
+# ─────────────────────────────────────────────────────────── 코인
+function bgCoin(p: player, n: number, why: text):
+    add {_n} to {bg::coin::%uuid of {_p}%}
+    send action bar "&6+%{_n}% 코인 &7(%{_why}%) &f· 보유 &e%{bg::coin::%uuid of {_p}%}%" to {_p}
+
+function bgCoinTeam(t: text, n: number, why: text):
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            bgCoin(loop-player, {_n}, {_why})
+
+every 20 seconds:
+    {-bg::on} is true
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            add 1 to {bg::coin::%uuid of loop-player%}
+
+on death of player:
+    {-bg::on} is true
+    attacker is a player
+    bgTeam(attacker) is not bgTeam(victim)
+    bgTeam(attacker) is not "none"
+    bgCoin(attacker, 5, "처치")
+
+# ─────────────────────────────────────────────────────────── 상점
+command /상점:
+    aliases: /shop
+    trigger:
+        if {-bg::on} is true:
+            if bgTeam(player) is not "none":
+                if bgDist2(location of player, bgMk("base_%bgTeam(player)%")) > 24:
+                    send "&6[상점] &f상점은 &e자기 본진&f에서만 열 수 있습니다."
+                    stop
+        set {_c} to {bg::coin::%uuid of player%} ? 0
+        set {_gui} to chest inventory with 1 row named "&6&l신들의 무기고 &8| &e%{_c}% 코인"
+        set {_i} to 1
+        loop {-bg::w::list::*}:
+            set {_w} to loop-value
+            set {_it} to {-bg::w::%{_w}%::icon}
+            set name of {_it} to "&6&l%{-bg::w::%{_w}%::name}%"
+            set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&e가격: %{-bg::w::%{_w}%::price}% 코인 &7(클릭해서 구매)"
+            set slot {_i} of {_gui} to {_it}
+            add 2 to {_i}
+        set {-bg::shop::%uuid of player%} to true
+        open {_gui} to player
+        play sound "block.chest.open" to player
+
+on inventory close:
+    delete {-bg::shop::%uuid of player%}
+
+on inventory click:
+    {-bg::shop::%uuid of player%} is true
+    cancel event
+    set {_s} to index of event-slot
+    if {_s} is not 1, 3, 5 or 7:
+        stop
+    set {_w} to {-bg::w::list::%({_s} + 1) / 2%}
+    set {_price} to {-bg::w::%{_w}%::price}
+    if ({bg::coin::%uuid of player%} ? 0) < {_price}:
+        send "&6[상점] &c코인이 부족합니다. &7(필요 %{_price}%, 보유 %{bg::coin::%uuid of player%} ? 0%)" to player
+        play sound "entity.villager.no" to player
+        stop
+    remove {_price} from {bg::coin::%uuid of player%}
+    bgGiveWeapon(player, {_w})
+    close player's inventory
+    send title "&6&l%{-bg::w::%{_w}%::name}%" with subtitle "&f획득! 우클릭으로 전용 스킬" to player for 50 ticks
+    play sound "ui.toast.challenge_complete" to player
+    bgWfx(location of player, "wfx_%{_w}%", 5, 30, 0)
+
+function bgGiveWeapon(p: player, w: text):
+    set {_nm} to {-bg::w::%{_w}%::name}
+    bgCmd("give %name of {_p}% %{-bg::w::%{_w}%::base}%[item_model=""bg:weapon/%{_w}%"",custom_name={text:""%{_nm}%"",color:""%{-bg::w::%{_w}%::col}%"",bold:true,italic:false},lore=[{text:""%{-bg::w::%{_w}%::desc}%"",color:""gray"",italic:false}],custom_data={bgw:""%{_w}%""},unbreakable={},rarity:""epic""]")
+
+# ─────────────────────────────────────────────────────────── 바닥 효과
+function bgWfx(l: location, m: text, d: number, t: number, yaw: number):
+    set {_id} to bgTid()
+    bgCmd("function bg:tele/decal {x:%bgN(x-coordinate of {_l})%,y:%bgN(y-coordinate of {_l})%,z:%bgN(z-coordinate of {_l})%,m:%{_m}%,d:%bgN({_d})%,t:%{_t}%,yaw:%bgN({_yaw})%,id:%{_id}%}")
+
+function bgWRune(l: location, m: text, d: number, t: number):
+    set {_id} to bgTid()
+    bgCmd("function bg:tele/rune {x:%bgN(x-coordinate of {_l})%,y:%bgN(y-coordinate of {_l})%,z:%bgN(z-coordinate of {_l})%,m:%{_m}%,d:%bgN({_d})%,t:%{_t}%,id:%{_id}%}")
+
+# 적 판정: 다른 팀 전투 참가자
+function bgEnemies(p: player, c: location, r: number) :: players:
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            if bgTeam(loop-player) is not bgTeam({_p}):
+                if world of loop-player is world of {_c}:
+                    if distance between loop-player and {_c} <= {_r}:
+                        add loop-player to {_out::*}
+    return {_out::*}
+
+# ─────────────────────────────────────────────────────────── 전용 스킬 (우클릭)
+on right click:
+    set {_nm} to uncolored name of player's tool
+    {_nm} is set
+    loop {-bg::w::list::*}:
+        if {_nm} contains {-bg::w::%loop-value%::name}:
+            set {_w} to loop-value
+    {_w} is set
+    cancel event
+    set {_k} to "%uuid of player%::%{_w}%"
+    if {-bg::wcd::%{_k}%} is set:
+        set {_left} to {-bg::w::%{_w}%::cd} - (difference between {-bg::wcd::%{_k}%} and now) / 1 second
+        if {_left} > 0:
+            send action bar "&7%{-bg::w::%{_w}%::name}% &f재사용 대기 &e%ceil({_left})%초" to player
+            stop
+    set {-bg::wcd::%{_k}%} to now
+    if {_w} is "zeus":
+        bgSkZeus(player)
+    else if {_w} is "ares":
+        bgSkAres(player)
+    else if {_w} is "hermes":
+        bgSkHermes(player)
+    else:
+        bgSkAthena(player)
+
+function bgSkZeus(p: player):
+    set {_b} to target block of {_p}
+    if {_b} is set:
+        set {_l} to location of {_b}
+        add 1 to y-coordinate of {_l}
+    else:
+        set {_l} to location of {_p}
+    if distance between {_p} and {_l} > 24:
+        set {_l} to location of {_p}
+    bgWfx({_l}, "wfx_zeus", 8, 14, random number between 0 and 360)
+    bgParticle({_l}, "electric_spark", 1.5, 2, 1.5, 0.3, 60)
+    bgSoundAt({_l}, "item.trident.thunder", 2, 1.3)
+    wait 10 ticks
+    strike lightning effect at {_l}
+    bgWRune({_l}, "wfx_zeus", 5, 20)
+    set {_es::*} to bgEnemies({_p}, {_l}, 3.5)
+    loop {_es::*}:
+        damage loop-value by 3
+        ignite loop-value for 1 second
+        bgParticle(location of loop-value, "electric_spark", 0.4, 1, 0.4, 0.2, 20)
+
+function bgSkAres(p: player):
+    set {_v} to vector(-1 * sin(yaw of {_p}) * 0.9, 0.85, cos(yaw of {_p}) * 0.9)
+    set velocity of {_p} to {_v}
+    bgSoundAt(location of {_p}, "entity.ravager.roar", 1.5, 1.4)
+    bgParticle(location of {_p}, "large_smoke", 0.5, 0.2, 0.5, 0.05, 20)
+    wait 14 ticks
+    set velocity of {_p} to vector(0, -1.4, 0)
+    wait 5 ticks
+    set {_l} to location of {_p}
+    bgWfx({_l}, "wfx_ares", 9, 30, random number between 0 and 360)
+    bgParticle({_l}, "explosion", 2, 0.3, 2, 0, 6)
+    bgParticle({_l}, "lava", 2, 0.3, 2, 0, 20)
+    bgSoundAt({_l}, "entity.generic.explode", 1.5, 0.8)
+    set {_es::*} to bgEnemies({_p}, {_l}, 4)
+    loop {_es::*}:
+        damage loop-value by 2.5
+        set velocity of loop-value to vector(0, 0.75, 0)
+
+function bgSkHermes(p: player):
+    set {_l} to location of {_p}
+    bgWfx({_l}, "wfx_hermes", 5, 20, yaw of {_p})
+    set {_v} to vector(-1 * sin(yaw of {_p}) * cos(pitch of {_p}) * 1.8, 0.25, cos(yaw of {_p}) * cos(pitch of {_p}) * 1.8)
+    set velocity of {_p} to {_v}
+    bgCmd("effect give %name of {_p}% speed 3 1 true")
+    bgSoundAt({_l}, "entity.breeze.wind_burst", 1.5, 1.2)
+    loop 4 times:
+        bgParticle(location of {_p}, "cloud", 0.3, 0.2, 0.3, 0.02, 8)
+        wait 2 ticks
+    bgWfx(location of {_p}, "wfx_hermes", 4, 16, yaw of {_p})
+
+function bgSkAthena(p: player):
+    set {_l} to location of {_p}
+    bgWRune({_l}, "wfx_athena", 9, 40)
+    bgWfx({_l}, "wfx_athena", 12, 24, 0)
+    bgSoundAt({_l}, "item.shield.block", 2, 0.7)
+    bgSoundAt({_l}, "block.beacon.power_select", 1.5, 1.4)
+    bgParticle({_l}, "wax_on", 3, 1, 3, 0.1, 40)
+    bgCmd("effect give %name of {_p}% resistance 4 1 true")
+    loop all players:
+        if bgTeam(loop-player) is bgTeam({_p}):
+            if distance between loop-player and {_l} <= 6:
+                bgCmd("effect give %name of loop-player% absorption 8 0 true")
+    set {_es::*} to bgEnemies({_p}, {_l}, 4)
+    loop {_es::*}:
+        set {_dx} to (x-coordinate of loop-value) - (x-coordinate of {_l})
+        set {_dz} to (z-coordinate of loop-value) - (z-coordinate of {_l})
+        set {_d} to max(0.5, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
+        set velocity of loop-value to vector({_dx} / {_d} * 1.3, 0.45, {_dz} / {_d} * 1.3)

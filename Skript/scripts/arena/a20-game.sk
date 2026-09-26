@@ -178,6 +178,7 @@ function bgCapturePoint(p: text):
             bgSoundAt({_c}, "block.beacon.activate", 3, 1)
             bgSound("block.bell.use", 0.5, 1.4)
             bgPointVisual({_p}, {_who})
+            bgCoinTeam({_who}, 8, "점령")
     else:
         set {_v} to min(100, {_v} + {_rate})
     set {-bg::capt::%{_p}%} to {_capt}

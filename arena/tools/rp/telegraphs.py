@@ -252,6 +252,56 @@ def pools(out):
                          colorize(ndimage.gaussian_filter(crack, 1.5) * 1.5, 1.0, (255, 150, 40), (255, 90, 20), (255, 230, 150)))
 
 
+def weapon_fx(out, S=256):
+    """상점 무기 전용 스킬 바닥 효과 (붓터치, 무기 색)"""
+    c = S / 2
+    R = np.random.default_rng(900)
+
+    def zig(a, r0, r1, seed, n=6, amp=0.07):
+        pts = []
+        for i in range(n + 1):
+            t = i / n
+            r = r0 + (r1 - r0) * t
+            j = (R.random() - 0.5) * amp * 2 * (0 < i < n)
+            pts.append((c + np.cos(a + j) * r * S, c + np.sin(a + j) * r * S))
+        return [p for i in range(n) for p in line_path(pts[i], pts[i + 1], 18)]
+    # 제우스: 금빛 고리 + 푸른 번개 가지
+    ring = stroke(S, circle_path(S, S * 0.36, seed=901, wobble=0.01), 9, seed=902, dry=0.5, bristles=14)
+    bolts = np.zeros((S, S), np.float32)
+    for k in range(9):
+        a = k / 9 * 6.283 + R.random() * 0.3
+        bolts = np.maximum(bolts, stroke(S, zig(a, 0.04, 0.47, k), 5.5, seed=910 + k, dry=0.4, pool=0.2, bristles=6))
+    out["wfx_zeus"] = over(colorize(ring, 0.95, (250, 200, 70), (150, 90, 20), (255, 240, 180), paper_seed=903),
+                           colorize(ndimage.gaussian_filter(bolts, 0.8) * 1.3, 1.0, (120, 210, 255), (40, 110, 230), (230, 250, 255)))
+    # 아레스: 붉은 균열 폭발
+    burst = wash(np.hypot(*np.mgrid[-c:c, -c:c]) < S * 0.2, 920, 0.5, 4)
+    cr = np.zeros((S, S), np.float32)
+    for k in range(11):
+        a = k / 11 * 6.283 + R.random() * 0.4
+        cr = np.maximum(cr, stroke(S, zig(a, 0.1, 0.3 + R.random() * 0.18, k, 5, 0.12), 4.5, seed=930 + k, dry=0.35, pool=0.1, bristles=5))
+    out["wfx_ares"] = over(colorize(burst, 0.85, (120, 16, 20), (40, 4, 6), (200, 60, 50), paper_seed=921),
+                           colorize(np.clip(cr * 1.3, 0, 1), 1.0, (255, 80, 40), (160, 10, 10), (255, 200, 140)))
+    # 헤르메스: 청록 바람 소용돌이
+    wind = np.zeros((S, S), np.float32)
+    for k in range(3):
+        pts = []
+        for i in range(160):
+            t = i / 159
+            a = k * 2.094 + t * 4.2
+            r = S * (0.06 + 0.38 * t)
+            pts.append((c + np.cos(a) * r, c + np.sin(a) * r))
+        wind = np.maximum(wind, stroke(S, pts, 8, seed=940 + k, dry=0.6, pool=0.3, taper=(0.2, 0.8), bristles=14))
+    out["wfx_hermes"] = colorize(wind, 1.0, (60, 220, 200), (10, 110, 110), (220, 255, 250), paper_seed=941)
+    # 아테나: 금빛 방패 문양 (이중 고리 + 8방 광채)
+    r1 = stroke(S, circle_path(S, S * 0.42, seed=950, wobble=0.008), 7, seed=951, dry=0.5, bristles=12)
+    r2 = stroke(S, circle_path(S, S * 0.3, start_deg=80, seed=952, wobble=0.008), 5, seed=953, dry=0.6, bristles=10)
+    rays = np.zeros((S, S), np.float32)
+    for k in range(8):
+        a = k / 8 * 6.283
+        rays = np.maximum(rays, stroke(S, line_path((c + np.cos(a) * S * 0.08, c + np.sin(a) * S * 0.08), (c + np.cos(a) * S * 0.26, c + np.sin(a) * S * 0.26), 40), 6, seed=960 + k, dry=0.4, bristles=6))
+    out["wfx_athena"] = colorize(np.maximum(np.maximum(r1, r2), rays), 1.0, (255, 214, 90), (170, 110, 20), (255, 248, 210), paper_seed=954)
+
+
 def build_all():
     out = {}
     circle_set(out)
@@ -260,6 +310,7 @@ def build_all():
         cone_set(out, deg)
     donut_set(out)
     marks(out)
+    weapon_fx(out)
     rune_sphinx(out)
     pools(out)
     return {k: img(v) for k, v in out.items()}
