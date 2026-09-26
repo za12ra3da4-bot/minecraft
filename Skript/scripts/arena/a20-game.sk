@@ -324,7 +324,16 @@ function bgBaseGuard():
 on death of player:
     {-bg::on} is true
     bgTeam(victim) is not "none"
+    # 전설 무기만 떨어뜨리고 나머지(기본 장비)는 지움
+    loop drops:
+        if bgIsLegend(loop-item) is not "":
+            add loop-item to {_keep::*}
+            delete {bg::owned::%uuid of victim%::%bgIsLegend(loop-item)%}
     clear drops
+    loop {_keep::*}:
+        drop loop-value at location of victim
+    if size of {_keep::*} > 0:
+        broadcast "&6[전장] &f%name of victim%이(가) 전설 무기를 떨어뜨렸습니다!"
     if attacker is a player:
         if bgTeam(attacker) is not bgTeam(victim):
             if bgTeam(attacker) is not "none":
@@ -369,7 +378,7 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
         if arg-1 is not set:
             send "&6[전장] &f/전장 건설 (내 위치) | 건설 원점 | 장식 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
             send "&6[전장] &f/전장 자동팀 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops] | 보스제거"
-            send "&6[전장] &f/전장 점수 <팀> <n> | 목표 <n> | 시간 <분> | 이동 <마커>"
+            send "&6[전장] &f/전장 코인 <플레이어|all> <n> | 점수 <팀> <n> | 목표 <n> | 시간 <분> | 이동 <마커>"
             stop
         if arg-1 is "건설":
             # 기본: 명령을 친 사람이 서 있는 곳이 맵 한가운데(대전 앞 광장) 지면이 된다.  '/전장 건설 원점' = 저장된 원점 그대로
@@ -431,6 +440,25 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             bgBossSpawn({_b})
         else if arg-1 is "보스제거":
             bgBossRemove()
+        else if arg-1 is "코인":
+            # /전장 코인 <플레이어|all> <수>  (음수면 뺌)
+            set {_n} to arg-3 parsed as integer
+            if {_n} is not set:
+                send "&c사용법: /전장 코인 <플레이어|all> <수>"
+                stop
+            if arg-2 is "all":
+                loop all players:
+                    add {_n} to {bg::coin::%uuid of loop-player%}
+                    send "&6[코인] &f관리자가 &e%{_n}%&f 코인을 줬습니다 (보유 %{bg::coin::%uuid of loop-player%}%)" to loop-player
+                send "&6[전장] &f모든 플레이어에게 %{_n}% 코인"
+                stop
+            set {_p} to arg-2 parsed as player
+            if {_p} is not set:
+                send "&c플레이어를 찾을 수 없습니다."
+                stop
+            add {_n} to {bg::coin::%uuid of {_p}%}
+            send "&6[코인] &f관리자가 &e%{_n}%&f 코인을 줬습니다 (보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
+            send "&6[전장] &f%name of {_p}% 코인 %{_n}% → 보유 %{bg::coin::%uuid of {_p}%}%"
         else if arg-1 is "점수":
             set {-bg::score::%arg-2%} to arg-3 parsed as integer
         else if arg-1 is "목표":

@@ -299,6 +299,102 @@ def phoenix():
 WEAPONS = {"thunder": thunder, "dragon": dragon, "wind": wind, "phoenix": phoenix}
 
 
+# ─────────────────────────────────────────────────────────── 흑철대도 (넓은 외날 칼, 핏빛 날)
+IRONB = ((70, 72, 80), (16, 16, 20), (150, 154, 166))
+
+
+def blackiron():
+    ring = disc(84, 0, 20) & ~disc(84, 0, 11)
+    Ls = tassel(70, 200, length=80, spread=24)
+    Ls += [fill(ring, *GOLD, 201), edge(ring, 2.2, 202)]
+    grip = band_mask(104, 184, 10)
+    Ls += [fill(grip, *LACQ, 203, shade=V / 25), edge(grip, 2, 204)]
+    for k in range(6):
+        u = 110 + k * 12
+        Ls.append(brush([(u, -11), (u + 9, 11)], 4.5, 205 + k, ((40, 30, 30), (10, 6, 6), (100, 80, 80)), dry=0.3, pool=0, bristles=6)[0])
+    guard = disc(192, 0, 20)
+    Ls += [fill(guard, *GOLD, 212, shade=V / 50), edge(guard, 2.4, 213)]
+    spine = [(200, 13), (470, 14), (530, 14), (556, 12)]
+    edge_pts = [(200, -12), (300, -18), (400, -26), (470, -34), (515, -30), (545, -12), (556, 12)]
+    blade = poly_mask(spine + edge_pts[::-1])
+    Ls += [fill(blade, *IRONB, 214, shade=np.clip((V + 30) / 60, 0, 1) * 0.3 - 0.1), edge(blade, 2.6, 215)]
+    d = stroke(S, path([(e[0], e[1] + 4) for e in edge_pts[1:-1]], 16), 4.5, seed=216, dry=0.3, pool=0, taper=(0.05, 0.9), bristles=6)
+    Ls += [glow(d, (255, 60, 50), 5, 1.1), colorize(d, 1.0, (230, 40, 40), (120, 6, 10), (255, 150, 130))]
+    Ls.append(brush([(214, 7), (500, 8)], 2.6, 217, ((170, 170, 180), (80, 80, 90), (230, 230, 240)), dry=0.5, pool=0, bristles=4)[0])
+    return Ls
+
+
+# ─────────────────────────────────────────────────────────── 백호조 (호랑이 발톱 수갑)
+def tiger():
+    Ls = []
+    arm = taper_mask([(90, 30), (150, 34), (230, 36), (270, 30)])
+    Ls += [fill(arm, *PAPER, 220, shade=V / 90, strength=0.65), edge(arm, 2.6, 221)]
+    for k in range(6):                                  # 백호 줄무늬
+        u = 110 + k * 26
+        Ls.append(brush([(u, -34), (u + 10, -12), (u + 2, 4)], 7, 222 + k, dry=0.5, pool=0.2, taper=(0.1, 0.6), bristles=8)[0])
+        Ls.append(brush([(u + 8, 34), (u + 16, 14)], 6, 230 + k, dry=0.5, pool=0.2, taper=(0.1, 0.6), bristles=8)[0])
+    knuckle = taper_mask([(262, 38), (292, 40)])
+    Ls += [fill(knuckle, *GOLD, 240, shade=V / 60), edge(knuckle, 2.2, 241)]
+    for j, off in enumerate((-26, 0, 26)):
+        pts = [(292, off - 6), (380, off - 8), (460, off - 2 + j), (530, off + 18), (552, off + 30)]
+        back = [(292, off + 6), (380, off + 5), (460, off + 10), (530, off + 26), (552, off + 30)]
+        cl = poly_mask(pts + back[::-1])
+        Ls += [fill(cl, *STEEL, 242 + j, shade=-V / 90), edge(cl, 2.2, 245 + j)]
+        d = stroke(S, path([(p[0], p[1] + 1) for p in pts[1:]], 14), 3, seed=248 + j, dry=0.3, pool=0, bristles=4)
+        Ls += [glow(d, (140, 220, 255), 4, 0.9), colorize(d, 1.0, (170, 230, 255), (40, 120, 200), (240, 250, 255))]
+    gem = disc(276, 0, 9)
+    Ls += [glow(gem.astype(np.float32), (140, 220, 255), 5, 1.2), fill(gem, (120, 200, 250), (20, 80, 150), (220, 245, 255), 251), edge(gem, 1.6, 252)]
+    return Ls
+
+
+# ─────────────────────────────────────────────────────────── 여의봉 (붉은 옻칠 봉 + 금 머리)
+def staff():
+    shaft = band_mask(60, 500, 9)
+    Ls = [fill(shaft, *LACQ, 260, shade=V / 22), edge(shaft, 2.2, 261)]
+    for u0, u1 in ((14, 62), (498, 548)):
+        cap = taper_mask([(u0, 11), (u0 + 6, 13), (u1 - 6, 13), (u1, 11)])
+        Ls += [fill(cap, *GOLD, 262 + u0, shade=V / 40), edge(cap, 2.4, 263 + u0)]
+        for k in range(3):
+            u = u0 + 12 + k * 12
+            Ls.append(brush([(u, -12), (u + 4, 0), (u, 12)], 2.6, 264 + u0 + k, ((140, 80, 14), (70, 36, 6), (220, 170, 80)), dry=0.4, pool=0, bristles=4)[0])
+    for k in range(5):                                   # 금빛 경문 띠 (빛남)
+        u = 130 + k * 75
+        d = stroke(S, path([(u, -9), (u + 10, 9)], 8), 5, seed=280 + k, dry=0.3, pool=0.1, bristles=6)
+        Ls += [glow(d, (255, 220, 110), 5, 1.0), colorize(d, 1.0, *GOLD)]
+    Ls.append(brush([(80, -4), (480, -5)], 2.4, 290, ((255, 170, 150), (180, 60, 50), (255, 220, 210)), alpha=0.7, dry=0.6, pool=0, bristles=4)[0])
+    return Ls
+
+
+# ─────────────────────────────────────────────────────────── 도목검 (복숭아나무 부적검 + 노란 부적)
+WOOD = ((176, 112, 70), (90, 48, 24), (226, 170, 120))
+TALIS = ((236, 206, 90), (170, 130, 30), (252, 236, 170))
+
+
+def peachwood():
+    Ls = tassel(96, 300, length=84, spread=20)
+    pom = taper_mask([(84, 8), (92, 12), (104, 10)])
+    grip = band_mask(104, 182, 9)
+    guard = taper_mask([(182, 12), (188, 30), (198, 30), (204, 12)])
+    blade = taper_mask([(204, 16), (440, 15), (505, 12), (536, 6), (550, 0.5)])
+    Ls += [fill(pom, *WOOD, 301), edge(pom, 2, 302), fill(grip, *WOOD, 303, shade=V / 30), edge(grip, 2, 304),
+           fill(guard, *WOOD, 305), edge(guard, 2.2, 306), fill(blade, *WOOD, 307, shade=-V / 50), edge(blade, 2.6, 308)]
+    # 주사(붉은) 부적 문양 (빛남)
+    pts = [(220, 0)]
+    for i in range(1, 12):
+        pts.append((220 + i * 26, (7 if i % 3 == 0 else -5 if i % 3 == 1 else 2)))
+    d = stroke(S, path(pts, 10), 4, seed=309, dry=0.3, pool=0.1, bristles=5)
+    Ls += [glow(d, (255, 110, 60), 5, 1.0), colorize(d, 1.0, (220, 40, 30), (110, 10, 6), (255, 140, 110))]
+    # 노란 부적 두 장 (가드에 매달림)
+    for j, off in enumerate((-22, 22)):
+        tal = poly_mask([(200, off - 9), (206, off + 9), (130, off + 16 + j * 4), (122, off - 2 + j * 4)])
+        Ls += [fill(tal, *TALIS, 310 + j, strength=0.7), edge(tal, 1.6, 312 + j)]
+        Ls.append(brush([(190, off), (150, off + 8), (136, off + 4 + j * 3)], 3, 314 + j, ((200, 30, 20), (110, 6, 6), (250, 120, 100)), dry=0.4, pool=0.1, bristles=4)[0])
+    return Ls
+
+
+WEAPONS.update({"blackiron": blackiron, "tiger": tiger, "staff": staff, "peachwood": peachwood})
+
+
 def paint(wid, out=256):
     img = over(*WEAPONS[wid]())
     im = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8), "RGBA")
@@ -313,7 +409,7 @@ def export(pack):
 
 def preview(path):
     ims = [paint(w) for w in WEAPONS]
-    W = Image.new("RGBA", (1024, 512), (0, 0, 0, 0))
+    W = Image.new("RGBA", (256 * len(ims), 512), (0, 0, 0, 0))
     for i, im in enumerate(ims):
         W.paste(Image.new("RGBA", (256, 256), (238, 232, 216, 255)), (i * 256, 0))
         W.paste(Image.new("RGBA", (256, 256), (46, 44, 50, 255)), (i * 256, 256))

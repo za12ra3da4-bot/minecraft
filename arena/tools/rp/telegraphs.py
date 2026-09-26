@@ -332,6 +332,44 @@ def weapon_fx(out, S=256):
     core = wash(rr < 0.1, 1961, 0.6, 3)
     out["wfx_barrier"] = over(colorize(np.maximum(core, wash(rr < 0.42, 1962, 0.18, 8)), 0.7, (220, 170, 60), (100, 60, 10), (255, 235, 170), paper_seed=1963),
                               colorize(np.clip(np.maximum(np.maximum(r1, r2), rays) * 1.15, 0, 1), 1.0, (240, 180, 50), (110, 60, 8), (255, 245, 200), paper_seed=1964))
+    # ── 혈풍참: 앞으로 길게 그은 핏빛 일섬 (이미지 위 = 앞)
+    sl = stroke(S, line_path((c, S * 0.95), (c + 6, S * 0.04), 300), 30, seed=1970, dry=0.55, pool=0.5, taper=(0.1, 0.85), bristles=24, rough=0.8)
+    fine = np.zeros((S, S), np.float32)
+    for k in range(4):
+        fine = np.maximum(fine, stroke(S, line_path((c - 20 + k * 13, S * 0.9), (c - 14 + k * 11, S * 0.1), 200), 3, seed=1971 + k, dry=0.8, pool=0, bristles=4))
+    out["wfx_blood"] = over(colorize(np.clip(sl * 1.1, 0, 1), 1.0, (170, 16, 24), (50, 2, 6), (240, 90, 80), paper_seed=1975),
+                            colorize(np.maximum(fine, splatter(S, 1976, 40, 0.05, 0.45) * (np.abs(xx - c) < S * 0.25)), 0.9, (150, 12, 20), (40, 2, 4), (230, 80, 70)))
+    # ── 호조연격: 세 줄 발톱 자국 (은청)
+    cl = np.zeros((S, S), np.float32)
+    for k in range(3):
+        x0 = c - S * 0.2 + k * S * 0.2
+        pts = [(x0 - S * 0.08 + S * 0.16 * t, S * 0.15 + S * 0.7 * t + np.sin(t * 3) * 8) for t in np.linspace(0, 1, 120)]
+        cl = np.maximum(cl, stroke(S, pts, 20, seed=1980 + k, dry=0.55, pool=0.45, taper=(0.1, 0.9), bristles=18))
+    out["wfx_claw"] = over(colorize(wash(rr < 0.3, 1984, 0.25, 6), 0.4, (90, 150, 200), (20, 50, 90), (190, 230, 255)),
+                           colorize(np.clip(cl * 1.15, 0, 1), 1.0, (120, 190, 240), (20, 60, 120), (230, 248, 255), paper_seed=1985))
+    # ── 여의천강: 붓으로 내리친 금빛 충격 고리 + 갈라짐
+    sh = stroke(S, circle_path(S, S * 0.4, start_deg=-30, sweep=330, seed=1990, wobble=0.012), 22, seed=1991, dry=0.55, pool=0.5, bristles=22)
+    crk = np.zeros((S, S), np.float32)
+    for k in range(8):
+        a = k / 8 * 6.283 + 0.3
+        crk = np.maximum(crk, stroke(S, zig(a, 0.05, 0.38, 5, 0.12), 5, seed=1992 + k, dry=0.4, pool=0.1, bristles=5))
+    out["wfx_staff"] = over(colorize(wash(rr < 0.12, 1999, 0.6, 3), 0.9, (230, 160, 50), (110, 60, 10), (255, 230, 150)),
+                            colorize(np.clip(np.maximum(sh, crk) * 1.15, 0, 1), 1.0, (240, 180, 60), (130, 70, 10), (255, 240, 180), paper_seed=2000))
+    # ── 화염부: 불꽃 고리 + 부적 여섯 장
+    fr = np.zeros((S, S), np.float32)
+    for k in range(18):
+        a = k / 18 * 6.283
+        r0 = 0.3
+        pts = [(c + np.cos(a) * S * (r0 + 0.14 * t) + np.sin(t * 5 + k) * 6, c + np.sin(a) * S * (r0 + 0.14 * t)) for t in np.linspace(0, 1, 50)]
+        fr = np.maximum(fr, stroke(S, pts, 14, seed=2010 + k, dry=0.6, pool=0.3, taper=(0.1, 0.4), bristles=10))
+    tal = np.zeros((S, S), np.float32)
+    for k in range(6):
+        a = k / 6 * 6.283 + 0.26
+        x, y = c + np.cos(a) * S * 0.2, c + np.sin(a) * S * 0.2
+        tal = np.maximum(tal, (np.abs(xx - x) < S * 0.03) & (np.abs(yy - y) < S * 0.06))
+    out["wfx_fire"] = over(colorize(np.clip(fr * 1.1, 0, 1), 1.0, (250, 110, 30), (160, 30, 6), (255, 220, 120), paper_seed=2030),
+                           colorize(tal.astype(np.float32) * 0.95, 1.0, (236, 206, 90), (170, 130, 30), (252, 236, 170)))
+
 
 
 def build_all():
