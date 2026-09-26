@@ -74,9 +74,13 @@ warp = (noise(300, 4) - 0.5) * 260
 coast_z = 770 + (noise(420, 5, 5) - 0.5) * 260 + np.where(np.abs(X) < 180, 60, 0) * (1 - np.abs(X) / 180).clip(0, 1)
 land = np.clip((coast_z - Z) / 30, 0, 1)
 
-w_hills = soft(wdist(-620, 140), 400, 220)
-w_forest = soft(wdist(640, 160), 400, 220)
-w_canyon = soft(wdist(-60, -470), 360, 200)
+# 경계를 잡음으로 크게 흔들어 동그란 모양이 안 보이게
+bn1 = (noise(170, 51, 4) - 0.5) * 420
+bn2 = (noise(170, 52, 4) - 0.5) * 420
+bn3 = (noise(170, 53, 4) - 0.5) * 380
+w_hills = soft(wdist(-640, 120) + bn1, 420, 160)
+w_forest = soft(wdist(660, 180) + bn2, 400, 160)
+w_canyon = soft(wdist(-60, -470) + bn3, 330, 150)
 w_north = np.clip((-700 - Z + wx * 0.5) / 180, 0, 1)
 
 # ─────────────────────────────────────────────────────────────── 높이
@@ -85,7 +89,9 @@ def ridged(scale, seed):
     return r ** 2
 
 
-h = SEA + 5 + (n1 - 0.5) * 16 + (n2 - 0.5) * 10 + (n3 - 0.5) * 3
+h = SEA + 5 + (n1 - 0.5) * 26 + (n2 - 0.5) * 16 + (n3 - 0.5) * 4
+cliff = np.clip((noise(260, 54) - 0.55) * 8, 0, 1)
+h += cliff * 12
 h += w_hills * (14 + ridged(140, 6) * 70 + n3 * 6)
 h += w_forest * (5 + n2 * 14)
 mesa = 26 + noise(120, 61) * 26
