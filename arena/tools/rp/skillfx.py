@@ -334,3 +334,269 @@ def preview(path):
 
 if __name__ == "__main__":
     preview(os.path.join(os.path.dirname(__file__), "..", "..", "preview", "skill_fx_new.png"))
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+#  v2 — 무기 동작에 맞춘 바닥 효과 (마법진 아님). 이미지 위쪽 = 앞 (스킬 방향)
+# ═════════════════════════════════════════════════════════════════════════════
+def _noise(S, scale, seed, octaves=4):
+    R = _rng(seed)
+    out = np.zeros((S, S), np.float32)
+    amp, tot = 1.0, 0.0
+    for o in range(octaves):
+        n = max(2, int(S / scale * (2 ** o)))
+        a = R.random((n, n)).astype(np.float32)
+        im = Image.fromarray((a * 255).astype(np.uint8)).resize((S, S), Image.BICUBIC)
+        out += np.asarray(im, np.float32) / 255 * amp
+        tot += amp
+        amp *= 0.5
+    return out / tot
+
+
+def _crack(c, x, y, ang, length, width, R, k="core", depth=0, val=255):
+    """갈라지는 균열 (갈래 치기)"""
+    pts = [(x, y)]
+    seg = 7
+    n = max(2, int(length / seg))
+    for i in range(n):
+        ang += R.normal(0, 0.35)
+        x += math.cos(ang) * seg; y += math.sin(ang) * seg
+        pts.append((x, y))
+        if depth < 2 and R.random() < 0.18:
+            _crack(c, x, y, ang + R.choice([-1, 1]) * R.uniform(0.5, 1.1), length * R.uniform(0.3, 0.55),
+                   width * 0.6, R, "mid", depth + 1, int(val * 0.85))
+    for i in range(len(pts) - 1):
+        t = i / max(1, len(pts) - 1)
+        c.line(k, [pts[i], pts[i + 1]], max(0.7, width * (1 - t * 0.8)), val)
+
+
+def _dark_under(glow, dark_alpha):
+    """빛 효과 아래에 그을음 (반투명 검정) 을 깐다"""
+    S = glow.size
+    d = np.zeros((S[1], S[0], 4), np.uint8)
+    d[..., 3] = np.clip(dark_alpha * 255, 0, 255).astype(np.uint8)
+    base = Image.fromarray(d, "RGBA")
+    base.alpha_composite(glow)
+    return base
+
+
+def _radial(S, cx, cy):
+    yy, xx = np.mgrid[0:S, 0:S].astype(np.float32)
+    return np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2), np.arctan2(yy - cy, xx - cx)
+
+
+def fx_thunder():
+    """낙뢰 충격: 가운데 폭발 + 번개 모양으로 갈라진 땅 + 흩어진 불꽃"""
+    S = 256; c = Canvas(S, S); R = _rng(11); cx = cy = S / 2
+    for i in range(9):
+        a = 2 * math.pi * i / 9 + R.normal(0, 0.2)
+        _crack(c, cx + math.cos(a) * 10, cy + math.sin(a) * 10, a, R.uniform(70, 115), 5.5, R)
+    c.disc("core", cx, cy, 16)
+    c.disc("mid", cx, cy, 30, 170)
+    for i in range(70):
+        a = R.uniform(0, 6.28); r = R.uniform(20, 115)
+        c.disc("gold" if i % 3 else "core", cx + math.cos(a) * r, cy + math.sin(a) * r, R.uniform(0.6, 1.8))
+    g = c.render(PAL["thunder"], bloom=1.1)
+    rr, _ = _radial(S, cx, cy)
+    n = _noise(S, 40, 3)
+    dark = np.clip(1 - rr / 105, 0, 1) ** 0.8 * (0.35 + 0.35 * n)
+    return _dark_under(g, dark)
+
+
+def fx_dragon():
+    """용살자의 일격: 앞 120° 를 태우며 휩쓴 거대한 화염 베기 (아래 가운데 = 휘두른 사람)"""
+    S = 256; c = Canvas(S, S); R = _rng(21)
+    ox, oy = S / 2, S * 0.86
+    for j, (r, th, k, v) in enumerate(((150, 60, "mid", 90), (148, 38, "mid", 150), (146, 12, "core", 235))):
+        outer, inner = [], []
+        for t in np.linspace(0, 1, 90):
+            a = math.radians(-150 + 120 * t)
+            w_ = th * math.sin(math.pi * t) ** 0.7
+            outer.append((ox + math.cos(a) * r, oy + math.sin(a) * r))
+            inner.append((ox + math.cos(a) * (r - w_), oy + math.sin(a) * (r - w_)))
+        c.poly(k, outer + inner[::-1], v)
+    # 칼끝 궤적 줄무늬 + 불티
+    for i in range(7):
+        rr = 150 - i * 9
+        pts = [(ox + math.cos(math.radians(a)) * rr, oy + math.sin(math.radians(a)) * rr) for a in np.linspace(-146, -34, 40)]
+        c.line("gold", pts, 1.0, 160)
+    for i in range(90):
+        a = math.radians(R.uniform(-150, -30)); r = R.uniform(90, 175)
+        c.disc("gold" if i % 2 else "core", ox + math.cos(a) * r, oy + math.sin(a) * r, R.uniform(0.6, 2.2))
+    g = c.render(PAL["dragon"], bloom=1.2, core_white=0.45)
+    rr, ang = _radial(S, ox, oy)
+    ad = np.degrees(ang)
+    inside = ((ad > -152) & (ad < -28)).astype(np.float32)
+    dark = inside * np.clip(1 - np.abs(rr - 110) / 70, 0, 1) * (0.25 + 0.3 * _noise(S, 30, 5))
+    return _dark_under(g, dark)
+
+
+def fx_wind():
+    """질풍 돌진: 앞으로 뻗은 바람 줄기 + 뒤쪽 소용돌이"""
+    S = 256; c = Canvas(S, S); R = _rng(31); cx = S / 2
+    for i in range(16):
+        x0 = cx + R.normal(0, 26)
+        y0 = S * R.uniform(0.62, 0.95); y1 = S * R.uniform(0.02, 0.2)
+        bend = R.normal(0, 14)
+        pts = [(x0 + bend * math.sin(math.pi * t), y0 + (y1 - y0) * t) for t in np.linspace(0, 1, 30)]
+        wd = R.uniform(1.2, 3.6)
+        for j in range(len(pts) - 1):
+            t = j / (len(pts) - 1)
+            c.line("core" if wd > 2.8 else "mid", [pts[j], pts[j + 1]], max(0.5, wd * math.sin(math.pi * (0.15 + 0.85 * t))), 235)
+    for s in (-1, 1):
+        pts = [(cx + s * (10 + t * 34) * math.cos(t * 5.5), S * 0.86 + (10 + t * 34) * math.sin(t * 5.5) * 0.45) for t in np.linspace(0, 1, 50)]
+        c.line("mid", pts, 2.0, 220)
+    for i in range(40):
+        c.disc("gold", cx + R.normal(0, 40), R.uniform(10, S - 10), R.uniform(0.5, 1.4))
+    return c.render(PAL["wind"], bloom=1.0)
+
+
+def fx_phoenix():
+    """성기사의 망치: 내리찍은 충격파 — 금빛 파문 + 방사형 균열 + 불사조 깃 빛살"""
+    S = 256; c = Canvas(S, S); R = _rng(41); cx = cy = S / 2
+    for i in range(14):
+        a = 2 * math.pi * i / 14 + R.normal(0, 0.1)
+        _crack(c, cx + math.cos(a) * 14, cy + math.sin(a) * 14, a, R.uniform(55, 95), 4.2, R, "mid", val=230)
+    for rr, wd, k in ((112, 6, "mid"), (112, 2.5, "core"), (80, 3, "mid"), (80, 1.2, "gold")):
+        pts = []
+        for t in np.linspace(0, 2 * math.pi, 120):
+            r_ = rr + math.sin(t * 7) * 3 + R.normal(0, 1.2)
+            pts.append((cx + math.cos(t) * r_, cy + math.sin(t) * r_))
+        c.line(k, pts, wd)
+    for i in range(24):
+        a = 2 * math.pi * i / 24
+        L = R.uniform(18, 34)
+        p0 = (cx + math.cos(a) * 84, cy + math.sin(a) * 84)
+        p1 = (cx + math.cos(a + 0.05) * (84 + L), cy + math.sin(a + 0.05) * (84 + L))
+        c.poly("gold", [p0, (p0[0] + math.cos(a + 1.57) * 3, p0[1] + math.sin(a + 1.57) * 3), p1], 200)
+    c.disc("core", cx, cy, 20)
+    g = c.render(PAL["phoenix"], bloom=1.2)
+    rr, _ = _radial(S, cx, cy)
+    dark = np.clip(1 - rr / 90, 0, 1) ** 1.2 * (0.3 + 0.3 * _noise(S, 30, 7))
+    return _dark_under(g, dark)
+
+
+def fx_blackiron():
+    """흑기사 돌진 베기: 앞으로 길게 찢긴 핏빛 참격 (아래→위)"""
+    S = 256; c = Canvas(S, S); R = _rng(51); cx = S / 2
+    for wd, k, v in ((42, "mid", 110), (26, "mid", 200), (9, "core", 255)):
+        left, right = [], []
+        for t in np.linspace(0, 1, 60):
+            y = S * 0.97 - t * S * 0.94
+            w_ = wd * math.sin(math.pi * t) ** 0.6
+            x = cx + math.sin(t * 3) * 6
+            left.append((x - w_ / 2, y)); right.append((x + w_ / 2, y))
+        c.poly(k, left + right[::-1], v)
+    for i in range(22):            # 찢긴 가장자리 조각
+        t = R.uniform(0.1, 0.9); y = S * 0.97 - t * S * 0.94
+        s = R.choice([-1, 1])
+        x = cx + s * 22 * math.sin(math.pi * t) ** 0.6
+        c.poly("mid", [(x, y - 4), (x + s * R.uniform(8, 22), y + R.uniform(-8, 8)), (x, y + 4)], 170)
+    for i in range(50):
+        c.disc("gold" if i % 2 else "mid", cx + R.normal(0, 30), R.uniform(10, S - 10), R.uniform(0.8, 2.6))
+    g = c.render(PAL["blackiron"], bloom=1.1, core_white=0.55)
+    yy, xx = np.mgrid[0:S, 0:S].astype(np.float32)
+    dark = np.clip(1 - np.abs(xx - cx) / 40, 0, 1) * (0.35 + 0.35 * _noise(S, 20, 9))
+    return _dark_under(g, dark)
+
+
+def fx_tiger():
+    """그림자 쌍단검: 세 줄 발톱 자국 (보랏빛 그림자)"""
+    S = 256; c = Canvas(S, S); R = _rng(61); cx = S / 2
+    for j in (-1, 0, 1):
+        pts = [(cx + j * 34 + math.sin(t * math.pi) * 14 - 10, S * 0.92 - t * S * 0.84) for t in np.linspace(0, 1, 40)]
+        for i in range(len(pts) - 1):
+            t = i / (len(pts) - 1)
+            f = math.sin(math.pi * t) ** 0.7
+            c.line("mid", [pts[i], pts[i + 1]], max(1, 22 * f), 150)
+            c.line("mid", [pts[i], pts[i + 1]], max(1, 11 * f), 230)
+            c.line("core", [pts[i], pts[i + 1]], max(0.6, 4 * f))
+    for i in range(40):
+        c.disc("gold", cx + R.normal(0, 45), R.uniform(15, S - 15), R.uniform(0.5, 1.6))
+    g = c.render(PAL["tiger"], bloom=1.0)
+    yy, xx = np.mgrid[0:S, 0:S].astype(np.float32)
+    dark = np.zeros((S, S), np.float32)
+    for j in (-1, 0, 1):
+        dark = np.maximum(dark, np.clip(1 - np.abs(xx - (cx + j * 34)) / 14, 0, 1))
+    dark *= 0.4 * np.clip(np.sin(np.pi * (1 - yy / S)), 0, 1)
+    return _dark_under(g, dark)
+
+
+def fx_staff():
+    """대마법사의 폭발: 가운데서 터지는 비전 파편 (별 모양 광선 + 파편 + 먼지)"""
+    S = 256; c = Canvas(S, S); R = _rng(71); cx = cy = S / 2
+    for i in range(18):
+        a = 2 * math.pi * i / 18 + R.normal(0, 0.08)
+        L = R.uniform(60, 118) if i % 2 == 0 else R.uniform(35, 70)
+        w_ = R.uniform(7, 13)
+        p1 = (cx + math.cos(a) * L, cy + math.sin(a) * L)
+        pl = (cx + math.cos(a + 1.57) * w_ / 2, cy + math.sin(a + 1.57) * w_ / 2)
+        pr = (cx + math.cos(a - 1.57) * w_ / 2, cy + math.sin(a - 1.57) * w_ / 2)
+        c.poly("mid", [pl, p1, pr], 210)
+        c.line("core", [(cx, cy), (cx + math.cos(a) * L * 0.8, cy + math.sin(a) * L * 0.8)], 1.6)
+    for i in range(36):            # 떠오르는 비전 파편 (작은 마름모)
+        a = R.uniform(0, 6.28); r = R.uniform(40, 118); s = R.uniform(2, 5)
+        x, y = cx + math.cos(a) * r, cy + math.sin(a) * r
+        c.poly("gold", [(x, y - s), (x + s * 0.6, y), (x, y + s), (x - s * 0.6, y)], 230)
+    c.disc("core", cx, cy, 18)
+    c.disc("mid", cx, cy, 34, 150)
+    g = c.render(PAL["staff"], bloom=1.2)
+    rr, _ = _radial(S, cx, cy)
+    dark = np.clip(1 - rr / 80, 0, 1) * (0.3 + 0.3 * _noise(S, 26, 13))
+    return _dark_under(g, dark)
+
+
+def fx_peachwood():
+    """불사조의 창: 땅을 두르는 불의 고리 (불 혀가 바깥으로 솟음) + 그을린 바닥"""
+    S = 256; c = Canvas(S, S); R = _rng(81); cx = cy = S / 2
+    base = 78
+    for layer, (n, lmin, lmax, wmin, wmax, k, v) in enumerate(((30, 28, 48, 9, 15, "mid", 150), (30, 18, 34, 6, 10, "mid", 225), (24, 8, 18, 3, 6, "core", 255))):
+        for i in range(n):
+            a = 2 * math.pi * (i + R.uniform(0, 1)) / n
+            L = R.uniform(lmin, lmax); w_ = R.uniform(wmin, wmax)
+            pts_l, pts_r = [], []
+            for t in np.linspace(0, 1, 14):
+                r = base - 6 + t * L
+                sway = math.sin(t * 4 + i) * 0.06 * t
+                ww = w_ * (1 - t) ** 0.8 / r
+                pts_l.append((cx + math.cos(a + sway - ww) * r, cy + math.sin(a + sway - ww) * r))
+                pts_r.append((cx + math.cos(a + sway + ww) * r, cy + math.sin(a + sway + ww) * r))
+            c.poly(k, pts_l + pts_r[::-1], v)
+    c.circle("core", cx, cy, base - 4, 3.0)
+    for i in range(60):
+        a = R.uniform(0, 6.28); r = R.uniform(base, base + 50)
+        c.disc("gold", cx + math.cos(a) * r, cy + math.sin(a) * r, R.uniform(0.6, 1.8))
+    g = c.render(PAL["peachwood"], bloom=1.2, core_white=0.5)
+    rr, _ = _radial(S, cx, cy)
+    dark = np.clip(1 - np.abs(rr - base) / 40, 0, 1) * (0.35 + 0.35 * _noise(S, 24, 17))
+    return _dark_under(g, dark)
+
+
+FX2 = {"thunder": fx_thunder, "dragon": fx_dragon, "wind": fx_wind, "phoenix": fx_phoenix,
+       "blackiron": fx_blackiron, "tiger": fx_tiger, "staff": fx_staff, "peachwood": fx_peachwood}
+
+
+def ground(wid):          # noqa: F811  (v2 가 앞의 마법진 버전을 대신함)
+    return FX2[wid]()
+
+
+def preview2(path):
+    cell = 256
+    sheet = Image.new("RGB", (cell * 4 + 50, cell * 2 + 30), (14, 12, 18))
+    ground_tex = Image.new("RGBA", (cell, cell), (0, 0, 0, 0))
+    try:
+        import blocks as B
+        a = B.load_tex("stone_bricks")
+        t = Image.fromarray((a * 255).astype(np.uint8), "RGBA").resize((32, 32), Image.NEAREST)
+        for y in range(0, cell, 32):
+            for x in range(0, cell, 32):
+                ground_tex.paste(t, (x, y))
+        ground_tex = Image.eval(ground_tex, lambda v: int(v * 0.55))
+    except Exception:
+        ground_tex = Image.new("RGBA", (cell, cell), (60, 58, 56, 255))
+    for i, w in enumerate(WEAPONS):
+        bg = ground_tex.copy().convert("RGBA")
+        bg.putalpha(255)
+        bg.alpha_composite(ground(w))
+        sheet.paste(bg.convert("RGB"), (10 + (i % 4) * (cell + 10), 10 + (i // 4) * (cell + 10)))
+    sheet.save(path)
