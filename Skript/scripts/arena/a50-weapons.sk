@@ -325,7 +325,9 @@ on inventory click:
     play sound "ui.toast.challenge_complete" to player
     bgWfx(location of player, "wfx_barrier", 5, 30, 0)
 
-function bgItemCd(p: player, t: number):
+function bgItemCd(p: player, w: text, t: number):
+    # 무기마다 따로 도는 쿨타임 그룹 (예전에 받은 무기에도 지금 붙인다) → 다른 철 검 · 무기는 영향 없음
+    bgCmd("item modify entity %name of {_p}% weapon.mainhand {function:""minecraft:set_components"",components:{""minecraft:use_cooldown"":{seconds:%{-bg::w::%{_w}%::cd}%,cooldown_group:""bg:w_%{_w}%""}}}")
     set {_it} to {_p}.getInventory().getItemInMainHand()
     {_p}.setCooldown({_it}, round({_t}))
 
@@ -435,7 +437,7 @@ on right click:
             stop
     set {-bg::wcd::%{_k}%} to now
     # 아이템 쿨타임 표시 (엔더 진주처럼 무기 칸이 하얗게 차오름)
-    bgItemCd(player, {-bg::w::%{_w}%::cd} * 20)
+    bgItemCd(player, {_w}, {-bg::w::%{_w}%::cd} * 20)
     if {_w} is "thunder":
         bgSkThunder(player)
     else if {_w} is "dragon":
