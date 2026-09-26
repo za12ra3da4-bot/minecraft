@@ -99,11 +99,11 @@ function bgAimYaw() :: number:
         return bgYawTo({_pos}, location of {-bg::boss::target})
     return yaw of (location of {-bg::boss::ent})
 
-# 경고 시간 (틱): 원래 값의 약 60% — 피하기 빠듯하게. 격노 때 더 짧음
+# 경고 시간 (틱): 원래 값의 약 80% — 너무 쉽지도 어렵지도 않게. 격노 때 조금 더 짧음
 function bgRT(a: number, b: number) :: number:
     if {-bg::boss::rage} is true:
-        return max(8, round({_b} * 0.58))
-    return max(8, round({_a} * 0.62))
+        return max(10, round({_b} * 0.78))
+    return max(10, round({_a} * 0.82))
 
 function bgRage(a: number, b: number) :: number:
     if {-bg::boss::rage} is true:
@@ -374,7 +374,7 @@ function bgSkCyclopsBoulder(g: number):
     if {_p} is not set:
         bgCastEnd()
         stop
-    set {_n} to bgRage(6, 8)
+    set {_n} to bgRage(5, 6)
     set {_gap} to bgRT(12, 9)
     set {_t} to bgRT(22, 18)
     bgCastLen(({_n} - 1) * {_gap} + {_t})

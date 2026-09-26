@@ -42,6 +42,21 @@ command /로비:
             stop
         bgToLobby(player)
 
+# 최신 리소스팩을 sha1 과 함께 직접 보낸다 (server.properties 에 sha1 이 없으면 클라이언트가 옛 팩을 계속 쓰기 때문)
+function bgSendPack(p: player):
+    {-bg::pack::url} is set
+    send the resource pack from {-bg::pack::url} with hash {-bg::pack::sha1} to {_p}
+
+command /리팩:
+    aliases: /rp
+    trigger:
+        bgSendPack(player)
+        send "&6[전장] &f최신 리소스팩을 보냈습니다. 화면에서 '예' 를 눌러주세요."
+
+on join:
+    wait 20 ticks
+    bgSendPack(player)
+
 on join:
     wait 3 ticks
     if {-bg::on} is not true:

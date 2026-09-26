@@ -131,7 +131,7 @@ function bgInCone(p: player, c: location, yaw: number, deg: number, r: number) :
 
 # 피해 (하트 단위) + 밀쳐내기
 function bgHit(p: player, hearts: number, from: location, kb: number, up: number):
-    damage {_p} by {_hearts} * 1.3
+    damage {_p} by {_hearts} * 1.1
     set {_dx} to (x-coordinate of {_p}) - (x-coordinate of {_from})
     set {_dz} to (z-coordinate of {_p}) - (z-coordinate of {_from})
     set {_d} to sqrt({_dx} * {_dx} + {_dz} * {_dz})
@@ -242,9 +242,9 @@ function bgCastEnd():
         set {-bg::boss::state} to "idle"
     delete {-bg::boss::skill}
     set {-bg::boss::cast} to 0
-    set {-bg::boss::cd} to 40
+    set {-bg::boss::cd} to 55
     if {-bg::boss::rage} is true:
-        set {-bg::boss::cd} to 24
+        set {-bg::boss::cd} to 35
 
 function bgStun(ticks: number):
     set {-bg::boss::state} to "stun"

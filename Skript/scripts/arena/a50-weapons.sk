@@ -233,14 +233,16 @@ command /상점:
 on right click on entity:
     scoreboard tags of event-entity contain "bg_shopnpc"
     cancel event
-    bgShopOpen(player)
+    add "bg_wantshop" to scoreboard tags of player
 
-on damage:
-    scoreboard tags of victim contain "bg_shopnpc"
-    cancel event
-    attacker is a player
-    set {_a} to attacker
-    bgShopOpen({_a})
+# 데이터팩(tick)도 interaction 클릭을 잡아 같은 태그를 붙인다 → 여기서 한 번만 연다
+every 2 ticks:
+    loop all players:
+        if scoreboard tags of loop-player contain "bg_wantshop":
+            remove "bg_wantshop" from scoreboard tags of loop-player
+            if {-bg::shop::%uuid of loop-player%} is not true:
+                bgShopOpen(loop-player)
+
 
 # 6줄 상자: 보라 유리판 바탕 + 전설 무기 8칸 (리소스팩 그림) + 장비 6칸 + 보유 코인
 function bgShopOpen(p: player):

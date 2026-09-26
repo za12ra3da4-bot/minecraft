@@ -151,6 +151,11 @@ def core_functions(dp_root):
         "execute as @e[type=item_display,tag=bg_tg] run function bg:tele/tick",
         "execute as @e[type=!player,tag=bg_spin_fast] at @s run tp @s ~ ~ ~ ~3 ~",
         "execute as @e[type=!player,tag=bg_spin] at @s run tp @s ~ ~ ~ ~0.8 ~",
+        # 상점 상인 클릭 (interaction) → 누른 사람에게 태그 → Skript 가 상점을 연다
+        "execute as @e[type=interaction,tag=bg_shopnpc] if data entity @s interaction on target run tag @s add bg_wantshop",
+        "execute as @e[type=interaction,tag=bg_shopnpc] if data entity @s attack on attacker run tag @s add bg_wantshop",
+        "execute as @e[type=interaction,tag=bg_shopnpc] run data remove entity @s interaction",
+        "execute as @e[type=interaction,tag=bg_shopnpc] run data remove entity @s attack",
         "execute if score #run bg_build matches 1 run function bg:map/build/step with storage bg:map origin",
     ])
     tele_functions(F)
@@ -406,7 +411,19 @@ def npc_and_class_lines(world, bdkit, bdmodels):
         avoid = [(mk[n]["pos"][0], mk[n]["pos"][2], 2.2) for n in mk if n.startswith(f"base_{t}_class_") or n.startswith(f"base_{t}_spawn_")]
         if P(f"base_{t}_beacon"):
             b = P(f"base_{t}_beacon"); avoid.append((b[0], b[2], 3.0))
-        spot = find_spot(world, sp, 4, 9, avoid)
+        # 병과 발판 줄 끝에 이어서: [상인] [전사][궁수][수호자]
+        spot = None
+        c0, c1 = P(f"base_{t}_class_0"), P(f"base_{t}_class_1")
+        if c0 and c1:
+            dx, dz = c0[0] - c1[0], c0[2] - c1[2]
+            L = (dx * dx + dz * dz) ** 0.5 or 1
+            want = (c0[0] + dx / L * 5.5, sp[1], c0[2] + dz / L * 5.5)
+            spot = find_spot(world, want, 0, 3, [(a, b, 1.6) for a, b, _ in avoid])
+            if spot is None:
+                want = (c1[0] - dx / L * 17.5, sp[1], c1[2] - dz / L * 17.5)
+                spot = find_spot(world, want, 0, 3, [(a, b, 1.6) for a, b, _ in avoid])
+        if spot is None:
+            spot = find_spot(world, sp, 4, 9, avoid)
         if spot:
             npc(spot, sp)
         else:

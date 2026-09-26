@@ -89,6 +89,14 @@ def main(args):
     skgen.write_hud(os.path.join(OUT_SK, "a01-gen-hud.sk"), font)
     skgen.write_map(os.path.join(OUT_SK, "a02-gen-map.sk"), world)
     skgen.write_boss(os.path.join(OUT_SK, "a03-gen-boss.sk"), bmeta)
+    # 리소스팩 주소 + sha1 → 접속할 때 서버가 최신 팩을 직접 보낸다 (sha1 이 없으면 클라이언트가 옛 팩을 계속 씀)
+    import hashlib
+    h = hashlib.sha1(open(OUT_RP, "rb").read()).hexdigest()
+    url = f"https://raw.githubusercontent.com/za12ra3da4-bot/minecraft/claude/wonderful-cray-expxq7/arena/resourcepack/bg_arena_pack.zip?v={h[:12]}"
+    with open(os.path.join(OUT_SK, "a04-gen-pack.sk"), "w", encoding="utf-8") as f:
+        f.write("# 자동 생성 — 리소스팩 주소와 sha1 (arena/tools/build.py)\n"
+                f'on load:\n    set {{-bg::pack::url}} to "{url}"\n    set {{-bg::pack::sha1}} to "{h}"\n')
+    print(f"[rp] sha1 {h}")
     print(f"[done] {time.time() - t0:.1f}s")
 
 
