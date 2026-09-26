@@ -760,3 +760,37 @@ def class_icon(k):
     for p in m.parts:
         p.spin = True
     return m
+
+
+# ─────────────────────────────────────────────────────────────── 본진 코어
+def core_crystal(t):
+    """본진 코어: 신호기를 감싼 받침 + 네 발톱 기둥 + 떠서 도는 큰 팀 수정 + 고리 두 개 + 하늘로 빛기둥
+       원점 = 신호기 블록 바닥 가운데 (신호기 자체는 진짜 블록, 이걸 때린다)"""
+    C = TEAM[t]
+    m = Model()
+    # 받침 (신호기 둘레)
+    m.box("polished_blackstone_bricks", -14, -1, -14, 14, 1.5, 14)
+    m.box(GOLD, -14.4, 1.2, -14.4, 14.4, 2.0, 14.4, glow=True)
+    m.box(C["deep"], -11, 1.5, -11, 11, 2.4, 11)
+    # 네 발톱 기둥 (안쪽으로 기울어 수정을 받친다)
+    for a in (45, 135, 225, 315):
+        k = m.mark()
+        m.cbox("polished_blackstone_bricks", (0, 10, 13), (4, 20, 4), pitch=-14)
+        m.cbox(GOLD, (0, 19.5, 11.3), (4.6, 2, 4.6), pitch=-14, glow=True)
+        m.cbox(C["conc"], (0, 25, 9.8), (2.6, 9, 2.6), pitch=-30)
+        m.cbox(C["core"], (0, 29.5, 7.4), (1.6, 3, 1.6), pitch=-40, glow=True)
+        rotate(m.since(k), rot(a), (0, 0, 0))
+    # 떠서 도는 큰 수정
+    k = m.mark()
+    gem(m, (0, 44, 0), 14.0, 26.0, C["glass"], C["core"], steps=7)
+    ring(m, GOLD, (0, 44, 0), 13.5, 1.4, n=16, tilt=22, glow=True)
+    ring(m, C["conc"], (0, 44, 0), 16.5, 1.2, n=16, tilt=-28)
+    for i in range(4):
+        a = math.radians(i * 90)
+        gem(m, (math.cos(a) * 21, 40 + (i % 2) * 7, math.sin(a) * 21), 3.6, 6.4, C["glass"], C["core"])
+    for p in m.since(k):
+        p.spin = True
+    # 하늘로 빛기둥 (멀리서도 보이게)
+    m.box(C["glass"], -1.6, 58, -1.6, 1.6, 58 + 900, 1.6, glow=True)
+    m.box(C["core"], -0.6, 58, -0.6, 0.6, 58 + 900, 0.6, glow=True)
+    return m

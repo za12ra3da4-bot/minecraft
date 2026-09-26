@@ -1,3 +1,21 @@
+fill ~57 ~24 ~20 ~58 ~26 ~20 minecraft:mossy_cobblestone strict
+fill ~59 ~24 ~20 ~59 ~24 ~21 minecraft:stone strict
+fill ~62 ~24 ~20 ~63 ~24 ~21 minecraft:grass_block strict
+fill ~87 ~24 ~20 ~89 ~25 ~21 minecraft:dirt strict
+fill ~103 ~24 ~20 ~103 ~25 ~20 minecraft:stone strict
+fill ~106 ~24 ~20 ~106 ~25 ~20 minecraft:mossy_stone_bricks strict
+fill ~152 ~24 ~20 ~152 ~26 ~20 minecraft:dirt strict
+fill ~153 ~24 ~20 ~153 ~25 ~20 minecraft:stone strict
+fill ~163 ~24 ~20 ~163 ~26 ~46 minecraft:dirt strict
+fill ~191 ~24 ~20 ~191 ~26 ~22 minecraft:dirt strict
+fill ~196 ~24 ~20 ~197 ~25 ~21 minecraft:andesite strict
+fill ~198 ~24 ~20 ~198 ~26 ~21 minecraft:basalt[axis=y] strict
+fill ~209 ~24 ~20 ~209 ~24 ~21 minecraft:blackstone strict
+fill ~211 ~24 ~20 ~215 ~24 ~20 minecraft:basalt[axis=y] strict
+fill ~224 ~24 ~20 ~224 ~24 ~24 minecraft:basalt[axis=y] strict
+setblock ~233 ~24 ~20 minecraft:basalt[axis=y] strict
+fill ~234 ~24 ~20 ~235 ~24 ~20 minecraft:blackstone strict
+setblock ~20 ~24 ~21 minecraft:dirt strict
 fill ~21 ~24 ~21 ~21 ~24 ~23 minecraft:stone_bricks strict
 fill ~23 ~24 ~21 ~23 ~24 ~27 minecraft:stone_bricks strict
 setblock ~24 ~24 ~21 minecraft:dirt strict
@@ -51,7 +69,7 @@ fill ~65 ~24 ~23 ~65 ~24 ~29 minecraft:grass_block strict
 fill ~103 ~24 ~23 ~103 ~26 ~25 minecraft:dirt strict
 fill ~105 ~24 ~23 ~105 ~24 ~24 minecraft:cracked_stone_bricks strict
 fill ~153 ~24 ~23 ~153 ~26 ~24 minecraft:dirt strict
-fill ~206 ~24 ~23 ~206 ~25 ~23 minecraft:basalt[axis=y] strict
+fill ~206 ~24 ~23 ~206 ~26 ~23 minecraft:basalt[axis=y] strict
 setblock ~207 ~24 ~23 minecraft:blackstone strict
 fill ~208 ~24 ~23 ~211 ~24 ~23 minecraft:basalt[axis=y] strict
 setblock ~226 ~24 ~23 minecraft:basalt[axis=y] strict
@@ -174,7 +192,7 @@ fill ~196 ~24 ~30 ~201 ~24 ~35 minecraft:basalt[axis=y] strict
 fill ~204 ~24 ~30 ~205 ~24 ~30 minecraft:basalt[axis=y] strict
 fill ~218 ~24 ~30 ~218 ~24 ~38 minecraft:smooth_basalt strict
 setblock ~223 ~24 ~30 minecraft:smooth_basalt strict
-fill ~241 ~24 ~30 ~241 ~25 ~30 minecraft:smooth_basalt strict
+fill ~241 ~24 ~30 ~241 ~26 ~30 minecraft:smooth_basalt strict
 fill ~15 ~24 ~31 ~15 ~24 ~37 minecraft:dirt strict
 setblock ~28 ~24 ~31 minecraft:dirt strict
 fill ~53 ~24 ~31 ~64 ~24 ~37 minecraft:dirt strict
@@ -264,7 +282,7 @@ fill ~181 ~24 ~38 ~185 ~26 ~39 minecraft:dirt strict
 fill ~194 ~24 ~38 ~194 ~25 ~38 minecraft:andesite strict
 fill ~199 ~24 ~38 ~202 ~25 ~38 minecraft:basalt[axis=y] strict
 fill ~240 ~24 ~38 ~240 ~24 ~41 minecraft:blackstone strict
-fill ~241 ~24 ~38 ~241 ~25 ~38 minecraft:smooth_basalt strict
+fill ~241 ~24 ~38 ~241 ~26 ~38 minecraft:smooth_basalt strict
 fill ~22 ~24 ~39 ~22 ~24 ~43 minecraft:stone_bricks strict
 fill ~29 ~24 ~39 ~29 ~24 ~45 minecraft:dirt strict
 fill ~41 ~24 ~39 ~41 ~24 ~43 minecraft:stone_bricks strict
@@ -330,21 +348,3 @@ fill ~39 ~24 ~42 ~39 ~24 ~45 minecraft:dirt strict
 fill ~44 ~24 ~42 ~44 ~24 ~46 minecraft:stone_bricks strict
 fill ~47 ~24 ~42 ~47 ~24 ~44 minecraft:dirt strict
 fill ~73 ~24 ~42 ~73 ~24 ~43 minecraft:moss_block strict
-fill ~147 ~24 ~42 ~147 ~26 ~48 minecraft:dirt strict
-fill ~168 ~24 ~42 ~168 ~26 ~44 minecraft:dirt strict
-fill ~172 ~24 ~42 ~173 ~26 ~42 minecraft:dirt strict
-fill ~196 ~24 ~42 ~196 ~25 ~42 minecraft:basalt[axis=y] strict
-fill ~205 ~24 ~42 ~205 ~24 ~45 minecraft:basalt[axis=y] strict
-fill ~211 ~24 ~42 ~211 ~24 ~52 minecraft:smooth_basalt strict
-fill ~24 ~24 ~43 ~24 ~24 ~45 minecraft:stone_bricks strict
-fill ~40 ~24 ~43 ~40 ~24 ~45 minecraft:dirt strict
-setblock ~72 ~24 ~43 minecraft:moss_block strict
-fill ~110 ~24 ~43 ~110 ~26 ~44 minecraft:dirt strict
-fill ~111 ~24 ~43 ~111 ~24 ~46 minecraft:stone strict
-fill ~145 ~24 ~43 ~145 ~24 ~46 minecraft:stone strict
-fill ~148 ~24 ~43 ~148 ~26 ~48 minecraft:dirt strict
-fill ~234 ~24 ~43 ~234 ~24 ~47 minecraft:smooth_basalt strict
-fill ~238 ~24 ~43 ~238 ~24 ~45 minecraft:blackstone strict
-fill ~22 ~24 ~44 ~22 ~24 ~49 minecraft:dirt strict
-fill ~25 ~24 ~44 ~25 ~24 ~46 minecraft:stone_bricks strict
-setblock ~41 ~24 ~44 minecraft:dirt strict

@@ -6,6 +6,11 @@ execute as @e[type=interaction,tag=bg_shopnpc] if data entity @s attack on attac
 execute as @e[type=interaction,tag=bg_shopnpc] run data remove entity @s interaction
 execute as @e[type=interaction,tag=bg_shopnpc] run data remove entity @s attack
 execute as @e[type=interaction,tag=bg_rewardhit] if data entity @s interaction on target run tag @s add bg_wantreward
+execute as @e[type=interaction,tag=bg_corehit_red] if data entity @s attack on attacker run tag @s add bg_wantcore_red
+execute as @e[type=interaction,tag=bg_corehit_blue] if data entity @s attack on attacker run tag @s add bg_wantcore_blue
+execute as @e[type=interaction,tag=bg_corehit_green] if data entity @s attack on attacker run tag @s add bg_wantcore_green
+execute as @e[type=interaction,tag=bg_corehit_yellow] if data entity @s attack on attacker run tag @s add bg_wantcore_yellow
+execute as @e[type=interaction,tag=bg_corehit] run data remove entity @s attack
 execute as @e[type=interaction,tag=bg_rewardhit] if data entity @s attack on attacker run tag @s add bg_wantreward
 execute as @e[type=interaction,tag=bg_rewardhit] run data remove entity @s interaction
 execute as @e[type=interaction,tag=bg_rewardhit] run data remove entity @s attack

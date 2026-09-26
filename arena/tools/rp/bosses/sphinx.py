@@ -242,4 +242,4 @@ def anims():
     return A
 
 
-INFO = dict(hitbox="iron_golem", hit_scale=1.3, portrait=dict(bone="head", dist=1.7, cy=1.8, cz=3.0))
+INFO = dict(hitbox="iron_golem", hit_scale=2.4, portrait=dict(bone="head", dist=1.7, cy=1.8, cz=3.0))

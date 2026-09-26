@@ -325,7 +325,7 @@ function bgBossSpawn(id: text):
     bgCmd("execute as %{_u}% at @s run function bg:boss/%{_id}%/spawn")
     bgAnim("idle")
     bgTitle("&c&l⚠ %{-bg::bd::%{_id}%::name}%", "&f%{-bg::lairname::%{_lair}%}%에 나타났습니다!", 10, 60, 15)
-    bgSay("&c&l보스 출현! &f%{-bg::bd::%{_id}%::name}% — &e%{-bg::lairname::%{_lair}%}%&f · 처치 팀 +150점 · %{-bg::blessname::%{_id}%}%")
+    bgSay("&c&l보스 출현! &f%{-bg::bd::%{_id}%::name}% — &e%{-bg::lairname::%{_lair}%}%&f · 처치 팀 +300점 · 보스 전용 무기 · %{-bg::blessname::%{_id}%}%")
     bgSound("entity.wither.spawn", 0.5, 0.8)
     bgParticle({_c}, "explosion_emitter", 2, 1, 2, 0, 3)
     bgParticle({_c}, "large_smoke", 4, 2, 4, 0.05, 120)
@@ -624,12 +624,12 @@ function bgBossDie():
     set {_rc} to {-bg::boss::home}
     bgRewardSpawn({_win}, {_id}, {_rc})
     if {_win} is not "none":
-        bgAddScore({_win}, 150)
-        bgCoinTeam({_win}, 40, "보스 처치")
-        set {-bg::bless::%{_win}%::until} to {-bg::sec} + 120
+        bgAddScore({_win}, 300)
+        bgCoinTeam({_win}, 120, "보스 처치")
+        set {-bg::bless::%{_win}%::until} to {-bg::sec} + 180
         set {-bg::bless::%{_win}%::boss} to {_id}
-        bgTitle("&6&l%{-bg::bd::%{_id}%::name}% 처치!", "%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀 &f+150점 · %{-bg::blessname::%{_id}%}% 2분", 10, 70, 20)
-        bgSay("%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀&f이 &c%{-bg::bd::%{_id}%::name}%&f 을(를) 쓰러뜨렸습니다! (+150, 축복: %{-bg::blessname::%{_id}%}%)")
+        bgTitle("&6&l%{-bg::bd::%{_id}%::name}% 처치!", "%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀 &f+300점 · %{-bg::blessname::%{_id}%}% 3분", 10, 70, 20)
+        bgSay("%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀&f이 &c%{-bg::bd::%{_id}%::name}%&f 을(를) 쓰러뜨렸습니다! (+300, 축복: %{-bg::blessname::%{_id}%}%)")
     bgSound("ui.toast.challenge_complete", 0.8, 1)
     bgBossRemove()
 

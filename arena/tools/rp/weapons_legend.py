@@ -264,6 +264,13 @@ def export(pack):
             "from": [0, -8, 8], "to": [16, 24, 8], "shade": False, "light_emission": 15,
             "faces": {"north": {"uv": [16, 0, 0, 16], "texture": "#0"}, "south": {"uv": [0, 0, 16, 16], "texture": "#0"}}}]})
         pack.item_model(f"weapon/{wid}", {"parent": "minecraft:item/handheld", "textures": {"layer0": ref}})
+    # 추가 8종 + 보스 전용 4종 (직접 그린 그림이 있으면 그걸 씀)
+    import weapons_legend2
+    for wid in weapons_legend2.WEAPONS2:
+        f = os.path.join(ART, f"{wid}.png")
+        img = Image.open(f).convert("RGBA") if os.path.exists(f) else weapons_legend2.paint(wid)
+        ref = pack.texture(f"weapon/{wid}", img)
+        pack.item_model(f"weapon/{wid}", {"parent": "minecraft:item/handheld", "textures": {"layer0": ref}})
 
 
 def preview(path):

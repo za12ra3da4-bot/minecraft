@@ -1,3 +1,18 @@
+setblock ~113 ~22 ~175 minecraft:andesite strict
+fill ~115 ~22 ~175 ~115 ~24 ~175 minecraft:water strict
+fill ~141 ~22 ~175 ~141 ~24 ~175 minecraft:water strict
+fill ~162 ~22 ~175 ~162 ~24 ~176 minecraft:dirt strict
+fill ~172 ~22 ~175 ~173 ~24 ~177 minecraft:dirt strict
+fill ~175 ~22 ~175 ~176 ~24 ~178 minecraft:dirt strict
+fill ~204 ~22 ~175 ~204 ~22 ~195 minecraft:calcite strict
+fill ~205 ~22 ~175 ~206 ~24 ~176 minecraft:dirt strict
+fill ~209 ~22 ~175 ~209 ~24 ~195 minecraft:dirt strict
+fill ~39 ~22 ~176 ~39 ~22 ~189 minecraft:tuff strict
+fill ~95 ~22 ~176 ~95 ~24 ~179 minecraft:dirt strict
+fill ~115 ~22 ~176 ~115 ~24 ~176 minecraft:mossy_stone_bricks strict
+fill ~160 ~22 ~176 ~161 ~24 ~177 minecraft:dirt strict
+fill ~164 ~22 ~176 ~164 ~24 ~177 minecraft:dirt strict
+fill ~174 ~22 ~176 ~174 ~24 ~178 minecraft:dirt strict
 fill ~179 ~22 ~176 ~179 ~22 ~205 minecraft:calcite strict
 fill ~211 ~22 ~176 ~211 ~22 ~178 minecraft:calcite strict
 fill ~32 ~22 ~177 ~37 ~22 ~180 minecraft:andesite strict
@@ -333,18 +348,3 @@ fill ~15 ~22 ~200 ~15 ~24 ~200 minecraft:andesite strict
 fill ~18 ~22 ~200 ~18 ~23 ~200 minecraft:andesite strict
 fill ~23 ~22 ~200 ~25 ~23 ~201 minecraft:andesite strict
 fill ~29 ~22 ~200 ~30 ~24 ~200 minecraft:andesite strict
-fill ~38 ~22 ~200 ~39 ~23 ~202 minecraft:andesite strict
-fill ~42 ~22 ~200 ~42 ~23 ~202 minecraft:stone strict
-fill ~44 ~22 ~200 ~44 ~23 ~201 minecraft:smooth_stone strict
-fill ~46 ~22 ~200 ~46 ~23 ~200 minecraft:tuff strict
-fill ~49 ~22 ~200 ~51 ~22 ~202 minecraft:andesite strict
-fill ~55 ~22 ~200 ~55 ~23 ~201 minecraft:tuff strict
-fill ~109 ~22 ~200 ~111 ~22 ~200 minecraft:andesite strict
-fill ~112 ~22 ~200 ~114 ~24 ~200 minecraft:dirt strict
-fill ~124 ~22 ~200 ~126 ~22 ~202 minecraft:stone strict
-fill ~153 ~22 ~200 ~154 ~24 ~212 minecraft:dirt strict
-setblock ~155 ~22 ~200 minecraft:andesite strict
-fill ~158 ~22 ~200 ~159 ~24 ~202 minecraft:dirt strict
-fill ~162 ~22 ~200 ~162 ~24 ~200 minecraft:dirt strict
-setblock ~243 ~22 ~200 minecraft:andesite strict
-fill ~13 ~22 ~201 ~13 ~24 ~201 minecraft:dirt strict

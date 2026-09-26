@@ -1,3 +1,64 @@
+fill ~31 ~32 ~108 ~34 ~32 ~108 minecraft:yellow_terracotta strict
+setblock ~62 ~32 ~108 minecraft:andesite strict
+setblock ~217 ~32 ~108 minecraft:stone_bricks strict
+fill ~222 ~32 ~108 ~225 ~32 ~108 minecraft:blue_terracotta strict
+fill ~231 ~32 ~108 ~234 ~32 ~108 minecraft:blue_terracotta strict
+setblock ~235 ~32 ~108 minecraft:stone_bricks strict
+setblock ~238 ~32 ~108 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~239 ~32 ~108 minecraft:mossy_stone_bricks strict
+setblock ~24 ~32 ~109 minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~200 ~32 ~109 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~204 ~32 ~109 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~232 ~32 ~109 minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~233 ~32 ~109 ~234 ~32 ~109 minecraft:stone_bricks strict
+setblock ~235 ~32 ~109 minecraft:mossy_stone_bricks strict
+fill ~239 ~32 ~109 ~239 ~32 ~110 minecraft:stone_bricks strict
+fill ~16 ~32 ~110 ~16 ~32 ~111 minecraft:yellow_terracotta strict
+setblock ~17 ~32 ~110 minecraft:stone_bricks strict
+setblock ~37 ~32 ~110 minecraft:stone_bricks strict
+setblock ~38 ~32 ~110 minecraft:cracked_stone_bricks strict
+setblock ~103 ~32 ~110 minecraft:smooth_quartz strict
+setblock ~134 ~32 ~110 minecraft:quartz_bricks strict
+setblock ~153 ~32 ~110 minecraft:smooth_quartz strict
+setblock ~201 ~32 ~110 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~203 ~32 ~110 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~218 ~32 ~110 minecraft:stone_bricks strict
+setblock ~220 ~32 ~110 minecraft:stone_bricks strict
+setblock ~235 ~32 ~110 minecraft:stone_bricks strict
+fill ~240 ~32 ~110 ~240 ~32 ~111 minecraft:blue_terracotta strict
+fill ~7 ~32 ~111 ~7 ~39 ~111 minecraft:stone strict
+fill ~15 ~32 ~111 ~15 ~32 ~112 minecraft:yellow_terracotta strict
+setblock ~113 ~32 ~111 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~118 ~32 ~111 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~123 ~32 ~111 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~133 ~32 ~111 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~138 ~32 ~111 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~143 ~32 ~111 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~236 ~32 ~111 ~237 ~32 ~111 minecraft:mossy_stone_bricks strict
+setblock ~238 ~32 ~111 minecraft:stone_bricks strict
+fill ~241 ~32 ~111 ~241 ~32 ~112 minecraft:blue_terracotta strict
+fill ~249 ~32 ~111 ~249 ~36 ~113 minecraft:stone strict
+fill ~13 ~32 ~112 ~14 ~32 ~113 minecraft:yellow_terracotta strict
+fill ~112 ~32 ~112 ~114 ~32 ~114 minecraft:smooth_quartz strict
+fill ~117 ~32 ~112 ~119 ~32 ~114 minecraft:smooth_quartz strict
+fill ~122 ~32 ~112 ~124 ~32 ~114 minecraft:smooth_quartz strict
+fill ~132 ~32 ~112 ~134 ~32 ~114 minecraft:smooth_quartz strict
+fill ~137 ~32 ~112 ~139 ~32 ~113 minecraft:smooth_quartz strict
+fill ~142 ~32 ~112 ~144 ~32 ~114 minecraft:smooth_quartz strict
+fill ~242 ~32 ~112 ~243 ~32 ~113 minecraft:blue_terracotta strict
+fill ~248 ~32 ~112 ~248 ~33 ~112 minecraft:stone strict
+fill ~6 ~32 ~113 ~6 ~39 ~113 minecraft:stone strict
+fill ~12 ~32 ~113 ~12 ~32 ~115 minecraft:yellow_terracotta strict
+setblock ~26 ~32 ~113 minecraft:yellow_wool strict
+setblock ~28 ~32 ~113 minecraft:yellow_wool strict
+setblock ~45 ~32 ~113 minecraft:cracked_stone_bricks strict
+setblock ~111 ~32 ~113 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~115 ~32 ~113 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~116 ~32 ~113 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~120 ~32 ~113 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~121 ~32 ~113 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~125 ~32 ~113 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~131 ~32 ~113 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~135 ~32 ~113 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~136 ~32 ~113 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~140 ~32 ~113 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
@@ -162,7 +223,7 @@ fill ~128 ~32 ~126 ~128 ~32 ~130 minecraft:iron_block strict
 fill ~129 ~32 ~126 ~130 ~32 ~126 minecraft:chiseled_quartz_block strict
 fill ~132 ~32 ~126 ~132 ~32 ~130 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~250 ~32 ~126 minecraft:stone_bricks strict
-setblock ~7 ~32 ~127 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~7 ~32 ~127 ~7 ~38 ~127 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~8 ~32 ~127 minecraft:cracked_stone_bricks strict
 setblock ~116 ~32 ~127 minecraft:weathered_cut_copper_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
 fill ~125 ~32 ~127 ~126 ~32 ~127 minecraft:chiseled_quartz_block strict
@@ -287,64 +348,3 @@ fill ~11 ~32 ~139 ~11 ~32 ~141 minecraft:yellow_terracotta strict
 fill ~26 ~32 ~139 ~26 ~32 ~140 minecraft:yellow_wool strict
 fill ~28 ~32 ~139 ~28 ~32 ~140 minecraft:yellow_wool strict
 setblock ~45 ~32 ~139 minecraft:cracked_stone_bricks strict
-setblock ~117 ~32 ~139 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-fill ~118 ~32 ~139 ~119 ~32 ~139 minecraft:quartz_bricks strict
-setblock ~120 ~32 ~139 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~139 ~32 ~139 minecraft:weathered_cut_copper strict
-setblock ~140 ~32 ~139 minecraft:quartz_bricks strict
-fill ~188 ~32 ~139 ~189 ~33 ~141 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~209 ~32 ~139 minecraft:stone_bricks strict
-setblock ~210 ~32 ~139 minecraft:mossy_stone_bricks strict
-fill ~228 ~32 ~139 ~228 ~32 ~140 minecraft:blue_wool strict
-fill ~230 ~32 ~139 ~230 ~32 ~140 minecraft:blue_wool strict
-fill ~245 ~32 ~139 ~245 ~32 ~141 minecraft:blue_terracotta strict
-setblock ~10 ~32 ~140 minecraft:yellow_terracotta strict
-setblock ~44 ~32 ~140 minecraft:mossy_stone_bricks strict
-setblock ~47 ~32 ~140 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~113 ~32 ~140 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~115 ~32 ~140 minecraft:calcite strict
-setblock ~118 ~32 ~140 minecraft:quartz_bricks strict
-setblock ~143 ~32 ~140 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-fill ~191 ~32 ~140 ~191 ~33 ~140 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~211 ~32 ~140 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~212 ~32 ~140 minecraft:stone_bricks strict
-setblock ~246 ~32 ~140 minecraft:blue_terracotta strict
-fill ~12 ~32 ~141 ~12 ~32 ~143 minecraft:yellow_terracotta strict
-setblock ~26 ~32 ~141 minecraft:white_wool strict
-setblock ~28 ~32 ~141 minecraft:white_wool strict
-setblock ~44 ~32 ~141 minecraft:stone_bricks strict
-setblock ~113 ~32 ~141 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~118 ~32 ~141 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~123 ~32 ~141 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~133 ~32 ~141 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~138 ~32 ~141 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~143 ~32 ~141 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~212 ~32 ~141 minecraft:cracked_stone_bricks strict
-setblock ~228 ~32 ~141 minecraft:white_wool strict
-setblock ~230 ~32 ~141 minecraft:white_wool strict
-fill ~244 ~32 ~141 ~244 ~32 ~143 minecraft:blue_terracotta strict
-fill ~250 ~32 ~141 ~251 ~37 ~141 minecraft:stone strict
-fill ~13 ~32 ~142 ~13 ~32 ~144 minecraft:yellow_terracotta strict
-fill ~26 ~32 ~142 ~26 ~32 ~143 minecraft:yellow_wool strict
-fill ~28 ~32 ~142 ~28 ~32 ~143 minecraft:yellow_wool strict
-setblock ~44 ~32 ~142 minecraft:mossy_stone_bricks strict
-setblock ~100 ~32 ~142 minecraft:smooth_quartz strict
-fill ~112 ~32 ~142 ~114 ~32 ~144 minecraft:smooth_quartz strict
-fill ~117 ~32 ~142 ~119 ~32 ~144 minecraft:smooth_quartz strict
-fill ~122 ~32 ~142 ~124 ~32 ~144 minecraft:smooth_quartz strict
-fill ~132 ~32 ~142 ~134 ~32 ~144 minecraft:smooth_quartz strict
-fill ~138 ~32 ~142 ~138 ~32 ~144 minecraft:smooth_quartz strict
-fill ~142 ~32 ~142 ~144 ~32 ~144 minecraft:smooth_quartz strict
-setblock ~156 ~32 ~142 minecraft:smooth_quartz strict
-setblock ~192 ~32 ~142 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~208 ~32 ~142 minecraft:stone_bricks strict
-setblock ~212 ~32 ~142 minecraft:mossy_stone_bricks strict
-fill ~228 ~32 ~142 ~228 ~32 ~143 minecraft:blue_wool strict
-fill ~230 ~32 ~142 ~230 ~32 ~143 minecraft:blue_wool strict
-fill ~243 ~32 ~142 ~243 ~32 ~144 minecraft:blue_terracotta strict
-fill ~249 ~32 ~142 ~250 ~33 ~143 minecraft:stone strict
-fill ~6 ~32 ~143 ~7 ~36 ~143 minecraft:stone strict
-fill ~14 ~32 ~143 ~14 ~32 ~144 minecraft:yellow_terracotta strict
-setblock ~111 ~32 ~143 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~115 ~32 ~143 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~116 ~32 ~143 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict

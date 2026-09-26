@@ -1,3 +1,20 @@
+fill ~222 ~19 ~239 ~231 ~19 ~239 minecraft:sandstone strict
+fill ~152 ~19 ~240 ~152 ~19 ~242 minecraft:stone strict
+fill ~222 ~19 ~240 ~229 ~19 ~240 minecraft:sandstone strict
+fill ~221 ~19 ~241 ~221 ~20 ~241 minecraft:smooth_sandstone strict
+fill ~222 ~19 ~241 ~226 ~19 ~241 minecraft:sandstone strict
+fill ~151 ~19 ~242 ~151 ~22 ~242 minecraft:stone strict
+fill ~13 ~20 ~13 ~14 ~21 ~14 minecraft:stone strict
+fill ~53 ~20 ~13 ~58 ~20 ~13 minecraft:andesite strict
+fill ~54 ~20 ~14 ~55 ~22 ~14 minecraft:andesite strict
+fill ~56 ~20 ~14 ~57 ~22 ~14 minecraft:dirt strict
+setblock ~58 ~20 ~14 minecraft:andesite strict
+fill ~59 ~20 ~14 ~60 ~20 ~16 minecraft:stone strict
+fill ~151 ~20 ~14 ~154 ~20 ~14 minecraft:stone strict
+fill ~201 ~20 ~14 ~201 ~23 ~14 minecraft:stone strict
+fill ~55 ~20 ~15 ~56 ~22 ~15 minecraft:andesite strict
+fill ~57 ~20 ~15 ~58 ~22 ~15 minecraft:dirt strict
+fill ~61 ~20 ~15 ~61 ~20 ~19 minecraft:stone strict
 fill ~152 ~20 ~15 ~154 ~20 ~16 minecraft:stone strict
 fill ~56 ~20 ~16 ~57 ~22 ~16 minecraft:andesite strict
 fill ~58 ~20 ~16 ~58 ~22 ~17 minecraft:dirt strict
@@ -273,10 +290,13 @@ fill ~169 ~20 ~70 ~169 ~22 ~70 minecraft:brown_terracotta strict
 fill ~206 ~20 ~70 ~206 ~20 ~78 minecraft:terracotta strict
 fill ~45 ~20 ~71 ~45 ~20 ~73 minecraft:andesite strict
 fill ~55 ~20 ~71 ~56 ~21 ~71 minecraft:andesite strict
+fill ~62 ~20 ~71 ~62 ~20 ~78 minecraft:water strict
 fill ~169 ~20 ~71 ~170 ~20 ~76 minecraft:terracotta strict
 fill ~207 ~20 ~71 ~208 ~20 ~74 minecraft:terracotta strict
 fill ~55 ~20 ~72 ~55 ~21 ~74 minecraft:andesite strict
+setblock ~56 ~20 ~72 minecraft:ladder[facing=east,waterlogged=true] strict
 fill ~118 ~20 ~72 ~118 ~20 ~79 minecraft:stone strict
+fill ~56 ~20 ~73 ~56 ~20 ~76 minecraft:water strict
 fill ~92 ~20 ~73 ~92 ~20 ~78 minecraft:andesite strict
 fill ~112 ~20 ~73 ~117 ~20 ~74 minecraft:stone strict
 fill ~171 ~20 ~73 ~171 ~20 ~77 minecraft:terracotta strict
@@ -328,23 +348,3 @@ fill ~89 ~20 ~78 ~89 ~22 ~80 minecraft:dirt strict
 fill ~100 ~20 ~78 ~103 ~20 ~78 minecraft:stone strict
 fill ~104 ~20 ~78 ~105 ~22 ~78 minecraft:dirt strict
 fill ~106 ~20 ~78 ~107 ~20 ~83 minecraft:stone strict
-fill ~146 ~20 ~78 ~149 ~20 ~82 minecraft:stone strict
-fill ~151 ~20 ~78 ~153 ~20 ~78 minecraft:stone strict
-fill ~203 ~20 ~78 ~203 ~20 ~81 minecraft:terracotta strict
-fill ~50 ~20 ~79 ~50 ~22 ~83 minecraft:dirt strict
-setblock ~98 ~20 ~79 minecraft:andesite strict
-fill ~99 ~20 ~79 ~100 ~20 ~79 minecraft:stone strict
-fill ~101 ~20 ~79 ~103 ~22 ~79 minecraft:dirt strict
-fill ~104 ~20 ~79 ~105 ~20 ~84 minecraft:stone strict
-setblock ~121 ~20 ~79 minecraft:stone strict
-fill ~122 ~20 ~79 ~122 ~22 ~79 minecraft:dirt strict
-fill ~150 ~20 ~79 ~151 ~20 ~84 minecraft:stone strict
-fill ~153 ~20 ~79 ~155 ~20 ~79 minecraft:stone strict
-setblock ~202 ~20 ~79 minecraft:terracotta strict
-fill ~206 ~20 ~79 ~206 ~20 ~85 minecraft:stone strict
-fill ~48 ~20 ~80 ~48 ~20 ~91 minecraft:stone strict
-fill ~51 ~20 ~80 ~51 ~21 ~91 minecraft:dirt strict
-fill ~83 ~20 ~80 ~88 ~22 ~80 minecraft:dirt strict
-fill ~90 ~20 ~80 ~90 ~20 ~91 minecraft:andesite strict
-fill ~96 ~20 ~80 ~97 ~20 ~80 minecraft:andesite strict
-setblock ~98 ~20 ~80 minecraft:stone strict

@@ -299,26 +299,27 @@ fill ~70 ~16 ~170 ~73 ~18 ~170 minecraft:andesite strict
 fill ~73 ~16 ~171 ~75 ~18 ~171 minecraft:andesite strict
 fill ~73 ~16 ~172 ~74 ~16 ~182 minecraft:water strict
 fill ~75 ~16 ~172 ~76 ~18 ~172 minecraft:andesite strict
-fill ~63 ~16 ~173 ~65 ~16 ~175 minecraft:water strict
+setblock ~63 ~16 ~173 minecraft:ladder[facing=east,waterlogged=true] strict
+fill ~64 ~16 ~173 ~65 ~16 ~175 minecraft:water strict
 fill ~75 ~16 ~173 ~75 ~16 ~184 minecraft:water strict
 fill ~76 ~16 ~173 ~77 ~18 ~173 minecraft:andesite strict
-fill ~60 ~16 ~174 ~62 ~16 ~181 minecraft:water strict
-fill ~76 ~16 ~174 ~76 ~16 ~186 minecraft:water strict
+fill ~60 ~16 ~174 ~63 ~16 ~181 minecraft:water strict
+fill ~76 ~16 ~174 ~76 ~16 ~184 minecraft:water strict
 fill ~77 ~16 ~174 ~77 ~18 ~174 minecraft:andesite strict
 fill ~58 ~16 ~175 ~59 ~16 ~201 minecraft:water strict
 fill ~77 ~16 ~175 ~77 ~16 ~187 minecraft:water strict
 fill ~57 ~16 ~176 ~57 ~16 ~201 minecraft:water strict
-fill ~63 ~16 ~176 ~64 ~16 ~177 minecraft:water strict
+fill ~64 ~16 ~176 ~64 ~16 ~177 minecraft:water strict
 fill ~78 ~16 ~176 ~78 ~16 ~201 minecraft:water strict
-fill ~56 ~16 ~177 ~56 ~16 ~200 minecraft:water strict
+fill ~56 ~16 ~177 ~56 ~16 ~199 minecraft:water strict
 fill ~72 ~16 ~177 ~72 ~16 ~180 minecraft:water strict
 fill ~79 ~16 ~177 ~79 ~16 ~183 minecraft:water strict
-fill ~54 ~16 ~178 ~55 ~16 ~197 minecraft:water strict
-fill ~63 ~16 ~178 ~63 ~16 ~181 minecraft:water strict
+setblock ~54 ~16 ~178 minecraft:ladder[facing=east,waterlogged=true] strict
+fill ~55 ~16 ~178 ~55 ~16 ~199 minecraft:water strict
 fill ~70 ~16 ~178 ~71 ~16 ~179 minecraft:water strict
 fill ~80 ~16 ~178 ~80 ~16 ~181 minecraft:water strict
 fill ~82 ~16 ~178 ~82 ~17 ~179 minecraft:andesite strict
-fill ~53 ~16 ~179 ~53 ~16 ~195 minecraft:water strict
+fill ~53 ~16 ~179 ~54 ~16 ~189 minecraft:water strict
 fill ~69 ~16 ~179 ~69 ~16 ~180 minecraft:water strict
 fill ~81 ~16 ~179 ~81 ~16 ~180 minecraft:water strict
 fill ~64 ~16 ~180 ~65 ~16 ~180 minecraft:water strict
@@ -334,17 +335,16 @@ setblock ~60 ~16 ~182 minecraft:water strict
 fill ~73 ~16 ~183 ~74 ~18 ~183 minecraft:andesite strict
 fill ~74 ~16 ~184 ~74 ~18 ~185 minecraft:andesite strict
 fill ~75 ~16 ~185 ~75 ~18 ~186 minecraft:andesite strict
+setblock ~76 ~16 ~185 minecraft:ladder[facing=east,waterlogged=true] strict
 setblock ~79 ~16 ~185 minecraft:water strict
+setblock ~76 ~16 ~186 minecraft:water strict
 fill ~82 ~16 ~186 ~84 ~16 ~192 minecraft:water strict
 fill ~60 ~16 ~187 ~60 ~16 ~188 minecraft:water strict
 fill ~85 ~16 ~189 ~85 ~16 ~190 minecraft:water strict
+setblock ~53 ~16 ~190 minecraft:ladder[facing=east,waterlogged=true] strict
+fill ~54 ~16 ~190 ~54 ~16 ~197 minecraft:water strict
 fill ~77 ~16 ~190 ~77 ~16 ~201 minecraft:water strict
+fill ~53 ~16 ~191 ~53 ~16 ~195 minecraft:water strict
 fill ~60 ~16 ~191 ~60 ~16 ~202 minecraft:water strict
 fill ~74 ~16 ~191 ~74 ~17 ~192 minecraft:andesite strict
 fill ~76 ~16 ~191 ~76 ~16 ~202 minecraft:water strict
-fill ~79 ~16 ~191 ~81 ~16 ~195 minecraft:water strict
-fill ~61 ~16 ~192 ~61 ~16 ~202 minecraft:water strict
-fill ~73 ~16 ~192 ~73 ~18 ~194 minecraft:andesite strict
-fill ~75 ~16 ~192 ~75 ~16 ~202 minecraft:water strict
-fill ~74 ~16 ~193 ~74 ~16 ~203 minecraft:water strict
-fill ~82 ~16 ~193 ~83 ~16 ~193 minecraft:water strict

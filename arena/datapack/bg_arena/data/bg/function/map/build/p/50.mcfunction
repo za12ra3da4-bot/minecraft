@@ -1,3 +1,21 @@
+fill ~49 ~24 ~78 ~49 ~27 ~78 minecraft:quartz_pillar[axis=y] strict
+fill ~51 ~24 ~78 ~51 ~27 ~78 minecraft:quartz_pillar[axis=y] strict
+fill ~100 ~24 ~78 ~103 ~24 ~78 minecraft:grass_block strict
+fill ~106 ~24 ~78 ~107 ~24 ~81 minecraft:grass_block strict
+fill ~146 ~24 ~78 ~149 ~24 ~80 minecraft:grass_block strict
+fill ~151 ~24 ~78 ~153 ~24 ~78 minecraft:grass_block strict
+setblock ~170 ~24 ~78 minecraft:terracotta strict
+fill ~216 ~24 ~78 ~216 ~24 ~88 minecraft:andesite strict
+setblock ~49 ~24 ~79 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~51 ~24 ~79 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+fill ~98 ~24 ~79 ~100 ~24 ~79 minecraft:grass_block strict
+fill ~104 ~24 ~79 ~105 ~24 ~82 minecraft:grass_block strict
+fill ~114 ~24 ~79 ~115 ~24 ~79 minecraft:grass_block strict
+setblock ~134 ~24 ~79 minecraft:gravel strict
+setblock ~141 ~24 ~79 minecraft:grass_block strict
+fill ~150 ~24 ~79 ~151 ~24 ~82 minecraft:grass_block strict
+fill ~153 ~24 ~79 ~155 ~24 ~79 minecraft:grass_block strict
+setblock ~169 ~24 ~79 minecraft:stone strict
 fill ~170 ~24 ~79 ~170 ~25 ~82 minecraft:andesite strict
 fill ~206 ~24 ~79 ~206 ~24 ~84 minecraft:grass_block strict
 fill ~214 ~24 ~79 ~214 ~26 ~91 minecraft:dirt strict
@@ -275,6 +293,7 @@ fill ~53 ~24 ~94 ~55 ~24 ~94 minecraft:dirt_path strict
 setblock ~56 ~24 ~94 minecraft:coarse_dirt strict
 setblock ~86 ~24 ~94 minecraft:rooted_dirt strict
 fill ~87 ~24 ~94 ~87 ~24 ~98 minecraft:grass_block strict
+setblock ~93 ~24 ~94 minecraft:ladder[facing=west,waterlogged=true] strict
 fill ~168 ~24 ~94 ~173 ~24 ~95 minecraft:moss_block strict
 fill ~182 ~24 ~94 ~182 ~24 ~123 minecraft:grass_block strict
 fill ~200 ~24 ~94 ~201 ~26 ~94 minecraft:dirt strict
@@ -295,6 +314,7 @@ fill ~73 ~24 ~95 ~75 ~26 ~95 minecraft:dirt strict
 fill ~82 ~24 ~95 ~82 ~24 ~106 minecraft:grass_block strict
 fill ~86 ~24 ~95 ~86 ~24 ~99 minecraft:grass_block strict
 fill ~88 ~24 ~95 ~89 ~24 ~95 minecraft:grass_block strict
+fill ~93 ~24 ~95 ~93 ~24 ~96 minecraft:water strict
 fill ~174 ~24 ~95 ~176 ~24 ~103 minecraft:moss_block strict
 fill ~196 ~24 ~95 ~197 ~24 ~113 minecraft:grass_block strict
 fill ~225 ~24 ~95 ~227 ~24 ~98 minecraft:grass_block strict
@@ -312,7 +332,7 @@ fill ~78 ~24 ~96 ~78 ~26 ~96 minecraft:dirt strict
 fill ~81 ~24 ~96 ~81 ~24 ~98 minecraft:grass_block strict
 fill ~83 ~24 ~96 ~85 ~24 ~101 minecraft:grass_block strict
 fill ~88 ~24 ~96 ~88 ~24 ~97 minecraft:grass_block strict
-fill ~93 ~24 ~96 ~94 ~24 ~96 minecraft:water strict
+setblock ~94 ~24 ~96 minecraft:water strict
 fill ~169 ~24 ~96 ~173 ~24 ~96 minecraft:moss_block strict
 fill ~177 ~24 ~96 ~177 ~24 ~104 minecraft:moss_block strict
 fill ~184 ~24 ~96 ~184 ~24 ~124 minecraft:grass_block strict
@@ -328,23 +348,3 @@ fill ~58 ~24 ~97 ~58 ~25 ~98 minecraft:stone strict
 fill ~59 ~24 ~97 ~60 ~26 ~97 minecraft:dirt strict
 fill ~61 ~24 ~97 ~65 ~24 ~97 minecraft:stone strict
 fill ~76 ~24 ~97 ~76 ~24 ~98 minecraft:stone strict
-fill ~77 ~24 ~97 ~77 ~26 ~98 minecraft:dirt strict
-setblock ~165 ~24 ~97 minecraft:water strict
-setblock ~166 ~24 ~97 minecraft:grass_block strict
-fill ~170 ~24 ~97 ~173 ~24 ~98 minecraft:moss_block strict
-fill ~178 ~24 ~97 ~178 ~24 ~103 minecraft:moss_block strict
-fill ~187 ~24 ~97 ~193 ~24 ~116 minecraft:grass_block strict
-fill ~219 ~24 ~97 ~221 ~24 ~102 minecraft:grass_block strict
-fill ~232 ~24 ~97 ~236 ~24 ~97 minecraft:moss_block strict
-fill ~14 ~24 ~98 ~15 ~24 ~98 minecraft:stone strict
-fill ~16 ~24 ~98 ~19 ~26 ~98 minecraft:dirt strict
-fill ~57 ~24 ~98 ~57 ~25 ~98 minecraft:stone strict
-fill ~59 ~24 ~98 ~59 ~26 ~98 minecraft:stone strict
-fill ~80 ~24 ~98 ~80 ~24 ~100 minecraft:grass_block strict
-fill ~163 ~24 ~98 ~164 ~24 ~98 minecraft:water strict
-setblock ~167 ~24 ~98 minecraft:grass_block strict
-fill ~179 ~24 ~98 ~179 ~24 ~102 minecraft:moss_block strict
-fill ~180 ~24 ~98 ~180 ~24 ~122 minecraft:grass_block strict
-fill ~185 ~24 ~98 ~186 ~24 ~124 minecraft:grass_block strict
-fill ~208 ~24 ~98 ~208 ~24 ~100 minecraft:dirt_path strict
-fill ~217 ~24 ~98 ~218 ~24 ~99 minecraft:grass_block strict

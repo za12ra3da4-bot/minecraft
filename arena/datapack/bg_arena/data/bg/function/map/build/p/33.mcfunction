@@ -1,3 +1,18 @@
+fill ~38 ~22 ~200 ~39 ~23 ~202 minecraft:andesite strict
+fill ~42 ~22 ~200 ~42 ~23 ~202 minecraft:stone strict
+fill ~44 ~22 ~200 ~44 ~23 ~201 minecraft:smooth_stone strict
+fill ~46 ~22 ~200 ~46 ~23 ~200 minecraft:tuff strict
+fill ~49 ~22 ~200 ~51 ~22 ~202 minecraft:andesite strict
+fill ~55 ~22 ~200 ~55 ~23 ~201 minecraft:tuff strict
+fill ~109 ~22 ~200 ~111 ~22 ~200 minecraft:andesite strict
+fill ~112 ~22 ~200 ~114 ~24 ~200 minecraft:dirt strict
+fill ~124 ~22 ~200 ~126 ~22 ~202 minecraft:stone strict
+fill ~153 ~22 ~200 ~154 ~24 ~212 minecraft:dirt strict
+setblock ~155 ~22 ~200 minecraft:andesite strict
+fill ~158 ~22 ~200 ~159 ~24 ~202 minecraft:dirt strict
+fill ~162 ~22 ~200 ~162 ~24 ~200 minecraft:dirt strict
+setblock ~243 ~22 ~200 minecraft:andesite strict
+fill ~13 ~22 ~201 ~13 ~24 ~201 minecraft:dirt strict
 fill ~14 ~22 ~201 ~14 ~24 ~201 minecraft:andesite strict
 fill ~15 ~22 ~201 ~16 ~23 ~201 minecraft:tuff strict
 fill ~18 ~22 ~201 ~22 ~23 ~201 minecraft:tuff strict
@@ -95,6 +110,7 @@ fill ~227 ~22 ~204 ~228 ~22 ~204 minecraft:sand strict
 setblock ~229 ~22 ~204 minecraft:sandstone strict
 fill ~13 ~22 ~205 ~20 ~23 ~208 minecraft:andesite strict
 fill ~21 ~22 ~205 ~22 ~23 ~205 minecraft:stone strict
+fill ~23 ~22 ~205 ~23 ~23 ~205 minecraft:smooth_stone strict
 fill ~24 ~22 ~205 ~24 ~23 ~205 minecraft:stone strict
 fill ~51 ~22 ~205 ~51 ~22 ~206 minecraft:stone strict
 fill ~53 ~22 ~205 ~53 ~22 ~206 minecraft:stone strict
@@ -332,19 +348,3 @@ fill ~220 ~22 ~215 ~220 ~22 ~218 minecraft:cut_red_sandstone strict
 fill ~221 ~22 ~215 ~221 ~22 ~218 minecraft:smooth_sandstone strict
 fill ~222 ~22 ~215 ~223 ~22 ~219 minecraft:cut_red_sandstone strict
 fill ~224 ~22 ~215 ~226 ~22 ~215 minecraft:smooth_sandstone strict
-fill ~227 ~22 ~215 ~228 ~22 ~215 minecraft:cut_red_sandstone strict
-setblock ~229 ~22 ~215 minecraft:chiseled_sandstone strict
-setblock ~230 ~22 ~215 minecraft:cut_red_sandstone strict
-setblock ~234 ~22 ~215 minecraft:sandstone strict
-setblock ~236 ~22 ~215 minecraft:sandstone strict
-setblock ~237 ~22 ~215 minecraft:cyan_terracotta strict
-setblock ~240 ~22 ~215 minecraft:sandstone strict
-fill ~64 ~22 ~216 ~64 ~23 ~217 minecraft:tuff strict
-fill ~78 ~22 ~216 ~78 ~22 ~218 minecraft:tuff strict
-setblock ~81 ~22 ~216 minecraft:tuff strict
-fill ~82 ~22 ~216 ~82 ~24 ~222 minecraft:dirt strict
-fill ~102 ~22 ~216 ~102 ~24 ~216 minecraft:dirt strict
-fill ~103 ~22 ~216 ~106 ~22 ~216 minecraft:andesite strict
-fill ~153 ~22 ~216 ~153 ~23 ~218 minecraft:andesite strict
-fill ~154 ~22 ~216 ~154 ~24 ~216 minecraft:dirt strict
-fill ~155 ~22 ~216 ~155 ~23 ~216 minecraft:andesite strict

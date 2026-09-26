@@ -14,64 +14,42 @@ import:
 function bgShopInv(c: number) :: inventory:
     return chest inventory with 3 rows named "&6&l왕국 무기고 &8| &e%{_c}% 코인"
 
+# 무기 정의 한 줄: 이름 · 가격 · 재사용(초) · 이름 색 · 설명
+function bgWDef(id: text, name: text, price: number, cd: number, col: text, desc: text):
+    set {-bg::w::%{_id}%::name} to {_name}
+    set {-bg::w::%{_id}%::base} to "iron_sword"
+    set {-bg::w::%{_id}%::price} to {_price}
+    set {-bg::w::%{_id}%::cd} to {_cd}
+    set {-bg::w::%{_id}%::col} to {_col}
+    set {-bg::w::%{_id}%::desc} to {_desc}
+
 on load:
-    set {-bg::w::list::*} to "thunder", "dragon", "wind", "phoenix", "blackiron", "tiger", "staff" and "peachwood"
-    set {-bg::w::thunder::name} to "천둥의 성검"
-    set {-bg::w::thunder::base} to "iron_sword"
-    set {-bg::w::thunder::price} to 150
-    set {-bg::w::thunder::cd} to 15
-    set {-bg::w::thunder::col} to "aqua"
-    set {-bg::w::thunder::icon} to netherite sword
-    set {-bg::w::thunder::desc} to "우클릭 뇌격: 바라보는 곳(24칸)에 낙뢰 — 반경 3.5 적 3하트 · 15초"
-    set {-bg::w::dragon::name} to "용살자의 도끼"
-    set {-bg::w::dragon::base} to "iron_axe"
-    set {-bg::w::dragon::price} to 130
-    set {-bg::w::dragon::cd} to 12
-    set {-bg::w::dragon::col} to "red"
-    set {-bg::w::dragon::icon} to netherite axe
-    set {-bg::w::dragon::desc} to "우클릭 대회전 베기: 앞 120° 반경 5.5 (3하트 + 밀쳐냄) · 12초"
-    set {-bg::w::wind::name} to "질풍의 레이피어"
-    set {-bg::w::wind::base} to "iron_sword"
-    set {-bg::w::wind::price} to 90
-    set {-bg::w::wind::cd} to 8
-    set {-bg::w::wind::col} to "green"
-    set {-bg::w::wind::icon} to iron sword
-    set {-bg::w::wind::desc} to "우클릭 질풍 도약: 질주 + 신속 II · 8초"
-    set {-bg::w::phoenix::name} to "성기사의 전쟁망치"
-    set {-bg::w::phoenix::base} to "iron_sword"
-    set {-bg::w::phoenix::price} to 120
-    set {-bg::w::phoenix::cd} to 18
-    set {-bg::w::phoenix::col} to "gold"
-    set {-bg::w::phoenix::icon} to diamond sword
-    set {-bg::w::phoenix::desc} to "우클릭 성스러운 결계: 저항 II · 아군 흡수 · 적 밀쳐냄 · 18초"
-    set {-bg::w::blackiron::name} to "흑기사의 대검"
-    set {-bg::w::blackiron::base} to "iron_sword"
-    set {-bg::w::blackiron::price} to 140
-    set {-bg::w::blackiron::cd} to 12
-    set {-bg::w::blackiron::col} to "dark_red"
-    set {-bg::w::blackiron::icon} to netherite sword
-    set {-bg::w::blackiron::desc} to "우클릭 피의 돌진: 앞으로 8칸 돌진 베기 (3하트 + 시듦) · 12초"
-    set {-bg::w::tiger::name} to "그림자 쌍단검"
-    set {-bg::w::tiger::base} to "iron_sword"
-    set {-bg::w::tiger::price} to 110
-    set {-bg::w::tiger::cd} to 10
-    set {-bg::w::tiger::col} to "white"
-    set {-bg::w::tiger::icon} to iron sword
-    set {-bg::w::tiger::desc} to "우클릭 연속 할퀴기: 앞쪽 3연속 (1.2하트 x3 + 구속) · 10초"
-    set {-bg::w::staff::name} to "대마법사의 지팡이"
-    set {-bg::w::staff::base} to "iron_sword"
-    set {-bg::w::staff::price} to 100
-    set {-bg::w::staff::cd} to 14
-    set {-bg::w::staff::col} to "light_purple"
-    set {-bg::w::staff::icon} to blaze rod
-    set {-bg::w::staff::desc} to "우클릭 대지 충격: 주변 적 공중으로 (2하트) · 14초"
-    set {-bg::w::peachwood::name} to "불사조의 창"
-    set {-bg::w::peachwood::base} to "iron_sword"
-    set {-bg::w::peachwood::price} to 120
-    set {-bg::w::peachwood::cd} to 16
-    set {-bg::w::peachwood::col} to "gold"
-    set {-bg::w::peachwood::icon} to wooden sword
-    set {-bg::w::peachwood::desc} to "우클릭 화염 고리: 반경 5 불태우기 (1.5하트 + 4초 화상) · 16초"
+    # 상점 전설 무기 16종 (특수무기답게 비싸게)
+    set {-bg::w::list::*} to "thunder", "dragon", "wind", "phoenix", "blackiron", "tiger", "staff", "peachwood", "frost", "storm", "scythe", "lance", "skull", "chakram", "chain" and "gauntlet"
+    # 보스 전용 무기 4종 (상점에 없음 — 그 보스의 보상 상자에서만)
+    set {-bg::w::bosslist::*} to "b_talos", "b_sphinx", "b_ladon" and "b_cyclops"
+    set {-bg::w::all::*} to {-bg::w::list::*}
+    add {-bg::w::bosslist::*} to {-bg::w::all::*}
+    bgWDef("thunder", "천둥의 성검", 500, 15, "aqua", "우클릭 심판의 낙뢰: 하늘에서 성검이 내리꽂힘 — 반경 4 강한 피해 · 15초")
+    bgWDef("dragon", "용살자의 도끼", 500, 12, "red", "우클릭 화염 선풍: 도끼가 두 바퀴 돌며 앞 120° 베기 · 12초")
+    bgWDef("wind", "질풍의 레이피어", 500, 8, "green", "우클릭 질풍 삼연격: 질주하며 세 번 찌르기 · 8초")
+    bgWDef("phoenix", "성기사의 전쟁망치", 500, 18, "gold", "우클릭 신성 강타: 거대한 망치가 떨어져 결계 (저항 II) · 18초")
+    bgWDef("blackiron", "흑기사의 대검", 500, 12, "dark_red", "우클릭 피의 돌진: 돌진 뒤 거대한 대검으로 가로 베기 · 12초")
+    bgWDef("tiger", "그림자 쌍단검", 500, 10, "dark_purple", "우클릭 그림자 교차: 단검 두 자루가 X자로 교차 (3연속) · 10초")
+    bgWDef("staff", "대마법사의 지팡이", 500, 14, "light_purple", "우클릭 비전 폭발: 비전 구체를 모았다 터뜨려 적을 띄움 · 14초")
+    bgWDef("peachwood", "불사조의 창", 500, 16, "gold", "우클릭 불창의 비: 불창 여섯 자루가 쏟아짐 (화상) · 16초")
+    bgWDef("frost", "서리 여왕의 장궁", 500, 12, "aqua", "우클릭 빙결 사격: 얼음 화살 세 발 — 맞은 적 자리에 얼음 가시 (구속 IV) · 12초")
+    bgWDef("storm", "폭풍의 삼지창", 500, 16, "blue", "우클릭 폭풍 투척: 삼지창을 던져 번개가 적 3명에게 튀어감 · 16초")
+    bgWDef("scythe", "망자의 낫", 500, 14, "dark_gray", "우클릭 영혼 수확: 낫이 한 바퀴 돌며 베고, 맞은 적마다 체력 회복 · 14초")
+    bgWDef("lance", "성광의 기병창", 500, 12, "yellow", "우클릭 성광 돌격: 9칸 돌격 — 길 위의 적을 띄우고 발광 · 12초")
+    bgWDef("skull", "저주받은 해골 지팡이", 500, 12, "dark_green", "우클릭 저주의 해골: 날아가는 해골이 터지며 독 구름 · 12초")
+    bgWDef("chakram", "태양의 원반", 500, 10, "gold", "우클릭 태양 원반: 원반이 날아갔다 돌아오며 두 번 벰 · 10초")
+    bgWDef("chain", "사냥꾼의 사슬낫", 500, 12, "gray", "우클릭 사슬 끌어오기: 앞의 적을 사슬로 끌어와 기절 · 12초")
+    bgWDef("gauntlet", "거인의 건틀렛", 500, 14, "gold", "우클릭 대지 분쇄: 앞으로 돌기둥이 줄지어 솟아 적을 띄움 · 14초")
+    bgWDef("b_talos", "탈로스의 청동 대검", 0, 18, "gold", "보스 전용 · 우클릭 청동 폭주: 세 번 연속 돌진 + 저항 · 힘 (5초) · 18초")
+    bgWDef("b_sphinx", "스핑크스의 모래시계", 0, 20, "yellow", "보스 전용 · 우클릭 시간의 모래폭풍: 반경 7 적 구속 V · 실명 (3초) · 20초")
+    bgWDef("b_ladon", "히드라의 삼두 채찍", 0, 14, "dark_green", "보스 전용 · 우클릭 삼두 채찍질: 세 갈래로 독 채찍 (독 · 시듦) · 14초")
+    bgWDef("b_cyclops", "외눈 거인의 곤봉", 0, 18, "gold", "보스 전용 · 우클릭 거암 투척: 거대한 바위를 던져 땅을 뒤흔듦 · 18초")
 
 # ─────────────────────────────────────────────────────────── 코인
 function bgCoin(p: player, n: number, why: text):
@@ -146,7 +124,12 @@ on load:
     loop {-bg::gear::list::*}:
         set {-bg::gearslot::%{-bg::gear::%loop-value%::slot}%} to loop-value
     # 전설 무기 진열 칸
-    set {-bg::wslots::*} to 10, 12, 14, 16, 19, 21, 23 and 25
+    set {-bg::wslots::*} to 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28 and 29
+    set {-bg::bslots::*} to 31, 32, 33 and 34
+    set {_k} to 0
+    loop {-bg::w::bosslist::*}:
+        add 1 to {_k}
+        set {-bg::bslot::%{-bg::bslots::%{_k}%}%} to loop-value
     set {_i} to 0
     loop {-bg::w::list::*}:
         add 1 to {_i}
@@ -185,7 +168,7 @@ function bgShopRestore(p: player):
         bgGiveGear({_p}, "diamond")
     if {bg::owned::%{_u}%::sword} is true:
         bgGiveGear({_p}, "sword")
-    loop {-bg::w::list::*}:
+    loop {-bg::w::all::*}:
         if {bg::owned::%{_u}%::%loop-value%} is true:
             bgGiveWeapon({_p}, loop-value)
 
@@ -265,6 +248,14 @@ function bgShopOpen(p: player):
         set {_it} to bgWeaponItem({_w})
         set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&e가격: %{-bg::w::%{_w}%::price}% 코인 &7(클릭해서 구매)"
         set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
+    set {_i} to 0
+    loop {-bg::w::bosslist::*}:
+        add 1 to {_i}
+        set {_w} to loop-value
+        set {_it} to bgWeaponItem({_w})
+        set name of {_it} to "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)"
+        set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&c상점에서 살 수 없습니다 — 그 보스의 보상 상자에서만"
+        set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
     loop {-bg::gear::list::*}:
         set {_g} to loop-value
         set {_it} to {-bg::gear::%{_g}%::icon}
@@ -307,6 +298,9 @@ on inventory click:
         bgGiveGear(player, {_g})
         send "&6[상점] &f%{-bg::gear::%{_g}%::name}% 구매 &7(남은 코인 %{bg::coin::%uuid of player%}%)" to player
         play sound "entity.experience_orb.pickup" to player
+        stop
+    if {-bg::bslot::%{_s}%} is set:
+        send "&6[상점] &c보스 전용 무기는 보스를 쓰러뜨리고 보상 상자를 열어야 얻을 수 있습니다." to player
         stop
     if {-bg::wslot::%{_s}%} is not set:
         stop
@@ -425,7 +419,7 @@ function bgEnemies(p: player, c: location, r: number) :: players:
 on right click:
     set {_nm} to uncolored name of player's tool
     {_nm} is set
-    loop {-bg::w::list::*}:
+    loop {-bg::w::all::*}:
         if {_nm} contains {-bg::w::%loop-value%::name}:
             set {_w} to loop-value
     {_w} is set
@@ -452,8 +446,32 @@ on right click:
         bgSkClaw(player)
     else if {_w} is "staff":
         bgSkStaff(player)
-    else:
+    else if {_w} is "peachwood":
         bgSkFire(player)
+    else if {_w} is "frost":
+        bgSkFrost(player)
+    else if {_w} is "storm":
+        bgSkStorm(player)
+    else if {_w} is "scythe":
+        bgSkScythe(player)
+    else if {_w} is "lance":
+        bgSkLance(player)
+    else if {_w} is "skull":
+        bgSkSkull(player)
+    else if {_w} is "chakram":
+        bgSkChakram(player)
+    else if {_w} is "chain":
+        bgSkChain(player)
+    else if {_w} is "gauntlet":
+        bgSkGauntlet(player)
+    else if {_w} is "b_talos":
+        bgSkBTalos(player)
+    else if {_w} is "b_sphinx":
+        bgSkBSphinx(player)
+    else if {_w} is "b_ladon":
+        bgSkBLadon(player)
+    else if {_w} is "b_cyclops":
+        bgSkBCyclops(player)
 
 function bgSkThunder(p: player):
     set {_b} to target block of {_p}
@@ -473,7 +491,7 @@ function bgSkThunder(p: player):
     strike lightning effect at {_l}
     set {_es::*} to bgEnemies({_p}, {_l}, 4)
     loop {_es::*}:
-        bgDmg(loop-value, 4)
+        bgDmg(loop-value, 3.5)
         bgIgnite(loop-value, 2)
         bgParticle(location of loop-value, "electric_spark", 0.4, 1, 0.4, 0.2, 20)
 
@@ -514,6 +532,11 @@ function bgSkWind(p: player):
     bgSoundAt({_l}, "entity.breeze.wind_burst", 1.5, 1.2)
     loop 4 times:
         bgParticle(location of {_p}, "cloud", 0.3, 0.2, 0.3, 0.02, 8)
+        set {_hit::*} to bgEnemies({_p}, location of {_p}, 2.2)
+        loop {_hit::*}:
+            if {_done::%uuid of loop-value-2%} is not set:
+                set {_done::%uuid of loop-value-2%} to true
+                bgDmg(loop-value-2, 2)
         wait 2 ticks
     bgWfx(location of {_p}, "wfx_wind", 4, 16, yaw of {_p})
 
@@ -529,7 +552,7 @@ function bgSkPhoenix(p: player):
     loop all players:
         if bgTeam(loop-player) is bgTeam({_p}):
             if distance between loop-player and {_l} <= 6:
-                bgCmd("effect give %name of loop-player% absorption 8 0 true")
+                bgCmd("effect give %name of loop-player% absorption 8 1 true")
     set {_es::*} to bgEnemies({_p}, {_l}, 4)
     loop {_es::*}:
         set {_dx} to (x-coordinate of loop-value) - (x-coordinate of {_l})
@@ -582,7 +605,7 @@ function bgSkClaw(p: player):
             set {_dz} to (z-coordinate of loop-value-2) - (z-coordinate of {_l})
             set {_d} to max(0.4, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
             if ({_dx} * {_fx} + {_dz} * {_fz}) / {_d} >= 0.64:
-                bgDmg(loop-value-2, 1.2)
+                bgDmg(loop-value-2, 1.1)
                 bgCmd("effect give %bgPName(loop-value-2)% slowness 1 1 true")
         wait 4 ticks
 
@@ -598,7 +621,7 @@ function bgSkStaff(p: player):
     bgParticle({_l}, "explosion", 2, 0.2, 2, 0, 4)
     set {_es::*} to bgEnemies({_p}, {_l}, 4.5)
     loop {_es::*}:
-        bgDmg(loop-value, 2)
+        bgDmg(loop-value, 2.5)
         bgVel(loop-value, vector(0, 1.1, 0))
 
 # 화염부: 부적 불꽃 고리 — 반경 5 적 1.5하트 + 4초 화상
@@ -611,15 +634,15 @@ function bgSkFire(p: player):
     bgParticle({_l}, "flame", 3.5, 0.4, 3.5, 0.02, 80)
     set {_es::*} to bgEnemies({_p}, {_l}, 5)
     loop {_es::*}:
-        bgDmg(loop-value, 1.5)
+        bgDmg(loop-value, 2)
         bgIgnite(loop-value, 4)
 
-# 죽으면 전설 무기는 그 자리에 떨어진다 (다른 사람이 주워 쓸 수 있음) — 산 갑옷·검은 부활 때 돌려받음
+# 전설 무기 판별 (이름으로) — 상점 무기 + 보스 무기
 function bgIsLegend(i: item) :: text:
     set {_n} to uncolored name of {_i}
     if {_n} is not set:
         return ""
-    loop {-bg::w::list::*}:
+    loop {-bg::w::all::*}:
         if {_n} contains {-bg::w::%loop-value%::name}:
             return loop-value
     return ""

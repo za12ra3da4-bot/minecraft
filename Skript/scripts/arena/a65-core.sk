@@ -10,6 +10,37 @@ function bgCoreReset():
         set {-bg::core::%loop-value%::down} to false
         if {-bg::mk::base_%loop-value%_beacon::x} is set:
             set block at bgMk("base_%loop-value%_beacon") to beacon
+        bgCoreShow(loop-value, true)
+        bgCoreText(loop-value)
+
+# 코어 위 체력 글씨 (데이터팩 장식 bg_coretext_<팀>)
+function bgCoreText(t: text):
+    set {_h} to 30 - ({-bg::core::%{_t}%::hits} ? 0)
+    set {_c} to "white"
+    if {_h} <= 10:
+        set {_c} to "red"
+    else if {_h} <= 20:
+        set {_c} to "gold"
+    if {-bg::core::%{_t}%::down} is true:
+        bgCmd("data merge entity @e[tag=bg_coretext_%{_t}%,limit=1] {text:{text:""파괴됨 — 90초 뒤 복구"",color:""dark_gray"",bold:true}}")
+        stop
+    bgCmd("data merge entity @e[tag=bg_coretext_%{_t}%,limit=1] {text:{text:""%{_h}% / 30"",color:""%{_c}%"",bold:true}}")
+
+# 부서지면 수정 · 빛기둥 숨기기
+function bgCoreShow(t: text, on: boolean):
+    if {_on} is true:
+        bgCmd("execute as @e[tag=bg_core_%{_t}%] run data merge entity @s {view_range:2f}")
+    else:
+        bgCmd("execute as @e[tag=bg_core_%{_t}%] run data merge entity @s {view_range:0f}")
+
+# 떠 있는 수정(interaction)을 때려도 코어 타격 — 데이터팩 tick 이 bg_wantcore_<팀> 태그를 붙인다
+every 2 ticks:
+    loop all players:
+        loop {-bg::teams::*}:
+            if scoreboard tags of loop-player contain "bg_wantcore_%loop-value-2%":
+                remove "bg_wantcore_%loop-value-2%" from scoreboard tags of loop-player
+                if bgIsFighter(loop-player) is true:
+                    bgCoreHit(loop-player, loop-value-2)
 
 on left click on beacon:
     bgIsFighter(player) is true
@@ -40,6 +71,7 @@ function bgCoreHit(p: player, t: text):
     bgParticle({_m}, "crit", 0.6, 0.8, 0.6, 0.3, 12)
     bgSoundAt({_m}, "block.anvil.land", 1, 1.6)
     send action bar "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 코어 &f%{_h}%&7/30" to {_p}
+    bgCoreText({_t})
     if mod({_h}, 10) is 0:
         if {_h} < 30:
             loop all players:
@@ -53,6 +85,8 @@ function bgCoreBreak(t: text, by: text):
     set {-bg::core::%{_t}%::down} to true
     set {_m} to bgMk("base_%{_t}%_beacon")
     set block at {_m} to air
+    bgCoreShow({_t}, false)
+    bgCoreText({_t})
     bgParticle({_m}, "explosion_emitter", 0.5, 0.5, 0.5, 0, 2)
     bgParticle({_m}, "large_smoke", 1.5, 1.5, 1.5, 0.05, 60)
     bgSoundAt({_m}, "entity.generic.explode", 4, 0.7)
@@ -68,6 +102,8 @@ function bgCoreBreak(t: text, by: text):
         set block at {_m} to beacon
         set {-bg::core::%{_t}%::hits} to 0
         set {-bg::core::%{_t}%::down} to false
+        bgCoreShow({_t}, true)
+        bgCoreText({_t})
         bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어가 복구되었습니다.")
 
 # ─────────────────────────────────────────────────────────── 결계 부적
@@ -90,13 +126,24 @@ function bgWardOn(p: player) :: boolean:
         return true
     return false
 
-# ─────────────────────────────────────────────────────────── 광산 (보스 투기장 옆)
-#  곡괭이로 광석을 캐면 코인: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10. 40초 뒤 다시 채워짐
+# ─────────────────────────────────────────────────────────── 광산 (본진 광석 바위)
+#  본진 광석 바위에서만: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10 코인. 누가 캐도 40초 뒤 다시 채워짐
+#  (다른 곳 광석은 캘 수 없음 · 창작 모드 관리자는 예외)
+function bgAtBaseOre(l: location) :: boolean:
+    loop {-bg::teams::*}:
+        if {-bg::mk::base_%loop-value%_class_2::x} is set:
+            set {_m} to bgMk("base_%loop-value%_class_2")
+            if world of {_l} is world of {_m}:
+                if bgDist2({_l}, {_m}) <= 14:
+                    return true
+    return false
+
 on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
-    bgIsFighter(player) is true
+    player's gamemode is not creative
     cancel event
-    set {_ty} to type of event-block
     set {_l} to location of event-block
+    bgAtBaseOre({_l}) is true
+    set {_ty} to type of event-block
     set {_n} to 2
     if event-block is gold ore:
         set {_n} to 3
@@ -105,9 +152,10 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     else if event-block is diamond ore:
         set {_n} to 10
     set block at {_l} to cobblestone
-    bgCoin(player, {_n}, "광질")
+    if bgIsFighter(player) is true:
+        bgCoin(player, {_n}, "광질")
+        play sound "entity.experience_orb.pickup" to player
     play sound "block.amethyst_block.break" to player
-    play sound "entity.experience_orb.pickup" to player
     bgParticle({_l}, "wax_on", 0.4, 0.4, 0.4, 0.1, 10)
     wait 40 seconds
     if block at {_l} is cobblestone:

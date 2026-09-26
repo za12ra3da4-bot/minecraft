@@ -1,3 +1,19 @@
+fill ~217 ~23 ~31 ~217 ~23 ~41 minecraft:basalt[axis=y] strict
+fill ~223 ~23 ~31 ~223 ~24 ~56 minecraft:smooth_basalt strict
+fill ~242 ~23 ~31 ~242 ~37 ~31 minecraft:polished_blackstone_bricks strict
+fill ~243 ~23 ~31 ~243 ~37 ~31 minecraft:basalt[axis=y] strict
+fill ~13 ~23 ~32 ~13 ~26 ~34 minecraft:mossy_stone_bricks strict
+fill ~103 ~23 ~32 ~103 ~23 ~34 minecraft:stone strict
+fill ~104 ~23 ~32 ~105 ~23 ~33 minecraft:stone_bricks strict
+fill ~151 ~23 ~32 ~152 ~23 ~32 minecraft:stone_bricks strict
+fill ~153 ~23 ~32 ~154 ~23 ~32 minecraft:stone strict
+fill ~160 ~23 ~32 ~160 ~25 ~45 minecraft:dirt strict
+fill ~204 ~23 ~32 ~204 ~23 ~41 minecraft:basalt[axis=y] strict
+fill ~222 ~23 ~32 ~222 ~24 ~55 minecraft:smooth_basalt strict
+fill ~242 ~23 ~32 ~243 ~37 ~32 minecraft:blackstone strict
+fill ~12 ~23 ~33 ~12 ~26 ~38 minecraft:stone_bricks strict
+setblock ~151 ~23 ~33 minecraft:mossy_stone_bricks strict
+setblock ~152 ~23 ~33 minecraft:stone_bricks strict
 fill ~153 ~23 ~33 ~153 ~23 ~34 minecraft:stone strict
 fill ~221 ~23 ~33 ~221 ~24 ~55 minecraft:smooth_basalt strict
 fill ~242 ~23 ~33 ~243 ~36 ~33 minecraft:basalt[axis=y] strict
@@ -332,19 +348,3 @@ fill ~136 ~23 ~52 ~137 ~23 ~52 minecraft:andesite strict
 fill ~138 ~23 ~52 ~138 ~25 ~52 minecraft:dirt strict
 fill ~157 ~23 ~52 ~160 ~25 ~55 minecraft:dirt strict
 fill ~166 ~23 ~52 ~167 ~23 ~53 minecraft:andesite strict
-fill ~175 ~23 ~52 ~175 ~24 ~53 minecraft:terracotta strict
-fill ~183 ~23 ~52 ~184 ~24 ~52 minecraft:terracotta strict
-fill ~192 ~23 ~52 ~193 ~24 ~52 minecraft:terracotta strict
-fill ~213 ~23 ~52 ~213 ~37 ~52 minecraft:smooth_basalt strict
-fill ~214 ~23 ~52 ~214 ~36 ~52 minecraft:basalt[axis=y] strict
-fill ~218 ~23 ~52 ~218 ~23 ~53 minecraft:basalt[axis=y] strict
-fill ~228 ~23 ~52 ~229 ~23 ~52 minecraft:smooth_basalt strict
-fill ~230 ~23 ~52 ~230 ~37 ~52 minecraft:polished_blackstone_bricks strict
-fill ~231 ~23 ~52 ~231 ~36 ~52 minecraft:basalt[axis=y] strict
-fill ~232 ~23 ~52 ~232 ~36 ~53 minecraft:blackstone strict
-fill ~244 ~23 ~52 ~245 ~24 ~53 minecraft:andesite strict
-setblock ~14 ~23 ~53 minecraft:andesite strict
-fill ~22 ~23 ~53 ~22 ~26 ~53 minecraft:mossy_stone_bricks strict
-fill ~26 ~23 ~53 ~26 ~26 ~54 minecraft:stone_bricks strict
-fill ~27 ~23 ~53 ~28 ~25 ~54 minecraft:mossy_stone_bricks strict
-fill ~30 ~23 ~53 ~30 ~25 ~61 minecraft:stone strict

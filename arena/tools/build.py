@@ -67,8 +67,12 @@ def main(args):
     else:
         world, T = build_map.generate()
         build_map.save(world, T)
+    # 갇히는 곳 찾아서 고치기 (사다리 · 메우기) — 새로 짓는 맵과 이미 지은 맵(patch) 둘 다에 반영
+    import escape
+    seeds = [m["pos"] for n, m in world.markers.items() if n.startswith("base_") and "_spawn_" in n]
+    fixes = escape.fix(world, seeds)
     ncmd, nparts = dp.map_functions(OUT_DP, world)
-    ndeco = dp.decor_functions(OUT_DP, world)
+    ndeco = dp.decor_functions(OUT_DP, world, fixes)
     print(f"[dp] 맵 명령 {ncmd} ({nparts} 단계), 장식 {ndeco}")
     # 리소스팩
     pack = Pack("bg")

@@ -1,3 +1,19 @@
+fill ~175 ~23 ~52 ~175 ~24 ~53 minecraft:terracotta strict
+fill ~183 ~23 ~52 ~184 ~24 ~52 minecraft:terracotta strict
+fill ~192 ~23 ~52 ~193 ~24 ~52 minecraft:terracotta strict
+fill ~213 ~23 ~52 ~213 ~37 ~52 minecraft:smooth_basalt strict
+fill ~214 ~23 ~52 ~214 ~36 ~52 minecraft:basalt[axis=y] strict
+fill ~218 ~23 ~52 ~218 ~23 ~53 minecraft:basalt[axis=y] strict
+fill ~228 ~23 ~52 ~229 ~23 ~52 minecraft:smooth_basalt strict
+fill ~230 ~23 ~52 ~230 ~37 ~52 minecraft:polished_blackstone_bricks strict
+fill ~231 ~23 ~52 ~231 ~36 ~52 minecraft:basalt[axis=y] strict
+fill ~232 ~23 ~52 ~232 ~36 ~53 minecraft:blackstone strict
+fill ~244 ~23 ~52 ~245 ~24 ~53 minecraft:andesite strict
+setblock ~14 ~23 ~53 minecraft:andesite strict
+fill ~22 ~23 ~53 ~22 ~26 ~53 minecraft:mossy_stone_bricks strict
+fill ~26 ~23 ~53 ~26 ~26 ~54 minecraft:stone_bricks strict
+fill ~27 ~23 ~53 ~28 ~25 ~54 minecraft:mossy_stone_bricks strict
+fill ~30 ~23 ~53 ~30 ~25 ~61 minecraft:stone strict
 fill ~40 ~23 ~53 ~41 ~25 ~54 minecraft:stone_bricks strict
 fill ~42 ~23 ~53 ~42 ~26 ~53 minecraft:mossy_stone_bricks strict
 fill ~44 ~23 ~53 ~44 ~25 ~54 minecraft:stone_bricks strict
@@ -332,19 +348,3 @@ fill ~76 ~23 ~72 ~76 ~30 ~72 minecraft:sandstone strict
 fill ~105 ~23 ~72 ~107 ~23 ~72 minecraft:andesite strict
 fill ~108 ~23 ~72 ~110 ~25 ~72 minecraft:dirt strict
 setblock ~126 ~23 ~72 minecraft:mossy_stone_bricks strict
-setblock ~127 ~23 ~72 minecraft:cracked_stone_bricks strict
-setblock ~128 ~23 ~72 minecraft:polished_andesite strict
-fill ~129 ~23 ~72 ~130 ~23 ~77 minecraft:stone_bricks strict
-fill ~138 ~23 ~72 ~140 ~25 ~72 minecraft:dirt strict
-fill ~141 ~23 ~72 ~143 ~23 ~72 minecraft:andesite strict
-fill ~171 ~23 ~72 ~172 ~23 ~73 minecraft:brown_terracotta strict
-fill ~204 ~23 ~72 ~204 ~23 ~73 minecraft:brown_terracotta strict
-fill ~220 ~23 ~72 ~221 ~25 ~72 minecraft:andesite strict
-fill ~225 ~23 ~72 ~225 ~24 ~72 minecraft:andesite strict
-fill ~33 ~23 ~73 ~33 ~25 ~73 minecraft:dirt strict
-setblock ~73 ~23 ~73 minecraft:chiseled_polished_blackstone strict
-fill ~91 ~23 ~73 ~91 ~23 ~76 minecraft:grass_block strict
-fill ~102 ~23 ~73 ~105 ~23 ~73 minecraft:andesite strict
-fill ~106 ~23 ~73 ~107 ~25 ~73 minecraft:dirt strict
-setblock ~125 ~23 ~73 minecraft:cobblestone strict
-fill ~126 ~23 ~73 ~126 ~23 ~77 minecraft:stone_bricks strict

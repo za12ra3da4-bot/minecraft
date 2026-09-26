@@ -1,3 +1,82 @@
+setblock ~213 ~53 ~251 minecraft:jungle_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~144 ~53 ~253 ~146 ~53 ~253 minecraft:grass_block strict
+setblock ~150 ~53 ~253 minecraft:grass_block strict
+fill ~144 ~53 ~254 ~145 ~53 ~255 minecraft:grass_block strict
+fill ~152 ~53 ~254 ~153 ~53 ~254 minecraft:grass_block strict
+setblock ~146 ~53 ~255 minecraft:grass_block strict
+fill ~151 ~53 ~255 ~152 ~53 ~255 minecraft:grass_block strict
+fill ~120 ~54 ~112 ~121 ~54 ~112 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~122 ~54 ~112 ~134 ~54 ~112 minecraft:quartz_bricks strict
+fill ~135 ~54 ~112 ~136 ~54 ~112 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~120 ~54 ~113 ~121 ~54 ~113 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~122 ~54 ~113 ~123 ~54 ~113 minecraft:weathered_cut_copper strict
+setblock ~134 ~54 ~113 minecraft:weathered_cut_copper strict
+fill ~135 ~54 ~113 ~136 ~54 ~114 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~120 ~54 ~114 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~123 ~54 ~114 minecraft:weathered_cut_copper strict
+fill ~133 ~54 ~114 ~133 ~54 ~116 minecraft:weathered_cut_copper strict
+setblock ~116 ~54 ~115 minecraft:weathered_cut_copper_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+fill ~121 ~54 ~115 ~121 ~54 ~116 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~136 ~54 ~115 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~137 ~54 ~115 minecraft:calcite strict
+setblock ~122 ~54 ~116 minecraft:weathered_cut_copper strict
+setblock ~135 ~54 ~117 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~137 ~54 ~117 minecraft:quartz_bricks strict
+setblock ~120 ~54 ~118 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~120 ~54 ~141 ~120 ~54 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~121 ~54 ~142 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~122 ~54 ~142 ~122 ~54 ~143 minecraft:weathered_cut_copper strict
+setblock ~123 ~54 ~143 minecraft:weathered_cut_copper strict
+fill ~120 ~54 ~144 ~121 ~54 ~144 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~122 ~54 ~144 ~129 ~54 ~144 minecraft:quartz_bricks strict
+setblock ~147 ~54 ~253 minecraft:andesite strict
+fill ~148 ~54 ~253 ~149 ~54 ~253 minecraft:stone strict
+fill ~146 ~54 ~254 ~151 ~54 ~254 minecraft:grass_block strict
+fill ~147 ~54 ~255 ~150 ~54 ~255 minecraft:grass_block strict
+fill ~122 ~55 ~112 ~123 ~55 ~112 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~124 ~55 ~112 ~132 ~55 ~112 minecraft:quartz_bricks strict
+fill ~133 ~55 ~112 ~134 ~55 ~112 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~122 ~55 ~113 ~123 ~55 ~113 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~124 ~55 ~113 ~124 ~55 ~116 minecraft:weathered_cut_copper strict
+fill ~131 ~55 ~113 ~132 ~55 ~114 minecraft:weathered_cut_copper strict
+setblock ~134 ~55 ~113 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~123 ~55 ~114 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~125 ~55 ~114 ~125 ~55 ~115 minecraft:weathered_cut_copper strict
+fill ~133 ~55 ~114 ~133 ~55 ~116 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~122 ~55 ~116 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~124 ~55 ~141 ~125 ~55 ~141 minecraft:weathered_cut_copper strict
+fill ~122 ~55 ~142 ~122 ~55 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~125 ~55 ~142 ~125 ~55 ~143 minecraft:weathered_cut_copper strict
+setblock ~123 ~55 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~124 ~55 ~143 minecraft:weathered_cut_copper strict
+fill ~122 ~55 ~144 ~123 ~55 ~144 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~124 ~55 ~144 ~129 ~55 ~144 minecraft:quartz_bricks strict
+fill ~124 ~56 ~112 ~125 ~56 ~112 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~126 ~56 ~112 ~130 ~56 ~112 minecraft:quartz_bricks strict
+fill ~131 ~56 ~112 ~132 ~56 ~112 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~124 ~56 ~113 ~124 ~56 ~116 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~127 ~56 ~113 ~127 ~56 ~116 minecraft:weathered_cut_copper strict
+fill ~129 ~56 ~113 ~130 ~56 ~114 minecraft:weathered_cut_copper strict
+fill ~131 ~56 ~113 ~132 ~56 ~114 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~125 ~56 ~114 ~125 ~56 ~115 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~126 ~56 ~114 minecraft:weathered_cut_copper strict
+fill ~129 ~56 ~116 ~130 ~56 ~116 minecraft:weathered_cut_copper strict
+setblock ~130 ~56 ~117 minecraft:weathered_cut_copper strict
+setblock ~129 ~56 ~118 minecraft:weathered_cut_copper strict
+fill ~124 ~56 ~141 ~125 ~56 ~141 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~125 ~56 ~142 ~125 ~56 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~127 ~56 ~142 ~127 ~56 ~143 minecraft:weathered_cut_copper strict
+fill ~129 ~56 ~142 ~129 ~56 ~143 minecraft:weathered_cut_copper strict
+setblock ~124 ~56 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~126 ~56 ~143 minecraft:weathered_cut_copper strict
+fill ~124 ~56 ~144 ~125 ~56 ~144 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~126 ~56 ~144 ~129 ~56 ~144 minecraft:quartz_bricks strict
+fill ~126 ~57 ~112 ~127 ~57 ~112 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~128 ~57 ~112 minecraft:quartz_bricks strict
+fill ~129 ~57 ~112 ~130 ~57 ~112 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~127 ~57 ~113 ~127 ~57 ~116 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~128 ~57 ~113 ~128 ~58 ~116 minecraft:weathered_cut_copper strict
+fill ~129 ~57 ~113 ~130 ~57 ~114 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~126 ~57 ~114 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~131 ~57 ~114 minecraft:weathered_cut_copper_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
 fill ~129 ~57 ~116 ~130 ~57 ~116 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
@@ -269,82 +348,3 @@ fill ~128 ~76 ~118 ~128 ~77 ~119 minecraft:deepslate_tiles strict
 fill ~124 ~76 ~119 ~124 ~76 ~121 minecraft:deepslate_tiles strict
 fill ~126 ~76 ~119 ~127 ~76 ~120 minecraft:deepslate_tiles strict
 fill ~130 ~76 ~119 ~130 ~76 ~121 minecraft:deepslate_tiles strict
-fill ~125 ~76 ~120 ~125 ~76 ~121 minecraft:deepslate_tiles strict
-setblock ~128 ~76 ~120 minecraft:amethyst_block strict
-fill ~129 ~76 ~120 ~129 ~76 ~121 minecraft:deepslate_tiles strict
-fill ~131 ~76 ~120 ~132 ~77 ~120 minecraft:deepslate_tiles strict
-fill ~135 ~76 ~120 ~135 ~77 ~120 minecraft:deepslate_tiles strict
-fill ~121 ~76 ~121 ~121 ~76 ~124 minecraft:deepslate_tiles strict
-setblock ~122 ~76 ~121 minecraft:amethyst_block strict
-fill ~123 ~76 ~121 ~123 ~76 ~122 minecraft:deepslate_tiles strict
-fill ~126 ~76 ~121 ~126 ~77 ~121 minecraft:stone strict
-fill ~127 ~76 ~121 ~128 ~76 ~121 minecraft:deepslate_tiles strict
-setblock ~131 ~76 ~121 minecraft:amethyst_block strict
-fill ~132 ~76 ~121 ~134 ~76 ~121 minecraft:deepslate_tiles strict
-fill ~136 ~76 ~121 ~136 ~77 ~121 minecraft:deepslate_tiles strict
-fill ~122 ~76 ~122 ~122 ~76 ~123 minecraft:deepslate_tiles strict
-setblock ~125 ~76 ~122 minecraft:amethyst_block strict
-setblock ~126 ~76 ~122 minecraft:andesite strict
-fill ~128 ~76 ~122 ~129 ~77 ~122 minecraft:stone strict
-setblock ~130 ~76 ~122 minecraft:andesite strict
-fill ~132 ~76 ~122 ~132 ~77 ~122 minecraft:stone strict
-setblock ~133 ~76 ~122 minecraft:deepslate_tiles strict
-setblock ~134 ~76 ~122 minecraft:amethyst_block strict
-fill ~135 ~76 ~122 ~135 ~77 ~124 minecraft:deepslate_tiles strict
-fill ~123 ~76 ~123 ~123 ~77 ~123 minecraft:stone strict
-setblock ~125 ~76 ~123 minecraft:andesite strict
-fill ~126 ~76 ~123 ~127 ~76 ~123 minecraft:stone strict
-setblock ~128 ~76 ~123 minecraft:amethyst_block strict
-setblock ~129 ~76 ~123 minecraft:andesite strict
-fill ~130 ~76 ~123 ~131 ~76 ~123 minecraft:stone strict
-setblock ~132 ~76 ~123 minecraft:deepslate_tiles strict
-setblock ~133 ~76 ~123 minecraft:andesite strict
-fill ~119 ~76 ~124 ~120 ~77 ~124 minecraft:deepslate_tiles strict
-setblock ~122 ~76 ~124 minecraft:amethyst_block strict
-setblock ~124 ~76 ~124 minecraft:andesite strict
-setblock ~125 ~76 ~124 minecraft:stone strict
-fill ~127 ~76 ~124 ~127 ~78 ~124 minecraft:stone strict
-setblock ~128 ~76 ~124 minecraft:andesite strict
-setblock ~129 ~76 ~124 minecraft:stone strict
-setblock ~131 ~76 ~124 minecraft:amethyst_block strict
-setblock ~132 ~76 ~124 minecraft:andesite strict
-setblock ~133 ~76 ~124 minecraft:deepslate_tiles strict
-fill ~134 ~76 ~124 ~134 ~77 ~124 minecraft:stone strict
-fill ~136 ~76 ~124 ~136 ~76 ~125 minecraft:deepslate_tiles strict
-setblock ~122 ~76 ~125 minecraft:deepslate_tiles strict
-setblock ~123 ~76 ~125 minecraft:andesite strict
-setblock ~124 ~76 ~125 minecraft:stone strict
-setblock ~125 ~76 ~125 minecraft:amethyst_block strict
-fill ~126 ~76 ~125 ~126 ~78 ~125 minecraft:stone strict
-setblock ~127 ~76 ~125 minecraft:andesite strict
-setblock ~128 ~76 ~125 minecraft:stone strict
-fill ~130 ~76 ~125 ~130 ~78 ~125 minecraft:stone strict
-setblock ~131 ~76 ~125 minecraft:andesite strict
-fill ~132 ~76 ~125 ~133 ~76 ~125 minecraft:stone strict
-setblock ~134 ~76 ~125 minecraft:amethyst_block strict
-setblock ~135 ~76 ~125 minecraft:andesite strict
-setblock ~119 ~76 ~126 minecraft:amethyst_block strict
-fill ~120 ~76 ~126 ~120 ~76 ~132 minecraft:deepslate_tiles strict
-setblock ~121 ~76 ~126 minecraft:stone strict
-setblock ~122 ~76 ~126 minecraft:andesite strict
-fill ~123 ~76 ~126 ~123 ~76 ~128 minecraft:stone strict
-fill ~125 ~76 ~126 ~125 ~78 ~126 minecraft:stone strict
-setblock ~126 ~76 ~126 minecraft:andesite strict
-setblock ~128 ~76 ~126 minecraft:amethyst_block strict
-fill ~129 ~76 ~126 ~129 ~78 ~126 minecraft:stone strict
-setblock ~130 ~76 ~126 minecraft:andesite strict
-setblock ~131 ~76 ~126 minecraft:stone strict
-fill ~133 ~76 ~126 ~133 ~78 ~126 minecraft:stone strict
-setblock ~134 ~76 ~126 minecraft:andesite strict
-setblock ~135 ~76 ~126 minecraft:deepslate_tiles strict
-setblock ~137 ~76 ~126 minecraft:amethyst_block strict
-fill ~119 ~76 ~127 ~119 ~77 ~128 minecraft:deepslate_tiles strict
-fill ~121 ~76 ~127 ~121 ~76 ~130 minecraft:deepslate_tiles strict
-setblock ~122 ~76 ~127 minecraft:amethyst_block strict
-setblock ~124 ~76 ~127 minecraft:stone strict
-setblock ~125 ~76 ~127 minecraft:andesite strict
-setblock ~126 ~76 ~127 minecraft:stone strict
-fill ~128 ~76 ~127 ~128 ~78 ~127 minecraft:stone strict
-setblock ~129 ~76 ~127 minecraft:andesite strict
-setblock ~131 ~76 ~127 minecraft:amethyst_block strict
-fill ~132 ~76 ~127 ~132 ~78 ~127 minecraft:stone strict

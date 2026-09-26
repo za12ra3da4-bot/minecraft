@@ -1,3 +1,23 @@
+fill ~77 ~24 ~97 ~77 ~26 ~98 minecraft:dirt strict
+setblock ~165 ~24 ~97 minecraft:water strict
+setblock ~166 ~24 ~97 minecraft:grass_block strict
+fill ~170 ~24 ~97 ~173 ~24 ~98 minecraft:moss_block strict
+fill ~178 ~24 ~97 ~178 ~24 ~103 minecraft:moss_block strict
+fill ~187 ~24 ~97 ~193 ~24 ~116 minecraft:grass_block strict
+fill ~219 ~24 ~97 ~221 ~24 ~102 minecraft:grass_block strict
+fill ~232 ~24 ~97 ~236 ~24 ~97 minecraft:moss_block strict
+fill ~14 ~24 ~98 ~15 ~24 ~98 minecraft:stone strict
+fill ~16 ~24 ~98 ~19 ~26 ~98 minecraft:dirt strict
+fill ~57 ~24 ~98 ~57 ~25 ~98 minecraft:stone strict
+fill ~59 ~24 ~98 ~59 ~26 ~98 minecraft:stone strict
+fill ~80 ~24 ~98 ~80 ~24 ~100 minecraft:grass_block strict
+fill ~163 ~24 ~98 ~164 ~24 ~98 minecraft:water strict
+setblock ~167 ~24 ~98 minecraft:grass_block strict
+fill ~179 ~24 ~98 ~179 ~24 ~102 minecraft:moss_block strict
+fill ~180 ~24 ~98 ~180 ~24 ~122 minecraft:grass_block strict
+fill ~185 ~24 ~98 ~186 ~24 ~124 minecraft:grass_block strict
+fill ~208 ~24 ~98 ~208 ~24 ~100 minecraft:dirt_path strict
+fill ~217 ~24 ~98 ~218 ~24 ~99 minecraft:grass_block strict
 setblock ~237 ~24 ~98 minecraft:moss_block strict
 fill ~238 ~24 ~98 ~241 ~24 ~98 minecraft:grass_block strict
 fill ~243 ~24 ~98 ~243 ~24 ~99 minecraft:andesite strict
@@ -30,6 +50,7 @@ setblock ~31 ~24 ~101 minecraft:moss_block strict
 fill ~55 ~24 ~101 ~55 ~25 ~104 minecraft:andesite strict
 fill ~57 ~24 ~101 ~57 ~26 ~102 minecraft:andesite strict
 fill ~78 ~24 ~101 ~78 ~24 ~103 minecraft:grass_block strict
+fill ~87 ~24 ~101 ~87 ~25 ~101 minecraft:ladder[facing=east,waterlogged=false] strict
 setblock ~169 ~24 ~101 minecraft:grass_block strict
 setblock ~171 ~24 ~101 minecraft:grass_block strict
 fill ~172 ~24 ~101 ~173 ~24 ~101 minecraft:moss_block strict
@@ -216,6 +237,7 @@ fill ~52 ~24 ~110 ~52 ~24 ~111 minecraft:grass_block strict
 fill ~58 ~24 ~110 ~58 ~25 ~110 minecraft:andesite strict
 fill ~69 ~24 ~110 ~69 ~24 ~111 minecraft:andesite strict
 setblock ~71 ~24 ~110 minecraft:andesite strict
+fill ~82 ~24 ~110 ~82 ~25 ~110 minecraft:ladder[facing=east,waterlogged=false] strict
 setblock ~174 ~24 ~110 minecraft:gravel strict
 fill ~206 ~24 ~110 ~206 ~24 ~112 minecraft:grass_block strict
 fill ~208 ~24 ~110 ~209 ~26 ~110 minecraft:dirt strict
@@ -326,25 +348,3 @@ fill ~62 ~24 ~119 ~62 ~24 ~120 minecraft:cracked_stone_bricks strict
 fill ~63 ~24 ~119 ~65 ~24 ~119 minecraft:stone_bricks strict
 fill ~66 ~24 ~119 ~66 ~24 ~121 minecraft:mossy_stone_bricks strict
 fill ~67 ~24 ~119 ~71 ~24 ~119 minecraft:grass_block strict
-fill ~187 ~24 ~119 ~189 ~24 ~124 minecraft:grass_block strict
-fill ~204 ~24 ~119 ~204 ~25 ~119 minecraft:stone strict
-setblock ~207 ~24 ~119 minecraft:stone_bricks strict
-fill ~5 ~24 ~120 ~6 ~27 ~120 minecraft:stone_bricks strict
-fill ~50 ~24 ~120 ~50 ~25 ~121 minecraft:stone_bricks strict
-fill ~52 ~24 ~120 ~53 ~24 ~123 minecraft:stone strict
-setblock ~63 ~24 ~120 minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~204 ~24 ~120 ~204 ~26 ~120 minecraft:dirt strict
-fill ~205 ~24 ~120 ~205 ~25 ~120 minecraft:cracked_stone_bricks strict
-fill ~206 ~24 ~120 ~206 ~25 ~120 minecraft:stone_bricks strict
-fill ~250 ~24 ~120 ~251 ~24 ~120 minecraft:mossy_stone_bricks strict
-setblock ~5 ~24 ~121 minecraft:mossy_stone_bricks strict
-fill ~6 ~24 ~121 ~6 ~28 ~121 minecraft:stone_bricks strict
-fill ~51 ~24 ~121 ~51 ~25 ~121 minecraft:stone_bricks strict
-setblock ~62 ~24 ~121 minecraft:stone_bricks strict
-fill ~204 ~24 ~121 ~204 ~24 ~123 minecraft:stone strict
-fill ~205 ~24 ~121 ~205 ~27 ~121 minecraft:mossy_stone_bricks strict
-setblock ~206 ~24 ~121 minecraft:cracked_stone_bricks strict
-fill ~250 ~24 ~121 ~251 ~24 ~121 minecraft:stone_bricks strict
-setblock ~5 ~24 ~122 minecraft:cracked_stone_bricks strict
-setblock ~6 ~24 ~122 minecraft:mossy_stone_bricks strict
-fill ~54 ~24 ~122 ~56 ~24 ~122 minecraft:stone strict

@@ -1,3 +1,82 @@
+fill ~200 ~47 ~2 ~200 ~47 ~3 minecraft:moss_block strict
+fill ~204 ~47 ~2 ~204 ~49 ~3 minecraft:dirt strict
+setblock ~223 ~47 ~2 minecraft:grass_block strict
+fill ~226 ~47 ~2 ~227 ~47 ~2 minecraft:grass_block strict
+setblock ~252 ~47 ~2 minecraft:grass_block strict
+fill ~18 ~47 ~3 ~20 ~47 ~3 minecraft:grass_block strict
+fill ~28 ~47 ~3 ~29 ~47 ~3 minecraft:grass_block strict
+fill ~44 ~47 ~3 ~46 ~47 ~3 minecraft:grass_block strict
+setblock ~53 ~47 ~3 minecraft:grass_block strict
+setblock ~54 ~47 ~3 minecraft:moss_block strict
+setblock ~81 ~47 ~3 minecraft:stone strict
+setblock ~82 ~47 ~3 minecraft:grass_block strict
+fill ~87 ~47 ~3 ~88 ~47 ~3 minecraft:tuff strict
+fill ~91 ~47 ~3 ~92 ~49 ~3 minecraft:dirt strict
+setblock ~101 ~47 ~3 minecraft:stone strict
+setblock ~102 ~47 ~3 minecraft:grass_block strict
+setblock ~103 ~47 ~3 minecraft:stone strict
+fill ~139 ~47 ~3 ~140 ~47 ~3 minecraft:tuff strict
+fill ~144 ~47 ~3 ~145 ~47 ~3 minecraft:moss_block strict
+setblock ~146 ~47 ~3 minecraft:stone strict
+fill ~148 ~47 ~3 ~150 ~48 ~3 minecraft:stone strict
+fill ~151 ~47 ~3 ~151 ~49 ~3 minecraft:dirt strict
+fill ~152 ~47 ~3 ~153 ~47 ~5 minecraft:stone strict
+fill ~154 ~47 ~3 ~155 ~47 ~3 minecraft:tuff strict
+fill ~156 ~47 ~3 ~158 ~47 ~3 minecraft:stone strict
+fill ~159 ~47 ~3 ~160 ~49 ~3 minecraft:dirt strict
+fill ~175 ~47 ~3 ~176 ~47 ~3 minecraft:grass_block strict
+fill ~205 ~47 ~3 ~205 ~49 ~3 minecraft:dirt strict
+fill ~206 ~47 ~3 ~207 ~47 ~3 minecraft:tuff strict
+setblock ~221 ~47 ~3 minecraft:grass_block strict
+fill ~222 ~47 ~3 ~224 ~47 ~3 minecraft:andesite strict
+fill ~225 ~47 ~3 ~226 ~47 ~3 minecraft:grass_block strict
+fill ~254 ~47 ~3 ~254 ~47 ~4 minecraft:grass_block strict
+fill ~22 ~47 ~4 ~25 ~47 ~4 minecraft:grass_block strict
+fill ~85 ~47 ~4 ~87 ~47 ~4 minecraft:stone strict
+setblock ~88 ~47 ~4 minecraft:tuff strict
+fill ~97 ~47 ~4 ~99 ~47 ~4 minecraft:stone strict
+fill ~146 ~47 ~4 ~148 ~47 ~4 minecraft:andesite strict
+fill ~149 ~47 ~4 ~151 ~47 ~4 minecraft:stone strict
+fill ~154 ~47 ~4 ~157 ~47 ~5 minecraft:stone strict
+fill ~160 ~47 ~4 ~160 ~47 ~5 minecraft:stone strict
+fill ~164 ~47 ~4 ~169 ~47 ~4 minecraft:grass_block strict
+setblock ~201 ~47 ~4 minecraft:stone strict
+setblock ~202 ~47 ~4 minecraft:moss_block strict
+setblock ~203 ~47 ~4 minecraft:tuff strict
+fill ~205 ~47 ~4 ~205 ~47 ~5 minecraft:tuff strict
+fill ~209 ~47 ~4 ~214 ~47 ~4 minecraft:tuff strict
+setblock ~217 ~47 ~4 minecraft:tuff strict
+fill ~253 ~47 ~4 ~253 ~47 ~11 minecraft:grass_block strict
+fill ~92 ~47 ~5 ~93 ~47 ~5 minecraft:grass_block strict
+setblock ~94 ~47 ~5 minecraft:tuff strict
+setblock ~95 ~47 ~5 minecraft:stone strict
+fill ~150 ~47 ~5 ~151 ~47 ~5 minecraft:stone strict
+fill ~158 ~47 ~5 ~159 ~47 ~5 minecraft:stone strict
+setblock ~128 ~47 ~6 minecraft:red_wool strict
+fill ~254 ~47 ~12 ~254 ~47 ~13 minecraft:grass_block strict
+fill ~255 ~47 ~13 ~255 ~47 ~14 minecraft:moss_block strict
+fill ~255 ~47 ~24 ~255 ~47 ~28 minecraft:grass_block strict
+fill ~254 ~47 ~25 ~254 ~47 ~26 minecraft:grass_block strict
+fill ~254 ~47 ~37 ~255 ~47 ~39 minecraft:grass_block strict
+fill ~254 ~47 ~40 ~255 ~47 ~44 minecraft:moss_block strict
+setblock ~254 ~47 ~45 minecraft:grass_block strict
+setblock ~255 ~47 ~45 minecraft:moss_block strict
+setblock ~255 ~47 ~46 minecraft:grass_block strict
+fill ~254 ~47 ~54 ~254 ~47 ~64 minecraft:grass_block strict
+fill ~255 ~47 ~56 ~255 ~47 ~65 minecraft:grass_block strict
+setblock ~253 ~47 ~57 minecraft:stone strict
+fill ~253 ~47 ~58 ~253 ~47 ~69 minecraft:grass_block strict
+fill ~252 ~47 ~60 ~252 ~47 ~63 minecraft:stone strict
+fill ~252 ~47 ~71 ~252 ~47 ~72 minecraft:grass_block strict
+fill ~252 ~47 ~73 ~252 ~48 ~73 minecraft:stone strict
+fill ~254 ~47 ~76 ~254 ~49 ~78 minecraft:dirt strict
+setblock ~252 ~47 ~81 minecraft:grass_block strict
+fill ~2 ~47 ~82 ~3 ~47 ~84 minecraft:grass_block strict
+fill ~252 ~47 ~82 ~252 ~47 ~83 minecraft:stone strict
+fill ~1 ~47 ~83 ~1 ~47 ~85 minecraft:grass_block strict
+fill ~0 ~47 ~84 ~0 ~47 ~87 minecraft:grass_block strict
+fill ~253 ~47 ~84 ~253 ~47 ~87 minecraft:grass_block strict
+fill ~3 ~47 ~85 ~3 ~47 ~86 minecraft:grass_block strict
 fill ~253 ~47 ~93 ~253 ~47 ~94 minecraft:grass_block strict
 fill ~254 ~47 ~94 ~255 ~47 ~95 minecraft:grass_block strict
 fill ~4 ~47 ~95 ~4 ~47 ~98 minecraft:grass_block strict
@@ -269,82 +348,3 @@ fill ~153 ~48 ~4 ~157 ~49 ~4 minecraft:stone strict
 fill ~160 ~48 ~4 ~160 ~49 ~4 minecraft:stone strict
 fill ~161 ~48 ~4 ~163 ~48 ~4 minecraft:grass_block strict
 setblock ~203 ~48 ~4 minecraft:stone strict
-setblock ~204 ~48 ~4 minecraft:moss_block strict
-fill ~205 ~48 ~4 ~205 ~49 ~4 minecraft:stone strict
-fill ~207 ~48 ~4 ~207 ~50 ~4 minecraft:stone strict
-fill ~210 ~48 ~4 ~211 ~48 ~5 minecraft:stone strict
-fill ~212 ~48 ~4 ~212 ~50 ~4 minecraft:dirt strict
-fill ~213 ~48 ~4 ~213 ~49 ~5 minecraft:stone strict
-fill ~216 ~48 ~4 ~217 ~49 ~4 minecraft:stone strict
-fill ~255 ~48 ~4 ~255 ~48 ~6 minecraft:grass_block strict
-fill ~153 ~48 ~5 ~156 ~48 ~5 minecraft:stone strict
-fill ~212 ~48 ~5 ~212 ~49 ~5 minecraft:stone strict
-fill ~254 ~48 ~5 ~254 ~48 ~11 minecraft:grass_block strict
-fill ~128 ~48 ~6 ~128 ~50 ~6 minecraft:dark_oak_fence[east=false,north=false,south=false,waterlogged=false,west=false] strict
-fill ~255 ~48 ~11 ~255 ~48 ~12 minecraft:grass_block strict
-fill ~254 ~48 ~65 ~254 ~48 ~70 minecraft:grass_block strict
-fill ~255 ~48 ~66 ~255 ~48 ~70 minecraft:grass_block strict
-fill ~253 ~48 ~70 ~253 ~48 ~72 minecraft:grass_block strict
-fill ~252 ~48 ~74 ~252 ~48 ~79 minecraft:grass_block strict
-setblock ~253 ~48 ~82 minecraft:grass_block strict
-fill ~254 ~48 ~83 ~255 ~48 ~93 minecraft:grass_block strict
-fill ~2 ~48 ~85 ~2 ~48 ~93 minecraft:grass_block strict
-fill ~1 ~48 ~86 ~1 ~48 ~91 minecraft:grass_block strict
-fill ~0 ~48 ~88 ~0 ~48 ~91 minecraft:grass_block strict
-fill ~3 ~48 ~89 ~3 ~48 ~99 minecraft:grass_block strict
-fill ~253 ~48 ~91 ~253 ~48 ~92 minecraft:grass_block strict
-fill ~0 ~48 ~104 ~0 ~48 ~106 minecraft:grass_block strict
-fill ~3 ~48 ~104 ~3 ~48 ~108 minecraft:grass_block strict
-fill ~1 ~48 ~105 ~1 ~48 ~107 minecraft:grass_block strict
-fill ~2 ~48 ~106 ~2 ~48 ~109 minecraft:grass_block strict
-fill ~113 ~48 ~112 ~113 ~48 ~113 minecraft:chiseled_quartz_block strict
-fill ~114 ~48 ~112 ~117 ~48 ~112 minecraft:quartz_bricks strict
-fill ~118 ~48 ~112 ~118 ~48 ~114 minecraft:chiseled_quartz_block strict
-fill ~133 ~48 ~112 ~133 ~48 ~114 minecraft:chiseled_quartz_block strict
-fill ~134 ~48 ~112 ~137 ~48 ~112 minecraft:quartz_bricks strict
-fill ~138 ~48 ~112 ~138 ~48 ~114 minecraft:chiseled_quartz_block strict
-fill ~139 ~48 ~112 ~142 ~48 ~112 minecraft:quartz_bricks strict
-fill ~143 ~48 ~112 ~143 ~48 ~114 minecraft:chiseled_quartz_block strict
-fill ~255 ~48 ~112 ~255 ~48 ~113 minecraft:grass_block strict
-setblock ~112 ~48 ~113 minecraft:chiseled_quartz_block strict
-setblock ~114 ~48 ~113 minecraft:chiseled_quartz_block strict
-setblock ~115 ~48 ~113 minecraft:gold_block strict
-setblock ~116 ~48 ~113 minecraft:blue_terracotta strict
-setblock ~117 ~48 ~113 minecraft:gold_block strict
-setblock ~134 ~48 ~113 minecraft:blue_terracotta strict
-setblock ~135 ~48 ~113 minecraft:gold_block strict
-setblock ~136 ~48 ~113 minecraft:blue_terracotta strict
-setblock ~137 ~48 ~113 minecraft:gold_block strict
-setblock ~139 ~48 ~113 minecraft:blue_terracotta strict
-setblock ~140 ~48 ~113 minecraft:gold_block strict
-setblock ~141 ~48 ~113 minecraft:blue_terracotta strict
-setblock ~142 ~48 ~113 minecraft:gold_block strict
-fill ~253 ~48 ~113 ~254 ~48 ~113 minecraft:grass_block strict
-fill ~112 ~48 ~114 ~112 ~48 ~117 minecraft:quartz_bricks strict
-setblock ~113 ~48 ~114 minecraft:blue_terracotta strict
-fill ~114 ~48 ~114 ~117 ~48 ~114 minecraft:quartz_bricks strict
-fill ~134 ~48 ~114 ~137 ~48 ~114 minecraft:quartz_bricks strict
-fill ~139 ~48 ~114 ~142 ~48 ~114 minecraft:quartz_bricks strict
-setblock ~253 ~48 ~114 minecraft:grass_block strict
-setblock ~113 ~48 ~115 minecraft:gold_block strict
-fill ~114 ~48 ~115 ~114 ~48 ~117 minecraft:quartz_bricks strict
-setblock ~113 ~48 ~116 minecraft:blue_terracotta strict
-fill ~253 ~48 ~116 ~253 ~48 ~119 minecraft:tuff strict
-setblock ~113 ~48 ~117 minecraft:gold_block strict
-fill ~112 ~48 ~118 ~114 ~48 ~118 minecraft:chiseled_quartz_block strict
-fill ~112 ~48 ~119 ~112 ~48 ~122 minecraft:quartz_bricks strict
-setblock ~113 ~48 ~119 minecraft:blue_terracotta strict
-fill ~114 ~48 ~119 ~114 ~48 ~122 minecraft:quartz_bricks strict
-fill ~254 ~48 ~119 ~254 ~48 ~124 minecraft:tuff strict
-setblock ~113 ~48 ~120 minecraft:gold_block strict
-setblock ~113 ~48 ~121 minecraft:blue_terracotta strict
-setblock ~113 ~48 ~122 minecraft:gold_block strict
-fill ~255 ~48 ~122 ~255 ~50 ~122 minecraft:dirt strict
-fill ~112 ~48 ~123 ~114 ~48 ~123 minecraft:chiseled_quartz_block strict
-fill ~142 ~48 ~123 ~144 ~48 ~123 minecraft:chiseled_quartz_block strict
-fill ~255 ~48 ~123 ~255 ~49 ~132 minecraft:tuff strict
-fill ~112 ~48 ~124 ~112 ~48 ~127 minecraft:quartz_bricks strict
-setblock ~113 ~48 ~124 minecraft:blue_terracotta strict
-fill ~114 ~48 ~124 ~114 ~48 ~127 minecraft:quartz_bricks strict
-fill ~142 ~48 ~124 ~142 ~48 ~127 minecraft:quartz_bricks strict
-setblock ~143 ~48 ~124 minecraft:blue_terracotta strict

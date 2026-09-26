@@ -1,3 +1,77 @@
+setblock ~129 ~41 ~9 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
+setblock ~131 ~41 ~9 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
+fill ~6 ~41 ~10 ~6 ~41 ~12 minecraft:stone strict
+setblock ~19 ~41 ~10 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~250 ~41 ~10 minecraft:grass_block strict
+fill ~250 ~41 ~11 ~250 ~41 ~12 minecraft:stone strict
+setblock ~6 ~41 ~13 minecraft:grass_block strict
+fill ~126 ~41 ~13 ~126 ~41 ~21 minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~127 ~41 ~13 ~129 ~41 ~13 minecraft:chiseled_quartz_block strict
+fill ~130 ~41 ~13 ~130 ~41 ~21 minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~252 ~41 ~13 ~252 ~43 ~13 minecraft:dirt strict
+fill ~127 ~41 ~14 ~129 ~41 ~20 minecraft:deepslate_tiles strict
+fill ~252 ~41 ~14 ~253 ~41 ~14 minecraft:stone strict
+fill ~2 ~41 ~15 ~2 ~43 ~19 minecraft:dirt strict
+fill ~253 ~41 ~15 ~253 ~43 ~16 minecraft:dirt strict
+fill ~254 ~41 ~15 ~254 ~41 ~16 minecraft:stone strict
+fill ~0 ~41 ~16 ~1 ~43 ~19 minecraft:dirt strict
+setblock ~108 ~41 ~16 minecraft:red_wool strict
+setblock ~110 ~41 ~16 minecraft:red_wool strict
+setblock ~146 ~41 ~16 minecraft:red_wool strict
+setblock ~148 ~41 ~16 minecraft:red_wool strict
+setblock ~5 ~41 ~17 minecraft:grass_block strict
+fill ~254 ~41 ~17 ~254 ~43 ~20 minecraft:dirt strict
+fill ~255 ~41 ~17 ~255 ~41 ~21 minecraft:stone strict
+fill ~3 ~41 ~18 ~3 ~43 ~21 minecraft:dirt strict
+fill ~4 ~41 ~18 ~5 ~41 ~21 minecraft:stone strict
+setblock ~106 ~41 ~18 minecraft:red_wool strict
+setblock ~112 ~41 ~18 minecraft:red_wool strict
+setblock ~144 ~41 ~18 minecraft:red_wool strict
+setblock ~150 ~41 ~18 minecraft:red_wool strict
+fill ~252 ~41 ~18 ~252 ~41 ~21 minecraft:stone strict
+fill ~0 ~41 ~20 ~2 ~41 ~21 minecraft:stone strict
+setblock ~106 ~41 ~20 minecraft:red_wool strict
+setblock ~112 ~41 ~20 minecraft:red_wool strict
+setblock ~144 ~41 ~20 minecraft:red_wool strict
+setblock ~150 ~41 ~20 minecraft:red_wool strict
+fill ~253 ~41 ~20 ~253 ~42 ~23 minecraft:stone strict
+fill ~127 ~41 ~21 ~129 ~41 ~21 minecraft:chiseled_quartz_block strict
+setblock ~251 ~41 ~21 minecraft:stone strict
+fill ~254 ~41 ~21 ~254 ~41 ~22 minecraft:stone strict
+fill ~0 ~41 ~22 ~4 ~41 ~23 minecraft:andesite strict
+setblock ~5 ~41 ~22 minecraft:stone strict
+setblock ~108 ~41 ~22 minecraft:red_wool strict
+setblock ~110 ~41 ~22 minecraft:red_wool strict
+setblock ~146 ~41 ~22 minecraft:red_wool strict
+setblock ~148 ~41 ~22 minecraft:red_wool strict
+fill ~5 ~41 ~23 ~5 ~41 ~32 minecraft:andesite strict
+fill ~0 ~41 ~24 ~3 ~41 ~26 minecraft:andesite strict
+fill ~0 ~41 ~27 ~2 ~41 ~27 minecraft:andesite strict
+fill ~3 ~41 ~27 ~3 ~43 ~29 minecraft:dirt strict
+fill ~0 ~41 ~28 ~2 ~43 ~30 minecraft:dirt strict
+fill ~252 ~41 ~29 ~253 ~41 ~30 minecraft:stone strict
+setblock ~3 ~41 ~30 minecraft:andesite strict
+fill ~251 ~41 ~30 ~251 ~41 ~46 minecraft:stone strict
+fill ~252 ~41 ~31 ~252 ~43 ~34 minecraft:dirt strict
+fill ~253 ~41 ~31 ~253 ~41 ~33 minecraft:stone strict
+setblock ~106 ~41 ~35 minecraft:deepslate_tiles strict
+fill ~107 ~41 ~35 ~109 ~41 ~35 minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~110 ~41 ~35 minecraft:deepslate_tiles strict
+setblock ~146 ~41 ~35 minecraft:deepslate_tiles strict
+fill ~147 ~41 ~35 ~149 ~41 ~35 minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~150 ~41 ~35 minecraft:deepslate_tiles strict
+fill ~252 ~41 ~35 ~252 ~41 ~44 minecraft:stone strict
+fill ~4 ~41 ~36 ~4 ~41 ~39 minecraft:grass_block strict
+fill ~106 ~41 ~36 ~106 ~41 ~38 minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~110 ~41 ~36 ~110 ~41 ~38 minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~146 ~41 ~36 ~146 ~41 ~38 minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~150 ~41 ~36 ~150 ~41 ~38 minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~106 ~41 ~39 minecraft:deepslate_tiles strict
+fill ~107 ~41 ~39 ~109 ~41 ~39 minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~110 ~41 ~39 minecraft:deepslate_tiles strict
+setblock ~146 ~41 ~39 minecraft:deepslate_tiles strict
+fill ~147 ~41 ~39 ~149 ~41 ~39 minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~150 ~41 ~39 minecraft:deepslate_tiles strict
 fill ~5 ~41 ~41 ~5 ~41 ~43 minecraft:grass_block strict
 setblock ~5 ~41 ~44 minecraft:moss_block strict
 setblock ~113 ~41 ~44 minecraft:deepslate_tiles strict
@@ -202,6 +276,7 @@ setblock ~137 ~41 ~126 minecraft:quartz_bricks strict
 fill ~235 ~41 ~126 ~243 ~41 ~126 minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
 fill ~248 ~41 ~126 ~248 ~43 ~126 minecraft:dark_oak_log[axis=y] strict
 fill ~252 ~41 ~126 ~252 ~43 ~126 minecraft:dark_oak_log[axis=y] strict
+fill ~253 ~41 ~126 ~253 ~43 ~126 minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false] strict
 setblock ~3 ~41 ~127 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=low] strict
 setblock ~9 ~41 ~127 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
 fill ~13 ~41 ~127 ~13 ~41 ~129 minecraft:chiseled_quartz_block strict
@@ -218,12 +293,14 @@ setblock ~3 ~41 ~129 minecraft:stone_brick_wall[east=none,north=none,south=none,
 setblock ~9 ~41 ~129 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
 setblock ~247 ~41 ~129 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
 setblock ~253 ~41 ~129 minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,waterlogged=false,west=none] strict
+fill ~3 ~41 ~130 ~3 ~42 ~130 minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false] strict
 fill ~4 ~41 ~130 ~4 ~43 ~130 minecraft:dark_oak_log[axis=y] strict
 fill ~8 ~41 ~130 ~8 ~43 ~130 minecraft:dark_oak_log[axis=y] strict
 fill ~13 ~41 ~130 ~21 ~41 ~130 minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
 fill ~235 ~41 ~130 ~243 ~41 ~130 minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
 fill ~248 ~41 ~130 ~248 ~43 ~130 minecraft:dark_oak_log[axis=y] strict
 fill ~252 ~41 ~130 ~252 ~43 ~130 minecraft:dark_oak_log[axis=y] strict
+fill ~253 ~41 ~130 ~253 ~43 ~130 minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false] strict
 setblock ~3 ~41 ~131 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=low] strict
 setblock ~5 ~41 ~131 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
 setblock ~7 ~41 ~131 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
@@ -271,80 +348,3 @@ fill ~44 ~41 ~140 ~44 ~41 ~142 minecraft:deepslate_tile_stairs[facing=east,half=
 fill ~48 ~41 ~140 ~48 ~41 ~142 minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 fill ~208 ~41 ~140 ~208 ~41 ~142 minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
 fill ~212 ~41 ~140 ~212 ~41 ~142 minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-fill ~5 ~41 ~141 ~5 ~41 ~147 minecraft:andesite strict
-fill ~252 ~41 ~141 ~252 ~42 ~141 minecraft:andesite strict
-setblock ~44 ~41 ~143 minecraft:deepslate_tiles strict
-fill ~45 ~41 ~143 ~47 ~41 ~143 minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~48 ~41 ~143 minecraft:deepslate_tiles strict
-setblock ~208 ~41 ~143 minecraft:deepslate_tiles strict
-fill ~209 ~41 ~143 ~211 ~41 ~143 minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~212 ~41 ~143 minecraft:deepslate_tiles strict
-fill ~250 ~41 ~143 ~250 ~41 ~148 minecraft:andesite strict
-fill ~6 ~41 ~144 ~6 ~42 ~148 minecraft:andesite strict
-setblock ~18 ~41 ~144 minecraft:yellow_wool strict
-setblock ~20 ~41 ~144 minecraft:yellow_wool strict
-setblock ~236 ~41 ~144 minecraft:blue_wool strict
-setblock ~238 ~41 ~144 minecraft:blue_wool strict
-fill ~251 ~41 ~145 ~251 ~41 ~147 minecraft:andesite strict
-setblock ~16 ~41 ~146 minecraft:yellow_wool strict
-setblock ~22 ~41 ~146 minecraft:yellow_wool strict
-setblock ~35 ~41 ~146 minecraft:deepslate_tiles strict
-fill ~36 ~41 ~146 ~38 ~41 ~146 minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~39 ~41 ~146 minecraft:deepslate_tiles strict
-setblock ~217 ~41 ~146 minecraft:deepslate_tiles strict
-fill ~218 ~41 ~146 ~220 ~41 ~146 minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~221 ~41 ~146 minecraft:deepslate_tiles strict
-setblock ~234 ~41 ~146 minecraft:blue_wool strict
-setblock ~240 ~41 ~146 minecraft:blue_wool strict
-fill ~35 ~41 ~147 ~35 ~41 ~149 minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~39 ~41 ~147 ~39 ~41 ~149 minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-fill ~217 ~41 ~147 ~217 ~41 ~149 minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~221 ~41 ~147 ~221 ~41 ~149 minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~16 ~41 ~148 minecraft:yellow_wool strict
-setblock ~22 ~41 ~148 minecraft:yellow_wool strict
-setblock ~234 ~41 ~148 minecraft:blue_wool strict
-setblock ~240 ~41 ~148 minecraft:blue_wool strict
-fill ~251 ~41 ~148 ~251 ~41 ~149 minecraft:stone strict
-fill ~6 ~41 ~149 ~6 ~43 ~153 minecraft:stone strict
-fill ~61 ~41 ~149 ~63 ~41 ~149 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~250 ~41 ~149 ~250 ~42 ~149 minecraft:stone strict
-setblock ~18 ~41 ~150 minecraft:yellow_wool strict
-setblock ~20 ~41 ~150 minecraft:yellow_wool strict
-setblock ~35 ~41 ~150 minecraft:deepslate_tiles strict
-fill ~36 ~41 ~150 ~38 ~41 ~150 minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~39 ~41 ~150 minecraft:deepslate_tiles strict
-setblock ~61 ~41 ~150 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~63 ~41 ~150 ~65 ~41 ~150 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~217 ~41 ~150 minecraft:deepslate_tiles strict
-fill ~218 ~41 ~150 ~220 ~41 ~150 minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~221 ~41 ~150 minecraft:deepslate_tiles strict
-setblock ~236 ~41 ~150 minecraft:blue_wool strict
-setblock ~238 ~41 ~150 minecraft:blue_wool strict
-fill ~250 ~41 ~150 ~252 ~41 ~152 minecraft:tuff strict
-fill ~7 ~41 ~151 ~7 ~41 ~153 minecraft:stone strict
-setblock ~60 ~41 ~151 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~61 ~41 ~152 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~64 ~41 ~152 ~65 ~41 ~152 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~62 ~41 ~153 ~63 ~41 ~153 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~65 ~41 ~153 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~251 ~41 ~153 ~252 ~41 ~153 minecraft:tuff strict
-fill ~6 ~41 ~154 ~6 ~41 ~161 minecraft:andesite strict
-setblock ~61 ~41 ~154 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~63 ~41 ~154 ~64 ~41 ~154 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~251 ~41 ~154 ~251 ~43 ~155 minecraft:dirt strict
-fill ~252 ~41 ~154 ~252 ~41 ~155 minecraft:tuff strict
-fill ~249 ~41 ~155 ~250 ~41 ~155 minecraft:tuff strict
-fill ~249 ~41 ~156 ~249 ~41 ~159 minecraft:tuff strict
-fill ~251 ~41 ~156 ~251 ~41 ~158 minecraft:tuff strict
-fill ~250 ~41 ~158 ~250 ~43 ~158 minecraft:tuff strict
-fill ~250 ~41 ~159 ~250 ~43 ~160 minecraft:dirt strict
-setblock ~211 ~41 ~160 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~213 ~41 ~160 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~249 ~41 ~161 ~250 ~41 ~166 minecraft:tuff strict
-fill ~6 ~41 ~162 ~6 ~43 ~164 minecraft:dirt strict
-setblock ~211 ~41 ~162 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~213 ~41 ~162 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~248 ~41 ~162 ~248 ~41 ~163 minecraft:tuff strict
-fill ~5 ~41 ~164 ~5 ~41 ~166 minecraft:andesite strict
-fill ~251 ~41 ~164 ~251 ~43 ~168 minecraft:tuff strict
-fill ~7 ~41 ~166 ~7 ~41 ~169 minecraft:grass_block strict

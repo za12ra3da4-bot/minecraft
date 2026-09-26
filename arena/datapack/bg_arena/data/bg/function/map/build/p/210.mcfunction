@@ -1,3 +1,82 @@
+fill ~0 ~49 ~220 ~1 ~49 ~220 minecraft:stone strict
+fill ~0 ~49 ~221 ~2 ~51 ~222 minecraft:dirt strict
+fill ~3 ~49 ~221 ~3 ~52 ~221 minecraft:stone strict
+fill ~0 ~49 ~223 ~1 ~51 ~223 minecraft:dirt strict
+fill ~0 ~49 ~224 ~0 ~51 ~224 minecraft:dirt strict
+setblock ~3 ~49 ~227 minecraft:grass_block strict
+fill ~3 ~49 ~232 ~3 ~50 ~232 minecraft:stone strict
+setblock ~3 ~49 ~233 minecraft:grass_block strict
+setblock ~2 ~49 ~234 minecraft:grass_block strict
+setblock ~3 ~49 ~234 minecraft:stone strict
+setblock ~1 ~49 ~235 minecraft:grass_block strict
+setblock ~2 ~49 ~235 minecraft:andesite strict
+setblock ~0 ~49 ~236 minecraft:grass_block strict
+fill ~143 ~49 ~251 ~146 ~49 ~251 minecraft:tuff strict
+fill ~148 ~49 ~251 ~152 ~49 ~252 minecraft:stone strict
+fill ~216 ~49 ~251 ~216 ~51 ~251 minecraft:jungle_log[axis=y] strict
+fill ~16 ~49 ~252 ~24 ~49 ~252 minecraft:grass_block strict
+fill ~25 ~49 ~252 ~26 ~49 ~252 minecraft:stone strict
+fill ~67 ~49 ~252 ~68 ~49 ~252 minecraft:grass_block strict
+fill ~73 ~49 ~252 ~74 ~49 ~252 minecraft:grass_block strict
+setblock ~80 ~49 ~252 minecraft:grass_block strict
+setblock ~81 ~49 ~252 minecraft:stone strict
+fill ~153 ~49 ~252 ~155 ~50 ~252 minecraft:stone strict
+fill ~226 ~49 ~252 ~228 ~49 ~252 minecraft:grass_block strict
+fill ~229 ~49 ~252 ~231 ~49 ~252 minecraft:andesite strict
+fill ~232 ~49 ~252 ~235 ~49 ~252 minecraft:moss_block strict
+fill ~236 ~49 ~252 ~239 ~49 ~252 minecraft:grass_block strict
+fill ~13 ~49 ~253 ~13 ~49 ~255 minecraft:grass_block strict
+fill ~26 ~49 ~253 ~30 ~49 ~253 minecraft:grass_block strict
+fill ~64 ~49 ~253 ~65 ~49 ~253 minecraft:grass_block strict
+setblock ~83 ~49 ~253 minecraft:grass_block strict
+fill ~138 ~49 ~253 ~140 ~49 ~253 minecraft:tuff strict
+fill ~142 ~49 ~253 ~143 ~51 ~254 minecraft:dirt strict
+setblock ~144 ~49 ~253 minecraft:tuff strict
+fill ~145 ~49 ~253 ~146 ~49 ~253 minecraft:stone strict
+fill ~150 ~49 ~253 ~152 ~49 ~253 minecraft:stone strict
+fill ~158 ~49 ~253 ~160 ~49 ~253 minecraft:grass_block strict
+fill ~224 ~49 ~253 ~225 ~49 ~254 minecraft:grass_block strict
+fill ~229 ~49 ~253 ~231 ~50 ~253 minecraft:stone strict
+fill ~240 ~49 ~253 ~242 ~49 ~253 minecraft:grass_block strict
+fill ~12 ~49 ~254 ~12 ~49 ~255 minecraft:grass_block strict
+fill ~27 ~49 ~254 ~32 ~49 ~255 minecraft:grass_block strict
+fill ~63 ~49 ~254 ~64 ~49 ~255 minecraft:grass_block strict
+fill ~68 ~49 ~254 ~80 ~51 ~255 minecraft:dirt strict
+fill ~85 ~49 ~254 ~86 ~49 ~254 minecraft:grass_block strict
+fill ~135 ~49 ~254 ~137 ~49 ~254 minecraft:tuff strict
+fill ~144 ~49 ~254 ~145 ~49 ~255 minecraft:stone strict
+fill ~152 ~49 ~254 ~153 ~49 ~254 minecraft:stone strict
+fill ~154 ~49 ~254 ~155 ~51 ~254 minecraft:dirt strict
+fill ~159 ~49 ~254 ~162 ~49 ~254 minecraft:grass_block strict
+fill ~241 ~49 ~254 ~246 ~49 ~255 minecraft:grass_block strict
+fill ~24 ~49 ~255 ~26 ~49 ~255 minecraft:grass_block strict
+fill ~81 ~49 ~255 ~81 ~51 ~255 minecraft:dirt strict
+fill ~86 ~49 ~255 ~87 ~49 ~255 minecraft:grass_block strict
+fill ~131 ~49 ~255 ~133 ~49 ~255 minecraft:tuff strict
+fill ~134 ~49 ~255 ~137 ~49 ~255 minecraft:grass_block strict
+fill ~143 ~49 ~255 ~143 ~51 ~255 minecraft:dirt strict
+setblock ~146 ~49 ~255 minecraft:stone strict
+fill ~151 ~49 ~255 ~152 ~49 ~255 minecraft:stone strict
+fill ~153 ~49 ~255 ~154 ~51 ~255 minecraft:dirt strict
+fill ~160 ~49 ~255 ~162 ~49 ~255 minecraft:grass_block strict
+fill ~225 ~49 ~255 ~226 ~49 ~255 minecraft:grass_block strict
+setblock ~240 ~49 ~255 minecraft:grass_block strict
+fill ~247 ~49 ~255 ~255 ~49 ~255 minecraft:grass_block strict
+fill ~95 ~50 ~0 ~98 ~50 ~1 minecraft:grass_block strict
+fill ~149 ~50 ~0 ~150 ~50 ~2 minecraft:grass_block strict
+fill ~161 ~50 ~0 ~162 ~50 ~2 minecraft:grass_block strict
+fill ~203 ~50 ~0 ~204 ~50 ~0 minecraft:moss_block strict
+fill ~210 ~50 ~0 ~213 ~52 ~3 minecraft:dirt strict
+fill ~217 ~50 ~0 ~217 ~50 ~3 minecraft:grass_block strict
+fill ~93 ~50 ~1 ~94 ~50 ~3 minecraft:grass_block strict
+fill ~203 ~50 ~1 ~203 ~50 ~2 minecraft:moss_block strict
+fill ~209 ~50 ~1 ~209 ~52 ~2 minecraft:dirt strict
+fill ~214 ~50 ~1 ~214 ~52 ~2 minecraft:dirt strict
+fill ~89 ~50 ~2 ~92 ~50 ~2 minecraft:grass_block strict
+fill ~95 ~50 ~2 ~97 ~50 ~2 minecraft:grass_block strict
+fill ~204 ~50 ~2 ~204 ~50 ~3 minecraft:moss_block strict
+fill ~91 ~50 ~3 ~92 ~50 ~3 minecraft:grass_block strict
+setblock ~150 ~50 ~3 minecraft:andesite strict
 setblock ~151 ~50 ~3 minecraft:grass_block strict
 fill ~159 ~50 ~3 ~160 ~50 ~3 minecraft:grass_block strict
 setblock ~205 ~50 ~3 minecraft:moss_block strict
@@ -269,82 +348,3 @@ fill ~215 ~53 ~248 ~216 ~53 ~252 minecraft:jungle_leaves[distance=7,persistent=t
 setblock ~213 ~53 ~249 minecraft:jungle_leaves[distance=7,persistent=true,waterlogged=false] strict
 setblock ~214 ~53 ~250 minecraft:jungle_leaves[distance=7,persistent=true,waterlogged=false] strict
 setblock ~217 ~53 ~250 minecraft:jungle_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~213 ~53 ~251 minecraft:jungle_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~144 ~53 ~253 ~146 ~53 ~253 minecraft:grass_block strict
-setblock ~150 ~53 ~253 minecraft:grass_block strict
-fill ~144 ~53 ~254 ~145 ~53 ~255 minecraft:grass_block strict
-fill ~152 ~53 ~254 ~153 ~53 ~254 minecraft:grass_block strict
-setblock ~146 ~53 ~255 minecraft:grass_block strict
-fill ~151 ~53 ~255 ~152 ~53 ~255 minecraft:grass_block strict
-fill ~120 ~54 ~112 ~121 ~54 ~112 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~122 ~54 ~112 ~134 ~54 ~112 minecraft:quartz_bricks strict
-fill ~135 ~54 ~112 ~136 ~54 ~112 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-fill ~120 ~54 ~113 ~121 ~54 ~113 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~122 ~54 ~113 ~123 ~54 ~113 minecraft:weathered_cut_copper strict
-setblock ~134 ~54 ~113 minecraft:weathered_cut_copper strict
-fill ~135 ~54 ~113 ~136 ~54 ~114 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~120 ~54 ~114 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~123 ~54 ~114 minecraft:weathered_cut_copper strict
-fill ~133 ~54 ~114 ~133 ~54 ~116 minecraft:weathered_cut_copper strict
-setblock ~116 ~54 ~115 minecraft:weathered_cut_copper_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-fill ~121 ~54 ~115 ~121 ~54 ~116 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~136 ~54 ~115 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~137 ~54 ~115 minecraft:calcite strict
-setblock ~122 ~54 ~116 minecraft:weathered_cut_copper strict
-setblock ~135 ~54 ~117 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~137 ~54 ~117 minecraft:quartz_bricks strict
-setblock ~120 ~54 ~118 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~120 ~54 ~141 ~120 ~54 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~121 ~54 ~142 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~122 ~54 ~142 ~122 ~54 ~143 minecraft:weathered_cut_copper strict
-setblock ~123 ~54 ~143 minecraft:weathered_cut_copper strict
-fill ~120 ~54 ~144 ~121 ~54 ~144 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~122 ~54 ~144 ~129 ~54 ~144 minecraft:quartz_bricks strict
-setblock ~147 ~54 ~253 minecraft:andesite strict
-fill ~148 ~54 ~253 ~149 ~54 ~253 minecraft:stone strict
-fill ~146 ~54 ~254 ~151 ~54 ~254 minecraft:grass_block strict
-fill ~147 ~54 ~255 ~150 ~54 ~255 minecraft:grass_block strict
-fill ~122 ~55 ~112 ~123 ~55 ~112 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~124 ~55 ~112 ~132 ~55 ~112 minecraft:quartz_bricks strict
-fill ~133 ~55 ~112 ~134 ~55 ~112 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-fill ~122 ~55 ~113 ~123 ~55 ~113 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~124 ~55 ~113 ~124 ~55 ~116 minecraft:weathered_cut_copper strict
-fill ~131 ~55 ~113 ~132 ~55 ~114 minecraft:weathered_cut_copper strict
-setblock ~134 ~55 ~113 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~123 ~55 ~114 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~125 ~55 ~114 ~125 ~55 ~115 minecraft:weathered_cut_copper strict
-fill ~133 ~55 ~114 ~133 ~55 ~116 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~122 ~55 ~116 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~124 ~55 ~141 ~125 ~55 ~141 minecraft:weathered_cut_copper strict
-fill ~122 ~55 ~142 ~122 ~55 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~125 ~55 ~142 ~125 ~55 ~143 minecraft:weathered_cut_copper strict
-setblock ~123 ~55 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~124 ~55 ~143 minecraft:weathered_cut_copper strict
-fill ~122 ~55 ~144 ~123 ~55 ~144 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~124 ~55 ~144 ~129 ~55 ~144 minecraft:quartz_bricks strict
-fill ~124 ~56 ~112 ~125 ~56 ~112 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~126 ~56 ~112 ~130 ~56 ~112 minecraft:quartz_bricks strict
-fill ~131 ~56 ~112 ~132 ~56 ~112 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-fill ~124 ~56 ~113 ~124 ~56 ~116 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~127 ~56 ~113 ~127 ~56 ~116 minecraft:weathered_cut_copper strict
-fill ~129 ~56 ~113 ~130 ~56 ~114 minecraft:weathered_cut_copper strict
-fill ~131 ~56 ~113 ~132 ~56 ~114 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-fill ~125 ~56 ~114 ~125 ~56 ~115 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~126 ~56 ~114 minecraft:weathered_cut_copper strict
-fill ~129 ~56 ~116 ~130 ~56 ~116 minecraft:weathered_cut_copper strict
-setblock ~130 ~56 ~117 minecraft:weathered_cut_copper strict
-setblock ~129 ~56 ~118 minecraft:weathered_cut_copper strict
-fill ~124 ~56 ~141 ~125 ~56 ~141 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~125 ~56 ~142 ~125 ~56 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~127 ~56 ~142 ~127 ~56 ~143 minecraft:weathered_cut_copper strict
-fill ~129 ~56 ~142 ~129 ~56 ~143 minecraft:weathered_cut_copper strict
-setblock ~124 ~56 ~143 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~126 ~56 ~143 minecraft:weathered_cut_copper strict
-fill ~124 ~56 ~144 ~125 ~56 ~144 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~126 ~56 ~144 ~129 ~56 ~144 minecraft:quartz_bricks strict
-fill ~126 ~57 ~112 ~127 ~57 ~112 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~128 ~57 ~112 minecraft:quartz_bricks strict
-fill ~129 ~57 ~112 ~130 ~57 ~112 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-fill ~127 ~57 ~113 ~127 ~57 ~116 minecraft:weathered_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~128 ~57 ~113 ~128 ~58 ~116 minecraft:weathered_cut_copper strict
-fill ~129 ~57 ~113 ~130 ~57 ~114 minecraft:weathered_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict

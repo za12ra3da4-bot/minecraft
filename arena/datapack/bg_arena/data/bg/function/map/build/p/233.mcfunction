@@ -1,3 +1,80 @@
+setblock ~43 ~28 ~177 minecraft:short_grass strict
+setblock ~25 ~28 ~178 minecraft:short_grass strict
+setblock ~29 ~28 ~178 minecraft:short_grass strict
+fill ~24 ~28 ~179 ~24 ~28 ~180 minecraft:short_grass strict
+setblock ~42 ~28 ~180 minecraft:short_grass strict
+setblock ~25 ~28 ~181 minecraft:short_grass strict
+setblock ~24 ~28 ~182 minecraft:short_grass strict
+setblock ~32 ~28 ~182 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
+setblock ~94 ~28 ~182 minecraft:short_grass strict
+setblock ~209 ~28 ~182 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
+setblock ~211 ~28 ~182 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
+setblock ~23 ~28 ~183 minecraft:short_grass strict
+setblock ~42 ~28 ~183 minecraft:short_grass strict
+setblock ~25 ~28 ~184 minecraft:short_grass strict
+fill ~157 ~28 ~184 ~157 ~28 ~186 minecraft:short_grass strict
+setblock ~24 ~28 ~185 minecraft:short_grass strict
+setblock ~41 ~28 ~185 minecraft:fern strict
+setblock ~155 ~28 ~185 minecraft:short_grass strict
+setblock ~154 ~28 ~186 minecraft:short_grass strict
+setblock ~156 ~28 ~186 minecraft:short_grass strict
+fill ~53 ~28 ~187 ~53 ~28 ~189 minecraft:spruce_slab[type=top,waterlogged=false] strict
+fill ~58 ~28 ~187 ~58 ~28 ~189 minecraft:spruce_slab[type=top,waterlogged=false] strict
+setblock ~94 ~28 ~187 minecraft:short_grass strict
+setblock ~108 ~28 ~187 minecraft:short_grass strict
+setblock ~153 ~28 ~187 minecraft:fern strict
+setblock ~155 ~28 ~187 minecraft:short_grass strict
+setblock ~23 ~28 ~188 minecraft:short_grass strict
+setblock ~95 ~28 ~188 minecraft:short_grass strict
+setblock ~111 ~28 ~188 minecraft:fern strict
+fill ~215 ~28 ~188 ~215 ~28 ~189 minecraft:short_grass strict
+setblock ~22 ~28 ~189 minecraft:short_grass strict
+fill ~41 ~28 ~189 ~42 ~28 ~189 minecraft:short_grass strict
+fill ~98 ~28 ~189 ~99 ~28 ~189 minecraft:short_grass strict
+setblock ~152 ~28 ~189 minecraft:short_grass strict
+setblock ~153 ~28 ~189 minecraft:bush strict
+setblock ~94 ~28 ~190 minecraft:short_grass strict
+fill ~96 ~28 ~190 ~97 ~28 ~191 minecraft:short_grass strict
+setblock ~216 ~28 ~190 minecraft:short_grass strict
+setblock ~228 ~28 ~190 minecraft:short_grass strict
+setblock ~154 ~28 ~191 minecraft:short_grass strict
+setblock ~111 ~28 ~192 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
+setblock ~139 ~28 ~192 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
+setblock ~155 ~28 ~192 minecraft:cornflower strict
+setblock ~155 ~28 ~193 minecraft:short_grass strict
+setblock ~235 ~28 ~193 minecraft:short_grass strict
+setblock ~117 ~28 ~194 minecraft:short_grass strict
+fill ~158 ~28 ~194 ~159 ~28 ~194 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
+fill ~161 ~28 ~194 ~162 ~28 ~194 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
+fill ~67 ~28 ~198 ~69 ~28 ~198 minecraft:spruce_slab[type=top,waterlogged=false] strict
+fill ~67 ~28 ~203 ~69 ~28 ~203 minecraft:spruce_slab[type=top,waterlogged=false] strict
+setblock ~90 ~28 ~203 minecraft:short_grass strict
+setblock ~92 ~28 ~203 minecraft:bush strict
+setblock ~92 ~28 ~204 minecraft:fern strict
+setblock ~94 ~28 ~204 minecraft:short_grass strict
+fill ~89 ~28 ~205 ~89 ~28 ~206 minecraft:short_grass strict
+fill ~96 ~28 ~205 ~97 ~28 ~205 minecraft:short_grass strict
+setblock ~88 ~28 ~206 minecraft:short_grass strict
+setblock ~94 ~28 ~206 minecraft:short_grass strict
+setblock ~86 ~28 ~208 minecraft:short_grass strict
+setblock ~85 ~28 ~210 minecraft:short_grass strict
+setblock ~81 ~28 ~211 minecraft:short_grass strict
+setblock ~83 ~28 ~211 minecraft:fern strict
+setblock ~82 ~28 ~212 minecraft:short_grass strict
+fill ~77 ~28 ~213 ~78 ~28 ~213 minecraft:short_grass strict
+fill ~183 ~28 ~213 ~184 ~28 ~213 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
+setblock ~63 ~28 ~214 minecraft:bush strict
+setblock ~76 ~28 ~214 minecraft:bush strict
+setblock ~79 ~28 ~214 minecraft:short_grass strict
+setblock ~183 ~28 ~214 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
+setblock ~64 ~28 ~215 minecraft:fern strict
+fill ~76 ~28 ~215 ~76 ~28 ~218 minecraft:short_grass strict
+setblock ~77 ~28 ~215 minecraft:fern strict
+setblock ~74 ~28 ~216 minecraft:short_grass strict
+setblock ~75 ~28 ~217 minecraft:fern strict
+fill ~75 ~28 ~218 ~75 ~28 ~219 minecraft:short_grass strict
+setblock ~72 ~28 ~219 minecraft:short_grass strict
+setblock ~74 ~28 ~222 minecraft:short_grass strict
 setblock ~73 ~28 ~227 minecraft:short_grass strict
 setblock ~72 ~28 ~228 minecraft:short_grass strict
 fill ~65 ~28 ~230 ~65 ~28 ~232 minecraft:short_grass strict
@@ -83,7 +160,6 @@ setblock ~112 ~29 ~64 minecraft:stone_brick_slab[type=bottom,waterlogged=false] 
 setblock ~138 ~29 ~64 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
 setblock ~244 ~29 ~64 minecraft:short_grass strict
 setblock ~17 ~29 ~65 minecraft:short_grass strict
-setblock ~19 ~29 ~65 minecraft:short_grass strict
 setblock ~143 ~29 ~65 minecraft:fern strict
 setblock ~159 ~29 ~65 minecraft:short_grass strict
 setblock ~244 ~29 ~66 minecraft:short_grass strict
@@ -272,79 +348,3 @@ setblock ~46 ~29 ~175 minecraft:short_grass strict
 fill ~23 ~29 ~176 ~25 ~29 ~176 minecraft:short_grass strict
 fill ~22 ~29 ~177 ~22 ~29 ~179 minecraft:short_grass strict
 setblock ~45 ~29 ~177 minecraft:short_grass strict
-setblock ~24 ~29 ~178 minecraft:short_grass strict
-setblock ~92 ~29 ~178 minecraft:short_grass strict
-setblock ~23 ~29 ~179 minecraft:short_grass strict
-setblock ~44 ~29 ~179 minecraft:short_grass strict
-setblock ~21 ~29 ~180 minecraft:short_grass strict
-setblock ~45 ~29 ~180 minecraft:short_grass strict
-fill ~44 ~29 ~181 ~44 ~29 ~182 minecraft:short_grass strict
-fill ~99 ~29 ~181 ~99 ~29 ~183 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~100 ~29 ~182 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~22 ~29 ~183 minecraft:short_grass strict
-setblock ~183 ~29 ~183 minecraft:campfire[facing=north,lit=true,signal_fire=false,waterlogged=false] strict
-setblock ~193 ~29 ~183 minecraft:campfire[facing=north,lit=true,signal_fire=false,waterlogged=false] strict
-setblock ~210 ~29 ~183 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~20 ~29 ~184 ~21 ~29 ~184 minecraft:fern strict
-fill ~44 ~29 ~184 ~44 ~29 ~187 minecraft:short_grass strict
-setblock ~21 ~29 ~186 minecraft:fern strict
-fill ~43 ~29 ~186 ~43 ~29 ~187 minecraft:short_grass strict
-setblock ~21 ~29 ~188 minecraft:short_grass strict
-fill ~93 ~29 ~188 ~93 ~29 ~189 minecraft:short_grass strict
-setblock ~20 ~29 ~189 minecraft:bush strict
-setblock ~100 ~29 ~189 minecraft:fern strict
-setblock ~19 ~29 ~190 minecraft:short_grass strict
-fill ~43 ~29 ~190 ~43 ~29 ~191 minecraft:fern strict
-fill ~44 ~29 ~190 ~44 ~29 ~191 minecraft:short_grass strict
-setblock ~99 ~29 ~190 minecraft:short_grass strict
-setblock ~230 ~29 ~190 minecraft:short_grass strict
-fill ~95 ~29 ~191 ~95 ~29 ~192 minecraft:short_grass strict
-setblock ~96 ~29 ~192 minecraft:fern strict
-setblock ~112 ~29 ~192 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~138 ~29 ~192 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~183 ~29 ~193 minecraft:campfire[facing=north,lit=true,signal_fire=false,waterlogged=false] strict
-setblock ~193 ~29 ~193 minecraft:campfire[facing=north,lit=true,signal_fire=false,waterlogged=false] strict
-setblock ~124 ~29 ~196 minecraft:lantern[hanging=false,waterlogged=false] strict
-setblock ~132 ~29 ~196 minecraft:lantern[hanging=false,waterlogged=false] strict
-setblock ~189 ~29 ~197 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~188 ~29 ~198 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~107 ~29 ~199 minecraft:short_grass strict
-fill ~91 ~29 ~200 ~92 ~29 ~200 minecraft:short_grass strict
-setblock ~89 ~29 ~201 minecraft:bush strict
-fill ~89 ~29 ~202 ~89 ~29 ~203 minecraft:short_grass strict
-setblock ~93 ~29 ~202 minecraft:short_grass strict
-fill ~87 ~29 ~203 ~87 ~29 ~204 minecraft:short_grass strict
-setblock ~85 ~29 ~205 minecraft:short_grass strict
-fill ~83 ~29 ~207 ~83 ~29 ~208 minecraft:short_grass strict
-fill ~80 ~29 ~209 ~82 ~29 ~209 minecraft:short_grass strict
-setblock ~83 ~29 ~209 minecraft:bush strict
-setblock ~78 ~29 ~210 minecraft:short_grass strict
-setblock ~79 ~29 ~210 minecraft:bush strict
-fill ~80 ~29 ~210 ~80 ~29 ~211 minecraft:short_grass strict
-setblock ~76 ~29 ~211 minecraft:short_grass strict
-setblock ~77 ~29 ~211 minecraft:fern strict
-fill ~73 ~29 ~212 ~73 ~29 ~217 minecraft:short_grass strict
-setblock ~63 ~29 ~213 minecraft:short_grass strict
-fill ~66 ~29 ~213 ~66 ~29 ~214 minecraft:short_grass strict
-setblock ~68 ~29 ~213 minecraft:fern strict
-setblock ~68 ~29 ~214 minecraft:short_grass strict
-fill ~70 ~29 ~214 ~70 ~29 ~215 minecraft:short_grass strict
-setblock ~72 ~29 ~214 minecraft:short_grass strict
-setblock ~74 ~29 ~214 minecraft:poppy strict
-fill ~98 ~29 ~214 ~98 ~29 ~216 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~67 ~29 ~215 minecraft:short_grass strict
-setblock ~71 ~29 ~215 minecraft:fern strict
-setblock ~69 ~29 ~216 minecraft:short_grass strict
-setblock ~71 ~29 ~216 minecraft:short_grass strict
-setblock ~68 ~29 ~228 minecraft:oxeye_daisy strict
-fill ~71 ~29 ~228 ~71 ~29 ~229 minecraft:short_grass strict
-setblock ~67 ~29 ~230 minecraft:short_grass strict
-fill ~69 ~29 ~230 ~70 ~29 ~230 minecraft:short_grass strict
-setblock ~71 ~29 ~230 minecraft:fern strict
-setblock ~67 ~29 ~231 minecraft:fern strict
-setblock ~66 ~29 ~232 minecraft:short_grass strict
-fill ~71 ~29 ~232 ~72 ~29 ~232 minecraft:short_grass strict
-setblock ~181 ~29 ~232 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~72 ~29 ~233 minecraft:short_grass strict
-setblock ~71 ~29 ~234 minecraft:short_grass strict
-fill ~73 ~29 ~235 ~73 ~29 ~236 minecraft:short_grass strict

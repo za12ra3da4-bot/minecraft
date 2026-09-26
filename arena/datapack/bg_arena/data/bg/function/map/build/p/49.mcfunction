@@ -1,3 +1,21 @@
+fill ~112 ~24 ~59 ~112 ~26 ~60 minecraft:dirt strict
+fill ~149 ~24 ~59 ~150 ~26 ~60 minecraft:dirt strict
+fill ~153 ~24 ~59 ~153 ~26 ~59 minecraft:dirt strict
+fill ~154 ~24 ~59 ~157 ~24 ~61 minecraft:andesite strict
+fill ~158 ~24 ~59 ~158 ~26 ~59 minecraft:dirt strict
+fill ~205 ~24 ~59 ~206 ~24 ~60 minecraft:coarse_dirt strict
+fill ~208 ~24 ~59 ~209 ~24 ~59 minecraft:andesite strict
+fill ~225 ~24 ~59 ~225 ~25 ~61 minecraft:smooth_basalt strict
+fill ~232 ~24 ~59 ~232 ~25 ~60 minecraft:smooth_basalt strict
+fill ~235 ~24 ~59 ~235 ~25 ~59 minecraft:stone strict
+fill ~241 ~24 ~59 ~241 ~24 ~60 minecraft:grass_block strict
+fill ~18 ~24 ~60 ~21 ~24 ~60 minecraft:grass_block strict
+fill ~25 ~24 ~60 ~25 ~25 ~60 minecraft:stone strict
+fill ~26 ~24 ~60 ~26 ~26 ~60 minecraft:dirt strict
+fill ~27 ~24 ~60 ~27 ~25 ~61 minecraft:stone strict
+setblock ~41 ~24 ~60 minecraft:stone strict
+fill ~45 ~24 ~60 ~46 ~24 ~60 minecraft:mossy_cobblestone strict
+setblock ~54 ~24 ~60 minecraft:mossy_cobblestone strict
 setblock ~97 ~24 ~60 minecraft:stone strict
 fill ~111 ~24 ~60 ~111 ~24 ~61 minecraft:andesite strict
 fill ~113 ~24 ~60 ~113 ~26 ~61 minecraft:dirt strict
@@ -330,21 +348,3 @@ fill ~204 ~24 ~77 ~204 ~24 ~80 minecraft:coarse_dirt strict
 fill ~207 ~24 ~77 ~207 ~24 ~84 minecraft:grass_block strict
 fill ~229 ~24 ~77 ~229 ~24 ~83 minecraft:andesite strict
 fill ~40 ~24 ~78 ~41 ~24 ~81 minecraft:grass_block strict
-fill ~49 ~24 ~78 ~49 ~27 ~78 minecraft:quartz_pillar[axis=y] strict
-fill ~51 ~24 ~78 ~51 ~27 ~78 minecraft:quartz_pillar[axis=y] strict
-fill ~100 ~24 ~78 ~103 ~24 ~78 minecraft:grass_block strict
-fill ~106 ~24 ~78 ~107 ~24 ~81 minecraft:grass_block strict
-fill ~146 ~24 ~78 ~149 ~24 ~80 minecraft:grass_block strict
-fill ~151 ~24 ~78 ~153 ~24 ~78 minecraft:grass_block strict
-setblock ~170 ~24 ~78 minecraft:terracotta strict
-fill ~216 ~24 ~78 ~216 ~24 ~88 minecraft:andesite strict
-setblock ~49 ~24 ~79 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~51 ~24 ~79 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-fill ~98 ~24 ~79 ~100 ~24 ~79 minecraft:grass_block strict
-fill ~104 ~24 ~79 ~105 ~24 ~82 minecraft:grass_block strict
-fill ~114 ~24 ~79 ~115 ~24 ~79 minecraft:grass_block strict
-setblock ~134 ~24 ~79 minecraft:gravel strict
-setblock ~141 ~24 ~79 minecraft:grass_block strict
-fill ~150 ~24 ~79 ~151 ~24 ~82 minecraft:grass_block strict
-fill ~153 ~24 ~79 ~155 ~24 ~79 minecraft:grass_block strict
-setblock ~169 ~24 ~79 minecraft:stone strict

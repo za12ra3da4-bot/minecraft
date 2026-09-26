@@ -1,3 +1,70 @@
+fill ~4 ~30 ~224 ~4 ~31 ~230 minecraft:smooth_stone strict
+fill ~107 ~30 ~224 ~107 ~31 ~224 minecraft:cracked_stone_bricks strict
+fill ~108 ~30 ~224 ~108 ~31 ~224 minecraft:stone_bricks strict
+setblock ~114 ~30 ~224 minecraft:anvil[facing=north] strict
+fill ~115 ~30 ~224 ~116 ~30 ~224 minecraft:barrel[facing=up,open=false] strict
+setblock ~140 ~30 ~224 minecraft:anvil[facing=north] strict
+fill ~141 ~30 ~224 ~142 ~30 ~224 minecraft:barrel[facing=up,open=false] strict
+fill ~246 ~30 ~224 ~246 ~34 ~230 minecraft:sandstone strict
+fill ~0 ~30 ~225 ~1 ~31 ~230 minecraft:smooth_stone strict
+fill ~107 ~30 ~225 ~108 ~30 ~225 minecraft:mossy_stone_bricks strict
+setblock ~115 ~30 ~225 minecraft:hay_block[axis=y] strict
+setblock ~116 ~30 ~225 minecraft:smithing_table strict
+setblock ~141 ~30 ~225 minecraft:hay_block[axis=y] strict
+setblock ~142 ~30 ~225 minecraft:smithing_table strict
+setblock ~107 ~30 ~226 minecraft:cracked_stone_bricks strict
+setblock ~113 ~30 ~226 minecraft:white_wool strict
+fill ~114 ~30 ~226 ~115 ~30 ~226 minecraft:lime_wool strict
+setblock ~116 ~30 ~226 minecraft:white_wool strict
+fill ~117 ~30 ~226 ~118 ~30 ~226 minecraft:lime_wool strict
+setblock ~119 ~30 ~226 minecraft:white_wool strict
+setblock ~137 ~30 ~226 minecraft:white_wool strict
+fill ~138 ~30 ~226 ~139 ~30 ~226 minecraft:lime_wool strict
+setblock ~140 ~30 ~226 minecraft:white_wool strict
+fill ~141 ~30 ~226 ~142 ~30 ~226 minecraft:lime_wool strict
+setblock ~143 ~30 ~226 minecraft:white_wool strict
+setblock ~149 ~30 ~226 minecraft:cracked_stone_bricks strict
+fill ~237 ~30 ~226 ~237 ~31 ~226 minecraft:smooth_sandstone strict
+fill ~56 ~30 ~227 ~61 ~30 ~227 minecraft:stone strict
+fill ~107 ~30 ~227 ~107 ~30 ~234 minecraft:stone_bricks strict
+fill ~149 ~30 ~227 ~149 ~31 ~228 minecraft:mossy_stone_bricks strict
+fill ~245 ~30 ~227 ~245 ~34 ~230 minecraft:sandstone strict
+fill ~56 ~30 ~228 ~57 ~32 ~228 minecraft:stone strict
+fill ~60 ~30 ~228 ~61 ~30 ~228 minecraft:stone strict
+fill ~196 ~30 ~228 ~196 ~33 ~228 minecraft:sandstone strict
+fill ~8 ~30 ~229 ~8 ~31 ~230 minecraft:smooth_stone strict
+fill ~9 ~30 ~229 ~9 ~31 ~233 minecraft:stone strict
+fill ~60 ~30 ~229 ~60 ~34 ~229 minecraft:stone strict
+setblock ~120 ~30 ~229 minecraft:mossy_cobblestone strict
+setblock ~121 ~30 ~229 minecraft:cobblestone_wall[east=low,north=none,south=none,up=false,waterlogged=false,west=low] strict
+setblock ~122 ~30 ~229 minecraft:mossy_cobblestone strict
+fill ~149 ~30 ~229 ~149 ~31 ~232 minecraft:stone_bricks strict
+fill ~59 ~30 ~230 ~59 ~31 ~230 minecraft:andesite strict
+fill ~60 ~30 ~230 ~60 ~31 ~230 minecraft:tuff strict
+fill ~61 ~30 ~230 ~61 ~31 ~230 minecraft:smooth_stone strict
+setblock ~109 ~30 ~230 minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~120 ~30 ~230 minecraft:cobblestone_wall[east=none,north=low,south=low,up=false,waterlogged=false,west=none] strict
+setblock ~122 ~30 ~230 minecraft:cobblestone_wall[east=none,north=low,south=low,up=false,waterlogged=false,west=none] strict
+setblock ~147 ~30 ~230 minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~158 ~30 ~230 ~159 ~34 ~230 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~162 ~30 ~230 minecraft:birch_log[axis=z] strict
+fill ~247 ~30 ~230 ~247 ~34 ~234 minecraft:sandstone strict
+fill ~1 ~30 ~231 ~1 ~31 ~233 minecraft:andesite strict
+fill ~2 ~30 ~231 ~2 ~31 ~234 minecraft:stone strict
+fill ~3 ~30 ~231 ~3 ~31 ~233 minecraft:smooth_stone strict
+fill ~4 ~30 ~231 ~4 ~31 ~233 minecraft:andesite strict
+fill ~6 ~30 ~231 ~6 ~31 ~233 minecraft:stone strict
+fill ~8 ~30 ~231 ~8 ~31 ~233 minecraft:andesite strict
+fill ~10 ~30 ~231 ~10 ~31 ~231 minecraft:stone strict
+fill ~58 ~30 ~231 ~58 ~31 ~231 minecraft:andesite strict
+fill ~59 ~30 ~231 ~59 ~31 ~231 minecraft:tuff strict
+fill ~60 ~30 ~231 ~60 ~31 ~231 minecraft:smooth_stone strict
+fill ~61 ~30 ~231 ~61 ~31 ~231 minecraft:stone strict
+fill ~108 ~30 ~231 ~109 ~30 ~234 minecraft:stone_bricks strict
+setblock ~120 ~30 ~231 minecraft:mossy_cobblestone strict
+setblock ~121 ~30 ~231 minecraft:cobblestone_wall[east=low,north=none,south=none,up=false,waterlogged=false,west=low] strict
+setblock ~122 ~30 ~231 minecraft:mossy_cobblestone strict
+setblock ~128 ~30 ~231 minecraft:chiseled_quartz_block strict
 fill ~148 ~30 ~231 ~148 ~30 ~239 minecraft:stone_bricks strict
 fill ~159 ~30 ~231 ~159 ~30 ~232 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
 setblock ~161 ~30 ~231 minecraft:birch_log[axis=x] strict
@@ -281,70 +348,3 @@ fill ~45 ~30 ~245 ~45 ~31 ~245 minecraft:stone strict
 fill ~46 ~30 ~245 ~50 ~31 ~245 minecraft:tuff strict
 fill ~51 ~30 ~245 ~52 ~31 ~245 minecraft:andesite strict
 fill ~53 ~30 ~245 ~53 ~31 ~245 minecraft:tuff strict
-fill ~55 ~30 ~245 ~55 ~31 ~245 minecraft:andesite strict
-fill ~56 ~30 ~245 ~56 ~33 ~246 minecraft:stone strict
-fill ~57 ~30 ~245 ~57 ~31 ~245 minecraft:andesite strict
-setblock ~59 ~30 ~245 minecraft:stone strict
-fill ~61 ~30 ~245 ~61 ~32 ~245 minecraft:stone strict
-fill ~64 ~30 ~245 ~64 ~33 ~246 minecraft:stone strict
-fill ~65 ~30 ~245 ~67 ~30 ~245 minecraft:tuff strict
-fill ~68 ~30 ~245 ~70 ~30 ~245 minecraft:stone strict
-fill ~78 ~30 ~245 ~80 ~34 ~245 minecraft:stone strict
-fill ~91 ~30 ~245 ~93 ~30 ~245 minecraft:tuff strict
-fill ~96 ~30 ~245 ~98 ~30 ~246 minecraft:stone strict
-setblock ~115 ~30 ~245 minecraft:cracked_stone_bricks strict
-setblock ~116 ~30 ~245 minecraft:mossy_stone_bricks strict
-fill ~117 ~30 ~245 ~117 ~31 ~245 minecraft:stone_bricks strict
-fill ~139 ~30 ~245 ~140 ~30 ~245 minecraft:stone_bricks strict
-fill ~209 ~30 ~245 ~209 ~31 ~245 minecraft:sandstone strict
-fill ~236 ~30 ~245 ~236 ~32 ~246 minecraft:sandstone strict
-fill ~9 ~30 ~246 ~9 ~35 ~246 minecraft:stone strict
-fill ~12 ~30 ~246 ~12 ~32 ~246 minecraft:stone strict
-fill ~14 ~30 ~246 ~15 ~31 ~247 minecraft:stone strict
-fill ~18 ~30 ~246 ~18 ~31 ~247 minecraft:stone strict
-fill ~19 ~30 ~246 ~19 ~31 ~246 minecraft:andesite strict
-fill ~20 ~30 ~246 ~20 ~31 ~247 minecraft:stone strict
-fill ~23 ~30 ~246 ~23 ~31 ~246 minecraft:andesite strict
-fill ~43 ~30 ~246 ~47 ~31 ~246 minecraft:tuff strict
-fill ~48 ~30 ~246 ~49 ~31 ~246 minecraft:andesite strict
-fill ~51 ~30 ~246 ~51 ~31 ~246 minecraft:tuff strict
-fill ~52 ~30 ~246 ~52 ~31 ~246 minecraft:andesite strict
-fill ~53 ~30 ~246 ~55 ~30 ~246 minecraft:stone strict
-fill ~57 ~30 ~246 ~57 ~33 ~246 minecraft:stone strict
-fill ~60 ~30 ~246 ~60 ~33 ~246 minecraft:stone strict
-fill ~61 ~30 ~246 ~61 ~32 ~246 minecraft:dirt strict
-fill ~65 ~30 ~246 ~65 ~34 ~246 minecraft:stone strict
-fill ~89 ~30 ~246 ~93 ~34 ~246 minecraft:stone strict
-fill ~94 ~30 ~246 ~95 ~30 ~246 minecraft:tuff strict
-fill ~99 ~30 ~246 ~101 ~31 ~247 minecraft:stone strict
-setblock ~109 ~30 ~246 minecraft:moss_block strict
-fill ~116 ~30 ~246 ~116 ~31 ~246 minecraft:stone_bricks strict
-setblock ~117 ~30 ~246 minecraft:cracked_stone_bricks strict
-fill ~118 ~30 ~246 ~118 ~30 ~247 minecraft:stone_bricks strict
-fill ~138 ~30 ~246 ~139 ~30 ~247 minecraft:stone_bricks strict
-setblock ~140 ~30 ~246 minecraft:mossy_stone_bricks strict
-fill ~185 ~30 ~246 ~191 ~30 ~247 minecraft:stone strict
-fill ~196 ~30 ~246 ~201 ~30 ~246 minecraft:stone strict
-fill ~210 ~30 ~246 ~210 ~31 ~246 minecraft:sandstone strict
-fill ~235 ~30 ~246 ~235 ~33 ~246 minecraft:sandstone strict
-setblock ~10 ~30 ~247 minecraft:andesite strict
-fill ~11 ~30 ~247 ~12 ~30 ~247 minecraft:smooth_stone strict
-fill ~19 ~30 ~247 ~19 ~31 ~248 minecraft:stone strict
-fill ~23 ~30 ~247 ~23 ~32 ~247 minecraft:stone strict
-fill ~24 ~30 ~247 ~27 ~31 ~247 minecraft:andesite strict
-fill ~28 ~30 ~247 ~28 ~31 ~247 minecraft:stone strict
-fill ~39 ~30 ~247 ~41 ~31 ~248 minecraft:tuff strict
-fill ~42 ~30 ~247 ~46 ~31 ~247 minecraft:andesite strict
-fill ~47 ~30 ~247 ~47 ~31 ~247 minecraft:tuff strict
-fill ~48 ~30 ~247 ~48 ~33 ~247 minecraft:stone strict
-fill ~51 ~30 ~247 ~54 ~33 ~247 minecraft:stone strict
-fill ~59 ~30 ~247 ~59 ~34 ~247 minecraft:stone strict
-fill ~110 ~30 ~247 ~110 ~32 ~248 minecraft:stone strict
-setblock ~112 ~30 ~247 minecraft:stone strict
-fill ~117 ~30 ~247 ~117 ~31 ~247 minecraft:stone_bricks strict
-fill ~119 ~30 ~247 ~121 ~30 ~248 minecraft:stone_bricks strict
-fill ~135 ~30 ~247 ~137 ~30 ~248 minecraft:stone_bricks strict
-setblock ~144 ~30 ~247 minecraft:tuff strict
-fill ~148 ~30 ~247 ~151 ~31 ~247 minecraft:tuff strict
-fill ~152 ~30 ~247 ~162 ~34 ~247 minecraft:stone strict
-fill ~163 ~30 ~247 ~183 ~30 ~247 minecraft:tuff strict

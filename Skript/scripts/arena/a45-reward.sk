@@ -1,7 +1,7 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  왕관 쟁탈전 — 보스 보상 상자 (블록 디스플레이로 조립한 보물 상자)
 #   보스를 가장 많이 때린 팀이 가까이 가면 열린다:
-#     연 사람: 전설 무기 1개 (무작위)   ·   그 팀 전원: 코인 +60 · 황금 사과 2 · 치유 물약 1
+#     연 사람: 그 보스의 전용 무기 (상점에서 못 삼)   ·   그 팀 전원: 코인 +150 · 마법 황금 사과 1 · 황금 사과 3 · 치유 물약 2
 #   3분 동안 아무도 안 열면 사라짐
 # ═════════════════════════════════════════════════════════════════════════════
 
@@ -65,21 +65,25 @@ function bgRewardClear():
 function bgRewardClaim(p: player):
     set {_t} to {-bg::reward::team}
     set {_c} to {-bg::reward::loc}
+    set {_boss} to {-bg::reward::boss}
     bgRewardClear()
     bgParticle({_c}, "totem_of_undying", 1.5, 2, 1.5, 0.4, 120)
     bgParticle({_c}, "firework", 1, 1.5, 1, 0.2, 60)
     bgSoundAt({_c}, "block.chest.open", 3, 0.8)
     bgSoundAt({_c}, "ui.toast.challenge_complete", 3, 1)
-    set {_w} to random element out of {-bg::w::list::*}
+    set {_w} to "b_%{_boss}%"
+    if {-bg::w::%{_w}%::name} is not set:
+        set {_w} to random element out of {-bg::w::bosslist::*}
     bgGiveWeapon({_p}, {_w})
     set {bg::owned::%uuid of {_p}%::%{_w}%} to true
-    send title "&6&l보상 상자!" with subtitle "&f전설 무기 &6%{-bg::w::%{_w}%::name}%&f 획득" to {_p} for 60 ticks
+    send title "&6&l보상 상자!" with subtitle "&c보스 전용 무기 &6%{-bg::w::%{_w}%::name}%&f 획득" to {_p} for 60 ticks
     loop all players:
         if bgTeam(loop-player) is {_t}:
-            add 60 to {bg::coin::%uuid of loop-player%}
-            bgCmd("give %name of loop-player% golden_apple 2")
-            bgCmd("give %name of loop-player% splash_potion[potion_contents={potion:""minecraft:strong_healing""}] 1")
-            send action bar "&6보상 상자 &f— 코인 +60 · 황금 사과 2 · 치유 물약" to loop-player
+            add 150 to {bg::coin::%uuid of loop-player%}
+            bgCmd("give %name of loop-player% enchanted_golden_apple 1")
+            bgCmd("give %name of loop-player% golden_apple 3")
+            bgCmd("give %name of loop-player% splash_potion[potion_contents={potion:""minecraft:strong_healing""}] 2")
+            send action bar "&6보상 상자 &f— 코인 +150 · 마법 황금 사과 · 황금 사과 3 · 치유 물약 2" to loop-player
     bgSay("%{-bg::tcol::%{_t}%}%%name of {_p}%&f이(가) 보상 상자를 열어 &6%{-bg::w::%{_w}%::name}%&f을(를) 얻었습니다!")
 
 every 10 ticks:

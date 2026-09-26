@@ -157,6 +157,8 @@ def core_functions(dp_root):
         "execute as @e[type=interaction,tag=bg_shopnpc] run data remove entity @s interaction",
         "execute as @e[type=interaction,tag=bg_shopnpc] run data remove entity @s attack",
         "execute as @e[type=interaction,tag=bg_rewardhit] if data entity @s interaction on target run tag @s add bg_wantreward",
+        *[f"execute as @e[type=interaction,tag=bg_corehit_{t}] if data entity @s attack on attacker run tag @s add bg_wantcore_{t}" for t in ("red", "blue", "green", "yellow")],
+        "execute as @e[type=interaction,tag=bg_corehit] run data remove entity @s attack",
         "execute as @e[type=interaction,tag=bg_rewardhit] if data entity @s attack on attacker run tag @s add bg_wantreward",
         "execute as @e[type=interaction,tag=bg_rewardhit] run data remove entity @s interaction",
         "execute as @e[type=interaction,tag=bg_rewardhit] run data remove entity @s attack",
@@ -443,6 +445,20 @@ def npc_and_class_lines(world, bdkit, bdmodels):
             out.extend(bdkit.summon_lines(ic, at, x - 0.5, y + 1.4, z - 0.5, 0.0, 1.0, ['"bg"', '"bg_deco"'], view=0.6))
             out.append(text(x, y + 2.75, z, [(names[k][0], "gold", True)], 1.4))
             out.append(text(x, y + 2.45, z, [(names[k][1], "gray", False)], 0.8))
+    # 본진 코어: 신호기 위 떠서 도는 팀 수정 + 이름 · 체력 글씨 + 때리기 판정 (interaction)
+    cname = {"red": ("레드", "red"), "blue": ("블루", "blue"), "green": ("그린", "green"), "yellow": ("옐로", "yellow")}
+    for t in ("red", "blue", "green", "yellow"):
+        b = P(f"base_{t}_beacon")
+        if not b:
+            continue
+        x, y, z = b
+        tg = ['"bg"', '"bg_deco"', f'"bg_core_{t}"']
+        out.extend(bdkit.summon_lines(bdmodels.core_crystal(t), at, x - 0.5, y, z - 0.5, 0.0, 1.0, tg, view=2.0))
+        nm, col = cname[t]
+        out.append(text(x, y + 4.95, z, [(f"⚔ {nm} 코어 ⚔", col, True)], 1.7).replace('"bg_deco"]', f'"bg_deco","bg_core_{t}"]'))
+        out.append(text(x, y + 4.6, z, [("30 / 30", "white", True)], 1.3).replace('"bg_deco"]', f'"bg_deco","bg_coretext_{t}"]'))
+        out.append(text(x, y + 4.3, z, [("부수면 그 팀 -100점 · 약화", "gray", False)], 0.8).replace('"bg_deco"]', f'"bg_deco","bg_core_{t}"]'))
+        out.append(f'{at} interaction ~{x - 0.5:.3f} ~{y + 1.0:.3f} ~{z - 0.5:.3f} {{Tags:["bg","bg_deco","bg_corehit","bg_corehit_{t}"],width:1.8f,height:3.2f,response:1b}}')
     lb = P("lobby_spawn")
     if lb:
         avoid = [(mk[n]["pos"][0], mk[n]["pos"][2], 3.0) for n in mk if n.startswith("lobby_pad_")] + [(lb[0], lb[2], 2.5)]
@@ -631,7 +647,59 @@ def mine_lines(world, seed=91):
     return out
 
 
-def decor_functions(dp_root, world):
+def mine_restore_lines(world):
+    """예전 광산(보스 투기장 · 전초기지 옆)을 원래 지형으로 되돌리기 — (강제 로드 줄, 복구 줄, 해제 줄)
+       광산 자리가 파여서 갇히는 곳이 생겼고, 광질은 이제 본진 광석 바위에서만 한다"""
+    import math as _m
+    X, Y, Z = world.vox.shape
+    cx, cz = X / 2, Z / 2
+    at = "$execute positioned $(x) $(y) $(z) run"
+    fl_add, body, fl_rm = [], [], []
+    W, D, H = 6, 5, 5
+    for n, m in sorted(world.markers.items()):
+        if n.startswith("lair_") and n.count("_") == 1:
+            off = 30
+        elif n.startswith("outpost_") and n.count("_") == 1:
+            off = 15
+        else:
+            continue
+        lx, ly, lz = m["pos"]
+        vx, vz = cx - lx, cz - lz
+        L = _m.hypot(vx, vz) or 1
+        vx, vz = vx / L, vz / L
+        tx, tz = -vz, vx
+        mx, mz = int(lx + tx * off + vx * 4), int(lz + tz * off + vz * 4)
+        mx = max(10, min(X - 11, mx)); mz = max(10, min(Z - 11, mz))
+        hs = []
+        for dx in range(-4, 5, 2):
+            for dz in range(-4, 5, 2):
+                for y in range(min(Y - 2, 70), 1, -1):
+                    if world.pal[world.vox[mx + dx, y, mz + dz]] != "air":
+                        hs.append(y); break
+        gy = sorted(hs)[len(hs) // 2] if hs else int(ly)
+        R_ = max(W, D) + 2
+        x0, x1 = max(0, mx - R_), min(X - 1, mx + R_)
+        z0, z1 = max(0, mz - R_), min(Z - 1, mz + R_)
+        y0, y1 = max(0, gy - 2), min(Y - 1, gy + H + 2)
+        fl_add.append(f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}")
+        fl_rm.append(f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}")
+        for x in range(x0, x1 + 1):
+            for y in range(y0, y1 + 1):
+                z = z0
+                while z <= z1:
+                    st = full_state(world.pal[world.vox[x, y, z]])
+                    e = z
+                    while e + 1 <= z1 and full_state(world.pal[world.vox[x, y, e + 1]]) == st:
+                        e += 1
+                    if e == z:
+                        body.append(f"{at} setblock ~{x} ~{y} ~{z} {st} strict")
+                    else:
+                        body.append(f"{at} fill ~{x} ~{y} ~{z} ~{x} ~{y} ~{e} {st} strict")
+                    z = e + 1
+    return fl_add, body, fl_rm
+
+
+def decor_functions(dp_root, world, fixes=()):
     """world.displays → 소환 함수 (원점 기준 상대 좌표)
        장식은 전부 블록 디스플레이 조립 (bdmodels) — 마법진만 리소스팩 판"""
     import bdkit
@@ -676,6 +744,22 @@ def decor_functions(dp_root, world):
     w(os.path.join(F, "decor_run.mcfunction"), lines)
     w(os.path.join(F, "decor.mcfunction"), ["function bg:map/decor_run with storage bg:map origin"])
     w(os.path.join(F, "decor_clear.mcfunction"), ["kill @e[tag=bg_deco]"])
+    # 맵 고치기 (이미 지어진 맵에 덮어쓰기): 예전 광산 자리 복구 + 갇히는 곳 사다리 · 메우기
+    #  Skript: patch_fl (강제 로드) → 2초 → patch → patch_rm
+    fa, body, fr = mine_restore_lines(world)
+    at = "$execute positioned $(x) $(y) $(z) run"
+    chunks = sorted({(x // 16, z // 16) for x, y, z, st in fixes})
+    for cx_, cz_ in chunks:
+        fa.append(f"$execute positioned $(x) $(y) $(z) run forceload add ~{cx_ * 16} ~{cz_ * 16}")
+        fr.append(f"$execute positioned $(x) $(y) $(z) run forceload remove ~{cx_ * 16} ~{cz_ * 16}")
+    for x, y, z, st in fixes:
+        body.append(f"{at} setblock ~{x} ~{y} ~{z} {full_state(st)} strict")
+    w(os.path.join(F, "patch_fl_run.mcfunction"), fa)
+    w(os.path.join(F, "patch_run.mcfunction"), body)
+    w(os.path.join(F, "patch_rm_run.mcfunction"), fr)
+    for k in ("patch_fl", "patch", "patch_rm"):
+        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:map/{k}_run with storage bg:map origin"])
+    print(f"[decor] 맵 고치기: 예전 광산 복구 + 고친 칸 {len(fixes)}개, 명령 {len(body)}줄, 강제 로드 {len(fa)}")
     w(os.path.join(dp_root, "data", NS, "function", "diag.mcfunction"), ["scoreboard objectives add bg_diag dummy", "scoreboard players set #dp bg_diag 1"])
     # 보스 보상 상자 (팀별, 블록 디스플레이)  execute positioned <바닥> run function bg:reward/chest_<팀>
     R_ = os.path.join(dp_root, "data", NS, "function", "reward")

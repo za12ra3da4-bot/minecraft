@@ -1,3 +1,82 @@
+setblock ~127 ~84 ~114 minecraft:smooth_quartz strict
+setblock ~128 ~84 ~114 minecraft:quartz_bricks strict
+setblock ~129 ~84 ~114 minecraft:smooth_quartz strict
+setblock ~130 ~84 ~114 minecraft:quartz_bricks strict
+setblock ~131 ~84 ~114 minecraft:smooth_quartz strict
+setblock ~132 ~84 ~114 minecraft:quartz_bricks strict
+setblock ~133 ~84 ~114 minecraft:smooth_quartz strict
+setblock ~134 ~84 ~114 minecraft:quartz_bricks strict
+fill ~135 ~84 ~114 ~136 ~84 ~114 minecraft:chiseled_quartz_block strict
+fill ~137 ~84 ~114 ~138 ~84 ~114 minecraft:polished_blackstone_bricks strict
+setblock ~117 ~84 ~115 minecraft:polished_blackstone_bricks strict
+fill ~118 ~84 ~115 ~119 ~84 ~115 minecraft:chiseled_quartz_block strict
+setblock ~120 ~84 ~115 minecraft:smooth_quartz strict
+setblock ~121 ~84 ~115 minecraft:quartz_bricks strict
+setblock ~122 ~84 ~115 minecraft:smooth_quartz strict
+setblock ~123 ~84 ~115 minecraft:quartz_bricks strict
+setblock ~124 ~84 ~115 minecraft:smooth_quartz strict
+setblock ~125 ~84 ~115 minecraft:quartz_bricks strict
+setblock ~126 ~84 ~115 minecraft:smooth_quartz strict
+setblock ~127 ~84 ~115 minecraft:quartz_bricks strict
+setblock ~128 ~84 ~115 minecraft:smooth_quartz strict
+setblock ~129 ~84 ~115 minecraft:quartz_bricks strict
+setblock ~130 ~84 ~115 minecraft:smooth_quartz strict
+setblock ~131 ~84 ~115 minecraft:quartz_bricks strict
+setblock ~132 ~84 ~115 minecraft:smooth_quartz strict
+setblock ~133 ~84 ~115 minecraft:quartz_bricks strict
+setblock ~134 ~84 ~115 minecraft:smooth_quartz strict
+setblock ~135 ~84 ~115 minecraft:quartz_bricks strict
+setblock ~136 ~84 ~115 minecraft:smooth_quartz strict
+fill ~137 ~84 ~115 ~138 ~84 ~115 minecraft:chiseled_quartz_block strict
+setblock ~139 ~84 ~115 minecraft:polished_blackstone_bricks strict
+setblock ~116 ~84 ~116 minecraft:polished_blackstone_bricks strict
+fill ~117 ~84 ~116 ~118 ~84 ~116 minecraft:chiseled_quartz_block strict
+setblock ~119 ~84 ~116 minecraft:smooth_quartz strict
+setblock ~120 ~84 ~116 minecraft:quartz_bricks strict
+setblock ~121 ~84 ~116 minecraft:smooth_quartz strict
+setblock ~122 ~84 ~116 minecraft:quartz_bricks strict
+setblock ~123 ~84 ~116 minecraft:smooth_quartz strict
+setblock ~124 ~84 ~116 minecraft:quartz_bricks strict
+setblock ~125 ~84 ~116 minecraft:smooth_quartz strict
+fill ~126 ~84 ~116 ~130 ~84 ~116 minecraft:red_stained_glass strict
+setblock ~131 ~84 ~116 minecraft:smooth_quartz strict
+setblock ~132 ~84 ~116 minecraft:quartz_bricks strict
+setblock ~133 ~84 ~116 minecraft:smooth_quartz strict
+setblock ~134 ~84 ~116 minecraft:quartz_bricks strict
+setblock ~135 ~84 ~116 minecraft:smooth_quartz strict
+setblock ~136 ~84 ~116 minecraft:quartz_bricks strict
+setblock ~137 ~84 ~116 minecraft:smooth_quartz strict
+fill ~138 ~84 ~116 ~139 ~84 ~116 minecraft:chiseled_quartz_block strict
+setblock ~140 ~84 ~116 minecraft:polished_blackstone_bricks strict
+setblock ~115 ~84 ~117 minecraft:polished_blackstone_bricks strict
+fill ~116 ~84 ~117 ~117 ~84 ~117 minecraft:chiseled_quartz_block strict
+setblock ~118 ~84 ~117 minecraft:smooth_quartz strict
+setblock ~119 ~84 ~117 minecraft:quartz_bricks strict
+setblock ~120 ~84 ~117 minecraft:smooth_quartz strict
+setblock ~121 ~84 ~117 minecraft:quartz_bricks strict
+setblock ~122 ~84 ~117 minecraft:smooth_quartz strict
+setblock ~123 ~84 ~117 minecraft:quartz_bricks strict
+setblock ~124 ~84 ~117 minecraft:smooth_quartz strict
+setblock ~125 ~84 ~117 minecraft:quartz_bricks strict
+fill ~126 ~84 ~117 ~126 ~84 ~120 minecraft:red_stained_glass strict
+fill ~127 ~84 ~117 ~129 ~84 ~119 minecraft:red_concrete strict
+fill ~130 ~84 ~117 ~130 ~84 ~120 minecraft:red_stained_glass strict
+setblock ~131 ~84 ~117 minecraft:quartz_bricks strict
+setblock ~132 ~84 ~117 minecraft:smooth_quartz strict
+setblock ~133 ~84 ~117 minecraft:quartz_bricks strict
+setblock ~134 ~84 ~117 minecraft:smooth_quartz strict
+setblock ~135 ~84 ~117 minecraft:quartz_bricks strict
+setblock ~136 ~84 ~117 minecraft:smooth_quartz strict
+setblock ~137 ~84 ~117 minecraft:quartz_bricks strict
+setblock ~138 ~84 ~117 minecraft:smooth_quartz strict
+fill ~139 ~84 ~117 ~140 ~84 ~117 minecraft:chiseled_quartz_block strict
+setblock ~141 ~84 ~117 minecraft:polished_blackstone_bricks strict
+fill ~114 ~84 ~118 ~114 ~84 ~119 minecraft:polished_blackstone_bricks strict
+fill ~115 ~84 ~118 ~116 ~84 ~118 minecraft:chiseled_quartz_block strict
+setblock ~117 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~118 ~84 ~118 minecraft:quartz_bricks strict
+setblock ~119 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~120 ~84 ~118 minecraft:quartz_bricks strict
 setblock ~121 ~84 ~118 minecraft:smooth_quartz strict
 setblock ~122 ~84 ~118 minecraft:quartz_bricks strict
 setblock ~123 ~84 ~118 minecraft:smooth_quartz strict
@@ -269,82 +348,3 @@ setblock ~118 ~84 ~132 minecraft:quartz_bricks strict
 setblock ~119 ~84 ~132 minecraft:smooth_quartz strict
 setblock ~120 ~84 ~132 minecraft:quartz_bricks strict
 setblock ~124 ~84 ~132 minecraft:polished_diorite strict
-fill ~125 ~84 ~132 ~125 ~84 ~134 minecraft:white_glazed_terracotta strict
-fill ~127 ~84 ~132 ~128 ~84 ~135 minecraft:polished_diorite strict
-fill ~129 ~84 ~132 ~129 ~84 ~135 minecraft:white_glazed_terracotta strict
-fill ~132 ~84 ~132 ~132 ~84 ~134 minecraft:polished_diorite strict
-fill ~133 ~84 ~132 ~134 ~84 ~132 minecraft:white_glazed_terracotta strict
-setblock ~136 ~84 ~132 minecraft:quartz_bricks strict
-setblock ~137 ~84 ~132 minecraft:smooth_quartz strict
-setblock ~138 ~84 ~132 minecraft:quartz_bricks strict
-setblock ~139 ~84 ~132 minecraft:smooth_quartz strict
-setblock ~140 ~84 ~132 minecraft:quartz_bricks strict
-setblock ~141 ~84 ~132 minecraft:smooth_quartz strict
-setblock ~142 ~84 ~132 minecraft:quartz_bricks strict
-fill ~143 ~84 ~132 ~143 ~84 ~134 minecraft:chiseled_quartz_block strict
-fill ~112 ~84 ~133 ~112 ~84 ~135 minecraft:polished_blackstone_bricks strict
-setblock ~114 ~84 ~133 minecraft:smooth_quartz strict
-setblock ~115 ~84 ~133 minecraft:quartz_bricks strict
-setblock ~116 ~84 ~133 minecraft:smooth_quartz strict
-setblock ~117 ~84 ~133 minecraft:quartz_bricks strict
-setblock ~118 ~84 ~133 minecraft:smooth_quartz strict
-setblock ~119 ~84 ~133 minecraft:quartz_bricks strict
-setblock ~120 ~84 ~133 minecraft:smooth_quartz strict
-setblock ~121 ~84 ~133 minecraft:quartz_bricks strict
-fill ~122 ~84 ~133 ~122 ~84 ~134 minecraft:gold_block strict
-setblock ~123 ~84 ~133 minecraft:polished_diorite strict
-fill ~124 ~84 ~133 ~124 ~84 ~134 minecraft:white_glazed_terracotta strict
-fill ~126 ~84 ~133 ~126 ~84 ~135 minecraft:polished_diorite strict
-fill ~130 ~84 ~133 ~130 ~84 ~135 minecraft:white_glazed_terracotta strict
-fill ~131 ~84 ~133 ~131 ~84 ~134 minecraft:polished_diorite strict
-setblock ~133 ~84 ~133 minecraft:polished_diorite strict
-fill ~134 ~84 ~133 ~134 ~84 ~134 minecraft:gold_block strict
-setblock ~135 ~84 ~133 minecraft:quartz_bricks strict
-setblock ~136 ~84 ~133 minecraft:smooth_quartz strict
-setblock ~137 ~84 ~133 minecraft:quartz_bricks strict
-setblock ~138 ~84 ~133 minecraft:smooth_quartz strict
-setblock ~139 ~84 ~133 minecraft:quartz_bricks strict
-setblock ~140 ~84 ~133 minecraft:smooth_quartz strict
-setblock ~141 ~84 ~133 minecraft:quartz_bricks strict
-setblock ~142 ~84 ~133 minecraft:smooth_quartz strict
-fill ~144 ~84 ~133 ~144 ~84 ~135 minecraft:polished_blackstone_bricks strict
-setblock ~114 ~84 ~134 minecraft:quartz_bricks strict
-setblock ~115 ~84 ~134 minecraft:smooth_quartz strict
-setblock ~116 ~84 ~134 minecraft:quartz_bricks strict
-setblock ~117 ~84 ~134 minecraft:smooth_quartz strict
-setblock ~118 ~84 ~134 minecraft:quartz_bricks strict
-setblock ~119 ~84 ~134 minecraft:smooth_quartz strict
-setblock ~120 ~84 ~134 minecraft:quartz_bricks strict
-setblock ~121 ~84 ~134 minecraft:smooth_quartz strict
-setblock ~123 ~84 ~134 minecraft:gold_block strict
-setblock ~133 ~84 ~134 minecraft:gold_block strict
-setblock ~135 ~84 ~134 minecraft:smooth_quartz strict
-setblock ~136 ~84 ~134 minecraft:quartz_bricks strict
-setblock ~137 ~84 ~134 minecraft:smooth_quartz strict
-setblock ~138 ~84 ~134 minecraft:quartz_bricks strict
-setblock ~139 ~84 ~134 minecraft:smooth_quartz strict
-setblock ~140 ~84 ~134 minecraft:quartz_bricks strict
-setblock ~141 ~84 ~134 minecraft:smooth_quartz strict
-setblock ~142 ~84 ~134 minecraft:quartz_bricks strict
-fill ~113 ~84 ~135 ~113 ~84 ~137 minecraft:polished_blackstone_bricks strict
-fill ~114 ~84 ~135 ~114 ~84 ~136 minecraft:chiseled_quartz_block strict
-setblock ~115 ~84 ~135 minecraft:quartz_bricks strict
-setblock ~116 ~84 ~135 minecraft:smooth_quartz strict
-setblock ~117 ~84 ~135 minecraft:quartz_bricks strict
-setblock ~118 ~84 ~135 minecraft:smooth_quartz strict
-setblock ~119 ~84 ~135 minecraft:quartz_bricks strict
-setblock ~120 ~84 ~135 minecraft:smooth_quartz strict
-setblock ~121 ~84 ~135 minecraft:quartz_bricks strict
-setblock ~122 ~84 ~135 minecraft:smooth_quartz strict
-setblock ~123 ~84 ~135 minecraft:quartz_bricks strict
-fill ~124 ~84 ~135 ~125 ~84 ~135 minecraft:gold_block strict
-fill ~131 ~84 ~135 ~132 ~84 ~135 minecraft:gold_block strict
-setblock ~133 ~84 ~135 minecraft:quartz_bricks strict
-setblock ~134 ~84 ~135 minecraft:smooth_quartz strict
-setblock ~135 ~84 ~135 minecraft:quartz_bricks strict
-setblock ~136 ~84 ~135 minecraft:smooth_quartz strict
-setblock ~137 ~84 ~135 minecraft:quartz_bricks strict
-setblock ~138 ~84 ~135 minecraft:smooth_quartz strict
-setblock ~139 ~84 ~135 minecraft:quartz_bricks strict
-setblock ~140 ~84 ~135 minecraft:smooth_quartz strict
-setblock ~141 ~84 ~135 minecraft:quartz_bricks strict

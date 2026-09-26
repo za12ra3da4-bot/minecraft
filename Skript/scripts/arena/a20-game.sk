@@ -175,9 +175,11 @@ function bgCapturePoint(p: text):
     # 한 팀만 있음
     set {_k} to {_n::%{_who}%}
     if {_p} is "temple":
-        set {_rate} to min(14, 5 + 3 * ({_k} - 1))
+        # 중앙 성소는 오래 걸린다 (혼자 약 29초)
+        set {_rate} to min(10, 3.5 + 2 * ({_k} - 1))
     else:
-        set {_rate} to min(20, 8 + 4 * ({_k} - 1))
+        # 제단은 1.5배 빠르게 (혼자 약 9초)
+        set {_rate} to min(30, 12 + 6 * ({_k} - 1))
     if {_capt} is not {_who}:
         if {_v} > 0:
             set {_v} to max(0, {_v} - {_rate})
@@ -359,7 +361,7 @@ on death of player:
     # 아무것도 떨어뜨리지 않음 — 전설 무기 · 산 장비는 부활할 때 다시 받는다 (bgKit → bgShopRestore)
     # 복사 방지: 죽는 순간 '가방에 실제로 들고 있던' 전설 무기만 부활 때 돌려준다
     #  (버렸거나 상자에 넣어 둔 것은 돌려주지 않음 — 그건 바닥/상자에 그대로 있으니까)
-    loop {-bg::w::list::*}:
+    loop {-bg::w::all::*}:
         delete {bg::owned::%uuid of victim%::%loop-value%}
     loop drops:
         if bgIsLegend(loop-item) is not "":
@@ -462,7 +464,13 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
         else if arg-1 is "장식":
             bgSyncOrigin()
             bgCmd("function bg:map/decor")
-            send "&6[전장] &f장식을 다시 배치했습니다."
+            send "&6[전장] &f장식을 다시 배치했습니다. &7맵 고치는 중 (예전 광산 자리 복구 · 갇히는 곳 사다리)..."
+            bgCmd("function bg:map/patch_fl")
+            wait 40 ticks
+            bgCmd("function bg:map/patch")
+            wait 5 ticks
+            bgCmd("function bg:map/patch_rm")
+            send "&6[전장] &f맵 고치기 완료."
         else if arg-1 is "원점":
             set {bg::cfg::ox} to arg-2 parsed as integer
             set {bg::cfg::oy} to arg-3 parsed as integer

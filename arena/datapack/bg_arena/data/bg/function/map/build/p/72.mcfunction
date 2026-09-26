@@ -1,3 +1,51 @@
+fill ~177 ~25 ~124 ~177 ~25 ~132 minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false] strict
+fill ~178 ~25 ~124 ~182 ~25 ~124 minecraft:stone_bricks strict
+fill ~191 ~25 ~124 ~191 ~33 ~124 minecraft:stone_bricks strict
+fill ~192 ~25 ~124 ~193 ~25 ~124 minecraft:grass_block strict
+setblock ~194 ~25 ~124 minecraft:moss_block strict
+fill ~197 ~25 ~124 ~198 ~25 ~124 minecraft:moss_block strict
+fill ~206 ~25 ~124 ~206 ~27 ~125 minecraft:dirt strict
+fill ~251 ~25 ~124 ~251 ~25 ~125 minecraft:stone_bricks strict
+fill ~252 ~25 ~124 ~252 ~25 ~125 minecraft:mossy_stone_bricks strict
+fill ~4 ~25 ~125 ~5 ~25 ~125 minecraft:stone_bricks strict
+fill ~50 ~25 ~125 ~50 ~27 ~125 minecraft:dirt strict
+fill ~53 ~25 ~125 ~53 ~26 ~127 minecraft:cobblestone strict
+setblock ~58 ~25 ~125 minecraft:polished_andesite strict
+fill ~59 ~25 ~125 ~61 ~25 ~126 minecraft:stone_bricks strict
+setblock ~62 ~25 ~125 minecraft:cracked_stone_bricks strict
+fill ~74 ~25 ~125 ~74 ~25 ~131 minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~75 ~25 ~125 ~77 ~25 ~132 minecraft:stone_bricks strict
+fill ~87 ~25 ~125 ~89 ~25 ~132 minecraft:stone_bricks strict
+fill ~90 ~25 ~125 ~90 ~25 ~131 minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~91 ~25 ~125 minecraft:stone_bricks strict
+fill ~92 ~25 ~125 ~93 ~25 ~125 minecraft:calcite strict
+setblock ~94 ~25 ~125 minecraft:cobblestone strict
+setblock ~96 ~25 ~125 minecraft:stone_bricks strict
+setblock ~97 ~25 ~125 minecraft:polished_andesite strict
+setblock ~98 ~25 ~125 minecraft:stone_bricks strict
+setblock ~101 ~25 ~125 minecraft:stone_bricks strict
+setblock ~102 ~25 ~125 minecraft:cracked_stone_bricks strict
+setblock ~103 ~25 ~125 minecraft:cobblestone strict
+fill ~111 ~25 ~125 ~114 ~25 ~125 minecraft:stone_bricks strict
+fill ~115 ~25 ~125 ~115 ~25 ~126 minecraft:cracked_stone_bricks strict
+setblock ~118 ~25 ~125 minecraft:stone_bricks strict
+setblock ~119 ~25 ~125 minecraft:mossy_stone_bricks strict
+fill ~120 ~25 ~125 ~120 ~26 ~125 minecraft:cracked_stone_bricks strict
+fill ~121 ~25 ~125 ~121 ~26 ~125 minecraft:stone_bricks strict
+fill ~122 ~25 ~125 ~122 ~27 ~125 minecraft:cracked_stone_bricks strict
+fill ~123 ~25 ~125 ~123 ~25 ~127 minecraft:stone_bricks strict
+fill ~124 ~25 ~125 ~128 ~25 ~125 minecraft:mossy_stone_bricks strict
+fill ~129 ~25 ~125 ~129 ~27 ~125 minecraft:stone_bricks strict
+fill ~130 ~25 ~125 ~130 ~26 ~125 minecraft:mossy_stone_bricks strict
+setblock ~132 ~25 ~125 minecraft:mossy_stone_bricks strict
+fill ~133 ~25 ~125 ~133 ~27 ~125 minecraft:stone_bricks strict
+setblock ~134 ~25 ~125 minecraft:mossy_stone_bricks strict
+setblock ~136 ~25 ~125 minecraft:cracked_stone_bricks strict
+fill ~137 ~25 ~125 ~138 ~25 ~125 minecraft:mossy_stone_bricks strict
+fill ~139 ~25 ~125 ~139 ~25 ~130 minecraft:stone_bricks strict
+setblock ~140 ~25 ~125 minecraft:mossy_stone_bricks strict
+fill ~141 ~25 ~125 ~142 ~27 ~125 minecraft:stone_bricks strict
+setblock ~143 ~25 ~125 minecraft:mossy_stone_bricks strict
 fill ~145 ~25 ~125 ~145 ~27 ~125 minecraft:stone_bricks strict
 setblock ~152 ~25 ~125 minecraft:stone_bricks strict
 setblock ~153 ~25 ~125 minecraft:andesite strict
@@ -300,51 +348,3 @@ setblock ~161 ~25 ~131 minecraft:stone_bricks strict
 setblock ~162 ~25 ~131 minecraft:grass_block strict
 fill ~163 ~25 ~131 ~164 ~25 ~131 minecraft:mossy_cobblestone strict
 setblock ~165 ~25 ~131 minecraft:andesite strict
-setblock ~194 ~25 ~131 minecraft:polished_andesite strict
-fill ~196 ~25 ~131 ~198 ~25 ~131 minecraft:polished_andesite strict
-setblock ~199 ~25 ~131 minecraft:mossy_stone_bricks strict
-fill ~206 ~25 ~131 ~206 ~27 ~132 minecraft:dirt strict
-fill ~207 ~25 ~131 ~207 ~25 ~136 minecraft:stone strict
-fill ~252 ~25 ~131 ~252 ~26 ~131 minecraft:stone_bricks strict
-setblock ~5 ~25 ~132 minecraft:cracked_stone_bricks strict
-fill ~51 ~25 ~132 ~51 ~27 ~132 minecraft:dirt strict
-fill ~59 ~25 ~132 ~63 ~25 ~132 minecraft:grass_block strict
-fill ~64 ~25 ~132 ~65 ~33 ~132 minecraft:stone_bricks strict
-setblock ~74 ~25 ~132 minecraft:stone_bricks strict
-setblock ~90 ~25 ~132 minecraft:stone_bricks strict
-fill ~91 ~25 ~132 ~91 ~25 ~146 minecraft:grass_block strict
-setblock ~94 ~25 ~132 minecraft:cracked_stone_bricks strict
-setblock ~95 ~25 ~132 minecraft:stone_bricks strict
-setblock ~96 ~25 ~132 minecraft:cobblestone strict
-setblock ~97 ~25 ~132 minecraft:stone_bricks strict
-setblock ~98 ~25 ~132 minecraft:grass_block strict
-setblock ~101 ~25 ~132 minecraft:mossy_stone_bricks strict
-setblock ~102 ~25 ~132 minecraft:stone_bricks strict
-setblock ~103 ~25 ~132 minecraft:andesite strict
-setblock ~104 ~25 ~132 minecraft:cracked_stone_bricks strict
-fill ~111 ~25 ~132 ~111 ~25 ~133 minecraft:stone_bricks strict
-setblock ~112 ~25 ~132 minecraft:cracked_stone_bricks strict
-fill ~113 ~25 ~132 ~113 ~25 ~139 minecraft:stone_bricks strict
-fill ~116 ~25 ~132 ~117 ~25 ~132 minecraft:cracked_stone_bricks strict
-setblock ~119 ~25 ~132 minecraft:cracked_stone_bricks strict
-fill ~120 ~25 ~132 ~120 ~25 ~133 minecraft:mossy_stone_bricks strict
-fill ~121 ~25 ~132 ~123 ~25 ~132 minecraft:stone_bricks strict
-setblock ~125 ~25 ~132 minecraft:mossy_stone_bricks strict
-fill ~126 ~25 ~132 ~126 ~25 ~134 minecraft:cracked_stone_bricks strict
-setblock ~127 ~25 ~132 minecraft:stone_bricks strict
-setblock ~128 ~25 ~132 minecraft:mossy_stone_bricks strict
-fill ~129 ~25 ~132 ~129 ~26 ~132 minecraft:stone_bricks strict
-fill ~130 ~25 ~132 ~131 ~25 ~132 minecraft:mossy_stone_bricks strict
-fill ~134 ~25 ~132 ~134 ~26 ~132 minecraft:stone_bricks strict
-setblock ~135 ~25 ~132 minecraft:mossy_stone_bricks strict
-fill ~136 ~25 ~132 ~136 ~27 ~132 minecraft:stone_bricks strict
-fill ~139 ~25 ~132 ~139 ~27 ~132 minecraft:cracked_stone_bricks strict
-setblock ~142 ~25 ~132 minecraft:stone_bricks strict
-setblock ~143 ~25 ~132 minecraft:mossy_stone_bricks strict
-fill ~144 ~25 ~132 ~144 ~27 ~132 minecraft:stone_bricks strict
-setblock ~145 ~25 ~132 minecraft:cracked_stone_bricks strict
-setblock ~152 ~25 ~132 minecraft:cracked_stone_bricks strict
-fill ~153 ~25 ~132 ~154 ~25 ~132 minecraft:stone_bricks strict
-setblock ~155 ~25 ~132 minecraft:cobblestone strict
-fill ~157 ~25 ~132 ~157 ~25 ~136 minecraft:polished_andesite strict
-fill ~158 ~25 ~132 ~158 ~25 ~133 minecraft:mossy_stone_bricks strict

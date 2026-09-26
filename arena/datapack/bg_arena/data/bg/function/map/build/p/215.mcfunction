@@ -1,3 +1,82 @@
+fill ~115 ~80 ~120 ~117 ~81 ~120 minecraft:deepslate_tiles strict
+setblock ~118 ~80 ~120 minecraft:amethyst_block strict
+fill ~119 ~80 ~120 ~119 ~82 ~120 minecraft:stone strict
+setblock ~120 ~80 ~120 minecraft:andesite strict
+setblock ~121 ~80 ~120 minecraft:stone strict
+fill ~123 ~80 ~120 ~123 ~82 ~120 minecraft:stone strict
+setblock ~124 ~80 ~120 minecraft:andesite strict
+setblock ~125 ~80 ~120 minecraft:stone strict
+setblock ~127 ~80 ~120 minecraft:amethyst_block strict
+setblock ~128 ~80 ~120 minecraft:andesite strict
+fill ~131 ~80 ~120 ~131 ~82 ~120 minecraft:stone strict
+setblock ~132 ~80 ~120 minecraft:andesite strict
+fill ~133 ~80 ~120 ~135 ~80 ~120 minecraft:stone strict
+setblock ~136 ~80 ~120 minecraft:amethyst_block strict
+fill ~137 ~80 ~120 ~137 ~80 ~122 minecraft:stone strict
+fill ~139 ~80 ~120 ~139 ~81 ~120 minecraft:deepslate_tiles strict
+setblock ~118 ~80 ~121 minecraft:deepslate_tiles strict
+setblock ~119 ~80 ~121 minecraft:andesite strict
+setblock ~120 ~80 ~121 minecraft:stone strict
+setblock ~121 ~80 ~121 minecraft:amethyst_block strict
+setblock ~123 ~80 ~121 minecraft:andesite strict
+setblock ~124 ~80 ~121 minecraft:stone strict
+fill ~126 ~80 ~121 ~126 ~82 ~121 minecraft:stone strict
+setblock ~127 ~80 ~121 minecraft:andesite strict
+setblock ~128 ~80 ~121 minecraft:stone strict
+setblock ~130 ~80 ~121 minecraft:amethyst_block strict
+setblock ~131 ~80 ~121 minecraft:andesite strict
+fill ~134 ~80 ~121 ~134 ~82 ~121 minecraft:stone strict
+setblock ~135 ~80 ~121 minecraft:andesite strict
+setblock ~139 ~80 ~121 minecraft:amethyst_block strict
+fill ~140 ~80 ~121 ~141 ~81 ~122 minecraft:deepslate_tiles strict
+setblock ~115 ~80 ~122 minecraft:amethyst_block strict
+fill ~116 ~80 ~122 ~116 ~80 ~124 minecraft:deepslate_tiles strict
+fill ~117 ~80 ~122 ~117 ~82 ~122 minecraft:stone strict
+setblock ~118 ~80 ~122 minecraft:andesite strict
+fill ~119 ~80 ~122 ~119 ~80 ~124 minecraft:stone strict
+fill ~121 ~80 ~122 ~121 ~82 ~122 minecraft:stone strict
+setblock ~122 ~80 ~122 minecraft:andesite strict
+setblock ~124 ~80 ~122 minecraft:amethyst_block strict
+fill ~125 ~80 ~122 ~125 ~82 ~122 minecraft:stone strict
+setblock ~126 ~80 ~122 minecraft:andesite strict
+fill ~129 ~80 ~122 ~129 ~82 ~122 minecraft:stone strict
+setblock ~130 ~80 ~122 minecraft:andesite strict
+fill ~131 ~80 ~122 ~131 ~80 ~124 minecraft:stone strict
+setblock ~133 ~80 ~122 minecraft:amethyst_block strict
+setblock ~134 ~80 ~122 minecraft:andesite strict
+setblock ~138 ~80 ~122 minecraft:andesite strict
+setblock ~139 ~80 ~122 minecraft:deepslate_tiles strict
+setblock ~142 ~80 ~122 minecraft:amethyst_block strict
+fill ~115 ~80 ~123 ~115 ~81 ~124 minecraft:deepslate_tiles strict
+setblock ~117 ~80 ~123 minecraft:andesite strict
+setblock ~118 ~80 ~123 minecraft:amethyst_block strict
+fill ~120 ~80 ~123 ~120 ~82 ~123 minecraft:stone strict
+setblock ~121 ~80 ~123 minecraft:andesite strict
+fill ~124 ~80 ~123 ~124 ~82 ~123 minecraft:stone strict
+setblock ~125 ~80 ~123 minecraft:andesite strict
+setblock ~127 ~80 ~123 minecraft:amethyst_block strict
+fill ~128 ~80 ~123 ~128 ~82 ~123 minecraft:stone strict
+setblock ~129 ~80 ~123 minecraft:andesite strict
+setblock ~130 ~80 ~123 minecraft:stone strict
+fill ~132 ~80 ~123 ~132 ~82 ~123 minecraft:stone strict
+setblock ~133 ~80 ~123 minecraft:andesite strict
+setblock ~134 ~80 ~123 minecraft:stone strict
+setblock ~136 ~80 ~123 minecraft:amethyst_block strict
+setblock ~137 ~80 ~123 minecraft:andesite strict
+fill ~138 ~80 ~123 ~139 ~80 ~123 minecraft:stone strict
+fill ~141 ~80 ~123 ~141 ~80 ~125 minecraft:deepslate_tiles strict
+fill ~117 ~80 ~124 ~118 ~80 ~125 minecraft:stone strict
+setblock ~120 ~80 ~124 minecraft:andesite strict
+setblock ~121 ~80 ~124 minecraft:amethyst_block strict
+fill ~123 ~80 ~124 ~123 ~82 ~124 minecraft:stone strict
+setblock ~124 ~80 ~124 minecraft:andesite strict
+fill ~125 ~80 ~124 ~127 ~80 ~124 minecraft:stone strict
+setblock ~128 ~80 ~124 minecraft:andesite strict
+setblock ~130 ~80 ~124 minecraft:amethyst_block strict
+setblock ~132 ~80 ~124 minecraft:andesite strict
+setblock ~133 ~80 ~124 minecraft:stone strict
+fill ~135 ~80 ~124 ~135 ~82 ~124 minecraft:stone strict
+setblock ~136 ~80 ~124 minecraft:andesite strict
 fill ~137 ~80 ~124 ~138 ~80 ~124 minecraft:stone strict
 setblock ~139 ~80 ~124 minecraft:amethyst_block strict
 fill ~142 ~80 ~124 ~142 ~81 ~124 minecraft:deepslate_tiles strict
@@ -269,82 +348,3 @@ setblock ~136 ~80 ~141 minecraft:amethyst_block strict
 fill ~126 ~80 ~142 ~126 ~81 ~142 minecraft:deepslate_tiles strict
 fill ~128 ~80 ~142 ~129 ~81 ~142 minecraft:deepslate_tiles strict
 setblock ~130 ~80 ~142 minecraft:amethyst_block strict
-fill ~131 ~80 ~142 ~131 ~81 ~142 minecraft:deepslate_tiles strict
-fill ~128 ~80 ~143 ~128 ~81 ~143 minecraft:deepslate_tiles strict
-fill ~127 ~81 ~112 ~127 ~81 ~114 minecraft:deepslate_tiles strict
-fill ~132 ~81 ~112 ~132 ~81 ~114 minecraft:deepslate_tiles strict
-fill ~123 ~81 ~113 ~126 ~82 ~113 minecraft:deepslate_tiles strict
-fill ~128 ~81 ~113 ~131 ~81 ~113 minecraft:deepslate_tiles strict
-fill ~133 ~81 ~113 ~133 ~82 ~114 minecraft:deepslate_tiles strict
-fill ~119 ~81 ~114 ~119 ~82 ~114 minecraft:deepslate_tiles strict
-fill ~121 ~81 ~114 ~123 ~82 ~114 minecraft:deepslate_tiles strict
-setblock ~124 ~81 ~114 minecraft:stone strict
-setblock ~128 ~81 ~114 minecraft:deepslate_tiles strict
-fill ~129 ~81 ~114 ~129 ~82 ~115 minecraft:stone strict
-fill ~130 ~81 ~114 ~131 ~81 ~114 minecraft:deepslate_tiles strict
-fill ~134 ~81 ~114 ~135 ~81 ~114 minecraft:deepslate_tiles strict
-fill ~120 ~81 ~115 ~121 ~81 ~115 minecraft:deepslate_tiles strict
-fill ~125 ~81 ~115 ~125 ~83 ~115 minecraft:stone strict
-setblock ~126 ~81 ~115 minecraft:andesite strict
-fill ~127 ~81 ~115 ~128 ~81 ~115 minecraft:stone strict
-setblock ~130 ~81 ~115 minecraft:andesite strict
-setblock ~131 ~81 ~115 minecraft:stone strict
-fill ~134 ~81 ~115 ~134 ~81 ~116 minecraft:deepslate_tiles strict
-fill ~136 ~81 ~115 ~136 ~82 ~115 minecraft:deepslate_tiles strict
-fill ~118 ~81 ~116 ~120 ~81 ~116 minecraft:deepslate_tiles strict
-setblock ~121 ~81 ~116 minecraft:andesite strict
-setblock ~122 ~81 ~116 minecraft:deepslate_tiles strict
-fill ~123 ~81 ~116 ~124 ~82 ~116 minecraft:stone strict
-setblock ~125 ~81 ~116 minecraft:andesite strict
-fill ~128 ~81 ~116 ~128 ~83 ~116 minecraft:stone strict
-setblock ~129 ~81 ~116 minecraft:andesite strict
-setblock ~130 ~81 ~116 minecraft:stone strict
-fill ~132 ~81 ~116 ~132 ~83 ~116 minecraft:stone strict
-setblock ~133 ~81 ~116 minecraft:andesite strict
-fill ~136 ~81 ~116 ~136 ~83 ~116 minecraft:stone strict
-fill ~137 ~81 ~116 ~138 ~82 ~116 minecraft:deepslate_tiles strict
-fill ~118 ~81 ~117 ~118 ~82 ~117 minecraft:deepslate_tiles strict
-setblock ~120 ~81 ~117 minecraft:deepslate_tiles strict
-fill ~121 ~81 ~117 ~121 ~81 ~119 minecraft:stone strict
-fill ~123 ~81 ~117 ~123 ~83 ~117 minecraft:stone strict
-setblock ~124 ~81 ~117 minecraft:andesite strict
-fill ~125 ~81 ~117 ~127 ~81 ~117 minecraft:stone strict
-setblock ~128 ~81 ~117 minecraft:andesite strict
-fill ~129 ~81 ~117 ~129 ~81 ~119 minecraft:stone strict
-fill ~131 ~81 ~117 ~131 ~83 ~117 minecraft:stone strict
-setblock ~132 ~81 ~117 minecraft:andesite strict
-fill ~134 ~81 ~117 ~135 ~82 ~117 minecraft:stone strict
-setblock ~136 ~81 ~117 minecraft:deepslate_tiles strict
-setblock ~137 ~81 ~117 minecraft:stone strict
-fill ~138 ~81 ~117 ~139 ~82 ~117 minecraft:deepslate_tiles strict
-fill ~116 ~81 ~118 ~117 ~82 ~118 minecraft:deepslate_tiles strict
-fill ~118 ~81 ~118 ~118 ~83 ~118 minecraft:stone strict
-setblock ~120 ~81 ~118 minecraft:stone strict
-fill ~122 ~81 ~118 ~122 ~83 ~118 minecraft:stone strict
-setblock ~123 ~81 ~118 minecraft:andesite strict
-fill ~126 ~81 ~118 ~126 ~83 ~118 minecraft:stone strict
-setblock ~127 ~81 ~118 minecraft:andesite strict
-fill ~128 ~81 ~118 ~128 ~81 ~120 minecraft:stone strict
-fill ~130 ~81 ~118 ~130 ~83 ~118 minecraft:stone strict
-setblock ~131 ~81 ~118 minecraft:andesite strict
-fill ~132 ~81 ~118 ~132 ~81 ~120 minecraft:stone strict
-fill ~134 ~81 ~118 ~134 ~83 ~118 minecraft:stone strict
-setblock ~135 ~81 ~118 minecraft:andesite strict
-fill ~136 ~81 ~118 ~136 ~81 ~120 minecraft:stone strict
-fill ~138 ~81 ~118 ~138 ~83 ~118 minecraft:stone strict
-fill ~139 ~81 ~118 ~140 ~82 ~118 minecraft:deepslate_tiles strict
-fill ~114 ~81 ~119 ~114 ~82 ~119 minecraft:deepslate_tiles strict
-fill ~116 ~81 ~119 ~116 ~82 ~119 minecraft:deepslate_tiles strict
-setblock ~122 ~81 ~119 minecraft:andesite strict
-fill ~123 ~81 ~119 ~125 ~81 ~119 minecraft:stone strict
-setblock ~126 ~81 ~119 minecraft:andesite strict
-fill ~127 ~81 ~119 ~127 ~81 ~121 minecraft:stone strict
-setblock ~130 ~81 ~119 minecraft:andesite strict
-setblock ~131 ~81 ~119 minecraft:stone strict
-fill ~133 ~81 ~119 ~133 ~83 ~119 minecraft:stone strict
-setblock ~134 ~81 ~119 minecraft:andesite strict
-fill ~135 ~81 ~119 ~135 ~81 ~121 minecraft:stone strict
-fill ~137 ~81 ~119 ~137 ~83 ~119 minecraft:stone strict
-setblock ~138 ~81 ~119 minecraft:deepslate_tiles strict
-setblock ~139 ~81 ~119 minecraft:stone strict
-fill ~140 ~81 ~119 ~140 ~82 ~119 minecraft:deepslate_tiles strict

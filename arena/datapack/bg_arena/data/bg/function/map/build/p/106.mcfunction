@@ -1,3 +1,63 @@
+fill ~224 ~27 ~182 ~224 ~28 ~182 minecraft:stone strict
+setblock ~28 ~27 ~183 minecraft:mossy_stone_bricks strict
+setblock ~31 ~27 ~183 minecraft:stone_bricks strict
+setblock ~32 ~27 ~183 minecraft:mossy_stone_bricks strict
+fill ~60 ~27 ~183 ~61 ~29 ~183 minecraft:stone strict
+fill ~62 ~27 ~183 ~64 ~28 ~184 minecraft:dirt strict
+fill ~66 ~27 ~183 ~70 ~29 ~183 minecraft:andesite strict
+fill ~71 ~27 ~183 ~71 ~28 ~183 minecraft:dirt strict
+setblock ~96 ~27 ~183 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~98 ~27 ~183 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~100 ~27 ~183 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~157 ~27 ~183 ~157 ~27 ~188 minecraft:grass_block strict
+fill ~162 ~27 ~183 ~162 ~28 ~183 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~165 ~27 ~183 ~166 ~29 ~183 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~167 ~27 ~183 ~167 ~27 ~184 minecraft:dark_oak_log[axis=x] strict
+fill ~168 ~27 ~183 ~169 ~28 ~184 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~177 ~27 ~183 minecraft:lily_pad strict
+fill ~179 ~27 ~183 ~180 ~27 ~183 minecraft:smooth_quartz strict
+setblock ~183 ~27 ~183 minecraft:polished_blackstone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
+fill ~184 ~27 ~183 ~185 ~27 ~183 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~191 ~27 ~183 ~192 ~27 ~183 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~193 ~27 ~183 minecraft:polished_blackstone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
+fill ~195 ~27 ~183 ~197 ~27 ~183 minecraft:smooth_quartz strict
+fill ~209 ~27 ~183 ~209 ~29 ~183 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~211 ~27 ~183 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+fill ~28 ~27 ~184 ~29 ~27 ~184 minecraft:stone_bricks strict
+fill ~30 ~27 ~184 ~31 ~27 ~184 minecraft:cobblestone strict
+fill ~32 ~27 ~184 ~32 ~28 ~184 minecraft:stone_bricks strict
+setblock ~33 ~27 ~184 minecraft:cracked_stone_bricks strict
+setblock ~34 ~27 ~184 minecraft:stone_bricks strict
+fill ~35 ~27 ~184 ~37 ~27 ~184 minecraft:mossy_stone_bricks strict
+fill ~41 ~27 ~184 ~41 ~27 ~190 minecraft:grass_block strict
+fill ~60 ~27 ~184 ~60 ~28 ~186 minecraft:stone strict
+fill ~65 ~27 ~184 ~65 ~29 ~184 minecraft:andesite strict
+fill ~66 ~27 ~184 ~70 ~30 ~184 minecraft:smooth_stone strict
+fill ~71 ~27 ~184 ~71 ~29 ~184 minecraft:andesite strict
+fill ~72 ~27 ~184 ~73 ~28 ~184 minecraft:dirt strict
+fill ~95 ~27 ~184 ~97 ~27 ~186 minecraft:smooth_quartz strict
+fill ~156 ~27 ~184 ~156 ~27 ~193 minecraft:grass_block strict
+setblock ~164 ~27 ~184 minecraft:dark_oak_log[axis=z] strict
+fill ~166 ~27 ~184 ~166 ~28 ~185 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~173 ~27 ~184 minecraft:diorite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
+setblock ~178 ~27 ~184 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~179 ~27 ~184 minecraft:smooth_quartz strict
+fill ~181 ~27 ~184 ~181 ~27 ~185 minecraft:smooth_quartz strict
+setblock ~182 ~27 ~184 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~183 ~27 ~184 ~184 ~27 ~184 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~192 ~27 ~184 ~193 ~27 ~184 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~194 ~27 ~184 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~195 ~27 ~184 ~196 ~27 ~185 minecraft:smooth_quartz strict
+setblock ~198 ~27 ~184 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~203 ~27 ~184 minecraft:diorite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
+fill ~62 ~27 ~185 ~63 ~28 ~185 minecraft:dirt strict
+fill ~64 ~27 ~185 ~64 ~29 ~185 minecraft:andesite strict
+fill ~65 ~27 ~185 ~66 ~30 ~185 minecraft:smooth_stone strict
+fill ~67 ~27 ~185 ~69 ~30 ~185 minecraft:cyan_terracotta strict
+fill ~70 ~27 ~185 ~71 ~30 ~185 minecraft:smooth_stone strict
+fill ~72 ~27 ~185 ~72 ~29 ~185 minecraft:andesite strict
+fill ~73 ~27 ~185 ~73 ~28 ~185 minecraft:dirt strict
+setblock ~94 ~27 ~185 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~98 ~27 ~185 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 fill ~155 ~27 ~185 ~155 ~27 ~193 minecraft:grass_block strict
 fill ~161 ~27 ~185 ~162 ~27 ~185 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
@@ -7,6 +67,7 @@ fill ~169 ~27 ~185 ~170 ~27 ~185 minecraft:azalea_leaves[distance=7,persistent=t
 setblock ~178 ~27 ~185 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~180 ~27 ~185 minecraft:smooth_quartz strict
 setblock ~183 ~27 ~185 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~187 ~27 ~185 ~189 ~27 ~185 minecraft:light_blue_terracotta strict
 setblock ~193 ~27 ~185 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~197 ~27 ~185 minecraft:smooth_quartz strict
 setblock ~204 ~27 ~185 minecraft:diorite_wall[east=none,north=none,south=low,up=true,waterlogged=false,west=none] strict
@@ -33,6 +94,8 @@ fill ~163 ~27 ~186 ~164 ~28 ~187 minecraft:azalea_leaves[distance=7,persistent=t
 fill ~169 ~27 ~186 ~169 ~27 ~187 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
 setblock ~180 ~27 ~186 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
 fill ~182 ~27 ~186 ~182 ~27 ~190 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~186 ~27 ~186 minecraft:light_blue_terracotta strict
+setblock ~190 ~27 ~186 minecraft:light_blue_terracotta strict
 fill ~194 ~27 ~186 ~194 ~27 ~190 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~196 ~27 ~186 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~204 ~27 ~186 minecraft:diorite_wall[east=none,north=low,south=low,up=false,waterlogged=false,west=none] strict
@@ -55,7 +118,9 @@ fill ~107 ~27 ~187 ~109 ~27 ~187 minecraft:grass_block strict
 fill ~153 ~27 ~187 ~153 ~27 ~191 minecraft:grass_block strict
 fill ~166 ~27 ~187 ~166 ~28 ~187 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
 setblock ~172 ~27 ~187 minecraft:diorite_wall[east=none,north=none,south=low,up=true,waterlogged=false,west=none] strict
+fill ~185 ~27 ~187 ~185 ~27 ~189 minecraft:light_blue_terracotta strict
 fill ~187 ~27 ~187 ~189 ~27 ~187 minecraft:smooth_quartz strict
+fill ~191 ~27 ~187 ~191 ~27 ~189 minecraft:light_blue_terracotta strict
 setblock ~204 ~27 ~187 minecraft:diorite_wall[east=none,north=low,south=none,up=true,waterlogged=false,west=none] strict
 fill ~15 ~27 ~188 ~15 ~27 ~191 minecraft:stone strict
 fill ~16 ~27 ~188 ~17 ~29 ~190 minecraft:dirt strict
@@ -114,6 +179,8 @@ setblock ~137 ~27 ~190 minecraft:stone_bricks strict
 setblock ~158 ~27 ~190 minecraft:calcite strict
 setblock ~159 ~27 ~190 minecraft:quartz_bricks strict
 setblock ~180 ~27 ~190 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~186 ~27 ~190 minecraft:light_blue_terracotta strict
+setblock ~190 ~27 ~190 minecraft:light_blue_terracotta strict
 setblock ~196 ~27 ~190 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
 fill ~202 ~27 ~190 ~202 ~30 ~190 minecraft:quartz_pillar[axis=y] strict
 setblock ~217 ~27 ~190 minecraft:grass_block strict
@@ -136,6 +203,7 @@ setblock ~137 ~27 ~191 minecraft:mossy_stone_bricks strict
 fill ~152 ~27 ~191 ~152 ~27 ~193 minecraft:rooted_dirt strict
 fill ~179 ~27 ~191 ~181 ~27 ~191 minecraft:smooth_quartz strict
 fill ~183 ~27 ~191 ~183 ~27 ~192 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~187 ~27 ~191 ~189 ~27 ~191 minecraft:light_blue_terracotta strict
 fill ~193 ~27 ~191 ~193 ~27 ~192 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
 fill ~195 ~27 ~191 ~197 ~27 ~191 minecraft:smooth_quartz strict
 setblock ~198 ~27 ~191 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
@@ -280,71 +348,3 @@ setblock ~176 ~27 ~198 minecraft:diorite_wall[east=none,north=none,south=none,up
 setblock ~190 ~27 ~198 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
 setblock ~200 ~27 ~198 minecraft:diorite_wall[east=none,north=none,south=low,up=true,waterlogged=false,west=none] strict
 setblock ~207 ~27 ~198 minecraft:stone strict
-setblock ~233 ~27 ~198 minecraft:cut_sandstone strict
-fill ~243 ~27 ~198 ~245 ~27 ~199 minecraft:tuff strict
-fill ~8 ~27 ~199 ~10 ~27 ~200 minecraft:smooth_stone strict
-setblock ~49 ~27 ~199 minecraft:stone strict
-setblock ~106 ~27 ~199 minecraft:stone strict
-setblock ~108 ~27 ~199 minecraft:stone strict
-setblock ~109 ~27 ~199 minecraft:andesite strict
-setblock ~110 ~27 ~199 minecraft:moss_block strict
-setblock ~188 ~27 ~199 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-fill ~196 ~27 ~199 ~196 ~33 ~199 minecraft:quartz_pillar[axis=y] strict
-setblock ~200 ~27 ~199 minecraft:diorite_wall[east=none,north=low,south=none,up=true,waterlogged=false,west=none] strict
-fill ~213 ~27 ~199 ~216 ~29 ~199 minecraft:cut_sandstone strict
-fill ~228 ~27 ~199 ~231 ~29 ~199 minecraft:cut_sandstone strict
-fill ~235 ~27 ~199 ~237 ~30 ~199 minecraft:sandstone strict
-setblock ~238 ~27 ~199 minecraft:tuff strict
-setblock ~28 ~27 ~200 minecraft:stone strict
-setblock ~40 ~27 ~200 minecraft:stone strict
-fill ~103 ~27 ~200 ~104 ~27 ~200 minecraft:grass_block strict
-setblock ~105 ~27 ~200 minecraft:tuff strict
-setblock ~106 ~27 ~200 minecraft:andesite strict
-setblock ~107 ~27 ~200 minecraft:grass_block strict
-setblock ~108 ~27 ~200 minecraft:moss_block strict
-setblock ~177 ~27 ~200 minecraft:diorite_wall[east=low,north=none,south=none,up=true,waterlogged=false,west=none] strict
-setblock ~178 ~27 ~200 minecraft:diorite_wall[east=none,north=none,south=low,up=true,waterlogged=false,west=low] strict
-setblock ~198 ~27 ~200 minecraft:diorite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
-fill ~213 ~27 ~200 ~216 ~32 ~202 minecraft:smooth_sandstone strict
-fill ~228 ~27 ~200 ~231 ~32 ~202 minecraft:smooth_sandstone strict
-fill ~237 ~27 ~200 ~239 ~28 ~200 minecraft:sandstone strict
-fill ~244 ~27 ~200 ~245 ~27 ~201 minecraft:tuff strict
-fill ~8 ~27 ~201 ~9 ~27 ~203 minecraft:smooth_stone strict
-fill ~10 ~27 ~201 ~10 ~27 ~203 minecraft:stone strict
-setblock ~103 ~27 ~201 minecraft:grass_block strict
-fill ~177 ~27 ~201 ~177 ~27 ~202 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~178 ~27 ~201 minecraft:diorite_wall[east=low,north=low,south=none,up=true,waterlogged=false,west=none] strict
-setblock ~179 ~27 ~201 minecraft:diorite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=low] strict
-fill ~192 ~27 ~201 ~192 ~33 ~201 minecraft:quartz_pillar[axis=y] strict
-fill ~194 ~27 ~201 ~194 ~33 ~201 minecraft:quartz_pillar[axis=y] strict
-setblock ~197 ~27 ~201 minecraft:diorite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
-fill ~211 ~27 ~201 ~211 ~32 ~202 minecraft:smooth_sandstone strict
-fill ~238 ~27 ~201 ~240 ~29 ~201 minecraft:sandstone strict
-fill ~12 ~27 ~202 ~12 ~27 ~203 minecraft:smooth_stone strict
-fill ~91 ~27 ~202 ~91 ~27 ~206 minecraft:grass_block strict
-setblock ~103 ~27 ~202 minecraft:dirt_path strict
-setblock ~104 ~27 ~202 minecraft:grass_block strict
-setblock ~178 ~27 ~202 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~181 ~27 ~202 minecraft:diorite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
-fill ~188 ~27 ~202 ~188 ~33 ~202 minecraft:quartz_pillar[axis=y] strict
-fill ~190 ~27 ~202 ~190 ~30 ~202 minecraft:quartz_pillar[axis=y] strict
-setblock ~196 ~27 ~202 minecraft:diorite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none] strict
-fill ~240 ~27 ~202 ~241 ~29 ~202 minecraft:sandstone strict
-fill ~245 ~27 ~202 ~246 ~28 ~206 minecraft:tuff strict
-fill ~60 ~27 ~203 ~63 ~29 ~203 minecraft:stone strict
-fill ~90 ~27 ~203 ~90 ~27 ~206 minecraft:grass_block strict
-fill ~92 ~27 ~203 ~92 ~27 ~205 minecraft:grass_block strict
-setblock ~103 ~27 ~203 minecraft:rooted_dirt strict
-fill ~124 ~27 ~203 ~124 ~27 ~204 minecraft:grass_block strict
-fill ~132 ~27 ~203 ~132 ~27 ~204 minecraft:grass_block strict
-setblock ~133 ~27 ~203 minecraft:stone strict
-setblock ~192 ~27 ~203 minecraft:diorite_wall[east=low,north=none,south=low,up=true,waterlogged=false,west=none] strict
-setblock ~193 ~27 ~203 minecraft:diorite_wall[east=low,north=none,south=none,up=false,waterlogged=false,west=low] strict
-setblock ~194 ~27 ~203 minecraft:diorite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=low] strict
-fill ~212 ~27 ~203 ~213 ~32 ~203 minecraft:smooth_sandstone strict
-fill ~215 ~27 ~203 ~215 ~31 ~203 minecraft:smooth_sandstone strict
-fill ~228 ~27 ~203 ~228 ~31 ~203 minecraft:smooth_sandstone strict
-fill ~241 ~27 ~203 ~242 ~29 ~203 minecraft:sandstone strict
-fill ~59 ~27 ~204 ~59 ~29 ~204 minecraft:stone strict
-fill ~89 ~27 ~204 ~89 ~27 ~207 minecraft:grass_block strict
-fill ~93 ~27 ~204 ~94 ~27 ~205 minecraft:grass_block strict
