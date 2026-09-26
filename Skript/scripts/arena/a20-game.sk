@@ -367,11 +367,20 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
     permission: op
     trigger:
         if arg-1 is not set:
-            send "&6[전장] &f/전장 건설 | 장식 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
+            send "&6[전장] &f/전장 건설 (내 위치) | 건설 원점 | 장식 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
             send "&6[전장] &f/전장 자동팀 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops] | 보스제거"
             send "&6[전장] &f/전장 점수 <팀> <n> | 목표 <n> | 시간 <분> | 이동 <마커>"
             stop
         if arg-1 is "건설":
+            # 기본: 명령을 친 사람이 서 있는 곳이 맵 한가운데(대전 앞 광장) 지면이 된다.  '/전장 건설 원점' = 저장된 원점 그대로
+            if arg-2 is not "원점":
+                if sender is a player:
+                    set {_l} to location of player
+                    set {bg::cfg::world} to name of world of player
+                    set {bg::cfg::ox} to floor(x-coordinate of {_l}) - 128
+                    set {bg::cfg::oz} to floor(z-coordinate of {_l}) - 128
+                    set {bg::cfg::oy} to floor(y-coordinate of {_l}) - 25
+                    send "&6[전장] &f지금 서 있는 곳을 맵 중심으로 짓습니다 (256×256, 원점 %{bg::cfg::ox}% %{bg::cfg::oy}% %{bg::cfg::oz}%)"
             bgSyncOrigin()
             bgCmd("function bg:map/build/start")
             bgSay("맵 건설을 시작합니다 (수십 초 걸립니다).")

@@ -1,6 +1,6 @@
 # 자동 생성 파일 — 직접 고치지 말 것 (arena/tools/build.py 가 다시 만든다)
 
-# 맵 좌표 (맵 로컬, 원점 = 설정 {bg::cfg::origin::*}) 
+# 맵 좌표 (맵 로컬, 원점 = 설정 {bg::cfg::ox/oy/oz})
 on load:
     set {-bg::mk::altar_ares::x} to 188.5
     set {-bg::mk::altar_ares::y} to 35
@@ -122,6 +122,7 @@ on load:
     set {-bg::mk::base_red::y} to 30
     set {-bg::mk::base_red::z} to 28.5
     set {-bg::mk::base_red::radius} to 23.0
+on load:
     set {-bg::mk::base_red_beacon::x} to 128.5
     set {-bg::mk::base_red_beacon::y} to 30
     set {-bg::mk::base_red_beacon::z} to 24.5
@@ -242,6 +243,7 @@ on load:
     set {-bg::mk::pillar_222_34_0::y} to 26
     set {-bg::mk::pillar_222_34_0::z} to 42.5
     set {-bg::mk::pillar_222_34_1::x} to 214.5
+on load:
     set {-bg::mk::pillar_222_34_1::y} to 26
     set {-bg::mk::pillar_222_34_1::z} to 42.5
     set {-bg::mk::pillar_222_34_2::x} to 214.5

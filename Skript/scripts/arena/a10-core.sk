@@ -53,7 +53,13 @@ function bgN(n: number) :: text:
     return "%{_r}%"
 
 function bgWorld() :: world:
-    return world({bg::cfg::world})
+    set {_w} to world({bg::cfg::world})
+    if {_w} is set:
+        return {_w}
+    # 설정한 월드 이름이 없으면 첫 번째 월드로 (서버 level-name 이 world 가 아닐 때)
+    loop all worlds:
+        set {bg::cfg::world} to name of loop-world
+        return loop-world
 
 # 명령용 차원 이름 (기본 월드 = overworld, 그 외 = 월드 폴더 이름)
 function bgDim() :: text:
