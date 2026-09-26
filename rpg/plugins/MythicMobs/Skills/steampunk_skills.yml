@@ -1,0 +1,182 @@
+# ═══════════════════════════════════════════════════════════════════
+#  스팀펑크 몬스터 스킬 — 모든 강한 공격은 바닥 경고(파티클)가 먼저 나오고, 잠시 뒤 판정
+# ═══════════════════════════════════════════════════════════════════
+
+# ── 공통: 크기 (마크 scale 속성) ──────────────────────────────────
+Scale_0_7:
+  Skills:
+  - command{c="attribute <caster.uuid> minecraft:scale base set 0.7"} @self
+Scale_0_8:
+  Skills:
+  - command{c="attribute <caster.uuid> minecraft:scale base set 0.8"} @self
+Scale_1_4:
+  Skills:
+  - command{c="attribute <caster.uuid> minecraft:scale base set 1.4"} @self
+Scale_1_6:
+  Skills:
+  - command{c="attribute <caster.uuid> minecraft:scale base set 1.6"} @self
+
+# ── 처치 보상 → Skript (/rpg보상 <이름> <경험치> <골드>) ───────────
+RpgReward_2:
+  Skills:
+  - command{c="rpg보상 <trigger.name> 12 3"} @trigger
+RpgReward_4:
+  Skills:
+  - command{c="rpg보상 <trigger.name> 20 4"} @trigger
+RpgReward_6:
+  Skills:
+  - command{c="rpg보상 <trigger.name> 30 6"} @trigger
+RpgReward_12:
+  Skills:
+  - command{c="rpg보상 <trigger.name> 60 10"} @trigger
+RpgReward_13:
+  Skills:
+  - command{c="rpg보상 <trigger.name> 55 9"} @trigger
+RpgReward_15:
+  Skills:
+  - command{c="rpg보상 <trigger.name> 90 14"} @trigger
+RpgBossReward_Warden:
+  Skills:
+  - command{c="rpg보상 <target.name> 600 120"} @PlayersInRadius{r=40}
+RpgBossReward_Bore:
+  Skills:
+  - command{c="rpg보상 <target.name> 1500 300"} @PlayersInRadius{r=45}
+
+# ── 일반 몬스터 ──────────────────────────────────────────────────
+ClockSpark:
+  Skills:
+  - effect:particles{p=electric_spark;a=20;hs=0.4;vs=0.6;s=0.3} @target
+  - sound{s=entity.lightning_bolt.impact;v=0.4;p=2} @target
+  - potion{type=SLOWNESS;d=30;l=0} @target
+
+SteamPuff:
+  Cooldown: 4
+  Skills:
+  - effect:particles{p=cloud;a=40;hs=1.5;vs=0.4;s=0.05} @self
+  - sound{s=block.fire.extinguish;v=1;p=0.8} @self
+  - damage{a=2} @PlayersInRadius{r=2.5}
+  - potion{type=BLINDNESS;d=30;l=0} @PlayersInRadius{r=2.5}
+
+GroundPound:
+  Cooldown: 5
+  Skills:
+  - effect:particlering{p=crit;radius=3;points=24;a=2} @self
+  - delay 14
+  - effect:particles{p=block;m=stone;a=60;hs=2;vs=0.2;s=0.1} @self
+  - sound{s=block.anvil.land;v=1;p=0.6} @self
+  - damage{a=6} @PlayersInRadius{r=3}
+  - throw{velocity=6;velocityY=3} @PlayersInRadius{r=3}
+
+RockThrow:
+  Cooldown: 5
+  Skills:
+  - sound{s=entity.iron_golem.attack;v=1;p=0.6} @self
+  - shootfallingblock{block=COBBLESTONE;velocity=1.3;velocityY=0.6} @target
+
+ToxicBurst:
+  Skills:
+  - effect:particles{p=entity_effect;color=#44aa22;a=80;hs=2.5;vs=0.5;s=0.1} @self
+  - sound{s=entity.slime.death;v=1;p=0.5} @self
+  - potion{type=POISON;d=80;l=0} @PlayersInRadius{r=3.5}
+
+# ── 필드 보스: 태엽 기사단장 클락워든 ─────────────────────────────
+# 회전 베기: 몸 주변 원 경고 → 1초 뒤 휩쓸기
+Warden_Spin:
+  Cooldown: 6
+  Skills:
+  - message{m="&6클락워든&f이 태엽을 감습니다..."} @PlayersInRadius{r=30}
+  - effect:particlering{p=dust;color=#ffaa00;size=1.5;radius=5;points=40;a=1} @self
+  - delay 10
+  - effect:particlering{p=dust;color=#ff4400;size=1.5;radius=5;points=40;a=1} @self
+  - delay 10
+  - effect:particles{p=sweep_attack;a=12;hs=4;vs=0.4} @self
+  - sound{s=entity.player.attack.sweep;v=2;p=0.6} @self
+  - damage{a=12} @PlayersInRadius{r=5}
+  - throw{velocity=10;velocityY=2} @PlayersInRadius{r=5}
+
+# 돌진: 대상에게 달려들어 부딪힘
+Warden_Charge:
+  Cooldown: 8
+  Skills:
+  - effect:particles{p=angry_villager;a=6;hs=0.6;vs=0.6} @self
+  - delay 15
+  - lunge{velocity=2.2;velocityY=0.2} @target
+  - sound{s=entity.ravager.attack;v=2;p=1.2} @self
+  - delay 6
+  - damage{a=10} @PlayersInRadius{r=2.5}
+
+# 톱니 비: 주변 무작위 위치에 경고 → 톱니가 떨어짐
+Warden_Gears:
+  Cooldown: 10
+  Skills:
+  - skill{s=Warden_GearDrop} @RandomLocationsNearCaster{a=6;r=9}
+Warden_GearDrop:
+  Skills:
+  - effect:particlering{p=dust;color=#ffcc33;size=1.2;radius=1.6;points=16;a=1} @origin
+  - delay 20
+  - effect:particles{p=explosion;a=1} @origin
+  - effect:particles{p=block;m=copper_block;a=30;hs=1;vs=0.3} @origin
+  - sound{s=block.copper.break;v=1.5;p=0.6} @origin
+  - damage{a=9} @PlayersNearOrigin{r=1.8}
+
+# 체력이 깎이면 가끔 태엽병 호출
+Warden_Summon:
+  Cooldown: 20
+  Conditions:
+  - healthpercent{h=<0.6} true
+  Skills:
+  - message{m="&6클락워든&f: 전 병력, 집결하라!"} @PlayersInRadius{r=30}
+  - summon{type=RustyClockworkSoldier;amount=3;radius=4} @self
+
+# ── 필드 보스: 폭주한 굴착기 보어 킹 ─────────────────────────────
+# 드릴 돌진: 대상 쪽 직선 경고 → 돌진
+Bore_DrillCharge:
+  Cooldown: 8
+  Skills:
+  - effect:particleline{p=dust;color=#ff2200;size=1.5;fromOrigin=true;distanceBetween=0.5} @target
+  - sound{s=entity.ravager.roar;v=2;p=0.8} @self
+  - delay 20
+  - lunge{velocity=2.8;velocityY=0.1} @target
+  - effect:particles{p=block;m=stone;a=80;hs=1.5;vs=0.4} @self
+  - delay 8
+  - damage{a=16} @PlayersInRadius{r=3}
+  - throw{velocity=12;velocityY=4} @PlayersInRadius{r=3}
+
+# 낙석: 천장에서 바위가 쏟아짐 (경고 1.2초)
+Bore_Rockfall:
+  Cooldown: 11
+  Skills:
+  - message{m="&c보어 킹&f이 천장을 들이받습니다! &7(바닥 원을 피하세요)"} @PlayersInRadius{r=40}
+  - skill{s=Bore_RockDrop} @RandomLocationsNearCaster{a=10;r=12}
+  - skill{s=Bore_RockDrop} @PlayersInRadius{r=20}
+Bore_RockDrop:
+  Skills:
+  - effect:particlering{p=dust;color=#aa2200;size=1.4;radius=2;points=20;a=1} @origin
+  - delay 24
+  - effect:particles{p=block;m=cobblestone;a=50;hs=1.5;vs=1} @origin
+  - effect:particles{p=explosion;a=1} @origin
+  - sound{s=block.stone.break;v=2;p=0.5} @origin
+  - damage{a=14} @PlayersNearOrigin{r=2.2}
+
+# 증기 분출: 몸 주변 넓게 독 증기 (도넛 바깥은 안전)
+Bore_SteamVent:
+  Cooldown: 15
+  Skills:
+  - effect:particlering{p=cloud;radius=7;points=48;a=1} @self
+  - sound{s=block.fire.extinguish;v=2;p=0.5} @self
+  - delay 20
+  - effect:particles{p=cloud;a=200;hs=6;vs=0.6;s=0.05} @self
+  - damage{a=8} @PlayersInRadius{r=7}
+  - potion{type=POISON;d=100;l=1} @PlayersInRadius{r=7}
+
+# 격노: 체력 30% 아래에서 한 번, 빨라지고 광부 호출
+Bore_Enrage:
+  Cooldown: 999
+  Conditions:
+  - healthpercent{h=<0.3} true
+  Skills:
+  - message{m="&c&l보어 킹이 폭주합니다!"} @PlayersInRadius{r=45}
+  - potion{type=SPEED;d=6000;l=1} @self
+  - potion{type=STRENGTH;d=6000;l=0} @self
+  - summon{type=MinerAutomaton;amount=4;radius=6} @self
+  - effect:particles{p=lava;a=40;hs=2;vs=1} @self

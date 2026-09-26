@@ -1,0 +1,103 @@
+# ═══════════════════════════════════════════════════════════════════
+#  1지역 · 녹슨 평원 (Lv.1 ~ 10) — 버려진 태엽 기계들이 떠도는 초원
+#  처치 보상(경험치 · 골드)은 Skript 로: /rpg보상 <플레이어> <경험치> <골드>
+# ═══════════════════════════════════════════════════════════════════
+
+# 녹슨 태엽병 — 등에 태엽이 꽂힌 구리 병사. 때리면 스파크
+RustyClockworkSoldier:
+  Type: ZOMBIE
+  Display: '&6녹슨 태엽병 &7[Lv.2]'
+  Health: 28
+  Damage: 3
+  Armor: 2
+  Faction: machine
+  Options:
+    MovementSpeed: 0.22
+    FollowRange: 20
+    PreventSunburn: true
+    PreventOtherDrops: true
+    PreventItemPickup: true
+    Silent: true
+  Equipment:
+  - COPPER_HELMET:HEAD
+  - COPPER_CHESTPLATE:CHEST
+  - COPPER_SWORD:HAND
+  Skills:
+  - sound{s=block.copper.hit;v=1;p=0.7} @self ~onDamaged
+  - effect:particles{p=electric_spark;a=10;hs=0.3;vs=0.6;s=0.2} @self ~onDamaged
+  - skill{s=ClockSpark} @target ~onAttack 0.35
+  - skill{s=RpgReward_2} @trigger ~onDeath
+  DropTables:
+  - Drop_RustyPlains
+
+# 증기 딱정벌레 — 등껍질 틈으로 뜨거운 증기를 뿜는 벌레
+SteamBeetle:
+  Type: SPIDER
+  Display: '&e증기 딱정벌레 &7[Lv.4]'
+  Health: 34
+  Damage: 4
+  Armor: 3
+  Faction: beast
+  Options:
+    MovementSpeed: 0.28
+    FollowRange: 18
+    PreventOtherDrops: true
+  Skills:
+  - skill{s=Scale_0_8} @self ~onSpawn
+  - skill{s=SteamPuff} @self ~onTimer:80
+  - skill{s=RpgReward_4} @trigger ~onDeath
+  DropTables:
+  - Drop_RustyPlains
+
+# 고철 까마귀 — 고철 날개로 급강하
+ScrapCrow:
+  Type: PHANTOM
+  Display: '&7고철 까마귀 &7[Lv.6]'
+  Health: 24
+  Damage: 5
+  Faction: beast
+  Options:
+    PreventSunburn: true
+    PreventOtherDrops: true
+  Skills:
+  - skill{s=Scale_0_7} @self ~onSpawn
+  - effect:particles{p=smoke;a=6;hs=0.2;vs=0.2;s=0.01} @self ~onTimer:10
+  - skill{s=RpgReward_6} @trigger ~onDeath
+  DropTables:
+  - Drop_RustyPlains
+
+# ── 필드 보스: 태엽 기사단장 '클락워든' (Lv.10) ──────────────────
+ClockWarden:
+  Type: WITHER_SKELETON
+  Display: '&6&l태엽 기사단장 클락워든 &7[Lv.10 보스]'
+  Health: 900
+  Damage: 9
+  Armor: 8
+  Faction: machine
+  BossBar:
+    Enabled: true
+    Title: '&6&l태엽 기사단장 클락워든'
+    Range: 40
+    Color: YELLOW
+    Style: SEGMENTED_10
+  Options:
+    MovementSpeed: 0.26
+    FollowRange: 32
+    KnockbackResistance: 0.8
+    PreventOtherDrops: true
+    PreventSunburn: true
+    Despawn: false
+  Equipment:
+  - COPPER_HELMET:HEAD
+  - NETHERITE_CHESTPLATE:CHEST
+  - IRON_SWORD:HAND
+  Skills:
+  - skill{s=Scale_1_6} @self ~onSpawn
+  - message{m="&6[필드 보스] &f녹슨 평원에 &6태엽 기사단장 클락워든&f이 깨어났습니다!"} @PlayersInRadius{r=120} ~onSpawn
+  - skill{s=Warden_Spin} @self ~onTimer:140
+  - skill{s=Warden_Charge} @target ~onTimer:200
+  - skill{s=Warden_Gears} @self ~onTimer:260
+  - skill{s=Warden_Summon} @self ~onDamaged 0.08
+  - skill{s=RpgBossReward_Warden} @PlayersInRadius{r=40} ~onDeath
+  DropTables:
+  - Drop_ClockWarden

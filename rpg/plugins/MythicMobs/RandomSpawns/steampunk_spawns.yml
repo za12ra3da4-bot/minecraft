@@ -1,0 +1,59 @@
+# ═══════════════════════════════════════════════════════════════════
+#  자연 스폰 — WorldGuard 구역 이름으로 지역을 나눔 (rusty_plains / abandoned_mine)
+#  구역 만들기: //wand 로 영역 선택 → /rg define rusty_plains
+# ═══════════════════════════════════════════════════════════════════
+Spawn_RustySoldier:
+  Type: RustyClockworkSoldier
+  Level: 1
+  Chance: 0.02
+  Priority: 10
+  Action: add
+  Worlds: world
+  Conditions:
+  - region{r=rusty_plains} true
+
+Spawn_SteamBeetle:
+  Type: SteamBeetle
+  Chance: 0.015
+  Priority: 10
+  Action: add
+  Worlds: world
+  Conditions:
+  - region{r=rusty_plains} true
+
+Spawn_ScrapCrow:
+  Type: ScrapCrow
+  Chance: 0.006
+  Priority: 10
+  Action: add
+  Worlds: world
+  Conditions:
+  - region{r=rusty_plains} true
+  - outside true
+
+Spawn_MinerAutomaton:
+  Type: MinerAutomaton
+  Chance: 0.03
+  Priority: 10
+  Action: add
+  Worlds: world
+  Conditions:
+  - region{r=abandoned_mine} true
+
+Spawn_OreGolem:
+  Type: OreGolem
+  Chance: 0.008
+  Priority: 10
+  Action: add
+  Worlds: world
+  Conditions:
+  - region{r=abandoned_mine} true
+
+Spawn_ToxicSludge:
+  Type: ToxicSludge
+  Chance: 0.015
+  Priority: 10
+  Action: add
+  Worlds: world
+  Conditions:
+  - region{r=abandoned_mine} true

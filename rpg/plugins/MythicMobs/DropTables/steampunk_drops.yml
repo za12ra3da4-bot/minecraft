@@ -1,0 +1,30 @@
+# ═══════════════════════════════════════════════════════════════════
+#  드롭 테이블 — 제작 · 강화 재료 (아이템은 Items/steampunk_items.yml)
+#  형식: - <아이템> <개수> <확률>
+# ═══════════════════════════════════════════════════════════════════
+Drop_RustyPlains:
+  TotalItems: 2
+  Drops:
+  - ScrapGear 1-2 0.7
+  - RustySpring 1 0.35
+  - BrassPlate 1 0.08
+
+Drop_Mine:
+  TotalItems: 2
+  Drops:
+  - ScrapGear 1-3 0.6
+  - RawBrassOre 1-2 0.5
+  - SteamCore 1 0.06
+  - BrassPlate 1 0.15
+
+Drop_ClockWarden:
+  Drops:
+  - BrassPlate 3-5 1
+  - SteamCore 1-2 1
+  - WardenMainspring 1 0.25
+
+Drop_BoreKing:
+  Drops:
+  - RawBrassOre 6-10 1
+  - SteamCore 2-3 1
+  - BoreDrillBit 1 0.2

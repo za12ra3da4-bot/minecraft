@@ -1,0 +1,57 @@
+# ═══════════════════════════════════════════════════════════════════
+#  재료 아이템 (나중에 리소스팩 그림을 item_model 로 입힐 예정)
+# ═══════════════════════════════════════════════════════════════════
+ScrapGear:
+  Id: IRON_NUGGET
+  Display: '&7고철 톱니'
+  Lore:
+  - '&8녹슨 기계에서 떨어진 톱니바퀴.'
+  - '&8제작 재료 · 일반'
+
+RustySpring:
+  Id: COPPER_INGOT
+  Display: '&6녹슨 태엽 스프링'
+  Lore:
+  - '&8아직 탄성이 남아 있다.'
+  - '&8제작 재료 · 일반'
+
+RawBrassOre:
+  Id: RAW_GOLD
+  Display: '&e황동 원석'
+  Lore:
+  - '&8폐광산에서 캐낸 황동 광석.'
+  - '&8제작 재료 · 고급'
+
+BrassPlate:
+  Id: GOLD_INGOT
+  Display: '&e황동 판'
+  Lore:
+  - '&8장비 제작의 기본 판금.'
+  - '&8제작 재료 · 고급'
+
+SteamCore:
+  Id: HEART_OF_THE_SEA
+  Display: '&b증기 코어'
+  Lore:
+  - '&8아직 뜨거운 증기가 도는 동력 핵.'
+  - '&8강화 재료 · 희귀'
+  Options:
+    Glow: true
+
+WardenMainspring:
+  Id: CLOCK
+  Display: '&6&l클락워든의 주태엽'
+  Lore:
+  - '&7태엽 기사단장의 심장이었던 태엽.'
+  - '&8전설 장비 재료 · 영웅'
+  Options:
+    Glow: true
+
+BoreDrillBit:
+  Id: NETHERITE_SCRAP
+  Display: '&c&l보어 킹의 드릴 날'
+  Lore:
+  - '&7무엇이든 뚫는 강철 드릴 날.'
+  - '&8전설 장비 재료 · 영웅'
+  Options:
+    Glow: true

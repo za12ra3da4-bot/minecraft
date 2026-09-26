@@ -1,0 +1,100 @@
+# ═══════════════════════════════════════════════════════════════════
+#  2지역 · 폐광산 (Lv.10 ~ 20) — 멈추지 않는 굴착 기계와 광산 괴물
+# ═══════════════════════════════════════════════════════════════════
+
+# 광부 자동인형 — 곡괭이로 땅을 내리찍는 기계 광부
+MinerAutomaton:
+  Type: HUSK
+  Display: '&6광부 자동인형 &7[Lv.12]'
+  Health: 70
+  Damage: 7
+  Armor: 5
+  Faction: machine
+  Options:
+    MovementSpeed: 0.22
+    FollowRange: 22
+    PreventOtherDrops: true
+    PreventItemPickup: true
+  Equipment:
+  - COPPER_HELMET:HEAD
+  - IRON_PICKAXE:HAND
+  Skills:
+  - skill{s=GroundPound} @self ~onTimer:120
+  - skill{s=RpgReward_12} @trigger ~onDeath
+  DropTables:
+  - Drop_Mine
+
+# 광석 골렘 — 몸에 광맥이 박힌 느린 거인, 바위를 던짐
+OreGolem:
+  Type: IRON_GOLEM
+  Display: '&8광석 골렘 &7[Lv.15]'
+  Health: 160
+  Damage: 11
+  Armor: 10
+  Faction: beast
+  Options:
+    MovementSpeed: 0.2
+    FollowRange: 24
+    KnockbackResistance: 1
+    PreventOtherDrops: true
+  AIGoalSelectors:
+  - clear
+  - meleeattack
+  - randomstroll
+  AITargetSelectors:
+  - clear
+  - attacker
+  - players
+  Skills:
+  - skill{s=RockThrow} @target ~onTimer:100
+  - skill{s=RpgReward_15} @trigger ~onDeath
+  DropTables:
+  - Drop_Mine
+
+# 가스 슬라임 — 죽으면 독가스를 남김
+ToxicSludge:
+  Type: SLIME
+  Display: '&2가스 슬라임 &7[Lv.13]'
+  Health: 50
+  Damage: 5
+  Faction: beast
+  Options:
+    Size: 3
+    PreventSlimeSplit: true
+    PreventOtherDrops: true
+  Skills:
+  - skill{s=ToxicBurst} @self ~onDeath
+  - skill{s=RpgReward_13} @trigger ~onDeath
+  DropTables:
+  - Drop_Mine
+
+# ── 필드 보스: 폭주한 굴착기 '보어 킹' (Lv.20) ───────────────────
+BoreKing:
+  Type: RAVAGER
+  Display: '&c&l폭주한 굴착기 보어 킹 &7[Lv.20 보스]'
+  Health: 2400
+  Damage: 14
+  Armor: 12
+  Faction: machine
+  BossBar:
+    Enabled: true
+    Title: '&c&l폭주한 굴착기 보어 킹'
+    Range: 45
+    Color: RED
+    Style: SEGMENTED_12
+  Options:
+    MovementSpeed: 0.25
+    FollowRange: 36
+    KnockbackResistance: 1
+    PreventOtherDrops: true
+    Despawn: false
+  Skills:
+  - skill{s=Scale_1_4} @self ~onSpawn
+  - message{m="&c[필드 보스] &f폐광산 깊은 곳에서 &c보어 킹&f의 굉음이 울립니다!"} @PlayersInRadius{r=150} ~onSpawn
+  - skill{s=Bore_DrillCharge} @target ~onTimer:160
+  - skill{s=Bore_Rockfall} @self ~onTimer:220
+  - skill{s=Bore_SteamVent} @self ~onTimer:300
+  - skill{s=Bore_Enrage} @self ~onDamaged 0.05
+  - skill{s=RpgBossReward_Bore} @PlayersInRadius{r=45} ~onDeath
+  DropTables:
+  - Drop_BoreKing

@@ -1,0 +1,40 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  스팀펑크 RPG — 기반 (1단계 초안): 레벨 · 경험치 · 골드
+#   MythicMobs 가 몬스터를 잡으면  /rpg보상 <플레이어> <경험치> <골드>  를 콘솔로 실행한다
+# ═════════════════════════════════════════════════════════════════════════════
+
+# 다음 레벨까지 필요한 경험치
+function rpgNeed(lv: number) :: number:
+    return round(40 * ({_lv} ^ 1.55) + 60)
+
+command /rpg보상 <offlineplayer> <number> <number>:
+    permission: op
+    executable by: console and players
+    trigger:
+        arg-1 is online
+        set {_p} to arg-1's player
+        rpgGive({_p}, arg-2, arg-3)
+
+function rpgGive(p: player, xp: number, gold: number):
+    set {_u} to uuid of {_p}
+    if {rpg::lv::%{_u}%} is not set:
+        set {rpg::lv::%{_u}%} to 1
+    add {_xp} to {rpg::xp::%{_u}%}
+    add {_gold} to {rpg::gold::%{_u}%}
+    send action bar "&b+%{_xp}% EXP  &6+%{_gold}% 골드" to {_p}
+    while {rpg::xp::%{_u}%} >= rpgNeed({rpg::lv::%{_u}%}):
+        remove rpgNeed({rpg::lv::%{_u}%}) from {rpg::xp::%{_u}%}
+        add 1 to {rpg::lv::%{_u}%}
+        send title "&e&lLEVEL UP!" with subtitle "&fLv.%{rpg::lv::%{_u}%}%" to {_p} for 50 ticks
+        play sound "ui.toast.challenge_complete" to {_p}
+
+command /스탯:
+    aliases: /rpg
+    trigger:
+        set {_u} to uuid of player
+        set {_lv} to {rpg::lv::%{_u}%} ? 1
+        set {_xp} to {rpg::xp::%{_u}%} ? 0
+        set {_g} to {rpg::gold::%{_u}%} ? 0
+        send "&6&l[ 모험가 정보 ]"
+        send "&f레벨 &eLv.%{_lv}%  &f경험치 &b%{_xp}%&7/%rpgNeed({_lv})%"
+        send "&f골드 &6%{_g}%"
