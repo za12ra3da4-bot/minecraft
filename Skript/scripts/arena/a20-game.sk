@@ -357,6 +357,18 @@ on join:
             bgCmd("team join bg_%bgTeam(player)% %name of player%")
             bgSpawn(player)
 
+# 맵 밖으로 나가기 방지 (경계 벽 + 혹시 넘어가면 본진으로)
+every 10 ticks:
+    {-bg::on} is true
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            set {_lx} to (x-coordinate of loop-player) - {bg::cfg::ox}
+            set {_lz} to (z-coordinate of loop-player) - {bg::cfg::oz}
+            set {_ly} to (y-coordinate of loop-player) - {bg::cfg::oy}
+            if {_lx} < 1 or {_lx} > 255 or {_lz} < 1 or {_lz} > 255 or {_ly} < 2 or {_ly} > 110:
+                teleport loop-player to bgBaseSpawnLoc(bgTeam(loop-player))
+                send action bar "&c전장 밖으로는 나갈 수 없습니다" to loop-player
+
 # 맵 보호 (게임 중 참가자)
 on break:
     bgIsFighter(player) is true
@@ -393,6 +405,10 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             bgSyncOrigin()
             bgCmd("function bg:map/build/start")
             bgSay("맵 건설을 시작합니다 (수십 초 걸립니다).")
+        else if arg-1 is "경계":
+            bgSyncOrigin()
+            bgCmd("function bg:map/border with storage bg:map origin")
+            send "&6[전장] &f맵 경계 벽(보이지 않는 벽)을 세웠습니다."
         else if arg-1 is "장식":
             bgSyncOrigin()
             bgCmd("function bg:map/decor")

@@ -250,11 +250,18 @@ def map_functions(dp_root, world, per_part=350):
         f"execute if score #part bg_build matches {n}.. run function bg:map/build/done",
     ])
     w(os.path.join(F, "build", "run.mcfunction"), ["$execute positioned $(x) $(y) $(z) run function bg:map/build/p/$(part)"])
+    # 맵 경계: 보이지 않는 벽(barrier) — 네 면, 높이 전체 (fill 한 번에 32768 칸 이하로 나눔)
+    bl = []
+    for (x0, z0, x1, z1) in ((-1, -1, -1, 127), (-1, 128, -1, SZ), (SX, -1, SX, 127), (SX, 128, SX, SZ),
+                             (0, -1, 127, -1), (128, -1, SX - 1, -1), (0, SZ, 127, SZ), (128, SZ, SX - 1, SZ)):
+        bl.append(f"$execute positioned $(x) $(y) $(z) run fill ~{x0} ~0 ~{z0} ~{x1} ~{SY - 1} ~{z1} barrier replace air")
+    w(os.path.join(F, "border.mcfunction"), bl)
     w(os.path.join(F, "build", "done.mcfunction"), [
         "scoreboard players set #run bg_build 0",
+        "function bg:map/border with storage bg:map origin",
         "function bg:map/decor",
         "function bg:map/build/unload with storage bg:map origin",
-        'tellraw @a [{"text":"[전장] ","color":"gold"},{"text":"맵 건설 완료! /전장 준비 로 게임을 시작하세요.","color":"green"}]',
+        'tellraw @a [{"text":"[전장] ","color":"gold"},{"text":"맵 건설 완료! /전장 자동팀 → /전장 시작","color":"green"}]',
     ])
     return len(cmds), n
 
