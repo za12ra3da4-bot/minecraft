@@ -1,0 +1,138 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  신들의 전장 — 공용 (설정 · 명령 실행기 · 좌표 · 팀)
+#  필요: Skript 2.9+ , skript-reflect
+#  a01~a03 (자동 생성 데이터) 이 먼저 로드된다 (파일 이름 순서)
+# ═════════════════════════════════════════════════════════════════════════════
+import:
+    net.minecraft.server.MinecraftServer
+
+on load:
+    # 저장되는 설정 (처음 한 번만 기본값)
+    if {bg::cfg::world} is not set:
+        set {bg::cfg::world} to "world"
+    if {bg::cfg::ox} is not set:
+        set {bg::cfg::ox} to -128
+        set {bg::cfg::oy} to 40
+        set {bg::cfg::oz} to -128
+    if {bg::cfg::goal} is not set:
+        set {bg::cfg::goal} to 1500          # 목표 점수
+    if {bg::cfg::minutes} is not set:
+        set {bg::cfg::minutes} to 30         # 제한 시간
+    if {bg::cfg::boss_first} is not set:
+        set {bg::cfg::boss_first} to 180     # 첫 보스 (초)
+    if {bg::cfg::boss_every} is not set:
+        set {bg::cfg::boss_every} to 300     # 보스 간격 (초, 처치/퇴각 후부터)
+    set {-bg::on} to false
+    set {-bg::teams::*} to "red", "blue", "green" and "yellow"
+    set {-bg::tname::red} to "레드"
+    set {-bg::tname::blue} to "블루"
+    set {-bg::tname::green} to "그린"
+    set {-bg::tname::yellow} to "옐로"
+    set {-bg::tcol::red} to "&c"
+    set {-bg::tcol::blue} to "&9"
+    set {-bg::tcol::green} to "&a"
+    set {-bg::tcol::yellow} to "&e"
+    set {-bg::tvan::red} to "red"
+    set {-bg::tvan::blue} to "blue"
+    set {-bg::tvan::green} to "green"
+    set {-bg::tvan::yellow} to "yellow"
+    set {-bg::tid} to 0
+
+# ── 조용한 명령 실행 (데이터팩 함수처럼 출력 억제). {bg::cfg::debug} = true 이면 콘솔로 (오류 확인용)
+function bgCmd(c: text):
+    if {bg::cfg::debug} is true:
+        make console execute command {_c}
+        stop
+    set {_srv} to MinecraftServer.getServer()
+    set {_src} to {_srv}.createCommandSourceStack().withSuppressedOutput()
+    {_srv}.getCommands().performPrefixedCommand({_src}, {_c})
+
+# ── 숫자 → 명령용 텍스트 (소수 2자리)
+function bgN(n: number) :: text:
+    set {_r} to round({_n} * 100) / 100
+    return "%{_r}%"
+
+function bgWorld() :: world:
+    return world({bg::cfg::world})
+
+# ── 맵 로컬 → 월드 좌표
+function bgAt(x: number, y: number, z: number) :: location:
+    return location({_x} + {bg::cfg::ox}, {_y} + {bg::cfg::oy}, {_z} + {bg::cfg::oz}, bgWorld())
+
+# ── 마커 위치 (a02-gen-map)
+function bgMk(n: text) :: location:
+    return bgAt({-bg::mk::%{_n}%::x}, {-bg::mk::%{_n}%::y}, {-bg::mk::%{_n}%::z})
+
+function bgMkR(n: text) :: number:
+    if {-bg::mk::%{_n}%::radius} is set:
+        return {-bg::mk::%{_n}%::radius}
+    return 6
+
+# ── 수평 거리
+function bgDist2(a: location, b: location) :: number:
+    set {_dx} to (x-coordinate of {_a}) - (x-coordinate of {_b})
+    set {_dz} to (z-coordinate of {_a}) - (z-coordinate of {_b})
+    return sqrt({_dx} * {_dx} + {_dz} * {_dz})
+
+# ── 팀
+function bgTeam(p: player) :: text:
+    if {bg::team::%uuid of {_p}%} is set:
+        return {bg::team::%uuid of {_p}%}
+    return "none"
+
+function bgSetTeam(p: player, t: text):
+    set {bg::team::%uuid of {_p}%} to {_t}
+    if {_t} is "none":
+        bgCmd("team leave %name of {_p}%")
+        delete {bg::team::%uuid of {_p}%}
+        stop
+    bgCmd("team join bg_%{_t}% %name of {_p}%")
+    send "&6[전장] &f당신은 %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f 입니다." to {_p}
+
+function bgTeamCount(t: text) :: number:
+    set {_n} to 0
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            add 1 to {_n}
+    return {_n}
+
+# ── 전투 참가자 (게임 중 · 팀 있음 · 서바이벌/모험)
+function bgIsFighter(p: player) :: boolean:
+    if {-bg::on} is not true:
+        return false
+    if bgTeam({_p}) is "none":
+        return false
+    if gamemode of {_p} is spectator or creative:
+        return false
+    return true
+
+function bgSetupTeams():
+    loop {-bg::teams::*}:
+        set {_t} to loop-value
+        bgCmd("team add bg_%{_t}%")
+        bgCmd("team modify bg_%{_t}% color %{-bg::tvan::%{_t}%}%")
+        bgCmd("team modify bg_%{_t}% friendlyFire false")
+        bgCmd("team modify bg_%{_t}% seeFriendlyInvisibles true")
+        bgCmd("team modify bg_%{_t}% nametagVisibility hideForOtherTeams")
+        bgCmd("team modify bg_%{_t}% prefix {text:""[%{-bg::tname::%{_t}%}%] "",color:""%{-bg::tvan::%{_t}%}%""}")
+
+# ── 전체 알림
+function bgSay(msg: text):
+    broadcast "&6[전장] &f%{_msg}%"
+
+function bgTitle(t: text, s: text, fi: number, st: number, fo: number):
+    loop all players:
+        send title {_t} with subtitle {_s} to loop-player for {_st} ticks with fade in {_fi} ticks and fade out {_fo} ticks
+
+function bgSound(s: text, vol: number, pitch: number):
+    bgCmd("execute as @a at @s run playsound %{_s}% master @s ~ ~ ~ %bgN({_vol})% %bgN({_pitch})%")
+
+function bgSoundAt(l: location, s: text, vol: number, pitch: number):
+    bgCmd("playsound %{_s}% hostile @a %bgN(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgN(z-coordinate of {_l})% %bgN({_vol})% %bgN({_pitch})%")
+
+function bgParticle(l: location, p: text, dx: number, dy: number, dz: number, spd: number, n: number):
+    bgCmd("particle %{_p}% %bgN(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgN(z-coordinate of {_l})% %bgN({_dx})% %bgN({_dy})% %bgN({_dz})% %bgN({_spd})% %{_n}% force")
+
+# ── 원점 동기화 (데이터팩 저장소에도)
+function bgSyncOrigin():
+    bgCmd("data merge storage bg:map {origin:{x:%{bg::cfg::ox}%,y:%{bg::cfg::oy}%,z:%{bg::cfg::oz}%}}")

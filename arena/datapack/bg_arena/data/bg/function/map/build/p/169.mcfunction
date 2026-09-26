@@ -1,350 +1,350 @@
-fill ~51 ~31 ~247 ~57 ~31 ~247 minecraft:cobblestone strict
-fill ~58 ~31 ~247 ~61 ~31 ~247 minecraft:tuff strict
-setblock ~62 ~31 ~247 minecraft:stone strict
-fill ~97 ~31 ~247 ~99 ~31 ~247 minecraft:stone strict
-fill ~100 ~31 ~247 ~102 ~31 ~247 minecraft:tuff strict
-fill ~103 ~31 ~247 ~111 ~31 ~247 minecraft:cobblestone strict
-fill ~119 ~31 ~247 ~121 ~31 ~247 minecraft:stone_bricks strict
-setblock ~135 ~31 ~247 minecraft:mossy_stone_bricks strict
-setblock ~136 ~31 ~247 minecraft:stone_bricks strict
-setblock ~138 ~31 ~247 minecraft:cracked_stone_bricks strict
-setblock ~139 ~31 ~247 minecraft:stone_bricks strict
-fill ~145 ~31 ~247 ~151 ~31 ~247 minecraft:stone strict
-fill ~152 ~31 ~247 ~162 ~31 ~247 minecraft:andesite strict
-fill ~163 ~31 ~247 ~166 ~31 ~247 minecraft:tuff strict
-fill ~167 ~31 ~247 ~179 ~31 ~247 minecraft:stone strict
-fill ~180 ~31 ~247 ~189 ~31 ~247 minecraft:andesite strict
-setblock ~190 ~31 ~247 minecraft:cobblestone strict
-setblock ~192 ~31 ~247 minecraft:cobblestone strict
-fill ~197 ~31 ~247 ~204 ~31 ~247 minecraft:cobblestone strict
-setblock ~205 ~31 ~247 minecraft:grass_block strict
-setblock ~206 ~31 ~247 minecraft:gravel strict
-setblock ~208 ~31 ~247 minecraft:grass_block strict
-setblock ~209 ~31 ~247 minecraft:cobblestone strict
-setblock ~210 ~31 ~247 minecraft:yellow_terracotta strict
-setblock ~228 ~31 ~247 minecraft:smooth_sandstone strict
-setblock ~234 ~31 ~247 minecraft:smooth_sandstone strict
-fill ~235 ~31 ~247 ~241 ~31 ~247 minecraft:andesite strict
-fill ~45 ~31 ~248 ~46 ~31 ~248 minecraft:tuff strict
-fill ~47 ~31 ~248 ~49 ~31 ~248 minecraft:stone strict
-setblock ~51 ~31 ~248 minecraft:stone strict
-fill ~52 ~31 ~248 ~56 ~31 ~248 minecraft:tuff strict
-setblock ~105 ~31 ~248 minecraft:tuff strict
-fill ~106 ~31 ~248 ~113 ~31 ~248 minecraft:cobblestone strict
-setblock ~122 ~31 ~248 minecraft:cracked_stone_bricks strict
-setblock ~123 ~31 ~248 minecraft:mossy_stone_bricks strict
-setblock ~127 ~31 ~248 minecraft:cracked_stone_bricks strict
-setblock ~128 ~31 ~248 minecraft:mossy_stone_bricks strict
-fill ~129 ~31 ~248 ~129 ~32 ~248 minecraft:stone_bricks strict
-fill ~134 ~31 ~248 ~135 ~31 ~248 minecraft:stone_bricks strict
-setblock ~136 ~31 ~248 minecraft:cracked_stone_bricks strict
-fill ~143 ~31 ~248 ~146 ~31 ~248 minecraft:stone strict
-fill ~174 ~31 ~248 ~188 ~31 ~248 minecraft:stone strict
-fill ~189 ~31 ~248 ~203 ~31 ~248 minecraft:tuff strict
-setblock ~204 ~31 ~248 minecraft:cobblestone strict
-fill ~206 ~31 ~248 ~208 ~31 ~248 minecraft:cobblestone strict
-setblock ~210 ~31 ~248 minecraft:cobblestone strict
-fill ~217 ~31 ~248 ~218 ~31 ~248 minecraft:sandstone strict
-fill ~221 ~31 ~248 ~225 ~31 ~248 minecraft:orange_terracotta strict
-setblock ~227 ~31 ~248 minecraft:orange_terracotta strict
-fill ~111 ~31 ~249 ~114 ~31 ~249 minecraft:cobblestone strict
-setblock ~122 ~31 ~249 minecraft:mossy_stone_bricks strict
-setblock ~123 ~31 ~249 minecraft:stone_bricks strict
-setblock ~126 ~31 ~249 minecraft:cracked_stone_bricks strict
-setblock ~128 ~31 ~249 minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~130 ~31 ~249 ~130 ~32 ~251 minecraft:stone_bricks strict
-setblock ~131 ~31 ~249 minecraft:cracked_stone_bricks strict
-fill ~141 ~31 ~249 ~144 ~31 ~249 minecraft:stone strict
-fill ~204 ~31 ~249 ~212 ~31 ~249 minecraft:tuff strict
-fill ~113 ~31 ~250 ~116 ~31 ~250 minecraft:cobblestone strict
-fill ~126 ~31 ~250 ~126 ~32 ~250 minecraft:stone_bricks strict
-fill ~139 ~31 ~250 ~142 ~31 ~250 minecraft:stone strict
-fill ~115 ~31 ~251 ~119 ~31 ~251 minecraft:cobblestone strict
-fill ~137 ~31 ~251 ~140 ~31 ~251 minecraft:stone strict
-fill ~118 ~31 ~252 ~121 ~31 ~252 minecraft:cobblestone strict
-fill ~122 ~31 ~252 ~122 ~31 ~253 minecraft:andesite strict
-setblock ~127 ~31 ~252 minecraft:stone_bricks strict
-fill ~134 ~31 ~252 ~138 ~31 ~252 minecraft:stone strict
-setblock ~121 ~31 ~253 minecraft:andesite strict
-fill ~123 ~31 ~253 ~128 ~31 ~253 minecraft:andesite strict
-fill ~129 ~31 ~253 ~135 ~31 ~253 minecraft:stone strict
-fill ~125 ~32 ~2 ~131 ~33 ~3 minecraft:stone strict
-fill ~120 ~32 ~3 ~124 ~34 ~3 minecraft:stone strict
-fill ~132 ~32 ~3 ~133 ~34 ~3 minecraft:stone strict
-fill ~134 ~32 ~3 ~136 ~32 ~3 minecraft:cobblestone strict
-fill ~117 ~32 ~4 ~121 ~32 ~4 minecraft:stone strict
-fill ~127 ~32 ~4 ~129 ~32 ~4 minecraft:stone_bricks strict
-fill ~135 ~32 ~4 ~139 ~32 ~4 minecraft:cobblestone strict
-fill ~115 ~32 ~5 ~118 ~33 ~5 minecraft:stone strict
-setblock ~129 ~32 ~5 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~130 ~32 ~5 minecraft:mossy_stone_bricks strict
-fill ~138 ~32 ~5 ~141 ~32 ~5 minecraft:cobblestone strict
-setblock ~28 ~32 ~6 minecraft:stone strict
-fill ~29 ~32 ~6 ~39 ~32 ~6 minecraft:tuff strict
-fill ~40 ~32 ~6 ~40 ~32 ~7 minecraft:stone strict
-fill ~113 ~32 ~6 ~116 ~32 ~6 minecraft:stone strict
-setblock ~126 ~32 ~6 minecraft:stone_bricks strict
-setblock ~130 ~32 ~6 minecraft:stone_bricks strict
-fill ~140 ~32 ~6 ~142 ~32 ~6 minecraft:cobblestone strict
-fill ~143 ~32 ~6 ~143 ~32 ~7 minecraft:andesite strict
-fill ~24 ~32 ~7 ~26 ~32 ~7 minecraft:stone strict
-fill ~27 ~32 ~7 ~30 ~32 ~7 minecraft:mossy_cobblestone strict
-fill ~36 ~32 ~7 ~38 ~32 ~7 minecraft:mossy_cobblestone strict
-setblock ~39 ~32 ~7 minecraft:stone strict
-fill ~41 ~32 ~7 ~45 ~32 ~7 minecraft:stone strict
-setblock ~111 ~32 ~7 minecraft:cobblestone strict
-fill ~112 ~32 ~7 ~114 ~32 ~7 minecraft:stone strict
-fill ~122 ~32 ~7 ~125 ~32 ~8 minecraft:red_terracotta strict
-setblock ~126 ~32 ~7 minecraft:mossy_stone_bricks strict
-fill ~131 ~32 ~7 ~134 ~32 ~8 minecraft:red_terracotta strict
-setblock ~142 ~32 ~7 minecraft:cobblestone strict
-fill ~144 ~32 ~7 ~145 ~32 ~8 minecraft:andesite strict
-fill ~14 ~32 ~8 ~20 ~32 ~8 minecraft:tuff strict
-fill ~21 ~32 ~8 ~25 ~32 ~8 minecraft:stone strict
-fill ~43 ~32 ~8 ~60 ~32 ~8 minecraft:stone strict
-fill ~61 ~32 ~8 ~65 ~32 ~8 minecraft:tuff strict
-fill ~66 ~32 ~8 ~77 ~32 ~8 minecraft:stone strict
-fill ~103 ~32 ~8 ~105 ~32 ~8 minecraft:tuff strict
-fill ~106 ~32 ~8 ~110 ~32 ~9 minecraft:cobblestone strict
-fill ~111 ~32 ~8 ~112 ~32 ~8 minecraft:stone strict
-fill ~119 ~32 ~8 ~121 ~32 ~9 minecraft:red_terracotta strict
-setblock ~128 ~32 ~8 minecraft:cracked_stone_bricks strict
-fill ~135 ~32 ~8 ~137 ~32 ~9 minecraft:red_terracotta strict
-fill ~146 ~32 ~8 ~147 ~32 ~9 minecraft:andesite strict
-fill ~214 ~32 ~8 ~221 ~32 ~12 minecraft:blackstone strict
-fill ~227 ~32 ~8 ~232 ~32 ~8 minecraft:blackstone strict
-fill ~233 ~32 ~8 ~233 ~33 ~8 minecraft:stone strict
-fill ~234 ~32 ~8 ~235 ~34 ~8 minecraft:dirt strict
-fill ~236 ~32 ~8 ~242 ~32 ~8 minecraft:stone strict
-fill ~9 ~32 ~9 ~14 ~32 ~9 minecraft:tuff strict
-fill ~15 ~32 ~9 ~20 ~32 ~9 minecraft:cobblestone strict
-setblock ~21 ~32 ~9 minecraft:andesite strict
-fill ~48 ~32 ~9 ~60 ~32 ~9 minecraft:stone strict
-fill ~61 ~32 ~9 ~65 ~32 ~9 minecraft:cobblestone strict
-fill ~66 ~32 ~9 ~68 ~32 ~9 minecraft:andesite strict
-setblock ~69 ~32 ~9 minecraft:stone strict
-fill ~70 ~32 ~9 ~71 ~32 ~9 minecraft:andesite strict
-fill ~72 ~32 ~9 ~92 ~32 ~9 minecraft:stone strict
-fill ~94 ~32 ~9 ~102 ~32 ~9 minecraft:stone strict
-setblock ~103 ~32 ~9 minecraft:tuff strict
-fill ~104 ~32 ~9 ~105 ~32 ~9 minecraft:cobblestone strict
-fill ~117 ~32 ~9 ~118 ~32 ~10 minecraft:red_terracotta strict
-fill ~138 ~32 ~9 ~139 ~32 ~10 minecraft:red_terracotta strict
-fill ~148 ~32 ~9 ~151 ~32 ~9 minecraft:andesite strict
-fill ~152 ~32 ~9 ~159 ~32 ~9 minecraft:stone strict
-fill ~179 ~32 ~9 ~186 ~32 ~9 minecraft:stone strict
-fill ~187 ~32 ~9 ~190 ~32 ~9 minecraft:tuff strict
-fill ~191 ~32 ~9 ~192 ~34 ~9 minecraft:dirt strict
-setblock ~193 ~32 ~9 minecraft:tuff strict
-setblock ~194 ~32 ~9 minecraft:stone strict
-fill ~195 ~32 ~9 ~195 ~34 ~9 minecraft:dirt strict
-fill ~196 ~32 ~9 ~209 ~32 ~9 minecraft:stone strict
-fill ~210 ~32 ~9 ~213 ~32 ~11 minecraft:blackstone strict
-fill ~222 ~32 ~9 ~222 ~32 ~12 minecraft:blackstone strict
-fill ~226 ~32 ~9 ~229 ~32 ~10 minecraft:blackstone strict
-fill ~232 ~32 ~9 ~234 ~32 ~9 minecraft:blackstone strict
-fill ~235 ~32 ~9 ~241 ~32 ~9 minecraft:andesite strict
-setblock ~242 ~32 ~9 minecraft:stone strict
-fill ~243 ~32 ~9 ~247 ~32 ~9 minecraft:tuff strict
-fill ~9 ~32 ~10 ~9 ~32 ~12 minecraft:tuff strict
-fill ~10 ~32 ~10 ~12 ~32 ~10 minecraft:cobblestone strict
-fill ~79 ~32 ~10 ~95 ~32 ~10 minecraft:stone strict
-fill ~96 ~32 ~10 ~101 ~32 ~10 minecraft:andesite strict
-fill ~116 ~32 ~10 ~116 ~32 ~11 minecraft:red_terracotta strict
-fill ~140 ~32 ~10 ~140 ~32 ~11 minecraft:red_terracotta strict
-fill ~154 ~32 ~10 ~158 ~32 ~10 minecraft:andesite strict
-fill ~159 ~32 ~10 ~164 ~32 ~10 minecraft:stone strict
-fill ~165 ~32 ~10 ~166 ~34 ~10 minecraft:dirt strict
-setblock ~167 ~32 ~10 minecraft:tuff strict
-fill ~168 ~32 ~10 ~169 ~34 ~10 minecraft:dirt strict
-fill ~170 ~32 ~10 ~174 ~32 ~10 minecraft:tuff strict
-fill ~175 ~32 ~10 ~175 ~34 ~10 minecraft:dirt strict
-fill ~176 ~32 ~10 ~178 ~32 ~10 minecraft:stone strict
-fill ~179 ~32 ~10 ~180 ~34 ~10 minecraft:dirt strict
-fill ~181 ~32 ~10 ~181 ~32 ~11 minecraft:stone strict
-setblock ~183 ~32 ~10 minecraft:stone strict
-setblock ~187 ~32 ~10 minecraft:tuff strict
-setblock ~189 ~32 ~10 minecraft:tuff strict
-setblock ~190 ~32 ~10 minecraft:cobblestone strict
-fill ~195 ~32 ~10 ~199 ~32 ~10 minecraft:andesite strict
-setblock ~207 ~32 ~10 minecraft:stone strict
-fill ~208 ~32 ~10 ~209 ~32 ~11 minecraft:blackstone strict
-fill ~223 ~32 ~10 ~225 ~32 ~12 minecraft:blackstone strict
-fill ~234 ~32 ~10 ~236 ~32 ~10 minecraft:deepslate[axis=y] strict
-fill ~244 ~32 ~10 ~246 ~32 ~10 minecraft:cobblestone strict
-fill ~247 ~32 ~10 ~247 ~32 ~12 minecraft:tuff strict
-fill ~10 ~32 ~11 ~10 ~32 ~12 minecraft:cobblestone strict
-setblock ~93 ~32 ~11 minecraft:andesite strict
-fill ~115 ~32 ~11 ~115 ~32 ~12 minecraft:red_terracotta strict
-setblock ~117 ~32 ~11 minecraft:red_terracotta strict
-setblock ~139 ~32 ~11 minecraft:red_terracotta strict
-fill ~141 ~32 ~11 ~141 ~32 ~12 minecraft:red_terracotta strict
-fill ~161 ~32 ~11 ~164 ~32 ~11 minecraft:andesite strict
-setblock ~166 ~32 ~11 minecraft:cobblestone strict
-setblock ~168 ~32 ~11 minecraft:cobblestone strict
-fill ~176 ~32 ~11 ~178 ~32 ~11 minecraft:cobblestone strict
-setblock ~182 ~32 ~11 minecraft:cobblestone strict
-fill ~185 ~32 ~11 ~186 ~32 ~11 minecraft:grass_block strict
-setblock ~187 ~32 ~11 minecraft:stone strict
-setblock ~188 ~32 ~11 minecraft:grass_block strict
-fill ~190 ~32 ~11 ~191 ~32 ~11 minecraft:stone strict
-setblock ~192 ~32 ~11 minecraft:coarse_dirt strict
-fill ~207 ~32 ~11 ~207 ~32 ~13 minecraft:blackstone strict
-fill ~226 ~32 ~11 ~228 ~32 ~11 minecraft:blackstone strict
-fill ~235 ~32 ~11 ~237 ~32 ~11 minecraft:deepslate[axis=y] strict
-setblock ~246 ~32 ~11 minecraft:cobblestone strict
-fill ~248 ~32 ~11 ~248 ~32 ~29 minecraft:tuff strict
-fill ~113 ~32 ~12 ~114 ~32 ~13 minecraft:red_terracotta strict
-fill ~142 ~32 ~12 ~143 ~32 ~13 minecraft:red_terracotta strict
-fill ~166 ~32 ~12 ~182 ~32 ~12 minecraft:grass_block strict
-fill ~206 ~32 ~12 ~206 ~32 ~13 minecraft:blackstone strict
-setblock ~208 ~32 ~12 minecraft:blackstone strict
-fill ~212 ~32 ~12 ~213 ~32 ~12 minecraft:blackstone strict
-fill ~226 ~32 ~12 ~227 ~32 ~12 minecraft:blackstone strict
-fill ~236 ~32 ~12 ~238 ~32 ~12 minecraft:deepslate[axis=y] strict
-fill ~8 ~32 ~13 ~9 ~32 ~13 minecraft:stone strict
-fill ~29 ~32 ~13 ~31 ~32 ~13 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~34 ~32 ~13 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~35 ~32 ~13 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~36 ~32 ~13 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~37 ~32 ~13 ~37 ~32 ~14 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~38 ~32 ~13 ~39 ~32 ~13 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~112 ~32 ~13 ~112 ~32 ~15 minecraft:red_terracotta strict
-fill ~144 ~32 ~13 ~144 ~32 ~15 minecraft:red_terracotta strict
-fill ~205 ~32 ~13 ~205 ~32 ~14 minecraft:blackstone strict
-fill ~214 ~32 ~13 ~216 ~32 ~13 minecraft:blackstone strict
-fill ~238 ~32 ~13 ~239 ~32 ~13 minecraft:deepslate[axis=y] strict
-fill ~247 ~32 ~13 ~247 ~32 ~18 minecraft:cobblestone strict
-setblock ~8 ~32 ~14 minecraft:stone strict
-fill ~9 ~32 ~14 ~9 ~32 ~17 minecraft:andesite strict
-fill ~26 ~32 ~14 ~26 ~32 ~15 minecraft:mossy_stone_bricks strict
-fill ~27 ~32 ~14 ~27 ~32 ~15 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~30 ~32 ~14 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~36 ~32 ~14 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~38 ~32 ~14 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~40 ~32 ~14 minecraft:mossy_stone_bricks strict
-fill ~42 ~32 ~14 ~42 ~32 ~16 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~113 ~32 ~14 minecraft:red_terracotta strict
-setblock ~143 ~32 ~14 minecraft:red_terracotta strict
-fill ~204 ~32 ~14 ~204 ~32 ~15 minecraft:blackstone strict
-fill ~239 ~32 ~14 ~240 ~32 ~14 minecraft:tuff strict
-fill ~25 ~32 ~15 ~25 ~32 ~16 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~29 ~32 ~15 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~40 ~32 ~15 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~43 ~32 ~15 ~44 ~32 ~15 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~111 ~32 ~15 ~111 ~32 ~16 minecraft:red_terracotta strict
-fill ~145 ~32 ~15 ~145 ~32 ~16 minecraft:red_terracotta strict
-fill ~203 ~32 ~15 ~203 ~32 ~16 minecraft:blackstone strict
-fill ~240 ~32 ~15 ~241 ~32 ~15 minecraft:tuff strict
-setblock ~24 ~32 ~16 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~26 ~32 ~16 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~43 ~32 ~16 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~44 ~32 ~16 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~87 ~32 ~16 ~88 ~36 ~16 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~110 ~32 ~16 minecraft:red_terracotta strict
-setblock ~146 ~32 ~16 minecraft:red_terracotta strict
-fill ~202 ~32 ~16 ~202 ~32 ~17 minecraft:blackstone strict
-fill ~241 ~32 ~16 ~242 ~32 ~16 minecraft:tuff strict
-setblock ~21 ~32 ~17 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~80 ~32 ~17 ~84 ~36 ~17 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~86 ~32 ~17 ~87 ~36 ~17 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~89 ~32 ~17 ~89 ~35 ~19 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~108 ~32 ~17 minecraft:mossy_stone_bricks strict
-fill ~109 ~32 ~17 ~110 ~32 ~17 minecraft:stone_bricks strict
-setblock ~146 ~32 ~17 minecraft:stone_bricks strict
-fill ~147 ~32 ~17 ~148 ~32 ~17 minecraft:mossy_stone_bricks strict
-fill ~201 ~32 ~17 ~201 ~32 ~19 minecraft:blackstone strict
-fill ~242 ~32 ~17 ~243 ~32 ~17 minecraft:tuff strict
-fill ~249 ~32 ~17 ~249 ~32 ~21 minecraft:tuff strict
-fill ~46 ~32 ~18 ~47 ~32 ~18 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~80 ~32 ~18 ~82 ~36 ~18 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~84 ~32 ~18 ~84 ~36 ~18 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~85 ~32 ~18 ~86 ~32 ~18 minecraft:oak_log[axis=x] strict
-fill ~87 ~32 ~18 ~88 ~32 ~18 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~107 ~32 ~18 minecraft:stone_bricks strict
-setblock ~110 ~32 ~18 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~111 ~32 ~18 minecraft:mossy_stone_bricks strict
-setblock ~148 ~32 ~18 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~149 ~32 ~18 minecraft:stone_bricks strict
-fill ~200 ~32 ~18 ~200 ~32 ~20 minecraft:blackstone strict
-fill ~243 ~32 ~18 ~244 ~32 ~19 minecraft:tuff strict
-fill ~19 ~32 ~19 ~20 ~32 ~19 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~47 ~32 ~19 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~49 ~32 ~19 ~49 ~32 ~21 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~80 ~32 ~19 ~81 ~32 ~20 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~82 ~32 ~19 ~82 ~33 ~19 minecraft:oak_log[axis=x] strict
-fill ~83 ~32 ~19 ~83 ~36 ~19 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~85 ~32 ~19 ~86 ~35 ~19 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~88 ~32 ~19 ~88 ~36 ~20 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~107 ~32 ~19 minecraft:mossy_stone_bricks strict
-setblock ~111 ~32 ~19 minecraft:stone_bricks strict
-fill ~199 ~32 ~19 ~199 ~32 ~22 minecraft:blackstone strict
-fill ~245 ~32 ~19 ~245 ~32 ~24 minecraft:tuff strict
-fill ~7 ~32 ~20 ~7 ~32 ~26 minecraft:stone strict
-setblock ~18 ~32 ~20 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~87 ~32 ~20 ~87 ~35 ~20 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~145 ~32 ~20 minecraft:mossy_stone_bricks strict
-setblock ~244 ~32 ~20 minecraft:tuff strict
-fill ~246 ~32 ~20 ~246 ~32 ~25 minecraft:tuff strict
-setblock ~247 ~32 ~20 minecraft:coarse_dirt strict
-fill ~8 ~32 ~21 ~8 ~33 ~23 minecraft:stone strict
-fill ~12 ~32 ~21 ~13 ~32 ~22 minecraft:grass_block strict
-setblock ~14 ~32 ~21 minecraft:moss_block strict
-fill ~15 ~32 ~21 ~16 ~32 ~23 minecraft:grass_block strict
-setblock ~18 ~32 ~21 minecraft:stone strict
-fill ~50 ~32 ~21 ~51 ~32 ~22 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~80 ~32 ~21 ~80 ~35 ~21 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~86 ~32 ~21 ~86 ~34 ~21 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~108 ~32 ~21 ~110 ~32 ~21 minecraft:mossy_stone_bricks strict
-setblock ~148 ~32 ~21 minecraft:mossy_stone_bricks strict
-fill ~198 ~32 ~21 ~198 ~32 ~24 minecraft:blackstone strict
-setblock ~247 ~32 ~21 minecraft:cobblestone strict
-fill ~11 ~32 ~22 ~11 ~32 ~23 minecraft:grass_block strict
-setblock ~14 ~32 ~22 minecraft:grass_block strict
-setblock ~17 ~32 ~22 minecraft:stone strict
-setblock ~18 ~32 ~22 minecraft:mossy_stone_bricks strict
-fill ~84 ~32 ~22 ~84 ~35 ~22 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~107 ~32 ~22 ~108 ~32 ~25 minecraft:red_terracotta strict
-fill ~109 ~32 ~22 ~109 ~32 ~23 minecraft:stone_bricks strict
-fill ~147 ~32 ~22 ~147 ~32 ~23 minecraft:stone_bricks strict
-fill ~148 ~32 ~22 ~149 ~32 ~25 minecraft:red_terracotta strict
-fill ~240 ~32 ~22 ~244 ~32 ~22 minecraft:tuff strict
-fill ~247 ~32 ~22 ~247 ~32 ~26 minecraft:tuff strict
-fill ~9 ~32 ~23 ~10 ~32 ~26 minecraft:grass_block strict
-fill ~51 ~32 ~23 ~52 ~32 ~23 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~87 ~32 ~23 ~87 ~33 ~27 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~189 ~32 ~23 ~189 ~36 ~24 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~197 ~32 ~23 ~197 ~32 ~27 minecraft:blackstone strict
-setblock ~241 ~32 ~23 minecraft:tuff strict
-fill ~244 ~32 ~23 ~244 ~32 ~24 minecraft:tuff strict
-fill ~8 ~32 ~24 ~8 ~32 ~28 minecraft:mossy_stone_bricks strict
-fill ~16 ~32 ~24 ~17 ~32 ~24 minecraft:stone strict
-fill ~53 ~32 ~24 ~53 ~32 ~25 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~84 ~32 ~24 ~84 ~34 ~24 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~88 ~32 ~24 ~88 ~33 ~24 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~109 ~32 ~24 minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~147 ~32 ~24 minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~186 ~32 ~24 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~188 ~32 ~24 ~188 ~38 ~24 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~190 ~32 ~24 ~190 ~32 ~25 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~16 ~32 ~25 minecraft:stone strict
-fill ~82 ~32 ~25 ~82 ~33 ~26 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~86 ~32 ~25 ~86 ~33 ~25 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~187 ~32 ~25 ~187 ~33 ~25 minecraft:oak_log[axis=z] strict
-fill ~189 ~32 ~25 ~189 ~33 ~25 minecraft:oak_log[axis=z] strict
-fill ~191 ~32 ~25 ~191 ~38 ~25 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~14 ~32 ~26 minecraft:mossy_stone_bricks strict
-fill ~52 ~32 ~26 ~53 ~32 ~26 minecraft:stone strict
-setblock ~54 ~32 ~26 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~80 ~32 ~26 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~107 ~32 ~26 ~107 ~32 ~34 minecraft:red_terracotta strict
-setblock ~113 ~32 ~26 minecraft:red_wool strict
-setblock ~114 ~32 ~26 minecraft:white_wool strict
-fill ~115 ~32 ~26 ~116 ~32 ~26 minecraft:red_wool strict
-setblock ~117 ~32 ~26 minecraft:white_wool strict
-fill ~118 ~32 ~26 ~119 ~32 ~26 minecraft:red_wool strict
-setblock ~135 ~32 ~26 minecraft:iron_chain[axis=y,waterlogged=false] strict
-setblock ~137 ~32 ~26 minecraft:red_wool strict
-setblock ~138 ~32 ~26 minecraft:white_wool strict
-fill ~139 ~32 ~26 ~140 ~32 ~26 minecraft:red_wool strict
-setblock ~141 ~32 ~26 minecraft:white_wool strict
+fill ~202 ~33 ~184 ~203 ~33 ~184 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~207 ~33 ~184 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~209 ~33 ~184 ~210 ~33 ~184 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~227 ~33 ~184 minecraft:stone strict
+fill ~247 ~33 ~184 ~247 ~35 ~191 minecraft:dirt strict
+setblock ~144 ~33 ~185 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~152 ~33 ~185 ~155 ~33 ~185 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~203 ~33 ~185 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~209 ~33 ~185 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~220 ~33 ~185 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~230 ~33 ~185 ~230 ~33 ~186 minecraft:grass_block strict
+fill ~12 ~33 ~186 ~12 ~33 ~191 minecraft:grass_block strict
+fill ~152 ~33 ~186 ~152 ~34 ~186 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~156 ~33 ~186 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~205 ~33 ~186 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~207 ~33 ~186 ~208 ~33 ~186 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~218 ~33 ~186 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~222 ~33 ~186 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~231 ~33 ~186 ~231 ~33 ~187 minecraft:grass_block strict
+fill ~9 ~33 ~187 ~9 ~33 ~193 minecraft:stone strict
+setblock ~144 ~33 ~187 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~150 ~33 ~187 ~150 ~34 ~187 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~154 ~33 ~187 ~154 ~34 ~187 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~202 ~33 ~187 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~206 ~33 ~187 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~208 ~33 ~187 ~209 ~33 ~187 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~232 ~33 ~187 minecraft:grass_block strict
+fill ~10 ~33 ~188 ~10 ~35 ~190 minecraft:dirt strict
+fill ~152 ~33 ~188 ~152 ~34 ~188 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~203 ~33 ~188 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~217 ~33 ~188 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~223 ~33 ~188 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~233 ~33 ~188 minecraft:stone strict
+fill ~65 ~33 ~189 ~67 ~33 ~191 minecraft:polished_andesite strict
+fill ~153 ~33 ~189 ~155 ~33 ~189 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~156 ~33 ~189 ~157 ~33 ~189 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~235 ~33 ~189 minecraft:stone strict
+fill ~119 ~33 ~190 ~120 ~33 ~190 minecraft:stone_bricks strict
+setblock ~122 ~33 ~190 minecraft:mossy_stone_bricks strict
+setblock ~123 ~33 ~190 minecraft:stone_bricks strict
+setblock ~156 ~33 ~190 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~157 ~33 ~190 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~218 ~33 ~190 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~222 ~33 ~190 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~236 ~33 ~190 minecraft:stone strict
+fill ~10 ~33 ~191 ~10 ~36 ~191 minecraft:stone strict
+setblock ~119 ~33 ~191 minecraft:mossy_stone_bricks strict
+setblock ~121 ~33 ~191 minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~152 ~33 ~191 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~153 ~33 ~191 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~156 ~33 ~191 ~157 ~33 ~191 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~220 ~33 ~191 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~238 ~33 ~191 minecraft:stone strict
+fill ~246 ~33 ~191 ~246 ~33 ~200 minecraft:stone strict
+fill ~10 ~33 ~192 ~10 ~35 ~193 minecraft:dirt strict
+fill ~12 ~33 ~192 ~12 ~33 ~194 minecraft:stone strict
+setblock ~157 ~33 ~192 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~239 ~33 ~192 ~240 ~33 ~192 minecraft:stone strict
+fill ~241 ~33 ~192 ~242 ~33 ~192 minecraft:grass_block strict
+fill ~247 ~33 ~192 ~247 ~37 ~196 minecraft:stone strict
+fill ~8 ~33 ~193 ~8 ~37 ~195 minecraft:stone strict
+setblock ~119 ~33 ~193 minecraft:cracked_stone_bricks strict
+setblock ~123 ~33 ~193 minecraft:stone_bricks strict
+setblock ~155 ~33 ~193 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~242 ~33 ~193 minecraft:stone strict
+fill ~244 ~33 ~193 ~245 ~33 ~195 minecraft:stone strict
+fill ~9 ~33 ~194 ~9 ~35 ~194 minecraft:dirt strict
+setblock ~119 ~33 ~194 minecraft:stone_bricks strict
+setblock ~122 ~33 ~194 minecraft:stone_bricks strict
+setblock ~123 ~33 ~194 minecraft:mossy_stone_bricks strict
+fill ~9 ~33 ~195 ~9 ~36 ~197 minecraft:stone strict
+fill ~12 ~33 ~195 ~12 ~35 ~195 minecraft:smooth_stone strict
+fill ~43 ~33 ~195 ~45 ~35 ~195 minecraft:stone strict
+fill ~12 ~33 ~196 ~12 ~33 ~197 minecraft:stone strict
+fill ~29 ~33 ~196 ~29 ~36 ~198 minecraft:stone strict
+fill ~39 ~33 ~196 ~39 ~36 ~198 minecraft:stone strict
+setblock ~103 ~33 ~196 minecraft:grass_block strict
+setblock ~215 ~33 ~196 minecraft:sandstone strict
+fill ~245 ~33 ~196 ~245 ~33 ~197 minecraft:stone strict
+fill ~28 ~33 ~197 ~28 ~37 ~198 minecraft:stone strict
+fill ~230 ~33 ~197 ~231 ~33 ~197 minecraft:sandstone strict
+fill ~40 ~33 ~198 ~40 ~36 ~198 minecraft:stone strict
+fill ~210 ~33 ~198 ~212 ~34 ~198 minecraft:sandstone strict
+fill ~13 ~33 ~199 ~17 ~35 ~199 minecraft:stone strict
+fill ~47 ~33 ~199 ~47 ~35 ~201 minecraft:stone strict
+fill ~233 ~33 ~199 ~235 ~33 ~201 minecraft:smooth_sandstone strict
+fill ~236 ~33 ~199 ~236 ~34 ~199 minecraft:jungle_log[axis=y] strict
+fill ~248 ~33 ~199 ~248 ~33 ~201 minecraft:stone strict
+fill ~7 ~33 ~200 ~8 ~33 ~201 minecraft:andesite strict
+fill ~9 ~33 ~200 ~10 ~33 ~200 minecraft:stone strict
+fill ~13 ~33 ~200 ~16 ~33 ~200 minecraft:stone strict
+fill ~49 ~33 ~200 ~49 ~34 ~200 minecraft:stone strict
+fill ~210 ~33 ~200 ~210 ~34 ~201 minecraft:sandstone strict
+fill ~212 ~33 ~200 ~216 ~33 ~202 minecraft:cut_red_sandstone strict
+fill ~217 ~33 ~200 ~217 ~33 ~201 minecraft:smooth_sandstone strict
+fill ~218 ~33 ~200 ~220 ~33 ~201 minecraft:cyan_terracotta strict
+fill ~221 ~33 ~200 ~223 ~33 ~201 minecraft:gold_block strict
+fill ~224 ~33 ~200 ~226 ~33 ~201 minecraft:cyan_terracotta strict
+fill ~227 ~33 ~200 ~227 ~34 ~201 minecraft:smooth_sandstone strict
+fill ~228 ~33 ~200 ~231 ~33 ~202 minecraft:cut_red_sandstone strict
+setblock ~232 ~33 ~200 minecraft:smooth_sandstone strict
+fill ~236 ~33 ~200 ~237 ~33 ~203 minecraft:smooth_sandstone strict
+fill ~9 ~33 ~201 ~9 ~36 ~201 minecraft:stone strict
+fill ~10 ~33 ~201 ~10 ~35 ~201 minecraft:andesite strict
+fill ~46 ~33 ~201 ~46 ~36 ~201 minecraft:stone strict
+fill ~148 ~33 ~201 ~149 ~33 ~201 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~151 ~33 ~201 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~211 ~33 ~201 ~211 ~33 ~203 minecraft:cut_red_sandstone strict
+fill ~232 ~33 ~201 ~232 ~33 ~202 minecraft:sandstone strict
+fill ~238 ~33 ~201 ~238 ~33 ~204 minecraft:smooth_sandstone strict
+setblock ~7 ~33 ~202 minecraft:andesite strict
+fill ~8 ~33 ~202 ~8 ~36 ~210 minecraft:stone strict
+setblock ~210 ~33 ~202 minecraft:cut_red_sandstone strict
+fill ~235 ~33 ~202 ~235 ~34 ~202 minecraft:smooth_sandstone strict
+fill ~239 ~33 ~202 ~239 ~33 ~205 minecraft:smooth_sandstone strict
+fill ~5 ~33 ~203 ~7 ~33 ~203 minecraft:tuff strict
+fill ~147 ~33 ~203 ~147 ~33 ~204 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~210 ~33 ~203 ~210 ~33 ~204 minecraft:smooth_sandstone strict
+fill ~212 ~33 ~203 ~213 ~33 ~204 minecraft:cut_red_sandstone strict
+fill ~215 ~33 ~203 ~216 ~33 ~203 minecraft:cut_red_sandstone strict
+fill ~228 ~33 ~203 ~229 ~33 ~203 minecraft:cut_red_sandstone strict
+fill ~240 ~33 ~203 ~240 ~33 ~206 minecraft:smooth_sandstone strict
+fill ~150 ~33 ~204 ~150 ~33 ~205 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~209 ~33 ~204 ~209 ~33 ~206 minecraft:cyan_terracotta strict
+setblock ~211 ~33 ~204 minecraft:smooth_sandstone strict
+setblock ~214 ~33 ~204 minecraft:cut_red_sandstone strict
+fill ~230 ~33 ~204 ~232 ~33 ~204 minecraft:cut_red_sandstone strict
+fill ~241 ~33 ~204 ~241 ~33 ~208 minecraft:smooth_sandstone strict
+fill ~121 ~33 ~205 ~123 ~33 ~205 minecraft:lime_terracotta strict
+fill ~133 ~33 ~205 ~135 ~33 ~205 minecraft:lime_terracotta strict
+setblock ~148 ~33 ~205 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~208 ~33 ~205 ~208 ~33 ~206 minecraft:cyan_terracotta strict
+setblock ~210 ~33 ~205 minecraft:cyan_terracotta strict
+fill ~232 ~33 ~205 ~233 ~33 ~205 minecraft:cut_red_sandstone strict
+fill ~242 ~33 ~205 ~242 ~33 ~209 minecraft:smooth_sandstone strict
+fill ~120 ~33 ~206 ~120 ~33 ~208 minecraft:lime_terracotta strict
+fill ~124 ~33 ~206 ~124 ~33 ~208 minecraft:lime_terracotta strict
+fill ~132 ~33 ~206 ~132 ~33 ~208 minecraft:lime_terracotta strict
+fill ~136 ~33 ~206 ~136 ~33 ~208 minecraft:lime_terracotta strict
+fill ~207 ~33 ~206 ~207 ~33 ~208 minecraft:gold_block strict
+fill ~233 ~33 ~206 ~234 ~33 ~206 minecraft:cut_red_sandstone strict
+fill ~243 ~33 ~206 ~243 ~33 ~211 minecraft:smooth_sandstone strict
+setblock ~123 ~33 ~207 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~135 ~33 ~207 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~206 ~33 ~207 minecraft:gold_block strict
+setblock ~208 ~33 ~207 minecraft:gold_block strict
+fill ~235 ~33 ~207 ~236 ~33 ~207 minecraft:cut_red_sandstone strict
+fill ~244 ~33 ~207 ~244 ~33 ~211 minecraft:smooth_sandstone strict
+fill ~73 ~33 ~208 ~75 ~33 ~209 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~114 ~33 ~208 ~116 ~33 ~208 minecraft:lime_terracotta strict
+fill ~119 ~33 ~208 ~119 ~33 ~209 minecraft:stone_bricks strict
+setblock ~137 ~33 ~208 minecraft:mossy_stone_bricks strict
+fill ~140 ~33 ~208 ~142 ~33 ~208 minecraft:lime_terracotta strict
+fill ~205 ~33 ~208 ~206 ~33 ~209 minecraft:cyan_terracotta strict
+fill ~236 ~33 ~208 ~237 ~33 ~208 minecraft:cut_red_sandstone strict
+setblock ~245 ~33 ~208 minecraft:sand strict
+fill ~72 ~33 ~209 ~72 ~33 ~211 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~76 ~33 ~209 ~76 ~33 ~211 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~113 ~33 ~209 ~113 ~33 ~211 minecraft:lime_terracotta strict
+fill ~117 ~33 ~209 ~117 ~33 ~211 minecraft:lime_terracotta strict
+setblock ~118 ~33 ~209 minecraft:mossy_stone_bricks strict
+fill ~121 ~33 ~209 ~123 ~33 ~209 minecraft:lime_terracotta strict
+fill ~133 ~33 ~209 ~135 ~33 ~209 minecraft:lime_terracotta strict
+setblock ~137 ~33 ~209 minecraft:cracked_stone_bricks strict
+fill ~138 ~33 ~209 ~138 ~33 ~210 minecraft:stone_bricks strict
+fill ~139 ~33 ~209 ~139 ~33 ~211 minecraft:lime_terracotta strict
+fill ~143 ~33 ~209 ~143 ~33 ~211 minecraft:lime_terracotta strict
+fill ~199 ~33 ~209 ~199 ~33 ~211 minecraft:sandstone strict
+setblock ~204 ~33 ~209 minecraft:cyan_terracotta strict
+setblock ~237 ~33 ~209 minecraft:cut_red_sandstone strict
+fill ~245 ~33 ~209 ~245 ~33 ~211 minecraft:smooth_sandstone strict
+setblock ~246 ~33 ~209 minecraft:sand strict
+fill ~73 ~33 ~210 ~73 ~33 ~212 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~75 ~33 ~210 ~75 ~33 ~212 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~116 ~33 ~210 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~118 ~33 ~210 minecraft:stone_bricks strict
+setblock ~142 ~33 ~210 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~202 ~33 ~210 ~202 ~33 ~216 minecraft:cut_red_sandstone strict
+fill ~203 ~33 ~210 ~204 ~33 ~210 minecraft:smooth_sandstone strict
+setblock ~205 ~33 ~210 minecraft:cyan_terracotta strict
+fill ~238 ~33 ~210 ~238 ~33 ~211 minecraft:cut_red_sandstone strict
+fill ~246 ~33 ~210 ~246 ~33 ~212 minecraft:smooth_sandstone strict
+setblock ~247 ~33 ~210 minecraft:sand strict
+fill ~74 ~33 ~211 ~74 ~33 ~212 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~201 ~33 ~211 ~201 ~33 ~216 minecraft:cut_red_sandstone strict
+fill ~203 ~33 ~211 ~203 ~33 ~213 minecraft:cut_red_sandstone strict
+setblock ~204 ~33 ~211 minecraft:smooth_sandstone strict
+setblock ~233 ~33 ~211 minecraft:lightning_rod[facing=up,powered=false,waterlogged=false] strict
+fill ~239 ~33 ~211 ~239 ~33 ~212 minecraft:cut_red_sandstone strict
+fill ~247 ~33 ~211 ~247 ~33 ~215 minecraft:smooth_sandstone strict
+fill ~249 ~33 ~211 ~249 ~33 ~213 minecraft:stone strict
+fill ~114 ~33 ~212 ~116 ~33 ~212 minecraft:lime_terracotta strict
+fill ~140 ~33 ~212 ~142 ~33 ~212 minecraft:lime_terracotta strict
+fill ~200 ~33 ~212 ~200 ~33 ~216 minecraft:cut_red_sandstone strict
+fill ~204 ~33 ~212 ~204 ~33 ~214 minecraft:cut_red_sandstone strict
+fill ~240 ~33 ~212 ~240 ~33 ~214 minecraft:cut_red_sandstone strict
+fill ~244 ~33 ~212 ~245 ~33 ~213 minecraft:sand strict
+fill ~248 ~33 ~212 ~248 ~33 ~216 minecraft:smooth_sandstone strict
+fill ~197 ~33 ~213 ~197 ~34 ~214 minecraft:sandstone strict
+fill ~246 ~33 ~213 ~246 ~33 ~223 minecraft:sand strict
+setblock ~8 ~33 ~214 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~245 ~33 ~214 ~245 ~33 ~217 minecraft:sand strict
+setblock ~7 ~33 ~215 minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~8 ~33 ~215 ~8 ~45 ~215 minecraft:spruce_log[axis=y] strict
+setblock ~9 ~33 ~215 minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~203 ~33 ~215 ~203 ~33 ~216 minecraft:cut_red_sandstone strict
+fill ~241 ~33 ~215 ~241 ~33 ~218 minecraft:cut_red_sandstone strict
+fill ~249 ~33 ~215 ~249 ~34 ~221 minecraft:smooth_sandstone strict
+setblock ~8 ~33 ~216 minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+fill ~196 ~33 ~216 ~196 ~33 ~217 minecraft:sandstone strict
+fill ~247 ~33 ~216 ~247 ~33 ~222 minecraft:sand strict
+fill ~95 ~33 ~217 ~97 ~33 ~217 minecraft:quartz_stairs[facing=south,half=top,shape=straight,waterlogged=false] strict
+fill ~107 ~33 ~217 ~109 ~33 ~217 minecraft:lime_terracotta strict
+fill ~147 ~33 ~217 ~149 ~33 ~217 minecraft:lime_terracotta strict
+fill ~200 ~33 ~217 ~201 ~33 ~217 minecraft:smooth_sandstone strict
+fill ~248 ~33 ~217 ~248 ~33 ~222 minecraft:sand strict
+fill ~250 ~33 ~217 ~250 ~35 ~224 minecraft:stone strict
+fill ~94 ~33 ~218 ~94 ~33 ~220 minecraft:quartz_stairs[facing=east,half=top,shape=straight,waterlogged=false] strict
+fill ~95 ~33 ~218 ~97 ~33 ~220 minecraft:smooth_quartz strict
+fill ~98 ~33 ~218 ~98 ~33 ~220 minecraft:quartz_stairs[facing=west,half=top,shape=straight,waterlogged=false] strict
+fill ~106 ~33 ~218 ~106 ~33 ~220 minecraft:lime_terracotta strict
+fill ~110 ~33 ~218 ~110 ~33 ~220 minecraft:lime_terracotta strict
+fill ~146 ~33 ~218 ~146 ~33 ~220 minecraft:lime_terracotta strict
+fill ~150 ~33 ~218 ~150 ~33 ~220 minecraft:lime_terracotta strict
+fill ~200 ~33 ~218 ~201 ~33 ~220 minecraft:cyan_terracotta strict
+fill ~242 ~33 ~218 ~242 ~33 ~226 minecraft:cut_red_sandstone strict
+setblock ~69 ~33 ~219 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~109 ~33 ~219 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~149 ~33 ~219 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~70 ~33 ~221 minecraft:dark_oak_log[axis=y] strict
+fill ~95 ~33 ~221 ~97 ~33 ~221 minecraft:quartz_stairs[facing=north,half=top,shape=straight,waterlogged=false] strict
+fill ~107 ~33 ~221 ~109 ~33 ~221 minecraft:lime_terracotta strict
+fill ~147 ~33 ~221 ~149 ~33 ~221 minecraft:lime_terracotta strict
+fill ~200 ~33 ~221 ~201 ~33 ~223 minecraft:gold_block strict
+setblock ~69 ~33 ~222 minecraft:dark_oak_log[axis=y] strict
+fill ~107 ~33 ~222 ~107 ~33 ~224 minecraft:stone_bricks strict
+fill ~108 ~33 ~222 ~108 ~33 ~224 minecraft:mossy_stone_bricks strict
+fill ~148 ~33 ~222 ~149 ~33 ~222 minecraft:mossy_stone_bricks strict
+fill ~249 ~33 ~222 ~249 ~33 ~223 minecraft:sandstone strict
+setblock ~68 ~33 ~223 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~148 ~33 ~223 ~148 ~33 ~225 minecraft:stone_bricks strict
+setblock ~149 ~33 ~223 minecraft:mossy_stone_bricks strict
+setblock ~149 ~33 ~224 minecraft:cracked_stone_bricks strict
+fill ~200 ~33 ~224 ~201 ~33 ~226 minecraft:cyan_terracotta strict
+setblock ~70 ~33 ~225 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~107 ~33 ~225 minecraft:mossy_stone_bricks strict
+setblock ~108 ~33 ~225 minecraft:stone_bricks strict
+fill ~149 ~33 ~225 ~149 ~35 ~225 minecraft:stone_bricks strict
+fill ~107 ~33 ~226 ~107 ~33 ~227 minecraft:stone_bricks strict
+setblock ~149 ~33 ~226 minecraft:mossy_stone_bricks strict
+setblock ~237 ~33 ~226 minecraft:lightning_rod[facing=up,powered=false,waterlogged=false] strict
+fill ~241 ~33 ~226 ~241 ~33 ~229 minecraft:cut_red_sandstone strict
+fill ~58 ~33 ~227 ~60 ~35 ~227 minecraft:stone strict
+setblock ~149 ~33 ~227 minecraft:stone_bricks strict
+fill ~163 ~33 ~227 ~163 ~33 ~232 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~200 ~33 ~227 ~201 ~36 ~227 minecraft:smooth_sandstone strict
+fill ~59 ~33 ~228 ~59 ~37 ~228 minecraft:stone strict
+setblock ~107 ~33 ~228 minecraft:mossy_stone_bricks strict
+setblock ~149 ~33 ~228 minecraft:cracked_stone_bricks strict
+setblock ~160 ~33 ~228 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~162 ~33 ~228 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~164 ~33 ~228 ~164 ~33 ~230 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~198 ~33 ~228 ~199 ~33 ~229 minecraft:sandstone strict
+fill ~200 ~33 ~228 ~203 ~33 ~229 minecraft:cut_red_sandstone strict
+fill ~107 ~33 ~229 ~107 ~33 ~233 minecraft:stone_bricks strict
+setblock ~113 ~33 ~229 minecraft:white_wool strict
+fill ~114 ~33 ~229 ~115 ~33 ~229 minecraft:lime_wool strict
+setblock ~116 ~33 ~229 minecraft:white_wool strict
+fill ~117 ~33 ~229 ~118 ~33 ~229 minecraft:lime_wool strict
+setblock ~119 ~33 ~229 minecraft:white_wool strict
+setblock ~137 ~33 ~229 minecraft:white_wool strict
+fill ~138 ~33 ~229 ~139 ~33 ~229 minecraft:lime_wool strict
+setblock ~140 ~33 ~229 minecraft:white_wool strict
+fill ~141 ~33 ~229 ~142 ~33 ~229 minecraft:lime_wool strict
+setblock ~143 ~33 ~229 minecraft:white_wool strict
+fill ~149 ~33 ~229 ~149 ~33 ~230 minecraft:stone_bricks strict
+setblock ~249 ~33 ~229 minecraft:sandstone strict
+setblock ~197 ~33 ~230 minecraft:sandstone strict
+fill ~198 ~33 ~230 ~199 ~34 ~234 minecraft:smooth_sandstone strict
+fill ~200 ~33 ~230 ~202 ~33 ~231 minecraft:cut_red_sandstone strict
+fill ~204 ~33 ~230 ~204 ~33 ~232 minecraft:cut_red_sandstone strict
+fill ~240 ~33 ~230 ~240 ~33 ~232 minecraft:cut_red_sandstone strict
+fill ~249 ~33 ~230 ~249 ~36 ~230 minecraft:stone strict
+setblock ~108 ~33 ~231 minecraft:stone_bricks strict
+setblock ~148 ~33 ~231 minecraft:stone_bricks strict
+setblock ~149 ~33 ~231 minecraft:cracked_stone_bricks strict
+fill ~197 ~33 ~231 ~197 ~33 ~232 minecraft:smooth_sandstone strict
+fill ~108 ~33 ~232 ~108 ~33 ~233 minecraft:cracked_stone_bricks strict
+setblock ~148 ~33 ~232 minecraft:mossy_stone_bricks strict
+fill ~149 ~33 ~232 ~149 ~33 ~233 minecraft:stone_bricks strict
+setblock ~164 ~33 ~232 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~200 ~33 ~232 ~200 ~35 ~235 minecraft:smooth_sandstone strict
+fill ~205 ~33 ~232 ~205 ~33 ~233 minecraft:cut_red_sandstone strict
+fill ~239 ~33 ~232 ~239 ~33 ~233 minecraft:cut_red_sandstone strict
+setblock ~109 ~33 ~233 minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~147 ~33 ~233 minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~148 ~33 ~233 ~148 ~33 ~234 minecraft:stone_bricks strict
+fill ~201 ~33 ~233 ~201 ~35 ~235 minecraft:smooth_sandstone strict
+fill ~206 ~33 ~233 ~206 ~33 ~234 minecraft:cut_red_sandstone strict
+setblock ~211 ~33 ~233 minecraft:lightning_rod[facing=up,powered=false,waterlogged=false] strict
+fill ~238 ~33 ~233 ~238 ~33 ~234 minecraft:cut_red_sandstone strict
+fill ~107 ~33 ~234 ~108 ~33 ~234 minecraft:mossy_stone_bricks strict
+setblock ~109 ~33 ~234 minecraft:stone_bricks strict
+setblock ~147 ~33 ~234 minecraft:stone_bricks strict
+setblock ~149 ~33 ~234 minecraft:mossy_stone_bricks strict
+fill ~108 ~33 ~235 ~110 ~33 ~235 minecraft:lime_terracotta strict
+fill ~146 ~33 ~235 ~148 ~33 ~235 minecraft:lime_terracotta strict
+fill ~199 ~33 ~235 ~199 ~33 ~236 minecraft:smooth_sandstone strict
+fill ~207 ~33 ~235 ~207 ~33 ~236 minecraft:cut_red_sandstone strict
+fill ~237 ~33 ~235 ~237 ~33 ~236 minecraft:cut_red_sandstone strict
+fill ~9 ~33 ~236 ~9 ~35 ~237 minecraft:stone strict
+fill ~107 ~33 ~236 ~107 ~33 ~238 minecraft:lime_terracotta strict
+fill ~111 ~33 ~236 ~111 ~33 ~238 minecraft:lime_terracotta strict
+fill ~145 ~33 ~236 ~145 ~33 ~238 minecraft:lime_terracotta strict
+fill ~149 ~33 ~236 ~149 ~33 ~238 minecraft:lime_terracotta strict
+fill ~208 ~33 ~236 ~208 ~33 ~237 minecraft:cut_red_sandstone strict
+fill ~236 ~33 ~236 ~236 ~33 ~237 minecraft:cut_red_sandstone strict
+setblock ~110 ~33 ~237 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~148 ~33 ~237 minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~209 ~33 ~237 minecraft:cut_red_sandstone strict
+setblock ~226 ~33 ~237 minecraft:lightning_rod[facing=up,powered=false,waterlogged=false] strict
+setblock ~235 ~33 ~237 minecraft:cut_red_sandstone strict
+fill ~9 ~33 ~238 ~9 ~35 ~238 minecraft:andesite strict
+fill ~10 ~33 ~238 ~10 ~35 ~239 minecraft:stone strict
+fill ~201 ~33 ~238 ~201 ~34 ~238 minecraft:smooth_sandstone strict
+fill ~210 ~33 ~238 ~211 ~33 ~238 minecraft:cut_red_sandstone strict
+fill ~233 ~33 ~238 ~234 ~33 ~238 minecraft:cut_red_sandstone strict
+fill ~237 ~33 ~238 ~244 ~33 ~238 minecraft:sandstone strict
+fill ~247 ~33 ~238 ~248 ~33 ~238 minecraft:stone strict
+setblock ~9 ~33 ~239 minecraft:tuff strict
+fill ~66 ~33 ~239 ~66 ~33 ~241 minecraft:grass_block strict
+fill ~108 ~33 ~239 ~110 ~33 ~239 minecraft:lime_terracotta strict
+fill ~146 ~33 ~239 ~148 ~33 ~239 minecraft:lime_terracotta strict
+fill ~211 ~33 ~239 ~212 ~33 ~239 minecraft:cut_red_sandstone strict
+fill ~232 ~33 ~239 ~233 ~33 ~239 minecraft:cut_red_sandstone strict
+fill ~237 ~33 ~239 ~238 ~33 ~243 minecraft:sandstone strict
+fill ~239 ~33 ~239 ~249 ~34 ~249 minecraft:cut_sandstone strict
+setblock ~12 ~33 ~240 minecraft:stone strict
+fill ~67 ~33 ~240 ~67 ~33 ~242 minecraft:grass_block strict
+fill ~110 ~33 ~240 ~111 ~33 ~240 minecraft:stone_bricks strict
+setblock ~145 ~33 ~240 minecraft:mossy_stone_bricks strict
+fill ~146 ~33 ~240 ~146 ~35 ~240 minecraft:stone_bricks strict
+fill ~206 ~33 ~240 ~206 ~34 ~243 minecraft:smooth_sandstone strict
+fill ~212 ~33 ~240 ~214 ~33 ~240 minecraft:cut_red_sandstone strict
+fill ~230 ~33 ~240 ~232 ~33 ~240 minecraft:cut_red_sandstone strict
+fill ~68 ~33 ~241 ~68 ~33 ~244 minecraft:grass_block strict
+fill ~111 ~33 ~241 ~111 ~35 ~241 minecraft:stone_bricks strict
+fill ~112 ~33 ~241 ~112 ~33 ~242 minecraft:mossy_stone_bricks strict
+fill ~144 ~33 ~241 ~145 ~33 ~241 minecraft:stone_bricks strict
+fill ~215 ~33 ~241 ~218 ~33 ~241 minecraft:cut_red_sandstone strict

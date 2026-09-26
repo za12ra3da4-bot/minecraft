@@ -238,18 +238,6 @@ on load:
     set {-bg::mk::outpost_yellow::x} to 64.5
     set {-bg::mk::outpost_yellow::y} to 25
     set {-bg::mk::outpost_yellow::z} to 128.5
-    set {-bg::mk::pillar_222_222_0::x} to 230.5
-    set {-bg::mk::pillar_222_222_0::y} to 23
-    set {-bg::mk::pillar_222_222_0::z} to 230.5
-    set {-bg::mk::pillar_222_222_1::x} to 214.5
-    set {-bg::mk::pillar_222_222_1::y} to 23
-    set {-bg::mk::pillar_222_222_1::z} to 230.5
-    set {-bg::mk::pillar_222_222_2::x} to 214.5
-    set {-bg::mk::pillar_222_222_2::y} to 23
-    set {-bg::mk::pillar_222_222_2::z} to 214.5
-    set {-bg::mk::pillar_222_222_3::x} to 230.5
-    set {-bg::mk::pillar_222_222_3::y} to 23
-    set {-bg::mk::pillar_222_222_3::z} to 214.5
     set {-bg::mk::pillar_222_34_0::x} to 230.5
     set {-bg::mk::pillar_222_34_0::y} to 26
     set {-bg::mk::pillar_222_34_0::z} to 42.5
@@ -262,30 +250,6 @@ on load:
     set {-bg::mk::pillar_222_34_3::x} to 230.5
     set {-bg::mk::pillar_222_34_3::y} to 26
     set {-bg::mk::pillar_222_34_3::z} to 26.5
-    set {-bg::mk::pillar_34_222_0::x} to 42.5
-    set {-bg::mk::pillar_34_222_0::y} to 21
-    set {-bg::mk::pillar_34_222_0::z} to 230.5
-    set {-bg::mk::pillar_34_222_1::x} to 26.5
-    set {-bg::mk::pillar_34_222_1::y} to 21
-    set {-bg::mk::pillar_34_222_1::z} to 230.5
-    set {-bg::mk::pillar_34_222_2::x} to 26.5
-    set {-bg::mk::pillar_34_222_2::y} to 21
-    set {-bg::mk::pillar_34_222_2::z} to 214.5
-    set {-bg::mk::pillar_34_222_3::x} to 42.5
-    set {-bg::mk::pillar_34_222_3::y} to 21
-    set {-bg::mk::pillar_34_222_3::z} to 214.5
-    set {-bg::mk::pillar_34_34_0::x} to 42.5
-    set {-bg::mk::pillar_34_34_0::y} to 26
-    set {-bg::mk::pillar_34_34_0::z} to 42.5
-    set {-bg::mk::pillar_34_34_1::x} to 26.5
-    set {-bg::mk::pillar_34_34_1::y} to 26
-    set {-bg::mk::pillar_34_34_1::z} to 42.5
-    set {-bg::mk::pillar_34_34_2::x} to 26.5
-    set {-bg::mk::pillar_34_34_2::y} to 26
-    set {-bg::mk::pillar_34_34_2::z} to 26.5
-    set {-bg::mk::pillar_34_34_3::x} to 42.5
-    set {-bg::mk::pillar_34_34_3::y} to 26
-    set {-bg::mk::pillar_34_34_3::z} to 26.5
     set {-bg::mk::temple_core::x} to 128.5
     set {-bg::mk::temple_core::y} to 33
     set {-bg::mk::temple_core::z} to 128.5

@@ -1,0 +1,434 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  신들의 전장 — 게임 흐름 · 점령 · 점수 · 버프 · 병과 · 부활 · 본진 보호 · 명령
+#
+#  점령 지점 5곳:  대신전(가운데, 초당 +3)  +  제단 4곳(초당 +1, 팀 버프)
+#    아레스 = 힘 I   아테나 = 저항 I   헤르메스 = 신속 I   데메테르 = 2초마다 회복 · 포만
+#  처치 +10,  보스 처치(가장 많이 때린 팀) +150 · 보스 축복
+#  목표 점수 또는 제한 시간 → 최고 점수 팀 승리
+# ═════════════════════════════════════════════════════════════════════════════
+
+on load:
+    set {-bg::pts::*} to "temple", "ares", "athena", "hermes" and "demeter"
+    set {-bg::ptmk::temple} to "temple_core"
+    set {-bg::ptr::temple} to 9
+    set {-bg::ptname::temple} to "올림포스 대신전"
+    loop "ares", "athena", "hermes" and "demeter":
+        set {-bg::ptmk::%loop-value%} to "altar_%loop-value%"
+        set {-bg::ptr::%loop-value%} to bgMkR("altar_%loop-value%")
+    set {-bg::ptname::ares} to "아레스의 제단"
+    set {-bg::ptname::athena} to "아테나의 제단"
+    set {-bg::ptname::hermes} to "헤르메스의 제단"
+    set {-bg::ptname::demeter} to "데메테르의 제단"
+    set {-bg::ptbuff::ares} to "힘"
+    set {-bg::ptbuff::athena} to "저항"
+    set {-bg::ptbuff::hermes} to "신속"
+    set {-bg::ptbuff::demeter} to "재생"
+    set {-bg::ptscore::temple} to 3
+    set {-bg::ptscore::ares} to 1
+    set {-bg::ptscore::athena} to 1
+    set {-bg::ptscore::hermes} to 1
+    set {-bg::ptscore::demeter} to 1
+    set {-bg::hex::red} to 14693424
+    set {-bg::hex::blue} to 3963120
+    set {-bg::hex::green} to 4638790
+    set {-bg::hex::yellow} to 15779880
+    set {-bg::cls::0} to "전사"
+    set {-bg::cls::1} to "궁수"
+    set {-bg::cls::2} to "수호자"
+
+# ─────────────────────────────────────────────────────────── 시작 / 종료
+function bgStart():
+    if {-bg::mk::ready} is not true:
+        bgSay("&c맵 데이터(a02-gen-map.sk)가 없습니다.")
+        stop
+    bgSetupTeams()
+    bgSyncOrigin()
+    set {-bg::sec} to 0
+    set {-bg::on} to false
+    loop {-bg::teams::*}:
+        set {-bg::score::%loop-value%} to 0
+    loop {-bg::pts::*}:
+        set {-bg::own::%loop-value%} to "none"
+        set {-bg::capt::%loop-value%} to "none"
+        set {-bg::capv::%loop-value%} to 0
+        set {-bg::contest::%loop-value%} to false
+    set {-bg::boss::next} to {bg::cfg::boss_first}
+    bgHudCreate()
+    loop all players:
+        if bgTeam(loop-player) is not "none":
+            bgSpawn(loop-player)
+    loop 5 times:
+        set {_n} to 6 - loop-number
+        bgTitle("&6&l%{_n}%", "&f신들의 전장이 곧 열립니다", 0, 22, 0)
+        bgSound("block.note_block.hat", 1, 1)
+        wait 1 second
+    bgTitle("&6&l신들의 전장", "&f대신전과 제단을 점령하라!", 5, 50, 15)
+    bgSound("entity.ender_dragon.growl", 0.6, 1.2)
+    set {-bg::on} to true
+    bgSay("목표 &e%{bg::cfg::goal}%점&f · 제한 시간 &e%{bg::cfg::minutes}%분")
+
+function bgStop(reason: text):
+    if {-bg::on} is not true:
+        stop
+    set {-bg::on} to false
+    bgBossRemove()
+    bgCmd("function bg:tele/clear_all")
+    set {_best} to -1
+    set {_win} to "none"
+    loop {-bg::teams::*}:
+        if {-bg::score::%loop-value%} > {_best}:
+            set {_best} to {-bg::score::%loop-value%}
+            set {_win} to loop-value
+    bgTitle("%{-bg::tcol::%{_win}%}%&l%{-bg::tname::%{_win}%}% 팀 승리!", "&f%{_reason}% · %{_best}%점", 10, 100, 20)
+    bgSound("ui.toast.challenge_complete", 1, 1)
+    bgSay("&e%{_reason}%&f — %{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀&f 승리 (%{_best}%점)")
+    loop {-bg::teams::*}:
+        bgSay("  %{-bg::tcol::%loop-value%}%%{-bg::tname::%loop-value%}%&f : %{-bg::score::%loop-value%}%점")
+    wait 10 seconds
+    if {-bg::on} is not true:
+        bgHudRemove()
+
+function bgCheckEnd():
+    loop {-bg::teams::*}:
+        if {-bg::score::%loop-value%} >= {bg::cfg::goal}:
+            bgStop("목표 점수 달성")
+            stop
+    if {-bg::sec} >= {bg::cfg::minutes} * 60:
+        bgStop("시간 종료")
+
+function bgAddScore(t: text, n: number):
+    if {_t} is "none":
+        stop
+    add {_n} to {-bg::score::%{_t}%}
+
+# ─────────────────────────────────────────────────────────── 매초
+every 1 second:
+    {-bg::on} is true
+    add 1 to {-bg::sec}
+    loop {-bg::pts::*}:
+        bgCapturePoint(loop-value)
+    loop {-bg::pts::*}:
+        set {_o} to {-bg::own::%loop-value%}
+        if {_o} is not "none":
+            bgAddScore({_o}, {-bg::ptscore::%loop-value%})
+    bgBuffTick()
+    bgBaseGuard()
+    bgClassPads()
+    bgBossClock()
+    bgCheckEnd()
+
+# ─────────────────────────────────────────────────────────── 점령
+function bgCapturePoint(p: text):
+    set {_c} to bgMk({-bg::ptmk::%{_p}%})
+    set {_r} to {-bg::ptr::%{_p}%}
+    set {_present} to 0
+    set {_who} to "none"
+    loop {-bg::teams::*}:
+        set {_n::%loop-value%} to 0
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            if world of loop-player is world of {_c}:
+                if bgDist2(location of loop-player, {_c}) <= {_r}:
+                    if abs((y-coordinate of loop-player) - (y-coordinate of {_c})) < 7:
+                        add 1 to {_n::%bgTeam(loop-player)%}
+                        add loop-player to {_on::*}
+    loop {-bg::teams::*}:
+        if {_n::%loop-value%} > 0:
+            add 1 to {_present}
+            set {_who} to loop-value
+    set {-bg::contest::%{_p}%} to false
+    set {_own} to {-bg::own::%{_p}%}
+    set {_capt} to {-bg::capt::%{_p}%}
+    set {_v} to {-bg::capv::%{_p}%}
+    if {_present} >= 2:
+        set {-bg::contest::%{_p}%} to true
+        loop {_on::*}:
+            send action bar "&c⚔ %{-bg::ptname::%{_p}%}% 쟁탈 중 — 다른 팀을 몰아내세요" to loop-value
+        stop
+    if {_present} is 0:
+        if {_own} is not "none":
+            set {-bg::capt::%{_p}%} to {_own}
+            set {-bg::capv::%{_p}%} to min(100, {_v} + 5)
+        else:
+            set {-bg::capv::%{_p}%} to max(0, {_v} - 2)
+        stop
+    # 한 팀만 있음
+    set {_k} to {_n::%{_who}%}
+    if {_p} is "temple":
+        set {_rate} to min(14, 5 + 3 * ({_k} - 1))
+    else:
+        set {_rate} to min(20, 8 + 4 * ({_k} - 1))
+    if {_capt} is not {_who}:
+        if {_v} > 0:
+            set {_v} to max(0, {_v} - {_rate})
+            if {_v} is 0:
+                if {_own} is not "none":
+                    set {-bg::own::%{_p}%} to "none"
+                    bgSay("%{-bg::tcol::%{_own}%}%%{-bg::tname::%{_own}%}% 팀&f이 &e%{-bg::ptname::%{_p}%}%&f 을 잃었습니다!")
+                    bgSoundAt({_c}, "block.beacon.deactivate", 3, 1)
+                    bgPointVisual({_p}, "none")
+                set {_capt} to {_who}
+        else:
+            set {_capt} to {_who}
+    else if {_own} is not {_who}:
+        set {_v} to min(100, {_v} + {_rate})
+        if {_v} >= 100:
+            set {-bg::own::%{_p}%} to {_who}
+            bgSay("%{-bg::tcol::%{_who}%}%%{-bg::tname::%{_who}%}% 팀&f이 &e%{-bg::ptname::%{_p}%}%&f 을 점령했습니다!")
+            bgSoundAt({_c}, "block.beacon.activate", 3, 1)
+            bgSound("block.bell.use", 0.5, 1.4)
+            bgPointVisual({_p}, {_who})
+    else:
+        set {_v} to min(100, {_v} + {_rate})
+    set {-bg::capt::%{_p}%} to {_capt}
+    set {-bg::capv::%{_p}%} to {_v}
+    set {_bar} to bgGauge({_v})
+    loop {_on::*}:
+        if {_own} is {_who}:
+            send action bar "%{-bg::tcol::%{_who}%}%%{-bg::ptname::%{_p}%}% &7방어 중 %{_bar}%" to loop-value
+        else:
+            send action bar "&e%{-bg::ptname::%{_p}%}% &f점령 중 %{_bar}% &e%floor({_v})%%%" to loop-value
+
+function bgGauge(v: number) :: text:
+    set {_f} to floor({_v} / 10)
+    set {_s} to "&a"
+    loop 10 times:
+        if loop-number is {_f} + 1:
+            set {_s} to "%{_s}%&8"
+        set {_s} to "%{_s}%▮"
+    return {_s}
+
+# 점령 표시: 제단 위 점령 링 (리소스팩 deco/cap_ring_<팀>) 교체 · 불꽃 입자
+function bgPointVisual(p: text, t: text):
+    set {_c} to bgMk({-bg::ptmk::%{_p}%})
+    set {_m} to "neutral"
+    if {_t} is not "none":
+        set {_m} to {_t}
+    bgCmd("execute as @e[type=item_display,tag=bg_cap_%{_p}%] run data modify entity @s item.components.""minecraft:item_model"" set value ""bg:deco/cap_ring_%{_m}%""")
+    bgParticle({_c}, "firework", 2, 3, 2, 0.1, 60)
+
+# ─────────────────────────────────────────────────────────── 버프
+function bgBuffTick():
+    if {-bg::own::ares} is not "none":
+        bgCmd("effect give @a[team=bg_%{-bg::own::ares}%,gamemode=!spectator] strength 3 0 true")
+    if {-bg::own::athena} is not "none":
+        bgCmd("effect give @a[team=bg_%{-bg::own::athena}%,gamemode=!spectator] resistance 3 0 true")
+    if {-bg::own::hermes} is not "none":
+        bgCmd("effect give @a[team=bg_%{-bg::own::hermes}%,gamemode=!spectator] speed 3 0 true")
+    if {-bg::own::demeter} is not "none":
+        if mod({-bg::sec}, 2) is 0:
+            loop all players:
+                if bgTeam(loop-player) is {-bg::own::demeter}:
+                    if bgIsFighter(loop-player) is true:
+                        heal loop-player by 0.5
+                        set food level of loop-player to 20
+    # 보스 축복 (a40)
+    loop {-bg::teams::*}:
+        if {-bg::bless::%loop-value%::until} is set:
+            if {-bg::bless::%loop-value%::until} > {-bg::sec}:
+                bgBlessApply(loop-value, {-bg::bless::%loop-value%::boss})
+            else:
+                delete {-bg::bless::%loop-value%::until}
+                bgSay("%{-bg::tcol::%loop-value%}%%{-bg::tname::%loop-value%}% 팀&f의 보스 축복이 끝났습니다.")
+
+# ─────────────────────────────────────────────────────────── 부활 · 병과
+function bgBaseSpawnLoc(t: text) :: location:
+    set {_i} to random integer between 0 and 6
+    set {_n} to "base_%{_t}%_spawn_%{_i}%"
+    set {_l} to bgMk({_n})
+    if {-bg::mk::%{_n}%::yaw} is set:
+        set yaw of {_l} to {-bg::mk::%{_n}%::yaw}
+    return {_l}
+
+function bgSpawn(p: player):
+    set {_t} to bgTeam({_p})
+    if {_t} is "none":
+        stop
+    set gamemode of {_p} to survival
+    teleport {_p} to bgBaseSpawnLoc({_t})
+    heal {_p}
+    set food level of {_p} to 20
+    bgKit({_p})
+    bgCmd("effect give %name of {_p}% resistance 3 4 true")
+
+function bgKit(p: player):
+    set {_n} to name of {_p}
+    set {_t} to bgTeam({_p})
+    set {_c} to 0
+    if {bg::cls::%uuid of {_p}%} is set:
+        set {_c} to {bg::cls::%uuid of {_p}%}
+    bgCmd("clear %{_n}%")
+    bgCmd("effect clear %{_n}%")
+    bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
+    if {_c} is 0:
+        bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
+        bgCmd("give %{_n}% iron_sword[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% weapon.offhand with shield[unbreakable={}]")
+        bgCmd("give %{_n}% bow[unbreakable={}]")
+        bgCmd("give %{_n}% arrow 16")
+    else if {_c} is 1:
+        bgCmd("item replace entity %{_n}% armor.chest with chainmail_chestplate[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.legs with chainmail_leggings[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
+        bgCmd("give %{_n}% stone_sword[unbreakable={}]")
+        bgCmd("give %{_n}% bow[unbreakable={},enchantments={power:2,punch:1}]")
+        bgCmd("give %{_n}% crossbow[unbreakable={},enchantments={quick_charge:1}]")
+        bgCmd("give %{_n}% arrow 64")
+    else:
+        bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
+        bgCmd("give %{_n}% iron_axe[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% weapon.offhand with shield[unbreakable={}]")
+        bgCmd("effect give %{_n}% slowness infinite 0 true")
+    bgCmd("give %{_n}% cooked_beef 16")
+    bgCmd("give %{_n}% golden_apple 1")
+
+# 본진의 병과 발판 (base_<팀>_class_0..2) 위에 서면 병과 변경
+function bgClassPads():
+    loop all players:
+        set {_t} to bgTeam(loop-player)
+        if bgIsFighter(loop-player) is true:
+            loop 3 times:
+                set {_i} to loop-number - 1
+                set {_m} to "base_%{_t}%_class_%{_i}%"
+                if {-bg::mk::%{_m}%::x} is set:
+                    if bgDist2(location of loop-player, bgMk({_m})) < 1.6:
+                        if {bg::cls::%uuid of loop-player%} is not {_i}:
+                            set {bg::cls::%uuid of loop-player%} to {_i}
+                            bgKit(loop-player)
+                            send title "&6%{-bg::cls::%{_i}%}%" with subtitle "&f병과를 바꿨습니다" to loop-player for 30 ticks
+                            play sound "block.anvil.use" to loop-player
+
+# 본진 보호: 적 팀이 본진 안쪽(16칸)에 들어오면 초당 2칸 피해. 자기 본진에서는 회복
+function bgBaseGuard():
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            set {_me} to bgTeam(loop-player)
+            loop {-bg::teams::*}:
+                set {_b} to bgMk("base_%loop-value-2%")
+                if world of loop-player is world of {_b}:
+                    if bgDist2(location of loop-player, {_b}) < 16:
+                        if loop-value-2 is {_me}:
+                            heal loop-player by 0.5
+                        else:
+                            damage loop-player by 2
+                            send action bar "&c%{-bg::tname::%loop-value-2%}% 팀 본진의 수호 결계! 물러나세요" to loop-player
+
+on death of player:
+    {-bg::on} is true
+    bgTeam(victim) is not "none"
+    clear drops
+    set dropped exp to 0
+    if attacker is a player:
+        if bgTeam(attacker) is not bgTeam(victim):
+            if bgTeam(attacker) is not "none":
+                bgAddScore(bgTeam(attacker), 10)
+                set death message to "%{-bg::tcol::%bgTeam(attacker)%}%%name of attacker% &7⚔ %{-bg::tcol::%bgTeam(victim)%}%%name of victim%"
+                stop
+    set death message to "%{-bg::tcol::%bgTeam(victim)%}%%name of victim% &7쓰러짐"
+
+on respawn:
+    {-bg::on} is true
+    bgTeam(player) is not "none"
+    set respawn location to bgBaseSpawnLoc(bgTeam(player))
+    wait 1 tick
+    bgKit(player)
+    bgCmd("effect give %name of player% resistance 3 4 true")
+
+on join:
+    wait 2 ticks
+    if {-bg::on} is true:
+        if bgTeam(player) is not "none":
+            bgCmd("team join bg_%bgTeam(player)% %name of player%")
+            bgSpawn(player)
+
+# 맵 보호 (게임 중 참가자)
+on break:
+    bgIsFighter(player) is true
+    cancel event
+
+on place:
+    bgIsFighter(player) is true
+    cancel event
+
+on bucket empty:
+    bgIsFighter(player) is true
+    cancel event
+
+# ─────────────────────────────────────────────────────────── 명령
+command /전장 [<text>] [<text>] [<text>] [<text>]:
+    aliases: /bg
+    permission: op
+    trigger:
+        if arg-1 is not set:
+            send "&6[전장] &f/전장 건설 | 장식 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
+            send "&6[전장] &f/전장 자동팀 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops] | 보스제거"
+            send "&6[전장] &f/전장 점수 <팀> <n> | 목표 <n> | 시간 <분> | 이동 <마커>"
+            stop
+        if arg-1 is "건설":
+            bgSyncOrigin()
+            bgCmd("function bg:map/build/start")
+            bgSay("맵 건설을 시작합니다 (수십 초 걸립니다).")
+        else if arg-1 is "장식":
+            bgSyncOrigin()
+            bgCmd("function bg:map/decor")
+            send "&6[전장] &f장식을 다시 배치했습니다."
+        else if arg-1 is "원점":
+            set {bg::cfg::ox} to arg-2 parsed as integer
+            set {bg::cfg::oy} to arg-3 parsed as integer
+            set {bg::cfg::oz} to arg-4 parsed as integer
+            bgSyncOrigin()
+            send "&6[전장] &f원점 = %{bg::cfg::ox}% %{bg::cfg::oy}% %{bg::cfg::oz}%"
+        else if arg-1 is "월드":
+            set {bg::cfg::world} to arg-2
+            send "&6[전장] &f월드 = %arg-2%"
+        else if arg-1 is "팀":
+            set {_p} to arg-2 parsed as player
+            if {_p} is not set:
+                send "&c플레이어를 찾을 수 없습니다."
+                stop
+            if {-bg::tname::%arg-3%} is not set:
+                if arg-3 is not "none":
+                    send "&c팀: red / blue / green / yellow / none"
+                    stop
+            bgSetupTeams()
+            bgSetTeam({_p}, arg-3)
+        else if arg-1 is "자동팀":
+            bgSetupTeams()
+            set {_i} to 0
+            loop all players:
+                if gamemode of loop-player is not spectator:
+                    set {_t} to {-bg::teams::%mod({_i}, 4) + 1%}
+                    bgSetTeam(loop-player, {_t})
+                    add 1 to {_i}
+            bgSay("%{_i}%명을 네 팀으로 나눴습니다.")
+        else if arg-1 is "시작":
+            bgStart()
+        else if arg-1 is "종료":
+            bgStop("관리자 종료")
+        else if arg-1 is "보스":
+            set {_b} to arg-2
+            if {_b} is not set:
+                set {_b} to random element out of {-bg::bd::list::*}
+            if {-bg::bd::%{_b}%::name} is not set:
+                send "&c보스: talos / sphinx / ladon / cyclops"
+                stop
+            bgBossSpawn({_b})
+        else if arg-1 is "보스제거":
+            bgBossRemove()
+        else if arg-1 is "점수":
+            set {-bg::score::%arg-2%} to arg-3 parsed as integer
+        else if arg-1 is "목표":
+            set {bg::cfg::goal} to arg-2 parsed as integer
+            send "&6[전장] &f목표 점수 = %{bg::cfg::goal}%"
+        else if arg-1 is "시간":
+            set {bg::cfg::minutes} to arg-2 parsed as integer
+            send "&6[전장] &f제한 시간 = %{bg::cfg::minutes}%분"
+        else if arg-1 is "이동":
+            if {-bg::mk::%arg-2%::x} is set:
+                teleport player to bgMk(arg-2)
+            else:
+                send "&c마커 없음. 예: temple_core, altar_ares, lair_forge, base_red"

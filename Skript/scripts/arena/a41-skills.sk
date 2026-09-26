@@ -1,0 +1,410 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  신들의 전장 — 보스 스킬 12개 (보스마다 3개, 모두 바닥 경고 → 게이지가 차면 판정)
+#
+#  탈로스   청동 돌진(직선 돌진, 기둥에 박으면 기절) · 대지 가르기(부채꼴 직선 연속) · 용광로 폭주(주변 폭발 + 불바닥)
+#  스핑크스 석화의 수수께끼(번호 순서 폭발) · 모래 표식(추적 표식) · 봉인의 고리(도넛, 보스 곁이 안전)
+#  라돈     백두 폭풍(머리마다 부채꼴 연속) · 독 숨결(부채꼴 + 독 웅덩이) · 황금 사과의 재생(회복 시전, 딜로 저지)
+#  키클롭스 대지 진동(안→밖 퍼지는 고리) · 거암 추격(대상 발밑 연속) · 회전 강타(주변 원)
+#  강한 공격일수록 경고가 길다. 격노(체력 50%↓) 때는 경고가 조금 짧아지고 횟수가 늘어난다.
+#  피해는 하트 단위 (플레이어 최대 10하트). 한 번에 4.5하트를 넘는 공격은 없다.
+# ═════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────── 지연 판정 도우미
+function bgFx(p: player, fx: text):
+    if {_fx} is not "":
+        bgCmd("effect give %name of {_p}% %{_fx}% true")
+
+function bgLateCircle(g: number, c: location, r: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
+    wait {_t} ticks
+    if bgOk({_g}) is false:
+        stop
+    set {_ps::*} to bgLairPlayers()
+    loop {_ps::*}:
+        if bgInCircle(loop-value, {_c}, {_r}) is true:
+            bgHit(loop-value, {_hearts}, {_c}, {_kb}, {_up})
+            bgFx(loop-value, {_fx})
+    bgParticle({_c}, {_pt}, {_r} / 2, 0.4, {_r} / 2, 0.03, 40)
+    bgSoundAt({_c}, "entity.generic.explode", 1.5, 1.2)
+
+function bgLateDonut(g: number, c: location, rin: number, rout: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
+    wait {_t} ticks
+    if bgOk({_g}) is false:
+        stop
+    set {_ps::*} to bgLairPlayers()
+    loop {_ps::*}:
+        if bgInDonut(loop-value, {_c}, {_rin}, {_rout}) is true:
+            bgHit(loop-value, {_hearts}, {_c}, {_kb}, {_up})
+            bgFx(loop-value, {_fx})
+    loop 12 times:
+        set {_a} to loop-number * 30
+        set {_rr} to ({_rin} + {_rout}) / 2
+        set {_l} to location((x-coordinate of {_c}) + cos({_a}) * {_rr}, (y-coordinate of {-bg::boss::home}) + 0.3, (z-coordinate of {_c}) + sin({_a}) * {_rr}, world of {_c})
+        bgParticle({_l}, {_pt}, 1, 0.3, 1, 0.02, 8)
+    bgSoundAt({_c}, "entity.generic.explode", 2, 0.8)
+
+function bgLateRect(g: number, c: location, yaw: number, wd: number, len: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
+    wait {_t} ticks
+    if bgOk({_g}) is false:
+        stop
+    set {_ps::*} to bgLairPlayers()
+    loop {_ps::*}:
+        if bgInRect(loop-value, {_c}, {_yaw}, {_wd}, {_len}) is true:
+            bgHit(loop-value, {_hearts}, {_c}, {_kb}, {_up})
+            bgFx(loop-value, {_fx})
+    set {_n} to ceil({_len} / 2)
+    loop {_n} times:
+        bgParticle(bgOff({_c}, {_yaw}, loop-number * 2, 0), {_pt}, {_wd} / 4, 0.3, 0.6, 0.02, 8)
+    bgSoundAt({_c}, "entity.generic.explode", 1.5, 1)
+
+function bgLateCone(g: number, c: location, yaw: number, deg: number, r: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
+    wait {_t} ticks
+    if bgOk({_g}) is false:
+        stop
+    set {_ps::*} to bgLairPlayers()
+    loop {_ps::*}:
+        if bgInCone(loop-value, {_c}, {_yaw}, {_deg}, {_r}) is true:
+            bgHit(loop-value, {_hearts}, {_c}, {_kb}, {_up})
+            bgFx(loop-value, {_fx})
+    loop 3 times:
+        bgParticle(bgOff({_c}, {_yaw}, {_r} * loop-number / 4, 0), {_pt}, loop-number, 0.4, loop-number, 0.03, 16)
+    bgSoundAt({_c}, "entity.ender_dragon.flap", 2, 0.7)
+
+# 남는 바닥 (불 · 독): 10틱마다 판정
+function bgHazard(g: number, locs: locations, r: number, ticks: number, kind: text):
+    set {_n} to floor({_ticks} / 10)
+    loop {_n} times:
+        wait 10 ticks
+        if bgOk({_g}) is false:
+            stop
+        set {_ps::*} to bgLairPlayers()
+        loop {_ps::*}:
+            set {_p} to loop-value-2
+            loop {_locs::*}:
+                if bgInCircle({_p}, loop-value-3, {_r}) is true:
+                    if {_kind} is "fire":
+                        damage {_p} by 0.5
+                        ignite {_p} for 2 seconds
+                    else:
+                        bgCmd("effect give %name of {_p}% poison 2 0 true")
+
+function bgRandLair(maxr: number) :: location:
+    set {_h} to {-bg::boss::home}
+    set {_a} to random number between 0 and 360
+    set {_d} to sqrt(random number between 0 and 1) * {_maxr}
+    return location((x-coordinate of {_h}) + cos({_a}) * {_d}, y-coordinate of {_h}, (z-coordinate of {_h}) + sin({_a}) * {_d}, world of {_h})
+
+function bgAimYaw() :: number:
+    set {_pos} to bgBossPos()
+    if {-bg::boss::target} is set:
+        return bgYawTo({_pos}, location of {-bg::boss::target})
+    return yaw of (location of {-bg::boss::ent})
+
+function bgRage(a: number, b: number) :: number:
+    if {-bg::boss::rage} is true:
+        return {_b}
+    return {_a}
+
+# 스킬이 끝날 때까지 기다렸다 상태 정리
+function bgSkillDone(g: number, t: number):
+    wait {_t} ticks
+    if bgOk({_g}) is false:
+        stop
+    if {-bg::boss::state} is "cast":
+        bgCastEnd()
+
+# ═══════════════════════════════════════════════════════════ 탈로스
+# 청동 돌진: 대상 방향 직선 (폭 5, 벽까지). 기둥이 길에 있으면 기둥 앞에서 멈추고 3초 기절 (받는 피해 1.5배)
+function bgSkTalosRush(g: number):
+    set {_pos} to bgBossPos()
+    set {_yaw} to bgAimYaw()
+    bgBossFace({_yaw})
+    set {_len} to 4
+    loop 30 times:
+        if bgDist2(bgOff({_pos}, {_yaw}, loop-number, 0), {-bg::boss::home}) > 17:
+            exit loop
+        set {_len} to loop-number
+    set {_hit} to -1
+    set {_x0} to floor({-bg::mk::lair_%{-bg::boss::lair}%::x})
+    set {_z0} to floor({-bg::mk::lair_%{-bg::boss::lair}%::z})
+    loop 4 times:
+        set {_m} to "pillar_%{_x0}%_%{_z0}%_%loop-number - 1%"
+        if {-bg::mk::%{_m}%::x} is set:
+            set {_pl} to bgMk({_m})
+            set {_dx} to (x-coordinate of {_pl}) - (x-coordinate of {_pos})
+            set {_dz} to (z-coordinate of {_pl}) - (z-coordinate of {_pos})
+            set {_along} to {_dx} * bgFwdX({_yaw}) + {_dz} * bgFwdZ({_yaw})
+            set {_perp} to abs({_dx} * bgFwdZ({_yaw}) - {_dz} * bgFwdX({_yaw}))
+            if {_perp} < 2.6:
+                if {_along} > 2:
+                    if {_along} - 2 < {_len}:
+                        set {_len} to {_along} - 2
+                        set {_hit} to 1
+    set {_t} to bgRage(30, 22)
+    bgCastLen({_t} + 8)
+    bgTRect({_pos}, {_yaw}, 5, {_len}, {_t})
+    bgAnim("rush_windup")
+    bgSoundAt({_pos}, "block.anvil.land", 2, 0.5)
+    wait {_t} ticks
+    if bgOk({_g}) is false:
+        stop
+    bgAnim("rush")
+    set {_ps::*} to bgLairPlayers()
+    loop {_ps::*}:
+        if bgInRect(loop-value, {_pos}, {_yaw}, 5, {_len}) is true:
+            bgHit(loop-value, 3.5, {_pos}, 1.5, 0.5)
+    loop 8 times:
+        set {_n} to bgOff({_pos}, {_yaw}, {_len} * loop-number / 8, 0)
+        set yaw of {_n} to {_yaw}
+        teleport {-bg::boss::ent} to {_n}
+        bgBossSync()
+        bgParticle({_n}, "large_smoke", 1, 0.3, 1, 0.02, 6)
+        wait 1 tick
+        if bgOk({_g}) is false:
+            stop
+    if {_hit} is 1:
+        bgStun(60)
+        set {_ps::*} to bgLairPlayers()
+        loop {_ps::*}:
+            send action bar "&6탈로스가 기둥에 부딪혀 기절했습니다! &f(받는 피해 1.5배)" to loop-value
+        bgSoundAt(bgBossPos(), "block.anvil.destroy", 3, 0.5)
+        stop
+    bgCastEnd()
+
+# 대지 가르기: 대상 쪽으로 직선 3줄(격노 5줄)이 6틱 간격으로 차례로
+function bgSkTalosFissure(g: number):
+    set {_pos} to bgBossPos()
+    set {_yaw} to bgAimYaw()
+    bgBossFace({_yaw})
+    set {_offs::*} to -35, 0 and 35
+    if {-bg::boss::rage} is true:
+        set {_offs::*} to -70, -35, 0, 35 and 70
+    set {_t} to bgRage(26, 20)
+    set {_n} to size of {_offs::*}
+    bgCastLen(({_n} - 1) * 6 + {_t})
+    bgAnim("fissure")
+    loop {_offs::*}:
+        if bgOk({_g}) is false:
+            stop
+        set {_y} to {_yaw} + loop-value
+        bgTRect({_pos}, {_y}, 3, 18, {_t})
+        bgLateRect({_g}, {_pos}, {_y}, 3, 18, {_t}, 3, 0.4, 0.6, "lava", "")
+        bgSoundAt({_pos}, "block.basalt.break", 2, 0.6)
+        wait 6 ticks
+    bgSkillDone({_g}, {_t})
+
+# 용광로 폭주: 주변 반지름 8 폭발(경고 가장 김) → 불바닥 4곳 5초
+function bgSkTalosOverheat(g: number):
+    set {_pos} to bgBossPos()
+    set {_t} to bgRage(50, 40)
+    bgCastLen({_t})
+    bgTCircle({_pos}, 16, {_t})
+    bgAnim("overheat")
+    bgSoundAt({_pos}, "block.fire.ambient", 3, 0.5)
+    bgLateCircle({_g}, {_pos}, 8, {_t}, 4.5, 1.4, 0.5, "flame", "")
+    wait {_t} ticks
+    if bgOk({_g}) is false:
+        stop
+    bgCastEnd()
+    loop 4 times:
+        set {_l} to bgRandLair(13)
+        add {_l} to {_locs::*}
+        bgTDecal({_l}, "scorch", 5, 100, random number between 0 and 360)
+    bgHazard({_g}, {_locs::*}, 2.5, 100, "fire")
+
+# ═══════════════════════════════════════════════════════════ 스핑크스
+# 석화의 수수께끼: 번호 붙은 원 3개(격노 4)가 1→2→3 순서로 폭발. 맞으면 석화(구속 II 2초)
+function bgSkSphinxRiddle(g: number):
+    set {_n} to bgRage(3, 4)
+    set {_ps::*} to bgLairPlayers()
+    set {_base} to bgRage(30, 24)
+    set {_step} to bgRage(14, 10)
+    bgAnim("riddle")
+    bgSoundAt(bgBossPos(), "entity.evoker.prepare_summon", 3, 0.8)
+    loop {_n} times:
+        set {_i} to loop-number
+        set {_l} to bgRandLair(14)
+        set {_p} to random element out of {_ps::*}
+        if {_p} is set:
+            set {_l} to location of {_p}
+            remove {_p} from {_ps::*}
+        set {_t} to {_base} + {_step} * {_i}
+        bgTCircle({_l}, 8, {_t})
+        bgTDecal({_l}, "num_%{_i}%", 3, {_t}, 0)
+        bgLateCircle({_g}, {_l}, 4, {_t}, 3, 0.5, 0.3, "dust_plume", "slowness 2 1")
+        set {_last} to {_t}
+    bgCastLen({_last})
+    bgSkillDone({_g}, {_last})
+
+# 모래 표식: 2명(격노 3)의 머리 위에 ! — 원이 2초 동안 따라다니다 멈추고 0.8초 뒤 폭발 (아군에게서 떨어지기)
+function bgSkSphinxMark(g: number):
+    set {_ps::*} to bgLairPlayers()
+    set {_n} to min(size of {_ps::*}, bgRage(2, 3))
+    bgAnim("mark")
+    bgCastLen(56)
+    loop {_n} times:
+        set {_p} to random element out of {_ps::*}
+        remove {_p} from {_ps::*}
+        bgSandMark({_g}, {_p})
+    bgSoundAt(bgBossPos(), "entity.illusioner.cast_spell", 3, 1)
+    bgSkillDone({_g}, 56)
+
+function bgSandMark(g: number, p: player):
+    set {_mk} to bgTMark({_p}, 56)
+    set {_c} to bgTCircle(location of {_p}, 6, 56)
+    send title "&c!" with subtitle "&6모래 표식 — 동료에게서 떨어지세요" to {_p} for 30 ticks
+    loop 20 times:
+        wait 2 ticks
+        if bgOk({_g}) is false:
+            stop
+        if {_p} is online:
+            bgTMove({_c}, location of {_p}, 0)
+            bgTMove({_mk}, location of {_p}, 2.6)
+            set {_at} to location of {_p}
+    if {_at} is not set:
+        set {_at} to location of {_p}
+    bgLateCircle({_g}, {_at}, 3, 16, 3.5, 0.6, 0.4, "dust_plume", "slowness 2 1")
+
+# 봉인의 고리: 보스 반지름 7 바깥 ~ 17 전체 도넛 (경고 김) — 스핑크스 곁으로 파고들어야 산다
+function bgSkSphinxSeal(g: number):
+    set {_pos} to bgBossPos()
+    set {_t} to bgRage(56, 46)
+    bgCastLen({_t})
+    bgAnim("seal")
+    bgTRune({_pos}, "rune_sphinx", 12, {_t})
+    bgTDonut({_pos}, 34, {_t})
+    bgSoundAt({_pos}, "block.beacon.power_select", 3, 0.6)
+    bgLateDonut({_g}, {_pos}, 7.4, 17.5, {_t}, 4, 0.8, 0.4, "enchant", "weakness 4 0")
+    bgSkillDone({_g}, {_t})
+
+# ═══════════════════════════════════════════════════════════ 라돈
+# 백두 폭풍: 머리들이 차례로 부채꼴(60°) 브레스 — 3방향(격노 5방향), 8틱 간격
+function bgSkLadonStorm(g: number):
+    set {_pos} to bgBossPos()
+    set {_yaw} to bgAimYaw()
+    bgBossFace({_yaw})
+    set {_offs::*} to -60, 0 and 60
+    if {-bg::boss::rage} is true:
+        set {_offs::*} to -120, -60, 0, 60 and 120
+    set {_t} to bgRage(24, 18)
+    bgCastLen((size of {_offs::*} - 1) * 8 + {_t})
+    bgAnim("storm")
+    loop {_offs::*}:
+        if bgOk({_g}) is false:
+            stop
+        set {_y} to {_yaw} + loop-value
+        bgTCone({_pos}, {_y}, 60, 14, {_t})
+        bgLateCone({_g}, {_pos}, {_y}, 60, 14, {_t}, 3, 0.9, 0.3, "cloud", "")
+        wait 8 ticks
+    bgSkillDone({_g}, {_t})
+
+# 독 숨결: 대상 쪽 90° 부채꼴 → 맞으면 독, 바닥에 독 웅덩이 3개 6초
+function bgSkLadonVenom(g: number):
+    set {_pos} to bgBossPos()
+    set {_yaw} to bgAimYaw()
+    bgBossFace({_yaw})
+    set {_t} to bgRage(34, 26)
+    bgCastLen({_t})
+    bgAnim("venom")
+    bgTCone({_pos}, {_yaw}, 90, 16, {_t})
+    bgSoundAt({_pos}, "entity.ender_dragon.growl", 2, 1.4)
+    bgLateCone({_g}, {_pos}, {_yaw}, 90, 16, {_t}, 2, 0.5, 0.2, "witch", "poison 5 1")
+    wait {_t} ticks
+    if bgOk({_g}) is false:
+        stop
+    bgCastEnd()
+    loop 5, 9 and 13:
+        set {_l} to bgOff({_pos}, {_yaw} + (random number between -20 and 20), loop-value, 0)
+        add {_l} to {_locs::*}
+        bgTDecal({_l}, "poison", 6, 120, random number between 0 and 360)
+    bgHazard({_g}, {_locs::*}, 3, 120, "poison")
+
+# 황금 사과의 재생: 4초 시전 → 체력 12% 회복. 시전 중 최대 체력 8% 이상 피해를 주면 저지 + 기절
+function bgSkLadonApple(g: number):
+    set {_pos} to bgBossPos()
+    bgCastLen(80)
+    bgAnim("apple")
+    set {-bg::boss::hurt} to 0
+    set {_rune} to bgTRune({_pos}, "rune_sphinx", 10, 80)
+    bgTCircle({_pos}, 9, 20)
+    bgLateCircle({_g}, {_pos}, 4.5, 20, 1.5, 1.6, 0.5, "wax_on", "")
+    set {_ps::*} to bgLairPlayers()
+    loop {_ps::*}:
+        send title "" with subtitle "&6라돈이 황금 사과를 삼키려 한다! &f강하게 공격해 저지하세요" to loop-value for 50 ticks
+    loop 8 times:
+        wait 10 ticks
+        if bgOk({_g}) is false:
+            stop
+        if {-bg::boss::hurt} >= {-bg::boss::max} * 0.08:
+            bgTClear({_rune})
+            bgStun(50)
+            set {_ps::*} to bgLairPlayers()
+            loop {_ps::*}:
+                send action bar "&a저지 성공! &f라돈이 비틀거립니다 (받는 피해 1.5배)" to loop-value
+            stop
+    set {-bg::boss::hp} to min({-bg::boss::max}, {-bg::boss::hp} + {-bg::boss::max} * 0.12)
+    bgParticle(bgBossPos(), "wax_on", 2, 3, 2, 0.1, 60)
+    bgSoundAt(bgBossPos(), "entity.player.burp", 3, 0.6)
+    bgCastEnd()
+
+# ═══════════════════════════════════════════════════════════ 키클롭스
+# 대지 진동: 안쪽 원 → 가운데 고리 → 바깥 고리 순서로 퍼진다 (안쪽이 먼저 터지니 터진 곳으로 들어가기)
+function bgSkCyclopsQuake(g: number):
+    set {_pos} to bgBossPos()
+    set {_a} to bgRage(24, 18)
+    set {_b} to bgRage(34, 28)
+    set {_c} to bgRage(44, 38)
+    bgCastLen({_c})
+    bgAnim("quake")
+    bgTCircle({_pos}, 10, {_a})
+    bgTDonut({_pos}, 22, {_b})
+    bgTDonut({_pos}, 34, {_c})
+    bgLateCircle({_g}, {_pos}, 5, {_a}, 3, 0.4, 0.8, "poof", "")
+    bgLateDonut({_g}, {_pos}, 4.6, 11, {_b}, 3, 0.4, 0.8, "poof", "")
+    bgLateDonut({_g}, {_pos}, 7.1, 17.5, {_c}, 3, 0.4, 0.8, "poof", "")
+    bgSkillDone({_g}, {_c})
+
+# 거암 추격: 한 명의 발밑에 원이 4번(격노 6번) 연달아 — 계속 움직여야 피한다
+function bgSkCyclopsBoulder(g: number):
+    set {_p} to {-bg::boss::target}
+    if {_p} is not set:
+        bgCastEnd()
+        stop
+    set {_n} to bgRage(4, 6)
+    set {_gap} to bgRage(12, 9)
+    set {_t} to bgRage(22, 18)
+    bgCastLen(({_n} - 1) * {_gap} + {_t})
+    bgAnim("boulder")
+    send title "" with subtitle "&6거암이 당신을 쫓습니다 — 멈추지 마세요!" to {_p} for 40 ticks
+    loop {_n} times:
+        if bgOk({_g}) is false:
+            stop
+        if {_p} is not online:
+            exit loop
+        set {_l} to location of {_p}
+        bgTCircle({_l}, 6, {_t})
+        bgLateCircle({_g}, {_l}, 3, {_t}, 3.5, 0.9, 0.5, "explosion", "")
+        bgSoundAt({_l}, "block.stone.break", 2, 0.5)
+        wait {_gap} ticks
+    bgSkillDone({_g}, {_t})
+
+# 회전 강타: 곤봉을 휘둘러 주변 반지름 6.5 — 격노 시 한 번 더 (짧은 경고)
+function bgSkCyclopsWhirl(g: number):
+    set {_pos} to bgBossPos()
+    set {_t} to bgRage(36, 28)
+    set {_total} to {_t}
+    if {-bg::boss::rage} is true:
+        set {_total} to {_t} + 22
+    bgCastLen({_total})
+    bgAnim("whirl")
+    bgTCircle({_pos}, 13, {_t})
+    bgLateCircle({_g}, {_pos}, 6.5, {_t}, 4, 1.6, 0.5, "sweep_attack", "")
+    if {-bg::boss::rage} is true:
+        wait {_t} ticks
+        if bgOk({_g}) is false:
+            stop
+        bgAnim("whirl")
+        bgTCircle({_pos}, 13, 22)
+        bgLateCircle({_g}, {_pos}, 6.5, 22, 3, 1.6, 0.5, "sweep_attack", "")
+        bgSkillDone({_g}, 22)
+        stop
+    bgSkillDone({_g}, {_t})

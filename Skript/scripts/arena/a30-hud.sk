@@ -1,0 +1,111 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  신들의 전장 — 화면 위 HUD (보스바 이름 = 폰트 글리프 합성)
+#   윗줄: 팀 점수판 4개 (내 팀 강조) + 남은 시간
+#   아랫줄(보스 출현 시): 초상화 원 · 이름 배너 · 칸 나뉜 체력바 · 숫자 · 번개 원 · 시전 게이지
+#  글리프 · 공백 문자는 a01-gen-hud.sk 가 만든다. 보스 이름은 시전 중에도 바뀌지 않는다.
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgDigits(txt: text, cx: number, key: text) :: text:
+    set {_len} to length of {_txt}
+    set {_w} to {_len} * 8
+    set {_x} to round({_cx} - {_w} / 2)
+    set {_s} to ""
+    loop {_len} times:
+        set {_ch} to subtext of {_txt} from characters loop-number to loop-number
+        if {_ch} is "/":
+            set {_ch} to "s"
+        else if {_ch} is ":":
+            set {_ch} to "c"
+        set {_s} to "%{_s}%%{-bg::hud::%{_key}%::%{_ch}%}%"
+    set {_back} to -1 * ({_x} + {_w})
+    return "%{-bg::sp::%{_x}%}%%{_s}%%{-bg::sp::%{_back}%}%"
+
+function bgPad2(n: number) :: text:
+    if {_n} < 10:
+        return "0%{_n}%"
+    return "%{_n}%"
+
+# 공통 윗줄 (점수 · 시간) — 내 팀 판만 다르다
+function bgHudTop(me: text) :: text:
+    set {_s} to ""
+    loop {-bg::teams::*}:
+        if loop-value is {_me}:
+            set {_s} to "%{_s}%%{-bg::hud::plate::%loop-value%_me}%"
+        else:
+            set {_s} to "%{_s}%%{-bg::hud::plate::%loop-value%}%"
+    loop {-bg::teams::*}:
+        set {_sc} to floor({-bg::score::%loop-value%} ? 0)
+        set {_d} to bgDigits("%{_sc}%", {-bg::hud::platecx::%loop-value%}, "hd")
+        set {_s} to "%{_s}%%{_d}%"
+    set {_left} to max(0, {bg::cfg::minutes} * 60 - ({-bg::sec} ? 0))
+    set {_m} to floor({_left} / 60)
+    set {_sec} to {_left} - {_m} * 60
+    set {_d} to bgDigits("%bgPad2({_m})%:%bgPad2({_sec})%", 150, "td")
+    set {_s} to "%{_s}%%{-bg::hud::timer}%%{_d}%"
+    return {_s}
+
+function bgHudBoss() :: text:
+    set {_id} to {-bg::boss::id}
+    set {_max} to {-bg::boss::max}
+    set {_hp} to max(0, {-bg::boss::hp})
+    set {_fw} to {-bg::hud::fill_w}
+    set {_tr} to max({_hp}, {-bg::boss::trail} - {_max} * 0.012)
+    set {-bg::boss::trail} to {_tr}
+    set {_tp} to round({_fw} * min(1, {_tr} / {_max}))
+    set {_hpx} to round({_fw} * min(1, {_hp} / {_max}))
+    if {_hp} > 0:
+        if {_hpx} is 0:
+            set {_hpx} to 1
+    set {_st} to "normal"
+    if {-bg::boss::rage} is true:
+        set {_st} to "rage"
+    set {_stat} to {_st}
+    if {-bg::boss::state} is "stun":
+        set {_stat} to "stun"
+    set {_cpx} to round({-bg::hud::cast_w} * min(1, max(0, {-bg::boss::cast} ? 0)))
+    set {_dia} to "idle"
+    if {-bg::boss::skill} is set:
+        set {_dia} to "lit"
+    set {_s} to "%{-bg::hud::boss_back}%%{-bg::hud::trail::%{_tp}%}%%{-bg::hud::hp::%{_hpx}%}%%{-bg::hud::boss_front}%"
+    set {_s} to "%{_s}%%{-bg::hud::banner::%{_st}%}%%{-bg::hud::name::%{_id}%}%%{-bg::hud::portrait::%{_id}%}%%{-bg::hud::status::%{_stat}%}%"
+    set {_s} to "%{_s}%%{-bg::hud::cast::%{_cpx}%}%%{-bg::hud::diamond::%{_dia}%}%"
+    set {_d} to bgDigits("%ceil({_hp})%/%{_max}%", {-bg::hud::boss_x} + 120, "bd")
+    set {_s} to "%{_s}%%{_d}%"
+    return {_s}
+
+function bgHudCreate():
+    loop "red", "blue", "green", "yellow" and "none":
+        bgCmd("bossbar add bg:hud_%loop-value% """"")
+        bgCmd("bossbar set bg:hud_%loop-value% color white")
+        bgCmd("bossbar set bg:hud_%loop-value% style progress")
+        bgCmd("bossbar set bg:hud_%loop-value% value 0")
+        bgCmd("bossbar set bg:hud_%loop-value% visible true")
+        delete {-bg::hudlast::%loop-value%}
+    set {-bg::hudon} to true
+
+function bgHudRemove():
+    set {-bg::hudon} to false
+    loop "red", "blue", "green", "yellow" and "none":
+        bgCmd("bossbar remove bg:hud_%loop-value%")
+
+every 4 ticks:
+    {-bg::hudon} is true
+    {-bg::hud::ready} is true
+    set {_boss} to ""
+    if {-bg::boss::id} is set:
+        set {_boss} to bgHudBoss()
+    set {_half} to {-bg::hud::total_w} / 2
+    set {_l} to {-bg::sp::-%{_half}%}
+    set {_r} to {-bg::sp::%{_half}%}
+    loop "red", "blue", "green", "yellow" and "none":
+        set {_top} to bgHudTop(loop-value)
+        set {_str} to "%{_l}%%{_top}%%{_boss}%%{_r}%"
+        if {-bg::hudlast::%loop-value%} is not {_str}:
+            set {-bg::hudlast::%loop-value%} to {_str}
+            bgCmd("bossbar set bg:hud_%loop-value% name {text:""%{_str}%"",font:""bg:hud"",shadow_color:0}")
+
+every 1 second:
+    {-bg::hudon} is true
+    loop "red", "blue", "green" and "yellow":
+        bgCmd("bossbar set bg:hud_%loop-value% players @a[team=bg_%loop-value%]")
+    bgCmd("bossbar set bg:hud_none players @a[team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow]")

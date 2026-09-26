@@ -3,4 +3,4 @@
 function bg:map/build/forceload with storage bg:map origin
 scoreboard players set #part bg_build 0
 scoreboard players set #run bg_build 1
-tellraw @a [{"text":"[전장] ","color":"gold"},{"text":"맵 건설 시작 (256단계, 약 13초)","color":"yellow"}]
+tellraw @a [{"text":"[전장] ","color":"gold"},{"text":"맵 건설 시작 (229단계, 약 12초)","color":"yellow"}]

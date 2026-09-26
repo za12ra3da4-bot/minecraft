@@ -1,0 +1,581 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  신들의 전장 — 보스 틀 (소환 · 이동 · 애니메이션 · 피해 · 처치 보상) + 경고 장판 도우미
+#
+#  보스 = 투명 히트박스 몹(허스크/파괴수, NoAI, 크기 조절) + 아이템 디스플레이 파츠 (데이터팩 bg:boss/<id>/*)
+#  체력은 Skript 변수 (히트박스는 절대 죽지 않음). 매 틱: 히트박스 이동 → bg:boss/<id>/tp 로 파츠 따라감
+#  모든 공격은 바닥 장판(붉은 먹 붓터치)이 먼저 깔리고, 게이지가 다 차는 순간 판정한다.
+# ═════════════════════════════════════════════════════════════════════════════
+
+on load:
+    set {-bg::lairname::forge} to "헤파이스토스의 대장간"
+    set {-bg::lairname::sands} to "잊힌 모래 신전"
+    set {-bg::lairname::quarry} to "거인의 채석장"
+    set {-bg::lairname::garden} to "헤스페리데스의 정원"
+    set {-bg::bskills::talos::*} to "rush", "fissure" and "overheat"
+    set {-bg::bskills::sphinx::*} to "riddle", "sandmark" and "seal"
+    set {-bg::bskills::ladon::*} to "storm", "venom" and "apple"
+    set {-bg::bskills::cyclops::*} to "quake", "boulder" and "whirl"
+    set {-bg::bmelee::talos} to "punch"
+    set {-bg::bmelee::sphinx} to "claw"
+    set {-bg::bmelee::ladon} to "bite"
+    set {-bg::bmelee::cyclops} to "slam"
+    set {-bg::breach::talos} to 4.5
+    set {-bg::breach::sphinx} to 5
+    set {-bg::breach::ladon} to 5.5
+    set {-bg::breach::cyclops} to 5
+    set {-bg::bspd::talos} to 0.17
+    set {-bg::bspd::sphinx} to 0.2
+    set {-bg::bspd::ladon} to 0.15
+    set {-bg::bspd::cyclops} to 0.15
+    set {-bg::blessname::talos} to "청동 피부 (저항 · 화염 저항)"
+    set {-bg::blessname::sphinx} to "지혜의 눈 (적 전원 발광)"
+    set {-bg::blessname::ladon} to "황금 사과 (재생)"
+    set {-bg::blessname::cyclops} to "거인의 힘 (힘 · 점프)"
+    if {-bg::boss::gen} is not set:
+        set {-bg::boss::gen} to 0
+
+# ─────────────────────────────────────────────────────────── 공용 계산
+function bgFwdX(yaw: number) :: number:
+    return -1 * sin({_yaw})
+
+function bgFwdZ(yaw: number) :: number:
+    return cos({_yaw})
+
+function bgYawTo(a: location, b: location) :: number:
+    set {_dx} to (x-coordinate of {_b}) - (x-coordinate of {_a})
+    set {_dz} to (z-coordinate of {_b}) - (z-coordinate of {_a})
+    return atan2(-1 * {_dx}, {_dz})
+
+function bgOff(l: location, yaw: number, fwd: number, side: number) :: location:
+    set {_x} to (x-coordinate of {_l}) + bgFwdX({_yaw}) * {_fwd} + cos({_yaw}) * {_side}
+    set {_z} to (z-coordinate of {_l}) + bgFwdZ({_yaw}) * {_fwd} + sin({_yaw}) * {_side}
+    return location({_x}, y-coordinate of {_l}, {_z}, world of {_l})
+
+function bgOk(g: number) :: boolean:
+    if {-bg::boss::gen} is not {_g}:
+        return false
+    if {-bg::boss::id} is not set:
+        return false
+    if {-bg::boss::state} is "dead":
+        return false
+    return true
+
+function bgBossPos() :: location:
+    set {_l} to location of {-bg::boss::ent}
+    set y-coordinate of {_l} to y-coordinate of {-bg::boss::home}
+    return {_l}
+
+# 투기장 안의 전투 참가자
+function bgLairPlayers() :: players:
+    set {_h} to {-bg::boss::home}
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            if world of loop-player is world of {_h}:
+                if bgDist2(location of loop-player, {_h}) < 24:
+                    if abs((y-coordinate of loop-player) - (y-coordinate of {_h})) < 10:
+                        add loop-player to {_ps::*}
+    return {_ps::*}
+
+# ─────────────────────────────────────────────────────────── 판정 도형 (수평, 바닥 높이 ±4)
+function bgYOk(p: player) :: boolean:
+    if abs((y-coordinate of {_p}) - (y-coordinate of {-bg::boss::home})) < 4:
+        return true
+    return false
+
+function bgInCircle(p: player, c: location, r: number) :: boolean:
+    if bgYOk({_p}) is false:
+        return false
+    return bgDist2(location of {_p}, {_c}) <= {_r}
+
+function bgInDonut(p: player, c: location, rin: number, rout: number) :: boolean:
+    if bgYOk({_p}) is false:
+        return false
+    set {_d} to bgDist2(location of {_p}, {_c})
+    if {_d} >= {_rin}:
+        if {_d} <= {_rout}:
+            return true
+    return false
+
+function bgInRect(p: player, c: location, yaw: number, wd: number, len: number) :: boolean:
+    if bgYOk({_p}) is false:
+        return false
+    set {_dx} to (x-coordinate of {_p}) - (x-coordinate of {_c})
+    set {_dz} to (z-coordinate of {_p}) - (z-coordinate of {_c})
+    set {_fx} to bgFwdX({_yaw})
+    set {_fz} to bgFwdZ({_yaw})
+    set {_along} to {_dx} * {_fx} + {_dz} * {_fz}
+    set {_perp} to abs({_dx} * {_fz} - {_dz} * {_fx})
+    if {_along} >= -0.6:
+        if {_along} <= {_len}:
+            if {_perp} <= {_wd} / 2 + 0.3:
+                return true
+    return false
+
+function bgInCone(p: player, c: location, yaw: number, deg: number, r: number) :: boolean:
+    if bgYOk({_p}) is false:
+        return false
+    set {_dx} to (x-coordinate of {_p}) - (x-coordinate of {_c})
+    set {_dz} to (z-coordinate of {_p}) - (z-coordinate of {_c})
+    set {_d} to sqrt({_dx} * {_dx} + {_dz} * {_dz})
+    if {_d} > {_r}:
+        return false
+    if {_d} < 1.2:
+        return true
+    set {_cos} to ({_dx} * bgFwdX({_yaw}) + {_dz} * bgFwdZ({_yaw})) / {_d}
+    return {_cos} >= cos({_deg} / 2)
+
+# 피해 (하트 단위) + 밀쳐내기
+function bgHit(p: player, hearts: number, from: location, kb: number, up: number):
+    damage {_p} by {_hearts}
+    set {_dx} to (x-coordinate of {_p}) - (x-coordinate of {_from})
+    set {_dz} to (z-coordinate of {_p}) - (z-coordinate of {_from})
+    set {_d} to sqrt({_dx} * {_dx} + {_dz} * {_dz})
+    if {_d} < 0.1:
+        set {_dx} to 1
+        set {_d} to 1
+    set velocity of {_p} to vector({_dx} / {_d} * {_kb}, {_up}, {_dz} / {_d} * {_kb})
+
+# ─────────────────────────────────────────────────────────── 경고 장판 (데이터팩 bg:tele/*)
+function bgTid() :: text:
+    add 1 to {-bg::tid}
+    return "%{-bg::tid}%"
+
+function bgXYZ(l: location) :: text:
+    return "x:%bgN(x-coordinate of {_l})%,y:%bgN(y-coordinate of {-bg::boss::home})%,z:%bgN(z-coordinate of {_l})%"
+
+function bgTCircle(l: location, d: number, t: number) :: text:
+    set {_id} to bgTid()
+    bgCmd("function bg:tele/circle {%bgXYZ({_l})%,d:%bgN({_d})%,t:%{_t}%,id:%{_id}%}")
+    return {_id}
+
+function bgTDonut(l: location, d: number, t: number) :: text:
+    set {_id} to bgTid()
+    bgCmd("function bg:tele/donut {%bgXYZ({_l})%,d:%bgN({_d})%,t:%{_t}%,id:%{_id}%}")
+    return {_id}
+
+function bgTRect(l: location, yaw: number, wd: number, len: number, t: number) :: text:
+    set {_id} to bgTid()
+    bgCmd("function bg:tele/rect {%bgXYZ({_l})%,yaw:%bgN({_yaw})%,wd:%bgN({_wd})%,l:%bgN({_len})%,hl:%bgN({_len} / 2)%,hz:%bgN({_len} - {_wd} / 2)%,t:%{_t}%,id:%{_id}%}")
+    return {_id}
+
+function bgTCone(l: location, yaw: number, deg: number, r: number, t: number) :: text:
+    set {_id} to bgTid()
+    bgCmd("function bg:tele/cone {%bgXYZ({_l})%,yaw:%bgN({_yaw})%,deg:%{_deg}%,d:%bgN({_r} * 2)%,t:%{_t}%,id:%{_id}%}")
+    return {_id}
+
+function bgTDecal(l: location, m: text, d: number, t: number, yaw: number) :: text:
+    set {_id} to bgTid()
+    bgCmd("function bg:tele/decal {%bgXYZ({_l})%,m:%{_m}%,d:%bgN({_d})%,t:%{_t}%,yaw:%bgN({_yaw})%,id:%{_id}%}")
+    return {_id}
+
+function bgTRune(l: location, m: text, d: number, t: number) :: text:
+    set {_id} to bgTid()
+    bgCmd("function bg:tele/rune {%bgXYZ({_l})%,m:%{_m}%,d:%bgN({_d})%,t:%{_t}%,id:%{_id}%}")
+    return {_id}
+
+function bgTMark(p: player, t: number) :: text:
+    set {_id} to bgTid()
+    set {_l} to location of {_p}
+    bgCmd("function bg:tele/mark {x:%bgN(x-coordinate of {_l})%,y:%bgN((y-coordinate of {_l}) + 2.6)%,z:%bgN(z-coordinate of {_l})%,t:%{_t}%,id:%{_id}%}")
+    return {_id}
+
+function bgTMove(id: text, l: location, dy: number):
+    bgCmd("function bg:tele/move {id:%{_id}%,x:%bgN(x-coordinate of {_l})%,y:%bgN((y-coordinate of {-bg::boss::home}) + {_dy})%,z:%bgN(z-coordinate of {_l})%}")
+
+function bgTClear(id: text):
+    bgCmd("function bg:tele/clear {id:%{_id}%}")
+
+# ─────────────────────────────────────────────────────────── 애니메이션
+function bgAnim(a: text):
+    set {_id} to {-bg::boss::id}
+    if {-bg::anim::%{_id}%::%{_a}%::n} is not set:
+        stop
+    set {-bg::boss::anim} to {_a}
+    set {-bg::boss::frame} to 0
+    set {-bg::boss::ft} to {-bg::anim::%{_id}%::%{_a}%::t::0}
+    set {-bg::boss::animdone} to false
+    bgCmd("function bg:boss/%{_id}%/anim/%{_a}%/0")
+
+function bgAnimLoop(a: text):
+    if {-bg::boss::anim} is {_a}:
+        stop
+    bgAnim({_a})
+
+function bgAnimStep():
+    if {-bg::boss::animdone} is true:
+        stop
+    set {_id} to {-bg::boss::id}
+    set {_a} to {-bg::boss::anim}
+    remove 1 from {-bg::boss::ft}
+    if {-bg::boss::ft} > 0:
+        stop
+    set {_f} to {-bg::boss::frame} + 1
+    if {_f} >= {-bg::anim::%{_id}%::%{_a}%::n}:
+        if {-bg::anim::%{_id}%::%{_a}%::loop} is true:
+            set {_f} to 0
+        else:
+            set {-bg::boss::animdone} to true
+            stop
+    set {-bg::boss::frame} to {_f}
+    set {-bg::boss::ft} to {-bg::anim::%{_id}%::%{_a}%::t::%{_f}%}
+    bgCmd("function bg:boss/%{_id}%/anim/%{_a}%/%{_f}%")
+
+# ─────────────────────────────────────────────────────────── 시전 상태 (HUD 게이지 · 다이아몬드)
+function bgCastBegin(sk: text, ticks: number):
+    set {-bg::boss::state} to "cast"
+    set {-bg::boss::skill} to {_sk}
+    set {-bg::boss::castT} to 0
+    set {-bg::boss::castN} to max(1, {_ticks})
+    set {-bg::boss::cast} to 0
+
+function bgCastLen(ticks: number):
+    set {-bg::boss::castT} to 0
+    set {-bg::boss::castN} to max(1, {_ticks})
+
+function bgCastEnd():
+    if {-bg::boss::state} is "cast":
+        set {-bg::boss::state} to "idle"
+    delete {-bg::boss::skill}
+    set {-bg::boss::cast} to 0
+    set {-bg::boss::cd} to 70
+    if {-bg::boss::rage} is true:
+        set {-bg::boss::cd} to 45
+
+function bgStun(ticks: number):
+    set {-bg::boss::state} to "stun"
+    set {-bg::boss::stun} to {_ticks}
+    delete {-bg::boss::skill}
+    set {-bg::boss::cast} to 0
+    bgAnim("stun")
+    bgParticle(bgBossPos(), "wax_off", 1.5, 2, 1.5, 0.1, 40)
+    bgSoundAt(bgBossPos(), "entity.zombie.attack_iron_door", 2, 0.6)
+
+# ─────────────────────────────────────────────────────────── 소환 / 제거
+function bgBossSpawn(id: text):
+    if {-bg::boss::id} is set:
+        bgBossRemove()
+    set {_lair} to {-bg::bd::%{_id}%::lair}
+    set {_c} to bgMk("lair_%{_lair}%")
+    add 1 to {-bg::boss::gen}
+    set {-bg::boss::home} to {_c}
+    set {-bg::boss::lair} to {_lair}
+    set {-bg::boss::max} to {-bg::bd::%{_id}%::hp}
+    set {-bg::boss::hp} to {-bg::boss::max}
+    set {-bg::boss::trail} to {-bg::boss::max}
+    set {-bg::boss::state} to "spawn"
+    set {-bg::boss::rage} to false
+    set {-bg::boss::cd} to 60
+    set {-bg::boss::atk} to 0
+    set {-bg::boss::rot} to 0
+    set {-bg::boss::alone} to 0
+    set {-bg::boss::hurt} to 0
+    delete {-bg::boss::skill}
+    delete {-bg::boss::dmg::*}
+    delete {-bg::boss::target}
+    set {_hb} to {-bg::bd::%{_id}%::hitbox}
+    set {_xyz} to "%bgN(x-coordinate of {_c})% %bgN(y-coordinate of {_c})% %bgN(z-coordinate of {_c})%"
+    bgCmd("summon %{_hb}% %{_xyz}% {Tags:[""bg"",""bgb_hit"",""bgb_hit_%{_id}%""],NoAI:1b,Silent:1b,PersistenceRequired:1b,CanPickUpLoot:0b,attributes:[{id:""minecraft:scale"",base:%{-bg::bd::%{_id}%::hitscale}%},{id:""minecraft:max_health"",base:1000},{id:""minecraft:knockback_resistance"",base:1}],Health:1000f,active_effects:[{id:""minecraft:invisibility"",duration:-1,amplifier:0,show_particles:0b}]}")
+    loop all entities in radius 3 around {_c}:
+        if scoreboard tags of loop-entity contain "bgb_hit":
+            set {-bg::boss::ent} to loop-entity
+    if {-bg::boss::ent} is not set:
+        bgSay("&c보스 히트박스를 만들지 못했습니다 (청크가 로드되어 있나요?)")
+        delete {-bg::boss::id}
+        stop
+    set {-bg::boss::id} to {_id}
+    bgCmd("execute as @e[tag=bgb_hit,limit=1] at @s run function bg:boss/%{_id}%/spawn")
+    bgAnim("idle")
+    bgTitle("&c&l⚠ %{-bg::bd::%{_id}%::name}%", "&f%{-bg::lairname::%{_lair}%}%에 나타났습니다!", 10, 60, 15)
+    bgSay("&c&l보스 출현! &f%{-bg::bd::%{_id}%::name}% — &e%{-bg::lairname::%{_lair}%}%&f · 처치 팀 +150점 · %{-bg::blessname::%{_id}%}%")
+    bgSound("entity.wither.spawn", 0.5, 0.8)
+    bgParticle({_c}, "explosion_emitter", 2, 1, 2, 0, 3)
+    bgParticle({_c}, "large_smoke", 4, 2, 4, 0.05, 120)
+    wait 30 ticks
+    if {-bg::boss::id} is {_id}:
+        set {-bg::boss::state} to "idle"
+
+function bgBossRemove():
+    if {-bg::boss::id} is not set:
+        stop
+    set {_id} to {-bg::boss::id}
+    add 1 to {-bg::boss::gen}
+    bgCmd("function bg:boss/%{_id}%/remove")
+    bgCmd("kill @e[tag=bgb_hit]")
+    bgCmd("function bg:tele/clear_all")
+    delete {-bg::boss::id}
+    delete {-bg::boss::ent}
+    delete {-bg::boss::skill}
+    set {-bg::boss::state} to "none"
+    set {-bg::boss::next} to {bg::cfg::boss_every}
+
+# 초 단위 시계 (a20 의 every 1 second 에서 호출)
+function bgBossClock():
+    if {-bg::boss::id} is set:
+        set {_ps::*} to bgLairPlayers()
+        if size of {_ps::*} is 0:
+            add 1 to {-bg::boss::alone}
+            if {-bg::boss::alone} >= 45:
+                bgSay("&7%{-bg::bd::%{-bg::boss::id}%::name}%이(가) 도전자가 없어 사라졌습니다.")
+                bgBossRemove()
+        else:
+            set {-bg::boss::alone} to 0
+        stop
+    remove 1 from {-bg::boss::next}
+    if {-bg::boss::next} is 20:
+        set {_pick} to random element out of {-bg::bd::list::*}
+        if {_pick} is {-bg::boss::last}:
+            set {_pick} to random element out of {-bg::bd::list::*}
+        set {-bg::boss::pending} to {_pick}
+        bgSay("&e20초 후 &f%{-bg::lairname::%{-bg::bd::%{_pick}%::lair}%}%에 &c%{-bg::bd::%{_pick}%::name}%&f이(가) 깨어납니다!")
+        bgSound("block.bell.resonate", 0.6, 0.7)
+    if {-bg::boss::next} <= 0:
+        set {_b} to {-bg::boss::pending}
+        if {_b} is not set:
+            set {_b} to random element out of {-bg::bd::list::*}
+        set {-bg::boss::last} to {_b}
+        delete {-bg::boss::pending}
+        bgBossSpawn({_b})
+
+# ─────────────────────────────────────────────────────────── 매 틱
+every tick:
+    {-bg::boss::id} is set
+    bgBossTick()
+
+function bgBossTick():
+    set {_e} to {-bg::boss::ent}
+    if {_e} is not alive:
+        bgBossRemove()
+        stop
+    set {_id} to {-bg::boss::id}
+    bgAnimStep()
+    set {_st} to {-bg::boss::state}
+    if {_st} is "dead" or "spawn":
+        stop
+    # 시전 게이지
+    if {_st} is "cast":
+        add 1 to {-bg::boss::castT}
+        set {-bg::boss::cast} to min(1, {-bg::boss::castT} / {-bg::boss::castN})
+    # 격노 (체력 절반)
+    if {-bg::boss::rage} is false:
+        if {-bg::boss::hp} <= {-bg::boss::max} * 0.5:
+            set {-bg::boss::rage} to true
+            bgSay("&c&l%{-bg::bd::%{_id}%::name}%이(가) 격노했습니다! &f(공격이 빨라지고 경고가 짧아집니다)")
+            bgSoundAt(bgBossPos(), "entity.ravager.roar", 4, 0.7)
+            bgParticle(bgBossPos(), "angry_villager", 2, 3, 2, 0, 20)
+    if {_st} is "stun":
+        remove 1 from {-bg::boss::stun}
+        if {-bg::boss::stun} <= 0:
+            set {-bg::boss::state} to "idle"
+            bgAnim("idle")
+        stop
+    if {_st} is "cast":
+        bgBossSync()
+        stop
+    # 대상 고르기 (10틱마다)
+    add 1 to {-bg::boss::tt}
+    if mod({-bg::boss::tt}, 10) is 0:
+        delete {-bg::boss::target}
+        set {_best} to 999
+        set {_pos} to bgBossPos()
+        set {_ps::*} to bgLairPlayers()
+        loop {_ps::*}:
+            set {_d} to bgDist2(location of loop-value, {_pos})
+            if {_d} < {_best}:
+                set {_best} to {_d}
+                set {-bg::boss::target} to loop-value
+    remove 1 from {-bg::boss::cd}
+    remove 1 from {-bg::boss::atk}
+    set {_pos} to bgBossPos()
+    set {_t} to {-bg::boss::target}
+    set {_spd} to {-bg::bspd::%{_id}%}
+    if {-bg::boss::rage} is true:
+        set {_spd} to {_spd} * 1.25
+    if {_t} is set:
+        if bgIsFighter({_t}) is true:
+            set {_d} to bgDist2(location of {_t}, {_pos})
+            set {_yaw} to bgYawTo({_pos}, location of {_t})
+            if {-bg::boss::cd} <= 0:
+                bgBossFace({_yaw})
+                bgBossSkill()
+                stop
+            if {_d} > {-bg::breach::%{_id}%}:
+                bgBossStep({_yaw}, {_spd})
+                bgAnimLoop("walk")
+            else:
+                bgBossFace({_yaw})
+                if {-bg::boss::atk} <= 0:
+                    bgBossMelee()
+                else:
+                    bgAnimLoop("idle")
+            stop
+    # 대상 없음: 집으로
+    set {_h} to {-bg::boss::home}
+    if bgDist2({_pos}, {_h}) > 2:
+        bgBossStep(bgYawTo({_pos}, {_h}), {_spd})
+        bgAnimLoop("walk")
+    else:
+        bgAnimLoop("idle")
+        bgBossSync()
+
+function bgBossSync():
+    bgCmd("execute as @e[tag=bgb_hit,limit=1] at @s run function bg:boss/%{-bg::boss::id}%/tp")
+
+function bgBossFace(yaw: number):
+    set {_l} to location of {-bg::boss::ent}
+    set yaw of {_l} to {_yaw}
+    set pitch of {_l} to 0
+    teleport {-bg::boss::ent} to {_l}
+    bgBossSync()
+
+# 한 걸음 (투기장 반지름 17 안으로 제한)
+function bgBossStep(yaw: number, spd: number):
+    set {_l} to location of {-bg::boss::ent}
+    set {_h} to {-bg::boss::home}
+    set {_x} to (x-coordinate of {_l}) + bgFwdX({_yaw}) * {_spd}
+    set {_z} to (z-coordinate of {_l}) + bgFwdZ({_yaw}) * {_spd}
+    set {_dx} to {_x} - (x-coordinate of {_h})
+    set {_dz} to {_z} - (z-coordinate of {_h})
+    set {_d} to sqrt({_dx} * {_dx} + {_dz} * {_dz})
+    if {_d} > 17:
+        set {_x} to (x-coordinate of {_h}) + {_dx} / {_d} * 17
+        set {_z} to (z-coordinate of {_h}) + {_dz} / {_d} * 17
+    set {_n} to location({_x}, y-coordinate of {_h}, {_z}, world of {_h})
+    set yaw of {_n} to {_yaw}
+    set pitch of {_n} to 0
+    teleport {-bg::boss::ent} to {_n}
+    bgBossSync()
+
+# 스킬 순환 (3개를 차례로)
+function bgBossSkill():
+    set {_id} to {-bg::boss::id}
+    add 1 to {-bg::boss::rot}
+    set {_sk::*} to {-bg::bskills::%{_id}%::*}
+    set {_i} to mod({-bg::boss::rot} - 1, 3) + 1
+    set {_s} to {_sk::%{_i}%}
+    set {_g} to {-bg::boss::gen}
+    bgCastBegin({-bg::bd::%{_id}%::skill::%{_s}%}, 40)
+    if {_id} is "talos":
+        if {_s} is "rush":
+            bgSkTalosRush({_g})
+        else if {_s} is "fissure":
+            bgSkTalosFissure({_g})
+        else:
+            bgSkTalosOverheat({_g})
+    else if {_id} is "sphinx":
+        if {_s} is "riddle":
+            bgSkSphinxRiddle({_g})
+        else if {_s} is "sandmark":
+            bgSkSphinxMark({_g})
+        else:
+            bgSkSphinxSeal({_g})
+    else if {_id} is "ladon":
+        if {_s} is "storm":
+            bgSkLadonStorm({_g})
+        else if {_s} is "venom":
+            bgSkLadonVenom({_g})
+        else:
+            bgSkLadonApple({_g})
+    else:
+        if {_s} is "quake":
+            bgSkCyclopsQuake({_g})
+        else if {_s} is "boulder":
+            bgSkCyclopsBoulder({_g})
+        else:
+            bgSkCyclopsWhirl({_g})
+
+# 기본 근접 공격: 앞쪽 작은 원 (경고 16틱)
+function bgBossMelee():
+    set {_g} to {-bg::boss::gen}
+    set {-bg::boss::atk} to 36
+    set {-bg::boss::state} to "cast"
+    set {-bg::boss::castT} to 0
+    set {-bg::boss::castN} to 16
+    set {_pos} to bgBossPos()
+    set {_yaw} to yaw of (location of {-bg::boss::ent})
+    set {_c} to bgOff({_pos}, {_yaw}, 3.2, 0)
+    bgTCircle({_c}, 6.5, 16)
+    bgAnim({-bg::bmelee::%{-bg::boss::id}%})
+    wait 16 ticks
+    if bgOk({_g}) is false:
+        stop
+    set {_ps::*} to bgLairPlayers()
+    loop {_ps::*}:
+        if bgInCircle(loop-value, {_c}, 3.25) is true:
+            bgHit(loop-value, 3, {_pos}, 0.8, 0.35)
+    bgSoundAt({_c}, "entity.player.attack.sweep", 2, 0.6)
+    bgParticle({_c}, "sweep_attack", 1.5, 0.3, 1.5, 0, 6)
+    wait 6 ticks
+    if bgOk({_g}) is false:
+        stop
+    if {-bg::boss::state} is "cast":
+        set {-bg::boss::state} to "idle"
+    set {-bg::boss::cast} to 0
+
+# ─────────────────────────────────────────────────────────── 피해 · 처치
+on damage:
+    victim is not a player
+    scoreboard tags of victim contain "bgb_hit"
+    set {_d} to damage
+    set damage to 0
+    if {-bg::boss::id} is not set:
+        stop
+    if {-bg::boss::state} is "dead" or "spawn":
+        stop
+    if {-bg::boss::state} is "stun":
+        set {_d} to {_d} * 1.5
+    set {_d} to {_d} * 2
+    if attacker is a player:
+        set {_t} to bgTeam(attacker)
+        if {_t} is not "none":
+            add {_d} to {-bg::boss::dmg::%{_t}%}
+    add {_d} to {-bg::boss::hurt}
+    remove {_d} from {-bg::boss::hp}
+    bgParticle(location of victim, "damage_indicator", 0.6, 1.5, 0.6, 0.1, 3)
+    if {-bg::boss::hp} <= 0:
+        bgBossDie()
+
+function bgBossDie():
+    if {-bg::boss::state} is "dead":
+        stop
+    set {_id} to {-bg::boss::id}
+    set {_g} to {-bg::boss::gen}
+    set {-bg::boss::hp} to 0
+    set {-bg::boss::state} to "dead"
+    delete {-bg::boss::skill}
+    set {-bg::boss::cast} to 0
+    bgCmd("function bg:tele/clear_all")
+    bgAnim("death")
+    set {_best} to 0
+    set {_win} to "none"
+    loop {-bg::teams::*}:
+        if {-bg::boss::dmg::%loop-value%} is set:
+            if {-bg::boss::dmg::%loop-value%} > {_best}:
+                set {_best} to {-bg::boss::dmg::%loop-value%}
+                set {_win} to loop-value
+    bgSoundAt(bgBossPos(), "entity.wither.death", 3, 0.8)
+    wait 50 ticks
+    if {-bg::boss::gen} is not {_g}:
+        stop
+    bgParticle(bgBossPos(), "explosion_emitter", 1, 1, 1, 0, 2)
+    if {_win} is not "none":
+        bgAddScore({_win}, 150)
+        set {-bg::bless::%{_win}%::until} to {-bg::sec} + 120
+        set {-bg::bless::%{_win}%::boss} to {_id}
+        bgTitle("&6&l%{-bg::bd::%{_id}%::name}% 처치!", "%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀 &f+150점 · %{-bg::blessname::%{_id}%}% 2분", 10, 70, 20)
+        bgSay("%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀&f이 &c%{-bg::bd::%{_id}%::name}%&f 을(를) 쓰러뜨렸습니다! (+150, 축복: %{-bg::blessname::%{_id}%}%)")
+    bgSound("ui.toast.challenge_complete", 0.8, 1)
+    bgBossRemove()
+
+function bgBlessApply(t: text, b: text):
+    set {_sel} to "@a[team=bg_%{_t}%,gamemode=!spectator]"
+    if {_b} is "talos":
+        bgCmd("effect give %{_sel}% resistance 3 0 true")
+        bgCmd("effect give %{_sel}% fire_resistance 3 0 true")
+    else if {_b} is "sphinx":
+        bgCmd("effect give @a[team=!bg_%{_t}%,team=!,gamemode=!spectator] glowing 3 0 true")
+    else if {_b} is "ladon":
+        if mod({-bg::sec}, 3) is 0:
+            bgCmd("effect give %{_sel}% regeneration 3 0 true")
+    else:
+        bgCmd("effect give %{_sel}% strength 3 0 true")
+        bgCmd("effect give %{_sel}% jump_boost 3 0 true")

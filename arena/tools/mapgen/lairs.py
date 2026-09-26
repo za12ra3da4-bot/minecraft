@@ -424,6 +424,17 @@ def quarry(b, x0, y, z0):
         edge = (d - LAIR_R - 0.4) % 3 < 1.0
         b.set(x, top, z, "polished_andesite" if edge else ("gravel" if h2(x, z, 2) < 0.3 else "stone"))
         b.air(x, top + 1, z, x, max(g, top) + 4, z)
+    # 바깥 테두리: 마지막 단 뒤를 막아 하늘이 뚫려 보이지 않게 (지형보다 낮은 곳만 채움)
+    for x, z, d, a in cells(x0, z0, LAIR_R + 9.5, LAIR_R + 16):
+        if in_entrance(x, z, x0, z0, lid, 18):
+            continue
+        t = b.top(x, z)
+        rim = y + 16 + int(h2(x // 2, z // 2, 21) * 2)
+        for yy in range(y - 2, max(t, rim)):
+            if b.w.is_air(x, yy, z):
+                b.set(x, yy, z, cut(x, yy, z, a, d))
+        if t < rim:
+            b.set(x, rim, z, "grass_block" if h2(x, z, 22) < 0.8 else "coarse_dirt")
     # 채석 블록 더미 (가장자리 엄폐물, 가운데 비움)
     for i in range(5):
         a = i / 5 * 6.283 + 0.5
@@ -444,7 +455,7 @@ def quarry(b, x0, y, z0):
             dx, dz = x + 0.5 - cx, z + 0.5 - cz
             r = dx * ov[0] + dz * ov[1]
             t = dx * tv[0] + dz * tv[1]
-            if not (-0.5 <= r <= 12):
+            if not (-0.5 <= r <= 6.5):
                 continue
             shrink = r * 0.18
             for yy in range(y + 1, y + 12):
@@ -456,7 +467,7 @@ def quarry(b, x0, y, z0):
                 elif e < 1.25 and r > 0.5:
                     b.set(x, yy, z, "cobblestone" if h2(x, yy, z) < 0.4 else "stone")
     for i in range(7):
-        qx, qz = round(cx + ov[0] * (3 + i * 1.2) + tv[0] * ((i % 3) - 1) * 2.4), round(cz + ov[1] * (3 + i * 1.2) + tv[1] * ((i % 3) - 1) * 2.4)
+        qx, qz = round(cx + ov[0] * (2 + i * 0.6) + tv[0] * ((i % 3) - 1) * 2.4), round(cz + ov[1] * (2 + i * 0.6) + tv[1] * ((i % 3) - 1) * 2.4)
         b.set(qx, y + 1, qz, "bone_block[axis=y]" if i % 2 else "hay_block[axis=y]")
     for sg in (-1, 1):
         lx, lz = round(cx + tv[0] * sg * 6.5 - ov[0]), round(cz + tv[1] * sg * 6.5 - ov[1])
