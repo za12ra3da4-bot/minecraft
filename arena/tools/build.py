@@ -24,6 +24,7 @@ import telegraphs
 import bossgen
 import decor
 import weapons2d as weapons
+import decor2d
 import skgen
 import portraits
 
@@ -74,6 +75,7 @@ def main(args):
     font = hud_build.build(pack)
     telegraphs.export(pack)
     decor.export(pack)
+    decor2d.export(pack)
     weapons.export(pack)
     n = pack.write(OUT_RP_DIR, OUT_RP, "천하쟁패 + 신들의 전쟁(올림포스) 통합 팩")
     merge_olympus(OUT_RP)

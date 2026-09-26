@@ -311,8 +311,9 @@ def decor_functions(dp_root, world):
         off = qrot(lr, [-sc * v / 16 for v in s])     # 모델 맞춤(이동·축소) 되돌리기
         sk = sc / k
         tf_ = tf(off[0], ty + off[1], off[2], sk, sk if not d.get("flat") else 1, sk, lr)
+        bb = ',billboard:"vertical"' if model[3:] in decor.BILLBOARD else ""
         lines.append(f'$execute positioned $(x) $(y) $(z) run summon item_display ~{x:.3f} ~{y:.3f} ~{z:.3f} '
-                     f'{{Tags:[{",".join(tags)}],Rotation:[{yaw:.1f}f,0f],{item(model)},item_display:"none",view_range:6f,'
+                     f'{{Tags:[{",".join(tags)}],Rotation:[{yaw:.1f}f,0f],{item(model)},item_display:"none",view_range:6f{bb},'
                      f'shadow_radius:0f,teleport_duration:2{bright},{tf_}}}')
     w(os.path.join(F, "decor_run.mcfunction"), lines)
     w(os.path.join(F, "decor.mcfunction"), ["function bg:map/decor_run with storage bg:map origin"])

@@ -655,4 +655,4 @@ def garden(b, x0, y, z0):
         q = tips[k % len(tips)]
         aa = rng.uniform(0, 6.28); dd = rng.uniform(2.5, 4.8)
         b.w.display("item", q[0] + 0.5 + math.cos(aa) * dd, q[1] - 2.2 + rng.uniform(-0.4, 0.6), q[2] + 0.5 + math.sin(aa) * dd,
-                    model="minecraft:golden_apple", scale=1.1, yaw=rng.uniform(0, 360), glow=True)
+                    model="deco/peach", scale=1.4, yaw=rng.uniform(0, 360), glow=True)

@@ -474,10 +474,20 @@ def apply_fit(boxes, k, s):
 
 
 _FIT = {}
+DECOR2D_NAMES = {f"deco/{n}_{t}" for n in ("flag", "crest", "cap_ring") for t in ("red", "blue", "green", "yellow")} | {
+    "deco/cap_ring_neutral", "deco/rune_ring", "deco/rune_ring_big", "deco/banner_olympus", "deco/war_banner", "deco/wind_ribbon",
+    "deco/eagle_relief", "deco/zeus_bolt", "deco/great_sword", "deco/spear", "deco/giant_club", "deco/owl", "deco/shield",
+    "deco/sphinx_head", "deco/bronze_debris", "deco/peach", "statue/hoplite", "statue/hoplite_broken"} | {
+    f"deco/sigil_{a}" for a in ("ares", "athena", "hermes", "demeter")} | {f"statue/god_{a}" for a in ("ares", "athena", "hermes", "demeter")}
+BILLBOARD = {"statue/hoplite", "statue/hoplite_broken", "deco/owl", "deco/sphinx_head", "deco/peach", "deco/zeus_bolt"} | {
+    f"deco/sigil_{a}" for a in ("ares", "athena", "hermes", "demeter")} | {f"statue/god_{a}" for a in ("ares", "athena", "hermes", "demeter")}
 
 
 def model_fit(name):
-    """dp 가 디스플레이 변환을 보정할 때 쓴다: (k, s[px])"""
+    """dp 가 디스플레이 변환을 보정할 때 쓴다: (k, s[px])  — 2D 그림(decor2d)으로 바뀐 모델은 보정 없음"""
+    import decor2d
+    if name in DECOR2D_NAMES:
+        return (1.0, np.zeros(3))
     if not _FIT:
         for n, bx, _ in box_models():
             _FIT[n] = fit_boxes(bx)
