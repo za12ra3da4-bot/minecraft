@@ -58,7 +58,7 @@ def main(args):
     telegraphs.export(pack)
     decor.export(pack)
     weapons.export(pack)
-    n = pack.write(OUT_RP_DIR, OUT_RP, "신들의 전장 — 보스·장판·HUD·신전 장식")
+    n = pack.write(OUT_RP_DIR, OUT_RP, "천하쟁패 — 보스·장판·HUD·대전 장식")
     print(f"[rp] 파일 {n}개 → {OUT_RP} ({os.path.getsize(OUT_RP) // 1024} KB)")
     # Skript 데이터
     os.makedirs(OUT_SK, exist_ok=True)

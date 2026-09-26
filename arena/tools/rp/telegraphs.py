@@ -252,54 +252,86 @@ def pools(out):
                          colorize(ndimage.gaussian_filter(crack, 1.5) * 1.5, 1.0, (255, 150, 40), (255, 90, 20), (255, 230, 150)))
 
 
+def splatter(S, seed, n=60, rmin=0.05, rmax=0.48, big=2.8):
+    """먹 튐: 크고 작은 점 + 꼬리"""
+    R = np.random.default_rng(seed)
+    m = np.zeros((S, S), np.float32)
+    yy, xx = np.mgrid[0:S, 0:S]
+    for _ in range(n):
+        a = R.random() * 6.283
+        r = (rmin + (rmax - rmin) * R.random() ** 0.7) * S
+        x, y = S / 2 + np.cos(a) * r, S / 2 + np.sin(a) * r
+        rad = 0.6 + R.random() ** 3 * big
+        m = np.maximum(m, np.clip(1.4 - np.hypot(xx - x, yy - y) / rad, 0, 1))
+    return m
+
+
 def weapon_fx(out, S=256):
-    """상점 무기 전용 스킬 바닥 효과 (붓터치, 무기 색)"""
+    """상점 무기 전용 스킬 바닥 효과 — 짙은 수묵 붓터치 (담채 + 굵은 획 + 드라이 브러시 + 먹 튐)"""
     c = S / 2
     R = np.random.default_rng(900)
+    yy, xx = np.mgrid[0:S, 0:S]
+    rr = np.hypot(xx - c, yy - c) / S
 
-    def zig(a, r0, r1, seed, n=6, amp=0.07):
+    def zig(a, r0, r1, n=7, amp=0.09):
         pts = []
         for i in range(n + 1):
             t = i / n
             r = r0 + (r1 - r0) * t
             j = (R.random() - 0.5) * amp * 2 * (0 < i < n)
             pts.append((c + np.cos(a + j) * r * S, c + np.sin(a + j) * r * S))
-        return [p for i in range(n) for p in line_path(pts[i], pts[i + 1], 18)]
-    # 제우스: 금빛 고리 + 푸른 번개 가지
-    ring = stroke(S, circle_path(S, S * 0.36, seed=901, wobble=0.01), 9, seed=902, dry=0.5, bristles=14)
+        return [p for i in range(n) for p in line_path(pts[i], pts[i + 1], 20)]
+
+    def arc(r, a0, a1, n=400, cx=c, cy=c):
+        return [(cx + np.cos(np.radians(a0 + (a1 - a0) * i / (n - 1))) * r * S, cy + np.sin(np.radians(a0 + (a1 - a0) * i / (n - 1))) * r * S) for i in range(n)]
+
+    # ── 뇌정일섬: 쪽빛 먹 담채 원 + 굵은 보라 번개 가지 + 번개 끝 먹 튐
+    wash_ = wash(rr < 0.3, 1901, 0.55, 5)
     bolts = np.zeros((S, S), np.float32)
-    for k in range(9):
-        a = k / 9 * 6.283 + R.random() * 0.3
-        bolts = np.maximum(bolts, stroke(S, zig(a, 0.04, 0.47, k), 5.5, seed=910 + k, dry=0.4, pool=0.2, bristles=6))
-    out["wfx_zeus"] = over(colorize(ring, 0.95, (250, 200, 70), (150, 90, 20), (255, 240, 180), paper_seed=903),
-                           colorize(ndimage.gaussian_filter(bolts, 0.8) * 1.3, 1.0, (120, 210, 255), (40, 110, 230), (230, 250, 255)))
-    # 아레스: 붉은 균열 폭발
-    burst = wash(np.hypot(*np.mgrid[-c:c, -c:c]) < S * 0.2, 920, 0.5, 4)
-    cr = np.zeros((S, S), np.float32)
-    for k in range(11):
-        a = k / 11 * 6.283 + R.random() * 0.4
-        cr = np.maximum(cr, stroke(S, zig(a, 0.1, 0.3 + R.random() * 0.18, k, 5, 0.12), 4.5, seed=930 + k, dry=0.35, pool=0.1, bristles=5))
-    out["wfx_ares"] = over(colorize(burst, 0.85, (120, 16, 20), (40, 4, 6), (200, 60, 50), paper_seed=921),
-                           colorize(np.clip(cr * 1.3, 0, 1), 1.0, (255, 80, 40), (160, 10, 10), (255, 200, 140)))
-    # 헤르메스: 청록 바람 소용돌이
+    for k in range(7):
+        a = k / 7 * 6.283 + R.random() * 0.4
+        bolts = np.maximum(bolts, stroke(S, zig(a, 0.02, 0.44 + R.random() * 0.04), 11, seed=1910 + k, dry=0.45, pool=0.4, taper=(0.1, 0.7), bristles=12))
+        for j in range(2):
+            a2 = a + (R.random() - 0.5) * 0.9
+            bolts = np.maximum(bolts, stroke(S, zig(a2, 0.2, 0.34, 4), 5, seed=1930 + k * 3 + j, dry=0.5, pool=0.1, bristles=6))
+    ring = stroke(S, circle_path(S, S * 0.45, start_deg=R.random() * 360, sweep=300, seed=1902, wobble=0.012), 8, seed=1903, dry=0.7, bristles=16)
+    ink = np.maximum(bolts, ring * 0.9)
+    out["wfx_thunder"] = over(over(colorize(wash_, 0.8, (60, 50, 140), (16, 10, 50), (130, 120, 220), paper_seed=1904),
+                                   colorize(np.clip(ink * 1.2, 0, 1), 1.0, (150, 120, 255), (40, 20, 120), (235, 225, 255), paper_seed=1905)),
+                              colorize(splatter(S, 1906, 50, 0.3, 0.5), 1.0, (120, 90, 240), (30, 16, 90), (200, 190, 255)))
+    # ── 반월참: 앞쪽을 가르는 굵은 초승달 획 (진홍 + 금빛 가장자리) — 이미지 위쪽 = 앞
+    moon = stroke(S, arc(0.34, 200, 340, cy=c + S * 0.12), 34, seed=1920, dry=0.6, pool=0.55, taper=(0.15, 0.85), bristles=26, rough=0.8)
+    inner = stroke(S, arc(0.27, 215, 325, cy=c + S * 0.12), 12, seed=1921, dry=0.75, pool=0.2, taper=(0.3, 0.7), bristles=12)
+    trail = np.zeros((S, S), np.float32)
+    for k in range(5):
+        trail = np.maximum(trail, stroke(S, arc(0.40 + k * 0.018, 205 + k * 4, 330 - k * 6, cy=c + S * 0.12), 3, seed=1922 + k, dry=0.8, pool=0, bristles=4))
+    out["wfx_crescent"] = over(over(colorize(np.clip(moon * 1.15, 0, 1), 1.0, (190, 20, 26), (60, 4, 8), (255, 120, 90), paper_seed=1923),
+                                    colorize(inner, 1.0, (255, 200, 90), (180, 100, 20), (255, 240, 190))),
+                               colorize(np.maximum(trail, splatter(S, 1924, 40, 0.25, 0.5) * (yy < c + S * 0.1)), 0.9, (170, 20, 24), (50, 4, 6), (240, 110, 90)))
+    # ── 질풍보: 비취 바람 소용돌이 (굵은 나선 3줄 + 가는 결 + 담채)
     wind = np.zeros((S, S), np.float32)
     for k in range(3):
         pts = []
-        for i in range(160):
-            t = i / 159
-            a = k * 2.094 + t * 4.2
-            r = S * (0.06 + 0.38 * t)
+        for i in range(220):
+            t = i / 219
+            a = k * 2.094 + t * 4.6
+            r = S * (0.04 + 0.42 * t)
             pts.append((c + np.cos(a) * r, c + np.sin(a) * r))
-        wind = np.maximum(wind, stroke(S, pts, 8, seed=940 + k, dry=0.6, pool=0.3, taper=(0.2, 0.8), bristles=14))
-    out["wfx_hermes"] = colorize(wind, 1.0, (60, 220, 200), (10, 110, 110), (220, 255, 250), paper_seed=941)
-    # 아테나: 금빛 방패 문양 (이중 고리 + 8방 광채)
-    r1 = stroke(S, circle_path(S, S * 0.42, seed=950, wobble=0.008), 7, seed=951, dry=0.5, bristles=12)
-    r2 = stroke(S, circle_path(S, S * 0.3, start_deg=80, seed=952, wobble=0.008), 5, seed=953, dry=0.6, bristles=10)
+        wind = np.maximum(wind, stroke(S, pts, 18, seed=1940 + k, dry=0.65, pool=0.45, taper=(0.1, 0.85), bristles=22, rough=0.8))
+        pts2 = [(c + np.cos(k * 2.094 + 0.5 + t * 4.3) * S * (0.1 + 0.36 * t), c + np.sin(k * 2.094 + 0.5 + t * 4.3) * S * (0.1 + 0.36 * t)) for t in np.linspace(0, 1, 200)]
+        wind = np.maximum(wind, stroke(S, pts2, 4, seed=1945 + k, dry=0.8, pool=0, bristles=5) * 0.8)
+    out["wfx_wind"] = over(colorize(wash(rr < 0.22, 1946, 0.35, 6), 0.6, (40, 150, 120), (8, 50, 40), (150, 230, 200), paper_seed=1947),
+                           colorize(np.clip(wind * 1.15, 0, 1), 1.0, (40, 190, 150), (6, 70, 56), (200, 255, 235), paper_seed=1948))
+    # ── 금강결계: 금빛 이중 고리 + 팔방 획 + 가운데 원 담채 (수묵 인장 느낌)
+    r1 = stroke(S, circle_path(S, S * 0.44, start_deg=-80, sweep=340, seed=1950, wobble=0.01), 16, seed=1951, dry=0.55, pool=0.5, bristles=22)
+    r2 = stroke(S, circle_path(S, S * 0.33, start_deg=100, sweep=330, seed=1952, wobble=0.01), 7, seed=1953, dry=0.7, bristles=12)
     rays = np.zeros((S, S), np.float32)
     for k in range(8):
-        a = k / 8 * 6.283
-        rays = np.maximum(rays, stroke(S, line_path((c + np.cos(a) * S * 0.08, c + np.sin(a) * S * 0.08), (c + np.cos(a) * S * 0.26, c + np.sin(a) * S * 0.26), 40), 6, seed=960 + k, dry=0.4, bristles=6))
-    out["wfx_athena"] = colorize(np.maximum(np.maximum(r1, r2), rays), 1.0, (255, 214, 90), (170, 110, 20), (255, 248, 210), paper_seed=954)
+        a = k / 8 * 6.283 + 0.2
+        rays = np.maximum(rays, stroke(S, line_path((c + np.cos(a) * S * 0.12, c + np.sin(a) * S * 0.12), (c + np.cos(a) * S * 0.3, c + np.sin(a) * S * 0.3), 60), 10, seed=1960 + k, dry=0.5, pool=0.5, taper=(0.1, 0.8), bristles=10))
+    core = wash(rr < 0.1, 1961, 0.6, 3)
+    out["wfx_barrier"] = over(colorize(np.maximum(core, wash(rr < 0.42, 1962, 0.18, 8)), 0.7, (220, 170, 60), (100, 60, 10), (255, 235, 170), paper_seed=1963),
+                              colorize(np.clip(np.maximum(np.maximum(r1, r2), rays) * 1.15, 0, 1), 1.0, (240, 180, 50), (110, 60, 8), (255, 245, 200), paper_seed=1964))
 
 
 def build_all():

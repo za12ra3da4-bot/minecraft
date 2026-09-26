@@ -2,8 +2,8 @@
 
 BOSSES = {
     "talos": {
-        "name": "청동 거인 탈로스",
-        "short": "탈로스",
+        "name": "청동 거신",
+        "short": "거신",
         "lair": "forge",
         "style": "돌진·직선형",
         "hp": 1900,
@@ -14,8 +14,8 @@ BOSSES = {
         },
     },
     "sphinx": {
-        "name": "스핑크스",
-        "short": "스핑크스",
+        "name": "사막 석사자",
+        "short": "석사자",
         "lair": "sands",
         "style": "광역 마법진·석화형",
         "hp": 1700,
@@ -26,8 +26,8 @@ BOSSES = {
         },
     },
     "ladon": {
-        "name": "백두룡 라돈",
-        "short": "라돈",
+        "name": "구두룡",
+        "short": "구두룡",
         "lair": "garden",
         "style": "다중 지점·순차형",
         "hp": 2000,
@@ -38,8 +38,8 @@ BOSSES = {
         },
     },
     "cyclops": {
-        "name": "외눈 거인 키클롭스",
-        "short": "키클롭스",
+        "name": "외눈 산귀",
+        "short": "산귀",
         "lair": "quarry",
         "style": "근접 광역·추적형",
         "hp": 2200,
