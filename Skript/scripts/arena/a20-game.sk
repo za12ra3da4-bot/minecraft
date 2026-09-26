@@ -341,16 +341,11 @@ function bgBaseGuard():
 on death of player:
     {-bg::on} is true
     bgTeam(victim) is not "none"
-    # 전설 무기만 떨어뜨리고 나머지(기본 장비)는 지움
+    # 아무것도 떨어뜨리지 않음 — 전설 무기 · 산 장비는 부활할 때 다시 받는다 (bgKit → bgShopRestore)
     loop drops:
         if bgIsLegend(loop-item) is not "":
-            add loop-item to {_keep::*}
-            delete {bg::owned::%uuid of victim%::%bgIsLegend(loop-item)%}
+            set {bg::owned::%uuid of victim%::%bgIsLegend(loop-item)%} to true
     clear drops
-    loop {_keep::*}:
-        drop loop-value at location of victim
-    if size of {_keep::*} > 0:
-        broadcast "&6[전장] &f%name of victim%이(가) 전설 무기를 떨어뜨렸습니다!"
     if attacker is a player:
         if bgTeam(attacker) is not bgTeam(victim):
             if bgTeam(attacker) is not "none":
