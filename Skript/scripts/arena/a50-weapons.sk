@@ -11,13 +11,14 @@ import:
     org.bukkit.Bukkit
     net.kyori.adventure.text.Component
     net.kyori.adventure.key.Key
+    net.kyori.adventure.text.format.TextColor
 
 # 상점 화면: 제목에 양피지 배경 글리프(폰트 bg:hud)를 넣어 상자 화면 전체를 덮음 + 보통 글자로 제목
 function bgShopInv(c: number) :: inventory:
     if {-bg::gui::shop} is not set:
         return chest inventory with 3 rows named "&6&l왕국 무기고 &8| &e%{_c}% 코인"
     set {_bg} to Component.text({-bg::gui::shop}).font(Key.key("bg", "hud"))
-    set {_t} to Component.text("왕국 무기고 · %{_c}% 코인")
+    set {_t} to Component.text("왕국 무기고 · %{_c}% 코인").color(TextColor.color(255, 222, 140))
     set {_title} to Component.empty().append({_bg}).append({_t})
     return Bukkit.createInventory(null, 27, {_title})
 

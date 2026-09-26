@@ -24,6 +24,7 @@ import telegraphs
 import bossgen
 import decor
 import weapons_w as weapons
+import pixel_art
 import decor2d
 import decor_w
 import skgen
@@ -77,6 +78,7 @@ def main(args):
     telegraphs.export(pack)
     decor.export(pack)
     decor_w.export(pack)
+    pixel_art.export(pack)
     weapons.export(pack)
     n = pack.write(OUT_RP_DIR, OUT_RP, "왕관 쟁탈전 + 올림포스 통합 팩")
     merge_olympus(OUT_RP)
