@@ -285,7 +285,6 @@ function bgKit(p: player):
     if {_c} is 0:
         bgCmd("item replace entity %{_n}% armor.chest with chainmail_chestplate[unbreakable={}]")
         bgCmd("give %{_n}% stone_sword[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% weapon.offhand with shield[unbreakable={}]")
         bgCmd("give %{_n}% bow[unbreakable={}]")
         bgCmd("give %{_n}% arrow 8")
     else if {_c} is 1:
@@ -296,7 +295,6 @@ function bgKit(p: player):
     else:
         bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
         bgCmd("give %{_n}% stone_axe[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% weapon.offhand with shield[unbreakable={}]")
         bgCmd("effect give %{_n}% slowness infinite 0 true")
     bgCmd("give %{_n}% bread 8")
     bgShopRestore({_p})
