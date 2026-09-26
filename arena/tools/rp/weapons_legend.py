@@ -252,6 +252,13 @@ def export(pack):
         f = os.path.join(ART, f"{wid}.png")
         img = Image.open(f).convert("RGBA") if os.path.exists(f) else paint(wid)     # 직접 그린 그림 우선
         ref = pack.texture(f"weapon/{wid}", img)
+        sk = os.path.join(os.path.dirname(ART), "skills", f"{wid}.png")
+        if os.path.exists(sk):
+            # 스킬 연출 그림: 세로로 선 판 (가로 1 : 세로 2, 빛남) — 스킬 쓸 때 잠깐 솟아오름
+            r2 = pack.texture(f"skillart/{wid}", Image.open(sk).convert("RGBA"))
+            pack.item_model(f"fx/{wid}", {"textures": {"0": r2, "particle": r2}, "elements": [{
+                "from": [0, -8, 8], "to": [16, 24, 8], "shade": False, "light_emission": 15,
+                "faces": {"north": {"uv": [16, 0, 0, 16], "texture": "#0"}, "south": {"uv": [0, 0, 16, 16], "texture": "#0"}}}]})
         pack.item_model(f"weapon/{wid}", {"parent": "minecraft:item/handheld", "textures": {"layer0": ref}})
 
 

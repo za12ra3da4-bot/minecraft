@@ -329,6 +329,7 @@ function bgSkThunder(p: player):
     if distance between {_p} and {_l} > 24:
         set {_l} to location of {_p}
     bgWfx({_l}, "wfx_thunder", 8, 14, random number between 0 and 360)
+    bgSkillArt({_l}, "thunder", 2.8)
     bgParticle({_l}, "electric_spark", 1.5, 2, 1.5, 0.3, 60)
     bgSoundAt({_l}, "item.trident.thunder", 2, 1.3)
     wait 10 ticks
@@ -342,6 +343,7 @@ function bgSkThunder(p: player):
 
 # 대회전 베기: 앞쪽 120° 반경 5.5
 function bgSkDragon(p: player):
+    bgSkillArt(location of {_p}, "dragon", 2.4)
     set {_l} to location of {_p}
     set {_yaw} to yaw of {_p}
     set {_fx} to -1 * sin({_yaw})
@@ -365,6 +367,7 @@ function bgSkDragon(p: player):
             bgParticle(location of loop-value, "crit", 0.3, 0.8, 0.3, 0.2, 12)
 
 function bgSkWind(p: player):
+    bgSkillArt(location of {_p}, "wind", 2.0)
     set {_l} to location of {_p}
     bgWfx({_l}, "wfx_wind", 5, 20, yaw of {_p})
     set {_v} to vector(-1 * sin(yaw of {_p}) * cos(pitch of {_p}) * 1.8, 0.25, cos(yaw of {_p}) * cos(pitch of {_p}) * 1.8)
@@ -377,6 +380,7 @@ function bgSkWind(p: player):
     bgWfx(location of {_p}, "wfx_wind", 4, 16, yaw of {_p})
 
 function bgSkPhoenix(p: player):
+    bgSkillArt(location of {_p}, "phoenix", 2.4)
     set {_l} to location of {_p}
     bgWRune({_l}, "wfx_barrier", 9, 40)
     bgWfx({_l}, "wfx_barrier", 12, 24, 0)
@@ -398,6 +402,7 @@ function bgSkPhoenix(p: player):
 
 # 혈풍참: 바라보는 방향으로 8칸 돌진, 지나간 길 폭 2 안의 적 3하트 + 시듦
 function bgSkBlood(p: player):
+    bgSkillArt(location of {_p}, "blackiron", 2.4)
     set {_l} to location of {_p}
     set {_yaw} to yaw of {_p}
     set {_fx} to -1 * sin({_yaw})
@@ -422,6 +427,7 @@ function bgSkBlood(p: player):
 
 # 호조연격: 앞쪽 100° 반경 3.5 — 3연속 (4틱 간격)
 function bgSkClaw(p: player):
+    bgSkillArt(location of {_p}, "tiger", 2.0)
     loop 3 times:
         set {_l} to location of {_p}
         set {_yaw} to yaw of {_p}
@@ -442,6 +448,7 @@ function bgSkClaw(p: player):
 
 # 여의천강: 봉으로 땅을 내리쳐 반경 4.5 적을 공중으로
 function bgSkStaff(p: player):
+    bgSkillArt(location of {_p}, "staff", 2.4)
     set {_l} to location of {_p}
     bgWfx({_l}, "wfx_staff", 10, 20, random number between 0 and 360)
     bgSoundAt({_l}, "item.mace.smash_ground_heavy", 2, 0.8)
@@ -453,6 +460,7 @@ function bgSkStaff(p: player):
 
 # 화염부: 부적 불꽃 고리 — 반경 5 적 1.5하트 + 4초 화상
 function bgSkFire(p: player):
+    bgSkillArt(location of {_p}, "peachwood", 2.4)
     set {_l} to location of {_p}
     bgWfx({_l}, "wfx_fire", 11, 24, random number between 0 and 360)
     bgSoundAt({_l}, "item.firecharge.use", 2, 0.8)
@@ -471,3 +479,22 @@ function bgIsLegend(i: item) :: text:
         if {_n} contains {-bg::w::%loop-value%::name}:
             return loop-value
     return ""
+
+
+# 스킬 연출: 무기 · 이펙트 그림이 그 자리에서 커지며 솟았다가 사라짐 (항상 플레이어 쪽을 봄)
+function bgSkillArt(l: location, w: text, k: number):
+    add 1 to {-bg::fxn}
+    set {_t} to "bgfx_%{-bg::fxn}%"
+    set {_x} to bgN(x-coordinate of {_l})
+    set {_y} to bgN((y-coordinate of {_l}) + {_k})
+    set {_z} to bgN(z-coordinate of {_l})
+    set {_s0} to bgN({_k} * 0.3)
+    set {_s1} to bgN({_k})
+    set {_s2} to bgN({_k} * 1.15)
+    bgCmd("summon item_display %{_x}% %{_y}% %{_z}% {Tags:[""bg"",""bgfx"",""%{_t}%""],billboard:""vertical"",item:{id:""minecraft:paper"",count:1,components:{""minecraft:item_model"":""bg:fx/%{_w}%""}},brightness:{sky:15,block:15},view_range:4f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[%{_s0}%f,%{_s0}%f,%{_s0}%f]}}")
+    wait 1 tick
+    bgCmd("data merge entity @e[tag=%{_t}%,limit=1] {start_interpolation:0,interpolation_duration:4,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[%{_s1}%f,%{_s1}%f,%{_s1}%f]}}")
+    wait 18 ticks
+    bgCmd("data merge entity @e[tag=%{_t}%,limit=1] {start_interpolation:0,interpolation_duration:6,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[%{_s2}%f,0.02f,%{_s2}%f]}}")
+    wait 6 ticks
+    bgCmd("kill @e[tag=%{_t}%]")
