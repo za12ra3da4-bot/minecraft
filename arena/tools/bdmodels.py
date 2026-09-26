@@ -646,3 +646,117 @@ def treasure_chest(t):
     m.box(C["glass"], -2.2, ly, -2.2, 2.2, ly + 190, 2.2, glow=True)
     m.box(C["core"], -0.8, ly, -0.8, 0.8, ly + 190, 0.8, glow=True)
     return m
+
+
+# ─────────────────────────────────────────────────────────────── 상점 상인 NPC
+def merchant():
+    """떠돌이 상인: 보라 로브 + 금 장식, 넓은 챙 모자와 깃털, 흰 수염, 한 손엔 금화 주머니 · 한 손엔 금화.
+       옆에 금화가 쌓인 작은 좌판. 원점 = 발밑, 앞 = +z"""
+    m = Model()
+    ROBE, ROBE2, TRIM = "purple_wool", "magenta_wool", GOLD
+    SKIN, BEARD = "smooth_sandstone", "white_wool"
+    LEATHER, HAT = "brown_wool", "dark_oak_planks"
+    # 신발
+    for s in (-1, 1):
+        m.box(LEATHER, 2.0 * s - 1.7, 0, -1.6, 2.0 * s + 1.7, 1.6, 2.8)
+    # 로브 (아래로 퍼짐)
+    m.box(ROBE, -5.2, 1.2, -3.4, 5.2, 8.0, 3.4)
+    m.box(ROBE, -4.8, 8.0, -3.0, 4.8, 14.0, 3.0)
+    m.box(ROBE2, -1.4, 1.2, 3.35, 1.4, 14.0, 3.7)                 # 앞자락
+    m.box(TRIM, -5.35, 1.0, -3.55, 5.35, 1.9, 3.55)                # 밑단 금테
+    m.box(TRIM, -1.6, 1.2, 3.5, -1.2, 14.0, 3.9)
+    m.box(TRIM, 1.2, 1.2, 3.5, 1.6, 14.0, 3.9)
+    # 가죽 앞치마 · 허리띠 · 주머니들
+    m.box(LEATHER, -3.6, 7.0, 3.1, 3.6, 13.6, 3.6)
+    m.box("dark_oak_planks", -5.0, 13.4, -3.2, 5.0, 14.6, 3.2)
+    m.cbox(GOLD, (0, 14.0, 3.35), (1.8, 1.6, 0.6))
+    m.cbox(LEATHER, (-4.6, 12.0, 1.5), (2.2, 2.8, 2.2), yaw=-12)
+    m.cbox("red_wool", (4.7, 11.8, 1.2), (2.0, 2.6, 2.0), yaw=15)
+    # 몸통 · 망토깃
+    m.box(ROBE, -4.4, 14.4, -2.4, 4.4, 22.0, 2.4)
+    m.box(ROBE2, -4.9, 20.0, -2.8, 4.9, 22.6, 2.8)
+    m.box(TRIM, -4.95, 21.8, -2.85, 4.95, 22.4, 2.85)
+    m.box(ROBE, -4.0, 8.0, -4.2, 4.0, 21.5, -3.0)                 # 등 망토
+    # 머리 · 수염
+    m.box(SKIN, -3.2, 22.4, -3.0, 3.2, 28.6, 3.2)
+    m.box(BEARD, -3.3, 19.4, 2.0, 3.3, 25.2, 3.6)
+    m.cbox(BEARD, (0, 18.2, 3.0), (3.6, 2.6, 1.4), pitch=12)
+    m.box("white_concrete", -2.8, 25.0, 3.15, 2.8, 25.6, 3.5)    # 콧수염
+    m.cbox(SKIN, (0, 26.0, 3.5), (1.4, 1.8, 1.2))                 # 코
+    for s in (-1, 1):
+        m.box(DARK, 1.1 * s - 0.55, 26.8, 3.2, 1.1 * s + 0.55, 27.6, 3.3)
+        m.box(BEARD, 1.1 * s - 0.9, 27.9, 3.2, 1.1 * s + 0.9, 28.3, 3.35)   # 눈썹
+    # 모자: 넓은 챙 + 높은 관 + 금띠 + 깃털
+    m.cbox(HAT, (0, 28.9, 0.2), (13.0, 0.9, 13.0), yaw=0)
+    m.cbox(HAT, (0, 31.4, 0), (7.0, 4.4, 7.0))
+    m.cbox(HAT, (0.4, 34.0, -0.4), (5.0, 1.6, 5.0), roll=6)
+    m.box(GOLD, -3.6, 29.3, -3.6, 3.6, 30.4, 3.6)
+    m.cbox("red_wool", (3.6, 33.0, -1.2), (0.6, 6.0, 1.8), roll=-24, pitch=-10)
+    m.cbox("white_wool", (4.6, 35.2, -1.6), (0.5, 2.6, 1.4), roll=-30, pitch=-10)
+    # 오른팔: 금화 주머니
+    m.rod(ROBE, (5.2, 21.0, 0), (6.4, 16.4, 2.2), 3.0)
+    m.rod(ROBE2, (6.4, 16.4, 2.2), (6.2, 13.0, 4.8), 2.8)
+    m.cbox(SKIN, (6.2, 12.6, 5.0), (2.2, 2.2, 2.2))
+    m.cbox(LEATHER, (6.2, 9.2, 5.2), (4.4, 4.6, 4.4), yaw=20)
+    m.cbox(GOLD, (6.2, 11.8, 5.2), (2.2, 0.8, 2.2), yaw=20)
+    m.cbox(GOLD, (6.8, 12.4, 5.4), (1.6, 0.5, 1.6), yaw=40, roll=20)
+    # 왼팔: 금화를 들어 보임
+    m.rod(ROBE, (-5.2, 21.0, 0), (-6.8, 17.6, 3.0), 3.0)
+    m.rod(ROBE2, (-6.8, 17.6, 3.0), (-6.0, 21.6, 6.0), 2.8)
+    m.cbox(SKIN, (-6.0, 22.4, 6.2), (2.2, 2.2, 2.2))
+    m.cbox(GOLD, (-6.0, 24.6, 6.4), (2.6, 2.6, 0.5), roll=20, glow=True)
+    # 옆 좌판 (오른쪽)
+    k = m.mark()
+    m.box("spruce_planks", 9, 0, -4, 21, 1, 5)
+    for x, z in ((9.4, -3.6), (20.6, -3.6), (9.4, 4.6), (20.6, 4.6)):
+        m.box("stripped_dark_oak_log", x - 0.6, 0, z - 0.6, x + 0.6, 9, z + 0.6)
+    m.box("dark_oak_planks", 8.4, 9, -4.6, 21.6, 10.2, 5.6)
+    m.box("red_wool", 8.8, 10.2, -4.2, 21.2, 10.6, 5.2)
+    m.box(TRIM, 8.4, 9.6, 5.5, 21.6, 10.2, 5.9)
+    rng = np.random.default_rng(5)
+    for i in range(5):
+        x = 11 + i * 2.2; hgt = 1 + (i % 3)
+        for j in range(hgt):
+            m.cbox(GOLD, (x, 11.0 + j * 0.7, 1.5 + (i % 2)), (1.8, 0.6, 1.8), yaw=rng.uniform(0, 40), glow=True)
+    m.cbox("diamond_block", (18.6, 11.4, -1.6), (1.6, 1.6, 1.6), yaw=45, pitch=35)
+    m.cbox("emerald_block", (16.8, 11.2, -2.4), (1.4, 1.4, 1.4), yaw=20, pitch=35)
+    m.box("dark_oak_planks", 12, 10.6, -3.6, 16, 13.6, -0.4)                  # 작은 궤짝
+    m.box(GOLD, 13.6, 11.4, -0.5, 14.4, 12.8, -0.2)
+    # 좌판 지붕 (줄무늬 천)
+    for i in range(6):
+        m.cbox("purple_wool" if i % 2 == 0 else "yellow_wool", (15, 24.5, -3.2 + i * 1.9), (14, 0.8, 2.0), pitch=-14)
+    for x in (8.8, 21.2):
+        m.box("stripped_dark_oak_log", x - 0.5, 10.2, 5.0, x + 0.5, 23.6, 6.0)
+        m.box("stripped_dark_oak_log", x - 0.5, 10.2, -4.6, x + 0.5, 26.6, -3.6)
+    # 금화 간판 (좌판 위)
+    m.cbox(TRIM, (15, 28.5, -3.9), (6.4, 6.4, 0.8), roll=45, glow=True)
+    m.cbox("purple_concrete", (15, 28.5, -3.4), (4.6, 4.6, 0.8), roll=45)
+    m.cbox(TRIM, (15, 28.5, -2.9), (2.2, 2.2, 0.6), glow=True)
+    return m
+
+
+# ─────────────────────────────────────────────────────────────── 병과 표식 (발판 위에서 도는 아이콘)
+def class_icon(k):
+    m = Model()
+    if k == 0:          # 전사: 검
+        m.rod("iron_block", (0, -8, 0), (0, 10, 0), 2.6, 0.6)
+        m.cbox("iron_block", (0, -9, 0), (1.8, 1.8, 0.6), roll=45)
+        m.cbox(GOLD, (0, 10.6, 0), (8.0, 1.4, 1.4))
+        m.rod("dark_oak_planks", (0, 11.3, 0), (0, 15.2, 0), 1.2)
+        m.cbox(GOLD, (0, 15.8, 0), (2.0, 2.0, 2.0), yaw=45, pitch=35)
+        m.cbox("red_concrete", (0, 10.6, 0.8), (1.2, 1.2, 0.3), roll=45, glow=True)
+    elif k == 1:        # 궁수: 활 + 화살
+        prof = [(-1.0, -12), (1.2, -8), (2.4, -4), (2.8, 0), (2.4, 4), (1.2, 8), (-1.0, 12)]
+        for (x0, y0), (x1, y1) in zip(prof, prof[1:]):
+            m.rod("dark_oak_planks", (x0, y0, 0), (x1, y1, 0), 1.4, 1.2)
+        m.cbox(GOLD, (2.8, 0, 0), (1.8, 3.0, 1.6))
+        m.rod("white_wool", (-1.0, -12, 0), (-1.0, 12, 0), 0.4, 0.4)
+        m.rod("dark_oak_planks", (-4.0, 0, 0), (10, 0, 0), 0.7, 0.7)       # 화살대
+        m.cbox("iron_block", (10.8, 0, 0), (2.4, 1.6, 0.5), roll=45)
+        m.cbox("white_wool", (-4.4, 0.8, 0), (2.4, 1.0, 0.3), roll=20)
+        m.cbox("white_wool", (-4.4, -0.8, 0), (2.4, 1.0, 0.3), roll=-20)
+    else:               # 수호자: 방패
+        kite_shield(m, "light_gray_concrete", GOLD, "cross", w=12, h=15, t=1.2, emb_block=GOLD)
+    for p in m.parts:
+        p.spin = True
+    return m

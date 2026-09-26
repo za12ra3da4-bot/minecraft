@@ -45,6 +45,16 @@ function bgCmd(c: text):
         stop
     set {_srv} to MinecraftServer.getServer()
     set {_src} to {_srv}.createCommandSourceStack().withSuppressedOutput()
+    # 문법 오류면 실행하지 않고 콘솔 · 관리자에게 알린다 (조용히 실패하는 것 방지, 처음 20개만)
+    set {_pr} to {_srv}.getCommands().getDispatcher().parse({_c}, {_src})
+    if {_pr}.getReader().canRead() is true:
+        add 1 to {-bg::cmderr}
+        if {-bg::cmderr} <= 20:
+            send "[전장] 명령 오류: %{_c}%" to console
+            loop all players:
+                if loop-player is op:
+                    send "&c[전장] 명령 오류 (콘솔 확인): &7%{_c}%" to loop-player
+        stop
     {_srv}.getCommands().performPrefixedCommand({_src}, {_c})
 
 # ── 숫자 → 명령용 텍스트 (소수 2자리)

@@ -99,6 +99,12 @@ function bgAimYaw() :: number:
         return bgYawTo({_pos}, location of {-bg::boss::target})
     return yaw of (location of {-bg::boss::ent})
 
+# 경고 시간 (틱): 원래 값의 약 60% — 피하기 빠듯하게. 격노 때 더 짧음
+function bgRT(a: number, b: number) :: number:
+    if {-bg::boss::rage} is true:
+        return max(8, round({_b} * 0.58))
+    return max(8, round({_a} * 0.62))
+
 function bgRage(a: number, b: number) :: number:
     if {-bg::boss::rage} is true:
         return {_b}
@@ -139,7 +145,7 @@ function bgSkTalosRush(g: number):
                     if {_along} - 2 < {_len}:
                         set {_len} to {_along} - 2
                         set {_hit} to 1
-    set {_t} to bgRage(30, 22)
+    set {_t} to bgRT(30, 22)
     bgCastLen({_t} + 8)
     bgTRect({_pos}, {_yaw}, 5, {_len}, {_t})
     bgAnim("rush_windup")
@@ -154,8 +160,7 @@ function bgSkTalosRush(g: number):
             bgHit(loop-value, 3.5, {_pos}, 1.5, 0.5)
     loop 8 times:
         set {_n} to bgOff({_pos}, {_yaw}, {_len} * loop-number / 8, 0)
-        set yaw of {_n} to {_yaw}
-        teleport {-bg::boss::ent} to {_n}
+        bgCmd("execute in %bgDim()% run tp %{-bg::boss::uuid}% %bgC(x-coordinate of {_n})% %bgN(y-coordinate of {_n})% %bgC(z-coordinate of {_n})% %bgN({_yaw})% 0")
         bgBossSync()
         bgParticle({_n}, "large_smoke", 1, 0.3, 1, 0.02, 6)
         wait 1 tick
@@ -178,7 +183,7 @@ function bgSkTalosFissure(g: number):
     set {_offs::*} to -35, 0 and 35
     if {-bg::boss::rage} is true:
         set {_offs::*} to -70, -35, 0, 35 and 70
-    set {_t} to bgRage(26, 20)
+    set {_t} to bgRT(26, 20)
     set {_n} to size of {_offs::*}
     bgCastLen(({_n} - 1) * 6 + {_t})
     bgAnim("fissure")
@@ -195,7 +200,7 @@ function bgSkTalosFissure(g: number):
 # 용광로 폭주: 주변 반지름 8 폭발(경고 가장 김) → 불바닥 4곳 5초
 function bgSkTalosOverheat(g: number):
     set {_pos} to bgBossPos()
-    set {_t} to bgRage(50, 40)
+    set {_t} to bgRT(50, 40)
     bgCastLen({_t})
     bgTCircle({_pos}, 16, {_t})
     bgAnim("overheat")
@@ -214,10 +219,10 @@ function bgSkTalosOverheat(g: number):
 # ═══════════════════════════════════════════════════════════ 스핑크스
 # 석화의 수수께끼: 번호 붙은 원 3개(격노 4)가 1→2→3 순서로 폭발. 맞으면 석화(구속 II 2초)
 function bgSkSphinxRiddle(g: number):
-    set {_n} to bgRage(3, 4)
+    set {_n} to bgRage(4, 5)
     set {_ps::*} to bgLairPlayers()
-    set {_base} to bgRage(30, 24)
-    set {_step} to bgRage(14, 10)
+    set {_base} to bgRT(30, 24)
+    set {_step} to bgRT(14, 10)
     bgAnim("riddle")
     bgSoundAt(bgBossPos(), "entity.evoker.prepare_summon", 3, 0.8)
     loop {_n} times:
@@ -238,7 +243,7 @@ function bgSkSphinxRiddle(g: number):
 # 모래 표식: 2명(격노 3)의 머리 위에 ! — 원이 2초 동안 따라다니다 멈추고 0.8초 뒤 폭발 (아군에게서 떨어지기)
 function bgSkSphinxMark(g: number):
     set {_ps::*} to bgLairPlayers()
-    set {_n} to min(size of {_ps::*}, bgRage(2, 3))
+    set {_n} to min(size of {_ps::*}, bgRage(3, 4))
     bgAnim("mark")
     bgCastLen(56)
     loop {_n} times:
@@ -267,7 +272,7 @@ function bgSandMark(g: number, p: player):
 # 봉인의 고리: 보스 반지름 7 바깥 ~ 17 전체 도넛 (경고 김) — 스핑크스 곁으로 파고들어야 산다
 function bgSkSphinxSeal(g: number):
     set {_pos} to bgBossPos()
-    set {_t} to bgRage(56, 46)
+    set {_t} to bgRT(56, 46)
     bgCastLen({_t})
     bgAnim("seal")
     bgTRune({_pos}, "rune_sphinx", 12, {_t})
@@ -285,7 +290,7 @@ function bgSkLadonStorm(g: number):
     set {_offs::*} to -60, 0 and 60
     if {-bg::boss::rage} is true:
         set {_offs::*} to -120, -60, 0, 60 and 120
-    set {_t} to bgRage(24, 18)
+    set {_t} to bgRT(24, 18)
     bgCastLen((size of {_offs::*} - 1) * 8 + {_t})
     bgAnim("storm")
     loop {_offs::*}:
@@ -302,7 +307,7 @@ function bgSkLadonVenom(g: number):
     set {_pos} to bgBossPos()
     set {_yaw} to bgAimYaw()
     bgBossFace({_yaw})
-    set {_t} to bgRage(34, 26)
+    set {_t} to bgRT(34, 26)
     bgCastLen({_t})
     bgAnim("venom")
     bgTCone({_pos}, {_yaw}, 90, 16, {_t})
@@ -350,9 +355,9 @@ function bgSkLadonApple(g: number):
 # 대지 진동: 안쪽 원 → 가운데 고리 → 바깥 고리 순서로 퍼진다 (안쪽이 먼저 터지니 터진 곳으로 들어가기)
 function bgSkCyclopsQuake(g: number):
     set {_pos} to bgBossPos()
-    set {_a} to bgRage(24, 18)
-    set {_b} to bgRage(34, 28)
-    set {_c} to bgRage(44, 38)
+    set {_a} to bgRT(24, 18)
+    set {_b} to bgRT(34, 28)
+    set {_c} to bgRT(44, 38)
     bgCastLen({_c})
     bgAnim("quake")
     bgTCircle({_pos}, 10, {_a})
@@ -369,9 +374,9 @@ function bgSkCyclopsBoulder(g: number):
     if {_p} is not set:
         bgCastEnd()
         stop
-    set {_n} to bgRage(4, 6)
-    set {_gap} to bgRage(12, 9)
-    set {_t} to bgRage(22, 18)
+    set {_n} to bgRage(6, 8)
+    set {_gap} to bgRT(12, 9)
+    set {_t} to bgRT(22, 18)
     bgCastLen(({_n} - 1) * {_gap} + {_t})
     bgAnim("boulder")
     send title "" with subtitle "&6거암이 당신을 쫓습니다 — 멈추지 마세요!" to {_p} for 40 ticks
@@ -390,7 +395,7 @@ function bgSkCyclopsBoulder(g: number):
 # 회전 강타: 곤봉을 휘둘러 주변 반지름 6.5 — 격노 시 한 번 더 (짧은 경고)
 function bgSkCyclopsWhirl(g: number):
     set {_pos} to bgBossPos()
-    set {_t} to bgRage(36, 28)
+    set {_t} to bgRT(36, 28)
     set {_total} to {_t}
     if {-bg::boss::rage} is true:
         set {_total} to {_t} + 22

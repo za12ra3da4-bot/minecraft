@@ -57,11 +57,12 @@ function bgStart():
         set {-bg::capv::%loop-value%} to 0
         set {-bg::contest::%loop-value%} to false
     set {-bg::boss::next} to {bg::cfg::boss_first}
-    delete {bg::coin::*}
+    # 코인은 게임이 끝날 때 초기화된다 → 시작할 땐 최소 20 (관리자가 미리 준 코인은 유지)
     delete {bg::owned::*}
     loop all players:
         if bgTeam(loop-player) is not "none":
-            set {bg::coin::%uuid of loop-player%} to 20
+            if ({bg::coin::%uuid of loop-player%} ? 0) < 20:
+                set {bg::coin::%uuid of loop-player%} to 20
     bgHudCreate()
     loop all players:
         if bgTeam(loop-player) is not "none":
@@ -434,6 +435,8 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             bgSyncOrigin()
             bgCmd("function bg:map/border with storage bg:map origin")
             send "&6[전장] &f맵 경계 벽(보이지 않는 벽)을 세웠습니다."
+        else if arg-1 is "진단":
+            bgDiag(player)
         else if arg-1 is "장식":
             bgSyncOrigin()
             bgCmd("function bg:map/decor")

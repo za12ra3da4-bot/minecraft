@@ -335,6 +335,102 @@ def _quat_yaw_roll(yaw, roll):
     return tuple(round(v, 5) for v in mul(q("y", -yaw), q("z", roll)))
 
 
+def _solid(name):
+    return name != "air" and not any(k in name for k in ("grass", "fern", "flower", "torch", "lantern", "carpet", "snow", "button",
+                                                            "rail", "sapling", "vine", "water", "lava", "fence", "wall", "chain", "pane", "bars"))
+
+
+def find_spot(world, c, rmin, rmax, avoid, dy=(0, -1, 1)):
+    """c 주변에서 발 디딜 곳(아래 단단, 위 3칸 비어 있음, 옆 1칸도 비어 있음) 중 c 에서 rmin~rmax, 가장 가까운 곳"""
+    import math as _m
+    cx, cy, cz = c
+    best = None
+    for r2 in range(int(rmin * 2), int(rmax * 2) + 1):
+        r = r2 / 2
+        for i in range(48):
+            a = i / 48 * 2 * _m.pi
+            x = int(_m.floor(cx + _m.cos(a) * r)); z = int(_m.floor(cz + _m.sin(a) * r))
+            if any((ax - (x + 0.5)) ** 2 + (az - (z + 0.5)) ** 2 < ar * ar for ax, az, ar in avoid):
+                continue
+            for d in dy:
+                y = int(_m.floor(cy)) + d
+                try:
+                    if not _solid(world.pal[world.vox[x, y - 1, z]]):
+                        continue
+                    ok = True
+                    for ox in (-1, 0, 1):
+                        for oz in (-1, 0, 1):
+                            for oy in (0, 1, 2):
+                                if world.pal[world.vox[x + ox, y + oy, z + oz]] != "air":
+                                    ok = False
+                    if ok:
+                        return (x + 0.5, y, z + 0.5)
+                except IndexError:
+                    pass
+    return best
+
+
+def npc_and_class_lines(world, bdkit, bdmodels):
+    import math as _m
+    at = "$execute positioned $(x) $(y) $(z) run summon"
+    out = []
+    mk = world.markers
+
+    def P(name):
+        return mk[name]["pos"] if name in mk else None
+
+    def text(x, y, z, parts, scale=1.5):
+        comp = "[" + ",".join('{text:"%s",color:"%s",bold:%s}' % (t, c, "true" if b else "false") for t, c, b in parts) + "]"
+        return (f'{at} text_display ~{x - 0.5:.3f} ~{y:.3f} ~{z - 0.5:.3f} {{Tags:["bg","bg_deco"],text:{comp},billboard:"center",'
+                f'shadow:1b,view_range:0.5f,brightness:{{sky:15,block:15}},transformation:{{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],'
+                f'translation:[0f,0f,0f],scale:[{scale}f,{scale}f,{scale}f]}}}}')
+
+    def npc(pos, face_to):
+        x, y, z = pos
+        yaw = _m.degrees(_m.atan2(-(face_to[0] - x), face_to[2] - z))
+        mdl = bdmodels.merchant()
+        out.extend(bdkit.summon_lines(mdl, at, x - 0.5, y, z - 0.5, yaw, 1.0, ['"bg"', '"bg_deco"'], view=0.8))
+        # 클릭 판정: 상인 + 좌판
+        a = _m.radians(-yaw)
+        sx, sz = 15 / 16, 0.5 / 16
+        wx = x + _m.cos(a) * sx + _m.sin(a) * sz; wz = z - _m.sin(a) * sx + _m.cos(a) * sz
+        for (ix, iz, wd) in ((x, z, 1.3), (wx, wz, 1.1)):
+            out.append(f'{at} interaction ~{ix - 0.5:.3f} ~{y:.3f} ~{iz - 0.5:.3f} {{Tags:["bg","bg_deco","bg_shopnpc"],width:{wd}f,height:2.4f,response:1b}}')
+        out.append(text(x, y + 2.55, z, [("상점", "gold", True)], 1.6))
+        out.append(text(x, y + 2.25, z, [("우클릭해서 열기", "yellow", False)], 1.0))
+
+    for t in ("red", "blue", "green", "yellow"):
+        sp = P(f"base_{t}_spawn_0")
+        if not sp:
+            continue
+        avoid = [(mk[n]["pos"][0], mk[n]["pos"][2], 2.2) for n in mk if n.startswith(f"base_{t}_class_") or n.startswith(f"base_{t}_spawn_")]
+        if P(f"base_{t}_beacon"):
+            b = P(f"base_{t}_beacon"); avoid.append((b[0], b[2], 3.0))
+        spot = find_spot(world, sp, 4, 9, avoid)
+        if spot:
+            npc(spot, sp)
+        else:
+            print(f"[npc] {t} 본진 상인 자리를 못 찾음")
+        # 병과 발판 표식
+        names = [("전사", "쇠사슬 · 검 · 방패 · 활"), ("궁수", "활 · 화살 24"), ("수호자", "철 흉갑 · 도끼 · 방패")]
+        for k in range(3):
+            c = P(f"base_{t}_class_{k}")
+            if not c:
+                continue
+            x, y, z = c
+            ic = bdmodels.class_icon(k)
+            out.extend(bdkit.summon_lines(ic, at, x - 0.5, y + 1.4, z - 0.5, 0.0, 1.0, ['"bg"', '"bg_deco"'], view=0.6))
+            out.append(text(x, y + 2.75, z, [(names[k][0], "gold", True)], 1.4))
+            out.append(text(x, y + 2.45, z, [(names[k][1], "gray", False)], 0.8))
+    lb = P("lobby_spawn")
+    if lb:
+        avoid = [(mk[n]["pos"][0], mk[n]["pos"][2], 3.0) for n in mk if n.startswith("lobby_pad_")] + [(lb[0], lb[2], 2.5)]
+        spot = find_spot(world, lb, 4, 10, avoid)
+        if spot:
+            npc(spot, lb)
+    return out
+
+
 def decor_functions(dp_root, world):
     """world.displays → 소환 함수 (원점 기준 상대 좌표)
        장식은 전부 블록 디스플레이 조립 (bdmodels) — 마법진만 리소스팩 판"""
@@ -368,10 +464,15 @@ def decor_functions(dp_root, world):
         out = bdkit.summon_lines(mdl, at, x, y, z, yaw, 1.0, tags)
         nparts += len(out)
         lines += out
+    # ── 상점 상인 NPC (본진 4곳 + 대기실) · 병과 발판 표식
+    extra = npc_and_class_lines(world, bdkit, bdmodels)
+    lines += extra
+    nparts += len(extra)
     print(f"[decor] 블록 디스플레이 {nparts}개")
     w(os.path.join(F, "decor_run.mcfunction"), lines)
     w(os.path.join(F, "decor.mcfunction"), ["function bg:map/decor_run with storage bg:map origin"])
     w(os.path.join(F, "decor_clear.mcfunction"), ["kill @e[tag=bg_deco]"])
+    w(os.path.join(dp_root, "data", NS, "function", "diag.mcfunction"), ["scoreboard objectives add bg_diag dummy", "scoreboard players set #dp bg_diag 1"])
     # 보스 보상 상자 (팀별, 블록 디스플레이)  execute positioned <바닥> run function bg:reward/chest_<팀>
     R_ = os.path.join(dp_root, "data", NS, "function", "reward")
     for t in bdmodels.TEAM:

@@ -1,0 +1,67 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 진단 (/전장 진단)
+#   무엇이 안 되는지 한 화면에: 중복 스크립트 · 데이터팩 · HUD 데이터 · 리소스팩 · 보스 · 장식 · 명령 오류
+# ═════════════════════════════════════════════════════════════════════════════
+import:
+    java.io.File
+    org.bukkit.Bukkit
+
+# 접속자별 리소스팩 상태 기록
+on resource pack request response:
+    set {-bg::rp::%uuid of player%} to "%resource pack state%"
+
+function bgOk2(b: boolean) :: text:
+    if {_b} is true:
+        return "&a정상"
+    return "&c문제"
+
+function bgDiag(p: player):
+    send "&6&l[전장 진단]" to {_p}
+    # 1) scripts 폴더 바로 아래 중복 파일
+    set {_dup} to 0
+    loop "a01-gen-hud.sk", "a02-gen-map.sk", "a03-gen-boss.sk", "a10-core.sk", "a20-game.sk", "a30-hud.sk", "a40-boss.sk", "a41-skills.sk", "a45-reward.sk", "a50-weapons.sk" and "a60-lobby.sk":
+        set {_f} to new File("plugins/Skript/scripts/%loop-value%")
+        if {_f}.exists() is true:
+            add 1 to {_dup}
+    if {_dup} > 0:
+        send "&c✘ 중복 스크립트 %{_dup}%개 (plugins/Skript/scripts 바로 아래) → 지우고 /sk reload all" to {_p}
+    else:
+        send "&a✔ 중복 스크립트 없음" to {_p}
+    # 2) 데이터팩 (bg:diag 함수가 점수를 1로 바꾸는지)
+    bgCmd("scoreboard objectives add bg_diag dummy")
+    bgCmd("scoreboard players set #dp bg_diag 0")
+    bgCmd("function bg:diag")
+    set {_obj} to Bukkit.getScoreboardManager().getMainScoreboard().getObjective("bg_diag")
+    set {_v} to 0
+    if {_obj} is set:
+        set {_v} to {_obj}.getScore("#dp").getScore()
+    if {_v} is 1:
+        send "&a✔ 데이터팩 bg_arena 로드됨" to {_p}
+    else:
+        send "&c✘ 데이터팩이 안 읽힘 → 월드/datapacks/bg_arena 확인 후 /minecraft:reload" to {_p}
+    # 3) 스크립트 데이터
+    send "&7 · HUD 글리프 데이터: %bgOk2({-bg::hud::ready} is true)%  &7· 맵 데이터: %bgOk2({-bg::mk::ready} is true)%" to {_p}
+    send "&7 · 원점: &f%{bg::cfg::ox}% %{bg::cfg::oy}% %{bg::cfg::oz}% &7(월드 %{bg::cfg::world}%)  &7· 게임 중: &f%{-bg::on} ? false%" to {_p}
+    # 4) 리소스팩 (접속할 때 받은 응답)
+    set {_rp} to {-bg::rp::%uuid of {_p}%} ? "기록 없음 (다시 접속해 보세요)"
+    send "&7 · 내 리소스팩 상태: &f%{_rp}%" to {_p}
+    # 5) 보스
+    if {-bg::boss::id} is set:
+        set {_al} to "없음"
+        if {-bg::boss::ent} is alive:
+            set {_al} to "있음"
+        send "&7 · 보스: &f%{-bg::boss::id}% &7상태 &f%{-bg::boss::state}% &7체력 &f%{-bg::boss::hp}%/%{-bg::boss::max}% &7히트박스 &f%{_al}%" to {_p}
+    else:
+        set {_nx} to {-bg::boss::next} ? 0
+        send "&7 · 보스: 없음 &7(다음까지 %{_nx}%초, 게임 중일 때만 줄어듦)" to {_p}
+    # 6) 장식 · 명령 오류
+    set {_nd} to 0
+    loop all entities in world of {_p}:
+        if scoreboard tags of loop-entity contain "bg_deco":
+            add 1 to {_nd}
+    send "&7 · 장식 디스플레이: &f%{_nd}%개 &7(불러온 청크 안)" to {_p}
+    set {_ce} to {-bg::cmderr} ? 0
+    if {_ce} > 0:
+        send "&c✘ 실패한 명령 %{_ce}%개 → 서버 콘솔의 '[전장] 명령 오류' 줄을 보내주세요" to {_p}
+    else:
+        send "&a✔ 실패한 명령 없음" to {_p}

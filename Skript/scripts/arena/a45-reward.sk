@@ -22,7 +22,7 @@ function bgRewardSpawn(t: text, boss: text, c: location):
     bgCmd("execute in %bgDim()% positioned %{_p}% run function bg:reward/chest_%{_t}%")
     bgSoundAt({_c}, "block.beacon.activate", 3, 1.2)
     bgSoundAt({_c}, "entity.player.levelup", 3, 0.8)
-    bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 &6보상 상자&f가 %{-bg::lairname::%{-bg::bd::%{_boss}%::lair}%}%에 나타났습니다! 가까이 가서 여세요.")
+    bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 &6보상 상자&f가 &e왕좌의 성소 가운데&f에 나타났습니다! 가까이 가서 여세요.")
 
 function bgRewardClear():
     bgCmd("kill @e[tag=bg_reward]")
