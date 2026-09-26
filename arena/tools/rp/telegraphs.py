@@ -23,7 +23,7 @@ from ink import *
 S = 256
 ARC_FRAMES = 20
 DONUT_FRAMES = 12
-FLASH = ((255, 250, 225), (255, 170, 90), (255, 230, 170))
+FLASH = ((255, 70, 50), (200, 10, 20), (255, 236, 226))
 
 
 def img(a):
@@ -53,8 +53,8 @@ def disc_mask(size, r, cx=None, cy=None):
 def circle_set(out):
     R0 = S * 0.43
     path = circle_path(S, R0, -110, 352, seed=11, wobble=0.006)
-    bold = stroke(S, path, S * 0.075, seed=12, dry=0.55, pool=0.25, bristles=40)
-    faint = stroke(S, circle_path(S, R0, -95, 360, seed=13, wobble=0.004), S * 0.05, seed=14, dry=0.8, pool=0.0, bristles=30)
+    bold = stroke(S, path, S * 0.075, seed=12, dry=0.55, pool=0.25, bristles=16)
+    faint = stroke(S, circle_path(S, R0, -95, 360, seed=13, wobble=0.004), S * 0.05, seed=14, dry=0.8, pool=0.0, bristles=14)
     inner = wash(disc_mask(S, R0 - 4), 15, strength=0.14, edge_bleed=2.0)
     out["circle_ring"] = over(colorize(inner, 0.7, paper_seed=16), colorize(faint, 0.55, paper_seed=17))
     out["circle_fill"] = colorize(wash(disc_mask(S, R0 - 2), 18, strength=0.42, edge_bleed=2.5), 0.85, paper_seed=19)
@@ -63,7 +63,7 @@ def circle_set(out):
     for k in range(ARC_FRAMES):
         frac = (k + 1) / ARC_FRAMES
         sub = path[:max(3, int(n * frac))]
-        dens = stroke(S, sub, S * 0.075, seed=12, dry=0.55 * (0.4 + 0.6 * frac), pool=0.25, bristles=40)
+        dens = stroke(S, sub, S * 0.075, seed=12, dry=0.55 * (0.4 + 0.6 * frac), pool=0.25, bristles=16)
         out[f"circle_arc_{k}"] = colorize(dens, 1.0, paper_seed=20)
     fl = np.maximum(bold, wash(disc_mask(S, R0), 21, 0.55, 2.0) * 0.8)
     out["circle_flash"] = colorize(fl, 1.0, *FLASH, paper_seed=22)
@@ -74,7 +74,7 @@ def rect_set(out):
     W, H = 128, 256          # 가로(폭) x 세로(길이) — 길이 방향이 이미지 세로
     base = np.zeros((H, W), np.float32)
     for sx, sd in ((10, 31), (W - 11, 32)):
-        base = np.maximum(base, stroke(max(W, H), line_path((sx, 6), (sx, H - 6), 300, 1.5, sd), 11, seed=sd, dry=0.6, pool=0.2, bristles=24)[:H, :W])
+        base = np.maximum(base, stroke(max(W, H), line_path((sx, 6), (sx, H - 6), 300, 1.5, sd), 11, seed=sd, dry=0.6, pool=0.2, bristles=12)[:H, :W])
     m = np.zeros((H, W), bool); m[4:H - 4, 12:W - 12] = True
     inner = wash(np.pad(m, ((0, 0), (0, H - W)))[:, :max(W, H)], 33, 0.14, 2.0)[:H, :W]
     out["rect_base"] = over(colorize(inner, 0.7, paper_seed=34), colorize(base, 0.6, paper_seed=35))
@@ -94,8 +94,8 @@ def rect_set(out):
 # ─────────────────────────────────────────────────────────────── 부채꼴
 def cone_set(out, deg):
     # 꼭짓점 = 이미지 아래 가운데, 위쪽으로 퍼짐
-    ax, ay = S / 2, S - 4
-    R0 = S - 10
+    ax, ay = S / 2, S / 2
+    R0 = S / 2 - 8
     a0 = -90 - deg / 2
     a1 = -90 + deg / 2
     yy, xx = np.mgrid[0:S, 0:S]
@@ -105,9 +105,9 @@ def cone_set(out, deg):
     edge = np.zeros((S, S), np.float32)
     for k, a in enumerate((a0, a1)):
         p1 = (ax + math.cos(math.radians(a)) * R0, ay + math.sin(math.radians(a)) * R0)
-        edge = np.maximum(edge, stroke(S, line_path((ax, ay), p1, 260, 1.5, 50 + k), 9, seed=51 + k, dry=0.6, pool=0.2 if k == 0 else 0, bristles=24))
+        edge = np.maximum(edge, stroke(S, line_path((ax, ay), p1, 260, 1.5, 50 + k), 9, seed=51 + k, dry=0.6, pool=0.2 if k == 0 else 0, bristles=12))
     arc = circle_path(S, R0, a0, deg, cx=ax, cy=ay, seed=53, wobble=0.003, n=400)
-    edge = np.maximum(edge, stroke(S, arc, 10, seed=54, dry=0.55, pool=0.1, bristles=26))
+    edge = np.maximum(edge, stroke(S, arc, 10, seed=54, dry=0.55, pool=0.1, bristles=12))
     inner = wash(m, 55, 0.14, 2.0)
     out[f"cone{deg}_base"] = over(colorize(inner, 0.7, paper_seed=56), colorize(edge, 0.6, paper_seed=57))
     fill = wash(m, 58, 0.44, 2.5)
@@ -119,8 +119,8 @@ def cone_set(out, deg):
 def donut_set(out, inner_frac=0.42):
     Ro = S * 0.46
     Ri = Ro * inner_frac
-    outer = stroke(S, circle_path(S, Ro, -100, 356, seed=61, wobble=0.004), S * 0.05, seed=62, dry=0.6, pool=0.2, bristles=30)
-    innr = stroke(S, circle_path(S, Ri, 80, 350, seed=63, wobble=0.006), S * 0.04, seed=64, dry=0.6, pool=0.2, bristles=24)
+    outer = stroke(S, circle_path(S, Ro, -100, 356, seed=61, wobble=0.004), S * 0.05, seed=62, dry=0.6, pool=0.2, bristles=14)
+    innr = stroke(S, circle_path(S, Ri, 80, 350, seed=63, wobble=0.006), S * 0.04, seed=64, dry=0.6, pool=0.2, bristles=12)
     yy, xx = np.mgrid[0:S, 0:S]
     d = np.hypot(xx + 0.5 - S / 2, yy + 0.5 - S / 2)
     ring = (d <= Ro - 3) & (d >= Ri + 3)
@@ -151,12 +151,18 @@ def marks(out):
     h = colorize(np.clip(halo, 0, 1), 0.8, (255, 220, 190), (255, 160, 120), (255, 240, 220))
     out["mark_head"] = over(h, a)
     # 순서 숫자 (붓글씨체)
-    f = gfx.font("NanumBrush.ttf", 210)
+    f = gfx.font("BlackHanSans.ttf", 200)
     for n in range(1, 10):
-        im = Image.new("L", (S, S), 0)
-        d = ImageDraw.Draw(im)
+        big = Image.new("L", (S * 2, S * 2), 0)
+        d = ImageDraw.Draw(big)
         bb = d.textbbox((0, 0), str(n), font=f)
-        d.text(((S - (bb[2] - bb[0])) / 2 - bb[0], (S - (bb[3] - bb[1])) / 2 - bb[1]), str(n), font=f, fill=255)
+        d.text(((S * 2 - (bb[2] - bb[0])) / 2 - bb[0], (S * 2 - (bb[3] - bb[1])) / 2 - bb[1]), str(n), font=f, fill=255)
+        bb = big.getbbox()
+        crop = big.crop(bb)
+        sc = (S * 0.72) / max(crop.size)
+        crop = crop.resize((int(crop.size[0] * sc), int(crop.size[1] * sc)), Image.LANCZOS)
+        im = Image.new("L", (S, S), 0)
+        im.paste(crop, ((S - crop.size[0]) // 2, (S - crop.size[1]) // 2))
         dens = np.asarray(im, np.float32) / 255
         dens = dens * (0.75 + 0.25 * paper(S, 100 + n, 0.5))
         glow = ndimage.gaussian_filter(dens, 5) * 0.7
@@ -169,7 +175,7 @@ def rune_sphinx(out):
     dens = np.zeros((S, S), np.float32)
     c = S / 2
     for k, (r, w, sd) in enumerate(((0.47, 0.03, 1), (0.40, 0.02, 2), (0.24, 0.025, 3), (0.12, 0.02, 4))):
-        dens = np.maximum(dens, stroke(S, circle_path(S, S * r, -90 + k * 40, 358, seed=110 + sd, wobble=0.003), S * w, seed=120 + sd, dry=0.5, pool=0.15, bristles=18))
+        dens = np.maximum(dens, stroke(S, circle_path(S, S * r, -90 + k * 40, 358, seed=110 + sd, wobble=0.003), S * w, seed=120 + sd, dry=0.5, pool=0.15, bristles=10))
     # 12 상형 문자 (눈·앙크·새·물결)
     for i in range(12):
         a = i / 12 * 2 * math.pi
@@ -204,17 +210,46 @@ def rune_sphinx(out):
 def pools(out):
     R = np.random.default_rng(5)
     yy, xx = np.mgrid[0:S, 0:S]
-    d = np.hypot(xx - S / 2, yy - S / 2)
-    ang = np.arctan2(yy - S / 2, xx - S / 2)
-    blob = d < S * 0.38 * (1 + 0.12 * np.sin(ang * 5 + 1) + 0.07 * np.sin(ang * 11))
-    dens = wash(blob, 230, 0.65, 3.0)
-    for k in range(9):
-        bx, by = R.uniform(S * 0.25, S * 0.75, 2)
-        dens = np.maximum(dens, stroke(S, circle_path(S, R.uniform(4, 10), 0, 360, cx=bx, cy=by, n=80, seed=240 + k), 3, seed=250 + k, dry=0.2, pool=0) * 0.8)
-    out["poison"] = colorize(dens, 0.9, (70, 200, 60), (20, 70, 20), (170, 255, 120), paper_seed=260)
-    blob2 = d < S * 0.42 * (1 + 0.18 * np.sin(ang * 7 + 2) + 0.1 * np.sin(ang * 13))
-    dens2 = wash(blob2, 270, 0.7, 4.0)
-    out["scorch"] = colorize(dens2, 0.85, (60, 30, 20), (10, 6, 4), (200, 80, 30), paper_seed=280)
+    c = S / 2
+    d = np.hypot(xx - c, yy - c)
+    ang = np.arctan2(yy - c, xx - c)
+    # 독: 짙은 먹빛 초록 웅덩이 + 가장자리 흘러내림 + 거품
+    blob = d < S * 0.34 * (1 + 0.14 * np.sin(ang * 5 + 1) + 0.08 * np.sin(ang * 11 + 3))
+    dens = wash(blob, 230, 0.8, 2.5)
+    for k in range(10):
+        a_ = R.uniform(0, 2 * np.pi)
+        p0 = (c + np.cos(a_) * S * 0.28, c + np.sin(a_) * S * 0.28)
+        p1 = (c + np.cos(a_) * S * R.uniform(0.38, 0.47), c + np.sin(a_) * S * R.uniform(0.38, 0.47))
+        dens = np.maximum(dens, stroke(S, line_path(p0, p1, 60, 2, 240 + k), S * R.uniform(0.03, 0.06), seed=250 + k, dry=0.5, pool=0.2, bristles=8))
+    inner = ndimage.gaussian_filter((d < S * 0.2).astype(np.float32), 8)
+    base = colorize(dens, 0.95, (40, 150, 60), (8, 36, 16), (150, 255, 110), paper_seed=260)
+    glow = colorize(np.clip(inner * 0.9, 0, 1), 0.55, (170, 255, 120), (90, 220, 80), (220, 255, 190))
+    bub = np.zeros((S, S), np.float32)
+    for k in range(12):
+        bx, by = c + R.normal(0, S * 0.12, 2)
+        rr = R.uniform(3, 8)
+        ring = np.clip(1.4 - np.abs(np.hypot(xx - bx, yy - by) - rr), 0, 1)
+        bub = np.maximum(bub, ring)
+    out["poison"] = over(base, glow, colorize(bub, 0.9, (210, 255, 180), (120, 220, 110), (240, 255, 230)))
+    # 그을음: 먹 튄 검붉은 자국 + 불씨 균열
+    blob2 = d < S * 0.30 * (1 + 0.2 * np.sin(ang * 7 + 2) + 0.12 * np.sin(ang * 13))
+    dens2 = wash(blob2, 270, 0.85, 2.5)
+    for k in range(14):
+        a_ = R.uniform(0, 2 * np.pi)
+        p0 = (c + np.cos(a_) * S * 0.2, c + np.sin(a_) * S * 0.2)
+        p1 = (c + np.cos(a_) * S * R.uniform(0.36, 0.48), c + np.sin(a_) * S * R.uniform(0.36, 0.48))
+        dens2 = np.maximum(dens2, stroke(S, line_path(p0, p1, 60, 3, 280 + k), S * R.uniform(0.025, 0.05), seed=290 + k, dry=0.7, pool=0.3, bristles=8))
+    crack = np.zeros((S, S), np.float32)
+    for k in range(7):
+        a_ = R.uniform(0, 2 * np.pi)
+        pts = [(c, c)]
+        for j in range(8):
+            a_ += R.uniform(-0.5, 0.5)
+            x, y = pts[-1]
+            pts.append((x + np.cos(a_) * S * 0.04, y + np.sin(a_) * S * 0.04))
+        crack = np.maximum(crack, stroke(S, [p for i in range(len(pts) - 1) for p in line_path(pts[i], pts[i + 1], 12)], 3.5, seed=300 + k, dry=0.3, pool=0, bristles=4))
+    out["scorch"] = over(colorize(dens2, 0.92, (70, 20, 16), (14, 4, 4), (150, 50, 30), paper_seed=310),
+                         colorize(ndimage.gaussian_filter(crack, 1.5) * 1.5, 1.0, (255, 150, 40), (255, 90, 20), (255, 230, 150)))
 
 
 def build_all():

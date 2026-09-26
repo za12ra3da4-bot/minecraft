@@ -19,33 +19,48 @@ def pick(r, table):
     return table[-1][0]
 
 
+# 암석층: 두께 3 칸 띠 (가까운 색끼리) — 줄무늬가 튀지 않게
 STRATA = {
-    "default": ["stone", "stone", "andesite", "stone", "tuff", "stone", "andesite", "cobblestone", "stone"],
-    "ares": ["terracotta", "terracotta", "brown_terracotta", "terracotta", "red_terracotta", "terracotta", "brown_terracotta", "basalt[axis=y]", "blackstone"],
-    "athena": ["calcite", "calcite", "diorite", "polished_diorite", "calcite", "stone", "calcite"],
-    "hermes": ["stone", "andesite", "stone", "tuff", "stone", "stone", "andesite", "gravel"],
-    "demeter": ["mossy_cobblestone", "stone", "moss_block", "stone", "mossy_cobblestone", "andesite"],
-    "forge": ["basalt[axis=y]", "blackstone", "basalt[axis=y]", "smooth_basalt", "blackstone", "deepslate[axis=y]", "tuff"],
-    "sands": ["sandstone", "sandstone", "cut_sandstone", "smooth_sandstone", "orange_terracotta", "sandstone", "yellow_terracotta"],
-    "quarry": ["stone", "stone", "andesite", "stone", "cobblestone", "stone", "polished_andesite"],
-    "garden": ["mossy_stone_bricks", "stone", "mossy_cobblestone", "stone"],
-    "mount": ["stone", "andesite", "stone", "stone", "tuff", "stone", "granite", "stone", "diorite", "stone"],
+    "default": ["stone", "stone", "andesite", "stone", "tuff", "stone"],
+    "ares": ["terracotta", "brown_terracotta", "terracotta", "packed_mud", "terracotta", "brown_terracotta"],
+    "athena": ["calcite", "calcite", "diorite", "calcite", "stone"],
+    "hermes": ["stone", "andesite", "stone", "tuff", "stone"],
+    "demeter": ["stone", "mossy_cobblestone", "stone", "andesite"],
+    "forge": ["basalt[axis=y]", "blackstone", "basalt[axis=y]", "smooth_basalt", "blackstone", "deepslate[axis=y]"],
+    "sands": ["sandstone", "sandstone", "smooth_sandstone", "sandstone", "cut_sandstone"],
+    "quarry": ["stone", "stone", "andesite", "stone", "tuff", "stone"],
+    "garden": ["stone", "mossy_cobblestone", "stone", "andesite"],
+    "mount": ["stone", "andesite", "stone", "tuff", "stone", "stone"],
+}
+BAND = 3
+
+# 윗면: 기본 재질 + 저주파 노이즈 군락 (한 칸짜리 점박이 없음)
+#   (재질, 노이즈, 하한, 상한)  노이즈: a = 7칸, b = 13칸, c = 29칸 주기
+TOPS = {
+    "default": ("grass_block", [("moss_block", "b", 0.80, 1.1), ("rooted_dirt", "c", 0.0, 0.07)]),
+    "ares": ("coarse_dirt", [("blackstone", "b", 0.70, 1.1), ("gravel", "a", 0.0, 0.22), ("packed_mud", "c", 0.75, 1.1)]),
+    "athena": ("grass_block", [("moss_block", "b", 0.84, 1.1)]),
+    "hermes": ("grass_block", [("stone", "b", 0.84, 1.1), ("andesite", "c", 0.0, 0.08)]),
+    "demeter": ("grass_block", [("moss_block", "b", 0.70, 1.1), ("rooted_dirt", "c", 0.0, 0.1)]),
+    "plaza": ("grass_block", [("moss_block", "b", 0.82, 1.1)]),
+    "base": ("grass_block", [("moss_block", "b", 0.84, 1.1)]),
+    "forge": ("blackstone", [("basalt[axis=y]", "b", 0.62, 1.1), ("smooth_basalt", "a", 0.0, 0.2), ("gravel", "c", 0.0, 0.12)]),
+    "sands": ("sand", [("sandstone", "b", 0.80, 1.1), ("smooth_sandstone", "c", 0.0, 0.08)]),
+    "quarry": ("stone", [("andesite", "b", 0.64, 1.1), ("gravel", "c", 0.0, 0.14), ("tuff", "a", 0.0, 0.14)]),
+    "garden": ("grass_block", [("moss_block", "b", 0.72, 1.1)]),
+    "mount": ("grass_block", [("moss_block", "b", 0.82, 1.1)]),
 }
 
-TOPS = {
-    "default": [("grass_block", 74), ("coarse_dirt", 7), ("podzol", 5), ("moss_block", 3), ("rooted_dirt", 3), ("gravel", 2)],
-    "ares": [("coarse_dirt", 40), ("blackstone", 18), ("basalt[axis=y]", 12), ("gravel", 12), ("tuff", 8), ("packed_mud", 6), ("magma_block", 1)],
-    "athena": [("grass_block", 88), ("moss_block", 4), ("coarse_dirt", 3), ("calcite", 5)],
-    "hermes": [("grass_block", 72), ("stone", 10), ("andesite", 8), ("gravel", 5), ("coarse_dirt", 5)],
-    "demeter": [("grass_block", 58), ("moss_block", 24), ("rooted_dirt", 8), ("podzol", 10)],
-    "plaza": [("grass_block", 90), ("coarse_dirt", 6), ("moss_block", 4)],
-    "base": [("grass_block", 80), ("coarse_dirt", 12), ("gravel", 8)],
-    "forge": [("blackstone", 34), ("basalt[axis=y]", 18), ("smooth_basalt", 10), ("gravel", 12), ("coarse_dirt", 14), ("magma_block", 4), ("tuff", 8)],
-    "sands": [("sand", 62), ("sandstone", 18), ("smooth_sandstone", 10), ("coarse_dirt", 4), ("red_sand", 6)],
-    "quarry": [("stone", 38), ("cobblestone", 18), ("gravel", 18), ("andesite", 16), ("coarse_dirt", 10)],
-    "garden": [("grass_block", 80), ("moss_block", 14), ("podzol", 6)],
-    "mount": [("grass_block", 55), ("stone", 20), ("coarse_dirt", 10), ("andesite", 10), ("gravel", 5)],
-}
+
+def top_pick(k, na, nb, nc):
+    base, patches = TOPS.get(k, TOPS["default"])
+    nz = {"a": na, "b": nb, "c": nc}
+    for m, key, lo, hi in patches:
+        if lo <= nz[key] < hi:
+            return m
+    return base
+
+
 SUB = {"ares": "red_terracotta", "sands": "sandstone", "forge": "blackstone", "quarry": "stone", "athena": "dirt"}
 
 
@@ -64,7 +79,8 @@ def paint(w, T, seed=3):
     rnd2 = rs.random((S, S))
     n1 = value_noise(S, 7, seed + 1)
     n2 = value_noise(S, 13, seed + 2)
-    strata_off = (value_noise(S, 24, seed + 3) * 4).astype(int)
+    strata_off = (value_noise(S, 24, seed + 3) * 5).astype(int)
+    n3 = value_noise(S, 29, seed + 4)
     lowN = ndimage.minimum_filter(Hi, size=3, mode="nearest")
     hiN = ndimage.maximum_filter(Hi, size=3, mode="nearest")
     slope = np.maximum(Hi - lowN, hiN - Hi)
@@ -81,7 +97,7 @@ def paint(w, T, seed=3):
             floor = max(0, min(h - 4, int(lowN[x, z]) - 1))
             # 암석층
             for y in range(floor, h + 1):
-                s = strata[(y + strata_off[x, z]) % len(strata)]
+                s = strata[((y + strata_off[x, z]) // BAND) % len(strata)]
                 w.vox[x, y, z] = w.id(s)
             wl = T.water[x, z]
             rk = T.road_kind[x, z]
@@ -130,11 +146,9 @@ def paint(w, T, seed=3):
                 w.vox[x, h, z] = w.id(top)
                 w.vox[x, max(floor, h - 3):h, z] = w.id("dirt")
                 continue
-            table = TOPS.get(k, TOPS["default"])
-            r = (n1[x, z] * 0.6 + rnd[x, z] * 0.4) if k not in ("ares", "forge", "sands", "quarry", "hermes") else (n1[x, z] * 0.85 + rnd[x, z] * 0.15)
-            top = pick(r, table)
-            if k in ("default", "mount") and sl >= 2 and rnd2[x, z] < 0.45:
-                top = pick(rnd[x, z], [("stone", 4), ("andesite", 2), ("coarse_dirt", 2), ("gravel", 1)])
+            top = top_pick(k, n1[x, z], n2[x, z], n3[x, z])
+            if k in ("default", "mount", "hermes") and sl >= 2 and n1[x, z] < 0.45:
+                top = "stone" if n2[x, z] < 0.6 else "andesite"
             # 물가 모래/자갈
             if k not in ("ares", "forge", "sands"):
                 near_w = False
@@ -144,7 +158,7 @@ def paint(w, T, seed=3):
                         if 0 <= xx < S and 0 <= zz < S and T.water[xx, zz] >= 0 and T.water[xx, zz] >= h:
                             near_w = True
                 if near_w:
-                    top = pick(rnd[x, z], [("gravel", 3), ("coarse_dirt", 2), ("grass_block", 3), ("mud", 1)])
+                    top = "gravel" if n1[x, z] < 0.5 else ("sand" if n2[x, z] < 0.5 else "grass_block")
             sub = SUB.get(k, "dirt")
             if top in ("sand", "red_sand"):
                 sub = "sandstone" if top == "sand" else "red_sandstone"

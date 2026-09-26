@@ -108,15 +108,20 @@ def build():
             *[Box((-3.4 + k * 1.82, -7.6 + (0.5 if k in (0, 3) else 0), 2.4), (-2.3 + k * 1.82, -6.4 + (0.5 if k in (0, 3) else 0), 3.6), BONE) for k in range(4)],
         ])
     P["link"] = Part("link", [Box((-0.5, -3.4, -1.1), (0.5, 0, 1.1), IRON), Box((-1.1, -3.4, -0.5), (1.1, -2.2, 0.5), IRON)])
+    # 곤봉: 모델 범위(±24) 때문에 자루(club)와 머리(club_head, 자루 끝 -18 에 붙음) 두 조각
     club = rbox((-1.4, -12, -1.4), (1.4, 3, 1.4), WOOD, r=0.5)
-    club += rbox((-4.2, -30, -4.2), (4.2, -11, 4.2), WOOD, r=1.8)
-    club += [Box((-4.5, -15.4, -4.5), (4.5, -13.4, 4.5), IRON), Box((-4.5, -24.4, -4.5), (4.5, -22.4, 4.5), IRON)]
-    for yy in (-19, -27):
+    club += rbox((-4.2, -18, -4.2), (4.2, -11, 4.2), WOOD, r=1.8)
+    club += [Box((-4.5, -15.4, -4.5), (4.5, -13.4, 4.5), IRON)]
+    head = rbox((-4.2, -12, -4.2), (4.2, 0.6, 4.2), WOOD, r=1.8)
+    head += [Box((-4.5, -6.4, -4.5), (4.5, -4.4, 4.5), IRON)]
+    for yy, tgt in ((-19, club), (-27, head)):
+        oy = 0 if tgt is club else 18
         for (dx, dz) in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            lo = (dx * 4.0 - 0.7 + min(0, dx) * 1.8, yy - 0.7, dz * 4.0 - 0.7 + min(0, dz) * 1.8)
-            hi = (dx * 4.0 + 0.7 + max(0, dx) * 1.8, yy + 0.7, dz * 4.0 + 0.7 + max(0, dz) * 1.8)
-            club.append(Box(lo, hi, IRON))
+            lo = (dx * 4.0 - 0.7 + min(0, dx) * 1.8, yy + oy - 0.7, dz * 4.0 - 0.7 + min(0, dz) * 1.8)
+            hi = (dx * 4.0 + 0.7 + max(0, dx) * 1.8, yy + oy + 0.7, dz * 4.0 + 0.7 + max(0, dz) * 1.8)
+            tgt.append(Box(lo, hi, IRON))
     P["club"] = Part("club", club)
+    P["club_head"] = Part("club_head", head)
     P["thigh"] = Part("thigh", rbox((-4.2, -10, -4.2), (4.2, 1, 4.2), SKIN, r=1.6))
     P["shin"] = Part("shin", rbox((-3.6, -9, -3.6), (3.6, 0.5, 3.6), SKIN_D, r=1.2)
                      + [Box((-3.9, -7.6, -3.9), (3.9, -6.4, 3.9), ROPE), Box((-3.9, -4.6, -3.9), (3.9, -3.4, 3.9), ROPE)])
@@ -151,6 +156,7 @@ def build():
         R.bone("shin_" + s, "thigh_" + s, (0, -10, 0), P["shin"], rest=(10, 0, -sg * 4))
         R.bone("foot_" + s, "shin_" + s, (0, -8.8, 0), P["foot"], rest=(-4, 0, 0))
     R.bone("club", "palm_r", (0, -5.4, 1.2), P["club"], rest=(-60, 0, 0))
+    R.bone("club_head", "club", (0, -18, 0), P["club_head"])
     return R, parts, anims()
 
 
@@ -245,4 +251,4 @@ def anims():
     return A
 
 
-INFO = dict(hitbox="husk", hit_scale=3.4, portrait=dict(bone="head", dist=1.7, height=0.35))
+INFO = dict(hitbox="husk", hit_scale=3.4, portrait=dict(bone="head", dist=1.8, cy=3.6, cz=3.0))

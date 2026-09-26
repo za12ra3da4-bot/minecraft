@@ -20,13 +20,13 @@ def rng(seed):
     return np.random.default_rng(seed)
 
 
-def stroke(size, path, width, seed=1, dry=0.55, pool=0.35, taper=(0.35, 0.6), bristles=46, rough=0.6):
-    """path: [(x,y)] 픽셀 좌표 (조밀), width: 픽셀. 반환 농도 맵 (size x size)"""
+def stroke(size, path, width, seed=1, dry=0.55, pool=0.35, taper=(0.35, 0.6), bristles=16, rough=0.6):
+    """붓 한 획: 먹이 꽉 찬 몸통 + 굵은 붓털 가닥(드라이브러시) + 시작부 먹 고임 → 농도 맵"""
     R = rng(seed)
     H = W = size
-    acc = np.zeros((H, W), np.float32)
     P = np.array(path, np.float32)
     n = len(P)
+    acc = np.zeros((H, W), np.float32)
     if n < 2:
         return acc
     seg = np.diff(P, axis=0)
@@ -36,51 +36,57 @@ def stroke(size, path, width, seed=1, dry=0.55, pool=0.35, taper=(0.35, 0.6), br
     tang = np.zeros_like(P)
     tang[:-1] = seg / (L[:, None] + 1e-6)
     tang[-1] = tang[-2]
-    norm = np.stack([-tang[:, 1], tang[:, 0]], 1)
+    nrm = np.stack([-tang[:, 1], tang[:, 0]], 1)
     t = cum / total
-    # 획 굵기 프로파일: 시작 두툼 → 중간 → 끝 가늘게
-    prof = np.clip(np.minimum(t / taper[0] * 0.4 + 0.6, 1.0), 0, 1) * np.clip((1 - t) / (1 - taper[1]) * 0.7 + 0.3, 0, 1)
-    wob = ndimage.gaussian_filter1d(R.normal(0, 1, n), max(1, n / 30)) * width * 0.08 * rough
+    prof = np.clip(np.minimum(t / taper[0] * 0.45 + 0.55, 1.0), 0, 1) * np.clip((1 - t) / (1 - taper[1]) * 0.75 + 0.25, 0, 1)
+    wob = ndimage.gaussian_filter1d(R.normal(0, 1, n), max(1, n / 30)) * width * 0.06 * rough
+    step = max(1, int(n / (total / 1.2)))
+    yy, xx = np.mgrid[0:H, 0:W]
+
+    def dab(x, y, r, v):
+        x0, x1 = int(max(0, x - r - 1)), int(min(W - 1, x + r + 1))
+        y0, y1 = int(max(0, y - r - 1)), int(min(H - 1, y + r + 1))
+        if x0 > x1 or y0 > y1:
+            return
+        d = np.sqrt((xx[y0:y1 + 1, x0:x1 + 1] - x) ** 2 + (yy[y0:y1 + 1, x0:x1 + 1] - y) ** 2)
+        val = np.clip(r + 0.6 - d, 0, 1) * v
+        np.maximum(acc[y0:y1 + 1, x0:x1 + 1], val, out=acc[y0:y1 + 1, x0:x1 + 1])
+
+    # 1) 몸통: 획의 가운데 60% 폭, 먹이 꽉 참 (끝으로 갈수록 마름)
+    body_dry = 1 - dry * 0.55
+    for i in range(0, n, step):
+        if t[i] > body_dry + R.random() * 0.08:
+            break
+        c = P[i] + nrm[i] * wob[i]
+        dab(c[0], c[1], width * 0.32 * prof[i], 0.92)
+    # 2) 붓털: 굵은 가닥이 가장자리까지 — 마를수록 끊김
     for b in range(bristles):
-        off = (b / (bristles - 1) - 0.5)                # -0.5..0.5 가로 위치
-        ink0 = 0.55 + 0.45 * R.random()
-        thick = 0.6 + 1.3 * R.random()
-        # 붓털마다 마르는 지점
-        dry_start = np.clip(R.normal(1 - dry * 0.6, 0.18), 0.25, 1.1)
-        gaps = ndimage.gaussian_filter1d(R.random(n), 1.2) > (0.42 + 0.25 * (1 - dry))
-        edge = abs(off) > 0.36
-        for i in range(0, n, 1):
+        off = (b / (bristles - 1) - 0.5) * 0.98
+        ink0 = 0.7 + 0.3 * R.random()
+        thick = width / bristles * (1.1 + 0.9 * R.random())
+        dry_start = np.clip(R.normal(1 - dry * 0.7, 0.14) - abs(off) * dry * 0.6, 0.15, 1.1)
+        gaps = ndimage.gaussian_filter1d(R.random(n), 2.0) > (0.55 - 0.1 * dry)
+        for i in range(0, n, step):
             ti = t[i]
-            w_here = width * prof[i]
-            pos = P[i] + norm[i] * (off * w_here + wob[i])
             ink = ink0
             if ti > dry_start:
-                ink *= max(0.0, 1 - (ti - dry_start) * 4)
+                ink *= max(0.0, 1 - (ti - dry_start) * 3.5)
                 if gaps[i]:
                     continue
-            if edge and R.random() < 0.35 * dry:
+            if ink <= 0.03:
                 continue
-            if ink <= 0.02:
-                continue
-            x, y = pos
-            r = thick * 0.5 * (0.8 + 0.4 * prof[i])
-            x0, x1 = int(max(0, x - r - 1)), int(min(W - 1, x + r + 1))
-            y0, y1 = int(max(0, y - r - 1)), int(min(H - 1, y + r + 1))
-            if x0 > x1 or y0 > y1:
-                continue
-            yy, xx = np.mgrid[y0:y1 + 1, x0:x1 + 1]
-            d = np.sqrt((xx - x) ** 2 + (yy - y) ** 2)
-            v = np.clip(r + 0.5 - d, 0, 1) * ink
-            acc[y0:y1 + 1, x0:x1 + 1] = np.maximum(acc[y0:y1 + 1, x0:x1 + 1], v)
-    # 시작부 먹 고임
+            c = P[i] + nrm[i] * (off * width * prof[i] + wob[i])
+            dab(c[0], c[1], thick * 0.5 * (0.7 + 0.5 * prof[i]), ink)
+    # 3) 시작부 먹 고임 + 튄 먹
     if pool > 0:
-        cx, cy = P[min(3, n - 1)]
-        yy, xx = np.mgrid[0:H, 0:W]
-        d = np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2)
-        acc = np.maximum(acc, np.clip(1 - d / (width * 0.55), 0, 1) * pool * 1.4)
-    # 번짐 (화선지)
-    bleed = ndimage.gaussian_filter(acc, 0.8)
-    acc = np.maximum(acc, bleed * 0.8)
+        c = P[min(2, n - 1)]
+        d = np.sqrt((xx - c[0]) ** 2 + (yy - c[1]) ** 2)
+        acc = np.maximum(acc, np.clip(1 - d / (width * 0.6), 0, 1) ** 0.7 * pool * 1.6)
+        for k in range(int(3 + pool * 6)):
+            a_ = R.uniform(0, 2 * np.pi); rr = width * R.uniform(0.7, 1.4)
+            dab(c[0] + np.cos(a_) * rr, c[1] + np.sin(a_) * rr, R.uniform(0.6, 1.8), 0.9)
+    # 화선지 번짐
+    acc = np.maximum(acc, ndimage.gaussian_filter(acc, 1.0) * 0.85)
     return np.clip(acc, 0, 1)
 
 
