@@ -429,7 +429,7 @@ def npc_and_class_lines(world, bdkit, bdmodels):
         else:
             print(f"[npc] {t} 본진 상인 자리를 못 찾음")
         # 병과 발판 표식
-        names = [("전사", "쇠사슬 · 검 · 활"), ("궁수", "활 · 화살 24"), ("수호자", "철 흉갑 · 도끼")]
+        names = [("전사", "사슬 바지 · 돌 검 · 활"), ("궁수", "가죽 바지 · 활 · 화살 24"), ("수호자", "철 바지 · 돌 도끼")]
         for k in range(3):
             c = P(f"base_{t}_class_{k}")
             if not c:

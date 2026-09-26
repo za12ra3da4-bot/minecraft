@@ -108,7 +108,7 @@ on load:
     set {-bg::gear::food::price} to 5
     set {-bg::gear::food::icon} to cooked beef
     set {-bg::gear::food::slot} to 40
-    set {-bg::gear::iron::name} to "철 갑옷 (흉갑·각반·장화)"
+    set {-bg::gear::iron::name} to "철 갑옷 (투구·흉갑·장화)"
     set {-bg::gear::iron::desc} to "죽어도 유지됩니다"
     set {-bg::gear::iron::price} to 40
     set {-bg::gear::iron::icon} to iron chestplate
@@ -151,8 +151,8 @@ function bgGiveGear(p: player, g: text):
     set {_n} to name of {_p}
     if {_g} is "iron":
         set {bg::owned::%uuid of {_p}%::iron} to true
+        bgCmd("item replace entity %{_n}% armor.head with iron_helmet[unbreakable={}]")
         bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
         bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
     else if {_g} is "diamond":
         set {bg::owned::%uuid of {_p}%::diamond} to true

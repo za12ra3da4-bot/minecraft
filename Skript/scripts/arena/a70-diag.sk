@@ -65,3 +65,20 @@ function bgDiag(p: player):
         send "&c✘ 실패한 명령 %{_ce}%개 → 서버 콘솔의 '[전장] 명령 오류' 줄을 보내주세요" to {_p}
     else:
         send "&a✔ 실패한 명령 없음" to {_p}
+
+# /전장 보스바시험 — 10초 동안 시험용 보스바(점수판 + 보스 틀)를 띄우고, 채팅에도 글꼴 그림을 하나 보낸다
+function bgHudTest(p: player):
+    if {-bg::hud::ready} is not true:
+        send "&c✘ HUD 글리프 데이터가 준비되지 않았습니다 (a01-gen-hud.sk 가 제대로 안 읽힘 → /sk reload all 오류 확인)" to {_p}
+        stop
+    set {_top} to bgHudTop("red")
+    set {_s} to "%{_top}%%{-bg::hud::boss_back}%%{-bg::hud::boss_front}%%{-bg::hud::banner::normal}%%{-bg::hud::name::talos}%%{-bg::hud::portrait::talos}%%{-bg::hud::status::normal}%%{-bg::hud::diamond::idle}%"
+    bgBarInit("bg:hudtest")
+    bgHudName("bg:hudtest", {_s})
+    bgCmd("bossbar set bg:hudtest players %name of {_p}%")
+    bgCmd("tellraw %name of {_p}% [{text:""[전장] 글꼴 시험 → "",color:""gold""},{text:""%{-bg::hud::timer}%"",font:""bg:hud"",color:""white""},{text:""  ← 여기 금색 시계 틀이 보이면 리소스팩 글꼴 정상"",color:""gray""}]")
+    send "&7 · 화면 위에 점수판 4개 + 보스 틀이 10초 동안 보여야 합니다. 안 보이거나 네모(□)가 보이면 캡처해서 보내주세요." to {_p}
+    set {_rp} to {-bg::rp::%uuid of {_p}%} ? "기록 없음"
+    send "&7 · 글자 수: %length of {_s}%  · 리팩 상태: %{_rp}%" to {_p}
+    wait 10 seconds
+    bgCmd("bossbar remove bg:hudtest")

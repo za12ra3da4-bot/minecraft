@@ -278,26 +278,43 @@ function bgKit(p: player):
         set {_c} to {bg::cls::%uuid of {_p}%}
     bgCmd("clear %{_n}%")
     bgCmd("effect clear %{_n}%")
+    # 시작 장비는 약하게 (팀 색 가죽) — 좋은 장비는 상점에서 코인으로. 병과는 바지로만 구분
     bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
-    # 시작 장비는 약하게 — 좋은 장비는 상점에서 코인으로
-    bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
+    bgClassGear({_p}, {_c})
+    bgCmd("give %{_n}% bread 8")
+    bgShopRestore({_p})
+
+# 병과 장비: 바지 + 기본 무기 (다른 갑옷 · 산 물건은 건드리지 않음)
+#  전사 = 사슬 바지 · 돌 검 · 활 · 화살 8   궁수 = 팀 색 가죽 바지 · 나무 검 · 활 · 화살 24   수호자 = 철 바지 · 돌 도끼
+function bgClassGear(p: player, c: number):
+    set {_n} to name of {_p}
+    set {_t} to bgTeam({_p})
     if {_c} is 0:
-        bgCmd("item replace entity %{_n}% armor.chest with chainmail_chestplate[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.legs with chainmail_leggings[unbreakable={}]")
         bgCmd("give %{_n}% stone_sword[unbreakable={}]")
         bgCmd("give %{_n}% bow[unbreakable={}]")
         bgCmd("give %{_n}% arrow 8")
     else if {_c} is 1:
-        bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
         bgCmd("give %{_n}% wooden_sword[unbreakable={}]")
         bgCmd("give %{_n}% bow[unbreakable={}]")
         bgCmd("give %{_n}% arrow 24")
     else:
-        bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
         bgCmd("give %{_n}% stone_axe[unbreakable={}]")
-        bgCmd("effect give %{_n}% slowness infinite 0 true")
-    bgCmd("give %{_n}% bread 8")
-    bgShopRestore({_p})
+
+# 병과 바꾸기: 예전 병과의 기본 무기 · 화살만 빼고 새 병과 것을 준다
+function bgClassSwitch(p: player, c: number):
+    set {_n} to name of {_p}
+    bgCmd("clear %{_n}% stone_sword")
+    bgCmd("clear %{_n}% wooden_sword")
+    bgCmd("clear %{_n}% stone_axe")
+    bgCmd("clear %{_n}% bow")
+    bgCmd("clear %{_n}% arrow")
+    bgCmd("effect clear %{_n}% slowness")
+    bgClassGear({_p}, {_c})
 
 # 본진의 병과 발판 (base_<팀>_class_0..2) 위에 서면 병과 변경
 function bgClassPads():
@@ -311,13 +328,8 @@ function bgClassPads():
                     if bgDist2(location of loop-player, bgMk({_m})) < 1.6:
                         if {bg::cls::%uuid of loop-player%} is not {_i}:
                             set {bg::cls::%uuid of loop-player%} to {_i}
-                            # 산 음식 · 황금 사과 · 물약은 병과를 바꿔도 유지
-                            delete {_keep::*}
-                            loop items in loop-player's inventory:
-                                if loop-item is golden apple or enchanted golden apple or cooked beef or splash potion or potion:
-                                    add loop-item to {_keep::*}
-                            bgKit(loop-player)
-                            give {_keep::*} to loop-player
+                            # 바지와 기본 무기만 바뀐다 (다른 갑옷 · 음식 · 산 물건은 그대로)
+                            bgClassSwitch(loop-player, {_i})
                             send title "&6%{-bg::cls::%{_i}%}%" with subtitle "&f병과를 바꿨습니다" to loop-player for 30 ticks
                             play sound "block.anvil.use" to loop-player
 
@@ -436,6 +448,8 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             send "&6[전장] &f맵 경계 벽(보이지 않는 벽)을 세웠습니다."
         else if arg-1 is "진단":
             bgDiag(player)
+        else if arg-1 is "보스바시험":
+            bgHudTest(player)
         else if arg-1 is "장식":
             bgSyncOrigin()
             bgCmd("function bg:map/decor")
