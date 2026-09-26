@@ -21,7 +21,7 @@ BOSS_IDS = ["talos", "sphinx", "ladon", "cyclops"]
 def load(bid):
     m = importlib.import_module(bid)
     R, parts, anims = m.build()
-    atlas = bake_parts(parts, tpu=2, atlas_size=256, seed=hash(bid) & 0xFFFF)
+    atlas = bake_parts(parts, tpu=2, atlas_size=256, seed=sum(map(ord, bid)) * 131)
     return m, R, parts, anims, atlas
 
 

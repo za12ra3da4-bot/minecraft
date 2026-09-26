@@ -402,6 +402,8 @@ class Rig:
                 M = tr(*(np.array(root_t, float) / 16.0)) @ euler(root_r) @ tr(*off) @ euler(r)
             else:
                 M = W[b.parent] @ tr(*off) @ euler(r)
+            if b.scale != 1.0:
+                M = M @ sc(b.scale)      # 자식 뼈에도 전달
             W[n] = M
         return W
 
@@ -413,7 +415,7 @@ class Rig:
             b = self.bones[n]
             if b.part is None:
                 continue
-            M = sc(self.k) @ W[n] @ sc(b.scale) @ ry(180)
+            M = sc(self.k) @ W[n] @ ry(180)
             out[n] = M
         return out
 
