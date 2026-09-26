@@ -11,6 +11,8 @@ unzip -q "$TMP/src.zip" -d "$TMP"
 ROOT=$(find "$TMP" -mindepth 1 -maxdepth 1 -type d | head -1)
 rm -rf plugins/Skript/scripts/arena "$LEVEL/datapacks/bg_arena"
 cp -r "$ROOT/Skript/scripts/arena" plugins/Skript/scripts/arena
+# scripts 바로 아래 중복 파일 정리 (두 번 로드 방지)
+for f in plugins/Skript/scripts/arena/*.sk; do rm -f "plugins/Skript/scripts/$(basename "$f")"; done
 cp -r "$ROOT/arena/datapack/bg_arena" "$LEVEL/datapacks/bg_arena"
 rm -rf "$TMP"
 echo "완료! 게임에서 /sk reload all 그리고 /reload (또는 서버 재시작)"

@@ -372,7 +372,20 @@ every 10 ticks:
             set {_lx} to (x-coordinate of loop-player) - {bg::cfg::ox}
             set {_lz} to (z-coordinate of loop-player) - {bg::cfg::oz}
             set {_ly} to (y-coordinate of loop-player) - {bg::cfg::oy}
-            if {_lx} < 1 or {_lx} > 255 or {_lz} < 1 or {_lz} > 255 or {_ly} < 2 or {_ly} > 110:
+            set {_out} to false
+            if {_lx} < 1:
+                set {_out} to true
+            if {_lx} > 255:
+                set {_out} to true
+            if {_lz} < 1:
+                set {_out} to true
+            if {_lz} > 255:
+                set {_out} to true
+            if {_ly} < 2:
+                set {_out} to true
+            if {_ly} > 110:
+                set {_out} to true
+            if {_out} is true:
                 teleport loop-player to bgBaseSpawnLoc(bgTeam(loop-player))
                 send action bar "&c전장 밖으로는 나갈 수 없습니다" to loop-player
 

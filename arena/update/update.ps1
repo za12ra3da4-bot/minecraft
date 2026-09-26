@@ -22,6 +22,12 @@ $dp = Join-Path $server "$level\datapacks\bg_arena"
 if (Test-Path $sk) { Remove-Item $sk -Recurse -Force }
 if (Test-Path $dp) { Remove-Item $dp -Recurse -Force }
 Copy-Item (Join-Path $root.FullName "Skript\scripts\arena") $sk -Recurse
+# scripts 폴더 바로 아래에 잘못 복사된 같은 이름 파일 정리 (두 번 로드되어 "이미 있는 함수" 오류가 남)
+$skRoot = Join-Path $server "plugins\Skript\scripts"
+Get-ChildItem $sk -File | ForEach-Object {
+    $dup = Join-Path $skRoot $_.Name
+    if (Test-Path $dup) { Remove-Item $dup -Force; Write-Host "중복 파일 삭제: $dup" }
+}
 Copy-Item (Join-Path $root.FullName "arena\datapack\bg_arena") $dp -Recurse
 Remove-Item $tmp -Recurse -Force
 Write-Host ""
