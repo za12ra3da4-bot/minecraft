@@ -28,10 +28,13 @@ PAL = {
 }
 
 
+K = 2                                    # 최종 해상도 배율 (256 기준 좌표 → 512 텍스쳐)
+
+
 class Canvas:
     def __init__(self, w, h):
-        self.w, self.h = w, h
-        self.W, self.H = w * SS, h * SS
+        self.w, self.h = w * K, h * K
+        self.W, self.H = w * SS * K, h * SS * K
         self.layers = {k: Image.new("L", (self.W, self.H), 0) for k in ("core", "mid", "gold")}
 
     def d(self, k):
@@ -39,19 +42,24 @@ class Canvas:
 
     # 좌표는 최종 픽셀 기준
     def line(self, k, pts, width, val=255):
-        self.d(k).line([(x * SS, y * SS) for x, y in pts], fill=val, width=max(1, int(width * SS)), joint="curve")
+        self.d(k).line([(x * SS * K, y * SS * K) for x, y in pts], fill=val, width=max(1, int(width * SS * K)), joint="curve")
 
     def circle(self, k, cx, cy, r, width, val=255):
-        self.d(k).ellipse([(cx - r) * SS, (cy - r) * SS, (cx + r) * SS, (cy + r) * SS], outline=val, width=max(1, int(width * SS)))
+        self.d(k).ellipse([(cx - r) * SS * K, (cy - r) * SS * K, (cx + r) * SS * K, (cy + r) * SS * K], outline=val, width=max(1, int(width * SS * K)))
 
     def disc(self, k, cx, cy, r, val=255):
-        self.d(k).ellipse([(cx - r) * SS, (cy - r) * SS, (cx + r) * SS, (cy + r) * SS], fill=val)
+        self.d(k).ellipse([(cx - r) * SS * K, (cy - r) * SS * K, (cx + r) * SS * K, (cy + r) * SS * K], fill=val)
 
     def poly(self, k, pts, val=255):
-        self.d(k).polygon([(x * SS, y * SS) for x, y in pts], fill=val)
+        self.d(k).polygon([(x * SS * K, y * SS * K) for x, y in pts], fill=val)
 
-    def render(self, pal, bloom=1.0, core_white=0.85):
+    def render(self, pal, bloom=1.0, core_white=0.85, tex=0.55, seed=1):
         glow_c, mid_c, gold_c = (np.array(c, np.float32) / 255 for c in pal)
+        if tex > 0:
+            n = _noise(self.W // SS, 18 * K, seed, 5)
+            n = np.asarray(Image.fromarray((n * 255).astype(np.uint8)).resize((self.W, self.H), Image.BILINEAR), np.float32) / 255
+            m = np.asarray(self.layers["mid"], np.float32) * (1 - tex * 0.5 + tex * n * 1.1)
+            self.layers["mid"] = Image.fromarray(np.clip(m, 0, 255).astype(np.uint8))
         out = np.zeros((self.h, self.w, 3), np.float32)
         alpha = np.zeros((self.h, self.w), np.float32)
         for k, col in (("mid", mid_c), ("core", mid_c), ("gold", gold_c)):
@@ -60,7 +68,7 @@ class Canvas:
             # 블룸: 여러 반지름으로 번짐
             g = np.zeros_like(a)
             for r, wgt in ((2, 0.75), (5, 0.6), (11, 0.42), (24, 0.26)):
-                b = np.asarray(L.filter(ImageFilter.GaussianBlur(r * bloom)), np.float32) / 255
+                b = np.asarray(L.filter(ImageFilter.GaussianBlur(r * bloom * K)), np.float32) / 255
                 g += b * wgt
             g = np.clip(g, 0, 1.4)
             if k == "core":
@@ -373,6 +381,8 @@ def _crack(c, x, y, ang, length, width, R, k="core", depth=0, val=255):
 def _dark_under(glow, dark_alpha):
     """빛 효과 아래에 그을음 (반투명 검정) 을 깐다"""
     S = glow.size
+    if dark_alpha.shape != (S[1], S[0]):
+        dark_alpha = np.asarray(Image.fromarray((np.clip(dark_alpha, 0, 1) * 255).astype(np.uint8)).resize(S, Image.BILINEAR), np.float32) / 255
     d = np.zeros((S[1], S[0], 4), np.uint8)
     d[..., 3] = np.clip(dark_alpha * 255, 0, 255).astype(np.uint8)
     base = Image.fromarray(d, "RGBA")
@@ -415,11 +425,12 @@ def fx_dragon():
             outer.append((ox + math.cos(a) * r, oy + math.sin(a) * r))
             inner.append((ox + math.cos(a) * (r - w_), oy + math.sin(a) * (r - w_)))
         c.poly(k, outer + inner[::-1], v)
-    # 칼끝 궤적 줄무늬 + 불티
-    for i in range(7):
-        rr = 150 - i * 9
-        pts = [(ox + math.cos(math.radians(a)) * rr, oy + math.sin(math.radians(a)) * rr) for a in np.linspace(-146, -34, 40)]
-        c.line("gold", pts, 1.0, 160)
+    # 칼끝 궤적 줄무늬 (속도감) + 불티
+    for i in range(26):
+        rr = R.uniform(96, 160)
+        a0 = R.uniform(-150, -70); a1 = a0 + R.uniform(25, 70)
+        pts = [(ox + math.cos(math.radians(a)) * rr, oy + math.sin(math.radians(a)) * rr) for a in np.linspace(a0, min(a1, -30), 30)]
+        c.line("gold" if i % 3 else "core", pts, R.uniform(0.5, 1.4), int(R.uniform(140, 255)))
     for i in range(90):
         a = math.radians(R.uniform(-150, -30)); r = R.uniform(90, 175)
         c.disc("gold" if i % 2 else "core", ox + math.cos(a) * r, oy + math.sin(a) * r, R.uniform(0.6, 2.2))
@@ -487,6 +498,9 @@ def fx_blackiron():
             x = cx + math.sin(t * 3) * 6
             left.append((x - w_ / 2, y)); right.append((x + w_ / 2, y))
         c.poly(k, left + right[::-1], v)
+    for i in range(18):            # 칼날 궤적 줄무늬
+        x = cx + R.normal(0, 7); y0 = S * R.uniform(0.55, 0.95); y1 = y0 - S * R.uniform(0.3, 0.6)
+        c.line("gold" if i % 2 else "core", [(x, y0), (x + R.normal(0, 2), y1)], R.uniform(0.5, 1.3), int(R.uniform(150, 255)))
     for i in range(22):            # 찢긴 가장자리 조각
         t = R.uniform(0.1, 0.9); y = S * 0.97 - t * S * 0.94
         s = R.choice([-1, 1])
@@ -597,6 +611,6 @@ def preview2(path):
     for i, w in enumerate(WEAPONS):
         bg = ground_tex.copy().convert("RGBA")
         bg.putalpha(255)
-        bg.alpha_composite(ground(w))
+        bg.alpha_composite(ground(w).resize((cell, cell), Image.LANCZOS))
         sheet.paste(bg.convert("RGB"), (10 + (i % 4) * (cell + 10), 10 + (i // 4) * (cell + 10)))
     sheet.save(path)

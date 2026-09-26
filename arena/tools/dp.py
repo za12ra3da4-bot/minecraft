@@ -521,15 +521,19 @@ def mine_lines(world, seed=91):
     cx, cz = X / 2, Z / 2
     at = "$execute positioned $(x) $(y) $(z) run"
     out = []
+    sites = []
     for n, m in sorted(world.markers.items()):
-        if not n.startswith("lair_") or n.count("_") != 1:
-            continue
-        lx, ly, lz = m["pos"]
+        if n.startswith("lair_") and n.count("_") == 1:
+            sites.append((m["pos"], 30))           # 보스 투기장 한쪽 옆
+        elif n.startswith("outpost_") and n.count("_") == 1:
+            sites.append((m["pos"], 15))           # 전초기지 옆
+    for pos, off in sites:
+        lx, ly, lz = pos
         vx, vz = cx - lx, cz - lz
         L = _m.hypot(vx, vz) or 1
         vx, vz = vx / L, vz / L
         tx, tz = -vz, vx                     # 한쪽 옆 (투기장 기준 오른쪽)
-        mx, mz = int(lx + tx * 30 + vx * 4), int(lz + tz * 30 + vz * 4)
+        mx, mz = int(lx + tx * off + vx * 4), int(lz + tz * off + vz * 4)
         mx = max(10, min(X - 11, mx)); mz = max(10, min(Z - 11, mz))
         # 바닥 높이: 가운데 주변 지면 높이의 중간값
         hs = []

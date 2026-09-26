@@ -325,9 +325,13 @@ on inventory click:
     play sound "ui.toast.challenge_complete" to player
     bgWfx(location of player, "wfx_barrier", 5, 30, 0)
 
+function bgItemCd(p: player, t: number):
+    set {_it} to {_p}.getInventory().getItemInMainHand()
+    {_p}.setCooldown({_it}, round({_t}))
+
 function bgGiveWeapon(p: player, w: text):
     set {_nm} to {-bg::w::%{_w}%::name}
-    bgCmd("give %name of {_p}% %{-bg::w::%{_w}%::base}%[item_model=""bg:weapon/%{_w}%"",custom_name={text:""%{_nm}%"",color:""%{-bg::w::%{_w}%::col}%"",bold:true,italic:false},lore=[{text:""%{-bg::w::%{_w}%::desc}%"",color:""gray"",italic:false}],custom_data={bgw:""%{_w}%""},unbreakable={},rarity=""epic""]")
+    bgCmd("give %name of {_p}% %{-bg::w::%{_w}%::base}%[item_model=""bg:weapon/%{_w}%"",custom_name={text:""%{_nm}%"",color:""%{-bg::w::%{_w}%::col}%"",bold:true,italic:false},lore=[{text:""%{-bg::w::%{_w}%::desc}%"",color:""gray"",italic:false}],custom_data={bgw:""%{_w}%""},unbreakable={},rarity=""epic"",enchantment_glint_override=true,use_cooldown={seconds:%{-bg::w::%{_w}%::cd}%,cooldown_group:""bg:w_%{_w}%""}]")
 
 # 목록 루프 값(종류 모름)에도 확실히 먹도록 플레이어 인자로 받는 도우미
 function bgDmg(p: player, h: number):
@@ -372,6 +376,30 @@ function bgFxTrail(p: player, m: text, size: number, n: number):
         bgFxGrow(location of {_p}, {_m}, {_size}, {_size} * 1.2, 6, 0.1)
         wait 2 ticks
 
+# 전설 무기를 들고 있으면 무기 기운이 돈다
+every 5 ticks:
+    loop all players:
+        set {_w} to bgIsLegend(loop-player's tool)
+        if {_w} is not "":
+            set {_l} to location of loop-player
+            add 1.1 to y-coordinate of {_l}
+            if {_w} is "thunder":
+                bgParticle({_l}, "electric_spark", 0.35, 0.4, 0.35, 0.05, 3)
+            else if {_w} is "dragon":
+                bgParticle({_l}, "flame", 0.3, 0.4, 0.3, 0.01, 2)
+            else if {_w} is "wind":
+                bgParticle({_l}, "white_ash", 0.5, 0.5, 0.5, 0.02, 6)
+            else if {_w} is "phoenix":
+                bgParticle({_l}, "wax_on", 0.35, 0.45, 0.35, 0.02, 2)
+            else if {_w} is "blackiron":
+                bgParticle({_l}, "crimson_spore", 0.4, 0.5, 0.4, 0.01, 4)
+            else if {_w} is "tiger":
+                bgParticle({_l}, "reverse_portal", 0.3, 0.4, 0.3, 0.02, 3)
+            else if {_w} is "staff":
+                bgParticle({_l}, "enchant", 0.4, 0.6, 0.4, 0.3, 5)
+            else:
+                bgParticle({_l}, "small_flame", 0.3, 0.4, 0.3, 0.01, 3)
+
 # ─────────────────────────────────────────────────────────── 바닥 효과
 function bgWfx(l: location, m: text, d: number, t: number, yaw: number):
     set {_id} to bgTid()
@@ -404,9 +432,10 @@ on right click:
     if {-bg::wcd::%{_k}%} is set:
         set {_left} to {-bg::w::%{_w}%::cd} - (difference between {-bg::wcd::%{_k}%} and now) / 1 second
         if {_left} > 0:
-            send action bar "&7%{-bg::w::%{_w}%::name}% &f재사용 대기 &e%ceil({_left})%초" to player
             stop
     set {-bg::wcd::%{_k}%} to now
+    # 아이템 쿨타임 표시 (엔더 진주처럼 무기 칸이 하얗게 차오름)
+    bgItemCd(player, {-bg::w::%{_w}%::cd} * 20)
     if {_w} is "thunder":
         bgSkThunder(player)
     else if {_w} is "dragon":
@@ -440,6 +469,8 @@ function bgSkThunder(p: player):
     wait 10 ticks
     strike lightning effect at {_l}
     bgFxGrow({_l}, "wfx_thunder", 1, 10, 6, 0.05)
+    loop 6 times:
+        bgFxFly({_l}, "wfx_thunder", 2.2, loop-number * 60, 0.7, 8, 0.3)
     bgWRune({_l}, "wfx_thunder", 5, 20)
     set {_es::*} to bgEnemies({_p}, {_l}, 3.5)
     loop {_es::*}:
@@ -451,6 +482,8 @@ function bgSkThunder(p: player):
 function bgSkDragon(p: player):
     bgFxFly(location of {_p}, "wfx_crescent", 5, yaw of {_p}, 0.9, 10, 1.0)
     bgFxFly(location of {_p}, "wfx_crescent", 3.5, yaw of {_p}, 0.9, 8, 0.4)
+    bgFxFly(location of {_p}, "wfx_crescent", 4, (yaw of {_p}) - 25, 0.85, 9, 1.4)
+    bgFxFly(location of {_p}, "wfx_crescent", 4, (yaw of {_p}) + 25, 0.85, 9, 1.4)
     bgSkillArt(location of {_p}, "dragon", 2.4)
     set {_l} to location of {_p}
     set {_yaw} to yaw of {_p}
@@ -492,6 +525,8 @@ function bgSkWind(p: player):
 function bgSkPhoenix(p: player):
     bgFxGrow(location of {_p}, "wfx_barrier", 1, 14, 8, 0.05)
     bgFxGrow(location of {_p}, "wfx_barrier", 1, 8, 5, 0.4)
+    loop 8 times:
+        bgFxFly(location of {_p}, "wfx_barrier", 1.8, loop-number * 45, 0.8, 9, 1.0)
     bgSkillArt(location of {_p}, "phoenix", 2.4)
     set {_l} to location of {_p}
     bgWRune({_l}, "wfx_barrier", 9, 40)
@@ -516,6 +551,9 @@ function bgSkPhoenix(p: player):
 function bgSkBlood(p: player):
     bgFxFly(location of {_p}, "wfx_blood", 6, yaw of {_p}, 1.1, 9, 0.1)
     bgFxTrail({_p}, "wfx_blood", 3.5, 5)
+    set {_ex} to location of {_p}
+    bgFxFly({_ex}, "wfx_blood", 5, (yaw of {_p}) + 45, 1.0, 10, 1.0)
+    bgFxFly({_ex}, "wfx_blood", 5, (yaw of {_p}) - 45, 1.0, 10, 1.0)
     bgSkillArt(location of {_p}, "blackiron", 2.4)
     set {_l} to location of {_p}
     set {_yaw} to yaw of {_p}
@@ -564,6 +602,8 @@ function bgSkClaw(p: player):
 # 여의천강: 봉으로 땅을 내리쳐 반경 4.5 적을 공중으로
 function bgSkStaff(p: player):
     bgFxGrow(location of {_p}, "wfx_staff", 1, 12, 7, 0.05)
+    loop 6 times:
+        bgFxFly(location of {_p}, "wfx_staff", 1.8, loop-number * 60, 0.8, 10, 1.0)
     bgSkillArt(location of {_p}, "staff", 2.4)
     set {_l} to location of {_p}
     bgWfx({_l}, "wfx_staff", 10, 20, random number between 0 and 360)
@@ -578,6 +618,8 @@ function bgSkStaff(p: player):
 function bgSkFire(p: player):
     bgFxGrow(location of {_p}, "wfx_fire", 2, 14, 9, 0.05)
     bgFxFly(location of {_p}, "wfx_fire", 3, yaw of {_p}, 1.0, 8, 1.0)
+    loop 8 times:
+        bgFxFly(location of {_p}, "wfx_fire", 2, loop-number * 45, 0.9, 9, 0.6)
     bgSkillArt(location of {_p}, "peachwood", 2.4)
     set {_l} to location of {_p}
     bgWfx({_l}, "wfx_fire", 11, 24, random number between 0 and 360)
