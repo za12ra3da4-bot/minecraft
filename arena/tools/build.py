@@ -33,6 +33,23 @@ OUT_DP = os.path.join(ROOT, "arena", "datapack", "bg_arena")
 OUT_SK = os.path.join(ROOT, "Skript", "scripts", "arena")
 
 
+OLYMPUS = os.path.join(ROOT, "resourcepack", "olympus_pack.zip")
+
+
+def merge_olympus(zpath):
+    """기존 게임 팩(olympus_pack, 네임스페이스 oly)을 한 팩으로 합침 — 서버는 팩을 하나만 보낼 수 있다"""
+    import zipfile
+    if not os.path.exists(OLYMPUS):
+        return
+    with zipfile.ZipFile(zpath) as z:
+        have = set(z.namelist())
+    with zipfile.ZipFile(OLYMPUS) as src, zipfile.ZipFile(zpath, "a", zipfile.ZIP_DEFLATED) as dst:
+        for info in src.infolist():
+            if info.is_dir() or info.filename == "pack.mcmeta" or info.filename in have:
+                continue
+            dst.writestr(info.filename, src.read(info.filename))
+
+
 def main(args):
     t0 = time.time()
     import shutil
@@ -58,7 +75,8 @@ def main(args):
     telegraphs.export(pack)
     decor.export(pack)
     weapons.export(pack)
-    n = pack.write(OUT_RP_DIR, OUT_RP, "천하쟁패 — 보스·장판·HUD·대전 장식")
+    n = pack.write(OUT_RP_DIR, OUT_RP, "천하쟁패 + 신들의 전쟁(올림포스) 통합 팩")
+    merge_olympus(OUT_RP)
     print(f"[rp] 파일 {n}개 → {OUT_RP} ({os.path.getsize(OUT_RP) // 1024} KB)")
     # Skript 데이터
     os.makedirs(OUT_SK, exist_ok=True)
