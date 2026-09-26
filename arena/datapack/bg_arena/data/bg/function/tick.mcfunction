@@ -5,4 +5,8 @@ execute as @e[type=interaction,tag=bg_shopnpc] if data entity @s interaction on 
 execute as @e[type=interaction,tag=bg_shopnpc] if data entity @s attack on attacker run tag @s add bg_wantshop
 execute as @e[type=interaction,tag=bg_shopnpc] run data remove entity @s interaction
 execute as @e[type=interaction,tag=bg_shopnpc] run data remove entity @s attack
+execute as @e[type=interaction,tag=bg_rewardhit] if data entity @s interaction on target run tag @s add bg_wantreward
+execute as @e[type=interaction,tag=bg_rewardhit] if data entity @s attack on attacker run tag @s add bg_wantreward
+execute as @e[type=interaction,tag=bg_rewardhit] run data remove entity @s interaction
+execute as @e[type=interaction,tag=bg_rewardhit] run data remove entity @s attack
 execute if score #run bg_build matches 1 run function bg:map/build/step with storage bg:map origin

@@ -30,6 +30,8 @@ function bgRewardSpawn(t: text, boss: text, c: location):
     if {_t} is "none":
         set {_look} to "yellow"
     bgCmd("execute in %bgDim()% positioned %{_p}% run function bg:reward/chest_%{_look}%")
+    # 우클릭 판정 (interaction)
+    bgCmd("execute in %bgDim()% run summon interaction %{_p}% {Tags:[""bg"",""bg_reward"",""bg_rewardhit""],width:2.4f,height:2.2f,response:1b}")
     wait 2 ticks
     # 정말 생겼는지 확인 (안 생겼으면 한 번 더)
     set {_n} to 0
@@ -88,14 +90,27 @@ every 10 ticks:
         stop
     bgParticle({_c}, "end_rod", 0.6, 1.5, 0.6, 0.02, 6)
     loop all players:
-        set {_ok} to false
-        if {-bg::reward::team} is "none":
-            set {_ok} to true
-        else if bgTeam(loop-player) is {-bg::reward::team}:
-            set {_ok} to true
-        if {_ok} is true:
-            if gamemode of loop-player is survival or adventure:
-                if world of loop-player is world of {_c}:
-                    if distance between loop-player and {_c} < 2.6:
-                        bgRewardClaim(loop-player)
-                        stop
+        if world of loop-player is world of {_c}:
+            if distance between loop-player and {_c} < 5:
+                send action bar "&6보상 상자 &f— &e우클릭&f해서 열기" to loop-player
+
+# 우클릭: Skript 이벤트 + 데이터팩(tick) 둘 다 bg_wantreward 태그를 붙인다
+on right click on entity:
+    scoreboard tags of event-entity contain "bg_rewardhit"
+    cancel event
+    add "bg_wantreward" to scoreboard tags of player
+
+every 2 ticks:
+    loop all players:
+        if scoreboard tags of loop-player contain "bg_wantreward":
+            remove "bg_wantreward" from scoreboard tags of loop-player
+            if {-bg::reward::team} is set:
+                set {_ok} to false
+                if {-bg::reward::team} is "none":
+                    set {_ok} to true
+                else if bgTeam(loop-player) is {-bg::reward::team}:
+                    set {_ok} to true
+                if {_ok} is true:
+                    bgRewardClaim(loop-player)
+                else:
+                    send action bar "&c이 상자는 %{-bg::tcol::%{-bg::reward::team}%}%%{-bg::tname::%{-bg::reward::team}%}% 팀&c 것입니다" to loop-player
