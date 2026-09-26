@@ -57,6 +57,11 @@ def vents(a, w, h):
         a[y, 1:w - 1, :3] = (26, 14, 8)
 
 
+def knuckle_lines(a, w, h):
+    for x in (w // 4, w // 2, 3 * w // 4):
+        a[:, x, :3] *= 0.45
+
+
 def ridge(a, w, h):
     cx = w // 2
     a[:, cx - 1:cx + 1, :3] = np.minimum(255, a[:, cx - 1:cx + 1, :3] * 1.35)
@@ -126,9 +131,12 @@ def build():
         if s == "r":
             fore.append(Box((-3.6, -9.5, -0.3), (-3.3, -0.5, 0.3), ICHOR, glow=True))
         P["fore_" + s] = Part("fore_" + s, fore)
-        P["palm_" + s] = Part("palm_" + s, [*rbox((-3.4, -4.2, -2.2), (3.4, 0, 3.0), BRONZE_R, r=0.8)])
-        P["finger_" + s] = Part("finger_" + s, [*rbox((-0.75, -4.2, -0.9), (0.75, 0, 0.9), BRONZE_T, r=0.3), Box((-0.8, -2.4, -0.95), (0.8, -1.8, 0.95), BRONZE_D)])
-        P["thumb_" + s] = Part("thumb_" + s, [*rbox((-0.9, -3.4, -0.9), (0.9, 0, 0.9), BRONZE_T, r=0.3)])
+        P["palm_" + s] = Part("palm_" + s, [
+            *rbox((-3.7, -5.2, -2.8), (3.7, 0.8, 3.0), BRONZE_R, r=1.0),                                   # 손등·손바닥
+            *[b for k in range(4) for b in rbox((-3.6 + k * 1.82, -7.4 + (0.5 if k in (0, 3) else 0), -1.6), (-1.86 + k * 1.82, -3.4, 3.6), BRONZE_T, r=0.45)],  # 말아 쥔 손가락 4개
+            *rbox((-3.8, -4.6, 2.6), (3.8, -3.0, 4.0), BRONZE_D, r=0.4),                                   # 너클 줄
+            *rbox((-sg * 3.9 - 1.2, -6.6, 0.4), (-sg * 3.9 + 1.2, -2.6, 4.2), BRONZE_R, r=0.45),          # 엄지 (안쪽에서 감쌈)
+        ])
         P["thigh_" + s] = Part("thigh_" + s, [*rbox((-3.6, -9.6, -3.6), (3.6, 0, 3.6), BRONZE, r=1.2),
                                               Box((-3.3, -6.5, 3.3), (3.3, 0, 4.4), BRONZE_T)])
         shin = [*rbox((-3.2, -8.5, -3.2), (3.2, 0, 3.4), BRONZE, r=1.0),
@@ -162,10 +170,7 @@ def build():
         R.bone("shoulder_" + s, "torso", (sg * 12.8, 14.2, 0), P["shoulder_" + s], rest=(0, 0, sg * 10))
         R.bone("arm_" + s, "shoulder_" + s, (sg * 0.4, -2.2, 0), P["arm_" + s], rest=(0, 0, sg * 2))
         R.bone("fore_" + s, "arm_" + s, (0, -10.8, 0), P["fore_" + s], rest=(-14, 0, 0))
-        R.bone("palm_" + s, "fore_" + s, (0, -10.2, 0), P["palm_" + s])
-        for f in range(4):
-            R.bone(f"finger{f}_" + s, "palm_" + s, (-2.4 + f * 1.6, -4.0, 2.0), P["finger_" + s], rest=(-70, 0, 0))
-        R.bone("thumb_" + s, "palm_" + s, (-sg * 3.2, -1.6, 2.2), P["thumb_" + s], rest=(-40, 0, -sg * 30))
+        R.bone("palm_" + s, "fore_" + s, (0, -9.6, 0.2), P["palm_" + s])
         R.bone("thigh_" + s, "pelvis", (sg * 3.8, -2, 0), P["thigh_" + s], rest=(0, 0, sg * 3))
         R.bone("shin_" + s, "thigh_" + s, (0, -9.6, 0), P["shin_" + s], rest=(4, 0, -sg * 3))
         R.bone("foot_" + s, "shin_" + s, (0, -8.5, 0), P["foot_" + s], rest=(-4, 0, 0))
@@ -186,12 +191,9 @@ def legs(tl=0, tr_=0, sl=0, sr=0, fl=0, fr=0):
 
 
 def hands(curl_l=0.0, curl_r=0.0):
-    d = {}
-    for s, c in (("l", curl_l), ("r", curl_r)):
-        for f in range(4):
-            d[f"finger{f}_{s}"] = (-c * 60, 0, 0)
-        d["thumb_" + s] = (-c * 30, 0, 0)
-    return d
+    return {}
+
+
 
 
 def cape(t, amp=1.0, lift=0.0):

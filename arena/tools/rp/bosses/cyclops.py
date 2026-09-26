@@ -21,6 +21,7 @@ HORN = Mat((70, 58, 52), var=0.04, edge_dark=0.3, top_light=0.3)
 ROPE = Mat((176, 146, 96), var=0.05, edge_dark=0.25, pattern=stripes((176, 146, 96), (130, 102, 62), 1))
 EYE = Mat((255, 184, 60), var=0.02, edge_dark=0.0, top_light=0.0)
 MOUTH = Mat((70, 30, 30), var=0.04, edge_dark=0.2)
+BROW = Mat((22, 18, 18), var=0.03, edge_dark=0.2, top_light=0.1)
 HAIR = Mat((52, 44, 40), var=0.05, edge_dark=0.25, pattern=fur((30, 26, 24), (84, 72, 64)))
 
 
@@ -42,10 +43,7 @@ def eye_face(a, w, h):
                 a[y, x, :3] = (236, 226, 200)
             else:
                 a[y, x, :3] = np.array((255, 236, 140)) * (1 - d) + np.array((230, 110, 20)) * d
-    for y in range(h):
-        for x in range(w):
-            if ((x + 0.5 - cx) ** 2 + ((y + 0.5 - cy) * 1.3) ** 2) ** 0.5 < w * 0.16:
-                a[y, x, :3] = (30, 10, 4)
+    a[1:h - 1, int(cx) - 1:int(cx) + 1, :3] = (30, 10, 4)
 
 
 def face_front(a, w, h):
@@ -53,6 +51,11 @@ def face_front(a, w, h):
     a[int(h * 0.25), 2:w - 2, :3] *= 0.55          # 콧잔등 주름
     a[int(h * 0.62), cx - 2:cx - 1, :3] = (40, 36, 40)
     a[int(h * 0.62), cx + 1:cx + 2, :3] = (40, 36, 40)
+
+
+def knuckle_lines(a, w, h):
+    for x in (w // 4, w // 2, 3 * w // 4):
+        a[:, x, :3] *= 0.5
 
 
 def belly_face(a, w, h):
@@ -74,7 +77,7 @@ def build():
     P["head"] = Part("head", [
         *rbox((-5.0, -1.0, -4.4), (5.0, 8.4, 4.4), SKIN, {"south": face_front}, r=1.8),
         *rbox((-5.4, 6.4, 2.6), (5.4, 8.2, 5.6), SKIN_D, r=0.8),              # 한 줄 눈썹 뼈
-        Box((-3.8, 2.2, 4.3), (3.8, 6.8, 4.7), MOUTH),                         # 눈구멍 그늘
+        Box((-3.4, 2.4, 4.3), (3.4, 6.6, 4.7), MOUTH),                         # 눈구멍 그늘
         *rbox((-1.2, 0.2, 4.3), (1.2, 2.2, 6.2), SKIN_L, r=0.5),               # 코 (눈 아래)
         Box((-0.9, 8.2, -1.6), (0.9, 12.4, 0.8), HORN, rot=("x", -22.5, (0, 8.2, -0.4))),
         Box((-6.0, 2.6, -1.2), (-4.8, 5.4, 1.2), SKIN_D), Box((4.8, 2.6, -1.2), (6.0, 5.4, 1.2), SKIN_D),   # 귀
@@ -96,9 +99,14 @@ def build():
     P["fore"] = Part("fore", rbox((-3.6, -11, -3.6), (3.6, 0.6, 3.6), SKIN, r=1.4)
                      + rbox((-4.2, -9.6, -4.2), (4.2, -6.4, 4.2), IRON, r=0.8)
                      + [Box((-3.8, -3, -3.8), (3.8, -1.4, 3.8), ROPE)])
-    P["palm"] = Part("palm", rbox((-3.4, -4.6, -2.4), (3.4, 0, 3.0), SKIN_D, r=1.0))
-    P["finger"] = Part("finger", rbox((-0.85, -4.6, -1.0), (0.85, 0, 1.0), SKIN_D, r=0.35) + [Box((-0.7, -4.8, 0.2), (0.7, -4.0, 1.1), BONE)])
-    P["thumb"] = Part("thumb", rbox((-1.0, -3.8, -1.0), (1.0, 0, 1.0), SKIN_D, r=0.35))
+    for s, sg in (("l", 1), ("r", -1)):
+        P["palm_" + s] = Part("palm_" + s, [
+            *rbox((-3.7, -5.2, -2.8), (3.7, 0.8, 3.0), SKIN_D, r=1.0),                                   # 손등·손바닥
+            *[b for k in range(4) for b in rbox((-3.6 + k * 1.82, -7.4 + (0.5 if k in (0, 3) else 0), -1.6), (-1.86 + k * 1.82, -3.4, 3.6), SKIN_D, r=0.45)],  # 말아 쥔 손가락 4개
+            *rbox((-3.8, -4.6, 2.6), (3.8, -3.0, 4.0), SKIN, r=0.4),                                   # 너클 줄
+            *rbox((-sg * 3.9 - 1.2, -6.6, 0.4), (-sg * 3.9 + 1.2, -2.6, 4.2), SKIN_D, r=0.45),          # 엄지 (안쪽에서 감쌈)
+            *[Box((-3.4 + k * 1.82, -7.6 + (0.5 if k in (0, 3) else 0), 2.4), (-2.3 + k * 1.82, -6.4 + (0.5 if k in (0, 3) else 0), 3.6), BONE) for k in range(4)],
+        ])
     P["link"] = Part("link", [Box((-0.5, -3.4, -1.1), (0.5, 0, 1.1), IRON), Box((-1.1, -3.4, -0.5), (1.1, -2.2, 0.5), IRON)])
     club = rbox((-1.4, -12, -1.4), (1.4, 3, 1.4), WOOD, r=0.5)
     club += rbox((-4.2, -30, -4.2), (4.2, -11, 4.2), WOOD, r=1.8)
@@ -135,17 +143,14 @@ def build():
         R.bone("mantle_" + s, "chest", (sg * 9.4, 9.0, 0), P["mantle_" + s], rest=(0, 0, sg * 10))
         R.bone("upper_" + s, "chest", (sg * 12.6, 7.0, 0), P["upper"], rest=(-26, 0, sg * 10))
         R.bone("fore_" + s, "upper_" + s, (0, -12.4, 0), P["fore"], rest=(-24, 0, -sg * 4))
-        R.bone("palm_" + s, "fore_" + s, (0, -10.8, 0), P["palm"])
-        for f in range(4):
-            R.bone(f"finger{f}_" + s, "palm_" + s, (-2.4 + f * 1.6, -4.4, 1.8), P["finger"], rest=(-60, 0, 0))
-        R.bone("thumb_" + s, "palm_" + s, (-sg * 3.2, -1.6, 2.2), P["thumb"], rest=(-40, 0, -sg * 30))
+        R.bone("palm_" + s, "fore_" + s, (0, -10.4, 0.2), P["palm_" + s])
         R.bone("chain0_" + s, "fore_" + s, (sg * 3.6, -8.2, 1.0), P["link"])
         R.bone("chain1_" + s, "chain0_" + s, (0, -3.2, 0), P["link"], rest=(0, 90, 0))
         R.bone("chain2_" + s, "chain1_" + s, (0, -3.2, 0), P["link"], rest=(0, 90, 0))
         R.bone("thigh_" + s, "pelvis", (sg * 4.4, -1.6, 0), P["thigh"], rest=(-6, 0, sg * 4))
         R.bone("shin_" + s, "thigh_" + s, (0, -10, 0), P["shin"], rest=(10, 0, -sg * 4))
         R.bone("foot_" + s, "shin_" + s, (0, -8.8, 0), P["foot"], rest=(-4, 0, 0))
-    R.bone("club", "palm_r", (0, -3.0, 0.6), P["club"], rest=(-60, 0, 0))
+    R.bone("club", "palm_r", (0, -5.4, 1.2), P["club"], rest=(-60, 0, 0))
     return R, parts, anims()
 
 
@@ -167,12 +172,9 @@ def legs(tl=0, tr_=0, sl=0, sr=0, fl=0, fr=0):
 
 
 def hands(cl=0.0, cr=1.0):
-    d = {}
-    for s, c in (("l", cl), ("r", cr)):
-        for f in range(4):
-            d[f"finger{f}_{s}"] = (-c * 60, 0, 0)
-        d["thumb_" + s] = (-c * 30, 0, 0)
-    return d
+    return {}
+
+
 
 
 def swing(t, a=1.0):
