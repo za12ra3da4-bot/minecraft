@@ -32,6 +32,10 @@ on load:
     set {-bg::hex::blue} to 3963120
     set {-bg::hex::green} to 4638790
     set {-bg::hex::yellow} to 15779880
+    set {-bg::glass::red} to "red"
+    set {-bg::glass::blue} to "blue"
+    set {-bg::glass::green} to "lime"
+    set {-bg::glass::yellow} to "yellow"
     set {-bg::cls::0} to "전사"
     set {-bg::cls::1} to "궁수"
     set {-bg::cls::2} to "수호자"

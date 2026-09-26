@@ -1,1 +1,1 @@
-kill @e[type=item_display,tag=bg_deco]
+kill @e[tag=bg_deco]

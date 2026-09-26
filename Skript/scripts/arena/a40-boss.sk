@@ -69,7 +69,7 @@ function bgBossPos() :: location:
 function bgLairPlayers() :: players:
     set {_h} to {-bg::boss::home}
     loop all players:
-        if bgIsFighter(loop-player) is true:
+        if gamemode of loop-player is survival or adventure:
             if world of loop-player is world of {_h}:
                 if bgDist2(location of loop-player, {_h}) < 24:
                     if abs((y-coordinate of loop-player) - (y-coordinate of {_h})) < 10:
@@ -293,6 +293,7 @@ function bgBossSpawn(id: text):
         set {-bg::boss::next} to 60
         stop
     set {-bg::boss::ent} to {_e}
+    set ai of {_e} to false
     add "bg" to scoreboard tags of {_e}
     add "bgb_hit" to scoreboard tags of {_e}
     add "bgb_hit_%{_id}%" to scoreboard tags of {_e}
@@ -304,6 +305,7 @@ function bgBossSpawn(id: text):
     bgCmd("effect give %{_u}% invisibility infinite 0 true")
     bgCmd("effect give %{_u}% fire_resistance infinite 0 true")
     set {-bg::boss::id} to {_id}
+    bgBossBarShow()
     bgCmd("execute as %{_u}% at @s run function bg:boss/%{_id}%/spawn")
     bgAnim("idle")
     bgTitle("&c&l⚠ %{-bg::bd::%{_id}%::name}%", "&f%{-bg::lairname::%{_lair}%}%에 나타났습니다!", 10, 60, 15)
@@ -326,6 +328,7 @@ function bgBossRemove():
     if {-bg::boss::fl} is set:
         bgCmd("execute in %bgDim()% run forceload remove %{-bg::boss::fl}%")
         delete {-bg::boss::fl}
+    bgBossBarHide()
     delete {-bg::boss::id}
     delete {-bg::boss::ent}
     delete {-bg::boss::skill}
@@ -415,7 +418,7 @@ function bgBossTick():
     if {-bg::boss::rage} is true:
         set {_spd} to {_spd} * 1.25
     if {_t} is set:
-        if bgIsFighter({_t}) is true:
+        if {_t} is online:
             set {_d} to bgDist2(location of {_t}, {_pos})
             set {_yaw} to bgYawTo({_pos}, location of {_t})
             if {-bg::boss::cd} <= 0:

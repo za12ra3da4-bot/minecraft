@@ -1,26 +1,15 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  신들의 전장 — 코인 · 무기 상점(/상점) · 전설 무기 전용 스킬 (우클릭)
+#  왕관 쟁탈전 — 코인 · 무기 상점(/상점) · 전설 무기 전용 스킬 (우클릭)
 #
-#  코인: 처치 +5 · 지점 점령 +8(팀 전원) · 보스 처치 +25(팀 전원) · 20초마다 +1
+#  코인: 시작 20 · 10초마다 +1(+점령 지점당 1) · 처치 +10 · 점령 +15 · 보스 +40
 #  무기 (리소스팩 2D 아이콘 bg:weapon/*, 스킬마다 빛나는 마법진 바닥 효과 bg:tele/wfx_*)
 #    폭풍의 검 150 · 처형자의 도끼 130 · 질풍의 단검 90 · 성기사의 망치 120
 #    흑기사의 대검 140 · 늑대 발톱 110 · 대마법사의 지팡이 100 · 불사조의 창 120
 # ═════════════════════════════════════════════════════════════════════════════
 
-import:
-    org.bukkit.Bukkit
-    net.kyori.adventure.text.Component
-    net.kyori.adventure.key.Key
-    net.kyori.adventure.text.format.TextColor
-
-# 상점 화면: 제목에 양피지 배경 글리프(폰트 bg:hud)를 넣어 상자 화면 전체를 덮음 + 보통 글자로 제목
+# 상점 화면 (일반 상자, 폰트 없음)
 function bgShopInv(c: number) :: inventory:
-    if {-bg::gui::shop} is not set:
-        return chest inventory with 3 rows named "&6&l왕국 무기고 &8| &e%{_c}% 코인"
-    set {_bg} to Component.text({-bg::gui::shop}).font(Key.key("bg", "hud"))
-    set {_t} to Component.text("왕국 무기고 · %{_c}% 코인").color(TextColor.color(255, 222, 140))
-    set {_title} to Component.empty().append({_bg}).append({_t})
-    return Bukkit.createInventory(null, 27, {_title})
+    return chest inventory with 3 rows named "&6&l왕국 무기고 &8| &e%{_c}% 코인"
 
 on load:
     set {-bg::w::list::*} to "thunder", "dragon", "wind", "phoenix", "blackiron", "tiger", "staff" and "peachwood"

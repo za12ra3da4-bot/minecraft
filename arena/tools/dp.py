@@ -288,41 +288,124 @@ def qrot(q, v):
     return tuple(2 * np.dot(u, v) * u + (w * w - np.dot(u, u)) * v + 2 * w * np.cross(u, v))
 
 
+# ── 맵 장식 = 마인크래프트 기본 아이템 · 갑옷 거치대 (리소스팩 없이 보임)
+TEAM_DYE = {"red": "red", "blue": "blue", "green": "lime", "yellow": "yellow"}
+TEAM_PAT = {"red": [("cross", "yellow"), ("border", "yellow")], "blue": [("triangles_top", "white"), ("border", "yellow")],
+            "green": [("flower", "yellow"), ("border", "yellow")], "yellow": [("rhombus", "red"), ("border", "black")]}
+
+
+def _pats(lst):
+    return "[" + ",".join(f'{{pattern:"minecraft:{p}",color:"{c}"}}' for p, c in lst) + "]"
+
+
+def _banner(color, pats):
+    return f'item:{{id:"minecraft:{color}_banner",count:1,components:{{"minecraft:banner_patterns":{_pats(pats)}}}}}'
+
+
+def _shield(color, pats):
+    return f'item:{{id:"minecraft:shield",count:1,components:{{"minecraft:base_color":"{color}","minecraft:banner_patterns":{_pats(pats)}}}}}'
+
+
+def _it(i):
+    return f'item:{{id:"minecraft:{i}",count:1}}'
+
+
+ALTAR_ITEM = {"ares": "fire_charge", "athena": "heart_of_the_sea", "hermes": "feather", "demeter": "enchanted_golden_apple"}
+SUMMON_GLASS = {"talos": "orange", "sphinx": "light_blue", "ladon": "lime", "cyclops": "brown"}
+STATUE_GEAR = {
+    "hoplite": ("iron_helmet", "iron_chestplate", "iron_leggings", "iron_boots", "iron_sword", "shield", 2.4),
+    "hoplite_broken": ("chainmail_helmet", "chainmail_chestplate", None, None, "stone_sword", None, 2.0),
+    "god_ares": ("netherite_helmet", "netherite_chestplate", "netherite_leggings", "netherite_boots", "netherite_sword", "shield", 2.6),
+    "god_athena": ("diamond_helmet", "diamond_chestplate", "diamond_leggings", "diamond_boots", "trident", "shield", 2.6),
+    "god_hermes": ("chainmail_helmet", "chainmail_chestplate", "chainmail_leggings", "golden_boots", "bow", "feather", 2.4),
+    "god_demeter": ("golden_helmet", "golden_chestplate", "golden_leggings", "golden_boots", "golden_hoe", "wheat", 2.6),
+}
+
+
+def _quat_yaw_roll(yaw, roll):
+    def q(axis, deg):
+        h = math.radians(deg) / 2
+        s_, c_ = math.sin(h), math.cos(h)
+        return {"y": (0, s_, 0, c_), "z": (0, 0, s_, c_)}[axis]
+
+    def mul(a, b):
+        ax, ay, az, aw = a; bx, by, bz, bw = b
+        return (aw * bx + ax * bw + ay * bz - az * by, aw * by - ax * bz + ay * bw + az * bx,
+                aw * bz + ax * by - ay * bx + az * bw, aw * bw - ax * bx - ay * by - az * bz)
+    return tuple(round(v, 5) for v in mul(q("y", -yaw), q("z", roll)))
+
+
 def decor_functions(dp_root, world):
-    """world.displays → 소환 함수 (원점 기준 상대 좌표)"""
+    """world.displays → 소환 함수 (원점 기준 상대 좌표) — 기본 아이템 디스플레이 · 갑옷 거치대"""
     F = os.path.join(dp_root, "data", NS, "function", "map")
-    lines = ["kill @e[type=item_display,tag=bg_deco]"]
-    for i, d in enumerate(world.displays):
+    lines = ["kill @e[tag=bg_deco]"]
+    for d in world.displays:
         x, y, z = d["pos"]
-        model = d["model"]
-        if not model.startswith("minecraft:"):
-            model = ("bg:statue/" + model) if d["kind"] == "statue" else ("bg:" + model)
+        m = d["model"]
         sc = d.get("scale", 1.0)
-        tags = ['"bg"', '"bg_deco"']
-        if d.get("tag"):
-            tags.append(f'"{d["tag"]}"')
-        if d.get("spin"):
-            tags.append('"bg_spin"')
         yaw = d.get("yaw", 0.0) or 0.0
-        tilt = d.get("tilt", 0.0) or 0.0
-        lr = quat_yaw_tilt(0 if d.get("flat") else 180, tilt)
-        bright = ",brightness:{sky:15,block:15}" if d.get("glow") or d.get("flat") else ""
+        tags = ['"bg"', '"bg_deco"'] + ([f'"{d["tag"]}"'] if d.get("tag") else []) + (['"bg_spin"'] if d.get("spin") else [])
+        at = f"$execute positioned $(x) $(y) $(z) run summon"
+        if d["kind"] == "statue" and m in STATUE_GEAR:
+            h, c, l, f, mh, oh, s_ = STATUE_GEAR[m]
+            eq = []
+            for slot, i in (("head", h), ("chest", c), ("legs", l), ("feet", f), ("mainhand", mh), ("offhand", oh)):
+                if i:
+                    eq.append(f'{slot}:{{id:"minecraft:{i}",count:1}}')
+            pose = "Pose:{RightArm:[-10f,0f,10f],LeftArm:[-10f,0f,-10f]}" if m != "hoplite_broken" else "Pose:{Head:[20f,0f,10f],Body:[4f,0f,6f],RightArm:[30f,0f,20f]}"
+            lines.append(f'{at} armor_stand ~{x:.3f} ~{y:.3f} ~{z:.3f} {{Tags:[{",".join(tags)}],NoGravity:1b,Invulnerable:1b,ShowArms:1b,'
+                         f'DisabledSlots:4144959,Rotation:[{yaw:.1f}f,0f],equipment:{{{",".join(eq)}}},{pose},'
+                         f'attributes:[{{id:"minecraft:scale",base:{s_}}}]}}')
+            continue
+        flat = False
+        roll = 0.0
         ty = 0.0
-        if d.get("flat"):
-            ty = 0.0
-        if d["kind"] == "statue":
-            ty = round(22 / 16 * sc, 3)
-        if model.startswith("bg:deco/great_sword") or model.startswith("bg:deco/spear") or model.startswith("bg:deco/giant_club"):
-            ty = round(8 / 16 * sc, 3)
-        k, s = decor.model_fit(model[3:]) if model.startswith("bg:") else (1.0, (0, 0, 0))
-        off = qrot(lr, [-sc * v / 16 for v in s])     # 모델 맞춤(이동·축소) 되돌리기
-        sk = sc / k
-        tf_ = tf(off[0], ty + off[1], off[2], sk, sk if not d.get("flat") else 1, sk, lr)
-        bb = ',billboard:"vertical"' if model[3:] in decor.BILLBOARD else ""
-        lines.append(f'$execute positioned $(x) $(y) $(z) run summon item_display ~{x:.3f} ~{y:.3f} ~{z:.3f} '
-                     f'{{Tags:[{",".join(tags)}],Rotation:[{yaw:.1f}f,0f],{item(model)},item_display:"none",view_range:6f{bb},'
-                     f'shadow_radius:0f,teleport_duration:2{bright},{tf_}}}')
+        k = 1.0
+        bright = ""
+        if m.startswith("deco/flag_"):
+            t = m.split("_")[-1]; itm = _banner(TEAM_DYE[t], TEAM_PAT[t]); k = 0.9; ty = -0.6 * sc
+        elif m.startswith("deco/crest_"):
+            t = m.split("_")[-1]; itm = _shield(TEAM_DYE[t], TEAM_PAT[t]); k = 1.0
+        elif m == "deco/banner_olympus":
+            itm = _banner("purple", [("gradient", "black"), ("rhombus", "yellow"), ("border", "yellow")]); k = 0.8; ty = -0.8 * sc
+        elif m == "deco/war_banner":
+            itm = _banner("red", [("gradient_up", "orange"), ("skull", "black"), ("border", "black")]); k = 0.8; ty = -0.8 * sc
+        elif m == "deco/wind_ribbon":
+            itm = _banner("cyan", [("flow", "white"), ("border", "white")]); k = 0.8; ty = -0.8 * sc
+        elif m == "deco/eagle_relief":
+            itm = _shield("yellow", [("flower", "white"), ("border", "black")]); k = 0.9
+        elif m.startswith("deco/cap_ring_") or m.startswith("deco/summon_circle_") or m.startswith("deco/rune_ring"):
+            # 마법진만 리소스팩 픽셀아트 (바닥 · 공중에 눕힌 판)
+            lr = quat_yaw_tilt(0, d.get("tilt", 0.0) or 0.0)
+            lines.append(f'{at} item_display ~{x:.3f} ~{y:.3f} ~{z:.3f} {{Tags:[{",".join(tags)}],Rotation:[{yaw:.1f}f,0f],{item("bg:" + m)},'
+                         f'item_display:"none",view_range:6f,shadow_radius:0f,teleport_duration:2,brightness:{{sky:15,block:15}},{tf(0, 0, 0, sc, 1, sc, lr)}}}')
+            continue
+        elif m.startswith("deco/sigil_"):
+            itm = _it(ALTAR_ITEM[m.split("_")[-1]]); k = 0.7; bright = ",brightness:{sky:15,block:15}"
+        elif m == "deco/zeus_bolt":
+            itm = _it("nether_star"); k = 0.7; bright = ",brightness:{sky:15,block:15}"
+        elif m in ("deco/great_sword", "deco/spear", "deco/giant_club"):
+            itm = _it({"deco/great_sword": "netherite_sword", "deco/spear": "trident", "deco/giant_club": "mace"}[m]); roll = 135; ty = 0.5 * sc; k = 0.9
+        elif m == "deco/shield":
+            itm = _it("shield")
+        elif m == "deco/owl":
+            itm = _it("lantern"); k = 0.6; ty = 0.3
+        elif m == "deco/sphinx_head":
+            itm = _it("dragon_head"); k = 0.6; ty = 0.6 * sc
+        elif m == "deco/bronze_debris":
+            itm = _it("exposed_copper_bulb"); k = 0.6; ty = 0.3 * sc
+        elif m in ("deco/peach", "minecraft:golden_apple"):
+            itm = _it("golden_apple"); k = 0.8; bright = ",brightness:{sky:15,block:15}"
+        else:
+            continue
+        s2 = sc * k
+        if flat:
+            tfm = tf(0, 0, 0, sc, 0.02, sc, (0, 0, 0, 1))
+        else:
+            tfm = tf(0, round(ty, 3), 0, s2, s2, s2, _quat_yaw_roll(0, roll))
+        lines.append(f'{at} item_display ~{x:.3f} ~{y:.3f} ~{z:.3f} {{Tags:[{",".join(tags)}],Rotation:[{yaw:.1f}f,0f],{itm},'
+                     f'item_display:"fixed",view_range:6f,shadow_radius:0f,teleport_duration:2{bright},{tfm}}}')
     w(os.path.join(F, "decor_run.mcfunction"), lines)
     w(os.path.join(F, "decor.mcfunction"), ["function bg:map/decor_run with storage bg:map origin"])
-    w(os.path.join(F, "decor_clear.mcfunction"), ["kill @e[type=item_display,tag=bg_deco]"])
+    w(os.path.join(F, "decor_clear.mcfunction"), ["kill @e[tag=bg_deco]"])
     return len(lines) - 1
