@@ -146,7 +146,7 @@ function bgTid() :: text:
     return "%{-bg::tid}%"
 
 function bgXYZ(l: location) :: text:
-    return "x:%bgN(x-coordinate of {_l})%,y:%bgN(y-coordinate of {-bg::boss::home})%,z:%bgN(z-coordinate of {_l})%"
+    return "x:%bgC(x-coordinate of {_l})%,y:%bgN(y-coordinate of {-bg::boss::home})%,z:%bgC(z-coordinate of {_l})%"
 
 function bgTCircle(l: location, d: number, t: number) :: text:
     set {_id} to bgTid()
@@ -181,11 +181,11 @@ function bgTRune(l: location, m: text, d: number, t: number) :: text:
 function bgTMark(p: player, t: number) :: text:
     set {_id} to bgTid()
     set {_l} to location of {_p}
-    bgCmd("function bg:tele/mark {x:%bgN(x-coordinate of {_l})%,y:%bgN((y-coordinate of {_l}) + 2.6)%,z:%bgN(z-coordinate of {_l})%,t:%{_t}%,id:%{_id}%}")
+    bgCmd("function bg:tele/mark {x:%bgC(x-coordinate of {_l})%,y:%bgN((y-coordinate of {_l}) + 2.6)%,z:%bgC(z-coordinate of {_l})%,t:%{_t}%,id:%{_id}%}")
     return {_id}
 
 function bgTMove(id: text, l: location, dy: number):
-    bgCmd("function bg:tele/move {id:%{_id}%,x:%bgN(x-coordinate of {_l})%,y:%bgN((y-coordinate of {-bg::boss::home}) + {_dy})%,z:%bgN(z-coordinate of {_l})%}")
+    bgCmd("function bg:tele/move {id:%{_id}%,x:%bgC(x-coordinate of {_l})%,y:%bgN((y-coordinate of {-bg::boss::home}) + {_dy})%,z:%bgC(z-coordinate of {_l})%}")
 
 function bgTClear(id: text):
     bgCmd("function bg:tele/clear {id:%{_id}%}")

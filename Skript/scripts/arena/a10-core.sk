@@ -52,6 +52,13 @@ function bgN(n: number) :: text:
     set {_r} to round({_n} * 100) / 100
     return "%{_r}%"
 
+# 좌표용: 정수면 ".0" 을 붙인다 (마크는 정수 x·z 를 블록 가운데(+0.5)로 옮기기 때문)
+function bgC(n: number) :: text:
+    set {_r} to round({_n} * 100) / 100
+    if {_r} is floor({_r}):
+        return "%{_r}%.0"
+    return "%{_r}%"
+
 function bgWorld() :: world:
     set {_w} to world({bg::cfg::world})
     if {_w} is set:
@@ -147,10 +154,10 @@ function bgSound(s: text, vol: number, pitch: number):
     bgCmd("execute as @a at @s run playsound %{_s}% master @s ~ ~ ~ %bgN({_vol})% %bgN({_pitch})%")
 
 function bgSoundAt(l: location, s: text, vol: number, pitch: number):
-    bgCmd("playsound %{_s}% hostile @a %bgN(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgN(z-coordinate of {_l})% %bgN({_vol})% %bgN({_pitch})%")
+    bgCmd("playsound %{_s}% hostile @a %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% %bgN({_vol})% %bgN({_pitch})%")
 
 function bgParticle(l: location, p: text, dx: number, dy: number, dz: number, spd: number, n: number):
-    bgCmd("particle %{_p}% %bgN(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgN(z-coordinate of {_l})% %bgN({_dx})% %bgN({_dy})% %bgN({_dz})% %bgN({_spd})% %{_n}% force")
+    bgCmd("particle %{_p}% %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% %bgN({_dx})% %bgN({_dy})% %bgN({_dz})% %bgN({_spd})% %{_n}% force")
 
 # ── 원점 동기화 (데이터팩 저장소에도)
 function bgSyncOrigin():

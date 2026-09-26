@@ -270,11 +270,11 @@ function bgGiveWeapon(p: player, w: text):
 # ─────────────────────────────────────────────────────────── 바닥 효과
 function bgWfx(l: location, m: text, d: number, t: number, yaw: number):
     set {_id} to bgTid()
-    bgCmd("function bg:tele/decal {x:%bgN(x-coordinate of {_l})%,y:%bgN(y-coordinate of {_l})%,z:%bgN(z-coordinate of {_l})%,m:%{_m}%,d:%bgN({_d})%,t:%{_t}%,yaw:%bgN({_yaw})%,id:%{_id}%}")
+    bgCmd("function bg:tele/decal {x:%bgC(x-coordinate of {_l})%,y:%bgN(y-coordinate of {_l})%,z:%bgC(z-coordinate of {_l})%,m:%{_m}%,d:%bgN({_d})%,t:%{_t}%,yaw:%bgN({_yaw})%,id:%{_id}%}")
 
 function bgWRune(l: location, m: text, d: number, t: number):
     set {_id} to bgTid()
-    bgCmd("function bg:tele/rune {x:%bgN(x-coordinate of {_l})%,y:%bgN(y-coordinate of {_l})%,z:%bgN(z-coordinate of {_l})%,m:%{_m}%,d:%bgN({_d})%,t:%{_t}%,id:%{_id}%}")
+    bgCmd("function bg:tele/rune {x:%bgC(x-coordinate of {_l})%,y:%bgN(y-coordinate of {_l})%,z:%bgC(z-coordinate of {_l})%,m:%{_m}%,d:%bgN({_d})%,t:%{_t}%,id:%{_id}%}")
 
 # 적 판정: 다른 팀 전투 참가자
 function bgEnemies(p: player, c: location, r: number) :: players:
@@ -485,9 +485,9 @@ function bgIsLegend(i: item) :: text:
 function bgSkillArt(l: location, w: text, k: number):
     add 1 to {-bg::fxn}
     set {_t} to "bgfx_%{-bg::fxn}%"
-    set {_x} to bgN(x-coordinate of {_l})
+    set {_x} to bgC(x-coordinate of {_l})
     set {_y} to bgN((y-coordinate of {_l}) + {_k})
-    set {_z} to bgN(z-coordinate of {_l})
+    set {_z} to bgC(z-coordinate of {_l})
     set {_s0} to bgN({_k} * 0.3)
     set {_s1} to bgN({_k})
     set {_s2} to bgN({_k} * 1.15)

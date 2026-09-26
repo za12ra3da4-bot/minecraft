@@ -14,9 +14,9 @@ function bgRewardSpawn(t: text, boss: text, c: location):
     set {_xn} to x-coordinate of {_c}
     set {_yn} to y-coordinate of {_c}
     set {_zn} to z-coordinate of {_c}
-    set {_x} to bgN({_xn})
+    set {_x} to bgC({_xn})
     set {_y} to bgN({_yn})
-    set {_z} to bgN({_zn})
+    set {_z} to bgC({_zn})
     set {_p} to "%{_x}% %{_y}% %{_z}%"
     # 상자 모양 = 데이터팩 bg:reward/chest_<팀> (블록 디스플레이 조립: 받침 · 금띠 상자 · 금화 더미 · 도는 보석 · 빛기둥)
     bgCmd("execute in %bgDim()% positioned %{_p}% run function bg:reward/chest_%{_t}%")

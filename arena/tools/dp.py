@@ -345,6 +345,9 @@ def decor_functions(dp_root, world):
     nparts = 0
     for d in world.displays:
         x, y, z = d["pos"]
+        # 원점 매크로 값이 정수라 execute positioned 가 x·z 를 +0.5 (블록 가운데) 로 옮긴다 → 미리 빼 둔다
+        x -= 0.5
+        z -= 0.5
         m = d["model"]
         sc = d.get("scale", 1.0)
         yaw = d.get("yaw", 0.0) or 0.0
