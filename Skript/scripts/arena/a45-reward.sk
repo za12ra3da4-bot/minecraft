@@ -19,13 +19,25 @@ function bgRewardSpawn(t: text, boss: text, c: location):
     set {_z} to bgC({_zn})
     set {_p} to "%{_x}% %{_y}% %{_z}%"
     # 상자 모양 = 데이터팩 bg:reward/chest_<팀> (블록 디스플레이 조립: 받침 · 금띠 상자 · 금화 더미 · 도는 보석 · 빛기둥)
-    bgCmd("execute in %bgDim()% positioned %{_p}% run function bg:reward/chest_%{_t}%")
+    # 가운데 청크가 안 불러와져 있으면 소환이 실패한다 → 상자가 있는 동안 강제 로드
+    set {-bg::reward::fl} to "%{_x}% %{_z}%"
+    bgCmd("execute in %bgDim()% run forceload add %{-bg::reward::fl}%")
+    set {_look} to {_t}
+    if {_t} is "none":
+        set {_look} to "yellow"
+    bgCmd("execute in %bgDim()% positioned %{_p}% run function bg:reward/chest_%{_look}%")
     bgSoundAt({_c}, "block.beacon.activate", 3, 1.2)
     bgSoundAt({_c}, "entity.player.levelup", 3, 0.8)
+    if {_t} is "none":
+        bgSay("&6보상 상자&f가 &e왕좌의 성소 가운데&f에 나타났습니다! 먼저 가는 사람이 엽니다.")
+        stop
     bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 &6보상 상자&f가 &e왕좌의 성소 가운데&f에 나타났습니다! 가까이 가서 여세요.")
 
 function bgRewardClear():
     bgCmd("kill @e[tag=bg_reward]")
+    if {-bg::reward::fl} is set:
+        bgCmd("execute in %bgDim()% run forceload remove %{-bg::reward::fl}%")
+        delete {-bg::reward::fl}
     delete {-bg::reward::team}
     delete {-bg::reward::loc}
 
@@ -57,7 +69,12 @@ every 10 ticks:
         stop
     bgParticle({_c}, "end_rod", 0.6, 1.5, 0.6, 0.02, 6)
     loop all players:
-        if bgTeam(loop-player) is {-bg::reward::team}:
+        set {_ok} to false
+        if {-bg::reward::team} is "none":
+            set {_ok} to true
+        else if bgTeam(loop-player) is {-bg::reward::team}:
+            set {_ok} to true
+        if {_ok} is true:
             if gamemode of loop-player is survival or adventure:
                 if world of loop-player is world of {_c}:
                     if distance between loop-player and {_c} < 2.6:

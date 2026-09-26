@@ -278,6 +278,7 @@ function bgBossSpawn(id: text):
     set {-bg::boss::hurt} to 0
     delete {-bg::boss::skill}
     delete {-bg::boss::dmg::*}
+    delete {-bg::boss::lasthit}
     delete {-bg::boss::target}
     set {_hb} to {-bg::bd::%{_id}%::hitbox}
     # 투기장 청크를 보스가 있는 동안 강제 로드 (맵 모서리라 근처에 사람이 없으면 언로드됨)
@@ -581,6 +582,7 @@ on damage:
     # Skript 피해 = 하트 단위 → 실제 피해의 3배로 보스 체력을 깎는다
     set {_d} to {_d} * 6
     if attacker is a player:
+        set {-bg::boss::lasthit} to attacker
         set {_t} to bgTeam(attacker)
         if {_t} is not "none":
             add {_d} to {-bg::boss::dmg::%{_t}%}
@@ -608,17 +610,22 @@ function bgBossDie():
             if {-bg::boss::dmg::%loop-value%} > {_best}:
                 set {_best} to {-bg::boss::dmg::%loop-value%}
                 set {_win} to loop-value
+    # 팀 피해 기록이 없으면 마지막으로 때린 사람의 팀
+    if {_win} is "none":
+        if {-bg::boss::lasthit} is set:
+            set {_win} to bgTeam({-bg::boss::lasthit})
     bgSoundAt(bgBossPos(), "entity.wither.death", 3, 0.8)
     wait 50 ticks
     if {-bg::boss::gen} is not {_g}:
         stop
     bgParticle(bgBossPos(), "explosion_emitter", 1, 1, 1, 0, 2)
+    # 보상 상자는 항상 (팀이 없으면 누구나 열 수 있는 상자)
+    set {_rc} to bgMk("temple_core")
+    set {_rc} to location(x-coordinate of {_rc}, y-coordinate of {_rc}, (z-coordinate of {_rc}) + 4, world of {_rc})
+    bgRewardSpawn({_win}, {_id}, {_rc})
     if {_win} is not "none":
         bgAddScore({_win}, 150)
         bgCoinTeam({_win}, 40, "보스 처치")
-        set {_rc} to bgMk("temple_core")
-        set {_rc} to location(x-coordinate of {_rc}, y-coordinate of {_rc}, (z-coordinate of {_rc}) + 4, world of {_rc})
-        bgRewardSpawn({_win}, {_id}, {_rc})
         set {-bg::bless::%{_win}%::until} to {-bg::sec} + 120
         set {-bg::bless::%{_win}%::boss} to {_id}
         bgTitle("&6&l%{-bg::bd::%{_id}%::name}% 처치!", "%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀 &f+150점 · %{-bg::blessname::%{_id}%}% 2분", 10, 70, 20)
