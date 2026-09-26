@@ -414,6 +414,7 @@ on load:
     set {-bg::hud::td::9} to ""
     set {-bg::hud::td::s} to ""
     set {-bg::hud::td::c} to ""
+    set {-bg::gui::shop} to ""
     set {-bg::hud::total_w} to 300
     set {-bg::hud::boss_x} to 30
     set {-bg::hud::fill_w} to 174

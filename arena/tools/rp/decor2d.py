@@ -512,3 +512,42 @@ def export(pack):
     reg("deco/sphinx_head", stele("석사자", INK, 240), "up", (-4, 8, 20, 32), bb=True)
     reg("deco/bronze_debris", gear_debris(), "up", (-4, 8, 20, 32))
     reg("deco/peach", peach(), "up", (2, 2, 14, 14), glow=True, bb=True)
+
+
+# ═══════════════════════════════════════════════════════════ 상점 GUI (3줄 상자 176x168 GUI 픽셀, 2배로 그림)
+def shop_panel():
+    """상자 화면 배경: 한지 두루마리 + 먹 테두리 + 칸 (전설 무기 칸 = 금, 장비 칸 = 비취)"""
+    k = 2
+    W, H = 176 * k, 168 * k
+    paper = poly([(6, 10), (W - 6, 4), (W - 2, H - 8), (4, H - 4)])
+    L = [fill(paper, ((236, 226, 200), (170, 150, 110), (250, 244, 228)), 400, strength=0.55, grain=0.18, ang=0), edge(paper, 3, 401)]
+    band = rect(10, 8, W - 10, 30)
+    L.append(colorize(wash(band, 402, 0.5, 3) * 0.9, 0.9, (150, 30, 30), (70, 8, 8), (220, 110, 90)))
+    L.append(brush([(10, 32), (W - 12, 30)], 4, 403, dry=0.6, pool=0, bristles=6)[0])
+    L.append(brush([(10, 72 * k), (W - 12, 72 * k)], 3, 404, dry=0.7, pool=0, bristles=5)[0])
+
+    def slot(x, y, col, seed):
+        m = rect(x * k + 1, y * k + 1, (x + 18) * k - 2, (y + 18) * k - 2)
+        return [fill(m, ((222, 212, 188), (170, 156, 128), (240, 232, 214)), seed, strength=0.42, grain=0.08), edge(m, 1.3, seed + 1, col, dry=0.2)]
+    for r in range(3):
+        for c in range(9):
+            i = r * 9 + c
+            col = ((96, 84, 72), (40, 32, 26), (150, 136, 120))
+            if i in (1, 3, 5, 7):
+                col = GOLD
+            elif 10 <= i <= 16 and i != 13:
+                col = ((40, 130, 100), (10, 60, 44), (140, 220, 190))
+            L += slot(7 + c * 18, 17 + r * 18, col, 410 + i * 3)
+    for r in range(3):
+        for c in range(9):
+            L += slot(7 + c * 18, 83 + r * 18, ((96, 84, 72), (40, 32, 26), (150, 136, 120)), 520 + (r * 9 + c) * 3)
+    for c in range(9):
+        L += slot(7 + c * 18, 141, ((96, 84, 72), (40, 32, 26), (150, 136, 120)), 610 + c * 3)
+    # 오른쪽 아래 먹 산수 담채 (은은하게)
+    mnt = (YY > 250 + np.abs(XX - 300) * 0.9) & paper
+    L.insert(2, colorize(wash(mnt, 705, 0.4, 4), 0.22, (60, 64, 70), (10, 10, 14), (150, 154, 160)))
+    seal_m = rect(W - 44, 12, W - 16, 28)
+    L += [fill(seal_m, ((200, 30, 30), (110, 8, 8), (250, 110, 90)), 700, strength=0.85)]
+    arr = over(*L)
+    im = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGBA").crop((0, 0, W, H))
+    return im

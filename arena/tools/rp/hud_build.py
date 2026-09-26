@@ -15,6 +15,29 @@ from bossdata import BOSSES
 PORTRAITS = os.path.join(os.path.dirname(HERE), ".cache", "portraits")
 
 
+def gui_panel(f):
+    """상점 화면 배경 글리프 4조각 (2x2) — 인벤토리 제목에 넣으면 상자 화면 전체를 덮는다
+       제목 기준선: 위쪽 조각 ascent 13 (= 화면 맨 위), 아래 조각 -71"""
+    import decor2d
+    im = decor2d.shop_panel()                     # 352 x 336 (GUI 176 x 168 의 2배)
+    keys = []
+    for r in range(2):
+        for c in range(2):
+            tile = im.crop((c * 176, r * 168, (c + 1) * 176, (r + 1) * 168)).copy()
+            px = tile.load()
+            if px[175, 0][3] == 0:
+                px[175, 0] = (0, 0, 0, 1)
+            ch = chr(f.next); f.next += 1
+            fname = f"font/gui_shop_{r}{c}.png"
+            f.files[fname] = tile
+            f.providers.append({"type": "bitmap", "file": f"{H.NS}:{fname}", "height": 84, "ascent": 13 - 84 * r, "chars": [ch]})
+            keys.append(ch)
+    # 제목 위치(x=8) → 화면 왼쪽(0) 으로, 조각마다 폭 88 + 1 (알파 1 픽셀)
+    s = H.sp(-8) + keys[0] + H.sp(-1) + keys[1] + H.sp(-177) + keys[2] + H.sp(-1) + keys[3] + H.sp(-169)
+    f.glyphs["gui/shop"] = dict(char=s, adv=0, x=0, y=0, widget="hud")
+    return s
+
+
 def build(pack):
     f = H.Font()
     H.boss_static(f)
@@ -33,6 +56,7 @@ def build(pack):
         else:
             img = Image.new("RGBA", (64, 64), (60, 40, 30, 255))
         H.portrait(f, bid, img)
+    gui_panel(f)
     # 파일
     for name, img in f.files.items():
         pack.png(f"assets/{H.NS}/textures/{name}", img)

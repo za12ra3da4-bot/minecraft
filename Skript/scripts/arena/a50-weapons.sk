@@ -9,6 +9,20 @@
 #    방천화극   45코인  금강결계: 나 저항 II 4초, 주변 아군 흡수, 적 밀쳐냄           (18초)
 # ═════════════════════════════════════════════════════════════════════════════
 
+import:
+    org.bukkit.Bukkit
+    net.kyori.adventure.text.Component
+    net.kyori.adventure.key.Key
+
+# 상점 화면: 제목에 수묵 배경 글리프(폰트 bg:hud)를 넣어 상자 화면 전체를 덮음 + 보통 글자로 제목
+function bgShopInv(c: number) :: inventory:
+    if {-bg::gui::shop} is not set:
+        return chest inventory with 3 rows named "&6&l천하 병기고 &8| &e%{_c}% 코인"
+    set {_bg} to Component.text({-bg::gui::shop}).font(Key.key("bg", "hud"))
+    set {_t} to Component.text("천하 병기고 · %{_c}% 코인")
+    set {_title} to Component.empty().append({_bg}).append({_t})
+    return Bukkit.createInventory(null, 27, {_title})
+
 on load:
     set {-bg::w::list::*} to "thunder", "dragon", "wind" and "phoenix"
     set {-bg::w::thunder::name} to "뇌정검"
@@ -150,7 +164,7 @@ command /상점:
                     send "&6[상점] &f상점은 &e자기 본진&f에서만 열 수 있습니다."
                     stop
         set {_c} to {bg::coin::%uuid of player%} ? 0
-        set {_gui} to chest inventory with 3 rows named "&6&l천하 병기고 &8| &e%{_c}% 코인"
+        set {_gui} to bgShopInv({_c})
         set {_i} to 1
         loop {-bg::w::list::*}:
             set {_w} to loop-value
