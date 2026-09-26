@@ -313,7 +313,13 @@ function bgClassPads():
                     if bgDist2(location of loop-player, bgMk({_m})) < 1.6:
                         if {bg::cls::%uuid of loop-player%} is not {_i}:
                             set {bg::cls::%uuid of loop-player%} to {_i}
+                            # 산 음식 · 황금 사과 · 물약은 병과를 바꿔도 유지
+                            delete {_keep::*}
+                            loop items in loop-player's inventory:
+                                if loop-item is golden apple or enchanted golden apple or cooked beef or splash potion or potion:
+                                    add loop-item to {_keep::*}
                             bgKit(loop-player)
+                            give {_keep::*} to loop-player
                             send title "&6%{-bg::cls::%{_i}%}%" with subtitle "&f병과를 바꿨습니다" to loop-player for 30 ticks
                             play sound "block.anvil.use" to loop-player
 
