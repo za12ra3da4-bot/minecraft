@@ -79,7 +79,6 @@ def main(args):
     decor.export(pack)
     decor_w.export(pack)
     pixel_art.export(pack)
-    weapons.export(pack)
     n = pack.write(OUT_RP_DIR, OUT_RP, "왕관 쟁탈전 + 올림포스 통합 팩")
     merge_olympus(OUT_RP)
     print(f"[rp] 파일 {n}개 → {OUT_RP} ({os.path.getsize(OUT_RP) // 1024} KB)")
