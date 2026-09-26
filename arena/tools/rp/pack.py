@@ -39,8 +39,9 @@ class Pack:
         return f"{self.ns}:item/{name}"
 
     def write(self, folder, zpath, description):
+        # 1.21.4(46) ~ 이후 버전까지 '호환 안 됨' 경고 없이 켜지도록 넓은 범위 (구버전은 supported_formats, 신버전은 min/max_format)
         self.put("pack.mcmeta", {"pack": {"description": description, "pack_format": PACK_FORMAT,
-                                          "min_format": PACK_FORMAT, "max_format": PACK_FORMAT}})
+                                          "supported_formats": [46, 99], "min_format": 46, "max_format": 99}})
         if os.path.exists(folder):
             shutil.rmtree(folder)
         for p, d in self.files.items():
