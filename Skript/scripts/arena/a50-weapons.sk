@@ -17,7 +17,7 @@ function bgShopInv(c: number) :: inventory:
 on load:
     set {-bg::w::list::*} to "thunder", "dragon", "wind", "phoenix", "blackiron", "tiger", "staff" and "peachwood"
     set {-bg::w::thunder::name} to "천둥의 성검"
-    set {-bg::w::thunder::base} to "netherite_sword"
+    set {-bg::w::thunder::base} to "iron_sword"
     set {-bg::w::thunder::price} to 150
     set {-bg::w::thunder::cd} to 15
     set {-bg::w::thunder::col} to "aqua"
@@ -52,7 +52,7 @@ on load:
     set {-bg::w::blackiron::icon} to netherite sword
     set {-bg::w::blackiron::desc} to "우클릭 피의 돌진: 앞으로 8칸 돌진 베기 (3하트 + 시듦) · 12초"
     set {-bg::w::tiger::name} to "그림자 쌍단검"
-    set {-bg::w::tiger::base} to "stone_sword"
+    set {-bg::w::tiger::base} to "iron_sword"
     set {-bg::w::tiger::price} to 110
     set {-bg::w::tiger::cd} to 10
     set {-bg::w::tiger::col} to "white"
