@@ -1,8 +1,8 @@
 # 자동 생성 파일 — 직접 고치지 말 것 (arena/tools/build.py 가 다시 만든다)
 
 on load:
-    set {-bg::bd::talos::name} to "청동 거신"
-    set {-bg::bd::talos::short} to "거신"
+    set {-bg::bd::talos::name} to "청동 골렘"
+    set {-bg::bd::talos::short} to "골렘"
     set {-bg::bd::talos::lair} to "forge"
     set {-bg::bd::talos::hp} to 1900
     set {-bg::bd::talos::hitbox} to "husk"
@@ -57,8 +57,8 @@ on load:
     set {-bg::anim::talos::death::loop} to false
     set {-bg::anim::talos::death::t::0} to 14
     set {-bg::anim::talos::death::t::1} to 16
-    set {-bg::bd::sphinx::name} to "사막 석사자"
-    set {-bg::bd::sphinx::short} to "석사자"
+    set {-bg::bd::sphinx::name} to "스핑크스"
+    set {-bg::bd::sphinx::short} to "스핑크스"
     set {-bg::bd::sphinx::lair} to "sands"
     set {-bg::bd::sphinx::hp} to 1700
     set {-bg::bd::sphinx::hitbox} to "ravager"
@@ -109,8 +109,8 @@ on load:
     set {-bg::anim::sphinx::death::loop} to false
     set {-bg::anim::sphinx::death::t::0} to 16
     set {-bg::anim::sphinx::death::t::1} to 14
-    set {-bg::bd::ladon::name} to "구두룡"
-    set {-bg::bd::ladon::short} to "구두룡"
+    set {-bg::bd::ladon::name} to "히드라"
+    set {-bg::bd::ladon::short} to "히드라"
     set {-bg::bd::ladon::lair} to "garden"
     set {-bg::bd::ladon::hp} to 2000
     set {-bg::bd::ladon::hitbox} to "ravager"
@@ -169,8 +169,8 @@ on load:
     set {-bg::anim::ladon::death::loop} to false
     set {-bg::anim::ladon::death::t::0} to 16
     set {-bg::anim::ladon::death::t::1} to 14
-    set {-bg::bd::cyclops::name} to "외눈 산귀"
-    set {-bg::bd::cyclops::short} to "산귀"
+    set {-bg::bd::cyclops::name} to "사이클롭스"
+    set {-bg::bd::cyclops::short} to "사이클롭스"
     set {-bg::bd::cyclops::lair} to "quarry"
     set {-bg::bd::cyclops::hp} to 2200
     set {-bg::bd::cyclops::hitbox} to "husk"

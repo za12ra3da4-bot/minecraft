@@ -2,11 +2,9 @@
 #  신들의 전장 — 코인 · 무기 상점(/상점) · 전설 무기 전용 스킬 (우클릭)
 #
 #  코인: 처치 +5 · 지점 점령 +8(팀 전원) · 보스 처치 +25(팀 전원) · 20초마다 +1
-#  무기 (리소스팩 3D 모델 bg:weapon/*, 스킬마다 수묵 붓터치 바닥 효과 bg:tele/wfx_*)
-#    뇌정검     60코인  뇌정일섬: 바라보는 곳(24칸)에 낙뢰 — 반경 3.5 적 3하트          (15초)
-#    청룡언월도 55코인  반월참: 앞쪽 120° 반경 5.5 베기 — 적 3하트 + 밀쳐냄           (12초)
-#    풍혼선     35코인  질풍보: 바라보는 방향으로 질주 + 신속 II 3초                  (8초)
-#    방천화극   45코인  금강결계: 나 저항 II 4초, 주변 아군 흡수, 적 밀쳐냄           (18초)
+#  무기 (리소스팩 2D 아이콘 bg:weapon/*, 스킬마다 빛나는 마법진 바닥 효과 bg:tele/wfx_*)
+#    폭풍의 검 150 · 처형자의 도끼 130 · 질풍의 단검 90 · 성기사의 망치 120
+#    흑기사의 대검 140 · 늑대 발톱 110 · 대마법사의 지팡이 100 · 불사조의 창 120
 # ═════════════════════════════════════════════════════════════════════════════
 
 import:
@@ -14,73 +12,73 @@ import:
     net.kyori.adventure.text.Component
     net.kyori.adventure.key.Key
 
-# 상점 화면: 제목에 수묵 배경 글리프(폰트 bg:hud)를 넣어 상자 화면 전체를 덮음 + 보통 글자로 제목
+# 상점 화면: 제목에 양피지 배경 글리프(폰트 bg:hud)를 넣어 상자 화면 전체를 덮음 + 보통 글자로 제목
 function bgShopInv(c: number) :: inventory:
     if {-bg::gui::shop} is not set:
-        return chest inventory with 3 rows named "&6&l천하 병기고 &8| &e%{_c}% 코인"
+        return chest inventory with 3 rows named "&6&l왕국 무기고 &8| &e%{_c}% 코인"
     set {_bg} to Component.text({-bg::gui::shop}).font(Key.key("bg", "hud"))
-    set {_t} to Component.text("천하 병기고 · %{_c}% 코인")
+    set {_t} to Component.text("왕국 무기고 · %{_c}% 코인")
     set {_title} to Component.empty().append({_bg}).append({_t})
     return Bukkit.createInventory(null, 27, {_title})
 
 on load:
     set {-bg::w::list::*} to "thunder", "dragon", "wind", "phoenix", "blackiron", "tiger", "staff" and "peachwood"
-    set {-bg::w::thunder::name} to "뇌정검"
-    set {-bg::w::thunder::base} to "iron_sword"
+    set {-bg::w::thunder::name} to "폭풍의 검"
+    set {-bg::w::thunder::base} to "netherite_sword"
     set {-bg::w::thunder::price} to 150
     set {-bg::w::thunder::cd} to 15
-    set {-bg::w::thunder::col} to "light_purple"
+    set {-bg::w::thunder::col} to "aqua"
     set {-bg::w::thunder::icon} to netherite sword
-    set {-bg::w::thunder::desc} to "우클릭 뇌정일섬: 낙뢰 (반경 3.5, 3하트) · 15초"
-    set {-bg::w::dragon::name} to "청룡언월도"
+    set {-bg::w::thunder::desc} to "우클릭 뇌격: 바라보는 곳(24칸)에 낙뢰 — 반경 3.5 적 3하트 · 15초"
+    set {-bg::w::dragon::name} to "처형자의 도끼"
     set {-bg::w::dragon::base} to "iron_axe"
     set {-bg::w::dragon::price} to 130
     set {-bg::w::dragon::cd} to 12
-    set {-bg::w::dragon::col} to "dark_aqua"
+    set {-bg::w::dragon::col} to "red"
     set {-bg::w::dragon::icon} to netherite axe
-    set {-bg::w::dragon::desc} to "우클릭 반월참: 앞 120° 베기 (3하트, 밀쳐냄) · 12초"
-    set {-bg::w::wind::name} to "풍혼선"
-    set {-bg::w::wind::base} to "stone_sword"
+    set {-bg::w::dragon::desc} to "우클릭 대회전 베기: 앞 120° 반경 5.5 (3하트 + 밀쳐냄) · 12초"
+    set {-bg::w::wind::name} to "질풍의 단검"
+    set {-bg::w::wind::base} to "iron_sword"
     set {-bg::w::wind::price} to 90
     set {-bg::w::wind::cd} to 8
-    set {-bg::w::wind::col} to "aqua"
+    set {-bg::w::wind::col} to "green"
     set {-bg::w::wind::icon} to iron sword
-    set {-bg::w::wind::desc} to "우클릭 질풍보: 질주 + 신속 II · 8초"
-    set {-bg::w::phoenix::name} to "방천화극"
+    set {-bg::w::wind::desc} to "우클릭 질풍 도약: 질주 + 신속 II · 8초"
+    set {-bg::w::phoenix::name} to "성기사의 망치"
     set {-bg::w::phoenix::base} to "iron_sword"
     set {-bg::w::phoenix::price} to 120
     set {-bg::w::phoenix::cd} to 18
     set {-bg::w::phoenix::col} to "gold"
     set {-bg::w::phoenix::icon} to diamond sword
-    set {-bg::w::phoenix::desc} to "우클릭 금강결계: 저항 II · 아군 흡수 · 적 밀쳐냄 · 18초"
-    set {-bg::w::blackiron::name} to "흑철대도"
+    set {-bg::w::phoenix::desc} to "우클릭 성스러운 결계: 저항 II · 아군 흡수 · 적 밀쳐냄 · 18초"
+    set {-bg::w::blackiron::name} to "흑기사의 대검"
     set {-bg::w::blackiron::base} to "iron_sword"
     set {-bg::w::blackiron::price} to 140
     set {-bg::w::blackiron::cd} to 12
     set {-bg::w::blackiron::col} to "dark_red"
     set {-bg::w::blackiron::icon} to netherite sword
-    set {-bg::w::blackiron::desc} to "우클릭 혈풍참: 앞으로 8칸 돌진하며 베기 (3하트 + 시듦) · 12초"
-    set {-bg::w::tiger::name} to "백호조"
+    set {-bg::w::blackiron::desc} to "우클릭 피의 돌진: 앞으로 8칸 돌진 베기 (3하트 + 시듦) · 12초"
+    set {-bg::w::tiger::name} to "늑대 발톱"
     set {-bg::w::tiger::base} to "stone_sword"
     set {-bg::w::tiger::price} to 110
     set {-bg::w::tiger::cd} to 10
     set {-bg::w::tiger::col} to "white"
-    set {-bg::w::tiger::icon} to shears
-    set {-bg::w::tiger::desc} to "우클릭 호조연격: 앞쪽 3연속 할퀴기 (1.2하트 x3 + 구속) · 10초"
-    set {-bg::w::staff::name} to "여의봉"
+    set {-bg::w::tiger::icon} to iron sword
+    set {-bg::w::tiger::desc} to "우클릭 연속 할퀴기: 앞쪽 3연속 (1.2하트 x3 + 구속) · 10초"
+    set {-bg::w::staff::name} to "대마법사의 지팡이"
     set {-bg::w::staff::base} to "iron_sword"
     set {-bg::w::staff::price} to 100
     set {-bg::w::staff::cd} to 14
-    set {-bg::w::staff::col} to "gold"
+    set {-bg::w::staff::col} to "light_purple"
     set {-bg::w::staff::icon} to blaze rod
-    set {-bg::w::staff::desc} to "우클릭 여의천강: 주변 적 공중으로 띄우기 (2하트) · 14초"
-    set {-bg::w::peachwood::name} to "도목검"
-    set {-bg::w::peachwood::base} to "wooden_sword"
+    set {-bg::w::staff::desc} to "우클릭 대지 충격: 주변 적 공중으로 (2하트) · 14초"
+    set {-bg::w::peachwood::name} to "불사조의 창"
+    set {-bg::w::peachwood::base} to "iron_sword"
     set {-bg::w::peachwood::price} to 120
     set {-bg::w::peachwood::cd} to 16
-    set {-bg::w::peachwood::col} to "red"
+    set {-bg::w::peachwood::col} to "gold"
     set {-bg::w::peachwood::icon} to wooden sword
-    set {-bg::w::peachwood::desc} to "우클릭 화염부: 주변 반경 5 불태우기 (1.5하트 + 4초 화상) · 16초"
+    set {-bg::w::peachwood::desc} to "우클릭 화염 고리: 반경 5 불태우기 (1.5하트 + 4초 화상) · 16초"
 
 # ─────────────────────────────────────────────────────────── 코인
 function bgCoin(p: player, n: number, why: text):
@@ -323,7 +321,7 @@ function bgSkThunder(p: player):
         ignite loop-value for 1 second
         bgParticle(location of loop-value, "electric_spark", 0.4, 1, 0.4, 0.2, 20)
 
-# 반월참: 앞쪽 120° 반경 5.5 — 초승달 붓획이 앞을 가른다
+# 대회전 베기: 앞쪽 120° 반경 5.5
 function bgSkDragon(p: player):
     set {_l} to location of {_p}
     set {_yaw} to yaw of {_p}

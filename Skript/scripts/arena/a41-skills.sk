@@ -1,10 +1,10 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  천하쟁패 — 보스 스킬 12개 (보스마다 3개, 모두 바닥 경고 → 게이지가 차면 판정)
+#  왕관 쟁탈전 — 보스 스킬 12개 (보스마다 3개, 모두 바닥 경고 → 게이지가 차면 판정)
 #
-#  청동 거신 청동 돌진(직선 돌진, 기둥에 박으면 기절) · 대지 가르기(부채꼴 직선 연속) · 용광로 폭주(주변 폭발 + 불바닥)
-#  사막 석사자 석화의 수수께끼(번호 순서 폭발) · 모래 표식(추적 표식) · 봉인의 고리(도넛, 보스 곁이 안전)
-#  구두룡    백두 폭풍(머리마다 부채꼴 연속) · 독 숨결(부채꼴 + 독 웅덩이) · 황금 사과의 재생(회복 시전, 딜로 저지)
-#  외눈 산귀 대지 진동(안→밖 퍼지는 고리) · 거암 추격(대상 발밑 연속) · 회전 강타(주변 원)
+#  청동 골렘 청동 돌진(직선 돌진, 기둥에 박으면 기절) · 대지 가르기(부채꼴 직선 연속) · 용광로 폭주(주변 폭발 + 불바닥)
+#  스핑크스 석화의 수수께끼(번호 순서 폭발) · 모래 표식(추적 표식) · 봉인의 고리(도넛, 보스 곁이 안전)
+#  히드라    백두 폭풍(머리마다 부채꼴 연속) · 독 숨결(부채꼴 + 독 웅덩이) · 황금 사과의 재생(회복 시전, 딜로 저지)
+#  사이클롭스 대지 진동(안→밖 퍼지는 고리) · 거암 추격(대상 발밑 연속) · 회전 강타(주변 원)
 #  강한 공격일수록 경고가 길다. 격노(체력 50%↓) 때는 경고가 조금 짧아지고 횟수가 늘어난다.
 #  피해는 하트 단위 (플레이어 최대 10하트). 한 번에 4.5하트를 넘는 공격은 없다.
 # ═════════════════════════════════════════════════════════════════════════════
@@ -165,7 +165,7 @@ function bgSkTalosRush(g: number):
         bgStun(60)
         set {_ps::*} to bgLairPlayers()
         loop {_ps::*}:
-            send action bar "&6청동 거신이 기둥에 부딪혀 기절했습니다! &f(받는 피해 1.5배)" to loop-value
+            send action bar "&6청동 골렘이 기둥에 부딪혀 기절했습니다! &f(받는 피해 1.5배)" to loop-value
         bgSoundAt(bgBossPos(), "block.anvil.destroy", 3, 0.5)
         stop
     bgCastEnd()
@@ -329,7 +329,7 @@ function bgSkLadonApple(g: number):
     bgLateCircle({_g}, {_pos}, 4.5, 20, 1.5, 1.6, 0.5, "wax_on", "")
     set {_ps::*} to bgLairPlayers()
     loop {_ps::*}:
-        send title "" with subtitle "&6구두룡이 황금 사과를 삼키려 한다! &f강하게 공격해 저지하세요" to loop-value for 50 ticks
+        send title "" with subtitle "&6히드라가 황금 사과를 삼키려 한다! &f강하게 공격해 저지하세요" to loop-value for 50 ticks
     loop 8 times:
         wait 10 ticks
         if bgOk({_g}) is false:
@@ -339,7 +339,7 @@ function bgSkLadonApple(g: number):
             bgStun(50)
             set {_ps::*} to bgLairPlayers()
             loop {_ps::*}:
-                send action bar "&a저지 성공! &f구두룡이 비틀거립니다 (받는 피해 1.5배)" to loop-value-2
+                send action bar "&a저지 성공! &f히드라가 비틀거립니다 (받는 피해 1.5배)" to loop-value-2
             stop
     set {-bg::boss::hp} to min({-bg::boss::max}, {-bg::boss::hp} + {-bg::boss::max} * 0.12)
     bgParticle(bgBossPos(), "wax_on", 2, 3, 2, 0.1, 60)

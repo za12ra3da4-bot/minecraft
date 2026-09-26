@@ -1,8 +1,8 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  천하쟁패 — 게임 흐름 · 점령 · 점수 · 버프 · 병과 · 부활 · 본진 보호 · 명령
+#  왕관 쟁탈전 — 게임 흐름 · 점령 · 점수 · 버프 · 병과 · 부활 · 본진 보호 · 명령
 #
-#  점령 지점 5곳:  천하 대전(가운데, 초당 +3)  +  제단 4곳(초당 +1, 팀 버프)
-#    화염 = 힘 I   백옥 = 저항 I   청풍 = 신속 I   녹림 = 2초마다 회복 · 포만
+#  점령 지점 5곳:  왕좌의 성소(가운데, 초당 +3)  +  제단 4곳(초당 +1, 팀 버프)
+#    불꽃 = 힘 I   수호 = 저항 I   바람 = 신속 I   생명 = 2초마다 회복 · 포만
 #  처치 +10,  보스 처치(가장 많이 때린 팀) +150 · 보스 축복
 #  목표 점수 또는 제한 시간 → 최고 점수 팀 승리
 # ═════════════════════════════════════════════════════════════════════════════
@@ -11,14 +11,14 @@ on load:
     set {-bg::pts::*} to "temple", "ares", "athena", "hermes" and "demeter"
     set {-bg::ptmk::temple} to "temple_core"
     set {-bg::ptr::temple} to 9
-    set {-bg::ptname::temple} to "천하 대전"
+    set {-bg::ptname::temple} to "왕좌의 성소"
     loop "ares", "athena", "hermes" and "demeter":
         set {-bg::ptmk::%loop-value%} to "altar_%loop-value%"
         set {-bg::ptr::%loop-value%} to bgMkR("altar_%loop-value%")
-    set {-bg::ptname::ares} to "화염 제단"
-    set {-bg::ptname::athena} to "백옥 제단"
-    set {-bg::ptname::hermes} to "청풍 제단"
-    set {-bg::ptname::demeter} to "녹림 제단"
+    set {-bg::ptname::ares} to "불꽃 제단"
+    set {-bg::ptname::athena} to "수호 제단"
+    set {-bg::ptname::hermes} to "바람 제단"
+    set {-bg::ptname::demeter} to "생명 제단"
     set {-bg::ptbuff::ares} to "힘"
     set {-bg::ptbuff::athena} to "저항"
     set {-bg::ptbuff::hermes} to "신속"
@@ -64,10 +64,10 @@ function bgStart():
             bgSpawn(loop-player)
     loop 5 times:
         set {_n} to 6 - loop-number
-        bgTitle("&6&l%{_n}%", "&f천하쟁패가 곧 시작됩니다", 0, 22, 0)
+        bgTitle("&6&l%{_n}%", "&f왕관 쟁탈전이 곧 시작됩니다", 0, 22, 0)
         bgSound("block.note_block.hat", 1, 1)
         wait 1 second
-    bgTitle("&6&l천하쟁패", "&f대신전과 제단을 점령하라!", 5, 50, 15)
+    bgTitle("&6&l왕관 쟁탈전", "&f대신전과 제단을 점령하라!", 5, 50, 15)
     bgSound("entity.ender_dragon.growl", 0.6, 1.2)
     set {-bg::on} to true
     bgSay("목표 &e%{bg::cfg::goal}%점&f · 제한 시간 &e%{bg::cfg::minutes}%분")

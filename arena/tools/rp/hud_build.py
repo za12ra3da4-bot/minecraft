@@ -18,8 +18,8 @@ PORTRAITS = os.path.join(os.path.dirname(HERE), ".cache", "portraits")
 def gui_panel(f):
     """상점 화면 배경 글리프 4조각 (2x2) — 인벤토리 제목에 넣으면 상자 화면 전체를 덮는다
        제목 기준선: 위쪽 조각 ascent 13 (= 화면 맨 위), 아래 조각 -71"""
-    import decor2d
-    im = decor2d.shop_panel()                     # 352 x 336 (GUI 176 x 168 의 2배)
+    import decor_w
+    im = decor_w.shop_panel()                     # 352 x 336 (GUI 176 x 168 의 2배)
     keys = []
     for r in range(2):
         for c in range(2):

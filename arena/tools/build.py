@@ -23,8 +23,9 @@ import hud as H
 import telegraphs
 import bossgen
 import decor
-import weapons2d as weapons
+import weapons_w as weapons
 import decor2d
+import decor_w
 import skgen
 import portraits
 
@@ -75,9 +76,9 @@ def main(args):
     font = hud_build.build(pack)
     telegraphs.export(pack)
     decor.export(pack)
-    decor2d.export(pack)
+    decor_w.export(pack)
     weapons.export(pack)
-    n = pack.write(OUT_RP_DIR, OUT_RP, "천하쟁패 + 신들의 전쟁(올림포스) 통합 팩")
+    n = pack.write(OUT_RP_DIR, OUT_RP, "왕관 쟁탈전 + 올림포스 통합 팩")
     merge_olympus(OUT_RP)
     print(f"[rp] 파일 {n}개 → {OUT_RP} ({os.path.getsize(OUT_RP) // 1024} KB)")
     # Skript 데이터
