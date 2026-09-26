@@ -29,6 +29,8 @@ Get-ChildItem $sk -File | ForEach-Object {
     if (Test-Path $dup) { Remove-Item $dup -Force; Write-Host "중복 파일 삭제: $dup" }
 }
 Copy-Item (Join-Path $root.FullName "arena\datapack\bg_arena") $dp -Recurse
+# 업데이트 도구 자신도 최신으로
+Copy-Item (Join-Path $root.FullName "arena\update\update.ps1") (Join-Path $server "update.ps1") -Force
 Remove-Item $tmp -Recurse -Force
 Write-Host ""
 Write-Host "완료! 게임에서  /sk reload all  그리고  /reload  (또는 서버 재시작)"
