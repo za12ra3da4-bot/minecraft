@@ -99,6 +99,9 @@ function bgStop(reason: text):
     wait 5 seconds
     if {-bg::on} is not true:
         bgHudRemove()
+        # 게임 끝: 코인 · 산 장비 · 전설 무기 초기화
+        delete {bg::coin::*}
+        delete {bg::owned::*}
         loop all players:
             bgToLobby(loop-player)
 
