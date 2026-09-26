@@ -44,7 +44,8 @@ function bgFwdZ(yaw: number) :: number:
 function bgYawTo(a: location, b: location) :: number:
     set {_dx} to (x-coordinate of {_b}) - (x-coordinate of {_a})
     set {_dz} to (z-coordinate of {_b}) - (z-coordinate of {_a})
-    return atan2(-1 * {_dx}, {_dz})
+    # Skript atan2(x, y) = 자바 Math.atan2(y, x) → 인자 순서 주의 (마크 yaw: 앞 = (-sin, cos))
+    return atan2({_dz}, -1 * {_dx})
 
 function bgOff(l: location, yaw: number, fwd: number, side: number) :: location:
     set {_x} to (x-coordinate of {_l}) + bgFwdX({_yaw}) * {_fwd} + cos({_yaw}) * {_side}
@@ -284,7 +285,12 @@ function bgBossSpawn(id: text):
     bgCmd("execute in %bgDim()% run forceload add %{-bg::boss::fl}%")
     # 히트박스: Skript 가 직접 소환 (청크를 불러와서 소환한다) → 속성·태그는 UUID 로
     delete {-bg::boss::ent}
-    set {_type} to "%{_hb}%" parsed as entity type
+    # 적대 몹(허스크 등)은 '평화로움' 난이도에서 바로 사라진다 → 철 골렘 (NoAI · 투명)
+    set {_hn} to "%{_hb}%"
+    replace all "_" in {_hn} with " "
+    set {_type} to {_hn} parsed as entity type
+    if {_type} is not set:
+        set {_type} to "iron golem" parsed as entity type
     spawn 1 of {_type} at {_c}
     set {_e} to last spawned entity
     if {_e} is not set:
@@ -338,14 +344,6 @@ function bgBossRemove():
 # 초 단위 시계 (a20 의 every 1 second 에서 호출)
 function bgBossClock():
     if {-bg::boss::id} is set:
-        set {_ps::*} to bgLairPlayers()
-        if size of {_ps::*} is 0:
-            add 1 to {-bg::boss::alone}
-            if {-bg::boss::alone} >= 45:
-                bgSay("&7%{-bg::bd::%{-bg::boss::id}%::name}%이(가) 도전자가 없어 사라졌습니다.")
-                bgBossRemove()
-        else:
-            set {-bg::boss::alone} to 0
         stop
     remove 1 from {-bg::boss::next}
     if {-bg::boss::next} is 20:
@@ -371,9 +369,23 @@ every tick:
 function bgBossTick():
     set {_e} to {-bg::boss::ent}
     if {_e} is not alive:
+        if {-bg::boss::state} is not "dead":
+            bgSay("&7보스 히트박스가 사라져 보스를 정리했습니다. &8(다시: /전장 보스)")
         bgBossRemove()
         stop
     set {_id} to {-bg::boss::id}
+    # 예비: 피해 이벤트가 막지 못하고 히트박스 체력이 깎였으면 그만큼 보스 체력에서 뺀다 (Skript 체력 = 하트 단위)
+    set {_hh} to health of {_e}
+    set {_mh} to max health of {_e}
+    if {_hh} < {_mh} - 0.25:
+        set {_lost} to ({_mh} - {_hh}) * 6
+        if {-bg::boss::state} is not "dead":
+            remove {_lost} from {-bg::boss::hp}
+            add {_lost} to {-bg::boss::hurt}
+        set health of {_e} to {_mh}
+        if {-bg::boss::hp} <= 0:
+            bgBossDie()
+            stop
     bgAnimStep()
     set {_st} to {-bg::boss::state}
     if {_st} is "dead" or "spawn":
@@ -550,7 +562,8 @@ on damage:
         stop
     if {-bg::boss::state} is "stun":
         set {_d} to {_d} * 1.5
-    set {_d} to {_d} * 2
+    # Skript 피해 = 하트 단위 → 실제 피해의 3배로 보스 체력을 깎는다
+    set {_d} to {_d} * 6
     if attacker is a player:
         set {_t} to bgTeam(attacker)
         if {_t} is not "none":

@@ -96,7 +96,7 @@ function bgStop(reason: text):
     bgSay("&e%{_reason}%&f — %{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀&f 승리 (%{_best}%점)")
     loop {-bg::teams::*}:
         bgSay("  %{-bg::tcol::%loop-value%}%%{-bg::tname::%loop-value%}%&f : %{-bg::score::%loop-value%}%점")
-    wait 10 seconds
+    wait 5 seconds
     if {-bg::on} is not true:
         bgHudRemove()
         loop all players:

@@ -1,60 +1,123 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  왕관 쟁탈전 — 화면 위 보스바 (마인크래프트 기본 보스바, 폰트 없음 → 리소스팩 없어도 보임)
-#   게임 중: 팀별 점수 · 남은 시간 막대 (내 팀 이름 굵게)
-#   보스 출현: 빨간 체력 막대 + 이름 · 체력 숫자 · 격노/기절/시전 중 표시 (게임과 상관없이 모두에게)
+#  왕관 쟁탈전 — 화면 위 HUD (보스바 이름 = 폰트 글리프 합성)
+#   윗줄: 팀 점수판 4개 (내 팀 강조) + 남은 시간
+#   아랫줄(보스 출현 시): 초상화 원 · 이름 배너 · 칸 나뉜 체력바 · 숫자 · 번개 원 · 시전 게이지
+#  글리프 · 공백 문자는 a01-gen-hud.sk 가 만든다. 보스 이름은 시전 중에도 바뀌지 않는다.
 # ═════════════════════════════════════════════════════════════════════════════
+
+function bgDigits(txt: text, cx: number, key: text) :: text:
+    set {_len} to length of {_txt}
+    set {_w} to {_len} * 8
+    set {_x} to round({_cx} - {_w} / 2)
+    set {_s} to ""
+    loop {_len} times:
+        set {_ch} to subtext of {_txt} from characters loop-number to loop-number
+        if {_ch} is "/":
+            set {_ch} to "s"
+        else if {_ch} is ":":
+            set {_ch} to "c"
+        set {_s} to "%{_s}%%{-bg::hud::%{_key}%::%{_ch}%}%"
+    set {_back} to -1 * ({_x} + {_w})
+    return "%{-bg::sp::%{_x}%}%%{_s}%%{-bg::sp::%{_back}%}%"
 
 function bgPad2(n: number) :: text:
     if {_n} < 10:
         return "0%{_n}%"
     return "%{_n}%"
 
+# 공통 윗줄 (점수 · 시간) — 내 팀 판만 다르다
+function bgHudTop(me: text) :: text:
+    set {_s} to ""
+    loop {-bg::teams::*}:
+        if loop-value is {_me}:
+            set {_s} to "%{_s}%%{-bg::hud::plate::%loop-value%_me}%"
+        else:
+            set {_s} to "%{_s}%%{-bg::hud::plate::%loop-value%}%"
+    loop {-bg::teams::*}:
+        set {_sc} to floor({-bg::score::%loop-value%} ? 0)
+        set {_d} to bgDigits("%{_sc}%", {-bg::hud::platecx::%loop-value%}, "hd")
+        set {_s} to "%{_s}%%{_d}%"
+    set {_left} to max(0, {bg::cfg::minutes} * 60 - ({-bg::sec} ? 0))
+    set {_m} to floor({_left} / 60)
+    set {_sec} to {_left} - {_m} * 60
+    set {_d} to bgDigits("%bgPad2({_m})%:%bgPad2({_sec})%", 150, "td")
+    set {_s} to "%{_s}%%{-bg::hud::timer}%%{_d}%"
+    return {_s}
+
+function bgHudBoss() :: text:
+    set {_id} to {-bg::boss::id}
+    set {_max} to {-bg::boss::max}
+    set {_hp} to max(0, {-bg::boss::hp})
+    set {_fw} to {-bg::hud::fill_w}
+    set {_tr} to max({_hp}, {-bg::boss::trail} - {_max} * 0.012)
+    set {-bg::boss::trail} to {_tr}
+    set {_tp} to round({_fw} * min(1, {_tr} / {_max}))
+    set {_hpx} to round({_fw} * min(1, {_hp} / {_max}))
+    if {_hp} > 0:
+        if {_hpx} is 0:
+            set {_hpx} to 1
+    set {_st} to "normal"
+    if {-bg::boss::rage} is true:
+        set {_st} to "rage"
+    set {_stat} to {_st}
+    if {-bg::boss::state} is "stun":
+        set {_stat} to "stun"
+    set {_cpx} to round({-bg::hud::cast_w} * min(1, max(0, {-bg::boss::cast} ? 0)))
+    set {_dia} to "idle"
+    if {-bg::boss::skill} is set:
+        set {_dia} to "lit"
+    set {_s} to "%{-bg::hud::boss_back}%%{-bg::hud::trail::%{_tp}%}%%{-bg::hud::hp::%{_hpx}%}%%{-bg::hud::boss_front}%"
+    set {_s} to "%{_s}%%{-bg::hud::banner::%{_st}%}%%{-bg::hud::name::%{_id}%}%%{-bg::hud::portrait::%{_id}%}%%{-bg::hud::status::%{_stat}%}%"
+    set {_s} to "%{_s}%%{-bg::hud::cast::%{_cpx}%}%%{-bg::hud::diamond::%{_dia}%}%"
+    set {_d} to bgDigits("%ceil({_hp})%/%{_max}%", {-bg::hud::boss_x} + 120, "bd")
+    set {_s} to "%{_s}%%{_d}%"
+    return {_s}
+
+# 모든 막대 공통: 기본 막대는 리소스팩이 투명하게 지우고(white), 이름 자리에 글리프 그림을 겹친다
+function bgBarInit(id: text):
+    bgCmd("bossbar add %{_id}% """"")
+    bgCmd("bossbar set %{_id}% color white")
+    bgCmd("bossbar set %{_id}% style progress")
+    bgCmd("bossbar set %{_id}% max 1")
+    bgCmd("bossbar set %{_id}% value 0")
+    bgCmd("bossbar set %{_id}% visible true")
+
 function bgHudCreate():
     loop "red", "blue", "green", "yellow" and "none":
-        bgCmd("bossbar add bg:hud_%loop-value% """"")
-        bgCmd("bossbar set bg:hud_%loop-value% style notched_10")
-        bgCmd("bossbar set bg:hud_%loop-value% visible true")
+        bgBarInit("bg:hud_%loop-value%")
         delete {-bg::hudlast::%loop-value%}
-    bgCmd("bossbar set bg:hud_red color red")
-    bgCmd("bossbar set bg:hud_blue color blue")
-    bgCmd("bossbar set bg:hud_green color green")
-    bgCmd("bossbar set bg:hud_yellow color yellow")
-    bgCmd("bossbar set bg:hud_none color white")
     set {-bg::hudon} to true
+    # 게임 중엔 보스 체력이 팀 막대 안에 같이 그려진다 → 따로 띄운 보스 막대는 숨김
+    bgCmd("bossbar set bg:boss players")
 
 function bgHudRemove():
     set {-bg::hudon} to false
     loop "red", "blue", "green", "yellow" and "none":
         bgCmd("bossbar remove bg:hud_%loop-value%")
+        delete {-bg::hudlast::%loop-value%}
+    delete {-bg::bosslast}
 
-# 점수 한 줄 (텍스트 컴포넌트, 내 팀은 굵게)
-function bgHudLine(me: text) :: text:
-    set {_s} to ""
-    loop {-bg::teams::*}:
-        set {_t} to loop-value
-        set {_sc} to floor({-bg::score::%{_t}%} ? 0)
-        set {_b} to "false"
-        if {_t} is {_me}:
-            set {_b} to "true"
-        set {_s} to "%{_s}%{text:""%{-bg::tname::%{_t}%}% %{_sc}%   "",color:""%{-bg::tvan::%{_t}%}%"",bold:%{_b}%},"
-    set {_left} to max(0, {bg::cfg::minutes} * 60 - ({-bg::sec} ? 0))
-    set {_m} to floor({_left} / 60)
-    set {_sec} to {_left} - {_m} * 60
-    set {_s} to "%{_s}%{text:""남은 시간 %bgPad2({_m})%:%bgPad2({_sec})%"",color:""white""}"
-    return "[{text:""""},%{_s}%]"
+function bgHudName(id: text, s: text):
+    set {_half} to {-bg::hud::total_w} / 2
+    set {_str} to "%{-bg::sp::-%{_half}%}%%{_s}%%{-bg::sp::%{_half}%}%"
+    bgCmd("bossbar set %{_id}% name {text:""%{_str}%"",font:""bg:hud"",color:""white"",shadow_color:0}")
 
-every 10 ticks:
-    {-bg::hudon} is true
-    set {_total} to max(1, {bg::cfg::minutes} * 60)
-    set {_left} to max(0, {_total} - ({-bg::sec} ? 0))
-    set {_v} to round(100 * {_left} / {_total})
-    loop "red", "blue", "green", "yellow" and "none":
-        set {_line} to bgHudLine(loop-value)
-        if {-bg::hudlast::%loop-value%} is not {_line}:
-            set {-bg::hudlast::%loop-value%} to {_line}
-            bgCmd("bossbar set bg:hud_%loop-value% name %{_line}%")
-        bgCmd("bossbar set bg:hud_%loop-value% max 100")
-        bgCmd("bossbar set bg:hud_%loop-value% value %{_v}%")
+every 4 ticks:
+    {-bg::hud::ready} is true
+    set {_boss} to ""
+    if {-bg::boss::id} is set:
+        set {_boss} to bgHudBoss()
+    if {-bg::hudon} is true:
+        loop "red", "blue", "green", "yellow" and "none":
+            set {_str} to "%bgHudTop(loop-value)%%{_boss}%"
+            # 바뀔 때만 보낸다 (깜빡임 방지)
+            if {-bg::hudlast::%loop-value%} is not {_str}:
+                set {-bg::hudlast::%loop-value%} to {_str}
+                bgHudName("bg:hud_%loop-value%", {_str})
+    else if {-bg::boss::id} is set:
+        if {-bg::bosslast} is not {_boss}:
+            set {-bg::bosslast} to {_boss}
+            bgHudName("bg:boss", {_boss})
 
 every 1 second:
     {-bg::hudon} is true
@@ -62,40 +125,21 @@ every 1 second:
         bgCmd("bossbar set bg:hud_%loop-value% players @a[team=bg_%loop-value%]")
     bgCmd("bossbar set bg:hud_none players @a[team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow]")
 
-# ─────────────────────────────────────────────────────────── 보스 체력 막대
+# ─────────────────────────────────────────────────────────── 게임 밖 보스 막대 (보스만)
 function bgBossBarShow():
-    bgCmd("bossbar add bg:boss """"")
-    bgCmd("bossbar set bg:boss color red")
-    bgCmd("bossbar set bg:boss style notched_20")
-    bgCmd("bossbar set bg:boss visible true")
-    bgCmd("bossbar set bg:boss players @a")
+    bgBarInit("bg:boss")
     delete {-bg::bosslast}
+    set {-bg::boss::trail} to {-bg::boss::max}
+    if {-bg::hudon} is not true:
+        bgCmd("bossbar set bg:boss players @a")
 
 function bgBossBarHide():
     bgCmd("bossbar remove bg:boss")
     delete {-bg::bosslast}
 
-every 4 ticks:
-    {-bg::boss::id} is set
-    set {_id} to {-bg::boss::id}
-    set {_max} to max(1, {-bg::boss::max})
-    set {_hp} to max(0, ceil({-bg::boss::hp}))
-    set {_tag} to ""
-    if {-bg::boss::rage} is true:
-        set {_tag} to ",{text:""  [격노]"",color:""dark_red"",bold:true}"
-    if {-bg::boss::state} is "stun":
-        set {_tag} to ",{text:""  [기절 - 받는 피해 1.5배]"",color:""yellow"",bold:true}"
-    else if {-bg::boss::skill} is set:
-        set {_tag} to "%{_tag}%,{text:""  > %{-bg::boss::skill}%"",color:""gold""}"
-    set {_name} to "[{text:""%{-bg::bd::%{_id}%::name}%  "",color:""red"",bold:true},{text:""%{_hp}% / %{_max}%"",color:""white""}%{_tag}%]"
-    if {-bg::bosslast} is not {_name}:
-        set {-bg::bosslast} to {_name}
-        bgCmd("bossbar set bg:boss name %{_name}%")
-    bgCmd("bossbar set bg:boss max %{_max}%")
-    bgCmd("bossbar set bg:boss value %{_hp}%")
-
 every 2 seconds:
     {-bg::boss::id} is set
-    bgCmd("bossbar set bg:boss players @a")
-    if {-bg::boss::rage} is true:
-        bgCmd("bossbar set bg:boss color purple")
+    if {-bg::hudon} is true:
+        bgCmd("bossbar set bg:boss players")
+    else:
+        bgCmd("bossbar set bg:boss players @a")

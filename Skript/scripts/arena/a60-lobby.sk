@@ -28,6 +28,11 @@ function bgToLobby(p: player):
     set gamemode of {_p} to adventure
     heal {_p}
     set food level of {_p} to 20
+    # 게임 밖이면 인벤토리 · 효과 · 불 초기화 (전장 종료 → 대기실)
+    if {-bg::on} is not true:
+        clear {_p}'s inventory
+        bgCmd("effect clear %name of {_p}%")
+        extinguish {_p}
 
 command /로비:
     aliases: /lobby
@@ -60,11 +65,23 @@ every 10 ticks:
                             bgParticle(location of loop-player, "happy_villager", 0.6, 1, 0.6, 0, 12)
                         send action bar "%{-bg::tcol::%loop-value-2%}%&l%{-bg::tname::%loop-value-2%}% 팀 &7— 팀원 %bgTeamCount(loop-value-2)%명" to loop-player
 
-# 대기실 안 PvP · 파괴 금지
+# 대기실 안 피해 없음 · 게임 밖에서는 사람끼리 못 때림
 on damage of player:
-    bgInLobby(victim) is true
-    {-bg::on} is not true
-    cancel event
+    if bgInLobby(victim) is true:
+        if {-bg::on} is not true:
+            cancel event
+            stop
+    attacker is a player
+    if {-bg::on} is not true:
+        cancel event
+        stop
+    set {_a} to attacker
+    set {_v} to victim
+    if bgIsFighter({_a}) is false:
+        cancel event
+        stop
+    if bgIsFighter({_v}) is false:
+        cancel event
 
 on break:
     bgInLobby(player) is true
