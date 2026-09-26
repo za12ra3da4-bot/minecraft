@@ -89,3 +89,26 @@ function bgWardOn(p: player) :: boolean:
     if difference between {-bg::ward::%uuid of {_p}%} and now < 60 seconds:
         return true
     return false
+
+# ─────────────────────────────────────────────────────────── 광산 (보스 투기장 옆)
+#  곡괭이로 광석을 캐면 코인: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10. 40초 뒤 다시 채워짐
+on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
+    bgIsFighter(player) is true
+    cancel event
+    set {_ty} to type of event-block
+    set {_l} to location of event-block
+    set {_n} to 2
+    if event-block is gold ore:
+        set {_n} to 3
+    else if event-block is emerald ore:
+        set {_n} to 6
+    else if event-block is diamond ore:
+        set {_n} to 10
+    set block at {_l} to cobblestone
+    bgCoin(player, {_n}, "광질")
+    play sound "block.amethyst_block.break" to player
+    play sound "entity.experience_orb.pickup" to player
+    bgParticle({_l}, "wax_on", 0.4, 0.4, 0.4, 0.1, 10)
+    wait 40 seconds
+    if block at {_l} is cobblestone:
+        set block at {_l} to {_ty}

@@ -286,6 +286,7 @@ function bgKit(p: player):
     bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={}]")
     bgClassGear({_p}, {_c})
     bgCmd("give %{_n}% bread 8")
+    bgCmd("give %{_n}% iron_pickaxe[unbreakable={},custom_name={text:""광부의 곡괭이"",color:""gold"",italic:false},lore=[{text:""보스 투기장 옆 광산에서 광석을 캐면 코인"",color:""gray"",italic:false}]]")
     bgShopRestore({_p})
 
 # 병과 장비: 바지 + 기본 무기 (다른 갑옷 · 산 물건은 건드리지 않음)
@@ -356,6 +357,10 @@ on death of player:
     {-bg::on} is true
     bgTeam(victim) is not "none"
     # 아무것도 떨어뜨리지 않음 — 전설 무기 · 산 장비는 부활할 때 다시 받는다 (bgKit → bgShopRestore)
+    # 복사 방지: 죽는 순간 '가방에 실제로 들고 있던' 전설 무기만 부활 때 돌려준다
+    #  (버렸거나 상자에 넣어 둔 것은 돌려주지 않음 — 그건 바닥/상자에 그대로 있으니까)
+    loop {-bg::w::list::*}:
+        delete {bg::owned::%uuid of victim%::%loop-value%}
     loop drops:
         if bgIsLegend(loop-item) is not "":
             set {bg::owned::%uuid of victim%::%bgIsLegend(loop-item)%} to true

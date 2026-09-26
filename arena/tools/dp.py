@@ -452,6 +452,145 @@ def npc_and_class_lines(world, bdkit, bdmodels):
     return out
 
 
+NATURAL = ("grass_block", "dirt", "stone", "sand", "gravel", "andesite", "coarse_dirt", "podzol", "moss_block",
+           "terracotta", "tuff", "calcite", "diorite", "granite", "mud", "packed_mud", "rooted_dirt")
+
+
+def ore_lines(world, n_spots=48, seed=77):
+    """맵 곳곳 자연 지면에 광맥(금 · 에메랄드 · 다이아) 박기 — 본진 · 제단 · 성소 · 투기장 · 대기실은 피함"""
+    import random
+    R = random.Random(seed)
+    X, Y, Z = world.vox.shape
+    avoid = []
+    for n, m in world.markers.items():
+        if n.startswith(("base_", "altar_", "temple_core", "lair_", "lobby_", "outpost_")) and not n.endswith(("_beacon",)):
+            r = 26 if n.startswith(("base_", "lair_")) and n.count("_") <= 1 else 16
+            if n.startswith("temple_core"):
+                r = 30
+            avoid.append((m["pos"][0], m["pos"][2], r))
+    spots = []
+    tries = 0
+    at = "$execute positioned $(x) $(y) $(z) run setblock"
+    out = []
+    while len(spots) < n_spots and tries < 20000:
+        tries += 1
+        x = R.randint(16, X - 17); z = R.randint(16, Z - 17)
+        if any((x - a) ** 2 + (z - b) ** 2 < r * r for a, b, r in avoid):
+            continue
+        if any((x - a) ** 2 + (z - b) ** 2 < 12 ** 2 for a, b in spots):
+            continue
+        top = None
+        for y in range(min(Y - 2, 70), 1, -1):
+            nm = world.pal[world.vox[x, y, z]]
+            if nm != "air":
+                top = y
+                break
+        if top is None:
+            continue
+        nm = world.pal[world.vox[x, top, z]].split("[")[0]
+        if not any(nm == k or nm.endswith(k) for k in NATURAL):
+            continue
+        if world.pal[world.vox[x, top + 1, z]] != "air":
+            continue
+        spots.append((x, z))
+        kind = R.random()
+        ore = "gold_ore" if kind < 0.7 else ("emerald_ore" if kind < 0.9 else "diamond_ore")
+        cells = [(0, 0)] + R.sample([(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1)], R.randint(2, 4))
+        for dx, dz in cells:
+            xx, zz = x + dx, z + dz
+            ty = None
+            for yy in (top + 1, top, top - 1):
+                if world.pal[world.vox[xx, yy, zz]] != "air" and world.pal[world.vox[xx, yy + 1, zz]] == "air":
+                    ty = yy
+                    break
+            if ty is None:
+                continue
+            n2 = world.pal[world.vox[xx, ty, zz]].split("[")[0]
+            if not any(n2 == k or n2.endswith(k) for k in NATURAL):
+                continue
+            out.append(f"{at} ~{xx} ~{ty} ~{zz} minecraft:{ore}")
+    return out
+
+
+def mine_lines(world, seed=91):
+    """보스 투기장마다 한쪽 옆에 광산 (13x11, 광석 벽 3면 + 나무 버팀목 + 레일 + 등불)"""
+    import math as _m
+    import random
+    R = random.Random(seed)
+    X, Y, Z = world.vox.shape
+    cx, cz = X / 2, Z / 2
+    at = "$execute positioned $(x) $(y) $(z) run"
+    out = []
+    for n, m in sorted(world.markers.items()):
+        if not n.startswith("lair_") or n.count("_") != 1:
+            continue
+        lx, ly, lz = m["pos"]
+        vx, vz = cx - lx, cz - lz
+        L = _m.hypot(vx, vz) or 1
+        vx, vz = vx / L, vz / L
+        tx, tz = -vz, vx                     # 한쪽 옆 (투기장 기준 오른쪽)
+        mx, mz = int(lx + tx * 30 + vx * 4), int(lz + tz * 30 + vz * 4)
+        mx = max(10, min(X - 11, mx)); mz = max(10, min(Z - 11, mz))
+        # 바닥 높이: 가운데 주변 지면 높이의 중간값
+        hs = []
+        for dx in range(-4, 5, 2):
+            for dz in range(-4, 5, 2):
+                for y in range(min(Y - 2, 70), 1, -1):
+                    if world.pal[world.vox[mx + dx, y, mz + dz]] != "air":
+                        hs.append(y); break
+        gy = sorted(hs)[len(hs) // 2] if hs else int(ly)
+        # 입구 방향 = 투기장 쪽 (ex, ez 는 축 정렬)
+        if abs(tx) > abs(tz):
+            ex, ez = (-1 if tx > 0 else 1), 0
+        else:
+            ex, ez = 0, (-1 if tz > 0 else 1)
+        W, D, H = 6, 5, 5                    # 반 너비 · 반 깊이 · 높이
+        def rot(a, b):                        # (가로 a, 깊이 b) → 월드 (입구가 -깊이 쪽)
+            if ex != 0:
+                return (mx - ex * b, mz + a) if True else None
+            return (mx + a, mz - ez * b)
+        def fill(a0, b0, y0, a1, b1, y1, blk):
+            x0, z0 = rot(a0, b0); x1, z1 = rot(a1, b1)
+            out.append(f"{at} fill ~{min(x0, x1)} ~{y0} ~{min(z0, z1)} ~{max(x0, x1)} ~{y1} ~{max(z0, z1)} {blk}")
+        def setb(a, b, y, blk):
+            x, z = rot(a, b)
+            out.append(f"{at} setblock ~{x} ~{y} ~{z} {blk}")
+        # 파내기 + 바닥 + 지붕
+        fill(-W - 1, -D - 1, gy - 1, W + 1, D + 1, gy - 1, "minecraft:cobblestone")
+        fill(-W, -D, gy, W, D, gy, "minecraft:gravel")
+        fill(-W, -D - 1, gy + 1, W, D, gy + H, "minecraft:air")
+        fill(-W - 1, -D - 1, gy + H + 1, W + 1, D + 1, gy + H + 1, "minecraft:stone_bricks")
+        # 광석 벽 (뒤 + 양옆), 입구(-깊이) 는 열림
+        ores = ["minecraft:stone", "minecraft:stone", "minecraft:andesite", "minecraft:deepslate",
+                "minecraft:iron_ore", "minecraft:iron_ore", "minecraft:gold_ore", "minecraft:gold_ore", "minecraft:gold_ore",
+                "minecraft:emerald_ore", "minecraft:diamond_ore", "minecraft:copper_ore"]
+        for y in range(gy + 1, gy + H + 1):
+            for a in range(-W - 1, W + 2):
+                setb(a, D + 1, y, R.choice(ores))
+            for b in range(-D, D + 1):
+                setb(-W - 1, b, y, R.choice(ores))
+                setb(W + 1, b, y, R.choice(ores))
+        # 가운데 광석 기둥 두 개
+        for a in (-3, 3):
+            for y in range(gy + 1, gy + 4):
+                setb(a, 1, y, R.choice(ores[4:]))
+        # 입구 나무 버팀목 + 등불
+        for a in (-W, W):
+            fill(a, -D - 1, gy + 1, a, -D - 1, gy + H, "minecraft:stripped_dark_oak_log[axis=y]")
+            fill(a, 0, gy + 1, a, 0, gy + H, "minecraft:stripped_dark_oak_log[axis=y]")
+        fill(-W, -D - 1, gy + H, W, -D - 1, gy + H, "minecraft:dark_oak_planks")
+        fill(-W, 0, gy + H, W, 0, gy + H, "minecraft:dark_oak_planks")
+        for a in (-3, 3):
+            setb(a, -D - 1, gy + H - 1, "minecraft:lantern[hanging=true]")
+            setb(a, 0, gy + H - 1, "minecraft:lantern[hanging=true]")
+        # 레일 + 광차 자리
+        for b in range(-D - 1, D + 1):
+            setb(0, b, gy + 1, "minecraft:rail")
+        setb(1, D, gy + 1, "minecraft:barrel[facing=up]")
+        setb(-1, D, gy + 1, "minecraft:crafting_table")
+    return out
+
+
 def decor_functions(dp_root, world):
     """world.displays → 소환 함수 (원점 기준 상대 좌표)
        장식은 전부 블록 디스플레이 조립 (bdmodels) — 마법진만 리소스팩 판"""
@@ -485,6 +624,10 @@ def decor_functions(dp_root, world):
         out = bdkit.summon_lines(mdl, at, x, y, z, yaw, 1.0, tags)
         nparts += len(out)
         lines += out
+    # ── 광맥 (캐면 코인, Skript 가 다시 채움)
+    ore = mine_lines(world)
+    lines += ore
+    print(f"[decor] 광산 명령 {len(ore)}개")
     # ── 상점 상인 NPC (본진 4곳 + 대기실) · 병과 발판 표식
     extra = npc_and_class_lines(world, bdkit, bdmodels)
     lines += extra
