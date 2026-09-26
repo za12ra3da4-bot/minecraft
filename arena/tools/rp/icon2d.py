@@ -99,7 +99,7 @@ class Canvas:
         self.sil = np.zeros((S, S), bool)
         self.glow = np.zeros((S, S, 3), np.float32)
 
-    def part(self, mask, mat, seed=1, shape="round", bevel=8.0, height=1.0, ang=0.0, ridge=None, ao=True, outline=1.6, extra_h=None):
+    def part(self, mask, mat, seed=1, shape="round", bevel=8.0, height=1.0, ang=0.0, ridge=None, ao=True, outline=1.6, extra_h=None, alpha=1.0):
         m = mask.astype(bool)
         if not m.any():
             return
@@ -156,8 +156,13 @@ class Canvas:
         if outline > 0:
             ring = (d > 0) & (d <= outline)
             col[ring] = col[ring] * 0.35
-        self.rgb[m] = col[m]
-        self.a[m] = 1.0
+        if alpha < 1.0:
+            k = alpha
+            self.rgb[m] = self.rgb[m] * (1 - k) * (self.a[m][:, None] > 0) + col[m] * np.where(self.a[m][:, None] > 0, k, 1.0)
+            self.a[m] = np.maximum(self.a[m], alpha)
+        else:
+            self.rgb[m] = col[m]
+            self.a[m] = 1.0
         self.sil |= m
 
     def emissive(self, dens, color, glow=1.0, core=None):
@@ -238,3 +243,12 @@ def line_dens(pts, width, local=True, n=40):
     Q = [P(*p) if local else p for p in pts]
     d.line([(x * 2, y * 2) for x, y in Q], fill=255, width=int(width * 2), joint="curve")
     return np.asarray(im.resize((S, S), Image.LANCZOS)).astype(np.float32) / 255
+
+
+def ink(self, dens, color=(20, 10, 16), k=0.85):
+    """이미 그린 위에 어두운 선 (날개맥 · 줄무늬 · 새김)"""
+    d = np.clip(dens, 0, 1)[..., None] * k * (self.a[..., None] > 0)
+    self.rgb = self.rgb * (1 - d) + np.array(color, np.float32) * d
+
+
+Canvas.ink = ink

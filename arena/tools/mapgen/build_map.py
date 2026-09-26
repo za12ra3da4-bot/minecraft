@@ -21,6 +21,7 @@ import bases
 import altars
 import lairs
 import midfield
+import lobby
 
 CACHE = os.path.join(os.path.dirname(HERE), ".cache")
 
@@ -37,6 +38,7 @@ def generate(seed=7):
     bases.build_bases(b)
     temple.build_temple(b)
     midfield.build_midfield(b)
+    lobby.build_lobby(b)
     # 맵 경계: 보이지 않는 벽은 명령으로 (내보내기 단계)
     w.fix_connections()
     B.check_all(w.used_states())

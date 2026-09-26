@@ -227,6 +227,28 @@ on load:
     set {-bg::mk::lair_sands::z} to 222.5
     set {-bg::mk::lair_sands::radius} to 19.0
     set {-bg::mk::lair_sands::boss} to "sphinx"
+    set {-bg::mk::lobby_pad_blue::x} to 138.5
+    set {-bg::mk::lobby_pad_blue::y} to 85
+    set {-bg::mk::lobby_pad_blue::z} to 128.5
+    set {-bg::mk::lobby_pad_blue::radius} to 2.2
+    set {-bg::mk::lobby_pad_green::x} to 128.5
+    set {-bg::mk::lobby_pad_green::y} to 85
+    set {-bg::mk::lobby_pad_green::z} to 138.5
+    set {-bg::mk::lobby_pad_green::radius} to 2.2
+    set {-bg::mk::lobby_pad_red::x} to 128.5
+    set {-bg::mk::lobby_pad_red::y} to 85
+    set {-bg::mk::lobby_pad_red::z} to 118.5
+    set {-bg::mk::lobby_pad_red::radius} to 2.2
+    set {-bg::mk::lobby_pad_yellow::x} to 118.5
+    set {-bg::mk::lobby_pad_yellow::y} to 85
+    set {-bg::mk::lobby_pad_yellow::z} to 128.5
+    set {-bg::mk::lobby_pad_yellow::radius} to 2.2
+on load:
+    set {-bg::mk::lobby_spawn::x} to 128.5
+    set {-bg::mk::lobby_spawn::y} to 85
+    set {-bg::mk::lobby_spawn::z} to 131.5
+    set {-bg::mk::lobby_spawn::radius} to 17.0
+    set {-bg::mk::lobby_spawn::yaw} to 180.0
     set {-bg::mk::outpost_blue::x} to 192.5
     set {-bg::mk::outpost_blue::y} to 25
     set {-bg::mk::outpost_blue::z} to 128.5
@@ -243,7 +265,6 @@ on load:
     set {-bg::mk::pillar_222_34_0::y} to 26
     set {-bg::mk::pillar_222_34_0::z} to 42.5
     set {-bg::mk::pillar_222_34_1::x} to 214.5
-on load:
     set {-bg::mk::pillar_222_34_1::y} to 26
     set {-bg::mk::pillar_222_34_1::z} to 42.5
     set {-bg::mk::pillar_222_34_2::x} to 214.5

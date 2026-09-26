@@ -1,350 +1,350 @@
-fill ~133 ~24 ~76 ~133 ~24 ~77 minecraft:short_grass strict
-setblock ~107 ~24 ~77 minecraft:short_grass strict
-setblock ~48 ~24 ~79 minecraft:short_grass strict
-fill ~102 ~24 ~79 ~103 ~24 ~79 minecraft:short_grass strict
-fill ~85 ~24 ~80 ~86 ~24 ~80 minecraft:short_grass strict
-setblock ~89 ~24 ~80 minecraft:short_grass strict
-setblock ~98 ~24 ~81 minecraft:bush strict
-setblock ~99 ~24 ~81 minecraft:short_grass strict
-setblock ~50 ~24 ~82 minecraft:short_grass strict
-setblock ~97 ~24 ~82 minecraft:short_grass strict
-setblock ~50 ~24 ~83 minecraft:fern strict
-setblock ~95 ~24 ~83 minecraft:short_grass strict
-fill ~51 ~24 ~84 ~52 ~24 ~84 minecraft:short_grass strict
-setblock ~94 ~24 ~84 minecraft:short_grass strict
-setblock ~51 ~24 ~86 minecraft:short_grass strict
-setblock ~51 ~24 ~87 minecraft:poppy strict
-setblock ~52 ~24 ~87 minecraft:short_grass strict
-fill ~51 ~24 ~88 ~51 ~24 ~89 minecraft:short_grass strict
-fill ~82 ~24 ~88 ~83 ~24 ~88 minecraft:short_grass strict
-setblock ~61 ~24 ~89 minecraft:short_grass strict
-setblock ~63 ~24 ~89 minecraft:oxeye_daisy strict
-fill ~181 ~24 ~89 ~181 ~24 ~90 minecraft:short_grass strict
-setblock ~182 ~24 ~89 minecraft:fern strict
-setblock ~60 ~24 ~90 minecraft:short_grass strict
-setblock ~61 ~24 ~90 minecraft:bush strict
-setblock ~62 ~24 ~90 minecraft:short_grass strict
-setblock ~63 ~24 ~90 minecraft:fern strict
-setblock ~64 ~24 ~90 minecraft:short_grass strict
-setblock ~69 ~24 ~90 minecraft:short_grass strict
-fill ~73 ~24 ~90 ~73 ~24 ~93 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~75 ~24 ~90 ~75 ~24 ~93 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~182 ~24 ~90 ~183 ~24 ~90 minecraft:short_grass strict
-setblock ~64 ~24 ~91 minecraft:azure_bluet strict
-fill ~67 ~24 ~91 ~68 ~24 ~91 minecraft:short_grass strict
-setblock ~58 ~24 ~92 minecraft:short_grass strict
-fill ~64 ~24 ~92 ~66 ~24 ~92 minecraft:short_grass strict
-setblock ~68 ~24 ~92 minecraft:short_grass strict
-setblock ~182 ~24 ~93 minecraft:fern strict
-setblock ~185 ~24 ~97 minecraft:short_grass strict
-setblock ~228 ~24 ~98 minecraft:short_grass strict
-setblock ~231 ~24 ~98 minecraft:short_grass strict
-fill ~79 ~24 ~102 ~79 ~24 ~103 minecraft:short_grass strict
-setblock ~77 ~24 ~107 minecraft:short_grass strict
-fill ~76 ~24 ~109 ~76 ~24 ~110 minecraft:short_grass strict
-setblock ~75 ~24 ~113 minecraft:short_grass strict
-fill ~74 ~24 ~116 ~74 ~24 ~117 minecraft:short_grass strict
-setblock ~68 ~24 ~120 minecraft:fern strict
-fill ~69 ~24 ~120 ~70 ~24 ~120 minecraft:short_grass strict
-fill ~58 ~24 ~121 ~59 ~24 ~121 minecraft:short_grass strict
-setblock ~61 ~24 ~121 minecraft:fern strict
-fill ~67 ~24 ~121 ~68 ~24 ~121 minecraft:short_grass strict
-fill ~70 ~24 ~121 ~72 ~24 ~121 minecraft:short_grass strict
-setblock ~67 ~24 ~122 minecraft:dandelion strict
-fill ~68 ~24 ~122 ~69 ~24 ~122 minecraft:short_grass strict
-fill ~73 ~24 ~122 ~73 ~24 ~123 minecraft:short_grass strict
-setblock ~72 ~24 ~123 minecraft:short_grass strict
-setblock ~74 ~24 ~123 minecraft:short_grass strict
-fill ~180 ~24 ~123 ~181 ~24 ~123 minecraft:short_grass strict
-fill ~71 ~24 ~125 ~71 ~24 ~127 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~183 ~24 ~125 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~70 ~24 ~126 ~70 ~24 ~128 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~183 ~24 ~126 ~183 ~24 ~127 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~184 ~24 ~126 ~184 ~24 ~127 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-fill ~184 ~24 ~128 ~184 ~24 ~129 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~70 ~24 ~129 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~71 ~24 ~129 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~183 ~24 ~129 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~70 ~24 ~130 minecraft:andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~71 ~24 ~130 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-fill ~183 ~24 ~130 ~183 ~24 ~131 minecraft:cobblestone_slab[type=bottom,waterlogged=false] strict
-setblock ~184 ~24 ~130 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~71 ~24 ~131 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~72 ~24 ~133 ~72 ~24 ~134 minecraft:short_grass strict
-setblock ~73 ~24 ~133 minecraft:fern strict
-setblock ~75 ~24 ~133 minecraft:fern strict
-setblock ~77 ~24 ~133 minecraft:short_grass strict
-setblock ~180 ~24 ~133 minecraft:fern strict
-setblock ~65 ~24 ~134 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~69 ~24 ~134 minecraft:short_grass strict
-setblock ~60 ~24 ~135 minecraft:bush strict
-setblock ~61 ~24 ~135 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~63 ~24 ~135 ~64 ~24 ~135 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~60 ~24 ~136 minecraft:short_grass strict
-setblock ~71 ~24 ~136 minecraft:short_grass strict
-setblock ~57 ~24 ~137 minecraft:fern strict
-fill ~73 ~24 ~137 ~73 ~24 ~139 minecraft:short_grass strict
-setblock ~57 ~24 ~138 minecraft:short_grass strict
-setblock ~56 ~24 ~139 minecraft:dandelion strict
-fill ~74 ~24 ~141 ~74 ~24 ~144 minecraft:short_grass strict
-fill ~75 ~24 ~144 ~75 ~24 ~146 minecraft:short_grass strict
-setblock ~75 ~24 ~147 minecraft:fern strict
-setblock ~76 ~24 ~147 minecraft:short_grass strict
-setblock ~76 ~24 ~149 minecraft:short_grass strict
-setblock ~161 ~24 ~172 minecraft:short_grass strict
-setblock ~96 ~24 ~173 minecraft:fern strict
-setblock ~101 ~24 ~176 minecraft:short_grass strict
-setblock ~156 ~24 ~176 minecraft:bush strict
-fill ~149 ~24 ~179 ~149 ~24 ~180 minecraft:short_grass strict
-setblock ~151 ~24 ~179 minecraft:short_grass strict
-setblock ~147 ~24 ~180 minecraft:fern strict
-setblock ~148 ~24 ~180 minecraft:short_grass strict
-setblock ~133 ~24 ~181 minecraft:short_grass strict
-setblock ~143 ~24 ~181 minecraft:short_grass strict
-setblock ~145 ~24 ~181 minecraft:short_grass strict
-setblock ~140 ~24 ~182 minecraft:short_grass strict
-setblock ~142 ~24 ~182 minecraft:short_grass strict
-setblock ~144 ~24 ~182 minecraft:short_grass strict
-setblock ~136 ~24 ~183 minecraft:short_grass strict
-setblock ~141 ~24 ~183 minecraft:short_grass strict
-setblock ~137 ~24 ~184 minecraft:bush strict
-fill ~133 ~24 ~185 ~134 ~24 ~185 minecraft:short_grass strict
-setblock ~137 ~24 ~185 minecraft:short_grass strict
-setblock ~135 ~24 ~186 minecraft:oxeye_daisy strict
-setblock ~136 ~24 ~186 minecraft:short_grass strict
-setblock ~125 ~24 ~187 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~126 ~24 ~187 ~126 ~24 ~188 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~127 ~24 ~187 minecraft:cobblestone_slab[type=bottom,waterlogged=false] strict
-setblock ~129 ~24 ~187 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~130 ~24 ~187 ~131 ~24 ~187 minecraft:andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~136 ~24 ~187 minecraft:bush strict
-setblock ~127 ~24 ~188 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~128 ~24 ~188 minecraft:cobblestone_slab[type=bottom,waterlogged=false] strict
-setblock ~129 ~24 ~188 minecraft:andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~130 ~24 ~188 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~165 ~24 ~189 ~165 ~24 ~190 minecraft:short_grass strict
-setblock ~164 ~24 ~190 minecraft:poppy strict
-setblock ~164 ~24 ~191 minecraft:short_grass strict
-fill ~31 ~24 ~193 ~33 ~24 ~193 minecraft:short_grass strict
-setblock ~37 ~24 ~193 minecraft:short_grass strict
-fill ~34 ~24 ~194 ~35 ~24 ~194 minecraft:short_grass strict
-setblock ~164 ~24 ~195 minecraft:short_grass strict
-setblock ~135 ~24 ~196 minecraft:short_grass strict
-setblock ~165 ~24 ~196 minecraft:short_grass strict
-setblock ~166 ~24 ~196 minecraft:fern strict
-setblock ~165 ~24 ~197 minecraft:fern strict
-setblock ~52 ~24 ~198 minecraft:short_grass strict
-fill ~165 ~24 ~198 ~165 ~24 ~200 minecraft:short_grass strict
-setblock ~167 ~24 ~198 minecraft:short_grass strict
-setblock ~139 ~24 ~200 minecraft:short_grass strict
-setblock ~166 ~24 ~200 minecraft:short_grass strict
-setblock ~53 ~24 ~201 minecraft:short_grass strict
-setblock ~55 ~24 ~202 minecraft:short_grass strict
-setblock ~145 ~24 ~203 minecraft:short_grass strict
-fill ~173 ~24 ~208 ~174 ~24 ~208 minecraft:short_grass strict
-setblock ~175 ~24 ~209 minecraft:short_grass strict
-setblock ~177 ~24 ~209 minecraft:short_grass strict
-setblock ~178 ~24 ~210 minecraft:short_grass strict
-setblock ~158 ~24 ~213 minecraft:fern strict
-fill ~158 ~24 ~215 ~159 ~24 ~215 minecraft:short_grass strict
-fill ~157 ~24 ~216 ~157 ~24 ~217 minecraft:short_grass strict
-setblock ~156 ~24 ~217 minecraft:short_grass strict
-setblock ~63 ~24 ~219 minecraft:fern strict
-fill ~62 ~24 ~220 ~63 ~24 ~220 minecraft:short_grass strict
-setblock ~63 ~24 ~221 minecraft:fern strict
-fill ~166 ~24 ~221 ~166 ~24 ~223 minecraft:short_grass strict
-setblock ~62 ~24 ~222 minecraft:short_grass strict
-setblock ~168 ~24 ~222 minecraft:short_grass strict
-setblock ~167 ~24 ~223 minecraft:short_grass strict
-fill ~62 ~24 ~224 ~63 ~24 ~224 minecraft:short_grass strict
-fill ~159 ~24 ~224 ~159 ~24 ~226 minecraft:short_grass strict
-fill ~161 ~24 ~224 ~162 ~24 ~224 minecraft:short_grass strict
-setblock ~62 ~24 ~225 minecraft:short_grass strict
-setblock ~158 ~24 ~225 minecraft:fern strict
-setblock ~167 ~24 ~225 minecraft:short_grass strict
-setblock ~158 ~24 ~226 minecraft:short_grass strict
-setblock ~161 ~24 ~226 minecraft:short_grass strict
-fill ~166 ~24 ~226 ~166 ~24 ~227 minecraft:short_grass strict
-setblock ~160 ~24 ~227 minecraft:short_grass strict
-setblock ~167 ~24 ~227 minecraft:short_grass strict
-fill ~158 ~24 ~228 ~159 ~24 ~228 minecraft:short_grass strict
-setblock ~163 ~24 ~228 minecraft:short_grass strict
-setblock ~166 ~24 ~228 minecraft:bush strict
-setblock ~158 ~24 ~230 minecraft:short_grass strict
-setblock ~161 ~24 ~230 minecraft:fern strict
-setblock ~163 ~24 ~230 minecraft:fern strict
-fill ~159 ~24 ~231 ~159 ~24 ~232 minecraft:short_grass strict
-setblock ~164 ~24 ~231 minecraft:short_grass strict
-fill ~166 ~24 ~231 ~167 ~24 ~231 minecraft:short_grass strict
-setblock ~158 ~24 ~232 minecraft:short_grass strict
-fill ~161 ~24 ~232 ~161 ~24 ~235 minecraft:short_grass strict
-setblock ~162 ~24 ~232 minecraft:fern strict
-fill ~163 ~24 ~232 ~163 ~24 ~233 minecraft:short_grass strict
-setblock ~167 ~24 ~232 minecraft:short_grass strict
-setblock ~160 ~24 ~234 minecraft:short_grass strict
-setblock ~163 ~24 ~234 minecraft:bush strict
-setblock ~164 ~24 ~234 minecraft:short_grass strict
-setblock ~166 ~24 ~234 minecraft:short_grass strict
-setblock ~158 ~24 ~235 minecraft:fern strict
-setblock ~159 ~24 ~235 minecraft:short_grass strict
-setblock ~163 ~24 ~235 minecraft:short_grass strict
-setblock ~165 ~24 ~235 minecraft:short_grass strict
-setblock ~157 ~24 ~236 minecraft:short_grass strict
-setblock ~158 ~24 ~237 minecraft:short_grass strict
-setblock ~156 ~24 ~239 minecraft:fern strict
-fill ~55 ~25 ~13 ~56 ~25 ~13 minecraft:fern strict
-setblock ~58 ~25 ~13 minecraft:short_grass strict
-fill ~59 ~25 ~14 ~60 ~25 ~14 minecraft:fern strict
-setblock ~59 ~25 ~15 minecraft:fern strict
-setblock ~61 ~25 ~15 minecraft:fern strict
-fill ~60 ~25 ~16 ~60 ~25 ~17 minecraft:short_grass strict
-setblock ~62 ~25 ~17 minecraft:short_grass strict
-setblock ~61 ~25 ~18 minecraft:short_grass strict
-setblock ~61 ~25 ~19 minecraft:fern strict
-setblock ~63 ~25 ~19 minecraft:short_grass strict
-setblock ~64 ~25 ~21 minecraft:short_grass strict
-setblock ~63 ~25 ~22 minecraft:short_grass strict
-setblock ~64 ~25 ~23 minecraft:short_grass strict
-setblock ~65 ~25 ~25 minecraft:short_grass strict
-setblock ~66 ~25 ~27 minecraft:short_grass strict
-fill ~193 ~25 ~27 ~193 ~25 ~29 minecraft:short_grass strict
-setblock ~64 ~25 ~29 minecraft:short_grass strict
-setblock ~66 ~25 ~29 minecraft:short_grass strict
-fill ~80 ~25 ~33 ~80 ~25 ~35 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~82 ~25 ~33 ~82 ~25 ~35 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~83 ~25 ~33 ~84 ~25 ~33 minecraft:short_grass strict
-setblock ~79 ~25 ~34 minecraft:short_grass strict
-setblock ~86 ~25 ~34 minecraft:short_grass strict
-setblock ~88 ~25 ~34 minecraft:fern strict
-setblock ~78 ~25 ~35 minecraft:short_grass strict
-fill ~83 ~25 ~35 ~83 ~25 ~37 minecraft:short_grass strict
-setblock ~86 ~25 ~35 minecraft:fern strict
-setblock ~89 ~25 ~35 minecraft:short_grass strict
-setblock ~82 ~25 ~36 minecraft:short_grass strict
-setblock ~84 ~25 ~36 minecraft:short_grass strict
-fill ~87 ~25 ~36 ~87 ~25 ~37 minecraft:short_grass strict
-setblock ~88 ~25 ~36 minecraft:fern strict
-setblock ~89 ~25 ~36 minecraft:dandelion strict
-setblock ~90 ~25 ~36 minecraft:short_grass strict
-setblock ~99 ~25 ~36 minecraft:short_grass strict
-setblock ~75 ~25 ~37 minecraft:short_grass strict
-fill ~85 ~25 ~37 ~86 ~25 ~37 minecraft:short_grass strict
-fill ~88 ~25 ~37 ~88 ~25 ~38 minecraft:short_grass strict
-setblock ~89 ~25 ~37 minecraft:oxeye_daisy strict
-setblock ~75 ~25 ~38 minecraft:dandelion strict
-setblock ~76 ~25 ~38 minecraft:short_grass strict
-setblock ~82 ~25 ~38 minecraft:short_grass strict
-setblock ~84 ~25 ~38 minecraft:short_grass strict
-setblock ~85 ~25 ~38 minecraft:fern strict
-setblock ~89 ~25 ~38 minecraft:short_grass strict
-setblock ~73 ~25 ~39 minecraft:short_grass strict
-setblock ~75 ~25 ~39 minecraft:short_grass strict
-fill ~77 ~25 ~39 ~77 ~25 ~40 minecraft:short_grass strict
-setblock ~80 ~25 ~39 minecraft:short_grass strict
-setblock ~98 ~25 ~39 minecraft:short_grass strict
-setblock ~100 ~25 ~39 minecraft:short_grass strict
-setblock ~193 ~25 ~39 minecraft:fern strict
-fill ~74 ~25 ~40 ~74 ~25 ~41 minecraft:short_grass strict
-fill ~76 ~25 ~40 ~76 ~25 ~41 minecraft:short_grass strict
-setblock ~79 ~25 ~40 minecraft:short_grass strict
-setblock ~86 ~25 ~40 minecraft:fern strict
-fill ~87 ~25 ~40 ~88 ~25 ~40 minecraft:short_grass strict
-setblock ~90 ~25 ~40 minecraft:short_grass strict
-setblock ~73 ~25 ~41 minecraft:short_grass strict
-setblock ~77 ~25 ~41 minecraft:azure_bluet strict
-fill ~80 ~25 ~41 ~81 ~25 ~41 minecraft:short_grass strict
-setblock ~84 ~25 ~41 minecraft:short_grass strict
-fill ~89 ~25 ~41 ~89 ~25 ~42 minecraft:short_grass strict
-setblock ~78 ~25 ~42 minecraft:fern strict
-setblock ~79 ~25 ~42 minecraft:poppy strict
-fill ~81 ~25 ~42 ~81 ~25 ~43 minecraft:short_grass strict
-setblock ~82 ~25 ~42 minecraft:fern strict
-setblock ~84 ~25 ~42 minecraft:fern strict
-fill ~88 ~25 ~42 ~88 ~25 ~43 minecraft:short_grass strict
-setblock ~82 ~25 ~43 minecraft:short_grass strict
-fill ~86 ~25 ~43 ~86 ~25 ~45 minecraft:short_grass strict
-setblock ~193 ~25 ~43 minecraft:short_grass strict
-fill ~74 ~25 ~44 ~75 ~25 ~44 minecraft:short_grass strict
-setblock ~88 ~25 ~44 minecraft:bush strict
-fill ~188 ~25 ~44 ~189 ~25 ~44 minecraft:short_grass strict
-fill ~194 ~25 ~44 ~194 ~25 ~47 minecraft:short_grass strict
-setblock ~85 ~25 ~45 minecraft:short_grass strict
-fill ~88 ~25 ~45 ~88 ~25 ~46 minecraft:short_grass strict
-fill ~189 ~25 ~45 ~192 ~25 ~45 minecraft:short_grass strict
-setblock ~90 ~25 ~46 minecraft:short_grass strict
-setblock ~192 ~25 ~46 minecraft:short_grass strict
-fill ~86 ~25 ~47 ~87 ~25 ~48 minecraft:short_grass strict
-setblock ~88 ~25 ~47 minecraft:fern strict
-fill ~189 ~25 ~47 ~191 ~25 ~47 minecraft:short_grass strict
-setblock ~193 ~25 ~47 minecraft:short_grass strict
-setblock ~89 ~25 ~49 minecraft:bush strict
-setblock ~86 ~25 ~50 minecraft:fern strict
-fill ~88 ~25 ~50 ~89 ~25 ~50 minecraft:short_grass strict
-setblock ~191 ~25 ~50 minecraft:dead_bush strict
-fill ~87 ~25 ~51 ~88 ~25 ~51 minecraft:short_grass strict
-setblock ~101 ~25 ~51 minecraft:short_grass strict
-setblock ~110 ~25 ~52 minecraft:allium strict
-setblock ~100 ~25 ~53 minecraft:short_grass strict
-setblock ~111 ~25 ~54 minecraft:short_grass strict
-fill ~97 ~25 ~55 ~97 ~25 ~56 minecraft:short_grass strict
-fill ~115 ~25 ~56 ~116 ~25 ~56 minecraft:short_grass strict
-setblock ~51 ~25 ~57 minecraft:short_grass strict
-setblock ~115 ~25 ~57 minecraft:short_grass strict
-setblock ~117 ~25 ~57 minecraft:oxeye_daisy strict
-setblock ~119 ~25 ~57 minecraft:short_grass strict
-setblock ~243 ~25 ~57 minecraft:short_grass strict
-setblock ~52 ~25 ~58 minecraft:short_grass strict
-setblock ~118 ~25 ~58 minecraft:short_grass strict
-setblock ~120 ~25 ~58 minecraft:short_grass strict
-fill ~15 ~25 ~59 ~16 ~25 ~59 minecraft:short_grass strict
-setblock ~17 ~25 ~59 minecraft:fern strict
-setblock ~119 ~25 ~59 minecraft:bush strict
-setblock ~135 ~25 ~59 minecraft:short_grass strict
-setblock ~241 ~25 ~59 minecraft:short_grass strict
-setblock ~22 ~25 ~61 minecraft:short_grass strict
-setblock ~54 ~25 ~61 minecraft:wheat[age=7] strict
-setblock ~94 ~25 ~61 minecraft:short_grass strict
-setblock ~119 ~25 ~61 minecraft:bush strict
-setblock ~120 ~25 ~61 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~135 ~25 ~61 minecraft:short_grass strict
-setblock ~239 ~25 ~61 minecraft:fern strict
-setblock ~44 ~25 ~62 minecraft:fern strict
-setblock ~127 ~25 ~62 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-fill ~128 ~25 ~62 ~129 ~25 ~63 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~235 ~25 ~62 ~236 ~25 ~62 minecraft:short_grass strict
-setblock ~237 ~25 ~62 minecraft:fern strict
-setblock ~238 ~25 ~62 minecraft:short_grass strict
-fill ~40 ~25 ~63 ~42 ~25 ~63 minecraft:short_grass strict
-setblock ~44 ~25 ~63 minecraft:short_grass strict
-setblock ~93 ~25 ~63 minecraft:poppy strict
-fill ~94 ~25 ~63 ~94 ~25 ~64 minecraft:short_grass strict
-fill ~126 ~25 ~63 ~127 ~25 ~63 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~130 ~25 ~63 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~166 ~25 ~63 ~166 ~25 ~65 minecraft:short_grass strict
-setblock ~226 ~25 ~63 minecraft:short_grass strict
-fill ~232 ~25 ~63 ~232 ~25 ~64 minecraft:short_grass strict
-setblock ~234 ~25 ~63 minecraft:short_grass strict
-setblock ~235 ~25 ~63 minecraft:fern strict
-setblock ~41 ~25 ~64 minecraft:short_grass strict
-setblock ~42 ~25 ~64 minecraft:fern strict
-setblock ~44 ~25 ~64 minecraft:bush strict
-setblock ~125 ~25 ~64 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~126 ~25 ~64 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~127 ~25 ~64 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~129 ~25 ~64 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~130 ~25 ~64 minecraft:andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~131 ~25 ~64 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-fill ~228 ~25 ~64 ~229 ~25 ~64 minecraft:short_grass strict
-setblock ~231 ~25 ~64 minecraft:short_grass strict
-setblock ~42 ~25 ~65 minecraft:short_grass strict
-setblock ~93 ~25 ~65 minecraft:short_grass strict
-fill ~167 ~25 ~65 ~167 ~25 ~66 minecraft:short_grass strict
-setblock ~227 ~25 ~65 minecraft:bush strict
-setblock ~39 ~25 ~66 minecraft:short_grass strict
-setblock ~40 ~25 ~67 minecraft:bush strict
-fill ~42 ~25 ~67 ~44 ~25 ~67 minecraft:short_grass strict
-setblock ~133 ~25 ~67 minecraft:fern strict
-fill ~39 ~25 ~68 ~39 ~25 ~69 minecraft:short_grass strict
-fill ~44 ~25 ~68 ~44 ~25 ~69 minecraft:short_grass strict
-setblock ~93 ~25 ~68 minecraft:short_grass strict
-setblock ~135 ~25 ~68 minecraft:short_grass strict
+setblock ~133 ~76 ~127 minecraft:andesite strict
+setblock ~134 ~76 ~127 minecraft:stone strict
+fill ~136 ~76 ~127 ~136 ~76 ~132 minecraft:deepslate_tiles strict
+setblock ~118 ~76 ~128 minecraft:deepslate_tiles strict
+fill ~122 ~76 ~128 ~122 ~77 ~129 minecraft:stone strict
+setblock ~124 ~76 ~128 minecraft:andesite strict
+setblock ~125 ~76 ~128 minecraft:amethyst_block strict
+setblock ~127 ~76 ~128 minecraft:stone strict
+setblock ~128 ~76 ~128 minecraft:andesite strict
+setblock ~129 ~76 ~128 minecraft:stone strict
+fill ~131 ~76 ~128 ~131 ~78 ~128 minecraft:stone strict
+setblock ~132 ~76 ~128 minecraft:andesite strict
+setblock ~134 ~76 ~128 minecraft:amethyst_block strict
+fill ~137 ~76 ~128 ~138 ~77 ~128 minecraft:deepslate_tiles strict
+setblock ~119 ~76 ~129 minecraft:amethyst_block strict
+setblock ~123 ~76 ~129 minecraft:andesite strict
+fill ~124 ~76 ~129 ~124 ~76 ~131 minecraft:stone strict
+fill ~126 ~76 ~129 ~126 ~78 ~129 minecraft:stone strict
+setblock ~127 ~76 ~129 minecraft:andesite strict
+setblock ~128 ~76 ~129 minecraft:amethyst_block strict
+setblock ~130 ~76 ~129 minecraft:stone strict
+setblock ~131 ~76 ~129 minecraft:andesite strict
+fill ~132 ~76 ~129 ~134 ~76 ~129 minecraft:stone strict
+setblock ~135 ~76 ~129 minecraft:deepslate_tiles strict
+setblock ~137 ~76 ~129 minecraft:amethyst_block strict
+fill ~119 ~76 ~130 ~119 ~77 ~130 minecraft:deepslate_tiles strict
+setblock ~122 ~76 ~130 minecraft:amethyst_block strict
+fill ~123 ~76 ~130 ~123 ~76 ~131 minecraft:stone strict
+fill ~125 ~76 ~130 ~125 ~78 ~130 minecraft:stone strict
+setblock ~126 ~76 ~130 minecraft:andesite strict
+fill ~127 ~76 ~130 ~127 ~76 ~132 minecraft:stone strict
+fill ~129 ~76 ~130 ~129 ~78 ~130 minecraft:stone strict
+setblock ~130 ~76 ~130 minecraft:andesite strict
+setblock ~131 ~76 ~130 minecraft:amethyst_block strict
+fill ~132 ~76 ~130 ~133 ~76 ~130 minecraft:stone strict
+setblock ~134 ~76 ~130 minecraft:andesite strict
+setblock ~135 ~76 ~130 minecraft:stone strict
+fill ~137 ~76 ~130 ~137 ~77 ~130 minecraft:deepslate_tiles strict
+setblock ~121 ~76 ~131 minecraft:andesite strict
+setblock ~125 ~76 ~131 minecraft:amethyst_block strict
+fill ~126 ~76 ~131 ~126 ~76 ~133 minecraft:stone strict
+fill ~128 ~76 ~131 ~128 ~78 ~131 minecraft:stone strict
+setblock ~129 ~76 ~131 minecraft:andesite strict
+fill ~130 ~76 ~131 ~132 ~76 ~131 minecraft:stone strict
+setblock ~133 ~76 ~131 minecraft:andesite strict
+setblock ~134 ~76 ~131 minecraft:amethyst_block strict
+fill ~135 ~76 ~131 ~135 ~76 ~135 minecraft:deepslate_tiles strict
+fill ~121 ~76 ~132 ~121 ~76 ~134 minecraft:deepslate_tiles strict
+fill ~122 ~76 ~132 ~122 ~77 ~132 minecraft:stone strict
+setblock ~123 ~76 ~132 minecraft:deepslate_tiles strict
+setblock ~124 ~76 ~132 minecraft:andesite strict
+fill ~125 ~76 ~132 ~125 ~76 ~133 minecraft:stone strict
+setblock ~128 ~76 ~132 minecraft:amethyst_block strict
+fill ~129 ~76 ~132 ~131 ~76 ~132 minecraft:stone strict
+setblock ~132 ~76 ~132 minecraft:andesite strict
+setblock ~137 ~76 ~132 minecraft:amethyst_block strict
+setblock ~122 ~76 ~133 minecraft:amethyst_block strict
+setblock ~123 ~76 ~133 minecraft:andesite strict
+setblock ~124 ~76 ~133 minecraft:deepslate_tiles strict
+setblock ~127 ~76 ~133 minecraft:andesite strict
+fill ~129 ~76 ~133 ~130 ~77 ~133 minecraft:stone strict
+setblock ~131 ~76 ~133 minecraft:amethyst_block strict
+setblock ~133 ~76 ~133 minecraft:stone strict
+setblock ~134 ~76 ~133 minecraft:deepslate_tiles strict
+fill ~122 ~76 ~134 ~123 ~76 ~135 minecraft:deepslate_tiles strict
+fill ~124 ~76 ~134 ~124 ~77 ~134 minecraft:stone strict
+setblock ~125 ~76 ~134 minecraft:amethyst_block strict
+setblock ~126 ~76 ~134 minecraft:andesite strict
+fill ~127 ~76 ~134 ~129 ~76 ~134 minecraft:stone strict
+setblock ~130 ~76 ~134 minecraft:andesite strict
+fill ~131 ~76 ~134 ~132 ~76 ~135 minecraft:deepslate_tiles strict
+setblock ~134 ~76 ~134 minecraft:amethyst_block strict
+fill ~120 ~76 ~135 ~120 ~77 ~135 minecraft:deepslate_tiles strict
+fill ~124 ~76 ~135 ~124 ~76 ~136 minecraft:deepslate_tiles strict
+setblock ~125 ~76 ~135 minecraft:andesite strict
+fill ~126 ~76 ~135 ~127 ~76 ~135 minecraft:deepslate_tiles strict
+setblock ~128 ~76 ~135 minecraft:amethyst_block strict
+fill ~129 ~76 ~135 ~129 ~76 ~137 minecraft:deepslate_tiles strict
+setblock ~130 ~76 ~135 minecraft:stone strict
+fill ~133 ~76 ~135 ~134 ~77 ~135 minecraft:deepslate_tiles strict
+fill ~121 ~76 ~136 ~121 ~77 ~136 minecraft:deepslate_tiles strict
+fill ~125 ~76 ~136 ~125 ~77 ~136 minecraft:deepslate_tiles strict
+fill ~127 ~76 ~136 ~128 ~77 ~136 minecraft:deepslate_tiles strict
+fill ~130 ~76 ~136 ~130 ~77 ~137 minecraft:deepslate_tiles strict
+setblock ~131 ~76 ~136 minecraft:amethyst_block strict
+fill ~132 ~76 ~136 ~132 ~77 ~137 minecraft:deepslate_tiles strict
+fill ~126 ~76 ~137 ~126 ~77 ~137 minecraft:deepslate_tiles strict
+fill ~128 ~76 ~137 ~128 ~77 ~137 minecraft:deepslate_tiles strict
+setblock ~128 ~76 ~138 minecraft:amethyst_block strict
+fill ~127 ~77 ~117 ~127 ~78 ~118 minecraft:deepslate_tiles strict
+setblock ~132 ~77 ~117 minecraft:deepslate_tiles strict
+fill ~123 ~77 ~118 ~123 ~77 ~121 minecraft:deepslate_tiles strict
+fill ~125 ~77 ~118 ~126 ~77 ~119 minecraft:deepslate_tiles strict
+fill ~129 ~77 ~118 ~131 ~78 ~118 minecraft:deepslate_tiles strict
+setblock ~133 ~77 ~118 minecraft:amethyst_block strict
+fill ~124 ~77 ~119 ~124 ~77 ~120 minecraft:deepslate_tiles strict
+setblock ~127 ~77 ~119 minecraft:amethyst_block strict
+setblock ~129 ~77 ~119 minecraft:stone strict
+fill ~130 ~77 ~119 ~134 ~77 ~119 minecraft:deepslate_tiles strict
+fill ~120 ~77 ~120 ~120 ~77 ~123 minecraft:deepslate_tiles strict
+setblock ~121 ~77 ~120 minecraft:amethyst_block strict
+fill ~122 ~77 ~120 ~122 ~77 ~121 minecraft:deepslate_tiles strict
+setblock ~125 ~77 ~120 minecraft:andesite strict
+fill ~126 ~77 ~120 ~129 ~77 ~120 minecraft:deepslate_tiles strict
+setblock ~130 ~77 ~120 minecraft:amethyst_block strict
+fill ~133 ~77 ~120 ~134 ~78 ~120 minecraft:deepslate_tiles strict
+fill ~121 ~77 ~121 ~121 ~77 ~122 minecraft:deepslate_tiles strict
+setblock ~124 ~77 ~121 minecraft:amethyst_block strict
+fill ~125 ~77 ~121 ~125 ~77 ~123 minecraft:stone strict
+fill ~127 ~77 ~121 ~127 ~79 ~121 minecraft:stone strict
+setblock ~128 ~77 ~121 minecraft:andesite strict
+fill ~129 ~77 ~121 ~131 ~77 ~121 minecraft:stone strict
+setblock ~132 ~77 ~121 minecraft:deepslate_tiles strict
+setblock ~133 ~77 ~121 minecraft:amethyst_block strict
+fill ~134 ~77 ~121 ~135 ~77 ~121 minecraft:deepslate_tiles strict
+fill ~122 ~77 ~122 ~122 ~78 ~122 minecraft:stone strict
+setblock ~123 ~77 ~122 minecraft:andesite strict
+fill ~124 ~77 ~122 ~124 ~77 ~123 minecraft:stone strict
+fill ~126 ~77 ~122 ~126 ~79 ~122 minecraft:stone strict
+setblock ~127 ~77 ~122 minecraft:amethyst_block strict
+fill ~130 ~77 ~122 ~130 ~79 ~122 minecraft:stone strict
+setblock ~131 ~77 ~122 minecraft:andesite strict
+fill ~133 ~77 ~122 ~133 ~78 ~123 minecraft:stone strict
+setblock ~134 ~77 ~122 minecraft:deepslate_tiles strict
+setblock ~136 ~77 ~122 minecraft:amethyst_block strict
+fill ~137 ~77 ~122 ~137 ~77 ~126 minecraft:deepslate_tiles strict
+fill ~118 ~77 ~123 ~119 ~78 ~123 minecraft:deepslate_tiles strict
+setblock ~121 ~77 ~123 minecraft:amethyst_block strict
+setblock ~122 ~77 ~123 minecraft:andesite strict
+setblock ~126 ~77 ~123 minecraft:andesite strict
+fill ~127 ~77 ~123 ~129 ~77 ~123 minecraft:stone strict
+setblock ~130 ~77 ~123 minecraft:amethyst_block strict
+fill ~131 ~77 ~123 ~132 ~77 ~124 minecraft:stone strict
+setblock ~134 ~77 ~123 minecraft:andesite strict
+fill ~136 ~77 ~123 ~136 ~77 ~124 minecraft:deepslate_tiles strict
+fill ~138 ~77 ~123 ~138 ~78 ~123 minecraft:deepslate_tiles strict
+setblock ~121 ~77 ~124 minecraft:deepslate_tiles strict
+fill ~122 ~77 ~124 ~123 ~77 ~125 minecraft:stone strict
+setblock ~124 ~77 ~124 minecraft:amethyst_block strict
+setblock ~125 ~77 ~124 minecraft:andesite strict
+fill ~128 ~77 ~124 ~128 ~78 ~124 minecraft:stone strict
+setblock ~129 ~77 ~124 minecraft:andesite strict
+setblock ~133 ~77 ~124 minecraft:amethyst_block strict
+fill ~139 ~77 ~124 ~139 ~78 ~124 minecraft:deepslate_tiles strict
+setblock ~118 ~77 ~125 minecraft:amethyst_block strict
+fill ~119 ~77 ~125 ~119 ~77 ~126 minecraft:deepslate_tiles strict
+setblock ~120 ~77 ~125 minecraft:andesite strict
+setblock ~121 ~77 ~125 minecraft:stone strict
+setblock ~124 ~77 ~125 minecraft:andesite strict
+setblock ~125 ~77 ~125 minecraft:stone strict
+setblock ~127 ~77 ~125 minecraft:amethyst_block strict
+setblock ~128 ~77 ~125 minecraft:andesite strict
+fill ~131 ~77 ~125 ~131 ~78 ~125 minecraft:stone strict
+setblock ~132 ~77 ~125 minecraft:andesite strict
+fill ~133 ~77 ~125 ~135 ~77 ~125 minecraft:stone strict
+setblock ~136 ~77 ~125 minecraft:amethyst_block strict
+fill ~138 ~77 ~125 ~138 ~77 ~127 minecraft:deepslate_tiles strict
+fill ~118 ~77 ~126 ~118 ~78 ~127 minecraft:deepslate_tiles strict
+fill ~120 ~77 ~126 ~120 ~77 ~129 minecraft:deepslate_tiles strict
+setblock ~121 ~77 ~126 minecraft:amethyst_block strict
+fill ~122 ~77 ~126 ~122 ~79 ~126 minecraft:stone strict
+setblock ~123 ~77 ~126 minecraft:andesite strict
+fill ~126 ~77 ~126 ~126 ~79 ~126 minecraft:stone strict
+setblock ~127 ~77 ~126 minecraft:andesite strict
+setblock ~128 ~77 ~126 minecraft:stone strict
+setblock ~130 ~77 ~126 minecraft:amethyst_block strict
+setblock ~131 ~77 ~126 minecraft:andesite strict
+fill ~134 ~77 ~126 ~134 ~78 ~126 minecraft:stone strict
+setblock ~135 ~77 ~126 minecraft:andesite strict
+setblock ~136 ~77 ~126 minecraft:stone strict
+setblock ~117 ~77 ~127 minecraft:deepslate_tiles strict
+fill ~121 ~77 ~127 ~121 ~79 ~127 minecraft:stone strict
+setblock ~122 ~77 ~127 minecraft:andesite strict
+fill ~123 ~77 ~127 ~123 ~77 ~129 minecraft:stone strict
+setblock ~124 ~77 ~127 minecraft:amethyst_block strict
+fill ~125 ~77 ~127 ~125 ~79 ~127 minecraft:stone strict
+setblock ~126 ~77 ~127 minecraft:andesite strict
+fill ~129 ~77 ~127 ~129 ~79 ~127 minecraft:stone strict
+setblock ~130 ~77 ~127 minecraft:andesite strict
+setblock ~131 ~77 ~127 minecraft:stone strict
+setblock ~133 ~77 ~127 minecraft:amethyst_block strict
+setblock ~134 ~77 ~127 minecraft:andesite strict
+fill ~135 ~77 ~127 ~135 ~77 ~129 minecraft:stone strict
+setblock ~136 ~77 ~127 minecraft:deepslate_tiles strict
+fill ~137 ~77 ~127 ~137 ~78 ~127 minecraft:stone strict
+setblock ~118 ~77 ~128 minecraft:amethyst_block strict
+setblock ~121 ~77 ~128 minecraft:andesite strict
+fill ~124 ~77 ~128 ~124 ~79 ~128 minecraft:stone strict
+setblock ~125 ~77 ~128 minecraft:andesite strict
+setblock ~127 ~77 ~128 minecraft:amethyst_block strict
+fill ~128 ~77 ~128 ~128 ~79 ~128 minecraft:stone strict
+setblock ~129 ~77 ~128 minecraft:andesite strict
+fill ~132 ~77 ~128 ~132 ~79 ~128 minecraft:stone strict
+setblock ~133 ~77 ~128 minecraft:andesite strict
+fill ~134 ~77 ~128 ~134 ~77 ~130 minecraft:stone strict
+setblock ~136 ~77 ~128 minecraft:amethyst_block strict
+fill ~118 ~77 ~129 ~118 ~78 ~130 minecraft:deepslate_tiles strict
+fill ~119 ~77 ~129 ~119 ~79 ~129 minecraft:stone strict
+setblock ~121 ~77 ~129 minecraft:amethyst_block strict
+setblock ~124 ~77 ~129 minecraft:andesite strict
+fill ~127 ~77 ~129 ~127 ~79 ~129 minecraft:stone strict
+setblock ~128 ~77 ~129 minecraft:andesite strict
+setblock ~130 ~77 ~129 minecraft:amethyst_block strict
+fill ~131 ~77 ~129 ~131 ~79 ~129 minecraft:stone strict
+setblock ~132 ~77 ~129 minecraft:andesite strict
+setblock ~133 ~77 ~129 minecraft:stone strict
+fill ~136 ~77 ~129 ~138 ~77 ~129 minecraft:deepslate_tiles strict
+setblock ~139 ~77 ~129 minecraft:amethyst_block strict
+fill ~120 ~77 ~130 ~122 ~77 ~130 minecraft:stone strict
+setblock ~123 ~77 ~130 minecraft:andesite strict
+setblock ~124 ~77 ~130 minecraft:amethyst_block strict
+setblock ~126 ~77 ~130 minecraft:stone strict
+setblock ~127 ~77 ~130 minecraft:andesite strict
+fill ~130 ~77 ~130 ~130 ~79 ~130 minecraft:stone strict
+setblock ~131 ~77 ~130 minecraft:andesite strict
+fill ~132 ~77 ~130 ~132 ~77 ~132 minecraft:stone strict
+setblock ~133 ~77 ~130 minecraft:amethyst_block strict
+setblock ~135 ~77 ~130 minecraft:andesite strict
+setblock ~136 ~77 ~130 minecraft:deepslate_tiles strict
+fill ~138 ~77 ~130 ~138 ~77 ~131 minecraft:deepslate_tiles strict
+setblock ~118 ~77 ~131 minecraft:amethyst_block strict
+fill ~119 ~77 ~131 ~120 ~77 ~134 minecraft:deepslate_tiles strict
+fill ~121 ~77 ~131 ~121 ~79 ~131 minecraft:stone strict
+setblock ~122 ~77 ~131 minecraft:andesite strict
+fill ~123 ~77 ~131 ~125 ~77 ~131 minecraft:stone strict
+setblock ~126 ~77 ~131 minecraft:andesite strict
+setblock ~127 ~77 ~131 minecraft:amethyst_block strict
+setblock ~129 ~77 ~131 minecraft:stone strict
+setblock ~130 ~77 ~131 minecraft:andesite strict
+fill ~131 ~77 ~131 ~131 ~77 ~133 minecraft:stone strict
+fill ~133 ~77 ~131 ~133 ~79 ~131 minecraft:stone strict
+setblock ~134 ~77 ~131 minecraft:andesite strict
+setblock ~135 ~77 ~131 minecraft:stone strict
+setblock ~136 ~77 ~131 minecraft:amethyst_block strict
+fill ~137 ~77 ~131 ~137 ~77 ~133 minecraft:deepslate_tiles strict
+fill ~117 ~77 ~132 ~117 ~78 ~132 minecraft:deepslate_tiles strict
+setblock ~121 ~77 ~132 minecraft:amethyst_block strict
+fill ~123 ~77 ~132 ~124 ~77 ~132 minecraft:stone strict
+setblock ~125 ~77 ~132 minecraft:andesite strict
+fill ~126 ~77 ~132 ~128 ~77 ~132 minecraft:stone strict
+setblock ~129 ~77 ~132 minecraft:andesite strict
+setblock ~130 ~77 ~132 minecraft:amethyst_block strict
+setblock ~133 ~77 ~132 minecraft:andesite strict
+fill ~134 ~77 ~132 ~134 ~77 ~134 minecraft:stone strict
+fill ~135 ~77 ~132 ~136 ~77 ~133 minecraft:deepslate_tiles strict
+fill ~118 ~77 ~133 ~118 ~78 ~133 minecraft:deepslate_tiles strict
+fill ~121 ~77 ~133 ~121 ~77 ~134 minecraft:deepslate_tiles strict
+fill ~122 ~77 ~133 ~123 ~78 ~133 minecraft:stone strict
+setblock ~124 ~77 ~133 minecraft:amethyst_block strict
+fill ~125 ~77 ~133 ~127 ~77 ~133 minecraft:stone strict
+setblock ~128 ~77 ~133 minecraft:andesite strict
+setblock ~132 ~77 ~133 minecraft:andesite strict
+setblock ~133 ~77 ~133 minecraft:amethyst_block strict
+fill ~138 ~77 ~133 ~138 ~78 ~133 minecraft:deepslate_tiles strict
+fill ~122 ~77 ~134 ~122 ~77 ~137 minecraft:deepslate_tiles strict
+setblock ~123 ~77 ~134 minecraft:andesite strict
+fill ~125 ~77 ~134 ~126 ~78 ~134 minecraft:stone strict
+setblock ~127 ~77 ~134 minecraft:amethyst_block strict
+fill ~128 ~77 ~134 ~130 ~77 ~134 minecraft:stone strict
+setblock ~131 ~77 ~134 minecraft:andesite strict
+fill ~132 ~77 ~134 ~133 ~77 ~134 minecraft:stone strict
+fill ~135 ~77 ~134 ~135 ~77 ~136 minecraft:deepslate_tiles strict
+setblock ~136 ~77 ~134 minecraft:amethyst_block strict
+setblock ~121 ~77 ~135 minecraft:amethyst_block strict
+fill ~123 ~77 ~135 ~124 ~77 ~135 minecraft:deepslate_tiles strict
+fill ~125 ~77 ~135 ~125 ~78 ~135 minecraft:stone strict
+setblock ~126 ~77 ~135 minecraft:andesite strict
+fill ~127 ~77 ~135 ~129 ~77 ~135 minecraft:stone strict
+setblock ~130 ~77 ~135 minecraft:amethyst_block strict
+fill ~131 ~77 ~135 ~131 ~77 ~136 minecraft:stone strict
+setblock ~132 ~77 ~135 minecraft:deepslate_tiles strict
+fill ~136 ~77 ~135 ~136 ~78 ~136 minecraft:deepslate_tiles strict
+fill ~123 ~77 ~136 ~123 ~77 ~138 minecraft:deepslate_tiles strict
+setblock ~124 ~77 ~136 minecraft:amethyst_block strict
+setblock ~126 ~77 ~136 minecraft:stone strict
+fill ~129 ~77 ~136 ~129 ~77 ~139 minecraft:deepslate_tiles strict
+setblock ~133 ~77 ~136 minecraft:amethyst_block strict
+fill ~134 ~77 ~136 ~134 ~78 ~136 minecraft:deepslate_tiles strict
+fill ~124 ~77 ~137 ~125 ~78 ~137 minecraft:deepslate_tiles strict
+setblock ~127 ~77 ~137 minecraft:amethyst_block strict
+fill ~131 ~77 ~137 ~131 ~78 ~138 minecraft:deepslate_tiles strict
+fill ~133 ~77 ~137 ~133 ~78 ~138 minecraft:deepslate_tiles strict
+fill ~125 ~77 ~138 ~128 ~77 ~138 minecraft:deepslate_tiles strict
+setblock ~130 ~77 ~138 minecraft:amethyst_block strict
+setblock ~124 ~77 ~139 minecraft:amethyst_block strict
+fill ~125 ~78 ~115 ~125 ~79 ~115 minecraft:deepslate_tiles strict
+fill ~130 ~78 ~115 ~130 ~79 ~115 minecraft:deepslate_tiles strict
+fill ~126 ~78 ~116 ~128 ~79 ~116 minecraft:deepslate_tiles strict
+setblock ~129 ~78 ~116 minecraft:amethyst_block strict
+fill ~131 ~78 ~116 ~131 ~78 ~117 minecraft:deepslate_tiles strict
+fill ~122 ~78 ~117 ~122 ~78 ~120 minecraft:deepslate_tiles strict
+setblock ~123 ~78 ~117 minecraft:amethyst_block strict
+fill ~124 ~78 ~117 ~126 ~78 ~117 minecraft:deepslate_tiles strict
+fill ~128 ~78 ~117 ~130 ~79 ~117 minecraft:deepslate_tiles strict
+setblock ~132 ~78 ~117 minecraft:amethyst_block strict
+fill ~133 ~78 ~117 ~133 ~78 ~119 minecraft:deepslate_tiles strict
+fill ~123 ~78 ~118 ~125 ~78 ~118 minecraft:deepslate_tiles strict
+setblock ~126 ~78 ~118 minecraft:amethyst_block strict
+setblock ~128 ~78 ~118 minecraft:andesite strict
+fill ~132 ~78 ~118 ~132 ~78 ~119 minecraft:deepslate_tiles strict
+fill ~134 ~78 ~118 ~134 ~78 ~119 minecraft:deepslate_tiles strict
+fill ~119 ~78 ~119 ~119 ~78 ~122 minecraft:deepslate_tiles strict
+setblock ~120 ~78 ~119 minecraft:amethyst_block strict
+fill ~121 ~78 ~119 ~121 ~78 ~120 minecraft:deepslate_tiles strict
+setblock ~123 ~78 ~119 minecraft:deepslate_tiles strict
+fill ~124 ~78 ~119 ~124 ~78 ~121 minecraft:stone strict
+setblock ~125 ~78 ~119 minecraft:deepslate_tiles strict
+fill ~126 ~78 ~119 ~126 ~80 ~119 minecraft:stone strict
+setblock ~127 ~78 ~119 minecraft:andesite strict
+fill ~128 ~78 ~119 ~128 ~78 ~121 minecraft:stone strict
+setblock ~129 ~78 ~119 minecraft:amethyst_block strict
+fill ~130 ~78 ~119 ~130 ~80 ~119 minecraft:stone strict
+setblock ~131 ~78 ~119 minecraft:deepslate_tiles strict
+fill ~135 ~78 ~119 ~136 ~79 ~119 minecraft:deepslate_tiles strict
+fill ~120 ~78 ~120 ~120 ~78 ~121 minecraft:deepslate_tiles strict
+setblock ~123 ~78 ~120 minecraft:amethyst_block strict
+setblock ~125 ~78 ~120 minecraft:stone strict
+setblock ~126 ~78 ~120 minecraft:andesite strict
+setblock ~127 ~78 ~120 minecraft:stone strict
+fill ~129 ~78 ~120 ~129 ~80 ~120 minecraft:stone strict
+setblock ~130 ~78 ~120 minecraft:andesite strict
+fill ~131 ~78 ~120 ~131 ~78 ~122 minecraft:stone strict
+setblock ~132 ~78 ~120 minecraft:amethyst_block strict
+setblock ~135 ~78 ~120 minecraft:stone strict
+fill ~136 ~78 ~120 ~137 ~79 ~120 minecraft:deepslate_tiles strict
+setblock ~121 ~78 ~121 minecraft:andesite strict
+fill ~122 ~78 ~121 ~123 ~78 ~121 minecraft:stone strict
+setblock ~125 ~78 ~121 minecraft:andesite strict
+setblock ~126 ~78 ~121 minecraft:amethyst_block strict
+setblock ~129 ~78 ~121 minecraft:andesite strict
+setblock ~130 ~78 ~121 minecraft:stone strict
+fill ~132 ~78 ~121 ~132 ~80 ~121 minecraft:stone strict
+setblock ~133 ~78 ~121 minecraft:andesite strict
+fill ~134 ~78 ~121 ~134 ~78 ~123 minecraft:stone strict
+setblock ~135 ~78 ~121 minecraft:amethyst_block strict
+fill ~136 ~78 ~121 ~136 ~80 ~121 minecraft:stone strict
+fill ~137 ~78 ~121 ~137 ~78 ~125 minecraft:deepslate_tiles strict
+fill ~117 ~78 ~122 ~118 ~79 ~122 minecraft:deepslate_tiles strict
+setblock ~120 ~78 ~122 minecraft:amethyst_block strict
+fill ~121 ~78 ~122 ~121 ~78 ~124 minecraft:stone strict
+fill ~123 ~78 ~122 ~123 ~80 ~122 minecraft:stone strict
+setblock ~124 ~78 ~122 minecraft:andesite strict
+fill ~125 ~78 ~122 ~125 ~78 ~124 minecraft:stone strict
+fill ~127 ~78 ~122 ~127 ~80 ~122 minecraft:stone strict
+setblock ~128 ~78 ~122 minecraft:andesite strict
+setblock ~129 ~78 ~122 minecraft:amethyst_block strict
+setblock ~132 ~78 ~122 minecraft:andesite strict
+fill ~135 ~78 ~122 ~135 ~80 ~122 minecraft:stone strict
+fill ~136 ~78 ~122 ~136 ~78 ~123 minecraft:deepslate_tiles strict
+setblock ~138 ~78 ~122 minecraft:amethyst_block strict

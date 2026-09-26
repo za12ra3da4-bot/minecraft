@@ -1,0 +1,77 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 대기실 (맵 가운데 하늘의 떠 있는 섬)
+#   게임 전 · 후: 접속하면 대기실로. 팀 발판을 밟으면 그 팀으로 (게임 중엔 안 바뀜)
+#   대기실 안: PvP · 블록 부수기 없음, 배고픔 · 체력 회복.  /로비 로 이동
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgLobbyLoc() :: location:
+    set {_l} to bgMk("lobby_spawn")
+    set yaw of {_l} to 180
+    return {_l}
+
+function bgInLobby(p: player) :: boolean:
+    if {-bg::mk::lobby_spawn::x} is not set:
+        return false
+    set {_c} to bgMk("lobby_spawn")
+    if world of {_p} is not world of {_c}:
+        return false
+    if bgDist2(location of {_p}, {_c}) > 20:
+        return false
+    if abs((y-coordinate of {_p}) - (y-coordinate of {_c})) > 12:
+        return false
+    return true
+
+function bgToLobby(p: player):
+    if {-bg::mk::lobby_spawn::x} is not set:
+        stop
+    teleport {_p} to bgLobbyLoc()
+    set gamemode of {_p} to adventure
+    heal {_p}
+    set food level of {_p} to 20
+
+command /로비:
+    aliases: /lobby
+    trigger:
+        if bgIsFighter(player) is true:
+            send "&6[전장] &f게임 중에는 대기실로 갈 수 없습니다."
+            stop
+        bgToLobby(player)
+
+on join:
+    wait 3 ticks
+    if {-bg::on} is not true:
+        bgToLobby(player)
+        send title "&6&l왕관 쟁탈전" with subtitle "&f팀 발판을 밟아 팀을 고르세요" to player for 60 ticks
+
+# 팀 발판 · 대기실 회복
+every 10 ticks:
+    {-bg::mk::lobby_spawn::x} is set
+    loop all players:
+        if bgInLobby(loop-player) is true:
+            set food level of loop-player to 20
+            if {-bg::on} is not true:
+                loop {-bg::teams::*}:
+                    set {_m} to "lobby_pad_%loop-value-2%"
+                    if bgDist2(location of loop-player, bgMk({_m})) < 2.3:
+                        if bgTeam(loop-player) is not loop-value-2:
+                            bgSetupTeams()
+                            bgSetTeam(loop-player, loop-value-2)
+                            play sound "block.note_block.pling" to loop-player
+                            bgParticle(location of loop-player, "happy_villager", 0.6, 1, 0.6, 0, 12)
+                        send action bar "%{-bg::tcol::%loop-value-2%}%&l%{-bg::tname::%loop-value-2%}% 팀 &7— 팀원 %bgTeamCount(loop-value-2)%명" to loop-player
+
+# 대기실 안 PvP · 파괴 금지
+on damage of player:
+    bgInLobby(victim) is true
+    {-bg::on} is not true
+    cancel event
+
+on break:
+    bgInLobby(player) is true
+    gamemode of player is not creative
+    cancel event
+
+on place:
+    bgInLobby(player) is true
+    gamemode of player is not creative
+    cancel event

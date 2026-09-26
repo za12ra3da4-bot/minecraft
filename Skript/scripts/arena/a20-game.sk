@@ -83,6 +83,7 @@ function bgStop(reason: text):
         stop
     set {-bg::on} to false
     bgBossRemove()
+    bgRewardClear()
     bgCmd("function bg:tele/clear_all")
     set {_best} to -1
     set {_win} to "none"
@@ -98,6 +99,8 @@ function bgStop(reason: text):
     wait 10 seconds
     if {-bg::on} is not true:
         bgHudRemove()
+        loop all players:
+            bgToLobby(loop-player)
 
 function bgCheckEnd():
     loop {-bg::teams::*}:
@@ -409,6 +412,8 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             bgSyncOrigin()
             bgCmd("function bg:map/build/start")
             bgSay("맵 건설을 시작합니다 (수십 초 걸립니다).")
+        else if arg-1 is "로비":
+            bgToLobby(player)
         else if arg-1 is "경계":
             bgSyncOrigin()
             bgCmd("function bg:map/border with storage bg:map origin")

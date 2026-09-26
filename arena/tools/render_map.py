@@ -28,6 +28,7 @@ def shots():
         "demeter": dict(cam=(dx + 38, G + 24, dz + 40), target=(dx, G - 2, dz), fov=55),
         "base": dict(cam=(bx + 42, BASE_H + 36, bz + 50), target=(bx, BASE_H, bz), fov=55),
     }
+    s["lobby"] = dict(cam=(C[0] + 26, 100, C[1] + 30), target=(C[0], 85, C[1]), fov=60)
     for lid in LAIRS:
         lx, lz = lair_pos(lid)
         v = (C[0] - lx, C[1] - lz)

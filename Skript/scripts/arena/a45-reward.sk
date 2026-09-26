@@ -1,0 +1,97 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 보스 보상 상자 (블록 · 아이템 디스플레이로 만든 보물 상자)
+#   보스를 가장 많이 때린 팀이 가까이 가면 열린다:
+#     연 사람: 전설 무기 1개 (무작위)   ·   그 팀 전원: 코인 +60 · 황금 사과 2 · 치유 물약 1
+#   3분 동안 아무도 안 열면 사라짐
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgRewardSpawn(t: text, boss: text, c: location):
+    bgRewardClear()
+    set {-bg::reward::team} to {_t}
+    set {-bg::reward::boss} to {_boss}
+    set {-bg::reward::loc} to {_c}
+    set {-bg::reward::until} to now
+    set {_xn} to x-coordinate of {_c}
+    set {_yn} to y-coordinate of {_c}
+    set {_zn} to z-coordinate of {_c}
+    set {_x} to bgN({_xn})
+    set {_y} to bgN({_yn})
+    set {_z} to bgN({_zn})
+    set {_p} to "%{_x}% %{_y}% %{_z}%"
+    set {_col} to {-bg::hex::%{_t}%}
+    set {_T} to "Tags:[""bg"",""bg_reward""]"
+    # 받침: 길드 블랙스톤 판 + 금 테두리 네 줄
+    bgCmd("summon block_display %{_p}% {%{_T}%,block_state:{Name:""minecraft:gilded_blackstone""},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-1.1f,0f,-1.1f],scale:[2.2f,0.4f,2.2f]}}")
+    bgCmd("summon block_display %{_p}% {%{_T}%,block_state:{Name:""minecraft:polished_blackstone""},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.9f,0.4f,-0.9f],scale:[1.8f,0.2f,1.8f]}}")
+    loop 4 times:
+        set {_a} to (loop-number - 1) * 90
+        bgCmd("summon block_display %{_p}% {%{_T}%,Rotation:[%{_a}%f,0f],block_state:{Name:""minecraft:gold_block""},brightness:{sky:15,block:15},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-1.15f,0.38f,1.05f],scale:[2.3f,0.08f,0.1f]}}")
+    # 상자: 팀 색으로 빛나는 테두리 (아이템 디스플레이 상자, 크게)
+    bgCmd("summon item_display %{_x}% %bgN({_yn} + 1.25)% %{_z}% {%{_T}%,item:{id:""minecraft:chest"",count:1},item_display:""fixed"",Glowing:1b,glow_color_override:%{_col}%,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.5f,1.5f,1.5f]}}")
+    # 금괴 · 금덩이 더미
+    loop 6 times:
+        set {_a} to loop-number * 60
+        set {_gx} to bgN({_xn} + cos({_a}) * 0.95)
+        set {_gz} to bgN({_zn} + sin({_a}) * 0.95)
+        set {_it} to "gold_ingot"
+        if mod(loop-number, 2) is 0:
+            set {_it} to "raw_gold"
+        bgCmd("summon item_display %{_gx}% %bgN({_yn} + 0.72)% %{_gz}% {%{_T}%,Rotation:[%{_a}%f,0f],item:{id:""minecraft:%{_it}%"",count:1},item_display:""fixed"",transformation:{left_rotation:[0.7071f,0f,0f,0.7071f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.55f,0.55f,0.55f]}}")
+    # 둘레를 도는 보석 4개 (다이아 · 에메랄드 · 자수정 · 네더의 별)
+    loop 4 times:
+        set {_a} to loop-number * 90 + 45
+        set {_gx} to bgN({_xn} + cos({_a}) * 1.4)
+        set {_gz} to bgN({_zn} + sin({_a}) * 1.4)
+        set {_g} to "diamond"
+        if loop-number is 2:
+            set {_g} to "emerald"
+        else if loop-number is 3:
+            set {_g} to "amethyst_shard"
+        else if loop-number is 4:
+            set {_g} to "nether_star"
+        bgCmd("summon item_display %{_gx}% %bgN({_yn} + 2.4)% %{_gz}% {Tags:[""bg"",""bg_reward"",""bg_spin_fast""],item:{id:""minecraft:%{_g}%"",count:1},billboard:""vertical"",brightness:{sky:15,block:15},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.7f,0.7f,0.7f]}}")
+    # 빛기둥 (팀 색 유리, 얇고 높게)
+    bgCmd("summon block_display %{_p}% {%{_T}%,block_state:{Name:""minecraft:%{-bg::glass::%{_t}%}%_stained_glass""},brightness:{sky:15,block:15},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.15f,2.2f,-0.15f],scale:[0.3f,12f,0.3f]}}")
+    bgSoundAt({_c}, "block.beacon.activate", 3, 1.2)
+    bgSoundAt({_c}, "entity.player.levelup", 3, 0.8)
+    bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 &6보상 상자&f가 %{-bg::lairname::%{-bg::bd::%{_boss}%::lair}%}%에 나타났습니다! 가까이 가서 여세요.")
+
+function bgRewardClear():
+    bgCmd("kill @e[tag=bg_reward]")
+    delete {-bg::reward::team}
+    delete {-bg::reward::loc}
+
+function bgRewardClaim(p: player):
+    set {_t} to {-bg::reward::team}
+    set {_c} to {-bg::reward::loc}
+    bgRewardClear()
+    bgParticle({_c}, "totem_of_undying", 1.5, 2, 1.5, 0.4, 120)
+    bgParticle({_c}, "firework", 1, 1.5, 1, 0.2, 60)
+    bgSoundAt({_c}, "block.chest.open", 3, 0.8)
+    bgSoundAt({_c}, "ui.toast.challenge_complete", 3, 1)
+    set {_w} to random element out of {-bg::w::list::*}
+    bgGiveWeapon({_p}, {_w})
+    set {bg::owned::%uuid of {_p}%::%{_w}%} to true
+    send title "&6&l보상 상자!" with subtitle "&f전설 무기 &6%{-bg::w::%{_w}%::name}%&f 획득" to {_p} for 60 ticks
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            add 60 to {bg::coin::%uuid of loop-player%}
+            bgCmd("give %name of loop-player% golden_apple 2")
+            bgCmd("give %name of loop-player% splash_potion[potion_contents={potion:""minecraft:strong_healing""}] 1")
+            send action bar "&6보상 상자 &f— 코인 +60 · 황금 사과 2 · 치유 물약" to loop-player
+    bgSay("%{-bg::tcol::%{_t}%}%%name of {_p}%&f이(가) 보상 상자를 열어 &6%{-bg::w::%{_w}%::name}%&f을(를) 얻었습니다!")
+
+every 10 ticks:
+    {-bg::reward::team} is set
+    set {_c} to {-bg::reward::loc}
+    if difference between {-bg::reward::until} and now > 3 minutes:
+        bgRewardClear()
+        stop
+    bgParticle({_c}, "end_rod", 0.6, 1.5, 0.6, 0.02, 6)
+    loop all players:
+        if bgTeam(loop-player) is {-bg::reward::team}:
+            if gamemode of loop-player is survival or adventure:
+                if world of loop-player is world of {_c}:
+                    if distance between loop-player and {_c} < 2.6:
+                        bgRewardClaim(loop-player)
+                        stop

@@ -25,6 +25,7 @@ import bossgen
 import decor
 import weapons_w as weapons
 import pixel_art
+import weapons_legend
 import decor2d
 import decor_w
 import skgen
@@ -79,6 +80,7 @@ def main(args):
     decor.export(pack)
     decor_w.export(pack)
     pixel_art.export(pack)
+    weapons_legend.export(pack)
     n = pack.write(OUT_RP_DIR, OUT_RP, "왕관 쟁탈전 + 올림포스 통합 팩")
     merge_olympus(OUT_RP)
     print(f"[rp] 파일 {n}개 → {OUT_RP} ({os.path.getsize(OUT_RP) // 1024} KB)")

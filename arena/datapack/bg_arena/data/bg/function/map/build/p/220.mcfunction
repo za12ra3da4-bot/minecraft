@@ -1,350 +1,350 @@
-fill ~204 ~27 ~128 ~204 ~27 ~129 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-fill ~54 ~27 ~129 ~54 ~27 ~131 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~203 ~27 ~129 minecraft:cobblestone_slab[type=bottom,waterlogged=false] strict
-setblock ~203 ~27 ~130 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~204 ~27 ~130 minecraft:andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~97 ~27 ~133 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~197 ~27 ~133 ~198 ~27 ~133 minecraft:short_grass strict
-fill ~148 ~27 ~135 ~148 ~27 ~141 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~63 ~27 ~137 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~152 ~27 ~140 ~152 ~27 ~143 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~62 ~27 ~142 ~62 ~27 ~143 minecraft:short_grass strict
-fill ~66 ~27 ~142 ~67 ~27 ~142 minecraft:short_grass strict
-setblock ~61 ~27 ~143 minecraft:short_grass strict
-setblock ~64 ~27 ~143 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~189 ~27 ~144 minecraft:campfire[facing=north,lit=true,signal_fire=false,waterlogged=false] strict
-setblock ~59 ~27 ~145 minecraft:short_grass strict
-fill ~61 ~27 ~145 ~62 ~27 ~145 minecraft:short_grass strict
-setblock ~64 ~27 ~145 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~68 ~27 ~145 ~69 ~27 ~145 minecraft:short_grass strict
-setblock ~60 ~27 ~146 minecraft:short_grass strict
-setblock ~70 ~27 ~146 minecraft:short_grass strict
-setblock ~59 ~27 ~147 minecraft:short_grass strict
-setblock ~69 ~27 ~147 minecraft:short_grass strict
-fill ~193 ~27 ~147 ~193 ~27 ~150 minecraft:short_grass strict
-setblock ~195 ~27 ~147 minecraft:fern strict
-setblock ~197 ~27 ~147 minecraft:short_grass strict
-fill ~57 ~27 ~148 ~58 ~27 ~148 minecraft:short_grass strict
-fill ~110 ~27 ~148 ~111 ~27 ~148 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~113 ~27 ~148 ~115 ~27 ~148 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~191 ~27 ~148 ~192 ~27 ~148 minecraft:short_grass strict
-fill ~56 ~27 ~149 ~57 ~27 ~149 minecraft:short_grass strict
-setblock ~192 ~27 ~149 minecraft:fern strict
-setblock ~194 ~27 ~149 minecraft:short_grass strict
-setblock ~196 ~27 ~149 minecraft:short_grass strict
-fill ~198 ~27 ~149 ~198 ~27 ~150 minecraft:short_grass strict
-fill ~190 ~27 ~150 ~191 ~27 ~150 minecraft:short_grass strict
-setblock ~197 ~27 ~150 minecraft:short_grass strict
-fill ~205 ~27 ~150 ~206 ~27 ~150 minecraft:short_grass strict
-setblock ~72 ~27 ~151 minecraft:short_grass strict
-fill ~55 ~27 ~152 ~55 ~27 ~153 minecraft:short_grass strict
-fill ~74 ~27 ~152 ~74 ~27 ~153 minecraft:short_grass strict
-setblock ~184 ~27 ~152 minecraft:short_grass strict
-fill ~121 ~27 ~153 ~121 ~27 ~154 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~205 ~27 ~153 minecraft:fern strict
-setblock ~203 ~27 ~154 minecraft:short_grass strict
-setblock ~243 ~27 ~154 minecraft:short_grass strict
-setblock ~42 ~27 ~155 minecraft:short_grass strict
-fill ~45 ~27 ~155 ~47 ~27 ~155 minecraft:short_grass strict
-setblock ~183 ~27 ~155 minecraft:fern strict
-fill ~14 ~27 ~156 ~15 ~27 ~156 minecraft:short_grass strict
-setblock ~44 ~27 ~156 minecraft:short_grass strict
-setblock ~46 ~27 ~156 minecraft:short_grass strict
-fill ~121 ~27 ~156 ~121 ~27 ~158 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~216 ~27 ~156 minecraft:short_grass strict
-fill ~16 ~27 ~157 ~16 ~27 ~158 minecraft:short_grass strict
-fill ~180 ~27 ~157 ~180 ~27 ~158 minecraft:short_grass strict
-setblock ~215 ~27 ~157 minecraft:short_grass strict
-setblock ~237 ~27 ~157 minecraft:short_grass strict
-fill ~17 ~27 ~158 ~18 ~27 ~158 minecraft:short_grass strict
-fill ~39 ~27 ~158 ~40 ~27 ~158 minecraft:short_grass strict
-setblock ~181 ~27 ~158 minecraft:short_grass strict
-setblock ~213 ~27 ~158 minecraft:short_grass strict
-setblock ~217 ~27 ~158 minecraft:short_grass strict
-fill ~219 ~27 ~158 ~219 ~27 ~159 minecraft:short_grass strict
-setblock ~220 ~27 ~158 minecraft:fern strict
-setblock ~231 ~27 ~158 minecraft:short_grass strict
-setblock ~236 ~27 ~158 minecraft:short_grass strict
-setblock ~21 ~27 ~159 minecraft:bush strict
-setblock ~133 ~27 ~159 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~218 ~27 ~159 minecraft:azure_bluet strict
-setblock ~221 ~27 ~159 minecraft:allium strict
-setblock ~225 ~27 ~159 minecraft:short_grass strict
-fill ~227 ~27 ~159 ~229 ~27 ~159 minecraft:short_grass strict
-setblock ~230 ~27 ~159 minecraft:oxeye_daisy strict
-setblock ~234 ~27 ~159 minecraft:short_grass strict
-setblock ~30 ~27 ~160 minecraft:fern strict
-setblock ~31 ~27 ~160 minecraft:short_grass strict
-fill ~33 ~27 ~160 ~35 ~27 ~160 minecraft:short_grass strict
-setblock ~92 ~27 ~160 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~178 ~27 ~160 ~179 ~27 ~160 minecraft:short_grass strict
-fill ~183 ~27 ~160 ~184 ~27 ~160 minecraft:short_grass strict
-setblock ~225 ~27 ~160 minecraft:fern strict
-setblock ~228 ~27 ~160 minecraft:fern strict
-fill ~177 ~27 ~161 ~177 ~27 ~162 minecraft:short_grass strict
-fill ~179 ~27 ~161 ~180 ~27 ~161 minecraft:short_grass strict
-setblock ~182 ~27 ~161 minecraft:short_grass strict
-setblock ~187 ~27 ~161 minecraft:short_grass strict
-setblock ~181 ~27 ~162 minecraft:short_grass strict
-fill ~183 ~27 ~162 ~184 ~27 ~162 minecraft:short_grass strict
-setblock ~176 ~27 ~163 minecraft:short_grass strict
-setblock ~83 ~27 ~164 minecraft:fern strict
-setblock ~183 ~27 ~164 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~184 ~27 ~164 minecraft:polished_diorite_slab[type=bottom,waterlogged=false] strict
-fill ~189 ~27 ~168 ~190 ~27 ~168 minecraft:short_grass strict
-setblock ~182 ~27 ~169 minecraft:short_grass strict
-setblock ~184 ~27 ~169 minecraft:short_grass strict
-setblock ~190 ~27 ~169 minecraft:short_grass strict
-fill ~180 ~27 ~170 ~181 ~27 ~170 minecraft:short_grass strict
-fill ~183 ~27 ~170 ~183 ~27 ~171 minecraft:short_grass strict
-fill ~185 ~27 ~170 ~187 ~27 ~170 minecraft:short_grass strict
-setblock ~189 ~27 ~170 minecraft:short_grass strict
-fill ~192 ~27 ~170 ~193 ~27 ~170 minecraft:short_grass strict
-setblock ~85 ~27 ~171 minecraft:short_grass strict
-setblock ~184 ~27 ~171 minecraft:short_grass strict
-setblock ~186 ~27 ~171 minecraft:short_grass strict
-setblock ~188 ~27 ~171 minecraft:short_grass strict
-fill ~193 ~27 ~172 ~194 ~27 ~172 minecraft:fern strict
-setblock ~181 ~27 ~173 minecraft:short_grass strict
-setblock ~187 ~27 ~173 minecraft:poppy strict
-fill ~189 ~27 ~173 ~189 ~27 ~174 minecraft:short_grass strict
-fill ~42 ~27 ~174 ~42 ~27 ~177 minecraft:short_grass strict
-setblock ~185 ~27 ~174 minecraft:short_grass strict
-fill ~41 ~27 ~175 ~41 ~27 ~177 minecraft:short_grass strict
-setblock ~33 ~27 ~177 minecraft:short_grass strict
-fill ~39 ~27 ~177 ~39 ~27 ~178 minecraft:short_grass strict
-setblock ~40 ~27 ~177 minecraft:bush strict
-setblock ~105 ~27 ~177 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~32 ~27 ~178 ~32 ~27 ~179 minecraft:short_grass strict
-setblock ~36 ~27 ~178 minecraft:short_grass strict
-setblock ~38 ~27 ~178 minecraft:fern strict
-setblock ~40 ~27 ~178 minecraft:short_grass strict
-setblock ~42 ~27 ~178 minecraft:oxeye_daisy strict
-setblock ~171 ~27 ~178 minecraft:short_grass strict
-setblock ~202 ~27 ~178 minecraft:short_grass strict
-fill ~29 ~27 ~179 ~29 ~27 ~180 minecraft:short_grass strict
-setblock ~31 ~27 ~179 minecraft:short_grass strict
-setblock ~33 ~27 ~179 minecraft:short_grass strict
-fill ~35 ~27 ~179 ~35 ~27 ~180 minecraft:short_grass strict
-setblock ~37 ~27 ~179 minecraft:short_grass strict
-setblock ~39 ~27 ~179 minecraft:oxeye_daisy strict
-setblock ~41 ~27 ~179 minecraft:short_grass strict
-setblock ~172 ~27 ~179 minecraft:short_grass strict
-setblock ~174 ~27 ~179 minecraft:short_grass strict
-fill ~204 ~27 ~179 ~205 ~27 ~179 minecraft:short_grass strict
-setblock ~33 ~27 ~180 minecraft:fern strict
-setblock ~199 ~27 ~180 minecraft:short_grass strict
-fill ~205 ~27 ~180 ~205 ~27 ~181 minecraft:short_grass strict
-setblock ~31 ~27 ~181 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~32 ~27 ~181 ~33 ~27 ~181 minecraft:short_grass strict
-setblock ~35 ~27 ~181 minecraft:fern strict
-setblock ~36 ~27 ~181 minecraft:bush strict
-setblock ~41 ~27 ~181 minecraft:short_grass strict
-fill ~157 ~27 ~181 ~158 ~27 ~181 minecraft:short_grass strict
-setblock ~170 ~27 ~181 minecraft:short_grass strict
-fill ~172 ~27 ~181 ~173 ~27 ~181 minecraft:short_grass strict
-setblock ~203 ~27 ~181 minecraft:short_grass strict
-setblock ~207 ~27 ~181 minecraft:azure_bluet strict
-fill ~29 ~27 ~182 ~29 ~27 ~183 minecraft:short_grass strict
-setblock ~33 ~27 ~182 minecraft:dandelion strict
-setblock ~35 ~27 ~182 minecraft:short_grass strict
-setblock ~157 ~27 ~182 minecraft:short_grass strict
-setblock ~204 ~27 ~182 minecraft:fern strict
-setblock ~27 ~27 ~183 minecraft:short_grass strict
-fill ~40 ~27 ~183 ~40 ~27 ~184 minecraft:short_grass strict
-setblock ~95 ~27 ~183 minecraft:short_grass strict
-fill ~102 ~27 ~183 ~102 ~27 ~187 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~154 ~27 ~183 minecraft:short_grass strict
-setblock ~156 ~27 ~183 minecraft:short_grass strict
-setblock ~172 ~27 ~183 minecraft:short_grass strict
-fill ~206 ~27 ~183 ~208 ~27 ~183 minecraft:short_grass strict
-setblock ~26 ~27 ~184 minecraft:short_grass strict
-setblock ~38 ~27 ~184 minecraft:short_grass strict
-fill ~153 ~27 ~184 ~153 ~27 ~185 minecraft:short_grass strict
-setblock ~170 ~27 ~184 minecraft:short_grass strict
-setblock ~207 ~27 ~184 minecraft:fern strict
-setblock ~208 ~27 ~184 minecraft:poppy strict
-setblock ~27 ~27 ~185 minecraft:short_grass strict
-setblock ~30 ~27 ~185 minecraft:bush strict
-setblock ~39 ~27 ~185 minecraft:short_grass strict
-setblock ~107 ~27 ~185 minecraft:fern strict
-setblock ~151 ~27 ~185 minecraft:short_grass strict
-setblock ~154 ~27 ~185 minecraft:short_grass strict
-setblock ~171 ~27 ~185 minecraft:short_grass strict
-fill ~173 ~27 ~185 ~173 ~27 ~186 minecraft:short_grass strict
-setblock ~207 ~27 ~185 minecraft:short_grass strict
-fill ~29 ~27 ~186 ~29 ~27 ~187 minecraft:short_grass strict
-setblock ~40 ~27 ~186 minecraft:bush strict
-fill ~149 ~27 ~186 ~149 ~27 ~187 minecraft:short_grass strict
-setblock ~150 ~27 ~186 minecraft:fern strict
-setblock ~158 ~27 ~186 minecraft:fern strict
-setblock ~170 ~27 ~186 minecraft:short_grass strict
-setblock ~171 ~27 ~186 minecraft:cornflower strict
-setblock ~205 ~27 ~186 minecraft:short_grass strict
-setblock ~207 ~27 ~186 minecraft:bush strict
-setblock ~40 ~27 ~187 minecraft:short_grass strict
-setblock ~98 ~27 ~187 minecraft:short_grass strict
-fill ~112 ~27 ~187 ~113 ~27 ~187 minecraft:short_grass strict
-setblock ~146 ~27 ~187 minecraft:short_grass strict
-fill ~150 ~27 ~187 ~150 ~27 ~188 minecraft:short_grass strict
-setblock ~171 ~27 ~187 minecraft:short_grass strict
-setblock ~175 ~27 ~187 minecraft:short_grass strict
-setblock ~28 ~27 ~188 minecraft:short_grass strict
-setblock ~40 ~27 ~188 minecraft:bush strict
-fill ~147 ~27 ~188 ~148 ~27 ~188 minecraft:short_grass strict
-setblock ~149 ~27 ~188 minecraft:fern strict
-setblock ~151 ~27 ~188 minecraft:short_grass strict
-fill ~158 ~27 ~188 ~158 ~27 ~189 minecraft:short_grass strict
-fill ~169 ~27 ~188 ~170 ~27 ~188 minecraft:short_grass strict
-fill ~24 ~27 ~189 ~27 ~27 ~189 minecraft:short_grass strict
-setblock ~159 ~27 ~189 minecraft:short_grass strict
-fill ~170 ~27 ~189 ~171 ~27 ~189 minecraft:short_grass strict
-setblock ~175 ~27 ~189 minecraft:fern strict
-setblock ~207 ~27 ~189 minecraft:dandelion strict
-setblock ~208 ~27 ~189 minecraft:short_grass strict
-setblock ~40 ~27 ~190 minecraft:short_grass strict
-setblock ~173 ~27 ~190 minecraft:short_grass strict
-setblock ~175 ~27 ~190 minecraft:short_grass strict
-setblock ~201 ~27 ~190 minecraft:short_grass strict
-fill ~206 ~27 ~190 ~207 ~27 ~191 minecraft:short_grass strict
-fill ~214 ~27 ~190 ~214 ~27 ~191 minecraft:short_grass strict
-setblock ~24 ~27 ~191 minecraft:short_grass strict
-fill ~41 ~27 ~191 ~41 ~27 ~192 minecraft:short_grass strict
-fill ~157 ~27 ~191 ~158 ~27 ~191 minecraft:short_grass strict
-setblock ~160 ~27 ~191 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~170 ~27 ~191 minecraft:short_grass strict
-setblock ~202 ~27 ~191 minecraft:fern strict
-setblock ~203 ~27 ~191 minecraft:short_grass strict
-fill ~215 ~27 ~191 ~216 ~27 ~191 minecraft:short_grass strict
-setblock ~137 ~27 ~192 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~142 ~27 ~192 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~145 ~27 ~192 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~158 ~27 ~192 minecraft:short_grass strict
-fill ~171 ~27 ~192 ~171 ~27 ~193 minecraft:short_grass strict
-setblock ~205 ~27 ~192 minecraft:fern strict
-setblock ~206 ~27 ~192 minecraft:short_grass strict
-setblock ~117 ~27 ~193 minecraft:short_grass strict
-fill ~158 ~27 ~193 ~159 ~27 ~193 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~161 ~27 ~193 ~162 ~27 ~193 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~170 ~27 ~193 minecraft:fern strict
-setblock ~206 ~27 ~193 minecraft:fern strict
-setblock ~207 ~27 ~193 minecraft:short_grass strict
-setblock ~233 ~27 ~193 minecraft:fern strict
-setblock ~118 ~27 ~194 minecraft:short_grass strict
-setblock ~170 ~27 ~194 minecraft:short_grass strict
-fill ~204 ~27 ~194 ~206 ~27 ~194 minecraft:short_grass strict
-setblock ~235 ~27 ~194 minecraft:fern strict
-setblock ~157 ~27 ~195 minecraft:short_grass strict
-fill ~158 ~27 ~195 ~159 ~27 ~195 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-fill ~161 ~27 ~195 ~162 ~27 ~195 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~171 ~27 ~195 minecraft:bush strict
-setblock ~207 ~27 ~195 minecraft:short_grass strict
-fill ~158 ~27 ~196 ~159 ~27 ~196 minecraft:short_grass strict
-setblock ~205 ~27 ~196 minecraft:short_grass strict
-setblock ~206 ~27 ~197 minecraft:fern strict
-fill ~158 ~27 ~198 ~158 ~27 ~199 minecraft:short_grass strict
-fill ~176 ~27 ~200 ~176 ~27 ~201 minecraft:short_grass strict
-setblock ~107 ~27 ~201 minecraft:short_grass strict
-setblock ~183 ~27 ~201 minecraft:short_grass strict
-setblock ~189 ~27 ~201 minecraft:bush strict
-setblock ~105 ~27 ~202 minecraft:bush strict
-setblock ~175 ~27 ~202 minecraft:short_grass strict
-setblock ~182 ~27 ~202 minecraft:short_grass strict
-setblock ~187 ~27 ~202 minecraft:short_grass strict
-setblock ~194 ~27 ~202 minecraft:cornflower strict
-fill ~126 ~27 ~203 ~126 ~27 ~204 minecraft:andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~127 ~27 ~203 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~129 ~27 ~203 minecraft:andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~130 ~27 ~203 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~177 ~27 ~203 minecraft:short_grass strict
-setblock ~179 ~27 ~203 minecraft:short_grass strict
-setblock ~180 ~27 ~203 minecraft:poppy strict
-setblock ~181 ~27 ~203 minecraft:short_grass strict
-setblock ~190 ~27 ~203 minecraft:short_grass strict
-fill ~127 ~27 ~204 ~128 ~27 ~204 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~129 ~27 ~204 ~130 ~27 ~204 minecraft:polished_andesite_slab[type=bottom,waterlogged=false] strict
-setblock ~178 ~27 ~204 minecraft:short_grass strict
-setblock ~193 ~27 ~204 minecraft:short_grass strict
-fill ~195 ~27 ~204 ~195 ~27 ~206 minecraft:short_grass strict
-setblock ~179 ~27 ~205 minecraft:short_grass strict
-setblock ~184 ~27 ~205 minecraft:short_grass strict
-setblock ~191 ~27 ~205 minecraft:short_grass strict
-setblock ~95 ~27 ~206 minecraft:short_grass strict
-fill ~180 ~27 ~206 ~181 ~27 ~206 minecraft:short_grass strict
-setblock ~183 ~27 ~206 minecraft:fern strict
-setblock ~194 ~27 ~206 minecraft:short_grass strict
-setblock ~196 ~27 ~206 minecraft:short_grass strict
-setblock ~197 ~27 ~206 minecraft:fern strict
-setblock ~92 ~27 ~207 minecraft:short_grass strict
-fill ~94 ~27 ~207 ~94 ~27 ~208 minecraft:short_grass strict
-setblock ~96 ~27 ~207 minecraft:short_grass strict
-setblock ~192 ~27 ~207 minecraft:short_grass strict
-setblock ~193 ~27 ~207 minecraft:fern strict
-setblock ~89 ~27 ~208 minecraft:azure_bluet strict
-setblock ~89 ~27 ~209 minecraft:short_grass strict
-setblock ~90 ~27 ~209 minecraft:fern strict
-setblock ~91 ~27 ~209 minecraft:short_grass strict
-fill ~87 ~27 ~210 ~88 ~27 ~210 minecraft:fern strict
-setblock ~85 ~27 ~211 minecraft:short_grass strict
-setblock ~87 ~27 ~211 minecraft:short_grass strict
-setblock ~101 ~27 ~211 minecraft:short_grass strict
-setblock ~83 ~27 ~212 minecraft:fern strict
-setblock ~83 ~27 ~214 minecraft:short_grass strict
-setblock ~81 ~27 ~215 minecraft:short_grass strict
-fill ~80 ~27 ~216 ~80 ~27 ~217 minecraft:short_grass strict
-setblock ~189 ~27 ~217 minecraft:short_grass strict
-setblock ~77 ~27 ~219 minecraft:short_grass strict
-setblock ~73 ~27 ~221 minecraft:fern strict
-setblock ~76 ~27 ~221 minecraft:short_grass strict
-setblock ~75 ~27 ~222 minecraft:short_grass strict
-fill ~77 ~27 ~222 ~77 ~27 ~224 minecraft:short_grass strict
-setblock ~73 ~27 ~224 minecraft:short_grass strict
-setblock ~76 ~27 ~224 minecraft:short_grass strict
-setblock ~74 ~27 ~225 minecraft:short_grass strict
-setblock ~68 ~27 ~226 minecraft:short_grass strict
-setblock ~75 ~27 ~226 minecraft:short_grass strict
-fill ~65 ~27 ~227 ~65 ~27 ~228 minecraft:short_grass strict
-setblock ~74 ~27 ~227 minecraft:short_grass strict
-setblock ~76 ~27 ~227 minecraft:bush strict
-setblock ~76 ~27 ~229 minecraft:short_grass strict
-setblock ~181 ~27 ~229 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
-setblock ~77 ~27 ~230 minecraft:short_grass strict
-setblock ~181 ~27 ~230 minecraft:mossy_stone_brick_slab[type=bottom,waterlogged=false] strict
-fill ~79 ~27 ~234 ~79 ~27 ~235 minecraft:short_grass strict
-setblock ~78 ~27 ~236 minecraft:short_grass strict
-setblock ~80 ~27 ~236 minecraft:short_grass strict
-setblock ~82 ~27 ~237 minecraft:fern strict
-fill ~81 ~27 ~238 ~82 ~27 ~238 minecraft:short_grass strict
-fill ~86 ~27 ~238 ~87 ~27 ~238 minecraft:short_grass strict
-fill ~88 ~27 ~239 ~89 ~27 ~239 minecraft:short_grass strict
-setblock ~90 ~27 ~239 minecraft:fern strict
-setblock ~91 ~27 ~240 minecraft:fern strict
-fill ~92 ~27 ~240 ~92 ~27 ~241 minecraft:short_grass strict
-setblock ~193 ~27 ~242 minecraft:short_grass strict
-setblock ~97 ~27 ~243 minecraft:fern strict
-setblock ~98 ~27 ~243 minecraft:short_grass strict
-setblock ~191 ~27 ~243 minecraft:bush strict
-setblock ~193 ~27 ~243 minecraft:fern strict
-setblock ~195 ~27 ~243 minecraft:bush strict
-setblock ~162 ~27 ~244 minecraft:short_grass strict
-fill ~168 ~27 ~244 ~170 ~27 ~244 minecraft:short_grass strict
-setblock ~198 ~27 ~244 minecraft:short_grass strict
-setblock ~18 ~28 ~11 minecraft:short_grass strict
-setblock ~53 ~28 ~11 minecraft:short_grass strict
-setblock ~63 ~28 ~12 minecraft:fern strict
-setblock ~65 ~28 ~12 minecraft:short_grass strict
-setblock ~67 ~28 ~12 minecraft:short_grass strict
-fill ~71 ~28 ~12 ~72 ~28 ~12 minecraft:short_grass strict
-setblock ~154 ~28 ~12 minecraft:short_grass strict
-fill ~84 ~28 ~13 ~85 ~28 ~13 minecraft:fern strict
-setblock ~158 ~28 ~13 minecraft:short_grass strict
-setblock ~85 ~28 ~14 minecraft:short_grass strict
-setblock ~87 ~28 ~14 minecraft:short_grass strict
-setblock ~95 ~28 ~14 minecraft:short_grass strict
-fill ~160 ~28 ~14 ~160 ~28 ~15 minecraft:short_grass strict
-setblock ~87 ~28 ~15 minecraft:fern strict
-setblock ~88 ~28 ~15 minecraft:short_grass strict
-fill ~86 ~28 ~16 ~86 ~28 ~17 minecraft:short_grass strict
-setblock ~87 ~28 ~16 minecraft:azure_bluet strict
-setblock ~88 ~28 ~16 minecraft:fern strict
-fill ~95 ~28 ~16 ~96 ~28 ~16 minecraft:short_grass strict
+setblock ~121 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~122 ~84 ~118 minecraft:quartz_bricks strict
+setblock ~123 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~124 ~84 ~118 minecraft:quartz_bricks strict
+setblock ~125 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~131 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~132 ~84 ~118 minecraft:quartz_bricks strict
+setblock ~133 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~134 ~84 ~118 minecraft:quartz_bricks strict
+setblock ~135 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~136 ~84 ~118 minecraft:quartz_bricks strict
+setblock ~137 ~84 ~118 minecraft:smooth_quartz strict
+setblock ~138 ~84 ~118 minecraft:quartz_bricks strict
+setblock ~139 ~84 ~118 minecraft:smooth_quartz strict
+fill ~140 ~84 ~118 ~141 ~84 ~118 minecraft:chiseled_quartz_block strict
+fill ~142 ~84 ~118 ~142 ~84 ~119 minecraft:polished_blackstone_bricks strict
+fill ~113 ~84 ~119 ~113 ~84 ~121 minecraft:polished_blackstone_bricks strict
+setblock ~115 ~84 ~119 minecraft:chiseled_quartz_block strict
+setblock ~116 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~117 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~118 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~119 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~120 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~121 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~122 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~123 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~124 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~125 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~131 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~132 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~133 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~134 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~135 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~136 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~137 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~138 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~139 ~84 ~119 minecraft:quartz_bricks strict
+setblock ~140 ~84 ~119 minecraft:smooth_quartz strict
+setblock ~141 ~84 ~119 minecraft:chiseled_quartz_block strict
+fill ~143 ~84 ~119 ~143 ~84 ~121 minecraft:polished_blackstone_bricks strict
+fill ~114 ~84 ~120 ~114 ~84 ~121 minecraft:chiseled_quartz_block strict
+setblock ~115 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~116 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~117 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~118 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~119 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~120 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~121 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~122 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~123 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~124 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~125 ~84 ~120 minecraft:smooth_quartz strict
+fill ~127 ~84 ~120 ~129 ~84 ~120 minecraft:red_stained_glass strict
+setblock ~131 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~132 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~133 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~134 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~135 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~136 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~137 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~138 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~139 ~84 ~120 minecraft:smooth_quartz strict
+setblock ~140 ~84 ~120 minecraft:quartz_bricks strict
+setblock ~141 ~84 ~120 minecraft:smooth_quartz strict
+fill ~142 ~84 ~120 ~142 ~84 ~121 minecraft:chiseled_quartz_block strict
+fill ~112 ~84 ~121 ~112 ~84 ~123 minecraft:polished_blackstone_bricks strict
+setblock ~115 ~84 ~121 minecraft:quartz_bricks strict
+setblock ~116 ~84 ~121 minecraft:smooth_quartz strict
+setblock ~117 ~84 ~121 minecraft:quartz_bricks strict
+setblock ~118 ~84 ~121 minecraft:smooth_quartz strict
+setblock ~119 ~84 ~121 minecraft:quartz_bricks strict
+setblock ~120 ~84 ~121 minecraft:smooth_quartz strict
+setblock ~121 ~84 ~121 minecraft:quartz_bricks strict
+setblock ~122 ~84 ~121 minecraft:smooth_quartz strict
+setblock ~123 ~84 ~121 minecraft:quartz_bricks strict
+fill ~124 ~84 ~121 ~125 ~84 ~121 minecraft:gold_block strict
+fill ~126 ~84 ~121 ~127 ~84 ~123 minecraft:white_glazed_terracotta strict
+fill ~128 ~84 ~121 ~130 ~84 ~123 minecraft:polished_diorite strict
+fill ~131 ~84 ~121 ~132 ~84 ~121 minecraft:gold_block strict
+setblock ~133 ~84 ~121 minecraft:quartz_bricks strict
+setblock ~134 ~84 ~121 minecraft:smooth_quartz strict
+setblock ~135 ~84 ~121 minecraft:quartz_bricks strict
+setblock ~136 ~84 ~121 minecraft:smooth_quartz strict
+setblock ~137 ~84 ~121 minecraft:quartz_bricks strict
+setblock ~138 ~84 ~121 minecraft:smooth_quartz strict
+setblock ~139 ~84 ~121 minecraft:quartz_bricks strict
+setblock ~140 ~84 ~121 minecraft:smooth_quartz strict
+setblock ~141 ~84 ~121 minecraft:quartz_bricks strict
+fill ~144 ~84 ~121 ~144 ~84 ~123 minecraft:polished_blackstone_bricks strict
+fill ~113 ~84 ~122 ~113 ~84 ~124 minecraft:chiseled_quartz_block strict
+setblock ~114 ~84 ~122 minecraft:quartz_bricks strict
+setblock ~115 ~84 ~122 minecraft:smooth_quartz strict
+setblock ~116 ~84 ~122 minecraft:quartz_bricks strict
+setblock ~117 ~84 ~122 minecraft:smooth_quartz strict
+setblock ~118 ~84 ~122 minecraft:quartz_bricks strict
+setblock ~119 ~84 ~122 minecraft:smooth_quartz strict
+setblock ~120 ~84 ~122 minecraft:quartz_bricks strict
+setblock ~121 ~84 ~122 minecraft:smooth_quartz strict
+fill ~122 ~84 ~122 ~123 ~84 ~122 minecraft:gold_block strict
+fill ~124 ~84 ~122 ~125 ~84 ~124 minecraft:polished_diorite strict
+fill ~131 ~84 ~122 ~132 ~84 ~123 minecraft:white_glazed_terracotta strict
+fill ~133 ~84 ~122 ~134 ~84 ~122 minecraft:gold_block strict
+setblock ~135 ~84 ~122 minecraft:smooth_quartz strict
+setblock ~136 ~84 ~122 minecraft:quartz_bricks strict
+setblock ~137 ~84 ~122 minecraft:smooth_quartz strict
+setblock ~138 ~84 ~122 minecraft:quartz_bricks strict
+setblock ~139 ~84 ~122 minecraft:smooth_quartz strict
+setblock ~140 ~84 ~122 minecraft:quartz_bricks strict
+setblock ~141 ~84 ~122 minecraft:smooth_quartz strict
+setblock ~142 ~84 ~122 minecraft:quartz_bricks strict
+fill ~143 ~84 ~122 ~143 ~84 ~124 minecraft:chiseled_quartz_block strict
+setblock ~114 ~84 ~123 minecraft:smooth_quartz strict
+setblock ~115 ~84 ~123 minecraft:quartz_bricks strict
+setblock ~116 ~84 ~123 minecraft:smooth_quartz strict
+setblock ~117 ~84 ~123 minecraft:quartz_bricks strict
+setblock ~118 ~84 ~123 minecraft:smooth_quartz strict
+setblock ~119 ~84 ~123 minecraft:quartz_bricks strict
+setblock ~120 ~84 ~123 minecraft:smooth_quartz strict
+setblock ~121 ~84 ~123 minecraft:quartz_bricks strict
+setblock ~122 ~84 ~123 minecraft:gold_block strict
+setblock ~123 ~84 ~123 minecraft:polished_diorite strict
+fill ~133 ~84 ~123 ~133 ~84 ~125 minecraft:polished_diorite strict
+setblock ~134 ~84 ~123 minecraft:gold_block strict
+setblock ~135 ~84 ~123 minecraft:quartz_bricks strict
+setblock ~136 ~84 ~123 minecraft:smooth_quartz strict
+setblock ~137 ~84 ~123 minecraft:quartz_bricks strict
+setblock ~138 ~84 ~123 minecraft:smooth_quartz strict
+setblock ~139 ~84 ~123 minecraft:quartz_bricks strict
+setblock ~140 ~84 ~123 minecraft:smooth_quartz strict
+setblock ~141 ~84 ~123 minecraft:quartz_bricks strict
+setblock ~142 ~84 ~123 minecraft:smooth_quartz strict
+fill ~111 ~84 ~124 ~111 ~84 ~132 minecraft:polished_blackstone_bricks strict
+fill ~112 ~84 ~124 ~112 ~84 ~132 minecraft:chiseled_quartz_block strict
+setblock ~114 ~84 ~124 minecraft:quartz_bricks strict
+setblock ~115 ~84 ~124 minecraft:smooth_quartz strict
+setblock ~116 ~84 ~124 minecraft:quartz_bricks strict
+setblock ~117 ~84 ~124 minecraft:smooth_quartz strict
+setblock ~118 ~84 ~124 minecraft:quartz_bricks strict
+setblock ~119 ~84 ~124 minecraft:smooth_quartz strict
+setblock ~120 ~84 ~124 minecraft:quartz_bricks strict
+fill ~121 ~84 ~124 ~121 ~84 ~125 minecraft:gold_block strict
+fill ~122 ~84 ~124 ~123 ~84 ~125 minecraft:white_glazed_terracotta strict
+fill ~126 ~84 ~124 ~126 ~84 ~125 minecraft:polished_diorite strict
+setblock ~127 ~84 ~124 minecraft:white_glazed_terracotta strict
+fill ~128 ~84 ~124 ~129 ~84 ~124 minecraft:polished_diorite strict
+fill ~130 ~84 ~124 ~131 ~84 ~124 minecraft:white_glazed_terracotta strict
+fill ~132 ~84 ~124 ~132 ~84 ~126 minecraft:polished_diorite strict
+fill ~134 ~84 ~124 ~134 ~84 ~125 minecraft:polished_diorite strict
+fill ~135 ~84 ~124 ~135 ~84 ~125 minecraft:gold_block strict
+setblock ~136 ~84 ~124 minecraft:quartz_bricks strict
+setblock ~137 ~84 ~124 minecraft:smooth_quartz strict
+setblock ~138 ~84 ~124 minecraft:quartz_bricks strict
+setblock ~139 ~84 ~124 minecraft:smooth_quartz strict
+setblock ~140 ~84 ~124 minecraft:quartz_bricks strict
+setblock ~141 ~84 ~124 minecraft:smooth_quartz strict
+setblock ~142 ~84 ~124 minecraft:quartz_bricks strict
+fill ~144 ~84 ~124 ~144 ~84 ~132 minecraft:chiseled_quartz_block strict
+fill ~145 ~84 ~124 ~145 ~84 ~132 minecraft:polished_blackstone_bricks strict
+setblock ~113 ~84 ~125 minecraft:quartz_bricks strict
+setblock ~114 ~84 ~125 minecraft:smooth_quartz strict
+setblock ~115 ~84 ~125 minecraft:quartz_bricks strict
+setblock ~116 ~84 ~125 minecraft:smooth_quartz strict
+setblock ~117 ~84 ~125 minecraft:quartz_bricks strict
+setblock ~118 ~84 ~125 minecraft:smooth_quartz strict
+setblock ~119 ~84 ~125 minecraft:quartz_bricks strict
+setblock ~120 ~84 ~125 minecraft:smooth_quartz strict
+fill ~124 ~84 ~125 ~124 ~84 ~126 minecraft:white_glazed_terracotta strict
+setblock ~125 ~84 ~125 minecraft:polished_diorite strict
+fill ~127 ~84 ~125 ~129 ~84 ~125 minecraft:gold_block strict
+setblock ~130 ~84 ~125 minecraft:white_glazed_terracotta strict
+fill ~131 ~84 ~125 ~131 ~84 ~126 minecraft:polished_diorite strict
+setblock ~136 ~84 ~125 minecraft:smooth_quartz strict
+setblock ~137 ~84 ~125 minecraft:quartz_bricks strict
+setblock ~138 ~84 ~125 minecraft:smooth_quartz strict
+setblock ~139 ~84 ~125 minecraft:quartz_bricks strict
+setblock ~140 ~84 ~125 minecraft:smooth_quartz strict
+setblock ~141 ~84 ~125 minecraft:quartz_bricks strict
+setblock ~142 ~84 ~125 minecraft:smooth_quartz strict
+setblock ~143 ~84 ~125 minecraft:quartz_bricks strict
+setblock ~113 ~84 ~126 minecraft:smooth_quartz strict
+setblock ~114 ~84 ~126 minecraft:quartz_bricks strict
+setblock ~115 ~84 ~126 minecraft:smooth_quartz strict
+fill ~116 ~84 ~126 ~120 ~84 ~126 minecraft:yellow_stained_glass strict
+fill ~121 ~84 ~126 ~123 ~84 ~128 minecraft:polished_diorite strict
+setblock ~125 ~84 ~126 minecraft:white_glazed_terracotta strict
+setblock ~126 ~84 ~126 minecraft:gold_block strict
+fill ~127 ~84 ~126 ~129 ~84 ~130 minecraft:glass strict
+setblock ~130 ~84 ~126 minecraft:gold_block strict
+fill ~133 ~84 ~126 ~135 ~84 ~127 minecraft:white_glazed_terracotta strict
+fill ~136 ~84 ~126 ~140 ~84 ~126 minecraft:blue_stained_glass strict
+setblock ~141 ~84 ~126 minecraft:smooth_quartz strict
+setblock ~142 ~84 ~126 minecraft:quartz_bricks strict
+setblock ~143 ~84 ~126 minecraft:smooth_quartz strict
+setblock ~113 ~84 ~127 minecraft:quartz_bricks strict
+setblock ~114 ~84 ~127 minecraft:smooth_quartz strict
+setblock ~115 ~84 ~127 minecraft:quartz_bricks strict
+fill ~116 ~84 ~127 ~116 ~84 ~130 minecraft:yellow_stained_glass strict
+fill ~117 ~84 ~127 ~119 ~84 ~129 minecraft:yellow_concrete strict
+fill ~120 ~84 ~127 ~120 ~84 ~130 minecraft:yellow_stained_glass strict
+fill ~124 ~84 ~127 ~124 ~84 ~128 minecraft:polished_diorite strict
+fill ~125 ~84 ~127 ~125 ~84 ~129 minecraft:gold_block strict
+fill ~126 ~84 ~127 ~126 ~84 ~129 minecraft:glass strict
+fill ~130 ~84 ~127 ~130 ~84 ~129 minecraft:glass strict
+fill ~131 ~84 ~127 ~131 ~84 ~129 minecraft:gold_block strict
+setblock ~132 ~84 ~127 minecraft:white_glazed_terracotta strict
+fill ~136 ~84 ~127 ~136 ~84 ~130 minecraft:blue_stained_glass strict
+fill ~137 ~84 ~127 ~139 ~84 ~129 minecraft:blue_concrete strict
+fill ~140 ~84 ~127 ~140 ~84 ~130 minecraft:blue_stained_glass strict
+setblock ~141 ~84 ~127 minecraft:quartz_bricks strict
+setblock ~142 ~84 ~127 minecraft:smooth_quartz strict
+setblock ~143 ~84 ~127 minecraft:quartz_bricks strict
+setblock ~113 ~84 ~128 minecraft:smooth_quartz strict
+setblock ~114 ~84 ~128 minecraft:quartz_bricks strict
+setblock ~115 ~84 ~128 minecraft:smooth_quartz strict
+fill ~132 ~84 ~128 ~135 ~84 ~129 minecraft:polished_diorite strict
+setblock ~141 ~84 ~128 minecraft:smooth_quartz strict
+setblock ~142 ~84 ~128 minecraft:quartz_bricks strict
+setblock ~143 ~84 ~128 minecraft:smooth_quartz strict
+setblock ~113 ~84 ~129 minecraft:quartz_bricks strict
+setblock ~114 ~84 ~129 minecraft:smooth_quartz strict
+setblock ~115 ~84 ~129 minecraft:quartz_bricks strict
+fill ~121 ~84 ~129 ~124 ~84 ~129 minecraft:white_glazed_terracotta strict
+setblock ~141 ~84 ~129 minecraft:quartz_bricks strict
+setblock ~142 ~84 ~129 minecraft:smooth_quartz strict
+setblock ~143 ~84 ~129 minecraft:quartz_bricks strict
+setblock ~113 ~84 ~130 minecraft:smooth_quartz strict
+setblock ~114 ~84 ~130 minecraft:quartz_bricks strict
+setblock ~115 ~84 ~130 minecraft:smooth_quartz strict
+fill ~117 ~84 ~130 ~119 ~84 ~130 minecraft:yellow_stained_glass strict
+fill ~121 ~84 ~130 ~123 ~84 ~130 minecraft:white_glazed_terracotta strict
+fill ~124 ~84 ~130 ~125 ~84 ~131 minecraft:polished_diorite strict
+setblock ~126 ~84 ~130 minecraft:gold_block strict
+setblock ~130 ~84 ~130 minecraft:gold_block strict
+fill ~131 ~84 ~130 ~132 ~84 ~130 minecraft:white_glazed_terracotta strict
+fill ~133 ~84 ~130 ~135 ~84 ~130 minecraft:polished_diorite strict
+fill ~137 ~84 ~130 ~139 ~84 ~130 minecraft:blue_stained_glass strict
+setblock ~141 ~84 ~130 minecraft:smooth_quartz strict
+setblock ~142 ~84 ~130 minecraft:quartz_bricks strict
+setblock ~143 ~84 ~130 minecraft:smooth_quartz strict
+setblock ~113 ~84 ~131 minecraft:quartz_bricks strict
+setblock ~114 ~84 ~131 minecraft:smooth_quartz strict
+setblock ~115 ~84 ~131 minecraft:quartz_bricks strict
+setblock ~116 ~84 ~131 minecraft:smooth_quartz strict
+setblock ~117 ~84 ~131 minecraft:quartz_bricks strict
+setblock ~118 ~84 ~131 minecraft:smooth_quartz strict
+setblock ~119 ~84 ~131 minecraft:quartz_bricks strict
+setblock ~120 ~84 ~131 minecraft:smooth_quartz strict
+fill ~121 ~84 ~131 ~121 ~84 ~132 minecraft:gold_block strict
+fill ~122 ~84 ~131 ~123 ~84 ~132 minecraft:polished_diorite strict
+fill ~126 ~84 ~131 ~126 ~84 ~132 minecraft:white_glazed_terracotta strict
+fill ~127 ~84 ~131 ~129 ~84 ~131 minecraft:gold_block strict
+fill ~130 ~84 ~131 ~131 ~84 ~132 minecraft:polished_diorite strict
+fill ~132 ~84 ~131 ~134 ~84 ~131 minecraft:white_glazed_terracotta strict
+fill ~135 ~84 ~131 ~135 ~84 ~132 minecraft:gold_block strict
+setblock ~136 ~84 ~131 minecraft:smooth_quartz strict
+setblock ~137 ~84 ~131 minecraft:quartz_bricks strict
+setblock ~138 ~84 ~131 minecraft:smooth_quartz strict
+setblock ~139 ~84 ~131 minecraft:quartz_bricks strict
+setblock ~140 ~84 ~131 minecraft:smooth_quartz strict
+setblock ~141 ~84 ~131 minecraft:quartz_bricks strict
+setblock ~142 ~84 ~131 minecraft:smooth_quartz strict
+setblock ~143 ~84 ~131 minecraft:quartz_bricks strict
+fill ~113 ~84 ~132 ~113 ~84 ~134 minecraft:chiseled_quartz_block strict
+setblock ~114 ~84 ~132 minecraft:quartz_bricks strict
+setblock ~115 ~84 ~132 minecraft:smooth_quartz strict
+setblock ~116 ~84 ~132 minecraft:quartz_bricks strict
+setblock ~117 ~84 ~132 minecraft:smooth_quartz strict
+setblock ~118 ~84 ~132 minecraft:quartz_bricks strict
+setblock ~119 ~84 ~132 minecraft:smooth_quartz strict
+setblock ~120 ~84 ~132 minecraft:quartz_bricks strict
+setblock ~124 ~84 ~132 minecraft:polished_diorite strict
+fill ~125 ~84 ~132 ~125 ~84 ~134 minecraft:white_glazed_terracotta strict
+fill ~127 ~84 ~132 ~128 ~84 ~135 minecraft:polished_diorite strict
+fill ~129 ~84 ~132 ~129 ~84 ~135 minecraft:white_glazed_terracotta strict
+fill ~132 ~84 ~132 ~132 ~84 ~134 minecraft:polished_diorite strict
+fill ~133 ~84 ~132 ~134 ~84 ~132 minecraft:white_glazed_terracotta strict
+setblock ~136 ~84 ~132 minecraft:quartz_bricks strict
+setblock ~137 ~84 ~132 minecraft:smooth_quartz strict
+setblock ~138 ~84 ~132 minecraft:quartz_bricks strict
+setblock ~139 ~84 ~132 minecraft:smooth_quartz strict
+setblock ~140 ~84 ~132 minecraft:quartz_bricks strict
+setblock ~141 ~84 ~132 minecraft:smooth_quartz strict
+setblock ~142 ~84 ~132 minecraft:quartz_bricks strict
+fill ~143 ~84 ~132 ~143 ~84 ~134 minecraft:chiseled_quartz_block strict
+fill ~112 ~84 ~133 ~112 ~84 ~135 minecraft:polished_blackstone_bricks strict
+setblock ~114 ~84 ~133 minecraft:smooth_quartz strict
+setblock ~115 ~84 ~133 minecraft:quartz_bricks strict
+setblock ~116 ~84 ~133 minecraft:smooth_quartz strict
+setblock ~117 ~84 ~133 minecraft:quartz_bricks strict
+setblock ~118 ~84 ~133 minecraft:smooth_quartz strict
+setblock ~119 ~84 ~133 minecraft:quartz_bricks strict
+setblock ~120 ~84 ~133 minecraft:smooth_quartz strict
+setblock ~121 ~84 ~133 minecraft:quartz_bricks strict
+fill ~122 ~84 ~133 ~122 ~84 ~134 minecraft:gold_block strict
+setblock ~123 ~84 ~133 minecraft:polished_diorite strict
+fill ~124 ~84 ~133 ~124 ~84 ~134 minecraft:white_glazed_terracotta strict
+fill ~126 ~84 ~133 ~126 ~84 ~135 minecraft:polished_diorite strict
+fill ~130 ~84 ~133 ~130 ~84 ~135 minecraft:white_glazed_terracotta strict
+fill ~131 ~84 ~133 ~131 ~84 ~134 minecraft:polished_diorite strict
+setblock ~133 ~84 ~133 minecraft:polished_diorite strict
+fill ~134 ~84 ~133 ~134 ~84 ~134 minecraft:gold_block strict
+setblock ~135 ~84 ~133 minecraft:quartz_bricks strict
+setblock ~136 ~84 ~133 minecraft:smooth_quartz strict
+setblock ~137 ~84 ~133 minecraft:quartz_bricks strict
+setblock ~138 ~84 ~133 minecraft:smooth_quartz strict
+setblock ~139 ~84 ~133 minecraft:quartz_bricks strict
+setblock ~140 ~84 ~133 minecraft:smooth_quartz strict
+setblock ~141 ~84 ~133 minecraft:quartz_bricks strict
+setblock ~142 ~84 ~133 minecraft:smooth_quartz strict
+fill ~144 ~84 ~133 ~144 ~84 ~135 minecraft:polished_blackstone_bricks strict
+setblock ~114 ~84 ~134 minecraft:quartz_bricks strict
+setblock ~115 ~84 ~134 minecraft:smooth_quartz strict
+setblock ~116 ~84 ~134 minecraft:quartz_bricks strict
+setblock ~117 ~84 ~134 minecraft:smooth_quartz strict
+setblock ~118 ~84 ~134 minecraft:quartz_bricks strict
+setblock ~119 ~84 ~134 minecraft:smooth_quartz strict
+setblock ~120 ~84 ~134 minecraft:quartz_bricks strict
+setblock ~121 ~84 ~134 minecraft:smooth_quartz strict
+setblock ~123 ~84 ~134 minecraft:gold_block strict
+setblock ~133 ~84 ~134 minecraft:gold_block strict
+setblock ~135 ~84 ~134 minecraft:smooth_quartz strict
+setblock ~136 ~84 ~134 minecraft:quartz_bricks strict
+setblock ~137 ~84 ~134 minecraft:smooth_quartz strict
+setblock ~138 ~84 ~134 minecraft:quartz_bricks strict
+setblock ~139 ~84 ~134 minecraft:smooth_quartz strict
+setblock ~140 ~84 ~134 minecraft:quartz_bricks strict
+setblock ~141 ~84 ~134 minecraft:smooth_quartz strict
+setblock ~142 ~84 ~134 minecraft:quartz_bricks strict
+fill ~113 ~84 ~135 ~113 ~84 ~137 minecraft:polished_blackstone_bricks strict
+fill ~114 ~84 ~135 ~114 ~84 ~136 minecraft:chiseled_quartz_block strict
+setblock ~115 ~84 ~135 minecraft:quartz_bricks strict
+setblock ~116 ~84 ~135 minecraft:smooth_quartz strict
+setblock ~117 ~84 ~135 minecraft:quartz_bricks strict
+setblock ~118 ~84 ~135 minecraft:smooth_quartz strict
+setblock ~119 ~84 ~135 minecraft:quartz_bricks strict
+setblock ~120 ~84 ~135 minecraft:smooth_quartz strict
+setblock ~121 ~84 ~135 minecraft:quartz_bricks strict
+setblock ~122 ~84 ~135 minecraft:smooth_quartz strict
+setblock ~123 ~84 ~135 minecraft:quartz_bricks strict
+fill ~124 ~84 ~135 ~125 ~84 ~135 minecraft:gold_block strict
+fill ~131 ~84 ~135 ~132 ~84 ~135 minecraft:gold_block strict
+setblock ~133 ~84 ~135 minecraft:quartz_bricks strict
+setblock ~134 ~84 ~135 minecraft:smooth_quartz strict
+setblock ~135 ~84 ~135 minecraft:quartz_bricks strict
+setblock ~136 ~84 ~135 minecraft:smooth_quartz strict
+setblock ~137 ~84 ~135 minecraft:quartz_bricks strict
+setblock ~138 ~84 ~135 minecraft:smooth_quartz strict
+setblock ~139 ~84 ~135 minecraft:quartz_bricks strict
+setblock ~140 ~84 ~135 minecraft:smooth_quartz strict
+setblock ~141 ~84 ~135 minecraft:quartz_bricks strict

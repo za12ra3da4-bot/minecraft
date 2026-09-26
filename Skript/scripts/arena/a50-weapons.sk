@@ -7,6 +7,9 @@
 #    흑기사의 대검 140 · 늑대 발톱 110 · 대마법사의 지팡이 100 · 불사조의 창 120
 # ═════════════════════════════════════════════════════════════════════════════
 
+import:
+    org.bukkit.NamespacedKey
+
 # 상점 화면 (일반 상자, 폰트 없음)
 function bgShopInv(c: number) :: inventory:
     return chest inventory with 3 rows named "&6&l왕국 무기고 &8| &e%{_c}% 코인"
@@ -104,34 +107,40 @@ on load:
     set {-bg::gear::iron::desc} to "죽어도 유지됩니다"
     set {-bg::gear::iron::price} to 40
     set {-bg::gear::iron::icon} to iron chestplate
-    set {-bg::gear::iron::slot} to 10
+    set {-bg::gear::iron::slot} to 37
     set {-bg::gear::diamond::name} to "다이아몬드 흉갑"
     set {-bg::gear::diamond::desc} to "죽어도 유지됩니다"
     set {-bg::gear::diamond::price} to 80
     set {-bg::gear::diamond::icon} to diamond chestplate
-    set {-bg::gear::diamond::slot} to 11
+    set {-bg::gear::diamond::slot} to 38
     set {-bg::gear::sword::name} to "철 검"
     set {-bg::gear::sword::desc} to "죽어도 유지됩니다"
     set {-bg::gear::sword::price} to 25
     set {-bg::gear::sword::icon} to iron sword
-    set {-bg::gear::sword::slot} to 12
+    set {-bg::gear::sword::slot} to 39
     set {-bg::gear::arrows::name} to "화살 32개"
     set {-bg::gear::arrows::desc} to "소모품"
     set {-bg::gear::arrows::price} to 8
     set {-bg::gear::arrows::icon} to arrow
-    set {-bg::gear::arrows::slot} to 14
+    set {-bg::gear::arrows::slot} to 41
     set {-bg::gear::gapple::name} to "황금 사과"
     set {-bg::gear::gapple::desc} to "소모품"
     set {-bg::gear::gapple::price} to 15
     set {-bg::gear::gapple::icon} to golden apple
-    set {-bg::gear::gapple::slot} to 15
+    set {-bg::gear::gapple::slot} to 42
     set {-bg::gear::heal::name} to "치유의 투척 물약 II"
     set {-bg::gear::heal::desc} to "소모품"
     set {-bg::gear::heal::price} to 12
     set {-bg::gear::heal::icon} to splash potion
-    set {-bg::gear::heal::slot} to 16
+    set {-bg::gear::heal::slot} to 43
     loop {-bg::gear::list::*}:
         set {-bg::gearslot::%{-bg::gear::%loop-value%::slot}%} to loop-value
+    # 전설 무기 진열 칸
+    set {-bg::wslots::*} to 10, 12, 14, 16, 19, 21, 23 and 25
+    set {_i} to 0
+    loop {-bg::w::list::*}:
+        add 1 to {_i}
+        set {-bg::wslot::%{-bg::wslots::%{_i}%}%} to loop-value
 
 function bgGiveGear(p: player, g: text):
     set {_n} to name of {_p}
@@ -177,27 +186,45 @@ command /상점:
         if {-bg::on} is true:
             if bgTeam(player) is not "none":
                 if bgDist2(location of player, bgMk("base_%bgTeam(player)%")) > 24:
-                    send "&6[상점] &f상점은 &e자기 본진&f에서만 열 수 있습니다."
-                    stop
-        set {_c} to {bg::coin::%uuid of player%} ? 0
-        set {_gui} to bgShopInv({_c})
-        set {_i} to 0
-        loop {-bg::w::list::*}:
-            set {_w} to loop-value
-            set {_it} to {-bg::w::%{_w}%::icon}
-            set name of {_it} to "&6&l%{-bg::w::%{_w}%::name}% &7(전설)"
-            set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&e가격: %{-bg::w::%{_w}%::price}% 코인"
-            set slot {_i} of {_gui} to {_it}
-            add 1 to {_i}
-        loop {-bg::gear::list::*}:
-            set {_g} to loop-value
-            set {_it} to {-bg::gear::%{_g}%::icon}
-            set name of {_it} to "&f&l%{-bg::gear::%{_g}%::name}%"
-            set lore of {_it} to "&7%{-bg::gear::%{_g}%::desc}%", "" and "&e가격: %{-bg::gear::%{_g}%::price}% 코인"
-            set slot {-bg::gear::%{_g}%::slot} of {_gui} to {_it}
-        set {-bg::shop::%uuid of player%} to true
-        open {_gui} to player
-        play sound "block.chest.open" to player
+                    if bgInLobby(player) is false:
+                        send "&6[상점] &f상점은 &e자기 본진&f이나 &e대기실&f에서만 열 수 있습니다."
+                        stop
+        bgShopOpen(player)
+
+# 6줄 상자: 보라 유리판 바탕 + 전설 무기 8칸 (리소스팩 그림) + 장비 6칸 + 보유 코인
+function bgShopOpen(p: player):
+    set {_c} to {bg::coin::%uuid of {_p}%} ? 0
+    set {_gui} to chest inventory with 6 rows named "&5&l왕국 무기고 &8| &6%{_c}% 코인"
+    set {_pane} to purple stained glass pane named " "
+    loop 54 times:
+        set slot loop-number - 1 of {_gui} to {_pane}
+    set {_i} to 0
+    loop {-bg::w::list::*}:
+        add 1 to {_i}
+        set {_w} to loop-value
+        set {_it} to bgWeaponItem({_w})
+        set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&e가격: %{-bg::w::%{_w}%::price}% 코인 &7(클릭해서 구매)"
+        set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
+    loop {-bg::gear::list::*}:
+        set {_g} to loop-value
+        set {_it} to {-bg::gear::%{_g}%::icon}
+        set name of {_it} to "&f&l%{-bg::gear::%{_g}%::name}%"
+        set lore of {_it} to "&7%{-bg::gear::%{_g}%::desc}%", "" and "&e가격: %{-bg::gear::%{_g}%::price}% 코인"
+        set slot {-bg::gear::%{_g}%::slot} of {_gui} to {_it}
+    set {_coin} to sunflower named "&6&l보유 코인: &e%{_c}%"
+    set lore of {_coin} to "&7처치 +10 · 점령 +15 · 보스 +40", "&710초마다 +1 (점령 지점당 +1)"
+    set slot 53 of {_gui} to {_coin}
+    set {-bg::shop::%uuid of {_p}%} to true
+    open {_gui} to {_p}
+    play sound "block.chest.open" to {_p}
+
+# 상점 진열용 전설 무기 아이템 (리소스팩 그림이 보이도록 item_model 지정)
+function bgWeaponItem(w: text) :: item:
+    set {_it} to iron sword named "&6&l%{-bg::w::%{_w}%::name}% &7(전설)"
+    set {_m} to {_it}.getItemMeta()
+    {_m}.setItemModel(new NamespacedKey("bg", "weapon/%{_w}%"))
+    {_it}.setItemMeta({_m})
+    return {_it}
 
 on inventory close:
     delete {-bg::shop::%uuid of player%}
@@ -205,7 +232,9 @@ on inventory close:
 on inventory click:
     {-bg::shop::%uuid of player%} is true
     cancel event
-    set {_s} to index of event-slot
+    set {_s} to raw index of event-slot
+    if {_s} >= 54:
+        stop
     if {-bg::gearslot::%{_s}%} is set:
         set {_g} to {-bg::gearslot::%{_s}%}
         set {_price} to {-bg::gear::%{_g}%::price}
@@ -218,9 +247,9 @@ on inventory click:
         send "&6[상점] &f%{-bg::gear::%{_g}%::name}% 구매 &7(남은 코인 %{bg::coin::%uuid of player%}%)" to player
         play sound "entity.experience_orb.pickup" to player
         stop
-    if {_s} > 7:
+    if {-bg::wslot::%{_s}%} is not set:
         stop
-    set {_w} to {-bg::w::list::%{_s} + 1%}
+    set {_w} to {-bg::wslot::%{_s}%}
     set {_price} to {-bg::w::%{_w}%::price}
     if ({bg::coin::%uuid of player%} ? 0) < {_price}:
         send "&6[상점] &c코인이 부족합니다. &7(필요 %{_price}%, 보유 %{bg::coin::%uuid of player%} ? 0%)" to player
