@@ -132,7 +132,7 @@ function bgWardOn(p: player) :: boolean:
     return false
 
 # ─────────────────────────────────────────────────────────── 광산 (본진 광석 바위)
-#  본진 광석 바위에서만: 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 20초 뒤 다시 채워짐
+#  본진 광석 바위에서만: 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 2초 뒤 다시 채워짐
 #  죽으면 광물은 그 자리에 떨어져서 적이 주워 갈 수 있다
 #  (다른 곳 광석은 캘 수 없음 · 창작 모드 관리자는 예외)
 function bgAtBaseOre(l: location) :: boolean:
@@ -164,7 +164,7 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     else if event-block is diamond ore:
         set {_drop} to {-bg::it::diamond}
         set {_nm} to "다이아몬드 (6코인)"
-    # 캔 자리는 기반암(못 캠)으로 → 20초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
+    # 캔 자리는 기반암(못 캠)으로 → 2초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
     set block at {_l} to bedrock
     set {_k} to "%floor(x-coordinate of {_l})%_%floor(y-coordinate of {_l})%_%floor(z-coordinate of {_l})%"
     set {bg::oreq::%{_k}%} to true
@@ -183,7 +183,7 @@ function bgOreRegen(all: boolean):
         set {_k} to loop-index
         if {bg::oreq::%{_k}%::at} is set:
             set {_go} to {_all}
-            if difference between {bg::oreq::%{_k}%::at} and now >= 20 seconds:
+            if difference between {bg::oreq::%{_k}%::at} and now >= 2 seconds:
                 set {_go} to true
             if {_go} is true:
                 set {_l} to {bg::oreq::%{_k}%::l}
