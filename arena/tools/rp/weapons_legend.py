@@ -267,6 +267,9 @@ def export(pack):
     # 추가 8종 + 보스 전용 4종 스킬 효과 그림 (tele/fx2_*)
     import skillfx2
     skillfx2.export(pack)
+    # 상점 아이템 그림 (bg:shop/*)
+    import shopicons
+    shopicons.export(pack)
     # 추가 8종 + 보스 전용 4종 (직접 그린 그림이 있으면 그걸 씀)
     import weapons_legend2
     for wid in weapons_legend2.WEAPONS2:

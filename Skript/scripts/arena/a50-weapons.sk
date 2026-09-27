@@ -168,6 +168,13 @@ on load:
         add 1 to {_i}
         set {-bg::wslot::%{-bg::wslots::%{_i}%}%} to loop-value
 
+# 리소스팩 그림으로 보이게 (item_model = bg:<m>)
+function bgModelItem(i: item, m: text) :: item:
+    set {_x} to {_i}.getItemMeta()
+    {_x}.setItemModel(new NamespacedKey("bg", {_m}))
+    {_i}.setItemMeta({_x})
+    return {_i}
+
 # 상점 아이콘용: 물약 · 화살에 색 입히기
 function bgPotionIcon(i: item, r: number, g: number, b: number) :: item:
     set {_m} to {_i}.getItemMeta()
@@ -196,33 +203,33 @@ function bgGiveGear(p: player, g: text):
         set {bg::owned::%uuid of {_p}%::sword} to true
         bgCmd("give %{_n}% iron_sword[unbreakable={}]")
     else if {_g} is "arrows":
-        bgCmd("give %{_n}% arrow 32")
+        bgCmd("give %{_n}% arrow[item_model=""bg:shop/arrows""] 32")
     else if {_g} is "gapple":
-        bgCmd("give %{_n}% golden_apple 1")
+        bgCmd("give %{_n}% golden_apple[item_model=""bg:shop/gapple""] 1")
     else if {_g} is "food":
-        bgCmd("give %{_n}% cooked_beef 16")
+        bgCmd("give %{_n}% cooked_beef[item_model=""bg:shop/food""] 16")
     else if {_g} is "arrows64":
-        bgCmd("give %{_n}% arrow 64")
+        bgCmd("give %{_n}% arrow[item_model=""bg:shop/arrows64""] 64")
     else if {_g} is "spectral":
-        bgCmd("give %{_n}% spectral_arrow 16")
+        bgCmd("give %{_n}% spectral_arrow[item_model=""bg:shop/spectral""] 16")
     else if {_g} is "parrow":
-        bgCmd("give %{_n}% tipped_arrow[potion_contents={custom_color:5149489,custom_effects:[{id:""minecraft:poison"",amplifier:0b,duration:480}]}] 6")
+        bgCmd("give %{_n}% tipped_arrow[item_model=""bg:shop/parrow"",potion_contents={custom_color:5149489,custom_effects:[{id:""minecraft:poison"",amplifier:0b,duration:480}]}] 6")
     else if {_g} is "pspeed":
-        bgCmd("give %{_n}% potion[potion_contents={custom_color:8171462,custom_effects:[{id:""minecraft:speed"",amplifier:0b,duration:300}]}] 1")
+        bgCmd("give %{_n}% potion[item_model=""bg:shop/pspeed"",potion_contents={custom_color:8171462,custom_effects:[{id:""minecraft:speed"",amplifier:0b,duration:300}]}] 1")
     else if {_g} is "pstr":
-        bgCmd("give %{_n}% potion[potion_contents={custom_color:9643043,custom_effects:[{id:""minecraft:strength"",amplifier:0b,duration:160}]}] 1")
+        bgCmd("give %{_n}% potion[item_model=""bg:shop/pstr"",potion_contents={custom_color:9643043,custom_effects:[{id:""minecraft:strength"",amplifier:0b,duration:160}]}] 1")
     else if {_g} is "pregen":
-        bgCmd("give %{_n}% potion[potion_contents={custom_color:13458603,custom_effects:[{id:""minecraft:regeneration"",amplifier:0b,duration:160}]}] 1")
+        bgCmd("give %{_n}% potion[item_model=""bg:shop/pregen"",potion_contents={custom_color:13458603,custom_effects:[{id:""minecraft:regeneration"",amplifier:0b,duration:160}]}] 1")
     else if {_g} is "pfire":
-        bgCmd("give %{_n}% potion[potion_contents={custom_color:14981690,custom_effects:[{id:""minecraft:fire_resistance"",amplifier:0b,duration:600}]}] 1")
+        bgCmd("give %{_n}% potion[item_model=""bg:shop/pfire"",potion_contents={custom_color:14981690,custom_effects:[{id:""minecraft:fire_resistance"",amplifier:0b,duration:600}]}] 1")
     else if {_g} is "ppoison":
-        bgCmd("give %{_n}% splash_potion[potion_contents={custom_color:5149489,custom_effects:[{id:""minecraft:poison"",amplifier:0b,duration:80}]}] 1")
+        bgCmd("give %{_n}% splash_potion[item_model=""bg:shop/ppoison"",potion_contents={custom_color:5149489,custom_effects:[{id:""minecraft:poison"",amplifier:0b,duration:80}]}] 1")
     else if {_g} is "pleap":
-        bgCmd("give %{_n}% potion[potion_contents={custom_color:2293580,custom_effects:[{id:""minecraft:jump_boost"",amplifier:1b,duration:300}]}] 1")
+        bgCmd("give %{_n}% potion[item_model=""bg:shop/pleap"",potion_contents={custom_color:2293580,custom_effects:[{id:""minecraft:jump_boost"",amplifier:1b,duration:300}]}] 1")
     else if {_g} is "ward":
-        bgCmd("give %{_n}% echo_shard[custom_name={text:""결계 부적"",color:""aqua"",bold:true,italic:false},lore=[{text:""우클릭: 60초 동안 적 본진 결계 피해 무시"",color:""gray"",italic:false}],enchantment_glint_override=true] 1")
+        bgCmd("give %{_n}% echo_shard[item_model=""bg:shop/ward"",custom_name={text:""결계 부적"",color:""aqua"",bold:true,italic:false},lore=[{text:""우클릭: 60초 동안 적 본진 결계 피해 무시"",color:""gray"",italic:false}],enchantment_glint_override=true] 1")
     else:
-        bgCmd("give %{_n}% splash_potion[potion_contents={potion:""minecraft:healing""}] 1")
+        bgCmd("give %{_n}% splash_potion[item_model=""bg:shop/heal"",potion_contents={potion:""minecraft:healing""}] 1")
 
 # 부활 때 산 장비·전설 무기를 다시 준다 (bgKit 끝에서 호출)
 function bgShopRestore(p: player):
@@ -326,11 +333,13 @@ function bgShopOpen(p: player):
         set {_it} to {-bg::gear::%{_g}%::icon}
         if {-bg::gear::%{_g}%::rgb::1} is set:
             set {_it} to bgPotionIcon({_it}, {-bg::gear::%{_g}%::rgb::1}, {-bg::gear::%{_g}%::rgb::2}, {-bg::gear::%{_g}%::rgb::3})
+        set {_it} to bgModelItem({_it}, "shop/%{_g}%")
         set name of {_it} to "&f&l%{-bg::gear::%{_g}%::name}%"
         set lore of {_it} to "&7%{-bg::gear::%{_g}%::desc}%", "" and "&e가격: %{-bg::gear::%{_g}%::price}% 코인"
         set slot {-bg::gear::%{_g}%::slot} of {_gui} to {_it}
     # 광물 일괄 판매 버튼 (가방의 원석 · 보석을 한 번에 코인으로)
-    set {_sell} to hopper named "&a&l광물 일괄 판매"
+    set {_sell} to bgModelItem(hopper, "shop/sell")
+    set name of {_sell} to "&a&l광물 일괄 판매"
     set {_tot} to bgOreTotal({_p})
     set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e2 &7· &f금 원석 &e3", "&f에메랄드 &e6 &7· &f다이아몬드 &e10", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
     set slot 49 of {_gui} to {_sell}
