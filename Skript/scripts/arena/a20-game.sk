@@ -544,6 +544,8 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             add {_n} to {bg::coin::%uuid of {_p}%}
             send "&6[코인] &f관리자가 &e%{_n}%&f 코인을 줬습니다 (보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
             send "&6[전장] &f%name of {_p}% 코인 %{_n}% → 보유 %{bg::coin::%uuid of {_p}%}%"
+        else if arg-1 is "연습장건설":
+            bgPvpBuild(player)
         else if arg-1 is "무기":
             # /전장 무기 <무기id|all|boss> [플레이어]  (보스 전용 무기도 지급)
             if arg-2 is not set:

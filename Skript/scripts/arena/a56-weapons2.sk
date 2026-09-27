@@ -453,9 +453,9 @@ function bgSkBCyclops(p: player):
     bgParticle(bgUp({_to}, 0.3), "block{block_state:""minecraft:stone""}", 3, 0.3, 3, 0.2, 120)
     bgSoundAt({_to}, "entity.generic.explode", 2, 0.6)
     bgSoundAt({_to}, "item.mace.smash_ground_heavy", 2, 0.5)
-    loop bgNear({_p}, {_to}, 4.5):
-        bgDmg(loop-value, 5)
-        bgVel(loop-value, vector(0, 1.1, 0))
+    loop bgNear({_p}, {_to}, 4):
+        bgDmg(loop-value, 4)
+        bgVel(loop-value, vector(0, 0.9, 0))
     loop 4 times:
         set {_r} to loop-number * 1.4
         bgParticle(bgUp({_to}, 0.2), "crit", {_r}, 0.1, {_r}, 0.3, 30)

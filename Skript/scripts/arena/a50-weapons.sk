@@ -60,8 +60,8 @@ on load:
     set {-bg::w::gauntlet::bossdmg} to 6
     set {-bg::w::storm::bossdmg} to 7
     set {-bg::w::b_talos::bossdmg} to 6
-    set {-bg::w::b_cyclops::bossdmg} to 9
-    bgWDef("b_cyclops", "외눈 거인의 곤봉", 0, 18, "gold", "보스 전용 · 우클릭 거암 투척: 거대한 바위를 던져 땅을 뒤흔듦 · 18초")
+    set {-bg::w::b_cyclops::bossdmg} to 7
+    bgWDef("b_cyclops", "외눈 거인의 곤봉", 0, 20, "gold", "보스 전용 · 우클릭 거암 투척: 거대한 바위를 던져 땅을 뒤흔듦 · 20초")
 
 # ─────────────────────────────────────────────────────────── 코인
 function bgCoin(p: player, n: number, why: text):

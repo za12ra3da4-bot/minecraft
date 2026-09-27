@@ -767,3 +767,17 @@ def decor_functions(dp_root, world, fixes=()):
         out = bdkit.summon_lines(bdmodels.treasure_chest(t), "summon", 0, 0, 0, 0, 1.0, ['"bg"', '"bg_reward"'], spin_tag='"bg_spin_fast"', view=2.0)
         w(os.path.join(R_, f"chest_{t}.mcfunction"), out)
     return len(lines) - 1
+
+
+def pvp_functions(dp_root):
+    """PvP 연습장 (석영 원형 투기장) 짓기: bg:pvp/fl → 2초 → bg:pvp/build → bg:pvp/fl_rm"""
+    import pvparena
+    F = os.path.join(dp_root, "data", NS, "function", "pvp")
+    cmds = pvparena.commands(greedy_boxes)
+    x0, z0, x1, z1 = pvparena.forceload_range()
+    w(os.path.join(F, "build_run.mcfunction"), cmds)
+    w(os.path.join(F, "fl_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}"])
+    w(os.path.join(F, "fl_rm_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
+    for k in ("build", "fl", "fl_rm"):
+        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:pvp/{k}_run with storage bg:map origin"])
+    print(f"[pvp] 연습장 명령 {len(cmds)}줄")

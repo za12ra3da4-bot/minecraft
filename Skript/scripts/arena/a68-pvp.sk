@@ -1,5 +1,6 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  왕관 쟁탈전 — PvP 연습장 (게임이 없을 때 전장 맵에서 자유 대전)
+#  왕관 쟁탈전 — PvP 연습장 (전장 맵 북쪽 하늘에 떠 있는 석영 원형 투기장, 게임이 없을 때 자유 대전)
+#   관리자: /전장 연습장건설 (처음 한 번)
 #   /연습장 (/pvp장, /pvp) : 들어가기 · 나가기     /무기 : 무료 무기고 다시 열기
 #   전설 무기 16종 + 보스 무기 4종을 공짜로 골라서 스킬 연습. 죽어도 가방 유지, 연습장에서 부활
 #   게임이 시작되면 모두 대기실로 돌아감
@@ -12,12 +13,25 @@ function bgPvpOn(p: player) :: boolean:
         return true
     return false
 
+# 연습장 가운데 바닥 = 전장 원점 기준 (128, 30, -70). 입장문 4곳 안쪽(반지름 17)에서 부활, 가운데를 바라봄
+function bgPvpCenter() :: location:
+    return bgAt(128.5, 31, -69.5)
+
 function bgPvpSpawn() :: location:
-    set {_t} to random element out of {-bg::teams::*}
-    set {_i} to random integer between 0 and 6
-    if {-bg::mk::base_%{_t}%_spawn_%{_i}%::x} is set:
-        return bgMk("base_%{_t}%_spawn_%{_i}%")
-    return bgUp(bgMk("temple_core"), 1)
+    set {_a} to (random integer between 0 and 3) * 90
+    set {_l} to bgAt(128.5 + cos({_a}) * 17, 31, -69.5 + sin({_a}) * 17)
+    set yaw of {_l} to {_a} + 90
+    return {_l}
+
+function bgPvpBuild(p: player):
+    bgSyncOrigin()
+    send "&6[연습장] &f석영 투기장을 짓는 중..." to {_p}
+    bgCmd("function bg:pvp/fl")
+    wait 40 ticks
+    bgCmd("function bg:pvp/build")
+    wait 5 ticks
+    bgCmd("function bg:pvp/fl_rm")
+    send "&6[연습장] &a완성! &f/연습장 으로 들어가 보세요." to {_p}
 
 function bgPvpKit(p: player):
     set {_n} to name of {_p}
@@ -36,6 +50,9 @@ function bgPvpKit(p: player):
 function bgPvpEnter(p: player):
     if {-bg::on} is true:
         send "&6[연습장] &c게임 중에는 연습장에 갈 수 없습니다." to {_p}
+        stop
+    if block at bgUp(bgPvpCenter(), -1) is air:
+        send "&6[연습장] &c연습장이 아직 없습니다. &7관리자가 &e/전장 연습장건설 &7을 한 번 실행해 주세요." to {_p}
         stop
     set {-bg::pvp::%uuid of {_p}%} to true
     teleport {_p} to bgPvpSpawn()
@@ -133,3 +150,12 @@ on respawn:
 
 on quit:
     delete {-bg::pvp::%uuid of player%}
+
+# 섬 밖으로 떨어지면 다시 연습장으로
+every 1 second:
+    loop all players:
+        if {-bg::pvp::%uuid of loop-player%} is true:
+            if {-bg::on} is not true:
+                if (y-coordinate of loop-player) < (y-coordinate of bgPvpCenter()) - 14:
+                    teleport loop-player to bgPvpSpawn()
+                    play sound "entity.enderman.teleport" to loop-player
