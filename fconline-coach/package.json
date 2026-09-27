@@ -1,0 +1,18 @@
+{
+  "name": "fconline-squad-coach",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FC온라인 스쿼드와 전술을 말로 요청하면 짜주는 AI 코치",
+  "type": "commonjs",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs",
+    "demo": "node server.mjs --demo"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0"
+  }
+}

@@ -1,0 +1,970 @@
+<title>FC온라인 스쿼드 코치</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #edf1ec;
+    --surface: #ffffff;
+    --surface-2: #f4f7f3;
+    --ink: #142019;
+    --muted: #56665c;
+    --line: #d3dcd4;
+    --accent: #1d4ed8;
+    --accent-ink: #ffffff;
+    --accent-soft: #e2e9fb;
+    --kit: #1c3fb5;
+    --kit-ink: #ffffff;
+    --gk: #e5b420;
+    --gk-ink: #1d1a0e;
+    --gold: #8a6508;
+    --gold-soft: #f6edcf;
+    --grass-a: #3e7c51;
+    --grass-b: #39744b;
+    --chalk: rgba(255, 255, 255, 0.8);
+    --danger: #b42318;
+    --danger-soft: #fdecea;
+    --shadow: 0 1px 2px rgba(20, 32, 25, 0.06), 0 10px 28px rgba(20, 32, 25, 0.07);
+    --font-display: "Black Han Sans", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    --font-num: "Barlow Condensed", "Arial Narrow", "IBM Plex Sans KR", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1411;
+      --surface: #151d18;
+      --surface-2: #1b251f;
+      --ink: #e4ebe6;
+      --muted: #93a299;
+      --line: #28352d;
+      --accent: #7390ff;
+      --accent-ink: #0b1020;
+      --accent-soft: #1d2645;
+      --kit: #3556d4;
+      --kit-ink: #ffffff;
+      --gk: #e5b420;
+      --gk-ink: #1d1a0e;
+      --gold: #e3c35c;
+      --gold-soft: #2f2914;
+      --grass-a: #22503a;
+      --grass-b: #1f4935;
+      --chalk: rgba(232, 244, 236, 0.62);
+      --danger: #ff8a80;
+      --danger-soft: #3a1714;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.25);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1411;
+    --surface: #151d18;
+    --surface-2: #1b251f;
+    --ink: #e4ebe6;
+    --muted: #93a299;
+    --line: #28352d;
+    --accent: #7390ff;
+    --accent-ink: #0b1020;
+    --accent-soft: #1d2645;
+    --kit: #3556d4;
+    --kit-ink: #ffffff;
+    --gk: #e5b420;
+    --gk-ink: #1d1a0e;
+    --gold: #e3c35c;
+    --gold-soft: #2f2914;
+    --grass-a: #22503a;
+    --grass-b: #1f4935;
+    --chalk: rgba(232, 244, 236, 0.62);
+    --danger: #ff8a80;
+    --danger-soft: #3a1714;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.25);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.6 var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .app {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-inline: 16px;
+    padding-block: 20px 56px;
+    display: grid;
+    gap: 20px;
+  }
+
+  /* Header */
+  .top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 20px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark { width: 40px; height: 40px; flex: none; }
+  .brand h1 { margin: 0; font: 400 28px/1.1 var(--font-display); letter-spacing: -0.01em; }
+  .brand h1 small { display: block; font: 600 13px/1.4 var(--font-body); color: var(--muted); letter-spacing: 0.02em; }
+  .tagline { margin: 0; color: var(--muted); max-width: 46ch; font-size: 14px; }
+
+  /* Composer */
+  .composer {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+    display: grid;
+    gap: 12px;
+  }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+  .seg button {
+    border: 0; background: transparent; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+    font-size: 14px; font-weight: 500; color: var(--muted);
+  }
+  .seg button[aria-checked="true"] { background: var(--kit); color: var(--kit-ink); }
+  .budget { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+  .budget input {
+    width: 150px; max-width: 42vw; padding: 7px 12px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--surface-2);
+  }
+  .budget span.unit { font: 700 15px var(--font-num); letter-spacing: 0.04em; color: var(--ink); }
+  textarea {
+    width: 100%; resize: vertical; min-height: 84px; padding: 12px 14px; border-radius: 12px;
+    border: 1px solid var(--line); background: var(--surface-2); line-height: 1.55;
+  }
+  textarea:focus, .budget input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+  details.owned summary { cursor: pointer; font-size: 14px; color: var(--muted); width: fit-content; }
+  details.owned[open] summary { margin-bottom: 8px; }
+  details.owned textarea { min-height: 72px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 12px;
+    font-size: 13px; cursor: pointer; color: var(--ink); text-align: left;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .btn {
+    border: 1px solid transparent; border-radius: 12px; padding: 10px 18px; font-weight: 600; cursor: pointer;
+    font-size: 15px;
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { filter: brightness(1.06); }
+  .btn.primary:disabled { opacity: 0.55; cursor: progress; }
+  .btn.ghost { background: transparent; border-color: var(--line); color: var(--ink); }
+  .btn.ghost:hover { border-color: var(--muted); }
+  .kbd { font-size: 12px; color: var(--muted); }
+  .status { font-size: 14px; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; min-height: 22px; }
+  .status.err { color: var(--danger); }
+  .spinner {
+    width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--accent);
+    animation: spin 0.8s linear infinite; flex: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .history { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+  .history li { display: flex; gap: 8px; }
+  .history li b { font: 700 14px var(--font-num); color: var(--ink); min-width: 1.2em; }
+  .notice {
+    border-radius: 12px; padding: 10px 14px; font-size: 14px; background: var(--danger-soft); color: var(--danger);
+  }
+
+  /* Board */
+  .board { display: grid; grid-template-columns: minmax(300px, 440px) minmax(0, 1fr); gap: 24px; align-items: start; transition: opacity 0.2s; }
+  .board.busy { opacity: 0.5; }
+  .pitch-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); display: grid; gap: 12px; }
+  @media (min-width: 861px) {
+    /* Keep pitch + player card inside the viewport while the column is sticky. */
+    .pitch { width: min(100%, calc((100vh - 250px) * 74 / 111)); min-width: 280px; justify-self: center; }
+  }
+  @media (max-width: 860px) {
+    .board { grid-template-columns: minmax(0, 1fr); }
+    .pitch-col { position: static; max-width: 460px; width: 100%; margin: 0 auto; }
+  }
+
+  .pitch {
+    position: relative; width: 100%; aspect-ratio: 74 / 111; border-radius: 14px; overflow: hidden;
+    background: var(--grass-a); box-shadow: var(--shadow);
+  }
+  .pitch svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .pitch .stripe-a { fill: var(--grass-a); }
+  .pitch .stripe-b { fill: var(--grass-b); }
+  .pitch .mark { fill: none; stroke: var(--chalk); stroke-width: 0.32; }
+  .pitch .spot { fill: var(--chalk); }
+  .tok {
+    position: absolute; transform: translate(-50%, -17px); display: flex; flex-direction: column; align-items: center;
+    gap: 2px; background: none; border: 0; padding: 0; cursor: pointer; width: 84px;
+  }
+  .disc {
+    width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--kit); color: var(--kit-ink); font: 700 14px/1 var(--font-num); letter-spacing: 0.02em;
+    border: 2px solid rgba(255, 255, 255, 0.9); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    transition: transform 0.15s;
+  }
+  .tok.gk .disc { background: var(--gk); color: var(--gk-ink); }
+  .tok.sel .disc { transform: scale(1.14); box-shadow: 0 0 0 3px var(--accent), 0 2px 6px rgba(0, 0, 0, 0.35); }
+  .tok:hover .disc { transform: scale(1.08); }
+  .nm {
+    max-width: 84px; padding: 1px 6px; border-radius: 6px; background: rgba(8, 20, 12, 0.72); color: #fff;
+    font-size: 12px; font-weight: 600; line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cd { font: 600 11px/1.2 var(--font-num); color: #f3e3a4; letter-spacing: 0.03em; white-space: nowrap; max-width: 84px; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+  @media (max-width: 420px) {
+    .tok { width: 70px; }
+    .disc { width: 30px; height: 30px; font-size: 13px; }
+    .nm { max-width: 70px; font-size: 11px; }
+    .cd { display: none; }
+  }
+  .pitch-note { margin: 0; font-size: 13px; color: var(--muted); }
+
+  .detail {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px;
+    display: grid; gap: 8px;
+  }
+  .detail-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .detail-head strong { font-size: 17px; }
+
+  /* Info column */
+  .info { display: grid; gap: 16px; min-width: 0; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+  }
+  .squad-head { display: grid; gap: 10px; }
+  .squad-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .squad-title h2 { margin: 0; font: 400 26px/1.2 var(--font-display); text-wrap: balance; }
+  .tag-example {
+    font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 999px; background: var(--gold-soft); color: var(--gold);
+  }
+  .concept { margin: 0; color: var(--ink); max-width: 65ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; }
+  .meta span {
+    display: inline-flex; align-items: baseline; gap: 6px; padding: 4px 10px; border-radius: 8px;
+    background: var(--surface-2); border: 1px solid var(--line); font-size: 13px;
+  }
+  .meta span em { font-style: normal; color: var(--muted); font-size: 12px; }
+  .meta span b { font-weight: 600; }
+  .meta .num { font: 700 16px var(--font-num); letter-spacing: 0.02em; }
+  .reply {
+    margin: 0; padding: 10px 14px; border-radius: 12px; background: var(--accent-soft); font-size: 14px; max-width: 70ch;
+  }
+  .reply b { color: var(--accent); margin-right: 6px; }
+  .head-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .head-actions .btn { padding: 7px 14px; font-size: 14px; }
+  .copy-fallback { width: 100%; min-height: 160px; font-size: 13px; }
+
+  .blk h3 { margin: 0 0 12px; font: 400 19px/1.3 var(--font-display); }
+  .blk h4 { margin: 14px 0 8px; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.02em; }
+  .blk h4:first-of-type { margin-top: 0; }
+
+  .tac-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .tac-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: baseline; }
+  .tac-row .lbl { font-weight: 500; }
+  .tac-row .val { font-weight: 600; color: var(--accent); text-align: right; }
+  .tac-row .why { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+  .slider { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
+  .slider .val { font: 700 20px/1 var(--font-num); font-variant-numeric: tabular-nums; }
+  .slider .val small { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .bar { grid-column: 1 / -1; height: 8px; border-radius: 99px; background: var(--surface-2); border: 1px solid var(--line); position: relative; overflow: hidden; }
+  .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--kit); border-radius: 99px; }
+  .slider .why { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+
+  .players { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+  .prow {
+    display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 2px 12px; padding: 10px 8px; border-radius: 12px;
+    cursor: pointer; border: 1px solid transparent;
+  }
+  .prow:hover { background: var(--surface-2); }
+  .prow.sel { background: var(--accent-soft); border-color: var(--accent); }
+  .pos {
+    grid-row: span 3; align-self: start; display: grid; place-items: center; height: 30px; border-radius: 8px;
+    background: var(--kit); color: var(--kit-ink); font: 700 14px/1 var(--font-num); letter-spacing: 0.03em;
+  }
+  .pos.gk { background: var(--gk); color: var(--gk-ink); }
+  .pos.bench { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
+  .pname { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+  .pname strong { font-size: 15px; }
+  .season {
+    font: 700 13px/1.3 var(--font-num); letter-spacing: 0.03em; color: var(--gold); background: var(--gold-soft);
+    padding: 1px 7px; border-radius: 6px;
+  }
+  .stat { font: 600 13px var(--font-num); color: var(--muted); letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+  .stat b { color: var(--ink); font-size: 15px; }
+  .prole { font-size: 13px; color: var(--muted); }
+  .inst { display: flex; flex-wrap: wrap; gap: 6px; }
+  .inst span { font-size: 12px; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--line); }
+  .why-line { font-size: 13px; color: var(--muted); margin: 0; }
+
+  .kv { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 16px; }
+  .kv dt { color: var(--muted); font-size: 14px; }
+  .kv dd { margin: 0; font-weight: 600; }
+  .plans { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .plans li { display: grid; gap: 2px; padding-left: 12px; border-left: 3px solid var(--kit); }
+  .plans b { font-size: 14px; }
+  .plans span { font-size: 14px; color: var(--muted); }
+  .tips { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .tips ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; }
+  .tips ol li::marker { font-family: var(--font-num); font-weight: 700; color: var(--accent); }
+  .alts { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .alts li { display: grid; gap: 2px; }
+  .alts .swap { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; font-weight: 600; }
+  .alts .swap s { color: var(--muted); font-weight: 400; }
+  .alts .swap .arrow { color: var(--accent); font-family: var(--font-num); }
+  .alts span.why-line { display: block; }
+  .caveats { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spinner { animation: none; }
+    .disc, .board { transition: none; }
+  }
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="1" y="1" width="38" height="38" rx="10" fill="var(--grass-a)"/>
+        <rect x="7" y="6" width="26" height="28" rx="1.5" fill="none" stroke="var(--chalk)" stroke-width="1.4"/>
+        <line x1="7" y1="20" x2="33" y2="20" stroke="var(--chalk)" stroke-width="1.4"/>
+        <circle cx="20" cy="20" r="4.5" fill="none" stroke="var(--chalk)" stroke-width="1.4"/>
+        <circle cx="13" cy="13" r="3.2" fill="var(--kit)" stroke="#fff" stroke-width="1"/>
+        <circle cx="27" cy="27" r="3.2" fill="var(--gk)" stroke="#fff" stroke-width="1"/>
+      </svg>
+      <h1>스쿼드 코치<small>FC온라인 · 스쿼드와 전술을 말로 짜는 AI</small></h1>
+    </div>
+    <p class="tagline">원하는 팀컬러, 예산, 꼭 넣을 선수, 플레이 스타일을 말해주세요. 선발·벤치·팀 전술·개인 전술까지 한 번에 짜드려요.</p>
+  </header>
+
+  <section class="composer" aria-label="스쿼드 요청">
+    <div class="row">
+      <div class="seg" role="radiogroup" aria-label="경기 방식">
+        <button type="button" role="radio" id="mode-manual" data-mode="manual" aria-checked="true">공식경기</button>
+        <button type="button" role="radio" id="mode-coach" data-mode="coach" aria-checked="false">감독모드</button>
+      </div>
+      <label class="budget" for="budget">예산
+        <input id="budget" type="text" inputmode="text" autocomplete="off" placeholder="예: 5000억, 1.5조">
+        <span class="unit">BP</span>
+      </label>
+    </div>
+    <label for="req" class="kbd" id="req-label">어떤 스쿼드를 원하세요?</label>
+    <textarea id="req" rows="3" placeholder="예: 토트넘 팀컬러로 손흥민 꼭 넣고, 역습 위주 4-2-3-1로 짜줘"></textarea>
+    <details class="owned" id="owned-box">
+      <summary>내 보유 선수로 짜기 (선택)</summary>
+      <textarea id="owned" rows="3" placeholder="보유 선수를 붙여넣으세요. 예: 손흥민 24TOTY +5, 케인 23UCL +4, 김민재 LIVE +6 ..."></textarea>
+    </details>
+    <div class="chips" id="chips" aria-label="예시 요청"></div>
+    <div class="actions">
+      <button type="button" class="btn primary" id="go">스쿼드 짜기</button>
+      <button type="button" class="btn ghost" id="stop" hidden>중지</button>
+      <button type="button" class="btn ghost" id="reset" hidden>처음부터 새로</button>
+      <span class="kbd" id="kbd-hint">Ctrl + Enter로도 보낼 수 있어요</span>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <div class="notice" id="notice" hidden></div>
+    <ol class="history" id="history" hidden aria-label="지금까지의 요청"></ol>
+  </section>
+
+  <main class="board" id="board">
+    <div class="pitch-col">
+      <div class="pitch" id="pitch">
+        <svg viewBox="-3 -3 74 111" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="-3" y="-3" width="74" height="111" class="stripe-a"/>
+          <g id="stripes"></g>
+          <rect x="0" y="0" width="68" height="105" class="mark"/>
+          <line x1="0" y1="52.5" x2="68" y2="52.5" class="mark"/>
+          <circle cx="34" cy="52.5" r="9.15" class="mark"/>
+          <circle cx="34" cy="52.5" r="0.45" class="spot"/>
+          <rect x="13.84" y="0" width="40.32" height="16.5" class="mark"/>
+          <rect x="24.84" y="0" width="18.32" height="5.5" class="mark"/>
+          <circle cx="34" cy="11" r="0.45" class="spot"/>
+          <path d="M26.688 16.5 A9.15 9.15 0 0 0 41.312 16.5" class="mark"/>
+          <rect x="13.84" y="88.5" width="40.32" height="16.5" class="mark"/>
+          <rect x="24.84" y="99.5" width="18.32" height="5.5" class="mark"/>
+          <circle cx="34" cy="94" r="0.45" class="spot"/>
+          <path d="M26.688 88.5 A9.15 9.15 0 0 1 41.312 88.5" class="mark"/>
+          <rect x="30.34" y="-1.6" width="7.32" height="1.6" class="mark"/>
+          <rect x="30.34" y="105" width="7.32" height="1.6" class="mark"/>
+          <path d="M0 1 A1 1 0 0 0 1 0 M67 0 A1 1 0 0 0 68 1 M68 104 A1 1 0 0 0 67 105 M1 105 A1 1 0 0 0 0 104" class="mark"/>
+        </svg>
+        <div id="tokens"></div>
+      </div>
+      <p class="pitch-note">▲ 위쪽이 공격 방향이에요 (105m × 68m 비율). 선수를 누르면 역할과 개인 전술이 보여요.</p>
+      <div class="detail" id="detail" hidden></div>
+    </div>
+
+    <div class="info" id="info"></div>
+  </main>
+</div>
+
+<script src="coach-spec.js"></script>
+<script>
+(function () {
+  "use strict";
+  var Spec = window.CoachSpec;
+  var STORE_KEY = "fconline-coach-v1";
+
+  var START_CHIPS = [
+    "BP 3000억, 토트넘 팀컬러에 손흥민 필수. 역습 4-2-3-1로 짜줘",
+    "1조 예산으로 지금 메타에서 제일 센 4-1-2-1-2",
+    "대한민국 국가 팀컬러, 1500억 안에서 가성비로",
+    "레알 마드리드 팀컬러로 점유율 축구, 아이콘은 빼고",
+    "감독모드용으로 수비가 탄탄한 스쿼드"
+  ];
+  var EDIT_CHIPS = [
+    "좀 더 공격적으로 바꿔줘",
+    "예산 20% 줄여서 더 싸게",
+    "포메이션만 4-3-3으로",
+    "미드필더를 더 활동량 좋은 선수로",
+    "수비 라인을 더 빠른 선수로"
+  ];
+
+  var ERRORS = {
+    not_granted: "Claude 사용이 허용되지 않았어요. 페이지를 다시 열고 허용하면 쓸 수 있어요.",
+    sampling_disabled: "이 계정에서는 Claude를 호출할 수 없어요.",
+    not_declared: "이 화면에서는 AI 기능을 쓸 수 없어요.",
+    capability_disabled: "이 화면에서는 AI 기능을 쓸 수 없어요.",
+    capability_removed: "Claude 앱을 업데이트하면 AI 기능을 쓸 수 있어요.",
+    rate_limited: "요청이 많거나 사용량 한도에 닿았어요. 잠시 후 다시 눌러 주세요.",
+    session_expired: "로그인이 만료됐어요. 다시 로그인한 뒤 시도해 주세요.",
+    refused: "이 요청은 처리할 수 없어요. 표현을 바꿔서 다시 요청해 주세요.",
+    empty_completion: "답이 비어 있었어요. 요청을 조금 더 구체적으로 적어 주세요.",
+    invalid_json: "코치 답변을 읽지 못했어요. 한 번 더 눌러 주세요.",
+    prompt_too_large: "대화가 너무 길어졌어요. '처음부터 새로'를 누르고 다시 요청해 주세요.",
+    upstream_error: "연결이 잠깐 끊겼어요. 다시 눌러 주세요.",
+    no_backend: "AI에 연결되지 않았어요. claude.ai에서 이 페이지를 열거나, 폴더에서 npm start로 서버를 켜 주세요."
+  };
+  var FATAL = { not_granted: 1, sampling_disabled: 1, not_declared: 1, capability_disabled: 1, capability_removed: 1, no_backend: 1 };
+
+  function $(id) { return document.getElementById(id); }
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) {
+      for (var k in attrs) {
+        if (attrs[k] == null || attrs[k] === false) continue;
+        if (k === "class") el.className = attrs[k];
+        else if (k === "text") el.textContent = attrs[k];
+        else if (k.slice(0, 2) === "on") el.addEventListener(k.slice(2), attrs[k]);
+        else el.setAttribute(k, attrs[k]);
+      }
+    }
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c == null || c === false) continue;
+      if (Array.isArray(c)) c.forEach(function (x) { if (x) el.append(x); });
+      else el.append(c);
+    }
+    return el;
+  }
+
+  var state = {
+    result: Spec.EXAMPLE,
+    isExample: true,
+    history: [],
+    mode: "manual",
+    sel: -1,
+    busy: false,
+    ctl: null,
+    fatal: false
+  };
+
+  // Per-viewer convenience: keep the last squad and form values in this browser.
+  function load() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+      if (!saved) return;
+      if (saved.mode === "coach" || saved.mode === "manual") state.mode = saved.mode;
+      if (typeof saved.budget === "string") $("budget").value = saved.budget;
+      if (typeof saved.owned === "string" && saved.owned) { $("owned").value = saved.owned; $("owned-box").open = true; }
+      if (saved.result) {
+        state.result = Spec.normalizeResult(saved.result);
+        state.isExample = false;
+        state.history = Array.isArray(saved.history) ? saved.history.filter(function (x) { return typeof x === "string"; }).slice(-8) : [];
+      }
+    } catch (e) { /* storage unavailable or stale: start from the example */ }
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        mode: state.mode,
+        budget: $("budget").value,
+        owned: $("owned").value,
+        result: state.isExample ? null : state.result,
+        history: state.history
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  // ---- AI backends: claude.ai artifact (sample) or the local server (/api/generate)
+  var backendPromise = (async function detect() {
+    if (window.claude && typeof window.claude.use === "function") {
+      try {
+        var sample = await window.claude.use("sample");
+        if (sample) return { kind: "artifact", sample: sample };
+      } catch (e) { /* fall through */ }
+      return null;
+    }
+    try {
+      var r = await fetch("api/health", { cache: "no-store" });
+      if (r.ok) {
+        var j = await r.json();
+        if (j && j.ok) return { kind: "server", demo: !!j.demo };
+      }
+    } catch (e) { /* no server */ }
+    return null;
+  })();
+
+  backendPromise.then(function (be) {
+    if (!be) showNotice(ERRORS.no_backend);
+    else if (be.demo) setStatus("데모 서버에 연결됐어요. 어떤 요청이든 예시 스쿼드로 답해요.");
+  });
+
+  async function readServerStream(res, onProgress) {
+    var reader = res.body.getReader();
+    var dec = new TextDecoder();
+    var buf = "";
+    var result = null;
+    function handle(line) {
+      if (!line.trim()) return;
+      var ev = JSON.parse(line);
+      if (ev.type === "progress") onProgress(ev);
+      else if (ev.type === "result") result = ev.result;
+      else if (ev.type === "error") throw { code: "server_error", message: ev.message };
+    }
+    for (;;) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      buf += dec.decode(chunk.value, { stream: true });
+      var i;
+      while ((i = buf.indexOf("\n")) >= 0) {
+        handle(buf.slice(0, i));
+        buf = buf.slice(i + 1);
+      }
+    }
+    handle(buf);
+    if (!result) throw { code: "server_error", message: "서버 응답이 중간에 끊겼어요. 다시 눌러 주세요." };
+    return result;
+  }
+
+  async function askCoach(payload, signal, onProgress) {
+    var be = await backendPromise;
+    if (!be) throw { code: "no_backend" };
+    if (be.kind === "artifact") {
+      var raw = await be.sample.json(Spec.buildStandalonePrompt(payload), {
+        signal: signal,
+        cache: false,
+        onText: function (u) { onProgress(Spec.progressFromText(u.text)); }
+      });
+      return Spec.normalizeResult(raw);
+    }
+    var res;
+    try {
+      res = await fetch("api/generate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: signal
+      });
+    } catch (e) {
+      if (e && e.name === "AbortError") throw { code: "cancelled" };
+      throw { code: "server_error", message: "서버에 연결하지 못했어요. npm start가 켜져 있는지 확인해 주세요." };
+    }
+    if (!res.ok || !res.body) {
+      var msg = "";
+      try { msg = (await res.json()).error; } catch (e) { /* ignore */ }
+      throw { code: "server_error", message: msg || "서버 오류 (" + res.status + ")" };
+    }
+    try {
+      return Spec.normalizeResult(await readServerStream(res, onProgress));
+    } catch (e) {
+      if (e && e.name === "AbortError") throw { code: "cancelled" };
+      throw e;
+    }
+  }
+
+  // ---- UI state
+  function setStatus(text, opts) {
+    var el = $("status");
+    el.textContent = "";
+    el.className = "status" + (opts && opts.err ? " err" : "");
+    if (opts && opts.spin) el.append(h("span", { class: "spinner", "aria-hidden": "true" }));
+    if (text) el.append(h("span", { text: text }));
+    // The ticking clock is visual only, so screen readers don't hear it every second.
+    if (opts && opts.clock) el.append(h("span", { "aria-hidden": "true", text: "· " + opts.clock }));
+  }
+  function showNotice(text) {
+    var n = $("notice");
+    n.textContent = text || "";
+    n.hidden = !text;
+  }
+  function setBusy(busy) {
+    state.busy = busy;
+    $("go").disabled = busy || state.fatal;
+    $("stop").hidden = !busy;
+    $("board").classList.toggle("busy", busy);
+    $("board").setAttribute("aria-busy", busy ? "true" : "false");
+  }
+
+  function renderComposer() {
+    var editing = !state.isExample;
+    $("req-label").textContent = editing ? "바꾸고 싶은 점을 말해주세요" : "어떤 스쿼드를 원하세요?";
+    $("req").placeholder = editing
+      ? "예: 왼쪽 윙어를 더 싼 선수로 바꾸고, 수비는 조금 더 내려줘"
+      : "예: 토트넘 팀컬러로 손흥민 꼭 넣고, 역습 위주 4-2-3-1로 짜줘";
+    $("go").textContent = editing ? "수정 요청" : "스쿼드 짜기";
+    $("reset").hidden = !editing;
+    ["manual", "coach"].forEach(function (m) {
+      $("mode-" + m).setAttribute("aria-checked", state.mode === m ? "true" : "false");
+    });
+    var chips = $("chips");
+    chips.textContent = "";
+    (editing ? EDIT_CHIPS : START_CHIPS).forEach(function (t) {
+      chips.append(h("button", {
+        type: "button", class: "chip", text: t,
+        onclick: function () { $("req").value = t; $("req").focus(); }
+      }));
+    });
+    var hist = $("history");
+    hist.textContent = "";
+    hist.hidden = !editing || !state.history.length;
+    state.history.forEach(function (t, i) {
+      hist.append(h("li", null, h("b", { text: String(i + 1) }), h("span", { text: t })));
+    });
+  }
+
+  // viewBox is (-3,-3) 74x111 around a 68x105 pitch
+  function pitchLeft(x) { return ((3 + (x / 100) * 68) / 74) * 100; }
+  function pitchTop(y) { return ((3 + (1 - y / 100) * 105) / 111) * 100; }
+
+  function renderPitch() {
+    var tokens = $("tokens");
+    tokens.textContent = "";
+    state.result.starters.forEach(function (p, i) {
+      var isGk = p.pos === "GK";
+      var tok = h("button", {
+        type: "button",
+        class: "tok" + (isGk ? " gk" : "") + (state.sel === i ? " sel" : ""),
+        style: "left:" + pitchLeft(p.x).toFixed(2) + "%;top:" + pitchTop(p.y).toFixed(2) + "%",
+        "aria-label": p.pos + " " + p.name,
+        "aria-pressed": state.sel === i ? "true" : "false",
+        onclick: function () { select(i); }
+      },
+        h("span", { class: "disc", text: p.pos }),
+        h("span", { class: "nm", text: p.name }),
+        p.card ? h("span", { class: "cd", text: p.card }) : null
+      );
+      tokens.append(tok);
+    });
+    renderDetail();
+  }
+
+  function statLine(p) {
+    var bits = [];
+    if (p.ovr) bits.push(h("span", { class: "stat" }, "OVR ", h("b", { text: String(p.ovr) })));
+    if (p.salary) bits.push(h("span", { class: "stat" }, "급여 ", h("b", { text: String(p.salary) })));
+    if (p.price) bits.push(h("span", { class: "stat", text: p.price }));
+    return bits;
+  }
+
+  function renderDetail() {
+    var d = $("detail");
+    var p = state.result.starters[state.sel];
+    d.textContent = "";
+    d.hidden = !p;
+    if (!p) return;
+    d.append(
+      h("div", { class: "detail-head" },
+        h("span", { class: "pos" + (p.pos === "GK" ? " gk" : ""), style: "grid-row:auto;width:46px", text: p.pos }),
+        h("strong", { text: p.name }),
+        p.card ? h("span", { class: "season", text: p.card }) : null,
+        statLine(p)
+      ),
+      p.role ? h("div", { class: "prole", text: "역할: " + p.role }) : null,
+      p.instructions.length ? h("div", { class: "inst" }, p.instructions.map(function (t) { return h("span", { text: t }); })) : null,
+      p.why ? h("p", { class: "why-line", text: p.why }) : null
+    );
+  }
+
+  function select(i) {
+    state.sel = state.sel === i ? -1 : i;
+    renderPitch();
+    document.querySelectorAll(".prow[data-i]").forEach(function (row) {
+      row.classList.toggle("sel", Number(row.getAttribute("data-i")) === state.sel);
+      row.setAttribute("aria-pressed", Number(row.getAttribute("data-i")) === state.sel ? "true" : "false");
+    });
+  }
+
+  function section(title) {
+    var kids = Array.prototype.slice.call(arguments, 1).filter(Boolean);
+    if (!kids.length) return null;
+    return h("section", { class: "card blk" }, h("h3", { text: title }), kids);
+  }
+
+  function groupBy(items) {
+    var order = [];
+    var map = {};
+    items.forEach(function (t) {
+      var g = t.group || "기타";
+      if (!map[g]) { map[g] = []; order.push(g); }
+      map[g].push(t);
+    });
+    return order.map(function (g) { return [g, map[g]]; });
+  }
+
+  function renderTactics(r) {
+    var all = r.team_tactics.map(function (t) { return { kind: "pick", group: t.group, t: t }; })
+      .concat(r.sliders.map(function (t) { return { kind: "num", group: t.group, t: t }; }));
+    if (!all.length) return null;
+    var groups = groupBy(all);
+    var out = [];
+    groups.forEach(function (g) {
+      if (groups.length > 1) out.push(h("h4", { text: g[0] }));
+      out.push(h("ul", { class: "tac-list" }, g[1].map(function (item) {
+        var t = item.t;
+        if (item.kind === "pick") {
+          return h("li", { class: "tac-row" },
+            h("span", { class: "lbl", text: t.label }),
+            h("span", { class: "val", text: t.value }),
+            t.why ? h("span", { class: "why", text: t.why }) : null
+          );
+        }
+        var pct = ((t.value - t.min) / (t.max - t.min)) * 100;
+        return h("li", { class: "slider" },
+          h("span", { class: "lbl", text: t.label }),
+          h("span", { class: "val" }, String(t.value), h("small", { text: " / " + t.max })),
+          h("span", { class: "bar", role: "img", "aria-label": t.label + " " + t.value + " / " + t.max },
+            h("i", { style: "width:" + Math.max(4, pct).toFixed(1) + "%" })),
+          t.why ? h("span", { class: "why", text: t.why }) : null
+        );
+      })));
+    });
+    return section.apply(null, ["팀 전술"].concat(out));
+  }
+
+  function renderPlayers(r) {
+    return section("선발 · 역할 · 개인 전술",
+      h("ul", { class: "players" }, r.starters.map(function (p, i) {
+        return h("li", {
+          class: "prow" + (state.sel === i ? " sel" : ""), "data-i": String(i), tabindex: "0", role: "button",
+          "aria-pressed": state.sel === i ? "true" : "false",
+          onclick: function () { select(i); },
+          onkeydown: function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i); } }
+        },
+          h("span", { class: "pos" + (p.pos === "GK" ? " gk" : ""), text: p.pos }),
+          h("div", { class: "pname" },
+            h("strong", { text: p.name }),
+            p.card ? h("span", { class: "season", text: p.card }) : null,
+            statLine(p)
+          ),
+          p.role ? h("div", { class: "prole", text: p.role }) : null,
+          p.instructions.length ? h("div", { class: "inst" }, p.instructions.map(function (t) { return h("span", { text: t }); })) : null
+        );
+      }))
+    );
+  }
+
+  function renderBench(r) {
+    if (!r.bench.length) return null;
+    return section("벤치",
+      h("ul", { class: "players" }, r.bench.map(function (p) {
+        return h("li", { class: "prow", style: "cursor:default" },
+          h("span", { class: "pos bench", text: p.pos || "SUB" }),
+          h("div", { class: "pname" },
+            h("strong", { text: p.name }),
+            p.card ? h("span", { class: "season", text: p.card }) : null,
+            statLine(p)
+          ),
+          p.why ? h("p", { class: "why-line", text: p.why }) : null
+        );
+      }))
+    );
+  }
+
+  function renderHead(r) {
+    var salary = Spec.totalSalary(r);
+    var meta = [];
+    if (r.formation) meta.push(h("span", null, h("em", { text: "포메이션" }), h("b", { class: "num", text: r.formation })));
+    if (r.team_color) meta.push(h("span", null, h("em", { text: "팀컬러" }), h("b", { text: r.team_color })));
+    if (r.total_cost) meta.push(h("span", null, h("em", { text: "예상 총액" }), h("b", { text: r.total_cost })));
+    if (salary) meta.push(h("span", null, h("em", { text: "급여 합계" }), h("b", { class: "num", text: String(salary) })));
+    meta.push(h("span", null, h("em", { text: "경기 방식" }), h("b", { text: state.mode === "coach" ? "감독모드" : "공식경기" })));
+
+    var copyArea = h("textarea", { class: "copy-fallback", readonly: "readonly", hidden: "hidden", "aria-label": "복사할 스쿼드 텍스트" });
+    var copyBtn = h("button", {
+      type: "button", class: "btn ghost", text: "텍스트로 복사",
+      onclick: function () {
+        var text = Spec.toPlainText(state.result);
+        function fallback() {
+          copyArea.value = text;
+          copyArea.hidden = false;
+          copyArea.focus();
+          copyArea.select();
+          copyBtn.textContent = "아래 글을 직접 복사해 주세요";
+        }
+        try {
+          navigator.clipboard.writeText(text).then(function () {
+            copyBtn.textContent = "복사했어요";
+            setTimeout(function () { copyBtn.textContent = "텍스트로 복사"; }, 1800);
+          }, fallback);
+        } catch (e) { fallback(); }
+      }
+    });
+
+    return h("section", { class: "card squad-head" },
+      h("div", { class: "squad-title" },
+        h("h2", { text: r.squad_name }),
+        state.isExample ? h("span", { class: "tag-example", text: "예시" }) : null
+      ),
+      r.concept ? h("p", { class: "concept", text: r.concept }) : null,
+      h("div", { class: "meta" }, meta),
+      r.reply ? h("p", { class: "reply" }, h("b", { text: "코치" }), r.reply) : null,
+      h("div", { class: "head-actions" }, copyBtn),
+      copyArea
+    );
+  }
+
+  function renderRest(r) {
+    var sets = r.set_pieces.length ? h("dl", { class: "kv" }, r.set_pieces.map(function (t) {
+      return [h("dt", { text: t.duty }), h("dd", { text: t.player })];
+    }).reduce(function (a, b) { return a.concat(b); }, [])) : null;
+
+    var plans = r.game_plans.length ? h("ul", { class: "plans" }, r.game_plans.map(function (t) {
+      return h("li", null, h("b", { text: t.when }), h("span", { text: t.change }));
+    })) : null;
+
+    var tips = (r.attack_tips.length || r.defense_tips.length) ? h("div", { class: "tips" },
+      r.attack_tips.length ? h("div", null, h("h4", { text: "공격할 때" }), h("ol", null, r.attack_tips.map(function (t) { return h("li", { text: t }); }))) : null,
+      r.defense_tips.length ? h("div", null, h("h4", { text: "수비할 때" }), h("ol", null, r.defense_tips.map(function (t) { return h("li", { text: t }); }))) : null
+    ) : null;
+
+    var alts = r.alternatives.length ? h("ul", { class: "alts" }, r.alternatives.map(function (t) {
+      return h("li", null,
+        h("div", { class: "swap" },
+          t.replace ? h("s", { text: t.replace }) : null,
+          t.replace ? h("span", { class: "arrow", text: "→" }) : null,
+          h("span", { text: t.candidate }),
+          t.price ? h("span", { class: "stat", text: t.price }) : null
+        ),
+        t.why ? h("span", { class: "why-line", text: t.why }) : null
+      );
+    })) : null;
+
+    var cav = r.caveats.length ? h("ul", { class: "caveats" }, r.caveats.map(function (t) { return h("li", { text: t }); })) : null;
+
+    return [
+      section("세트피스 키커", sets),
+      section("상황별 전술", plans),
+      section(state.mode === "coach" ? "감독모드 운영 팁" : "이렇게 플레이하세요", tips),
+      section("대체 선수", alts),
+      section("참고", cav)
+    ];
+  }
+
+  function render() {
+    var r = state.result;
+    renderComposer();
+    renderPitch();
+    var info = $("info");
+    info.textContent = "";
+    [renderHead(r), renderTactics(r), renderPlayers(r), renderBench(r)].concat(renderRest(r)).forEach(function (el) {
+      if (el) info.append(el);
+    });
+  }
+
+  // ---- Actions
+  async function submit() {
+    if (state.busy || state.fatal) return;
+    var request = $("req").value.trim();
+    if (!request) {
+      setStatus("원하는 스쿼드를 먼저 적어 주세요.", { err: true });
+      $("req").focus();
+      return;
+    }
+    var editing = !state.isExample;
+    var payload = {
+      request: request,
+      mode: state.mode,
+      budget: $("budget").value.trim(),
+      owned: $("owned").value.trim(),
+      current: editing ? state.result : null,
+      history: editing ? state.history.slice(-6) : []
+    };
+    var ctl = new AbortController();
+    state.ctl = ctl;
+    var started = Date.now();
+    var progress = null;
+    function paint() {
+      var secs = Math.round((Date.now() - started) / 1000);
+      var label = progress ? progress.phase : (editing ? "코치가 수정안을 구상하는 중" : "코치가 스쿼드를 구상하는 중");
+      setStatus(label, { spin: true, clock: secs + "초" });
+    }
+    showNotice("");
+    setBusy(true);
+    paint();
+    var timer = setInterval(paint, 1000);
+    try {
+      var result = await askCoach(payload, ctl.signal, function (p) { progress = p; paint(); });
+      state.result = result;
+      state.isExample = false;
+      state.history = payload.history.concat([request]).slice(-8);
+      state.sel = -1;
+      $("req").value = "";
+      save();
+      render();
+      setStatus((editing ? "수정 완료" : "스쿼드 완성") + " · " + Math.round((Date.now() - started) / 1000) + "초");
+    } catch (e) {
+      var code = (e && e.code) || "upstream_error";
+      if (code === "cancelled") {
+        setStatus("요청을 멈췄어요.");
+      } else {
+        var msg = code === "server_error" ? e.message : (ERRORS[code] || ERRORS.upstream_error);
+        setStatus(msg, { err: true });
+        if (FATAL[code]) { state.fatal = true; showNotice(msg); }
+      }
+    } finally {
+      clearInterval(timer);
+      state.ctl = null;
+      setBusy(false);
+    }
+  }
+
+  $("go").addEventListener("click", submit);
+  $("stop").addEventListener("click", function () { if (state.ctl) state.ctl.abort(); });
+  $("req").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submit(); }
+  });
+  $("reset").addEventListener("click", function () {
+    if (state.busy) return;
+    state.result = Spec.EXAMPLE;
+    state.isExample = true;
+    state.history = [];
+    state.sel = -1;
+    save();
+    render();
+    setStatus("예시로 돌아왔어요. 새 스쿼드를 요청해 주세요.");
+    $("req").focus();
+  });
+  document.querySelectorAll(".seg button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      state.mode = b.getAttribute("data-mode");
+      save();
+      render();
+    });
+  });
+  ["budget", "owned"].forEach(function (id) { $(id).addEventListener("change", save); });
+
+  // Grass stripes: 10 bands along the 105m length.
+  var stripes = $("stripes");
+  for (var s = 0; s < 10; s++) {
+    var band = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    band.setAttribute("x", "-3");
+    band.setAttribute("y", String(s * 10.5));
+    band.setAttribute("width", "74");
+    band.setAttribute("height", "10.5");
+    band.setAttribute("class", s % 2 ? "stripe-b" : "stripe-a");
+    stripes.append(band);
+  }
+
+  load();
+  render();
+})();
+</script>
