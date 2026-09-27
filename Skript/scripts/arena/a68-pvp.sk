@@ -139,7 +139,6 @@ on death of player:
     # 가방 유지 + 바닥에 떨어지는 것 지우기 (안 지우면 복사됨)
     keep the inventory and experience
     clear drops
-    set dropped exp to 0
     if attacker is a player:
         set death message to "&c[연습장] &f%name of attacker% &7⚔ &f%name of victim%"
         stop

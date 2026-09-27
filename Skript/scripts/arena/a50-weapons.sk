@@ -288,13 +288,34 @@ function bgShopOpen(p: player):
     play sound "block.chest.open" to {_p}
 
 # ─────────────────────────────────────────────────────────── 광물 (캐면 가방에, 죽으면 떨어뜨림, 상점에서 일괄 판매)
+# 광물 아이템 ('raw iron' 을 코드에 바로 쓰면 Skript 가 raw 식으로 잘못 읽는다 → 문자열에서 변환)
+on load:
+    set {-bg::it::riron} to "raw iron" parsed as item type
+    set {-bg::it::rcopper} to "raw copper" parsed as item type
+    set {-bg::it::rgold} to "raw gold" parsed as item type
+    set {-bg::it::emerald} to "emerald" parsed as item type
+    set {-bg::it::diamond} to "diamond" parsed as item type
+
+function bgOreVal(i: item) :: number:
+    if {_i} is {-bg::it::riron}:
+        return 2
+    if {_i} is {-bg::it::rcopper}:
+        return 2
+    if {_i} is {-bg::it::rgold}:
+        return 3
+    if {_i} is {-bg::it::emerald}:
+        return 6
+    if {_i} is {-bg::it::diamond}:
+        return 10
+    return 0
+
 function bgOreTotal(p: player) :: number:
     set {_n} to 0
-    add 2 * (amount of raw iron in {_p}'s inventory) to {_n}
-    add 2 * (amount of raw copper in {_p}'s inventory) to {_n}
-    add 3 * (amount of raw gold in {_p}'s inventory) to {_n}
-    add 6 * (amount of emerald in {_p}'s inventory) to {_n}
-    add 10 * (amount of diamond in {_p}'s inventory) to {_n}
+    add 2 * (amount of {-bg::it::riron} in {_p}'s inventory) to {_n}
+    add 2 * (amount of {-bg::it::rcopper} in {_p}'s inventory) to {_n}
+    add 3 * (amount of {-bg::it::rgold} in {_p}'s inventory) to {_n}
+    add 6 * (amount of {-bg::it::emerald} in {_p}'s inventory) to {_n}
+    add 10 * (amount of {-bg::it::diamond} in {_p}'s inventory) to {_n}
     return {_n}
 
 function bgOreSell(p: player):
@@ -303,12 +324,10 @@ function bgOreSell(p: player):
         send "&6[상점] &7팔 광물이 없습니다. &f본진 광석 바위를 곡괭이로 캐 오세요." to {_p}
         play sound "entity.villager.no" to {_p}
         stop
-    set {_k} to (amount of raw iron in {_p}'s inventory) + (amount of raw copper in {_p}'s inventory) + (amount of raw gold in {_p}'s inventory) + (amount of emerald in {_p}'s inventory) + (amount of diamond in {_p}'s inventory)
-    remove all raw iron from {_p}'s inventory
-    remove all raw copper from {_p}'s inventory
-    remove all raw gold from {_p}'s inventory
-    remove all emerald from {_p}'s inventory
-    remove all diamond from {_p}'s inventory
+    set {_k} to 0
+    loop "riron", "rcopper", "rgold", "emerald" and "diamond":
+        add (amount of {-bg::it::%loop-value%} in {_p}'s inventory) to {_k}
+        remove all {-bg::it::%loop-value%} from {_p}'s inventory
     add {_n} to {bg::coin::%uuid of {_p}%}
     send "&6[상점] &a광물 %{_k}%개 일괄 판매 &e+%{_n}% 코인 &7(보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
     play sound "entity.experience_orb.pickup" to {_p}

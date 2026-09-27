@@ -145,19 +145,19 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     set {_l} to location of event-block
     bgAtBaseOre({_l}) is true
     set {_ty} to type of event-block
-    set {_drop} to raw iron
+    set {_drop} to {-bg::it::riron}
     set {_nm} to "철 원석 (2코인)"
     if event-block is copper ore:
-        set {_drop} to raw copper
+        set {_drop} to {-bg::it::rcopper}
         set {_nm} to "구리 원석 (2코인)"
     else if event-block is gold ore:
-        set {_drop} to raw gold
+        set {_drop} to {-bg::it::rgold}
         set {_nm} to "금 원석 (3코인)"
     else if event-block is emerald ore:
-        set {_drop} to emerald
+        set {_drop} to {-bg::it::emerald}
         set {_nm} to "에메랄드 (6코인)"
     else if event-block is diamond ore:
-        set {_drop} to diamond
+        set {_drop} to {-bg::it::diamond}
         set {_nm} to "다이아몬드 (10코인)"
     # 캔 자리는 기반암(못 캠)으로 → 2초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
     set block at {_l} to bedrock

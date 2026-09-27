@@ -375,7 +375,7 @@ on death of player:
         if bgIsLegend(loop-item) is not "":
             set {bg::owned::%uuid of victim%::%bgIsLegend(loop-item)%} to true
         # 캔 광물은 그 자리에 떨어뜨린다 (약탈)
-        if loop-item is raw iron or raw copper or raw gold or emerald or diamond:
+        if bgOreVal(loop-item) > 0:
             add loop-item to {_ores::*}
     clear drops
     if size of {_ores::*} > 0:
