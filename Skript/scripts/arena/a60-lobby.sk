@@ -50,6 +50,9 @@ function bgSendPack(p: player):
 command /리팩 [<text>]:
     aliases: /rp
     trigger:
+        # update 후 /sk reload 를 안 해도 최신 팩 주소 · sha1 을 쓰도록 팩 정보 스크립트만 다시 읽는다
+        execute console command "sk reload arena/a04-gen-pack.sk"
+        wait 20 ticks
         if arg-1 is "@a" or "all" or "전체":
             if sender is a player:
                 if player is not op:
@@ -64,7 +67,7 @@ command /리팩 [<text>]:
             send "&c사용법: /리팩 @a"
             stop
         bgSendPack(player)
-        send "&6[전장] &f최신 리소스팩을 보냈습니다. 화면에서 '예' 를 눌러주세요."
+        send "&6[전장] &f최신 리소스팩을 보냈습니다. 화면에서 '예' 를 눌러주세요. &7(팩 %{-bg::pack::sha1}%)"
 
 on join:
     wait 20 ticks
