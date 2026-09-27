@@ -49,6 +49,18 @@ on load:
     bgWDef("b_talos", "탈로스의 청동 대검", 0, 18, "gold", "보스 전용 · 우클릭 청동 폭주: 세 번 연속 돌진 + 저항 · 힘 (5초) · 18초")
     bgWDef("b_sphinx", "스핑크스의 모래시계", 0, 20, "yellow", "보스 전용 · 우클릭 시간의 모래폭풍: 반경 7 적 구속 V · 실명 (3초) · 20초")
     bgWDef("b_ladon", "히드라의 삼두 채찍", 0, 14, "dark_green", "보스 전용 · 우클릭 삼두 채찍질: 세 갈래로 독 채찍 (독 · 시듦) · 14초")
+    # 보스에게 주는 스킬 피해 (하트, 1.6배 · 보스 체력은 6배로 깎임) — 기본 5, 한 방 스킬은 더 세게
+    set {-bg::w::thunder::bossdmg} to 7
+    set {-bg::w::phoenix::bossdmg} to 6
+    set {-bg::w::staff::bossdmg} to 6
+    set {-bg::w::tiger::bossdmg} to 3
+    set {-bg::w::wind::bossdmg} to 4
+    set {-bg::w::skull::bossdmg} to 3
+    set {-bg::w::chakram::bossdmg} to 4
+    set {-bg::w::gauntlet::bossdmg} to 6
+    set {-bg::w::storm::bossdmg} to 7
+    set {-bg::w::b_talos::bossdmg} to 6
+    set {-bg::w::b_cyclops::bossdmg} to 9
     bgWDef("b_cyclops", "외눈 거인의 곤봉", 0, 18, "gold", "보스 전용 · 우클릭 거암 투척: 거대한 바위를 던져 땅을 뒤흔듦 · 18초")
 
 # ─────────────────────────────────────────────────────────── 코인
@@ -407,6 +419,8 @@ function bgWRune(l: location, m: text, d: number, t: number):
 
 # 적 판정: 다른 팀 전투 참가자
 function bgEnemies(p: player, c: location, r: number) :: players:
+    # 스킬 범위 안에 보스가 있으면 보스도 맞는다
+    bgBossSkillHit({_p}, {_c}, {_r})
     loop all players:
         if bgIsFighter(loop-player) is true:
             if bgTeam(loop-player) is not bgTeam({_p}):

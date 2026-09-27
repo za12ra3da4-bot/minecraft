@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.join(HERE, "rp"))
 import render as R
 import scene as SC
 import weapons_legend2 as WL
+import skillfx2 as FX2
 
 OUT = os.path.join(HERE, "..", "preview")
 SUN = np.array((-0.45, 0.78, -0.35)); SUN /= np.linalg.norm(SUN)
@@ -137,6 +138,11 @@ class Scene:
         sx, sy, sz = size
         SC.box(self.m, tid, (-sx / 2, 0, -sz / 2), (sx / 2, sy, sz / 2), M, SUN)
 
+    def fx(self, name, x, z, size, yaw=0.0, y=G + 0.03, fwd=0.0):
+        if name not in _cache:
+            _cache[name] = FX2.FX[name]()
+        SC.decal(self.m, _cache[name], name, x, y, z, size, size, yaw, fwd)
+
     def player(self, x, z, yaw, team, y=G, pose=0.0):
         SC.player(self.m, x, y, z, yaw, team, SUN, pose)
 
@@ -170,6 +176,9 @@ def cam_default(tx=CX, tz=12.0):
 # ── 장면들 (시전자 = 레드, 앞쪽 = +z)
 def s_frost():
     sc = Scene(*cam_default())
+    sc.fx('fx2_frost_burst', CX - 1.6, CZ + 13, 4.6)
+    sc.fx('fx2_frost_burst', CX + 1.6, CZ + 13, 4.0)
+    sc.fx('fx2_frost_arrow', CX, CZ + 7, 2.2, y=G + 1.3)
     sc.player(CX, CZ, 0, "red")
     sc.weapon("frost", (CX + 0.35, G + 1.25, CZ + 0.5), (0, 1, 0.15), (1, 0, 0), 1.6)
     for k, dx in enumerate((-1.6, 0, 1.6)):
@@ -188,6 +197,7 @@ def s_frost():
 
 def s_storm():
     sc = Scene(*cam_default())
+    sc.fx('fx2_storm_strike', CX, CZ + 12, 7)
     sc.player(CX, CZ, 0, "red", pose=1)
     sc.weapon("storm", (CX, G + 2.3, CZ + 6), (0, -0.25, 1), (1, 0, 0), 2.6)
     sc.line("st", (120, 180, 255), (CX, G + 1.6, CZ + 1), (CX, G + 2.3, CZ + 5), 12, 0.12)
@@ -207,6 +217,7 @@ def s_storm():
 
 def s_scythe():
     sc = Scene((CX + 6, G + 5.5, CZ - 5), (CX, G + 1, CZ + 1))
+    sc.fx('fx2_scythe_ring', CX, CZ, 8.5)
     sc.player(CX, CZ, 30, "red", pose=1)
     for k in range(3):
         a = math.radians(40 + k * 45)
@@ -222,6 +233,7 @@ def s_scythe():
 
 def s_lance():
     sc = Scene(*cam_default())
+    sc.fx('fx2_lance_streak', CX, CZ + 4, 5)
     px = np.array((CX, G, CZ + 6))
     sc.player(px[0], px[2], 0, "red", pose=1)
     sc.weapon("lance", px + (0.35, 1.1, 1.6), (0, 0.05, 1), (1, 0, 0), 3.2)
@@ -236,6 +248,7 @@ def s_lance():
 
 def s_skull():
     sc = Scene(*cam_default())
+    sc.fx('fx2_skull_miasma', CX, CZ + 11, 6.6)
     sc.player(CX, CZ, 0, "red", pose=1)
     sc.weapon("skull", (CX + 0.35, G + 1.3, CZ + 0.6), (0, 1, 0.2), (1, 0, 0), 1.8)
     hit = np.array((CX, G + 0.2, CZ + 11))
@@ -252,6 +265,7 @@ def s_skull():
 
 def s_chakram():
     sc = Scene(*cam_default())
+    sc.fx('fx2_chakram_sun', CX + 0.5, CZ + 7, 2.6, y=G + 1.15)
     sc.player(CX, CZ, 0, "red", pose=1)
     c = np.array((CX + 0.5, G + 1.3, CZ + 7))
     sc.weapon("chakram", c, (0, 0, 1), (0, 1, 0), 2.0)
@@ -266,6 +280,7 @@ def s_chakram():
 
 def s_chain():
     sc = Scene(*cam_default())
+    sc.fx('fx2_chain_hook', CX + 1, CZ + 6, 4)
     sc.player(CX, CZ, 0, "red", pose=1)
     sc.weapon("chain", (CX + 0.3, G + 1.3, CZ + 0.6), (0, 0.8, 0.6), (1, 0, 0), 1.8)
     tg = np.array((CX + 1, G, CZ + 6))
@@ -281,6 +296,7 @@ def s_chain():
 
 def s_gauntlet():
     sc = Scene(*cam_default())
+    sc.fx('fx2_gauntlet_fissure', CX, CZ + 7.2, 13)
     sc.player(CX, CZ, 0, "red", pose=1)
     sc.weapon("gauntlet", (CX + 0.4, G + 1.1, CZ + 0.5), (0, 0.3, 1), (1, 0, 0), 1.3)
     cols = [(120, 118, 114), (140, 138, 132), (104, 100, 96)]
@@ -297,6 +313,8 @@ def s_gauntlet():
 def s_talos():
     sc = Scene(*cam_default())
     for k in range(3):
+        sc.fx('fx2_talos_gear', CX, CZ + k * 2.6, 2.6)
+    for k in range(3):
         z = CZ + k * 2.6
         last = k == 2
         sc.player(CX, z, 0, "red", pose=1) if last else sc.cloud(f"af{k}", (230, 150, 70), (CX, G + 1, z), (0.25, 0.5, 0.25), 20, (0.15, 0.3), seed=30 + k)
@@ -310,6 +328,7 @@ def s_talos():
 
 def s_sphinx():
     sc = Scene((CX + 7, G + 6, CZ - 4), (CX, G + 1.8, CZ + 2))
+    sc.fx('fx2_sphinx_vortex', CX, CZ + 2, 13)
     c = np.array((CX, G, CZ + 2))
     sc.player(c[0], c[2], 20, "red")
     sc.weapon("b_sphinx", c + (0, 4.0, 0), (1, 1, 0), (0.3, 0, -1), 2.2)
@@ -327,6 +346,7 @@ def s_sphinx():
 
 def s_ladon():
     sc = Scene(*cam_default())
+    sc.fx('fx2_ladon_fan', CX, CZ + 3.6, 8.5)
     sc.player(CX, CZ, 0, "red", pose=1)
     for k, a in enumerate((-32, 0, 32)):
         d = np.array((math.sin(math.radians(a)), 0, math.cos(math.radians(a))))
@@ -341,6 +361,7 @@ def s_ladon():
 
 def s_cyclops():
     sc = Scene((CX + 11, G + 6.5, CZ - 2), (CX, G + 3, CZ + 8))
+    sc.fx('fx2_cyclops_crater', CX, CZ + 15, 8)
     sc.player(CX, CZ, 0, "red", pose=1)
     sc.weapon("b_cyclops", (CX + 0.4, G + 1.8, CZ + 0.4), (0, 1, 0.3), (1, 0, 0), 2.0)
     fr = np.array((CX, G + 2.5, CZ)); to = np.array((CX, G + 0.8, CZ + 14))

@@ -28,6 +28,7 @@ function bgSkFrost(p: player):
         wait 2 ticks
 
 function bgFrostArrow(p: player, o: location, a: number):
+    bgFxFly({_o}, "fx2_frost_arrow", 1.8, {_a}, 1.1, 16, 0)
     loop 22 times:
         set {_q} to bgFwd({_o}, {_a}, loop-number * 1.1, 0, 0)
         bgParticle({_q}, "snowflake", 0.05, 0.05, 0.05, 0, 3)
@@ -46,6 +47,7 @@ function bgFrostArrow(p: player, o: location, a: number):
         wait 1 tick
 
 function bgIceSpikes(l: location):
+    bgFxGrow(bgUp({_l}, -1.15), "fx2_frost_burst", 0.8, 4.6, 8, 0.05)
     set {_t} to bgVTag()
     set {_g} to bgUp({_l}, -1.2)
     loop 6 times:
@@ -77,6 +79,8 @@ function bgSkStorm(p: player):
         bgParticle({_q}, "electric_spark", 0.2, 0.2, 0.2, 0.1, 6)
         wait 1 tick
     strike lightning effect at {_end}
+    bgFxGrow(bgUp({_end}, -1.2), "fx2_storm_strike", 1, 7, 7, 0.05)
+    bgWfx(bgUp({_end}, -1.2), "fx2_storm_strike", 6, 30, 0)
     bgParticle({_end}, "electric_spark", 1.5, 1, 1.5, 0.5, 60)
     set {_es::*} to bgNear({_p}, {_end}, 3)
     loop {_es::*}:
@@ -106,6 +110,7 @@ function bgSkScythe(p: player):
     set {_yaw} to yaw of {_p}
     bgWModelQ(bgUp(location of {_p}, 1.0), "scythe", 3.4, {_yaw}, "[0.6533f,0.2706f,-0.2706f,0.6533f]", 0, 0, 2.2, {_t}, 1)
     bgSoundAt(location of {_p}, "entity.warden.attack_impact", 1, 1.4)
+    bgFxGrow(location of {_p}, "fx2_scythe_ring", 2, 9.5, 8, 0.1)
     loop 8 times:
         bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run tp @s ~ ~ ~ ~45 0")
         bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle soul ^ ^ ^2.6 0.3 0.2 0.3 0.02 6 force")
@@ -128,6 +133,7 @@ function bgSkLance(p: player):
     set {_yaw} to yaw of {_p}
     bgWModel(bgFwd(location of {_p}, {_yaw}, 1.5, 0, 1.1), "lance", 3, {_yaw} + 90, -135, 0, 0, 0, {_t}, 1)
     bgSoundAt(location of {_p}, "item.trident.riptide_2", 1.5, 1.1)
+    bgFxFly(location of {_p}, "fx2_lance_streak", 3.4, {_yaw}, 2.1, 9, 0.1)
     bgVel({_p}, vector(-1 * sin({_yaw}) * 2.1, 0.2, cos({_yaw}) * 2.1))
     loop 9 times:
         bgTpTag({_t}, bgFwd(location of {_p}, {_yaw}, 1.6, 0, 1.1), {_yaw} + 90)
@@ -168,6 +174,9 @@ function bgSkSkull(p: player):
     bgParticle({_end}, "explosion", 0.5, 0.5, 0.5, 0, 3)
     bgParticle({_end}, "soul", 1.5, 0.8, 1.5, 0.05, 30)
     bgSoundAt({_end}, "entity.generic.explode", 1.2, 1.4)
+    set {_gl} to bgUp({_end}, -1.4)
+    bgFxGrow({_gl}, "fx2_skull_miasma", 1, 7, 6, 0.05)
+    bgWfx({_gl}, "fx2_skull_miasma", 6.6, 84, 0)
     set {_es::*} to bgNear({_p}, {_end}, 3)
     loop {_es::*}:
         bgDmg(loop-value, 2.5)
@@ -186,6 +195,7 @@ function bgSkChakram(p: player):
     set {_o} to bgUp(location of {_p}, 1.2)
     bgWModelQ({_o}, "chakram", 2.2, 0, "[0.7071f,0f,0f,0.7071f]", 0, 0, 0, {_t}, 1)
     bgSoundAt({_o}, "item.trident.throw", 1.2, 1.6)
+    bgFxFly(bgUp({_o}, -0.15), "fx2_chakram_sun", 2.6, {_yaw}, 1.3, 8, 0)
     loop 8 times:
         set {_q} to bgFwd({_o}, {_yaw}, loop-number * 1.3, 0, 0)
         bgTpTag({_t}, {_q}, loop-number * 50)
@@ -247,6 +257,7 @@ function bgSkChain(p: player):
     bgDmg({_tg}, 1.5)
     bgCmd("effect give %bgPName({_tg})% slowness 2 9 true")
     bgSoundAt(location of {_tg}, "block.chain.break", 1.5, 0.6)
+    bgFxGrow(location of {_tg}, "fx2_chain_hook", 1, 4, 6, 0.08)
     bgShrinkKill({_t}, 4)
 
 # ─────────────────────────────────────────── 거인의 건틀렛: 앞으로 돌기둥이 줄지어 솟아 적을 띄움
@@ -255,6 +266,7 @@ function bgSkGauntlet(p: player):
     set {_o} to location of {_p}
     set {_t} to bgVTag()
     bgSoundAt({_o}, "item.mace.smash_ground_heavy", 1.8, 0.7)
+    bgWfx(bgFwd({_o}, {_yaw}, 7.2, 0, 0.02), "fx2_gauntlet_fissure", 13, 50, {_yaw})
     loop 9 times:
         set {_c} to bgFwd({_o}, {_yaw}, 1.2 + loop-number * 1.3, 0, -2.2)
         set {_blk} to "cobblestone"
@@ -296,6 +308,7 @@ function bgSkBTalos(p: player):
         bgWModel(bgFwd(location of {_p}, {_yaw}, 0.5, 0, 1.1), "b_talos", 3.6, {_yaw} + 90, -135, 0, 0, 0, {_t}, 1)
         bgVel({_p}, vector(-1 * sin({_yaw}) * 1.7, 0.18, cos({_yaw}) * 1.7))
         bgSoundAt(location of {_p}, "block.anvil.land", 1.2, 1.3)
+        bgFxTrail({_p}, "fx2_talos_gear", 2.4, 3)
         loop 6 times:
             bgParticle(bgUp(location of {_p}, 1), "wax_off", 0.4, 0.5, 0.4, 0.05, 8)
             bgParticle(bgUp(location of {_p}, 0.2), "block{block_state:""minecraft:copper_block""}", 0.4, 0.1, 0.4, 0.1, 6)
@@ -323,6 +336,8 @@ function bgSkBSphinx(p: player):
             set {_blk} to "gold_block"
         bgCmd("execute in %bgDim()% run summon block_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 0.3 + mod(loop-number, 4) * 0.7)% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bgfx"",""%{_ts}%""],Rotation:[%loop-number * 22.5%f,0f],block_state:{Name:""minecraft:%{_blk}%""},brightness:{sky:15,block:12},teleport_duration:1,transformation:{left_rotation:[0.2f,0.1f,0.2f,0.95f],right_rotation:[0f,0f,0f,1f],translation:[-0.2f,0f,%bgN(3 + mod(loop-number, 5) * 0.9)%f],scale:[0.4f,0.4f,0.4f]}}")
     bgSoundAt({_l}, "entity.illusioner.cast_spell", 2, 0.7)
+    bgFxGrow({_l}, "fx2_sphinx_vortex", 2, 15, 10, 0.08)
+    bgWRune({_l}, "fx2_sphinx_vortex", 13, 60)
     bgSoundAt({_l}, "block.sand.break", 2, 0.5)
     set {_es::*} to bgNear({_p}, {_l}, 7)
     loop {_es::*}:
@@ -347,6 +362,7 @@ function bgSkBLadon(p: player):
     set {_yaw} to yaw of {_p}
     set {_o} to bgUp(location of {_p}, 1.2)
     bgSoundAt({_o}, "entity.evoker_fangs.attack", 1.5, 0.7)
+    bgWfx(bgFwd(location of {_p}, {_yaw}, 3.6, 0, 0.02), "fx2_ladon_fan", 8.5, 26, {_yaw})
     loop 3 times:
         set {_a} to {_yaw} + (loop-number - 2) * 32
         bgWhipLash({_p}, {_o}, {_a})
@@ -405,6 +421,8 @@ function bgSkBCyclops(p: player):
         bgParticle({_q}, "large_smoke", 0.3, 0.3, 0.3, 0.01, 3)
         wait 1 tick
     bgParticle({_to}, "explosion_emitter", 0, 0, 0, 0, 1)
+    bgFxGrow({_to}, "fx2_cyclops_crater", 2, 10, 7, 0.05)
+    bgWfx({_to}, "fx2_cyclops_crater", 8, 70, 0)
     bgParticle(bgUp({_to}, 0.3), "block{block_state:""minecraft:stone""}", 3, 0.3, 3, 0.2, 120)
     bgSoundAt({_to}, "entity.generic.explode", 2, 0.6)
     bgSoundAt({_to}, "item.mace.smash_ground_heavy", 2, 0.5)
