@@ -10,6 +10,27 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
+  // Where each position code sits on the drawn pitch: [line, lateral slot 0-4 (left→right), y].
+  // y runs from 0 (own goal line) to 100 (opponent goal line).
+  var POS_LAYOUT = {
+    GK: ["GK", 2, 6],
+    LB: ["DEF", 0, 26], LCB: ["DEF", 1, 23], CB: ["DEF", 2, 23], RCB: ["DEF", 3, 23], RB: ["DEF", 4, 26],
+    LWB: ["WB", 0, 37], RWB: ["WB", 4, 37],
+    LDM: ["DM", 1, 40], CDM: ["DM", 2, 40], RDM: ["DM", 3, 40],
+    LM: ["CM", 0, 55], LCM: ["CM", 1, 52], CM: ["CM", 2, 52], RCM: ["CM", 3, 52], RM: ["CM", 4, 55],
+    LAM: ["AM", 1, 64], CAM: ["AM", 2, 64], RAM: ["AM", 3, 64],
+    LW: ["W", 0, 73], RW: ["W", 4, 73],
+    LF: ["FW", 1, 78], CF: ["FW", 2, 77], RF: ["FW", 3, 78],
+    LS: ["ST", 1, 86], ST: ["ST", 2, 86], RS: ["ST", 3, 86]
+  };
+  var LINES = ["GK", "DEF", "WB", "DM", "CM", "AM", "W", "FW", "ST"];
+  var POSITIONS = Object.keys(POS_LAYOUT);
+  // Codes other games or older FIFA titles use.
+  var POS_ALIAS = {
+    SW: "CB", DM: "CDM", LCDM: "LDM", RCDM: "RDM", AM: "CAM", LCAM: "LAM", RCAM: "RAM",
+    SS: "CF", LWF: "LW", RWF: "RW", LCF: "LS", RCF: "RS", FW: "ST", LST: "LS", RST: "RS"
+  };
+
   var SYSTEM_PROMPT = [
     'You are "FC온라인 스쿼드 코치", a veteran squad builder and tactics coach for Nexon\'s FC Online',
     "(EA SPORTS FC Online, formerly FIFA Online 4 / 피파온라인4). Korean players describe the squad they",
@@ -27,10 +48,20 @@
     "  for, plus whatever that change forces (e.g. tactics that no longer fit), and keep the rest identical.",
     "- If an owned-player list is given, build from it as the request says (only those players, or those first).",
     "",
+    "Picking players",
+    "- Only real, well-known players you are confident about. Every starter plays a position he really plays",
+    "  (his natural position or one he regularly played). Never shift a player out of position to fit a",
+    "  constraint: a centre-back stays a centre-back, a striker stays up front. If a must-include player's",
+    "  position clashes with the formation, adjust the formation or put him where he really plays and say so.",
+    "- Team color (팀컬러): in FC Online a club team color counts every club in the player's career history,",
+    "  so former players of that club qualify. When the user asks for a team color, every starter must",
+    "  qualify unless the user says otherwise; nation team color means players of that nationality.",
+    "- No player appears twice (starters and bench together).",
+    "",
     "FC Online conventions",
-    "- Use real players and real FC Online season/card classes you know exist (e.g. ICON, ICON TM, TOTY, TOTS,",
-    "  UCL, BTB, LN, UT, NHD, HR, MOG, LIVE). Never invent a season. Write card as \"<season> +<강화>\",",
-    "  e.g. \"24TOTY +5\".",
+    "- Use real FC Online season/card classes you know exist (e.g. ICON, ICON TM, TOTY, TOTS, UCL, LIVE).",
+    "  Never invent a season. Write card as \"<season> +<강화>\", e.g. \"24TOTY +5\". If you are unsure which",
+    "  season fits, pick one you are sure exists for that player.",
     "- ovr: the card's approximate in-game overall at its position, including enhancement; 0 if unknown.",
     "- salary: the card's 급여 as an integer; 0 if unknown. Keep the squad's total salary within the game's",
     "  salary cap as you know it.",
@@ -46,14 +77,14 @@
     "- attack_tips / defense_tips: 3-5 concrete tips each. For 공식경기, explain how to play this setup by hand",
     "  (patterns, which player to target, moves that suit it). For 감독모드, focus on settings, since the AI plays.",
     "",
-    "Pitch layout",
-    "- Exactly 11 starters with exactly one GK. pos uses FC Online codes: GK, LB, LCB, CB, RCB, RB, LWB, RWB,",
-    "  LDM, CDM, RDM, LCM, CM, RCM, LM, RM, LAM, CAM, RAM, LW, RW, LF, CF, RF, LS, ST, RS.",
-    "- x: 0 = left touchline, 100 = right touchline. y: 0 = own goal line, 100 = opponent goal line (the team",
-    "  attacks upward). GK at y 6; back line y 22-28; holding midfielders 38-46; central midfielders 48-56;",
-    "  attacking midfielders 58-66; wingers 68-76; strikers 78-86. Left-sided positions have x below 50.",
-    "  Keep every pair of players at least 10 units apart.",
-    "- Order starters GK first, then defenders left to right, then midfielders, then attackers.",
+    "Positions",
+    "- Exactly 11 starters with exactly one GK. pos is one of these FC Online codes: " + POSITIONS.join(", ") + ".",
+    "  The page draws the pitch from these codes, so use the left/right codes (LCB/RCB, LDM/RDM, LCM/RCM,",
+    "  LS/RS ...) whenever two players share a line. The starters' positions must add up to the formation",
+    "  (a 4-2-3-1 has 4 defenders, 2 holding midfielders, 3 attacking midfielders or wingers and 1 striker).",
+    "",
+    "Before you answer, check: 11 starters, one GK, positions match the formation, every player in a position",
+    "he really plays, every hard constraint met (or explained in caveats), no duplicates.",
     "",
     "Writing",
     "- Every text value in Korean. Player names in the Korean spelling FC Online and Korean media use",
@@ -74,8 +105,7 @@
     '  "team_color": string,           // e.g. "토트넘 (클럽 팀컬러)" or "없음"',
     '  "total_cost": string,',
     '  "starters": [ { "pos": string, "name": string, "card": string, "ovr": integer, "salary": integer,',
-    '                  "price": string, "role": string, "x": integer, "y": integer,',
-    '                  "instructions": [string], "why": string } ],   // exactly 11',
+    '                  "price": string, "role": string, "instructions": [string], "why": string } ],   // exactly 11',
     '  "bench": [ { "pos": string, "name": string, "card": string, "ovr": integer, "salary": integer,',
     '               "price": string, "why": string } ],',
     '  "team_tactics": [ { "group": string, "label": string, "value": string, "why": string } ],',
@@ -96,6 +126,7 @@
   var STR = { type: "string" };
   var INT = { type: "integer" };
   var STRS = { type: "array", items: STR };
+  var POS = { type: "string", enum: POSITIONS };
   var RESULT_SCHEMA = obj({
     reply: STR,
     squad_name: STR,
@@ -106,13 +137,13 @@
     starters: {
       type: "array",
       items: obj({
-        pos: STR, name: STR, card: STR, ovr: INT, salary: INT, price: STR, role: STR,
-        x: INT, y: INT, instructions: STRS, why: STR
+        pos: POS, name: STR, card: STR, ovr: INT, salary: INT, price: STR, role: STR,
+        instructions: STRS, why: STR
       })
     },
     bench: {
       type: "array",
-      items: obj({ pos: STR, name: STR, card: STR, ovr: INT, salary: INT, price: STR, why: STR })
+      items: obj({ pos: POS, name: STR, card: STR, ovr: INT, salary: INT, price: STR, why: STR })
     },
     team_tactics: { type: "array", items: obj({ group: STR, label: STR, value: STR, why: STR }) },
     sliders: {
@@ -155,16 +186,22 @@
     };
   }
 
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
   function buildUserMessage(payload) {
     var p = cleanPayload(payload);
     var parts = [];
+    parts.push("## 오늘 날짜\n" + today());
     parts.push("## 경기 방식\n" + MODES[p.mode]);
     parts.push("## 예산\n" + (p.budget ? p.budget + " (BP)" : "따로 지정 안 함 (요청 문장에 있으면 그대로 따르세요)"));
     if (p.owned) parts.push("## 보유 선수 목록\n" + p.owned);
     if (p.current) {
       parts.push(
         "## CURRENT SQUAD — edit this; keep everything the user did not ask to change\n" +
-          JSON.stringify(p.current)
+          JSON.stringify(p.current, function (k, v) { return k === "x" || k === "y" ? undefined : v; })
       );
       if (p.history.length) {
         parts.push("## 지금까지의 요청\n" + p.history.map(function (h, i) { return i + 1 + ". " + h; }).join("\n"));
@@ -180,15 +217,6 @@
   function buildStandalonePrompt(payload) {
     return SYSTEM_PROMPT + "\n\n" + SHAPE_TEXT + "\n\n---\n\n" + buildUserMessage(payload);
   }
-
-  // Fallback coordinates when a starter comes back without usable x/y.
-  var POS_XY = {
-    GK: [50, 6], LB: [14, 27], LCB: [37, 23], CB: [50, 22], RCB: [63, 23], RB: [86, 27],
-    LWB: [12, 40], RWB: [88, 40], LDM: [38, 41], CDM: [50, 41], RDM: [62, 41],
-    LCM: [34, 51], CM: [50, 51], RCM: [66, 51], LM: [14, 58], RM: [86, 58],
-    LAM: [32, 63], CAM: [50, 63], RAM: [68, 63], LW: [16, 73], RW: [84, 73],
-    LF: [34, 80], CF: [50, 80], RF: [66, 80], LS: [40, 85], ST: [50, 86], RS: [60, 85]
-  };
 
   function str(v) {
     return typeof v === "string" ? v.trim() : v == null ? "" : String(v).trim();
@@ -206,48 +234,88 @@
   function clamp(v, lo, hi) {
     return Math.min(hi, Math.max(lo, v));
   }
+  function normPos(v) {
+    var pos = str(v).toUpperCase().replace(/\s+/g, "");
+    return POS_ALIAS[pos] || pos;
+  }
 
-  // Pushes apart tokens that would overlap on the drawn pitch.
-  function spread(players) {
+  // x for the central players of one line, by how many there are (0 = left touchline, 100 = right).
+  var INNER_X = { 1: [50], 2: [38, 62], 3: [30, 50, 70], 4: [24, 41, 59, 76], 5: [20, 35, 50, 65, 80] };
+  var OUTER_X = { DEF: [12, 88], WB: [10, 90], CM: [12, 88], W: [16, 84] };
+
+  // Pushes apart tokens that would still overlap on the drawn pitch.
+  function separate(players) {
     for (var pass = 0; pass < 4; pass++) {
       for (var i = 0; i < players.length; i++) {
         for (var j = i + 1; j < players.length; j++) {
           var a = players[i], b = players[j];
           var dx = b.x - a.x, dy = b.y - a.y;
-          if (Math.abs(dx) < 12 && Math.abs(dy) < 7) {
-            var push = (12 - Math.abs(dx)) / 2;
-            var dir = dx === 0 ? (j % 2 ? 1 : -1) : dx > 0 ? 1 : -1;
-            a.x = clamp(a.x - dir * push, 6, 94);
-            b.x = clamp(b.x + dir * push, 6, 94);
+          var ax = Math.abs(dx), ay = Math.abs(dy);
+          if (ax < 7 && ay < 10 && dy !== 0) {
+            // Same column (e.g. CF behind ST): open up the gap vertically.
+            var pushY = ((10 - ay) / 2) * (dy > 0 ? 1 : -1);
+            a.y = clamp(a.y - pushY, 4, 94);
+            b.y = clamp(b.y + pushY, 4, 94);
+          } else if (ax < 14 && ay < 8) {
+            var dir = dx < 0 ? -1 : 1;
+            var pushX = (14 - Math.abs(dx)) / 2;
+            a.x = clamp(a.x - dir * pushX, 6, 94);
+            b.x = clamp(b.x + dir * pushX, 6, 94);
           }
         }
       }
     }
-    players.forEach(function (p) { p.x = Math.round(p.x); p.y = Math.round(p.y); });
+  }
+
+  // Lines the starters up from their position codes, the way a tactics board does, and
+  // orders them GK, defence, midfield, attack (left to right within a line).
+  function layout(players) {
+    var lines = {};
+    players.forEach(function (p, i) {
+      var spot = POS_LAYOUT[p.pos];
+      p._i = i;
+      if (!spot) { p._line = LINES.length; p._slot = 2; p.x = 50; p.y = 50; return; }
+      p._line = LINES.indexOf(spot[0]);
+      p._slot = spot[1];
+      p.y = spot[2];
+      (lines[spot[0]] = lines[spot[0]] || []).push(p);
+    });
+    Object.keys(lines).forEach(function (name) {
+      var row = lines[name].sort(function (a, b) { return a._slot - b._slot || a._i - b._i; });
+      var outer = OUTER_X[name] || [14, 86];
+      var inner = row.filter(function (p) { return p._slot > 0 && p._slot < 4; });
+      var xs = INNER_X[inner.length] || inner.map(function (_, k) { return 15 + (70 * k) / Math.max(1, inner.length - 1); });
+      inner.forEach(function (p, k) { p.x = xs[k]; });
+      row.filter(function (p) { return p._slot === 0; }).forEach(function (p, k) { p.x = outer[0] + k * 10; });
+      row.filter(function (p) { return p._slot === 4; }).forEach(function (p, k) { p.x = outer[1] - k * 10; });
+    });
+    separate(players);
+    players.sort(function (a, b) { return a._line - b._line || a.x - b.x || a._i - b._i; });
+    players.forEach(function (p) {
+      p.x = Math.round(p.x);
+      p.y = Math.round(p.y);
+      delete p._i; delete p._line; delete p._slot;
+    });
+    return players;
   }
 
   function normalizeResult(raw) {
     var o = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
     var starters = list(o.starters).slice(0, 11).map(function (p) {
-      var pos = str(p.pos).toUpperCase() || "?";
-      var fb = POS_XY[pos] || [50, 50];
-      var hasXY = p.x !== undefined && p.y !== undefined && isFinite(Number(p.x)) && isFinite(Number(p.y));
       return {
-        pos: pos,
+        pos: normPos(p.pos) || "?",
         name: str(p.name) || "미정",
         card: str(p.card),
         ovr: Math.max(0, int(p.ovr)),
         salary: Math.max(0, int(p.salary)),
         price: str(p.price),
         role: str(p.role),
-        x: clamp(hasXY ? int(p.x) : fb[0], 5, 95),
-        y: clamp(hasXY ? int(p.y) : fb[1], 4, 94),
         instructions: strs(p.instructions).slice(0, 4),
         why: str(p.why)
       };
     });
     if (!starters.length) throw new Error("선발 명단이 비어 있어요.");
-    spread(starters);
+    layout(starters);
     return {
       reply: str(o.reply),
       squad_name: str(o.squad_name) || "이름 없는 스쿼드",
@@ -258,7 +326,7 @@
       starters: starters,
       bench: list(o.bench).slice(0, 9).map(function (p) {
         return {
-          pos: str(p.pos).toUpperCase(),
+          pos: normPos(p.pos),
           name: str(p.name) || "미정",
           card: str(p.card),
           ovr: Math.max(0, int(p.ovr)),
@@ -303,7 +371,7 @@
   ];
   function progressFromText(text) {
     text = String(text || "");
-    var placed = Math.min(11, (text.match(/"x"\s*:/g) || []).length);
+    var placed = Math.min(11, (text.match(/"role"\s*:/g) || []).length);
     var phase = "스쿼드 콘셉트 잡는 중";
     for (var i = 0; i < PHASES.length; i++) {
       if (text.indexOf('"' + PHASES[i][0] + '"') !== -1) { phase = PHASES[i][1]; break; }
@@ -362,17 +430,17 @@
     team_color: "대한민국 (국가 팀컬러)",
     total_cost: "",
     starters: [
-      { pos: "GK", name: "조현우", role: "반응형 골키퍼", x: 50, y: 6, instructions: ["빌드업 시 짧게 연결"], why: "1:1 선방이 좋아 역습 뒤 실점 위기를 줄여줘요." },
-      { pos: "LB", name: "이명재", role: "오버래핑 풀백", x: 14, y: 28, instructions: ["공격 가담 많이", "크로스 위주"], why: "손흥민이 안으로 좁힐 때 바깥 공간을 채워요." },
-      { pos: "LCB", name: "김민재", role: "커버형 센터백", x: 37, y: 23, instructions: ["인터셉트 적극적"], why: "라인 뒷공간을 혼자 커버할 수 있는 속도와 힘이 있어요." },
-      { pos: "RCB", name: "조유민", role: "빌드업 센터백", x: 63, y: 23, instructions: ["수비 위치 유지"], why: "김민재가 전진할 때 뒤를 지켜줘요." },
-      { pos: "RB", name: "설영우", role: "밸런스 풀백", x: 86, y: 28, instructions: ["공격 가담 균형"], why: "이강인이 안쪽으로 들어올 때 측면 폭을 만들어요." },
-      { pos: "LDM", name: "박용우", role: "홀딩 미드필더", x: 38, y: 42, instructions: ["공격 가담 적게", "중앙 커버"], why: "역습을 당할 때 첫 번째 저지선이에요." },
-      { pos: "RDM", name: "황인범", role: "딥 라잉 플레이메이커", x: 62, y: 44, instructions: ["전진 패스 위주"], why: "볼을 뺏은 직후 전방으로 빠르게 연결해요." },
-      { pos: "CAM", name: "이재성", role: "박스 투 박스 공미", x: 50, y: 62, instructions: ["박스 침투", "전방 압박"], why: "활동량으로 공수 간격을 좁혀줘요." },
-      { pos: "LW", name: "손흥민", role: "인사이드 포워드", x: 17, y: 73, instructions: ["뒷공간 침투", "수비 가담 적게"], why: "역습의 마무리 담당이에요." },
-      { pos: "RW", name: "이강인", role: "플레이메이커 윙어", x: 83, y: 71, instructions: ["안쪽으로 좁히기", "킬패스 위주"], why: "왼발 스루패스로 손흥민을 살려요." },
-      { pos: "ST", name: "오현규", role: "타깃 스트라이커", x: 50, y: 85, instructions: ["등지고 연계", "박스 안 대기"], why: "센터백을 끌고 다니며 윙어에게 공간을 열어줘요." }
+      { pos: "GK", name: "조현우", role: "반응형 골키퍼", instructions: ["빌드업 시 짧게 연결"], why: "1:1 선방이 좋아 역습 뒤 실점 위기를 줄여줘요." },
+      { pos: "LB", name: "이명재", role: "오버래핑 풀백", instructions: ["공격 가담 많이", "크로스 위주"], why: "손흥민이 안으로 좁힐 때 바깥 공간을 채워요." },
+      { pos: "LCB", name: "김민재", role: "커버형 센터백", instructions: ["인터셉트 적극적"], why: "라인 뒷공간을 혼자 커버할 수 있는 속도와 힘이 있어요." },
+      { pos: "RCB", name: "조유민", role: "빌드업 센터백", instructions: ["수비 위치 유지"], why: "김민재가 전진할 때 뒤를 지켜줘요." },
+      { pos: "RB", name: "설영우", role: "밸런스 풀백", instructions: ["공격 가담 균형"], why: "이강인이 안쪽으로 들어올 때 측면 폭을 만들어요." },
+      { pos: "LDM", name: "박용우", role: "홀딩 미드필더", instructions: ["공격 가담 적게", "중앙 커버"], why: "역습을 당할 때 첫 번째 저지선이에요." },
+      { pos: "RDM", name: "황인범", role: "딥 라잉 플레이메이커", instructions: ["전진 패스 위주"], why: "볼을 뺏은 직후 전방으로 빠르게 연결해요." },
+      { pos: "CAM", name: "이재성", role: "박스 투 박스 공미", instructions: ["박스 침투", "전방 압박"], why: "활동량으로 공수 간격을 좁혀줘요." },
+      { pos: "LW", name: "손흥민", role: "인사이드 포워드", instructions: ["뒷공간 침투", "수비 가담 적게"], why: "역습의 마무리 담당이에요." },
+      { pos: "RW", name: "이강인", role: "플레이메이커 윙어", instructions: ["안쪽으로 좁히기", "킬패스 위주"], why: "왼발 스루패스로 손흥민을 살려요." },
+      { pos: "ST", name: "오현규", role: "타깃 스트라이커", instructions: ["등지고 연계", "박스 안 대기"], why: "센터백을 끌고 다니며 윙어에게 공간을 열어줘요." }
     ],
     bench: [
       { pos: "GK", name: "김승규", why: "빌드업이 필요한 경기용 골키퍼예요." },

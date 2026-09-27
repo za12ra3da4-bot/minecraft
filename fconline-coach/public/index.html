@@ -549,9 +549,11 @@
     var be = await backendPromise;
     if (!be) throw { code: "no_backend" };
     if (be.kind === "artifact") {
+      // Squad building leans on football knowledge, so ask for the most capable model.
       var raw = await be.sample.json(Spec.buildStandalonePrompt(payload), {
         signal: signal,
         cache: false,
+        modelTier: "complex",
         onText: function (u) { onProgress(Spec.progressFromText(u.text)); }
       });
       return Spec.normalizeResult(raw);
@@ -894,7 +896,8 @@
     var progress = null;
     function paint() {
       var secs = Math.round((Date.now() - started) / 1000);
-      var label = progress ? progress.phase : (editing ? "코치가 수정안을 구상하는 중" : "코치가 스쿼드를 구상하는 중");
+      var label = progress ? progress.phase
+        : (editing ? "코치가 수정안을 구상하는 중" : "코치가 스쿼드를 구상하는 중") + " (꼼꼼히 따져봐서 1~2분 걸릴 수 있어요)";
       setStatus(label, { spin: true, clock: secs + "초" });
     }
     showNotice("");
