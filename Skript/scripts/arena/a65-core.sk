@@ -1,6 +1,6 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  왕관 쟁탈전 — 본진 코어 (본진 앞 신호기) · 결계 부적
-#   적 코어를 30번 때리면 파괴: 그 팀 -100점 + 60초 약화 · 구속 · 발광. 90초 뒤 코어 복구
+#   적 코어를 30번 때리면 파괴: 그 팀 -50점 + 30초 약화 · 구속 · 발광. 90초 뒤 코어 복구 (복구 뒤 60초 보호막)
 #   결계 부적(상점): 우클릭하면 60초 동안 적 본진의 수호 결계 피해를 받지 않음
 # ═════════════════════════════════════════════════════════════════════════════
 
@@ -60,6 +60,10 @@ function bgCoreHit(p: player, t: text):
         stop
     if {-bg::core::%{_t}%::down} is true:
         stop
+    if {-bg::core::%{_t}%::shield} is set:
+        if difference between {-bg::core::%{_t}%::shield} and now < 60 seconds:
+            send action bar "&b복구된 코어 — 보호막 중입니다 (60초)" to {_p}
+            stop
     # 너무 빠른 연타 방지 (0.3초)
     if {-bg::corecd::%uuid of {_p}%} is set:
         if difference between {-bg::corecd::%uuid of {_p}%} and now < 0.3 seconds:
@@ -91,17 +95,18 @@ function bgCoreBreak(t: text, by: text):
     bgParticle({_m}, "large_smoke", 1.5, 1.5, 1.5, 0.05, 60)
     bgSoundAt({_m}, "entity.generic.explode", 4, 0.7)
     bgSoundAt({_m}, "block.beacon.deactivate", 4, 0.6)
-    set {-bg::score::%{_t}%} to max(0, ({-bg::score::%{_t}%} ? 0) - 100)
-    bgCmd("effect give @a[team=bg_%{_t}%] weakness 60 0 true")
-    bgCmd("effect give @a[team=bg_%{_t}%] slowness 60 0 true")
-    bgCmd("effect give @a[team=bg_%{_t}%] glowing 60 0 true")
-    bgTitle("%{-bg::tcol::%{_t}%}%&l%{-bg::tname::%{_t}%}% 코어 파괴!", "%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 부쉈습니다 · &c-100점 · 60초 약화", 10, 60, 20)
-    bgSay("%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어를 파괴했습니다! &c(-100점, 60초 약화 · 구속 · 발광) &7— 90초 뒤 복구")
+    set {-bg::score::%{_t}%} to max(0, ({-bg::score::%{_t}%} ? 0) - 50)
+    bgCmd("effect give @a[team=bg_%{_t}%] weakness 30 0 true")
+    bgCmd("effect give @a[team=bg_%{_t}%] slowness 30 0 true")
+    bgCmd("effect give @a[team=bg_%{_t}%] glowing 30 0 true")
+    bgTitle("%{-bg::tcol::%{_t}%}%&l%{-bg::tname::%{_t}%}% 코어 파괴!", "%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 부쉈습니다 · &c-50점 · 30초 약화", 10, 60, 20)
+    bgSay("%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어를 파괴했습니다! &c(-50점, 30초 약화 · 구속 · 발광) &7— 90초 뒤 복구 · 복구 뒤 60초 보호막")
     wait 90 seconds
     if {-bg::on} is true:
         set block at {_m} to beacon
         set {-bg::core::%{_t}%::hits} to 0
         set {-bg::core::%{_t}%::down} to false
+        set {-bg::core::%{_t}%::shield} to now
         bgCoreShow({_t}, true)
         bgCoreText({_t})
         bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어가 복구되었습니다.")
@@ -127,7 +132,7 @@ function bgWardOn(p: player) :: boolean:
     return false
 
 # ─────────────────────────────────────────────────────────── 광산 (본진 광석 바위)
-#  본진 광석 바위에서만: 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 2초 뒤 다시 채워짐
+#  본진 광석 바위에서만: 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 20초 뒤 다시 채워짐
 #  죽으면 광물은 그 자리에 떨어져서 적이 주워 갈 수 있다
 #  (다른 곳 광석은 캘 수 없음 · 창작 모드 관리자는 예외)
 function bgAtBaseOre(l: location) :: boolean:
@@ -146,20 +151,20 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     bgAtBaseOre({_l}) is true
     set {_ty} to type of event-block
     set {_drop} to {-bg::it::riron}
-    set {_nm} to "철 원석 (2코인)"
+    set {_nm} to "철 원석 (1코인)"
     if event-block is copper ore:
         set {_drop} to {-bg::it::rcopper}
-        set {_nm} to "구리 원석 (2코인)"
+        set {_nm} to "구리 원석 (1코인)"
     else if event-block is gold ore:
         set {_drop} to {-bg::it::rgold}
-        set {_nm} to "금 원석 (3코인)"
+        set {_nm} to "금 원석 (2코인)"
     else if event-block is emerald ore:
         set {_drop} to {-bg::it::emerald}
-        set {_nm} to "에메랄드 (6코인)"
+        set {_nm} to "에메랄드 (4코인)"
     else if event-block is diamond ore:
         set {_drop} to {-bg::it::diamond}
-        set {_nm} to "다이아몬드 (10코인)"
-    # 캔 자리는 기반암(못 캠)으로 → 2초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
+        set {_nm} to "다이아몬드 (6코인)"
+    # 캔 자리는 기반암(못 캠)으로 → 20초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
     set block at {_l} to bedrock
     set {_k} to "%floor(x-coordinate of {_l})%_%floor(y-coordinate of {_l})%_%floor(z-coordinate of {_l})%"
     set {bg::oreq::%{_k}%} to true
@@ -178,7 +183,7 @@ function bgOreRegen(all: boolean):
         set {_k} to loop-index
         if {bg::oreq::%{_k}%::at} is set:
             set {_go} to {_all}
-            if difference between {bg::oreq::%{_k}%::at} and now >= 2 seconds:
+            if difference between {bg::oreq::%{_k}%::at} and now >= 20 seconds:
                 set {_go} to true
             if {_go} is true:
                 set {_l} to {bg::oreq::%{_k}%::l}

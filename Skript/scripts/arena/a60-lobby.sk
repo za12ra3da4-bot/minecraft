@@ -120,12 +120,15 @@ every 10 ticks:
                 loop {-bg::teams::*}:
                     set {_m} to "lobby_pad_%loop-value-2%"
                     if bgDist2(location of loop-player, bgMk({_m})) < 2.3:
-                        if bgTeam(loop-player) is not loop-value-2:
-                            bgSetupTeams()
-                            bgSetTeam(loop-player, loop-value-2)
-                            play sound "block.note_block.pling" to loop-player
-                            bgParticle(location of loop-player, "happy_villager", 0.6, 1, 0.6, 0, 12)
-                        send action bar "%{-bg::tcol::%loop-value-2%}%&l%{-bg::tname::%loop-value-2%}% 팀 &7— 팀원 %bgTeamCount(loop-value-2)%명" to loop-player
+                        if {-bg::freeteam} is not true:
+                            send action bar "&7지금은 관리자가 팀을 정합니다 &8(/자유팀선택 으로 켜야 발판으로 팀 선택)" to loop-player
+                        else:
+                            if bgTeam(loop-player) is not loop-value-2:
+                                bgSetupTeams()
+                                bgSetTeam(loop-player, loop-value-2)
+                                play sound "block.note_block.pling" to loop-player
+                                bgParticle(location of loop-player, "happy_villager", 0.6, 1, 0.6, 0, 12)
+                            send action bar "%{-bg::tcol::%loop-value-2%}%&l%{-bg::tname::%loop-value-2%}% 팀 &7— 팀원 %bgTeamCount(loop-value-2)%명" to loop-player
 
 # 대기실 안 피해 없음 · 게임 밖에서는 사람끼리 못 때림
 on damage of player:
@@ -160,3 +163,48 @@ on place:
     bgInLobby(player) is true
     gamemode of player is not creative
     cancel event
+
+# ─────────────────────────────────────────────────────────── 자유 팀 선택 (관리자가 켜야 발판으로 팀 고르기)
+command /자유팀선택:
+    permission: op
+    trigger:
+        if {-bg::freeteam} is true:
+            delete {-bg::freeteam}
+            bgSay("&6[전장] &f자유 팀 선택 &c꺼짐 &7— 관리자가 팀을 정합니다")
+        else:
+            set {-bg::freeteam} to true
+            bgSay("&6[전장] &f자유 팀 선택 &a켜짐 &7— 대기실 색깔 발판을 밟으면 그 팀이 됩니다")
+
+# ─────────────────────────────────────────────────────────── 팀 채팅
+#   /팀 <말>  (/tc)  팀에게만.   /팀채팅 : 기본 채팅을 팀 채팅으로 켜고 끄기 (켠 상태에서 ! 로 시작하면 전체 채팅)
+command /팀 <text>:
+    aliases: /tc
+    trigger:
+        bgTeamSay(player, arg-1)
+
+command /팀채팅:
+    trigger:
+        if {-bg::tchat::%uuid of player%} is true:
+            delete {-bg::tchat::%uuid of player%}
+            send "&6[팀 채팅] &f꺼짐 &7— 채팅이 전체에게 갑니다"
+        else:
+            set {-bg::tchat::%uuid of player%} to true
+            send "&6[팀 채팅] &a켜짐 &7— 채팅이 팀에게만 갑니다 (! 로 시작하면 전체)"
+
+function bgTeamSay(p: player, m: text):
+    set {_t} to bgTeam({_p})
+    if {_t} is "none":
+        send "&7팀이 없습니다." to {_p}
+        stop
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            send "%{-bg::tcol::%{_t}%}%[팀] &f%name of {_p}%&7: &f%{_m}%" to loop-player
+
+on chat:
+    {-bg::tchat::%uuid of player%} is true
+    set {_m} to message
+    if {_m} starts with "!":
+        set message to subtext of {_m} from characters 2 to (length of {_m})
+        stop
+    cancel event
+    bgTeamSay(player, {_m})

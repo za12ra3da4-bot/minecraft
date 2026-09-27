@@ -121,6 +121,11 @@ on inventory drag:
 on inventory click:
     {-bg::pvpgui::%uuid of player%} is true
     cancel event
+    # 연타 방지 (0.2초 안의 두 번째 클릭은 무시 — 중복 구매 · 복사 방지)
+    if {-bg::shopclk::%uuid of player%} is set:
+        if difference between {-bg::shopclk::%uuid of player%} and now < 0.2 seconds:
+            stop
+    set {-bg::shopclk::%uuid of player%} to now
     set {_s} to raw index of event-slot
     if {_s} >= 54:
         stop

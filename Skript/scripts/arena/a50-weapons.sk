@@ -91,6 +91,8 @@ on death of player:
     bgTeam(attacker) is not bgTeam(victim)
     bgTeam(attacker) is not "none"
     bgCoin(attacker, 10, "처치")
+    if bgLeader() is bgTeam(victim):
+        bgCoin(attacker, 5, "1등 팀 현상금")
 
 # ─────────────────────────────────────────────────────────── 장비 · 소모품 (상점 2~3줄)
 on load:
@@ -339,7 +341,7 @@ function bgShopOpen(p: player):
     # 광물 일괄 판매 버튼 (가방의 원석 · 보석을 한 번에 코인으로)
     set {_sell} to hopper named "&a&l광물 일괄 판매"
     set {_tot} to bgOreTotal({_p})
-    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e2 &7· &f금 원석 &e3", "&f에메랄드 &e6 &7· &f다이아몬드 &e10", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
+    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e1 &7· &f금 원석 &e2", "&f에메랄드 &e4 &7· &f다이아몬드 &e6", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
     set slot 49 of {_gui} to {_sell}
     set {_coin} to sunflower named "&6&l보유 코인: &e%{_c}%"
     set lore of {_coin} to "&7처치 +10 · 점령 +15 · 보스 +40", "&710초마다 +1 (점령 지점당 +1)"
@@ -360,24 +362,24 @@ on load:
 
 function bgOreVal(i: item) :: number:
     if {_i} is {-bg::it::riron}:
-        return 2
+        return 1
     if {_i} is {-bg::it::rcopper}:
-        return 2
+        return 1
     if {_i} is {-bg::it::rgold}:
-        return 3
+        return 2
     if {_i} is {-bg::it::emerald}:
-        return 6
+        return 4
     if {_i} is {-bg::it::diamond}:
-        return 10
+        return 6
     return 0
 
 function bgOreTotal(p: player) :: number:
     set {_n} to 0
-    add 2 * (amount of {-bg::it::riron} in {_p}'s inventory) to {_n}
-    add 2 * (amount of {-bg::it::rcopper} in {_p}'s inventory) to {_n}
-    add 3 * (amount of {-bg::it::rgold} in {_p}'s inventory) to {_n}
-    add 6 * (amount of {-bg::it::emerald} in {_p}'s inventory) to {_n}
-    add 10 * (amount of {-bg::it::diamond} in {_p}'s inventory) to {_n}
+    add 1 * (amount of {-bg::it::riron} in {_p}'s inventory) to {_n}
+    add 1 * (amount of {-bg::it::rcopper} in {_p}'s inventory) to {_n}
+    add 2 * (amount of {-bg::it::rgold} in {_p}'s inventory) to {_n}
+    add 4 * (amount of {-bg::it::emerald} in {_p}'s inventory) to {_n}
+    add 6 * (amount of {-bg::it::diamond} in {_p}'s inventory) to {_n}
     return {_n}
 
 function bgOreSell(p: player):
@@ -416,6 +418,11 @@ on inventory drag:
 on inventory click:
     {-bg::shop::%uuid of player%} is true
     cancel event
+    # 연타 방지 (0.2초 안의 두 번째 클릭은 무시 — 중복 구매 · 복사 방지)
+    if {-bg::shopclk::%uuid of player%} is set:
+        if difference between {-bg::shopclk::%uuid of player%} and now < 0.2 seconds:
+            stop
+    set {-bg::shopclk::%uuid of player%} to now
     set {_s} to raw index of event-slot
     if {_s} >= 54:
         stop

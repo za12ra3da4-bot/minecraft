@@ -278,6 +278,7 @@ function bgBossSpawn(id: text):
     set {-bg::boss::hurt} to 0
     delete {-bg::boss::skill}
     delete {-bg::boss::dmg::*}
+    delete {-bg::boss::pdmg::*}
     delete {-bg::boss::lasthit}
     delete {-bg::boss::target}
     set {_hb} to {-bg::bd::%{_id}%::hitbox}
@@ -589,6 +590,56 @@ on damage:
     if {-bg::boss::hp} <= 0:
         bgBossDie()
 
+# ─────────────────────────────────────────── 보스 기여도 보상
+#  보스에게 준 피해 비율(3% 이상)만큼: 코인 (총 300 나눔, 최소 15) · 황금 사과 · 보스의 힘 (45초)
+#  1등 기여자: 마법 황금 사과 + 코인 50 추가
+function bgBossBuff(p: player, id: text):
+    set {_n} to name of {_p}
+    if {_id} is "sphinx":
+        bgCmd("effect give %{_n}% speed 45 1 true")
+        bgCmd("effect give %{_n}% haste 45 1 true")
+        send "&e  모래의 힘 &7— 신속 II · 성급함 II 45초" to {_p}
+    else if {_id} is "talos":
+        bgCmd("effect give %{_n}% resistance 45 0 true")
+        bgCmd("effect give %{_n}% fire_resistance 45 0 true")
+        send "&6  청동의 힘 &7— 저항 I · 화염 저항 45초" to {_p}
+    else if {_id} is "ladon":
+        bgCmd("effect give %{_n}% regeneration 30 0 true")
+        bgCmd("effect give %{_n}% absorption 60 1 true")
+        send "&a  히드라의 생명력 &7— 재생 I 30초 · 흡수 II 60초" to {_p}
+    else:
+        bgCmd("effect give %{_n}% strength 30 0 true")
+        bgCmd("effect give %{_n}% jump_boost 45 1 true")
+        send "&c  거인의 힘 &7— 힘 I 30초 · 점프 강화 II 45초" to {_p}
+
+function bgBossContrib(id: text):
+    set {_tot} to 0
+    loop {-bg::boss::pdmg::*}:
+        add loop-value to {_tot}
+    if {_tot} <= 0:
+        stop
+    set {_best} to 0
+    loop all players:
+        set {_u} to uuid of loop-player
+        if {-bg::boss::pdmg::%{_u}%} is set:
+            set {_sh} to {-bg::boss::pdmg::%{_u}%} / {_tot}
+            if {_sh} >= 0.03:
+                set {_c} to max(15, round(300 * {_sh}))
+                add {_c} to {bg::coin::%{_u}%}
+                set {_ga} to 1
+                if {_sh} >= 0.2:
+                    set {_ga} to 2
+                bgCmd("give %name of loop-player% golden_apple %{_ga}%")
+                send "&6[보스 기여도] &f%round({_sh} * 100)%%% &7— &e코인 +%{_c}% &7· 황금 사과 %{_ga}%" to loop-player
+                bgBossBuff(loop-player, {_id})
+                if {_sh} > {_best}:
+                    set {_best} to {_sh}
+                    set {_top} to loop-player
+    if {_top} is set:
+        add 50 to {bg::coin::%uuid of {_top}%}
+        bgCmd("give %name of {_top}% enchanted_golden_apple 1")
+        bgSay("&6[보스 기여도 1위] %{-bg::tcol::%bgTeam({_top})%}%%name of {_top}% &f(%round({_best} * 100)%%%) &7— 마법 황금 사과 + 코인 50")
+
 # 보스 체력 깎기 (d = 하트 단위 피해, 기절 중 1.5배, 보스 체력은 6배로 깎임)
 function bgBossTake(d: number, p: player, at: location):
     if {-bg::boss::state} is "dead" or "spawn":
@@ -597,6 +648,7 @@ function bgBossTake(d: number, p: player, at: location):
         set {_d} to {_d} * 1.5
     set {_d} to {_d} * 6
     set {-bg::boss::lasthit} to {_p}
+    add {_d} to {-bg::boss::pdmg::%uuid of {_p}%}
     set {_t} to bgTeam({_p})
     if {_t} is not "none":
         add {_d} to {-bg::boss::dmg::%{_t}%}
@@ -673,6 +725,7 @@ function bgBossDie():
     # 보상 상자는 보스가 소환된 투기장 가운데에
     set {_rc} to {-bg::boss::home}
     bgRewardSpawn({_win}, {_id}, {_rc})
+    bgBossContrib({_id})
     if {_win} is not "none":
         bgAddScore({_win}, 300)
         bgCoinTeam({_win}, 120, "보스 처치")

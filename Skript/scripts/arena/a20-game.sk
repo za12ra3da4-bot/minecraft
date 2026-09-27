@@ -57,6 +57,7 @@ function bgStart():
     set {-bg::on} to false
     loop {-bg::teams::*}:
         set {-bg::score::%loop-value%} to 0
+        set {-bg::sfrac::%loop-value%} to 0
     loop {-bg::pts::*}:
         set {-bg::own::%loop-value%} to "none"
         set {-bg::capt::%loop-value%} to "none"
@@ -86,6 +87,33 @@ function bgStart():
     bgSay("&6코인 버는 법&f: 10초마다 +1 · 처치 +10 · 지점 점령 +15(팀 전원) · 점령한 지점 하나당 10초마다 +1 · 보스 처치 +40(팀 전원)")
     bgSay("&6/상점&f (자기 본진에서) — 갑옷 · 소모품 · 전설 무기. &6/코인&f 으로 잔액 확인")
 
+# 따라잡기: 1등과 150점 넘게 벌어진 팀은 점령 점수 · 처치 점수 1.5배
+function bgCatchup(t: text) :: number:
+    set {_best} to 0
+    loop {-bg::teams::*}:
+        if ({-bg::score::%loop-value%} ? 0) > {_best}:
+            set {_best} to {-bg::score::%loop-value%}
+    if {_best} - ({-bg::score::%{_t}%} ? 0) >= 150:
+        return 1.5
+    return 1
+
+# 1등 팀 (다른 팀보다 100점 넘게 앞설 때만)
+function bgLeader() :: text:
+    set {_best} to -1
+    set {_second} to -1
+    set {_w} to "none"
+    loop {-bg::teams::*}:
+        set {_s} to {-bg::score::%loop-value%} ? 0
+        if {_s} > {_best}:
+            set {_second} to {_best}
+            set {_best} to {_s}
+            set {_w} to loop-value
+        else if {_s} > {_second}:
+            set {_second} to {_s}
+    if {_best} - {_second} >= 100:
+        return {_w}
+    return "none"
+
 function bgStop(reason: text):
     if {-bg::on} is not true:
         stop
@@ -105,6 +133,8 @@ function bgStop(reason: text):
     bgSay("&e%{_reason}%&f — %{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀&f 승리 (%{_best}%점)")
     loop {-bg::teams::*}:
         bgSay("  %{-bg::tcol::%loop-value%}%%{-bg::tname::%loop-value%}%&f : %{-bg::score::%loop-value%}%점")
+    # 자유 팀 선택은 판마다 꺼짐 (관리자가 /자유팀선택 으로 다시 켬)
+    delete {-bg::freeteam}
     wait 5 seconds
     if {-bg::on} is not true:
         bgHudRemove()
@@ -125,7 +155,11 @@ function bgCheckEnd():
 function bgAddScore(t: text, n: number):
     if {_t} is "none":
         stop
-    add {_n} to {-bg::score::%{_t}%}
+    # 소수점(따라잡기 1.5배)은 모아 두었다가 정수만 점수에
+    add {_n} to {-bg::sfrac::%{_t}%}
+    set {_w} to floor({-bg::sfrac::%{_t}%})
+    remove {_w} from {-bg::sfrac::%{_t}%}
+    add {_w} to {-bg::score::%{_t}%}
 
 # ─────────────────────────────────────────────────────────── 매초
 every 1 second:
@@ -136,7 +170,7 @@ every 1 second:
     loop {-bg::pts::*}:
         set {_o} to {-bg::own::%loop-value%}
         if {_o} is not "none":
-            bgAddScore({_o}, {-bg::ptscore::%loop-value%})
+            bgAddScore({_o}, {-bg::ptscore::%loop-value%} * bgCatchup({_o}))
     bgBuffTick()
     bgBaseGuard()
     bgClassPads()
@@ -188,6 +222,9 @@ function bgCapturePoint(p: text):
         set {_rate} to min(30, 12 + 6 * ({_k} - 1))
     if {_capt} is not {_who}:
         if {_v} > 0:
+            # 남이 점령한 지점을 빼앗을 때는 1.6배 느리게 (빼앗고 뺏기는 난장판 완화)
+            if {_own} is not "none":
+                set {_rate} to {_rate} / 1.6
             set {_v} to max(0, {_v} - {_rate})
             if {_v} is 0:
                 if {_own} is not "none":
@@ -369,13 +406,14 @@ on death of player:
     # 아무것도 떨어뜨리지 않음 — 전설 무기 · 산 장비는 부활할 때 다시 받는다 (bgKit → bgShopRestore)
     # 복사 방지: 죽는 순간 '가방에 실제로 들고 있던' 전설 무기만 부활 때 돌려준다
     #  (버렸거나 상자에 넣어 둔 것은 돌려주지 않음 — 그건 바닥/상자에 그대로 있으니까)
+    # 전설 무기 · 캔 광물은 그 자리에 떨어뜨린다 (약탈 — 주운 사람이 쓸 수 있음, 부활 때 돌려주지 않음)
     loop {-bg::w::all::*}:
         delete {bg::owned::%uuid of victim%::%loop-value%}
     loop drops:
         if bgIsLegend(loop-item) is not "":
-            set {bg::owned::%uuid of victim%::%bgIsLegend(loop-item)%} to true
-        # 캔 광물은 그 자리에 떨어뜨린다 (약탈)
-        if bgOreVal(loop-item) > 0:
+            add loop-item to {_ores::*}
+            send "&c[전장] &f전설 무기 &6%{-bg::w::%bgIsLegend(loop-item)%::name}%&f 을(를) 떨어뜨렸습니다!" to victim
+        else if bgOreVal(loop-item) > 0:
             add loop-item to {_ores::*}
     clear drops
     if size of {_ores::*} > 0:
@@ -383,7 +421,11 @@ on death of player:
     if attacker is a player:
         if bgTeam(attacker) is not bgTeam(victim):
             if bgTeam(attacker) is not "none":
-                bgAddScore(bgTeam(attacker), 10)
+                # 앞서가는 팀을 잡으면 현상금 (점수 +15), 뒤처진 팀은 처치 점수 1.5배
+                set {_ks} to 10 * bgCatchup(bgTeam(attacker))
+                if bgLeader() is bgTeam(victim):
+                    set {_ks} to {_ks} + 5
+                bgAddScore(bgTeam(attacker), {_ks})
                 set death message to "%{-bg::tcol::%bgTeam(attacker)%}%%name of attacker% &7⚔ %{-bg::tcol::%bgTeam(victim)%}%%name of victim%"
                 stop
     set death message to "%{-bg::tcol::%bgTeam(victim)%}%%name of victim% &7쓰러짐"
@@ -393,6 +435,20 @@ on respawn:
     bgTeam(player) is not "none"
     set respawn location to bgBaseSpawnLoc(bgTeam(player))
     wait 1 tick
+    # 부활 대기 (기본 5초, /전장 리스폰 <초>) — 그동안 관전 모드
+    set {_d} to {bg::cfg::respawn} ? 5
+    if {_d} > 0:
+        set gamemode of player to spectator
+        loop {_d} times:
+            send title "&c&l쓰러짐" with subtitle "&f%{_d} - loop-number + 1%초 뒤 부활" to player for 25 ticks
+            wait 1 second
+            if player is not online:
+                stop
+            if {-bg::on} is not true:
+                stop
+        set gamemode of player to survival
+        teleport player to bgBaseSpawnLoc(bgTeam(player))
+        heal player
     bgKit(player)
     bgCmd("effect give %name of player% resistance 3 4 true")
 
@@ -556,6 +612,16 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             add {_n} to {bg::coin::%uuid of {_p}%}
             send "&6[코인] &f관리자가 &e%{_n}%&f 코인을 줬습니다 (보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
             send "&6[전장] &f%name of {_p}% 코인 %{_n}% → 보유 %{bg::coin::%uuid of {_p}%}%"
+        else if arg-1 is "리스폰":
+            set {bg::cfg::respawn} to arg-2 parsed as integer
+            send "&6[전장] &f부활 대기 = %{bg::cfg::respawn}%초"
+        else if arg-1 is "연습장비우기":
+            set {_n} to 0
+            loop all players:
+                if {-bg::pvp::%uuid of loop-player%} is true:
+                    bgPvpLeave(loop-player)
+                    add 1 to {_n}
+            send "&6[전장] &f연습장에 있던 %{_n}%명을 대기실로 보냈습니다."
         else if arg-1 is "팩":
             # /전장 팩 켬|끔|자동 — 왕관 쟁탈전 리소스팩을 이 스크립트가 보낼지 (Nexo 등과 같이 쓸 때는 끔)
             if arg-2 is "켬":
