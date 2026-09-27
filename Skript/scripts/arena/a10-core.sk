@@ -151,7 +151,7 @@ function bgSetupTeams():
         bgCmd("team modify bg_%{_t}% color %{-bg::tvan::%{_t}%}%")
         bgCmd("team modify bg_%{_t}% friendlyFire false")
         bgCmd("team modify bg_%{_t}% seeFriendlyInvisibles true")
-        bgCmd("team modify bg_%{_t}% nametagVisibility hideForOtherTeams")
+        bgCmd("team modify bg_%{_t}% nametagVisibility always")
         bgCmd("team modify bg_%{_t}% prefix {text:""[%{-bg::tname::%{_t}%}%] "",color:""%{-bg::tvan::%{_t}%}%""}")
 
 # ── 전체 알림

@@ -108,11 +108,15 @@ function bgPvpShop(p: player):
         set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
     set {_x} to barrier named "&c&l가방 비우고 기본 장비로"
     set slot 49 of {_gui} to {_x}
-    set {-bg::pvpgui::%uuid of {_p}%} to true
     open {_gui} to {_p}
+    set {-bg::pvpgui::%uuid of {_p}%} to true
 
 on inventory close:
     delete {-bg::pvpgui::%uuid of player%}
+
+on inventory drag:
+    {-bg::pvpgui::%uuid of player%} is true
+    cancel event
 
 on inventory click:
     {-bg::pvpgui::%uuid of player%} is true

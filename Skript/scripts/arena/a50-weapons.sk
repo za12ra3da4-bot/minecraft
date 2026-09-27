@@ -344,8 +344,9 @@ function bgShopOpen(p: player):
     set {_coin} to sunflower named "&6&l보유 코인: &e%{_c}%"
     set lore of {_coin} to "&7처치 +10 · 점령 +15 · 보스 +40", "&710초마다 +1 (점령 지점당 +1)"
     set slot 53 of {_gui} to {_coin}
-    set {-bg::shop::%uuid of {_p}%} to true
+    # 먼저 열고 나서 표시 (다시 열 때 이전 창의 '닫힘' 이 표시를 지워서 아이템을 빼 갈 수 있었음 — 복사 버그)
     open {_gui} to {_p}
+    set {-bg::shop::%uuid of {_p}%} to true
     play sound "block.chest.open" to {_p}
 
 # ─────────────────────────────────────────────────────────── 광물 (캐면 가방에, 죽으면 떨어뜨림, 상점에서 일괄 판매)
@@ -406,6 +407,11 @@ function bgWeaponItem(w: text) :: item:
 
 on inventory close:
     delete {-bg::shop::%uuid of player%}
+
+# 상점 창에서는 끌어 놓기도 막음
+on inventory drag:
+    {-bg::shop::%uuid of player%} is true
+    cancel event
 
 on inventory click:
     {-bg::shop::%uuid of player%} is true
