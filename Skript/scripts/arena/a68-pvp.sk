@@ -1,0 +1,135 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — PvP 연습장 (게임이 없을 때 전장 맵에서 자유 대전)
+#   /연습장 (/pvp장, /pvp) : 들어가기 · 나가기     /무기 : 무료 무기고 다시 열기
+#   전설 무기 16종 + 보스 무기 4종을 공짜로 골라서 스킬 연습. 죽어도 가방 유지, 연습장에서 부활
+#   게임이 시작되면 모두 대기실로 돌아감
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgPvpOn(p: player) :: boolean:
+    if {-bg::on} is true:
+        return false
+    if {-bg::pvp::%uuid of {_p}%} is true:
+        return true
+    return false
+
+function bgPvpSpawn() :: location:
+    set {_t} to random element out of {-bg::teams::*}
+    set {_i} to random integer between 0 and 6
+    if {-bg::mk::base_%{_t}%_spawn_%{_i}%::x} is set:
+        return bgMk("base_%{_t}%_spawn_%{_i}%")
+    return bgUp(bgMk("temple_core"), 1)
+
+function bgPvpKit(p: player):
+    set {_n} to name of {_p}
+    bgCmd("clear %{_n}%")
+    bgCmd("effect clear %{_n}%")
+    bgCmd("item replace entity %{_n}% armor.head with iron_helmet[unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
+    bgCmd("give %{_n}% iron_sword[unbreakable={}]")
+    bgCmd("give %{_n}% bow[unbreakable={}]")
+    bgCmd("give %{_n}% arrow 32")
+    bgCmd("give %{_n}% golden_apple 4")
+    bgCmd("give %{_n}% cooked_beef 16")
+
+function bgPvpEnter(p: player):
+    if {-bg::on} is true:
+        send "&6[연습장] &c게임 중에는 연습장에 갈 수 없습니다." to {_p}
+        stop
+    set {-bg::pvp::%uuid of {_p}%} to true
+    teleport {_p} to bgPvpSpawn()
+    set gamemode of {_p} to adventure
+    heal {_p}
+    set food level of {_p} to 20
+    bgPvpKit({_p})
+    send title "&c&lPvP 연습장" with subtitle "&f무기를 고르고 마음껏 싸우세요 · &e/무기 &f다시 고르기 · &e/연습장 &f나가기" to {_p} for 70 ticks
+    play sound "item.goat_horn.sound.0" to {_p}
+    wait 10 ticks
+    bgPvpShop({_p})
+
+function bgPvpLeave(p: player):
+    delete {-bg::pvp::%uuid of {_p}%}
+    bgToLobby({_p})
+    send "&6[연습장] &f대기실로 돌아왔습니다." to {_p}
+
+command /연습장:
+    aliases: /pvp장, /pvp
+    trigger:
+        if {-bg::pvp::%uuid of player%} is true:
+            bgPvpLeave(player)
+            stop
+        bgPvpEnter(player)
+
+command /무기:
+    trigger:
+        if bgPvpOn(player) is false:
+            send "&6[연습장] &f무료 무기고는 연습장에서만 열립니다. &e/연습장"
+            stop
+        bgPvpShop(player)
+
+# 무료 무기고: 전설 무기 16종 + 보스 무기 4종
+function bgPvpShop(p: player):
+    set {_gui} to chest inventory with 6 rows named "&c&l연습장 무기고 &8| &a무료"
+    set {_pane} to red stained glass pane named " "
+    loop 54 times:
+        set slot loop-number - 1 of {_gui} to {_pane}
+    set {_i} to 0
+    loop {-bg::w::list::*}:
+        add 1 to {_i}
+        set {_w} to loop-value
+        set {_it} to bgWeaponItem({_w})
+        set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&a클릭해서 받기 (무료)"
+        set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
+    set {_i} to 0
+    loop {-bg::w::bosslist::*}:
+        add 1 to {_i}
+        set {_w} to loop-value
+        set {_it} to bgWeaponItem({_w})
+        set name of {_it} to "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)"
+        set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&a연습장에서는 무료"
+        set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
+    set {_x} to barrier named "&c&l가방 비우고 기본 장비로"
+    set slot 49 of {_gui} to {_x}
+    set {-bg::pvpgui::%uuid of {_p}%} to true
+    open {_gui} to {_p}
+
+on inventory close:
+    delete {-bg::pvpgui::%uuid of player%}
+
+on inventory click:
+    {-bg::pvpgui::%uuid of player%} is true
+    cancel event
+    set {_s} to raw index of event-slot
+    if {_s} >= 54:
+        stop
+    if {_s} is 49:
+        bgPvpKit(player)
+        send "&6[연습장] &f기본 장비로 바꿨습니다." to player
+        stop
+    set {_w} to {-bg::wslot::%{_s}%}
+    if {_w} is not set:
+        set {_w} to {-bg::bslot::%{_s}%}
+    {_w} is set
+    bgGiveWeapon(player, {_w})
+    send "&6[연습장] &f%{-bg::w::%{_w}%::name}% 받음 &7— 우클릭으로 스킬" to player
+    play sound "item.armor.equip_netherite" to player
+
+# 연습장에서 죽으면: 가방 그대로 · 연습장 아무 곳에서 부활
+on death of player:
+    bgPvpOn(victim) is true
+    keep the inventory
+    if attacker is a player:
+        set death message to "&c[연습장] &f%name of attacker% &7⚔ &f%name of victim%"
+        stop
+    set death message to "&c[연습장] &f%name of victim% &7쓰러짐"
+
+on respawn:
+    bgPvpOn(player) is true
+    set respawn location to bgPvpSpawn()
+    wait 1 tick
+    set gamemode of player to adventure
+    bgCmd("effect give %name of player% resistance 3 4 true")
+
+on quit:
+    delete {-bg::pvp::%uuid of player%}

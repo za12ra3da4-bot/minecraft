@@ -274,12 +274,46 @@ function bgShopOpen(p: player):
         set name of {_it} to "&f&l%{-bg::gear::%{_g}%::name}%"
         set lore of {_it} to "&7%{-bg::gear::%{_g}%::desc}%", "" and "&e가격: %{-bg::gear::%{_g}%::price}% 코인"
         set slot {-bg::gear::%{_g}%::slot} of {_gui} to {_it}
+    # 광물 일괄 판매 버튼 (가방의 원석 · 보석을 한 번에 코인으로)
+    set {_sell} to hopper named "&a&l광물 일괄 판매"
+    set {_tot} to bgOreTotal({_p})
+    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e2 &7· &f금 원석 &e3", "&f에메랄드 &e6 &7· &f다이아몬드 &e10", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
+    set slot 49 of {_gui} to {_sell}
     set {_coin} to sunflower named "&6&l보유 코인: &e%{_c}%"
     set lore of {_coin} to "&7처치 +10 · 점령 +15 · 보스 +40", "&710초마다 +1 (점령 지점당 +1)"
     set slot 53 of {_gui} to {_coin}
     set {-bg::shop::%uuid of {_p}%} to true
     open {_gui} to {_p}
     play sound "block.chest.open" to {_p}
+
+# ─────────────────────────────────────────────────────────── 광물 (캐면 가방에, 죽으면 떨어뜨림, 상점에서 일괄 판매)
+function bgOreTotal(p: player) :: number:
+    set {_n} to 0
+    add 2 * (amount of raw iron in {_p}'s inventory) to {_n}
+    add 2 * (amount of raw copper in {_p}'s inventory) to {_n}
+    add 3 * (amount of raw gold in {_p}'s inventory) to {_n}
+    add 6 * (amount of emerald in {_p}'s inventory) to {_n}
+    add 10 * (amount of diamond in {_p}'s inventory) to {_n}
+    return {_n}
+
+function bgOreSell(p: player):
+    set {_n} to bgOreTotal({_p})
+    if {_n} <= 0:
+        send "&6[상점] &7팔 광물이 없습니다. &f본진 광석 바위를 곡괭이로 캐 오세요." to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    set {_k} to (amount of raw iron in {_p}'s inventory) + (amount of raw copper in {_p}'s inventory) + (amount of raw gold in {_p}'s inventory) + (amount of emerald in {_p}'s inventory) + (amount of diamond in {_p}'s inventory)
+    remove all raw iron from {_p}'s inventory
+    remove all raw copper from {_p}'s inventory
+    remove all raw gold from {_p}'s inventory
+    remove all emerald from {_p}'s inventory
+    remove all diamond from {_p}'s inventory
+    add {_n} to {bg::coin::%uuid of {_p}%}
+    send "&6[상점] &a광물 %{_k}%개 일괄 판매 &e+%{_n}% 코인 &7(보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
+    play sound "entity.experience_orb.pickup" to {_p}
+    play sound "block.amethyst_block.resonate" to {_p}
+    wait 1 tick
+    bgShopOpen({_p})
 
 # 상점 진열용 전설 무기 아이템 (리소스팩 그림이 보이도록 item_model 지정)
 function bgWeaponItem(w: text) :: item:
@@ -310,6 +344,9 @@ on inventory click:
         bgGiveGear(player, {_g})
         send "&6[상점] &f%{-bg::gear::%{_g}%::name}% 구매 &7(남은 코인 %{bg::coin::%uuid of player%}%)" to player
         play sound "entity.experience_orb.pickup" to player
+        stop
+    if {_s} is 49:
+        bgOreSell(player)
         stop
     if {-bg::bslot::%{_s}%} is set:
         send "&6[상점] &c보스 전용 무기는 보스를 쓰러뜨리고 보상 상자를 열어야 얻을 수 있습니다." to player
@@ -423,7 +460,14 @@ function bgEnemies(p: player, c: location, r: number) :: players:
     bgBossSkillHit({_p}, {_c}, {_r})
     loop all players:
         if bgIsFighter(loop-player) is true:
-            if bgTeam(loop-player) is not bgTeam({_p}):
+            # 연습장(게임 밖)은 자유 대전 — 나 말고 전부 적
+            set {_foe} to false
+            if {-bg::on} is not true:
+                if loop-player is not {_p}:
+                    set {_foe} to true
+            else if bgTeam(loop-player) is not bgTeam({_p}):
+                set {_foe} to true
+            if {_foe} is true:
                 if world of loop-player is world of {_c}:
                     if distance between loop-player and {_c} <= {_r}:
                         add loop-player to {_out::*}

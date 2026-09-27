@@ -111,6 +111,12 @@ on damage of player:
             stop
     attacker is a player
     if {-bg::on} is not true:
+        # 연습장끼리는 때릴 수 있음
+        set {_a} to attacker
+        set {_v} to victim
+        if bgPvpOn({_a}) is true:
+            if bgPvpOn({_v}) is true:
+                stop
         cancel event
         stop
     set {_a} to attacker

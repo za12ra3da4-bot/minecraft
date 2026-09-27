@@ -14,6 +14,25 @@ function bgLine(a: location, b: location, pt: text, n: number):
 function bgBD(l: location, blk: text, sx: number, sy: number, sz: number, yaw: number, tag: text, dur: number):
     bgCmd("execute in %bgDim()% run summon block_display %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bgfx"",""%{_tag}%""],Rotation:[%bgN({_yaw})%f,0f],block_state:{Name:""minecraft:%{_blk}%""},brightness:{sky:15,block:12},teleport_duration:%{_dur}%,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[%bgN({_sx} / -2)%f,0f,%bgN({_sz} / -2)%f],scale:[%bgN({_sx})%f,%bgN({_sy})%f,%bgN({_sz})%f]}}")
 
+# 바라보는 방향(위아래 포함)으로 d 칸 앞
+function bgAim(o: location, yaw: number, pitch: number, d: number) :: location:
+    set {_c} to cos({_pitch})
+    return location((x-coordinate of {_o}) - sin({_yaw}) * {_c} * {_d}, (y-coordinate of {_o}) - sin({_pitch}) * {_d}, (z-coordinate of {_o}) + cos({_yaw}) * {_c} * {_d}, world of {_o})
+
+# 아래로 내려가 첫 바닥 (바닥 위 칸 위치)
+function bgGround(l: location) :: location:
+    set {_q} to location(x-coordinate of {_l}, y-coordinate of {_l}, z-coordinate of {_l}, world of {_l})
+    # 블록 속이면 위로 빠져나온다
+    loop 4 times:
+        if block at {_q} is not air:
+            add 1 to y-coordinate of {_q}
+    loop 12 times:
+        set {_b} to location(x-coordinate of {_q}, (y-coordinate of {_q}) - 0.5, z-coordinate of {_q}, world of {_q})
+        if block at {_b} is not air:
+            return location(x-coordinate of {_q}, floor(y-coordinate of {_q}) + 0.0, z-coordinate of {_q}, world of {_q})
+        remove 1 from y-coordinate of {_q}
+    return {_l}
+
 function bgNear(p: player, c: location, r: number) :: players:
     return bgEnemies({_p}, {_c}, {_r})
 
@@ -24,13 +43,13 @@ function bgSkFrost(p: player):
     bgSoundAt({_o}, "entity.player.hurt_freeze", 1.5, 1.4)
     bgSoundAt({_o}, "item.crossbow.shoot", 1.5, 1.6)
     loop 3 times:
-        bgFrostArrow({_p}, {_o}, {_yaw} + (loop-number - 2) * 9)
+        bgFrostArrow({_p}, {_o}, {_yaw} + (loop-number - 2) * 9, pitch of {_p})
         wait 2 ticks
 
-function bgFrostArrow(p: player, o: location, a: number):
+function bgFrostArrow(p: player, o: location, a: number, pit: number):
     bgFxFly({_o}, "fx2_frost_arrow", 1.8, {_a}, 1.1, 16, 0)
     loop 22 times:
-        set {_q} to bgFwd({_o}, {_a}, loop-number * 1.1, 0, 0)
+        set {_q} to bgAim({_o}, {_a}, {_pit}, loop-number * 1.1)
         bgParticle({_q}, "snowflake", 0.05, 0.05, 0.05, 0, 3)
         bgParticle({_q}, "end_rod", 0, 0, 0, 0, 1)
         if block at {_q} is not air:
@@ -47,9 +66,9 @@ function bgFrostArrow(p: player, o: location, a: number):
         wait 1 tick
 
 function bgIceSpikes(l: location):
-    bgFxGrow(bgUp({_l}, -1.15), "fx2_frost_burst", 0.8, 4.6, 8, 0.05)
+    bgFxGrow(bgGround({_l}), "fx2_frost_burst", 0.8, 4.6, 8, 0.05)
     set {_t} to bgVTag()
-    set {_g} to bgUp({_l}, -1.2)
+    set {_g} to bgUp(bgGround({_l}), -1.2)
     loop 6 times:
         set {_c} to bgFwd({_g}, loop-number * 60, random number between 0.3 and 0.9, 0, 0)
         bgBD({_c}, "packed_ice", 0.35, random number between 1.2 and 2.0, 0.35, loop-number * 60, {_t}, 2)
@@ -70,8 +89,9 @@ function bgSkStorm(p: player):
     bgWModel({_o}, "storm", 2.6, {_yaw} + 90, -135, 0, 0, 0, {_t}, 2)
     bgSoundAt({_o}, "item.trident.throw", 1.5, 0.8)
     set {_end} to {_o}
-    loop 8 times:
-        set {_q} to bgFwd({_o}, {_yaw}, loop-number * 1.7, 0, 0)
+    set {_pit} to pitch of {_p}
+    loop 9 times:
+        set {_q} to bgAim({_o}, {_yaw}, {_pit}, loop-number * 1.7)
         if block at {_q} is not air:
             exit loop
         set {_end} to {_q}
@@ -79,8 +99,8 @@ function bgSkStorm(p: player):
         bgParticle({_q}, "electric_spark", 0.2, 0.2, 0.2, 0.1, 6)
         wait 1 tick
     strike lightning effect at {_end}
-    bgFxGrow(bgUp({_end}, -1.2), "fx2_storm_strike", 1, 7, 7, 0.05)
-    bgWfx(bgUp({_end}, -1.2), "fx2_storm_strike", 6, 30, 0)
+    bgFxGrow(bgGround({_end}), "fx2_storm_strike", 1, 7, 7, 0.05)
+    bgWfx(bgGround({_end}), "fx2_storm_strike", 6, 30, 0)
     bgParticle({_end}, "electric_spark", 1.5, 1, 1.5, 0.5, 60)
     set {_es::*} to bgNear({_p}, {_end}, 3)
     loop {_es::*}:
@@ -154,12 +174,13 @@ function bgSkLance(p: player):
 function bgSkSkull(p: player):
     set {_t} to bgVTag()
     set {_yaw} to yaw of {_p}
-    set {_o} to bgUp(location of {_p}, 1.5)
+    set {_pit} to pitch of {_p}
+    set {_o} to bgUp(location of {_p}, 1.55)
     bgCmd("execute in %bgDim()% run summon item_display %bgC(x-coordinate of {_o})% %bgN(y-coordinate of {_o})% %bgC(z-coordinate of {_o})% {Tags:[""bg"",""bgfx"",""%{_t}%""],Rotation:[%bgN({_yaw})%f,0f],item:{id:""minecraft:wither_skeleton_skull"",count:1},item_display:""fixed"",brightness:{sky:15,block:10},teleport_duration:1,transformation:{left_rotation:[0f,1f,0f,0f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.3f,1.3f,1.3f]}}")
     bgSoundAt({_o}, "entity.wither.shoot", 1.2, 1.2)
     set {_end} to {_o}
-    loop 16 times:
-        set {_q} to bgFwd({_o}, {_yaw}, loop-number * 1.2, 0, 0)
+    loop 18 times:
+        set {_q} to bgAim({_o}, {_yaw}, {_pit}, loop-number * 1.2)
         set {_end} to {_q}
         bgTpTag({_t}, {_q}, {_yaw})
         bgParticle({_q}, "soul_fire_flame", 0.15, 0.15, 0.15, 0.01, 4)
@@ -174,16 +195,16 @@ function bgSkSkull(p: player):
     bgParticle({_end}, "explosion", 0.5, 0.5, 0.5, 0, 3)
     bgParticle({_end}, "soul", 1.5, 0.8, 1.5, 0.05, 30)
     bgSoundAt({_end}, "entity.generic.explode", 1.2, 1.4)
-    set {_gl} to bgUp({_end}, -1.4)
+    set {_gl} to bgGround({_end})
     bgFxGrow({_gl}, "fx2_skull_miasma", 1, 7, 6, 0.05)
     bgWfx({_gl}, "fx2_skull_miasma", 6.6, 84, 0)
     set {_es::*} to bgNear({_p}, {_end}, 3)
     loop {_es::*}:
         bgDmg(loop-value, 2.5)
     loop 8 times:
-        bgParticle({_end}, "dust{color:[0.3,0.8,0.2],scale:2}", 2.2, 0.4, 2.2, 0, 25)
-        bgParticle({_end}, "witch", 2, 0.4, 2, 0, 6)
-        set {_es::*} to bgNear({_p}, {_end}, 3.2)
+        bgParticle(bgUp({_gl}, 0.5), "dust{color:[0.3,0.8,0.2],scale:2}", 2.2, 0.4, 2.2, 0, 25)
+        bgParticle(bgUp({_gl}, 0.5), "witch", 2, 0.4, 2, 0, 6)
+        set {_es::*} to bgNear({_p}, bgUp({_gl}, 1), 3.4)
         loop {_es::*}:
             bgCmd("effect give %bgPName(loop-value-2)% poison 2 1 true")
         wait 10 ticks
@@ -264,32 +285,38 @@ function bgSkChain(p: player):
 function bgSkGauntlet(p: player):
     set {_yaw} to yaw of {_p}
     set {_o} to location of {_p}
-    set {_t} to bgVTag()
     bgSoundAt({_o}, "item.mace.smash_ground_heavy", 1.8, 0.7)
-    bgWfx(bgFwd({_o}, {_yaw}, 7.2, 0, 0.02), "fx2_gauntlet_fissure", 13, 50, {_yaw})
+    bgParticle(bgUp({_o}, 0.2), "explosion", 0.3, 0.1, 0.3, 0, 2)
+    bgWfx(bgGround(bgFwd({_o}, {_yaw}, 7.2, 0, 0.6)), "fx2_gauntlet_fissure", 13, 50, {_yaw})
+    # 땅속에서 돌기둥이 하나씩 솟아오른다 (지형 높이를 따라감)
     loop 9 times:
-        set {_c} to bgFwd({_o}, {_yaw}, 1.2 + loop-number * 1.3, 0, -2.2)
+        set {_c} to bgGround(bgFwd({_o}, {_yaw}, 1.2 + loop-number * 1.3, 0, 0.8))
         set {_blk} to "cobblestone"
         if mod(loop-number, 3) is 0:
             set {_blk} to "andesite"
         else if mod(loop-number, 3) is 1:
             set {_blk} to "stone"
-        bgBD({_c}, {_blk}, 1.1, 2.2 + loop-number * 0.12, 1.1, {_yaw} + loop-number * 17, {_t}, 2)
-        set {_g} to bgUp({_c}, 2.2)
-        bgParticle({_g}, "explosion", 0.2, 0.1, 0.2, 0, 1)
+        bgPillar({_c}, {_blk}, 1.3 + loop-number * 0.12, {_yaw} + loop-number * 17)
+        set {_g} to bgUp({_c}, 1)
+        bgParticle({_g}, "block{block_state:""minecraft:stone""}", 0.5, 0.2, 0.5, 0.1, 14)
         bgParticle({_g}, "crit", 0.6, 0.3, 0.6, 0.2, 8)
         bgSoundAt({_g}, "block.stone.break", 1.2, 0.6)
-        loop bgNear({_p}, {_g}, 1.7):
+        loop bgNear({_p}, {_g}, 1.8):
             if {_done::%uuid of loop-value-2%} is not set:
                 set {_done::%uuid of loop-value-2%} to true
                 bgDmg(loop-value-2, 2.5)
                 bgVel(loop-value-2, vector(0, 1.05, 0))
         wait 1 tick
-        bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~0.35 ~")
-    bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~1.6 ~")
-    wait 28 ticks
-    bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~-3.2 ~")
-    wait 3 ticks
+
+# 돌기둥 하나: 땅속에서 h 칸 솟았다가 1.5초 뒤 다시 들어감
+function bgPillar(c: location, blk: text, h: number, yaw: number):
+    set {_t} to bgVTag()
+    bgBD(bgUp({_c}, -1 * {_h} - 0.1), {_blk}, 1.1, {_h}, 1.1, {_yaw}, {_t}, 3)
+    wait 1 tick
+    bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~%bgN({_h} + 0.1)% ~")
+    wait 30 ticks
+    bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~%bgN(-1 * {_h} - 0.2)% ~")
+    wait 4 ticks
     bgCmd("kill @e[tag=%{_t}%]")
 
 # ═════════════════════════════════════════════════════════════════════════════

@@ -47,6 +47,12 @@ function bgStart():
         stop
     bgSetupTeams()
     bgSyncOrigin()
+    # 연습장에 있던 사람은 대기실로 (연습 무기는 회수)
+    loop all players:
+        if {-bg::pvp::%uuid of loop-player%} is true:
+            delete {-bg::pvp::%uuid of loop-player%}
+            bgToLobby(loop-player)
+    delete {-bg::pvp::*}
     set {-bg::sec} to 0
     set {-bg::on} to false
     loop {-bg::teams::*}:
@@ -366,7 +372,12 @@ on death of player:
     loop drops:
         if bgIsLegend(loop-item) is not "":
             set {bg::owned::%uuid of victim%::%bgIsLegend(loop-item)%} to true
+        # 캔 광물은 그 자리에 떨어뜨린다 (약탈)
+        if loop-item is raw iron or raw copper or raw gold or emerald or diamond:
+            add loop-item to {_ores::*}
     clear drops
+    if size of {_ores::*} > 0:
+        drop {_ores::*} at location of victim
     if attacker is a player:
         if bgTeam(attacker) is not bgTeam(victim):
             if bgTeam(attacker) is not "none":
@@ -533,6 +544,33 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             add {_n} to {bg::coin::%uuid of {_p}%}
             send "&6[코인] &f관리자가 &e%{_n}%&f 코인을 줬습니다 (보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
             send "&6[전장] &f%name of {_p}% 코인 %{_n}% → 보유 %{bg::coin::%uuid of {_p}%}%"
+        else if arg-1 is "무기":
+            # /전장 무기 <무기id|all|boss> [플레이어]  (보스 전용 무기도 지급)
+            if arg-2 is not set:
+                send "&6[전장] &f/전장 무기 <id|all|boss> [플레이어]"
+                send "&7무기 id: %join {-bg::w::all::*} with "", ""%"
+                stop
+            set {_p} to player
+            if arg-3 is set:
+                set {_p} to arg-3 parsed as player
+            if {_p} is not set:
+                send "&c플레이어를 찾을 수 없습니다."
+                stop
+            if arg-2 is "all":
+                set {_ws::*} to {-bg::w::all::*}
+            else if arg-2 is "boss":
+                set {_ws::*} to {-bg::w::bosslist::*}
+            else if {-bg::w::%arg-2%::name} is set:
+                add arg-2 to {_ws::*}
+            else:
+                send "&c없는 무기 id: %arg-2% &7(%join {-bg::w::all::*} with "", ""%)"
+                stop
+            loop {_ws::*}:
+                bgGiveWeapon({_p}, loop-value)
+                if {-bg::on} is true:
+                    set {bg::owned::%uuid of {_p}%::%loop-value%} to true
+            send "&6[전장] &f%name of {_p}%에게 무기 %size of {_ws::*}%개 지급"
+            send "&6[관리자] &f무기를 받았습니다: &e%join {_ws::*} with "", ""%" to {_p}
         else if arg-1 is "점수":
             set {-bg::score::%arg-2%} to arg-3 parsed as integer
         else if arg-1 is "목표":

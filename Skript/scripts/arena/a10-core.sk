@@ -132,7 +132,12 @@ function bgTeamCount(t: text) :: number:
 # ── 전투 참가자 (게임 중 · 팀 있음 · 서바이벌/모험)
 function bgIsFighter(p: player) :: boolean:
     if {-bg::on} is not true:
-        return false
+        # 게임 밖: PvP 연습장에 있는 사람만 전투 참가자
+        if {-bg::pvp::%uuid of {_p}%} is not true:
+            return false
+        if gamemode of {_p} is spectator or creative:
+            return false
+        return true
     if bgTeam({_p}) is "none":
         return false
     if gamemode of {_p} is spectator or creative:

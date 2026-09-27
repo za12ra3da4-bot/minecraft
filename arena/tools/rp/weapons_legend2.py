@@ -419,33 +419,43 @@ def chain():
 
 
 def gauntlet():
-    """거인의 건틀렛 — 청동 · 돌 판갑 주먹 + 마디 가시 + 빛나는 용암 룬"""
+    """거인의 건틀렛 — 금 테두리 강철 판갑 주먹 (소매 → 손등 → 꽉 쥔 네 손가락) + 마디 가시 + 용암 룬"""
     c, au, r = Canvas(), Aura(), np.random.default_rng(18)
-    # 손목 (아래 왼쪽) → 주먹 (위 오른쪽)
-    c.part(smooth_poly([(90, 330), (160, 260), (230, 330), (170, 410), (120, 430)], 8, local=False), STONE2, 1, bevel=14)
+    PLATE = M((150, 156, 172), spec=1.0, shin=55, env=0.5, grain="brushed", sky=(220, 226, 240), ground=(24, 24, 30))
+    PLATE_D = M((92, 96, 110), spec=0.9, shin=50, env=0.45, grain="brushed", sky=(160, 166, 190), ground=(12, 12, 16))
+    # 소매 (아래 왼쪽, 나팔 모양)
+    c.part(smooth_poly([(70, 400), (150, 330), (210, 390), (140, 470), (96, 470)], 8, local=False), PLATE_D, 1, bevel=14)
+    c.part(stroke([(84, 414), (156, 342)], 14, 14, local=False), GOLD2, 2, bevel=5)
+    c.part(stroke([(118, 452), (196, 380)], 12, 12, local=False), GOLD2, 3, bevel=5)
     for k in range(3):
-        c.part(stroke([(110 + k * 22, 360 - k * 22), (170 + k * 22, 420 - k * 22)], 12, 12, local=False), BRONZE2, 2 + k, bevel=5)
-    # 손등 판
-    c.part(smooth_poly([(170, 250), (260, 170), (340, 230), (320, 330), (240, 340)], 8, local=False), STONE2, 10, bevel=18)
-    c.part(smooth_poly([(200, 250), (264, 196), (318, 238), (300, 306), (244, 314)], 8, local=False), BRONZE2, 11, bevel=12)
-    # 손가락 마디 4개
+        c.part(cdisc(126 + k * 18, 404 - k * 18, 5), RUBY, 4 + k, bevel=3)
+    # 손목 판
+    c.part(smooth_poly([(150, 320), (212, 262), (262, 310), (206, 372)], 6, local=False), PLATE, 10, bevel=12)
+    c.part(stroke([(160, 318), (212, 270)], 6, 6, local=False), GOLD2, 11, bevel=3)
+    # 손등 (큰 판) + 가운데 용암 보석
+    c.part(smooth_poly([(200, 250), (270, 180), (350, 222), (348, 300), (272, 340), (222, 312)], 8, local=False), PLATE, 20, bevel=18)
+    c.part(smooth_poly([(226, 254), (274, 206), (330, 236), (326, 292), (274, 318), (240, 298)], 8, local=False), PLATE_D, 21, bevel=10)
+    c.part(cdisc(280, 262, 22), GOLD2, 22, bevel=8)
+    c.part(cdisc(280, 262, 14), LAVA, 23, bevel=7)
+    for pts in ([(240, 290), (262, 276)], [(300, 246), (318, 234)], [(250, 232), (266, 244)], [(296, 290), (312, 302)]):
+        c.emissive(line_dens(pts, 3.0, local=False), (255, 140, 40), 1.2)
+    # 꽉 쥔 네 손가락 (손등 위쪽 끝을 따라 둥글게 말림)
     for k in range(4):
-        x, y = 280 + k * 22, 150 + k * 26
-        c.part(smooth_poly([(x - 30, y + 10), (x + 10, y - 30), (x + 40, y - 6), (x + 6, y + 34)], 6, local=False), STONE2, 20 + k, bevel=12)
-        c.part(poly([(x - 2, y - 8), (x + 30, y - 40), (x + 16, y + 4)], local=False), IRON, 30 + k, shape="blade", height=1.0)
-    # 엄지
-    c.part(smooth_poly([(330, 300), (380, 300), (400, 340), (360, 360), (320, 340)], 6, local=False), STONE2, 40, bevel=10)
-    # 용암 룬
-    for pts in ([(225, 262), (262, 230), (298, 262)], [(262, 230), (262, 300)], [(240, 290), (284, 290)]):
-        c.emissive(line_dens(pts, 3.0, local=False), (255, 140, 40), 1.3)
-    c.part(cdisc(262, 262, 12), LAVA, 50, bevel=6)
-    # 오라: 먼지 · 불씨
-    for k in range(9):
-        a = math.radians(r.uniform(180, 360))
-        x0, y0 = 260 + math.cos(a) * 120, 240 + math.sin(a) * 120
-        au.wisp([(x0, y0), (x0 + math.cos(a) * 50, y0 + math.sin(a) * 50 - 20), (x0 + math.cos(a) * 80 + 20, y0 + math.sin(a) * 70 - 40)], r.uniform(10, 18), (255, 120, 30), local=False)
-    au.glow(c.sil, (255, 140, 50), 12, 0.5)
-    return c, au, dict(outline_col=(30, 14, 6), sparkle=(255, 230, 170))
+        x, y = 300 + k * 26, 170 + k * 30
+        c.part(smooth_poly([(x - 32, y + 14), (x - 4, y - 24), (x + 34, y - 12), (x + 40, y + 20), (x + 8, y + 40)], 7, local=False), PLATE, 30 + k, bevel=13)
+        c.part(stroke([(x - 18, y - 6), (x + 26, y + 10)], 5, 5, local=False), GOLD2, 40 + k, bevel=3)
+        c.part(poly([(x + 6, y - 20), (x + 44, y - 42), (x + 30, y - 2)], local=False), SILVER, 50 + k, shape="blade", height=1.0)
+    # 엄지 (주먹 아래쪽을 감쌈)
+    c.part(smooth_poly([(320, 318), (372, 300), (404, 330), (380, 368), (330, 360)], 7, local=False), PLATE, 60, bevel=12)
+    c.part(stroke([(334, 336), (384, 322)], 5, 5, local=False), GOLD2, 61, bevel=3)
+    # 오라: 불씨 · 충격
+    for k in range(8):
+        a = math.radians(r.uniform(200, 340))
+        x0, y0 = 330 + math.cos(a) * 110, 230 + math.sin(a) * 110
+        au.wisp([(x0, y0), (x0 + math.cos(a) * 50, y0 + math.sin(a) * 50 - 10), (x0 + math.cos(a) * 80 + 14, y0 + math.sin(a) * 76 - 30)], r.uniform(12, 18), (255, 100, 20), (255, 220, 120), 0.95, local=False)
+    au.glow(c.sil, (255, 130, 40), 12, 0.7)
+    c.glow += np.array((255, 120, 30), np.float32)[None, None, :] * ndimage.gaussian_filter(cdisc(280, 262, 26).astype(np.float32), 10)[..., None] * 2.0
+    return c, au, dict(outline_col=(20, 12, 8), sparkle=(255, 230, 170))
 
 
 def b_talos():

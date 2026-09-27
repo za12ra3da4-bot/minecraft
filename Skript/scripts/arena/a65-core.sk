@@ -127,7 +127,8 @@ function bgWardOn(p: player) :: boolean:
     return false
 
 # ─────────────────────────────────────────────────────────── 광산 (본진 광석 바위)
-#  본진 광석 바위에서만: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10 코인. 누가 캐도 40초 뒤 다시 채워짐
+#  본진 광석 바위에서만: 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 40초 뒤 다시 채워짐
+#  죽으면 광물은 그 자리에 떨어져서 적이 주워 갈 수 있다
 #  (다른 곳 광석은 캘 수 없음 · 창작 모드 관리자는 예외)
 function bgAtBaseOre(l: location) :: boolean:
     loop {-bg::teams::*}:
@@ -144,17 +145,25 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     set {_l} to location of event-block
     bgAtBaseOre({_l}) is true
     set {_ty} to type of event-block
-    set {_n} to 2
-    if event-block is gold ore:
-        set {_n} to 3
+    set {_drop} to raw iron
+    set {_nm} to "철 원석 (2코인)"
+    if event-block is copper ore:
+        set {_drop} to raw copper
+        set {_nm} to "구리 원석 (2코인)"
+    else if event-block is gold ore:
+        set {_drop} to raw gold
+        set {_nm} to "금 원석 (3코인)"
     else if event-block is emerald ore:
-        set {_n} to 6
+        set {_drop} to emerald
+        set {_nm} to "에메랄드 (6코인)"
     else if event-block is diamond ore:
-        set {_n} to 10
+        set {_drop} to diamond
+        set {_nm} to "다이아몬드 (10코인)"
     set block at {_l} to cobblestone
     if bgIsFighter(player) is true:
-        bgCoin(player, {_n}, "광질")
-        play sound "entity.experience_orb.pickup" to player
+        give player 1 of {_drop}
+        send action bar "&a+1 %{_nm}% &7— 상점 '광물 일괄 판매'에서 코인으로 · 죽으면 떨어뜨림" to player
+        play sound "entity.item.pickup" to player
     play sound "block.amethyst_block.break" to player
     bgParticle({_l}, "wax_on", 0.4, 0.4, 0.4, 0.1, 10)
     wait 40 seconds
