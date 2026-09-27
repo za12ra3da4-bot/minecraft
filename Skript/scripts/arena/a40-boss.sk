@@ -638,7 +638,7 @@ function bgBossSkillHit(p: player, c: location, r: number):
     set {_h} to 5
     if {_w} is not "":
         set {_h} to {-bg::w::%{_w}%::bossdmg} ? 5
-    bgBossTake({_h} * 1.6, {_p}, {_l})
+    bgBossTake({_h}, {_p}, {_l})
     bgParticle(bgUp({_l}, 1.5 * {_hs}), "crit", 0.8, 0.8, 0.8, 0.3, 20)
     bgSoundAt({_l}, "entity.player.attack.crit", 1.2, 0.8)
 

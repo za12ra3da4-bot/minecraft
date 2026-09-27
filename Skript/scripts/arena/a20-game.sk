@@ -445,7 +445,7 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
     permission: op
     trigger:
         if arg-1 is not set:
-            send "&6[전장] &f/전장 건설 (내 위치) | 건설 원점 | 장식 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
+            send "&6[전장] &f/전장 건설 (내 위치) | 건설 원점 | 장식 | 광석바위 | 맵패치 | 연습장건설 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
             send "&6[전장] &f/전장 자동팀 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops] | 보스제거"
             send "&6[전장] &f/전장 코인 <플레이어|all> <n> | 점수 <팀> <n> | 목표 <n> | 시간 <분> | 이동 <마커>"
             stop
@@ -474,14 +474,24 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             bgHudTest(player)
         else if arg-1 is "장식":
             bgSyncOrigin()
+            # 장식 = 디스플레이 · NPC · 코어 표시 같은 '엔티티'만 다시 소환 (블록은 건드리지 않음 → 직접 고친 맵 안전)
             bgCmd("function bg:map/decor")
-            send "&6[전장] &f장식을 다시 배치했습니다. &7맵 고치는 중 (예전 광산 자리 복구 · 갇히는 곳 사다리)..."
+            send "&6[전장] &f장식(디스플레이 · 상인 · 코어)을 다시 배치했습니다. &7블록은 건드리지 않습니다."
+        else if arg-1 is "광석바위":
+            # 본진 광석 바위 (블록을 덮어씀 — 그 자리 5x5 만)
+            bgSyncOrigin()
+            bgCmd("function bg:map/ores")
+            send "&6[전장] &f본진 광석 바위를 놓았습니다. &7(병과 발판 줄 끝 5x5 자리 블록을 덮어씀)"
+        else if arg-1 is "맵패치":
+            # 예전 광산 자리 원래 지형으로 + 갇히는 곳 사다리 (블록을 덮어씀 — 한 번만)
+            bgSyncOrigin()
+            send "&6[전장] &e맵 패치 중... &7(예전 광산 자리 8곳 원래 지형으로 · 갇히는 곳 사다리 · 메우기)"
             bgCmd("function bg:map/patch_fl")
             wait 40 ticks
             bgCmd("function bg:map/patch")
             wait 5 ticks
             bgCmd("function bg:map/patch_rm")
-            send "&6[전장] &f맵 고치기 완료."
+            send "&6[전장] &f맵 패치 완료."
         else if arg-1 is "원점":
             set {bg::cfg::ox} to arg-2 parsed as integer
             set {bg::cfg::oy} to arg-3 parsed as integer

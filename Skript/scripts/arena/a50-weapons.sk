@@ -19,7 +19,8 @@ function bgWDef(id: text, name: text, price: number, cd: number, col: text, desc
     set {-bg::w::%{_id}%::name} to {_name}
     set {-bg::w::%{_id}%::base} to "iron_sword"
     set {-bg::w::%{_id}%::price} to {_price}
-    set {-bg::w::%{_id}%::cd} to {_cd}
+    # 재사용 대기 전체 너프: 1.3배 (반올림)
+    set {-bg::w::%{_id}%::cd} to round({_cd} * 1.3)
     set {-bg::w::%{_id}%::col} to {_col}
     set {-bg::w::%{_id}%::desc} to {_desc}
 
@@ -30,25 +31,25 @@ on load:
     set {-bg::w::bosslist::*} to "b_talos", "b_sphinx", "b_ladon" and "b_cyclops"
     set {-bg::w::all::*} to {-bg::w::list::*}
     add {-bg::w::bosslist::*} to {-bg::w::all::*}
-    bgWDef("thunder", "천둥의 성검", 500, 15, "aqua", "우클릭 심판의 낙뢰: 하늘에서 성검이 내리꽂힘 — 반경 4 강한 피해 · 15초")
-    bgWDef("dragon", "용살자의 도끼", 500, 12, "red", "우클릭 화염 선풍: 도끼가 두 바퀴 돌며 앞 120° 베기 · 12초")
-    bgWDef("wind", "질풍의 레이피어", 500, 8, "green", "우클릭 질풍 삼연격: 질주하며 세 번 찌르기 · 8초")
-    bgWDef("phoenix", "성기사의 전쟁망치", 500, 18, "gold", "우클릭 신성 강타: 거대한 망치가 떨어져 결계 (저항 II) · 18초")
-    bgWDef("blackiron", "흑기사의 대검", 500, 12, "dark_red", "우클릭 피의 돌진: 돌진 뒤 거대한 대검으로 가로 베기 · 12초")
-    bgWDef("tiger", "그림자 쌍단검", 500, 10, "dark_purple", "우클릭 그림자 교차: 단검 두 자루가 X자로 교차 (3연속) · 10초")
-    bgWDef("staff", "대마법사의 지팡이", 500, 14, "light_purple", "우클릭 비전 폭발: 비전 구체를 모았다 터뜨려 적을 띄움 · 14초")
-    bgWDef("peachwood", "불사조의 창", 500, 16, "gold", "우클릭 불창의 비: 불창 여섯 자루가 쏟아짐 (화상) · 16초")
-    bgWDef("frost", "서리 여왕의 장궁", 500, 12, "aqua", "우클릭 빙결 사격: 얼음 화살 세 발 — 맞은 적 자리에 얼음 가시 (구속 IV) · 12초")
-    bgWDef("storm", "폭풍의 삼지창", 500, 16, "blue", "우클릭 폭풍 투척: 삼지창을 던져 번개가 적 3명에게 튀어감 · 16초")
-    bgWDef("scythe", "망자의 낫", 500, 14, "dark_gray", "우클릭 영혼 수확: 낫이 한 바퀴 돌며 베고, 맞은 적마다 체력 회복 · 14초")
-    bgWDef("lance", "성광의 기병창", 500, 12, "yellow", "우클릭 성광 돌격: 9칸 돌격 — 길 위의 적을 띄우고 발광 · 12초")
-    bgWDef("skull", "저주받은 해골 지팡이", 500, 12, "dark_green", "우클릭 저주의 해골: 날아가는 해골이 터지며 독 구름 · 12초")
-    bgWDef("chakram", "태양의 원반", 500, 10, "gold", "우클릭 태양 원반: 원반이 날아갔다 돌아오며 두 번 벰 · 10초")
-    bgWDef("chain", "사냥꾼의 사슬낫", 500, 12, "gray", "우클릭 사슬 끌어오기: 앞의 적을 사슬로 끌어와 기절 · 12초")
-    bgWDef("gauntlet", "거인의 건틀렛", 500, 14, "gold", "우클릭 대지 분쇄: 앞으로 돌기둥이 줄지어 솟아 적을 띄움 · 14초")
-    bgWDef("b_talos", "탈로스의 청동 대검", 0, 18, "gold", "보스 전용 · 우클릭 청동 폭주: 세 번 연속 돌진 + 저항 · 힘 (5초) · 18초")
-    bgWDef("b_sphinx", "스핑크스의 모래시계", 0, 20, "yellow", "보스 전용 · 우클릭 시간의 모래폭풍: 반경 7 적 구속 V · 실명 (3초) · 20초")
-    bgWDef("b_ladon", "히드라의 삼두 채찍", 0, 14, "dark_green", "보스 전용 · 우클릭 삼두 채찍질: 세 갈래로 독 채찍 (독 · 시듦) · 14초")
+    bgWDef("thunder", "천둥의 성검", 500, 15, "aqua", "우클릭 심판의 낙뢰: 하늘에서 성검이 내리꽂힘 — 반경 4 강한 피해 · 20초")
+    bgWDef("dragon", "용살자의 도끼", 500, 12, "red", "우클릭 화염 선풍: 도끼가 두 바퀴 돌며 앞 120° 베기 · 16초")
+    bgWDef("wind", "질풍의 레이피어", 500, 8, "green", "우클릭 질풍 삼연격: 질주하며 세 번 찌르기 · 10초")
+    bgWDef("phoenix", "성기사의 전쟁망치", 500, 18, "gold", "우클릭 신성 강타: 거대한 망치가 떨어져 결계 (저항 II) · 23초")
+    bgWDef("blackiron", "흑기사의 대검", 500, 12, "dark_red", "우클릭 피의 돌진: 돌진 뒤 거대한 대검으로 가로 베기 · 16초")
+    bgWDef("tiger", "그림자 쌍단검", 500, 10, "dark_purple", "우클릭 그림자 교차: 단검 두 자루가 X자로 교차 (3연속) · 13초")
+    bgWDef("staff", "대마법사의 지팡이", 500, 14, "light_purple", "우클릭 비전 폭발: 비전 구체를 모았다 터뜨려 적을 띄움 · 18초")
+    bgWDef("peachwood", "불사조의 창", 500, 16, "gold", "우클릭 불창의 비: 불창 여섯 자루가 쏟아짐 (화상) · 21초")
+    bgWDef("frost", "서리 여왕의 장궁", 500, 12, "aqua", "우클릭 빙결 사격: 얼음 화살 세 발 — 맞은 적 자리에 얼음 가시 (구속 IV) · 16초")
+    bgWDef("storm", "폭풍의 삼지창", 500, 16, "blue", "우클릭 폭풍 투척: 삼지창을 던져 번개가 적 3명에게 튀어감 · 21초")
+    bgWDef("scythe", "망자의 낫", 500, 14, "dark_gray", "우클릭 영혼 수확: 낫이 한 바퀴 돌며 베고, 맞은 적마다 체력 회복 · 18초")
+    bgWDef("lance", "성광의 기병창", 500, 12, "yellow", "우클릭 성광 돌격: 9칸 돌격 — 길 위의 적을 띄우고 발광 · 16초")
+    bgWDef("skull", "저주받은 해골 지팡이", 500, 12, "dark_green", "우클릭 저주의 해골: 날아가는 해골이 터지며 독 구름 · 16초")
+    bgWDef("chakram", "태양의 원반", 500, 10, "gold", "우클릭 태양 원반: 원반이 날아갔다 돌아오며 두 번 벰 · 13초")
+    bgWDef("chain", "사냥꾼의 사슬낫", 500, 12, "gray", "우클릭 사슬 끌어오기: 앞의 적을 사슬로 끌어와 기절 · 16초")
+    bgWDef("gauntlet", "거인의 건틀렛", 500, 14, "gold", "우클릭 대지 분쇄: 앞으로 돌기둥이 줄지어 솟아 적을 띄움 · 18초")
+    bgWDef("b_talos", "탈로스의 청동 대검", 0, 18, "gold", "보스 전용 · 우클릭 청동 폭주: 세 번 연속 돌진 + 저항 · 힘 (5초) · 23초")
+    bgWDef("b_sphinx", "스핑크스의 모래시계", 0, 20, "yellow", "보스 전용 · 우클릭 시간의 모래폭풍: 반경 7 적 구속 V · 실명 (3초) · 26초")
+    bgWDef("b_ladon", "히드라의 삼두 채찍", 0, 14, "dark_green", "보스 전용 · 우클릭 삼두 채찍질: 세 갈래로 독 채찍 (독 · 시듦) · 18초")
     # 보스에게 주는 스킬 피해 (하트, 1.6배 · 보스 체력은 6배로 깎임) — 기본 5, 한 방 스킬은 더 세게
     set {-bg::w::thunder::bossdmg} to 7
     set {-bg::w::phoenix::bossdmg} to 6
@@ -61,7 +62,7 @@ on load:
     set {-bg::w::storm::bossdmg} to 7
     set {-bg::w::b_talos::bossdmg} to 6
     set {-bg::w::b_cyclops::bossdmg} to 7
-    bgWDef("b_cyclops", "외눈 거인의 곤봉", 0, 20, "gold", "보스 전용 · 우클릭 거암 투척: 거대한 바위를 던져 땅을 뒤흔듦 · 20초")
+    bgWDef("b_cyclops", "외눈 거인의 곤봉", 0, 20, "gold", "보스 전용 · 우클릭 거암 투척: 거대한 바위를 던져 땅을 뒤흔듦 · 26초")
 
 # ─────────────────────────────────────────────────────────── 코인
 function bgCoin(p: player, n: number, why: text):
@@ -380,8 +381,8 @@ function bgGiveWeapon(p: player, w: text):
 
 # 목록 루프 값(종류 모름)에도 확실히 먹도록 플레이어 인자로 받는 도우미
 function bgDmg(p: player, h: number):
-    # 전설 무기 스킬 피해 전체 1.6배
-    damage {_p} by {_h} * 1.6
+    # 전설 무기 스킬 피해 (전체 너프: 1.6배 → 1.0배)
+    damage {_p} by {_h}
 
 function bgIgnite(p: player, s: number):
     set {_t} to "%{_s}% seconds" parsed as timespan

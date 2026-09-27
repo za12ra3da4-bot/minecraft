@@ -733,9 +733,11 @@ def decor_functions(dp_root, world, fixes=()):
         nparts += len(out)
         lines += out
     # ── 광맥 (캐면 코인, Skript 가 다시 채움)
+    # 광석 바위는 블록을 덮어쓰므로 장식과 분리 (bg:map/ores — 관리자가 따로 한 번)
     ore = base_ore_lines(world)
-    lines += ore
-    print(f"[decor] 본진 광석 바위 블록 {len(ore)}개")
+    w(os.path.join(F, "ores_run.mcfunction"), ore)
+    w(os.path.join(F, "ores.mcfunction"), ["function bg:map/ores_run with storage bg:map origin"])
+    print(f"[decor] 본진 광석 바위 블록 {len(ore)}개 (bg:map/ores)")
     # ── 상점 상인 NPC (본진 4곳 + 대기실) · 병과 발판 표식
     extra = npc_and_class_lines(world, bdkit, bdmodels)
     lines += extra
