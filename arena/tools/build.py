@@ -6,6 +6,7 @@
    Skript/scripts/arena/a90-generated-*.sk    Skript 데이터 (글리프 · 맵 좌표 · 보스 애니메이션)
 """
 import json
+import shutil
 import os
 import sys
 import time
@@ -107,7 +108,14 @@ def main(args):
     # 리소스팩 주소 + sha1 → 접속할 때 서버가 최신 팩을 직접 보낸다 (sha1 이 없으면 클라이언트가 옛 팩을 계속 씀)
     import hashlib
     h = hashlib.sha1(open(OUT_RP, "rb").read()).hexdigest()
-    url = f"https://raw.githubusercontent.com/za12ra3da4-bot/minecraft/claude/wonderful-cray-expxq7/arena/resourcepack/bg_arena_pack.zip?v={h[:12]}"
+    # 버전마다 따로 저장한 파일 주소 (내용이 바뀌지 않아 sha1 이 항상 맞음 — 서버가 옛 스크립트여도 옛 팩을 정확히 받음)
+    vdir = os.path.join(os.path.dirname(OUT_RP), "v")
+    os.makedirs(vdir, exist_ok=True)
+    shutil.copyfile(OUT_RP, os.path.join(vdir, f"{h[:12]}.zip"))
+    olds = sorted((f for f in os.listdir(vdir) if f.endswith(".zip")), key=lambda f: os.path.getmtime(os.path.join(vdir, f)))
+    for f in olds[:-4]:
+        os.remove(os.path.join(vdir, f))
+    url = f"https://raw.githubusercontent.com/za12ra3da4-bot/minecraft/claude/wonderful-cray-expxq7/arena/resourcepack/v/{h[:12]}.zip"
     with open(os.path.join(OUT_SK, "a04-gen-pack.sk"), "w", encoding="utf-8") as f:
         f.write("# 자동 생성 — 리소스팩 주소와 sha1 (arena/tools/build.py)\n"
                 f'on load:\n    set {{-bg::pack::url}} to "{url}"\n    set {{-bg::pack::sha1}} to "{h}"\n')
