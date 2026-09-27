@@ -191,19 +191,33 @@ function bgGearDef(id: text, name: text, desc: text, price: number, icon: item, 
     set {-bg::gear::%{_id}%::icon} to {_icon}
     set {-bg::gear::%{_id}%::slot} to {_slot}
 
+# 팀 색 갑옷 장식 (철 · 다이아 · 사슬 갑옷은 염색이 안 돼서 팀 구별용) — 레드=레드스톤 · 블루=청금석 · 그린=에메랄드 · 옐로=금
+function bgTrim(p: player) :: text:
+    set {_t} to bgTeam({_p})
+    set {_m} to "quartz"
+    if {_t} is "red":
+        set {_m} to "redstone"
+    else if {_t} is "blue":
+        set {_m} to "lapis"
+    else if {_t} is "green":
+        set {_m} to "emerald"
+    else if {_t} is "yellow":
+        set {_m} to "gold"
+    return "{material:""minecraft:%{_m}%"",pattern:""minecraft:silence""}"
+
 function bgGiveGear(p: player, g: text):
     set {_n} to name of {_p}
     if {_g} is "iron":
         set {bg::owned::%uuid of {_p}%::iron} to true
-        bgCmd("item replace entity %{_n}% armor.head with iron_helmet[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.head with iron_helmet[unbreakable={},trim=%bgTrim({_p})%]")
+        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={},trim=%bgTrim({_p})%]")
+        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={},trim=%bgTrim({_p})%]")
         # 다이아 흉갑을 이미 샀으면 흉갑은 그대로
         if {bg::owned::%uuid of {_p}%::diamond} is not true:
-            bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
+            bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={},trim=%bgTrim({_p})%]")
     else if {_g} is "diamond":
         set {bg::owned::%uuid of {_p}%::diamond} to true
-        bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={},trim=%bgTrim({_p})%]")
     else if {_g} is "sword":
         set {bg::owned::%uuid of {_p}%::sword} to true
         bgCmd("give %{_n}% iron_sword[unbreakable={}]")
