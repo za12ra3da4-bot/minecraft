@@ -142,9 +142,14 @@ function bgSkScythe(p: player):
         bgDmg(loop-value, 2)
         bgLine(bgUp(location of loop-value, 1), bgUp(location of {_p}, 1), "soul", 10)
         add 1 to {_n}
+    # 회복: 맞은 적마다 2.5하트 (최대 6하트) + 재생 II 4초 — 아무도 못 맞혀도 1하트
+    set {_hl} to 1
     if {_n} > 0:
-        heal {_p} by min(3, {_n})
-        bgParticle(bgUp(location of {_p}, 1), "heart", 0.4, 0.4, 0.4, 0, min(3, {_n}))
+        set {_hl} to min(6, {_n} * 2.5)
+        bgCmd("effect give %name of {_p}% regeneration 4 1 true")
+    heal {_p} by {_hl}
+    bgParticle(bgUp(location of {_p}, 1), "heart", 0.5, 0.5, 0.5, 0, max(2, {_n} * 3))
+    bgSoundAt(location of {_p}, "entity.player.levelup", 0.6, 1.8)
     bgShrinkKill({_t}, 4)
 
 # ─────────────────────────────────────────── 성광의 기병창: 앞으로 돌격 — 길 위의 적을 띄우고 발광
