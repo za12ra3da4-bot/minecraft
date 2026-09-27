@@ -556,6 +556,18 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             add {_n} to {bg::coin::%uuid of {_p}%}
             send "&6[코인] &f관리자가 &e%{_n}%&f 코인을 줬습니다 (보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
             send "&6[전장] &f%name of {_p}% 코인 %{_n}% → 보유 %{bg::coin::%uuid of {_p}%}%"
+        else if arg-1 is "팩":
+            # /전장 팩 켬|끔|자동 — 왕관 쟁탈전 리소스팩을 이 스크립트가 보낼지 (Nexo 등과 같이 쓸 때는 끔)
+            if arg-2 is "켬":
+                set {bg::cfg::packsend} to "on"
+            else if arg-2 is "끔":
+                set {bg::cfg::packsend} to "off"
+            else:
+                delete {bg::cfg::packsend}
+            set {_m} to "자동 (Nexo 있으면 끔)"
+            if {bg::cfg::packsend} is set:
+                set {_m} to {bg::cfg::packsend}
+            send "&6[전장] &f리소스팩 보내기: &e%{_m}%"
         else if arg-1 is "연습장건설":
             bgPvpBuild(player)
         else if arg-1 is "무기":
