@@ -4,6 +4,9 @@
 #  a01~a03 (자동 생성 데이터) 이 먼저 로드된다 (파일 이름 순서)
 # ═════════════════════════════════════════════════════════════════════════════
 import:
+    org.bukkit.Bukkit
+    org.bukkit.scoreboard.Team$Option as TeamOption
+    org.bukkit.scoreboard.Team$OptionStatus as TeamOptionStatus
     net.minecraft.server.MinecraftServer
 
 on load:
@@ -130,6 +133,17 @@ function bgTeamCount(t: text) :: number:
     return {_n}
 
 # ── 전투 참가자 (게임 중 · 팀 있음 · 서바이벌/모험)
+# 네임태그: 서버의 모든 팀(다른 플러그인 팀 포함)을 '항상 보임' 으로 — 불러올 때 + 1분마다 다시 맞춤
+function bgNameTags():
+    loop ...Bukkit.getScoreboardManager().getMainScoreboard().getTeams():
+        loop-value.setOption(TeamOption.NAME_TAG_VISIBILITY, TeamOptionStatus.ALWAYS)
+
+on load:
+    bgNameTags()
+
+every 1 minute:
+    bgNameTags()
+
 function bgIsFighter(p: player) :: boolean:
     if {-bg::on} is not true:
         # 게임 밖: PvP 연습장에 있는 사람만 전투 참가자

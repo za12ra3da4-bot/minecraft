@@ -32,22 +32,22 @@ on load:
     set {-bg::w::bosslist::*} to "b_talos", "b_sphinx", "b_ladon" and "b_cyclops"
     set {-bg::w::all::*} to {-bg::w::list::*}
     add {-bg::w::bosslist::*} to {-bg::w::all::*}
-    bgWDef("thunder", "천둥의 성검", 500, 15, "aqua", "우클릭 심판의 낙뢰: 하늘에서 성검이 내리꽂힘 — 반경 4 강한 피해 · 20초")
-    bgWDef("dragon", "용살자의 도끼", 500, 12, "red", "우클릭 화염 선풍: 도끼가 두 바퀴 돌며 앞 120° 베기 · 16초")
-    bgWDef("wind", "질풍의 레이피어", 500, 8, "green", "우클릭 질풍 삼연격: 질주하며 세 번 찌르기 · 10초")
-    bgWDef("phoenix", "성기사의 전쟁망치", 500, 18, "gold", "우클릭 신성 강타: 거대한 망치가 떨어져 결계 (저항 II) · 23초")
-    bgWDef("blackiron", "흑기사의 대검", 500, 12, "dark_red", "우클릭 피의 돌진: 돌진 뒤 거대한 대검으로 가로 베기 · 16초")
-    bgWDef("tiger", "그림자 쌍단검", 500, 10, "dark_purple", "우클릭 그림자 교차: 단검 두 자루가 X자로 교차 (3연속) · 13초")
-    bgWDef("staff", "대마법사의 지팡이", 500, 14, "light_purple", "우클릭 비전 폭발: 비전 구체를 모았다 터뜨려 적을 띄움 · 18초")
-    bgWDef("peachwood", "불사조의 창", 500, 16, "gold", "우클릭 불창의 비: 불창 여섯 자루가 쏟아짐 (화상) · 21초")
-    bgWDef("frost", "서리 여왕의 장궁", 500, 12, "aqua", "우클릭 빙결 사격: 얼음 화살 세 발 — 맞은 적 자리에 얼음 가시 (구속 IV) · 16초")
-    bgWDef("storm", "폭풍의 삼지창", 500, 16, "blue", "우클릭 폭풍 투척: 삼지창을 던져 번개가 적 3명에게 튀어감 · 21초")
-    bgWDef("scythe", "망자의 낫", 500, 14, "dark_gray", "우클릭 영혼 수확: 낫이 한 바퀴 돌며 베고, 맞은 적마다 2.5하트 회복 + 재생 · 18초")
-    bgWDef("lance", "성광의 기병창", 500, 12, "yellow", "우클릭 성광 돌격: 9칸 돌격 — 길 위의 적을 띄우고 발광 · 16초")
-    bgWDef("skull", "저주받은 해골 지팡이", 500, 12, "dark_green", "우클릭 저주의 해골: 날아가는 해골이 터지며 독 구름 · 16초")
-    bgWDef("chakram", "태양의 원반", 500, 10, "gold", "우클릭 태양 원반: 원반이 날아갔다 돌아오며 두 번 벰 · 13초")
-    bgWDef("chain", "사냥꾼의 사슬낫", 500, 12, "gray", "우클릭 사슬 끌어오기: 앞의 적을 사슬로 끌어와 기절 · 16초")
-    bgWDef("gauntlet", "거인의 건틀렛", 500, 14, "gold", "우클릭 대지 분쇄: 앞으로 돌기둥이 줄지어 솟아 적을 띄움 · 18초")
+    bgWDef("thunder", "천둥의 성검", 400, 15, "aqua", "우클릭 심판의 낙뢰: 하늘에서 성검이 내리꽂힘 — 반경 4 강한 피해 · 20초")
+    bgWDef("dragon", "용살자의 도끼", 400, 12, "red", "우클릭 화염 선풍: 도끼가 두 바퀴 돌며 앞 120° 베기 · 16초")
+    bgWDef("wind", "질풍의 레이피어", 400, 8, "green", "우클릭 질풍 삼연격: 질주하며 세 번 찌르기 · 10초")
+    bgWDef("phoenix", "성기사의 전쟁망치", 400, 18, "gold", "우클릭 신성 강타: 거대한 망치가 떨어져 결계 (저항 II) · 23초")
+    bgWDef("blackiron", "흑기사의 대검", 400, 12, "dark_red", "우클릭 피의 돌진: 돌진 뒤 거대한 대검으로 가로 베기 · 16초")
+    bgWDef("tiger", "그림자 쌍단검", 400, 10, "dark_purple", "우클릭 그림자 교차: 단검 두 자루가 X자로 교차 (3연속) · 13초")
+    bgWDef("staff", "대마법사의 지팡이", 400, 14, "light_purple", "우클릭 비전 폭발: 비전 구체를 모았다 터뜨려 적을 띄움 · 18초")
+    bgWDef("peachwood", "불사조의 창", 400, 16, "gold", "우클릭 불창의 비: 불창 여섯 자루가 쏟아짐 (화상) · 21초")
+    bgWDef("frost", "서리 여왕의 장궁", 400, 12, "aqua", "우클릭 빙결 사격: 얼음 화살 세 발 — 맞은 적 자리에 얼음 가시 (구속 IV) · 16초")
+    bgWDef("storm", "폭풍의 삼지창", 400, 16, "blue", "우클릭 폭풍 투척: 삼지창을 던져 번개가 적 3명에게 튀어감 · 21초")
+    bgWDef("scythe", "망자의 낫", 400, 14, "dark_gray", "우클릭 영혼 수확: 낫이 한 바퀴 돌며 베고, 맞은 적마다 2.5하트 회복 + 재생 · 18초")
+    bgWDef("lance", "성광의 기병창", 400, 12, "yellow", "우클릭 성광 돌격: 9칸 돌격 — 길 위의 적을 띄우고 발광 · 16초")
+    bgWDef("skull", "저주받은 해골 지팡이", 400, 12, "dark_green", "우클릭 저주의 해골: 날아가는 해골이 터지며 독 구름 · 16초")
+    bgWDef("chakram", "태양의 원반", 400, 10, "gold", "우클릭 태양 원반: 원반이 날아갔다 돌아오며 두 번 벰 · 13초")
+    bgWDef("chain", "사냥꾼의 사슬낫", 400, 12, "gray", "우클릭 사슬 끌어오기: 앞의 적을 사슬로 끌어와 기절 · 16초")
+    bgWDef("gauntlet", "거인의 건틀렛", 400, 14, "gold", "우클릭 대지 분쇄: 앞으로 돌기둥이 줄지어 솟아 적을 띄움 · 18초")
     bgWDef("b_talos", "탈로스의 청동 대검", 0, 18, "gold", "보스 전용 · 우클릭 청동 폭주: 세 번 연속 돌진 + 저항 · 힘 (5초) · 23초")
     bgWDef("b_sphinx", "스핑크스의 모래시계", 0, 20, "yellow", "보스 전용 · 우클릭 시간의 모래폭풍: 반경 7 적 구속 V · 실명 (3초) · 26초")
     bgWDef("b_ladon", "히드라의 삼두 채찍", 0, 14, "dark_green", "보스 전용 · 우클릭 삼두 채찍질: 세 갈래로 독 채찍 (독 · 시듦) · 18초")
@@ -126,8 +126,8 @@ on load:
     set {-bg::gear::food::price} to 5
     set {-bg::gear::food::icon} to cooked beef
     set {-bg::gear::food::slot} to 40
-    set {-bg::gear::iron::name} to "철 갑옷 (투구·흉갑·장화)"
-    set {-bg::gear::iron::desc} to "죽어도 유지됩니다"
+    set {-bg::gear::iron::name} to "철 갑옷 풀세트"
+    set {-bg::gear::iron::desc} to "투구 · 흉갑 · 레깅스 · 부츠 (다이아 흉갑이 있으면 흉갑은 유지) · 죽어도 유지"
     set {-bg::gear::iron::price} to 40
     set {-bg::gear::iron::icon} to iron chestplate
     set {-bg::gear::iron::slot} to 37
@@ -196,8 +196,11 @@ function bgGiveGear(p: player, g: text):
     if {_g} is "iron":
         set {bg::owned::%uuid of {_p}%::iron} to true
         bgCmd("item replace entity %{_n}% armor.head with iron_helmet[unbreakable={}]")
-        bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
+        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={}]")
         bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={}]")
+        # 다이아 흉갑을 이미 샀으면 흉갑은 그대로
+        if {bg::owned::%uuid of {_p}%::diamond} is not true:
+            bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={}]")
     else if {_g} is "diamond":
         set {bg::owned::%uuid of {_p}%::diamond} to true
         bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={}]")
@@ -341,7 +344,7 @@ function bgShopOpen(p: player):
     # 광물 일괄 판매 버튼 (가방의 원석 · 보석을 한 번에 코인으로)
     set {_sell} to hopper named "&a&l광물 일괄 판매"
     set {_tot} to bgOreTotal({_p})
-    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e1 &7· &f금 원석 &e2", "&f에메랄드 &e4 &7· &f다이아몬드 &e6", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
+    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e1 &7· &f금 원석 &e2", "&f에메랄드 &e3 &7· &f다이아몬드 &e5", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
     set slot 49 of {_gui} to {_sell}
     set {_coin} to sunflower named "&6&l보유 코인: &e%{_c}%"
     set lore of {_coin} to "&7처치 +10 · 점령 +15 · 보스 +40", "&710초마다 +1 (점령 지점당 +1)"
@@ -368,9 +371,9 @@ function bgOreVal(i: item) :: number:
     if {_i} is {-bg::it::rgold}:
         return 2
     if {_i} is {-bg::it::emerald}:
-        return 4
+        return 3
     if {_i} is {-bg::it::diamond}:
-        return 6
+        return 5
     return 0
 
 function bgOreTotal(p: player) :: number:
@@ -378,8 +381,8 @@ function bgOreTotal(p: player) :: number:
     add 1 * (amount of {-bg::it::riron} in {_p}'s inventory) to {_n}
     add 1 * (amount of {-bg::it::rcopper} in {_p}'s inventory) to {_n}
     add 2 * (amount of {-bg::it::rgold} in {_p}'s inventory) to {_n}
-    add 4 * (amount of {-bg::it::emerald} in {_p}'s inventory) to {_n}
-    add 6 * (amount of {-bg::it::diamond} in {_p}'s inventory) to {_n}
+    add 3 * (amount of {-bg::it::emerald} in {_p}'s inventory) to {_n}
+    add 5 * (amount of {-bg::it::diamond} in {_p}'s inventory) to {_n}
     return {_n}
 
 function bgOreSell(p: player):

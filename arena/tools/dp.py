@@ -510,8 +510,8 @@ def ore_lines(world, n_spots=48, seed=77):
             continue
         spots.append((x, z))
         kind = R.random()
-        ore = "gold_ore" if kind < 0.7 else ("emerald_ore" if kind < 0.9 else "diamond_ore")
-        cells = [(0, 0)] + R.sample([(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1)], R.randint(2, 4))
+        ore = "iron_ore" if kind < 0.3 else ("gold_ore" if kind < 0.7 else ("emerald_ore" if kind < 0.9 else "diamond_ore"))
+        cells = [(0, 0)] + R.sample([(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)], R.randint(3, 5))
         for dx, dz in cells:
             xx, zz = x + dx, z + dz
             ty = None
@@ -536,8 +536,8 @@ def base_ore_lines(world, seed=93):
     at = "$execute positioned $(x) $(y) $(z) run setblock"
     mk = world.markers
     out = []
-    ores = ["minecraft:iron_ore", "minecraft:iron_ore", "minecraft:copper_ore", "minecraft:gold_ore", "minecraft:gold_ore",
-            "minecraft:gold_ore", "minecraft:emerald_ore", "minecraft:diamond_ore"]
+    # 본진 바위는 싼 광석 위주 (철 · 구리 · 가끔 금) — 비싼 광석은 맵 곳곳 광맥에서
+    ores = ["minecraft:iron_ore"] * 4 + ["minecraft:copper_ore"] * 4 + ["minecraft:gold_ore"] * 2
     rock = ["minecraft:stone", "minecraft:andesite", "minecraft:cobblestone", "minecraft:tuff"]
     for t in ("red", "blue", "green", "yellow"):
         c1, c2 = mk.get(f"base_{t}_class_1"), mk.get(f"base_{t}_class_2")
@@ -735,8 +735,20 @@ def decor_functions(dp_root, world, fixes=()):
     # ── 광맥 (캐면 코인, Skript 가 다시 채움)
     # 광석 바위는 블록을 덮어쓰므로 장식과 분리 (bg:map/ores — 관리자가 따로 한 번)
     ore = base_ore_lines(world)
+    wild = ore_lines(world, n_spots=40)
+    print(f"[decor] 맵 곳곳 광맥 블록 {len(wild)}개")
+    ore = ore + wild
     w(os.path.join(F, "ores_run.mcfunction"), ore)
     w(os.path.join(F, "ores.mcfunction"), ["function bg:map/ores_run with storage bg:map origin"])
+    # 맵 곳곳이라 멀리 있는 청크는 강제 로드한 뒤 놓는다 (Skript: ores_fl → 2초 → ores → ores_rm)
+    import re as _re
+    chs = sorted({(int(m.group(1)) // 16, int(m.group(2)) // 16) for m in (_re.search(r"setblock ~(-?\d+) ~-?\d+ ~(-?\d+)", l) for l in ore) if m})
+    fa = [f"$execute positioned $(x) $(y) $(z) run forceload add ~{cx * 16} ~{cz * 16}" for cx, cz in chs]
+    fr = [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{cx * 16} ~{cz * 16}" for cx, cz in chs]
+    w(os.path.join(F, "ores_fl_run.mcfunction"), fa)
+    w(os.path.join(F, "ores_rm_run.mcfunction"), fr)
+    for k in ("ores_fl", "ores_rm"):
+        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:map/{k}_run with storage bg:map origin"])
     print(f"[decor] 본진 광석 바위 블록 {len(ore)}개 (bg:map/ores)")
     # ── 상점 상인 NPC (본진 4곳 + 대기실) · 병과 발판 표식
     extra = npc_and_class_lines(world, bdkit, bdmodels)

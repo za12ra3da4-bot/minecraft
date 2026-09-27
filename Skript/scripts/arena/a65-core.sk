@@ -132,7 +132,7 @@ function bgWardOn(p: player) :: boolean:
     return false
 
 # ─────────────────────────────────────────────────────────── 광산 (본진 광석 바위)
-#  본진 광석 바위에서만: 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 2초 뒤 다시 채워짐
+#  본진 광석 바위(5초 리젠) + 맵 곳곳 광맥(3초 리젠, 금 · 에메랄드 · 다이아 많음): 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 2초 뒤 다시 채워짐
 #  죽으면 광물은 그 자리에 떨어져서 적이 주워 갈 수 있다
 #  (다른 곳 광석은 캘 수 없음 · 창작 모드 관리자는 예외)
 function bgAtBaseOre(l: location) :: boolean:
@@ -148,7 +148,21 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     player's gamemode is not creative
     cancel event
     set {_l} to location of event-block
-    bgAtBaseOre({_l}) is true
+    # 본진 광석 바위 = 5초 리젠 · 맵 곳곳 광맥 = 3초 리젠 (전장 맵 안에서만)
+    set {_rg} to 3
+    if bgAtBaseOre({_l}) is true:
+        set {_rg} to 5
+    else:
+        set {_lx} to (x-coordinate of {_l}) - {bg::cfg::ox}
+        set {_lz} to (z-coordinate of {_l}) - {bg::cfg::oz}
+        if {_lx} < 0:
+            stop
+        if {_lx} > 256:
+            stop
+        if {_lz} < 0:
+            stop
+        if {_lz} > 256:
+            stop
     set {_ty} to type of event-block
     set {_drop} to {-bg::it::riron}
     set {_nm} to "철 원석 (1코인)"
@@ -160,10 +174,10 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
         set {_nm} to "금 원석 (2코인)"
     else if event-block is emerald ore:
         set {_drop} to {-bg::it::emerald}
-        set {_nm} to "에메랄드 (4코인)"
+        set {_nm} to "에메랄드 (3코인)"
     else if event-block is diamond ore:
         set {_drop} to {-bg::it::diamond}
-        set {_nm} to "다이아몬드 (6코인)"
+        set {_nm} to "다이아몬드 (5코인)"
     # 캔 자리는 기반암(못 캠)으로 → 2초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
     set block at {_l} to bedrock
     set {_k} to "%floor(x-coordinate of {_l})%_%floor(y-coordinate of {_l})%_%floor(z-coordinate of {_l})%"
@@ -171,6 +185,7 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     set {bg::oreq::%{_k}%::l} to {_l}
     set {bg::oreq::%{_k}%::t} to {_ty}
     set {bg::oreq::%{_k}%::at} to now
+    set {bg::oreq::%{_k}%::rg} to {_rg}
     if bgIsFighter(player) is true:
         give player 1 of {_drop}
         send action bar "&a+1 %{_nm}% &7— 상점 '광물 일괄 판매'에서 코인으로 · 죽으면 떨어뜨림" to player
@@ -183,7 +198,8 @@ function bgOreRegen(all: boolean):
         set {_k} to loop-index
         if {bg::oreq::%{_k}%::at} is set:
             set {_go} to {_all}
-            if difference between {bg::oreq::%{_k}%::at} and now >= 2 seconds:
+            set {_rgs} to "%{bg::oreq::%{_k}%::rg} ? 3% seconds" parsed as timespan
+            if difference between {bg::oreq::%{_k}%::at} and now >= {_rgs}:
                 set {_go} to true
             if {_go} is true:
                 set {_l} to {bg::oreq::%{_k}%::l}

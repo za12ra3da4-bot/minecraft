@@ -538,8 +538,13 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
         else if arg-1 is "광석바위":
             # 본진 광석 바위 (블록을 덮어씀 — 그 자리 5x5 만)
             bgSyncOrigin()
+            send "&6[전장] &e광석 놓는 중... &7(본진 바위 + 맵 곳곳 광맥 40곳)"
+            bgCmd("function bg:map/ores_fl")
+            wait 40 ticks
             bgCmd("function bg:map/ores")
-            send "&6[전장] &f본진 광석 바위를 놓았습니다. &7(병과 발판 줄 끝 5x5 자리 블록을 덮어씀)"
+            wait 5 ticks
+            bgCmd("function bg:map/ores_rm")
+            send "&6[전장] &f본진 광석 바위 + 맵 곳곳 광맥을 놓았습니다. &7(그 자리 블록을 덮어씀)"
         else if arg-1 is "맵패치":
             # 예전 광산 자리 원래 지형으로 + 갇히는 곳 사다리 (블록을 덮어씀 — 한 번만)
             bgSyncOrigin()
