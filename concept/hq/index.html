@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>기어 섬 고퀄 렌더</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.js", "three/addons/": "./lib/addons/" } }
+</script>
+</head>
+<body>
+<script type="module">
+// =====================================================================
+//  스팀펑크 공중 기어 섬 — 고퀄 컨셉 렌더
+//  ?view=hero | street | deck | edge | dock     ?w=2560&h=1440&pr=1.5
+// =====================================================================
+import * as THREE from 'three';
+import { Sky } from 'three/addons/objects/Sky.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { buildAtlas, puffTexture, h3, mulberry } from './textures.js';
+import { buildWorld, smoke, mist, cams, IY, CLOUD_Y, G } from './world.js';
+import { buildMeshes } from './mesher.js';
+
+const Q = new URLSearchParams(location.search);
+const VIEW = Q.get('view') || 'hero';
+const W = +(Q.get('w') || 2560), H = +(Q.get('h') || 1440), PR = +(Q.get('pr') || 1.5);
+const log = s => console.log('[hq] ' + s);
+
+try {
+  let t0 = performance.now();
+  buildWorld();
+  log('world ' + Math.round(performance.now() - t0) + 'ms');
+  t0 = performance.now();
+  const geos = buildMeshes();
+  log('mesh ' + Math.round(performance.now() - t0) + 'ms ' + Object.entries(geos).map(([g, x]) => g + ':' + x.index.count / 6).join(' '));
+
+  const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(PR);
+  renderer.setSize(W, H);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = +(Q.get('exp') || 0.5);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  document.body.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+
+  // ── 하늘 · 태양
+  const sunDir = new THREE.Vector3(-0.55, 0.26, 0.8).normalize();
+  const sky = new Sky();
+  sky.scale.setScalar(20000);
+  const su = sky.material.uniforms;
+  su.turbidity.value = 7.5; su.rayleigh.value = 2.4; su.mieCoefficient.value = 0.0055; su.mieDirectionalG.value = 0.82;
+  su.sunPosition.value.copy(sunDir);
+  scene.add(sky);
+  const pm = new THREE.PMREMGenerator(renderer);
+  const envScene = new THREE.Scene(); const sky2 = new Sky(); sky2.scale.setScalar(20000);
+  Object.keys(su).forEach(k => sky2.material.uniforms[k].value = su[k].value);
+  envScene.add(sky2);
+  scene.environment = pm.fromScene(envScene, 0.02).texture;
+  scene.fog = new THREE.Fog(new THREE.Color(0xa9bfdc), 380, 1700);
+  { const deep = new THREE.Mesh(new THREE.PlaneGeometry(20000, 20000), new THREE.MeshBasicMaterial({ color: 0xa9bfdc, fog: true })); deep.rotation.x = -Math.PI / 2; deep.position.y = -260; scene.add(deep); }
+
+  const sun = new THREE.DirectionalLight(0xffbf80, 5.6);
+  sun.position.copy(sunDir).multiplyScalar(420).add(new THREE.Vector3(0, IY - 20, 0));
+  sun.target.position.set(0, IY - 20, 0);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(4096, 4096);
+  Object.assign(sun.shadow.camera, { left: -200, right: 200, top: 200, bottom: -200, near: 10, far: 900 });
+  sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.25;
+  scene.add(sun, sun.target);
+  scene.add(new THREE.HemisphereLight(0x9fbbe6, 0x5a4636, 0.35));
+
+  // ── 블록 메시
+  const atlas = buildAtlas();
+  const mats = {
+    [G.OPAQ]: new THREE.MeshStandardMaterial({ map: atlas, vertexColors: true, roughness: 0.92, metalness: 0, envMapIntensity: 0.42 }),
+    [G.METAL]: new THREE.MeshStandardMaterial({ map: atlas, vertexColors: true, roughness: 0.34, metalness: 0.7, envMapIntensity: 0.9 }),
+    [G.CUT]: new THREE.MeshStandardMaterial({ map: atlas, vertexColors: true, roughness: 0.85, alphaTest: 0.5, side: THREE.DoubleSide, envMapIntensity: 0.42 }),
+    [G.GLASS]: new THREE.MeshStandardMaterial({ map: atlas, transparent: true, roughness: 0.04, metalness: 0.1, envMapIntensity: 1.6, depthWrite: false }),
+    [G.WATER]: new THREE.MeshStandardMaterial({ map: atlas, transparent: true, roughness: 0.08, metalness: 0.05, envMapIntensity: 1.2, depthWrite: false }),
+    [G.EMIT]: new THREE.MeshStandardMaterial({ map: atlas, emissiveMap: atlas, emissive: 0xffffff, emissiveIntensity: 2.6, vertexColors: true, roughness: 0.7, envMapIntensity: 0.4 }),
+  };
+  for (const g in geos) {
+    const m = new THREE.Mesh(geos[g], mats[g]);
+    m.castShadow = g != G.GLASS && g != G.WATER;
+    m.receiveShadow = true;
+    if (g == G.GLASS || g == G.WATER) m.renderOrder = 2;
+    scene.add(m);
+  }
+
+  // ── 구름 (마인크래프트식 12×4×12 칸)
+  function vn(x, z, s) {
+    const xi = Math.floor(x), zi = Math.floor(z), fx = x - xi, fz = z - zi;
+    const u = fx * fx * (3 - 2 * fx), v = fz * fz * (3 - 2 * fz);
+    const a = h3(xi, 0, zi, s), b = h3(xi + 1, 0, zi, s), c = h3(xi, 0, zi + 1, s), d = h3(xi + 1, 0, zi + 1, s);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+  }
+  function cloudLayer(y, cell, ext, thr, s, holeR) {
+    const cells = [];
+    for (let x = -ext; x < ext; x += cell) for (let z = -ext; z < ext; z += cell) {
+      if (holeR && Math.hypot(x, z) < holeR) continue;
+      const n = vn(x / 70, z / 70, s) * 0.65 + vn(x / 25, z / 25, s + 5) * 0.35;
+      if (n > thr) cells.push([x, z]);
+    }
+    const geo = new THREE.BoxGeometry(cell, 4, cell);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xeeeeee, roughness: 1, emissive: 0xfff1e4, emissiveIntensity: 0.03, envMapIntensity: 0.45 });
+    const im = new THREE.InstancedMesh(geo, mat, cells.length);
+    const m4 = new THREE.Matrix4();
+    cells.forEach(([x, z], i) => { m4.makeTranslation(x + cell / 2, y + 2, z + cell / 2); im.setMatrixAt(i, m4); });
+    im.receiveShadow = true;
+    scene.add(im);
+  }
+  cloudLayer(CLOUD_Y, 12, 1200, 0.57, 31, 0);
+  cloudLayer(CLOUD_Y - 70, 12, 1200, 0.5, 47, 0);
+
+  // ── 연기 · 물보라
+  const puff = puffTexture();
+  const R = mulberry(4242);
+  for (const s of smoke) {
+    for (let i = 0; i < s.n; i++) {
+      const t = i / s.n;
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: puff, color: s.dark ? 0x5d5a58 : 0xd9d6d2, transparent: true, depthWrite: false,
+        opacity: (s.dark ? 0.75 : 0.6) * (1 - t) + 0.08,
+      }));
+      const sz = (s.dark ? 1.8 : 1.2) + t * (s.dark ? 7 : 4.5);
+      sp.scale.set(sz, sz, 1);
+      sp.position.set(s.x + 0.5 + t * t * 14 + (R() - 0.5) * 1.5 * t, s.y + 0.5 + t * (s.dark ? 26 : 16), s.z + 0.5 - t * t * 5 + (R() - 0.5) * 1.5 * t);
+      scene.add(sp);
+    }
+  }
+  for (const m of mist) for (let i = 0; i < 40; i++) {
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: puff, color: 0xffffff, transparent: true, depthWrite: false, opacity: 0.35 }));
+    const sz = 3 + R() * 7; sp.scale.set(sz, sz, 1);
+    sp.position.set(m.x + (R() - 0.5) * 16, m.y + R() * 12, m.z + (R() - 0.5) * 16);
+    scene.add(sp);
+  }
+
+  // ── 카메라
+  const cam = new THREE.PerspectiveCamera(45, W / H, 0.3, 40000);
+  const S = cams.ships;
+  const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+  let pos, tgt, fov = 45;
+  if (VIEW === 'hero') { pos = V3(176, IY + 88, 196); tgt = V3(-6, IY + 2, -6); fov = 42; }
+  else if (VIEW === 'street') { pos = V3(-25.6, IY + 2.62, 43.6); tgt = V3(-2, IY + 28, 2); fov = 72; }
+  else if (VIEW === 'deck') { pos = V3(S.hero.bow[0] - 6, S.hero.bow[1] + 0.4, S.hero.bow[2] + 1.2); tgt = V3(8, IY + 12, -8); fov = 70; }
+  else if (VIEW === 'edge') { pos = V3(-192, IY - 8, -36); tgt = V3(-36, IY - 22, -32); fov = 46; }
+  else if (VIEW === 'dock') { pos = V3(cams.R + 30, IY + 3.1, -1.5); tgt = V3(0, IY + 22, 10); fov = 66; }
+  if (Q.get('pos')) pos = V3(...Q.get('pos').split(',').map(Number));
+  if (Q.get('tgt')) tgt = V3(...Q.get('tgt').split(',').map(Number));
+  if (Q.get('fov')) fov = +Q.get('fov');
+  cam.fov = fov; cam.position.copy(pos); cam.lookAt(tgt); cam.updateProjectionMatrix();
+
+  // ── 후처리: 블룸 + 비네트
+  const composer = new EffectComposer(renderer);
+  composer.setPixelRatio(PR);
+  composer.setSize(W, H);
+  composer.addPass(new RenderPass(scene, cam));
+  composer.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), 0.5, 0.45, 1.35));
+  composer.addPass(new OutputPass());
+  composer.addPass(new ShaderPass({
+    uniforms: { tDiffuse: { value: null } },
+    vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
+    fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
+      void main(){ vec4 c=texture2D(tDiffuse,vUv); vec2 d=vUv-0.5; float v=smoothstep(0.85,0.25,length(d*vec2(1.25,1.0)));
+      c.rgb*=mix(0.72,1.0,v); c.rgb=mix(c.rgb, c.rgb*vec3(1.03,1.0,0.96), 0.6); gl_FragColor=c; }`,
+  }));
+  t0 = performance.now();
+  composer.render();
+  log('render ' + Math.round(performance.now() - t0) + 'ms');
+  window.__done = true;
+} catch (e) {
+  console.error(e);
+  window.__err = String(e && e.stack || e);
+  window.__done = true;
+}
+</script>
+</body>
+</html>
