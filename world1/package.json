@@ -1,0 +1,10 @@
+{
+  "name": "world1-generator",
+  "private": true,
+  "type": "module",
+  "description": "RPG World 1 (2000x2000 western fantasy kingdom) generator for Minecraft Java 1.21",
+  "scripts": {
+    "gen": "node --max-old-space-size=12000 gen/main.js",
+    "render": "node --max-old-space-size=12000 render/mesh.js"
+  }
+}
