@@ -204,7 +204,24 @@ function bgOreRegen(all: boolean):
             if {_go} is true:
                 set {_l} to {bg::oreq::%{_k}%::l}
                 if block at {_l} is bedrock:
-                    set block at {_l} to {bg::oreq::%{_k}%::t}
+                    # 다시 채울 때 광석 종류는 무작위 (본진 바위: 철 · 구리 · 금 / 맵 광맥: 철 · 금 · 에메랄드 · 다이아)
+                    set {_r} to random integer between 1 and 10
+                    if {bg::oreq::%{_k}%::rg} is 5:
+                        if {_r} <= 4:
+                            set block at {_l} to iron ore
+                        else if {_r} <= 8:
+                            set block at {_l} to copper ore
+                        else:
+                            set block at {_l} to gold ore
+                    else:
+                        if {_r} <= 3:
+                            set block at {_l} to iron ore
+                        else if {_r} <= 7:
+                            set block at {_l} to gold ore
+                        else if {_r} <= 9:
+                            set block at {_l} to emerald ore
+                        else:
+                            set block at {_l} to diamond ore
                     bgParticle({_l}, "happy_villager", 0.4, 0.4, 0.4, 0, 6)
                 delete {bg::oreq::%{_k}%::*}
                 delete {bg::oreq::%{_k}%}
@@ -214,3 +231,16 @@ every 1 second:
 
 on load:
     bgOreRegen(true)
+
+# ─────────────────────────────────────────────────────────── 못 버리는 아이템
+#  귀속 저주가 붙은 아이템(기본 장비 · 산 장비) · 전설 무기는 Q 로 버릴 수 없음 (죽으면 전설 무기는 떨어짐)
+on drop:
+    player's gamemode is not creative
+    set {_i} to event-item
+    if {_i} is enchanted with curse of binding:
+        cancel event
+        send action bar "&c이 아이템은 버릴 수 없습니다 (귀속)" to player
+        stop
+    if bgIsLegend({_i}) is not "":
+        cancel event
+        send action bar "&c전설 무기는 버릴 수 없습니다" to player
