@@ -82,10 +82,12 @@ function bgOreBoulder(c: location):
     set {_id} to "%floor(x-coordinate of {_c})%_%floor(y-coordinate of {_c})%_%floor(z-coordinate of {_c})%"
     set {bg::oreb::%{_id}%} to {_c}
     set {_k} to 0
+    set {_dx} to -3
     loop 5 times:
-        set {_dx} to loop-number-1 - 3
+        add 1 to {_dx}
+        set {_dz} to -3
         loop 5 times:
-            set {_dz} to loop-number-2 - 3
+            add 1 to {_dz}
             set {_dist} to abs({_dx}) + abs({_dz})
             set {_skip} to false
             if {_dist} > 3:
@@ -103,17 +105,20 @@ function bgOreBoulder(c: location):
                     if block at {_g} is not air:
                         exit loop
                     remove 1 from y-coordinate of {_g}
-                loop {_h} + 1 times:
-                    set {_l} to location(x-coordinate of {_g}, (y-coordinate of {_g}) + loop-number-3 - 1, z-coordinate of {_g}, world of {_g})
+                set {_hh} to {_h} + 1
+                set {_j} to 0
+                loop {_hh} times:
+                    add 1 to {_j}
+                    set {_l} to location(x-coordinate of {_g}, (y-coordinate of {_g}) + {_j} - 1, z-coordinate of {_g}, world of {_g})
                     add 1 to {_k}
                     set {bg::oreb::%{_id}%::l::%{_k}%} to {_l}
                     set {bg::oreb::%{_id}%::t::%{_k}%} to type of block at {_l}
                     set {_outer} to false
-                    if loop-number-3 is {_h} + 1:
+                    if {_j} is {_hh}:
                         set {_outer} to true
                     if {_dist} >= 2:
                         set {_outer} to true
-                    if loop-number-3 is 1:
+                    if {_j} is 1:
                         set block at {_l} to random element out of {-bg::orerock::*}
                     else if {_outer} is true:
                         if chance of 55%:
