@@ -55,9 +55,9 @@ function bgStart():
     # 연습장에 있던 사람은 대기실로 (연습 무기는 회수)
     loop all players:
         if {-bg::pvp::%uuid of loop-player%} is true:
-            delete {-bg::pvp::%uuid of loop-player%}
-            bgToLobby(loop-player)
-    delete {-bg::pvp::*}
+            if bgOptOut(loop-player) is false:
+                delete {-bg::pvp::%uuid of loop-player%}
+                bgToLobby(loop-player)
     set {-bg::sec} to 0
     set {-bg::on} to false
     loop {-bg::teams::*}:
@@ -153,7 +153,9 @@ function bgStop(reason: text):
         delete {bg::coin::*}
         delete {bg::owned::*}
         loop all players:
-            bgToLobby(loop-player)
+            # 관전자 모드(/관전자)는 하던 것 그대로
+            if bgOptOut(loop-player) is false:
+                bgToLobby(loop-player)
 
 function bgCheckEnd():
     loop {-bg::teams::*}:
@@ -354,7 +356,7 @@ function bgKit(p: player):
     bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
     bgClassGear({_p}, {_c})
     bgCmd("give %{_n}% bread[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 8")
-    bgCmd("give %{_n}% compass[custom_name={text:""지휘 나침반"",color:""aqua"",bold:true,italic:false},lore=[{text:""우클릭: 공격 지점 · 웅크리고 우클릭: 방어 지점 (팀에게 표시)"",color:""gray"",italic:false}],enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 1")
+    bgCmd("give %{_n}% paper[item_model=""bg:ping/flag"",max_stack_size=1,custom_name={text:""지휘 깃발"",color:""gold"",bold:true,italic:false},lore=[{text:""우클릭: 공격 핑 · 웅크리고 우클릭: 도움 요청"",color:""gray"",italic:false},{text:""찍은 곳 공중에 빛나는 표시 — 우리 팀에게만 보임"",color:""dark_gray"",italic:false}],enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 1")
     bgCmd("give %{_n}% iron_pickaxe[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,custom_name={text:""광부의 곡괭이"",color:""gold"",italic:false},lore=[{text:""본진 광석 바위 · 맵 곳곳 광맥을 캐서 상점에 팔기"",color:""gray"",italic:false}]]")
     bgShopRestore({_p})
 
@@ -671,9 +673,10 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             set {_i} to 0
             loop all players:
                 if gamemode of loop-player is not spectator:
-                    set {_t} to {-bg::teams::%mod({_i}, 4) + 1%}
-                    bgSetTeam(loop-player, {_t})
-                    add 1 to {_i}
+                    if bgOptOut(loop-player) is false:
+                        set {_t} to {-bg::teams::%mod({_i}, 4) + 1%}
+                        bgSetTeam(loop-player, {_t})
+                        add 1 to {_i}
             bgSay("%{_i}%명을 네 팀으로 나눴습니다.")
         else if arg-1 is "시작":
             bgStart()

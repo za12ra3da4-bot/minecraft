@@ -110,6 +110,13 @@ def write_hud(path, font):
         B.append(f"    set {{-bg::hud::plate::{t}_me}} to {q(placed('hud/plate_' + t + '_me'))}")
         B.append(f"    set {{-bg::hud::platecx::{t}}} to {H.PLATE_X[t] + 17 + (H.PLATE_W - 17) / 2}")
     B.append(f"    set {{-bg::hud::timer}} to {q(placed('hud/timer'))}")
+    # 거점 배지 (점수판 아래 줄) + 쟁탈 겹침 (거점 자리마다)
+    for p in H.PT_ORDER:
+        for k in sorted(g):
+            if k.startswith(f"hud/pt_{p}_"):
+                B.append(f"    set {{-bg::hud::pt::{k[len('hud/pt_'):]}}} to {q(placed(k))}")
+        B.append(f"    set {{-bg::hud::ptc::{p}}} to {q(H.place(font, 'hud/pt_contest', H.PT_X[p]))}")
+    B.append(f"    set {{-bg::hud::ptorder::*}} to {', '.join(q(p) for p in H.PT_ORDER[:-1])} and {q(H.PT_ORDER[-1])}")
     for pre, key in (("boss/d", "bd"), ("hud/d", "hd"), ("hud/t", "td")):
         for ch in "0123456789":
             B.append(f"    set {{-bg::hud::{key}::{ch}}} to {q(g[pre + '_' + ch]['char'])}")

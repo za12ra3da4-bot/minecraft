@@ -42,6 +42,18 @@ function bgHudTop(me: text) :: text:
     set {_sec} to {_left} - {_m} * 60
     set {_d} to bgDigits("%bgPad2({_m})%:%bgPad2({_sec})%", 150, "td")
     set {_s} to "%{_s}%%{-bg::hud::timer}%%{_d}%"
+    # 거점 배지 줄 (점수판 아래): 거점 효과 + 가진 팀 (우리 팀 = 금테 · 왕관) · 쟁탈 중이면 붉은 칼 메달이 깜빡임
+    loop {-bg::hud::ptorder::*}:
+        set {_o} to {-bg::own::%loop-value%} ? "none"
+        set {_k} to "neutral"
+        if {_o} is not "none":
+            set {_k} to {_o}
+            if {_o} is {_me}:
+                set {_k} to "%{_o}%_me"
+        set {_s} to "%{_s}%%{-bg::hud::pt::%loop-value%_%{_k}%}%"
+        if {-bg::contest::%loop-value%} is true:
+            if mod({-bg::sec} ? 0, 2) is 0:
+                set {_s} to "%{_s}%%{-bg::hud::ptc::%loop-value%}%"
     return {_s}
 
 function bgHudBoss() :: text:
@@ -91,11 +103,9 @@ function bgHudCreate():
         delete {-bg::hudlast::%loop-value%_nb}
     set {-bg::hudon} to true
     bgCmd("bossbar set bg:boss players")
-    bgSideCreate()
 
 function bgHudRemove():
     set {-bg::hudon} to false
-    bgSideRemove()
     loop "red", "blue", "green", "yellow" and "none":
         bgCmd("bossbar remove bg:hud_%loop-value%")
         bgCmd("bossbar remove bg:hud_%loop-value%_nb")
@@ -140,7 +150,7 @@ every 10 ticks:
     loop "red", "blue", "green", "yellow" and "none":
         set {_f} to "team=bg_%loop-value%,"
         if loop-value is "none":
-            set {_f} to "team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow,"
+            set {_f} to "team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow,tag=!bg_optout,"
         if {-bg::boss::id} is set:
             set {_h} to {-bg::boss::home}
             set {_at} to "execute in %bgDim()% positioned %bgC(x-coordinate of {_h})% %bgN(y-coordinate of {_h})% %bgC(z-coordinate of {_h})% run"
@@ -149,7 +159,7 @@ every 10 ticks:
         else:
             set {_sel} to "@a[team=bg_%loop-value%]"
             if loop-value is "none":
-                set {_sel} to "@a[team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow]"
+                set {_sel} to "@a[team=!bg_red,team=!bg_blue,team=!bg_green,team=!bg_yellow,tag=!bg_optout]"
             bgCmd("bossbar set bg:hud_%loop-value% players")
             bgCmd("bossbar set bg:hud_%loop-value%_nb players %{_sel}%")
 
@@ -171,105 +181,9 @@ every 10 ticks:
         set {_h} to {-bg::boss::home}
         bgCmd("execute in %bgDim()% positioned %bgC(x-coordinate of {_h})% %bgN(y-coordinate of {_h})% %bgC(z-coordinate of {_h})% run bossbar set bg:boss players @a[distance=..40]")
 
-# ─────────────────────────────────────────────────────────── 오른쪽 거점 안내판 (점수판 옆)
-#  어떤 거점을 먹으면 무슨 효과인지 + 지금 누가 가졌는지 / 쟁탈 · 점령 중
-#  팀마다 따로 (sidebar.team.<색>) → 우리 팀이 가진 거점은 "우리 팀" 으로 강조. 관전 · 팀 없음은 공용 sidebar
+# ─────────────────────────────────────────────────────────── 예전 오른쪽 거점 안내판(스코어보드) 정리
 on load:
-    set {-bg::side::ic::temple} to "♛"
-    set {-bg::side::ic::ares} to "⚔"
-    set {-bg::side::ic::athena} to "⛨"
-    set {-bg::side::ic::hermes} to "➶"
-    set {-bg::side::ic::demeter} to "❤"
-    set {-bg::side::icc::temple} to "gold"
-    set {-bg::side::icc::ares} to "red"
-    set {-bg::side::icc::athena} to "aqua"
-    set {-bg::side::icc::hermes} to "green"
-    set {-bg::side::icc::demeter} to "light_purple"
-    set {-bg::side::eff::temple} to "점수 +3/초"
-    set {-bg::side::eff::ares} to "힘 I"
-    set {-bg::side::eff::athena} to "저항 I"
-    set {-bg::side::eff::hermes} to "신속 I"
-    set {-bg::side::eff::demeter} to "회복 · 배부름"
-
-function bgSideCreate():
-    loop "red", "blue", "green", "yellow" and "none":
-        set {_o} to "bg_side_%loop-value%"
-        bgCmd("scoreboard objectives remove %{_o}%")
-        bgCmd("scoreboard objectives add %{_o}% dummy {text:""⚑ 거점 효과 ⚑"",color:""gold"",bold:true}")
-        bgCmd("scoreboard objectives modify %{_o}% numberformat blank")
-        set {_i} to 0
-        loop 14 times:
-            add 1 to {_i}
-            bgCmd("scoreboard players set bgs%{_i}% %{_o}% %15 - {_i}%")
-        delete {-bg::sidelast::%loop-value%::*}
-        if loop-value is "none":
-            bgCmd("scoreboard objectives setdisplay sidebar %{_o}%")
-        else:
-            bgCmd("scoreboard objectives setdisplay sidebar.team.%{-bg::tvan::%loop-value%}% %{_o}%")
-    set {-bg::sideon} to true
-    bgSideUpdate()
-
-function bgSideRemove():
-    set {-bg::sideon} to false
     loop "red", "blue", "green", "yellow" and "none":
         bgCmd("scoreboard objectives remove bg_side_%loop-value%")
-        delete {-bg::sidelast::%loop-value%::*}
-
-# 줄 하나 (바뀔 때만 보냄)
-function bgSideSet(me: text, n: number, j: text):
-    if {-bg::sidelast::%{_me}%::%{_n}%} is {_j}:
-        stop
-    set {-bg::sidelast::%{_me}%::%{_n}%} to {_j}
-    bgCmd("scoreboard players display name bgs%{_n}% bg_side_%{_me}% %{_j}%")
-
-# 거점 상태 한 줄
-function bgSideState(p: text, me: text) :: text:
-    set {_own} to {-bg::own::%{_p}%} ? "none"
-    set {_capt} to {-bg::capt::%{_p}%} ? "none"
-    set {_v} to floor({-bg::capv::%{_p}%} ? 0)
-    if {-bg::contest::%{_p}%} is true:
-        return "{text:""   ⚔ 쟁탈 중!"",color:""red"",bold:true}"
-    if {_own} is not "none":
-        set {_col} to {-bg::tvan::%{_own}%}
-        set {_who} to "%{-bg::tname::%{_own}%}% 팀"
-        set {_bold} to "false"
-        if {_own} is {_me}:
-            set {_who} to "우리 팀"
-            set {_bold} to "true"
-        if {_v} < 100:
-            return "[{text:""   ▸ %{_who}% "",color:""%{_col}%"",bold:%{_bold}%},{text:""⚠ 흔들림 %{_v}%%%"",color:""red"",bold:false}]"
-        return "[{text:""   ▸ "",color:""gray""},{text:""%{_who}% 점령"",color:""%{_col}%"",bold:%{_bold}%}]"
-    if {_capt} is not "none":
-        if {_v} > 0:
-            set {_col} to {-bg::tvan::%{_capt}%}
-            set {_who} to "%{-bg::tname::%{_capt}%}% 팀"
-            if {_capt} is {_me}:
-                set {_who} to "우리 팀"
-            return "[{text:""   ▸ "",color:""gray""},{text:""%{_who}% 점령 중 %{_v}%%%"",color:""%{_col}%""}]"
-    return "{text:""   ▸ 비어 있음"",color:""dark_gray""}"
-
-function bgSideTeam(me: text):
-    set {_n} to 1
-    bgSideSet({_me}, {_n}, """""")
-    loop {-bg::pts::*}:
-        add 1 to {_n}
-        set {_p} to loop-value
-        set {_j} to "[{text:""%{-bg::side::ic::%{_p}%}% "",color:""%{-bg::side::icc::%{_p}%}%""},{text:""%{-bg::ptname::%{_p}%}% "",color:""white"",bold:true},{text:""%{-bg::side::eff::%{_p}%}%"",color:""yellow""}]"
-        bgSideSet({_me}, {_n}, {_j})
-        add 1 to {_n}
-        bgSideSet({_me}, {_n}, bgSideState({_p}, {_me}))
-    add 1 to {_n}
-    bgSideSet({_me}, {_n}, """""")
-    add 1 to {_n}
-    bgSideSet({_me}, {_n}, "{text:""제단: 팀 전원 효과 · 점수 +1/초"",color:""gray""}")
-    add 1 to {_n}
-    bgSideSet({_me}, {_n}, "{text:""성소: 점수 3배 — 중앙을 지켜라"",color:""gray""}")
-
-function bgSideUpdate():
-    {-bg::sideon} is true
-    loop "red", "blue", "green", "yellow" and "none":
-        bgSideTeam(loop-value)
-
-every 1 second:
-    {-bg::sideon} is true
-    bgSideUpdate()
+    delete {-bg::sideon}
+    delete {-bg::sidelast::*}

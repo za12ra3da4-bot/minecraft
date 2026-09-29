@@ -1,0 +1,74 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 관전자 모드 · TNT 함정
+#   /관전자 [플레이어] : 켜면 게임이 시작 · 끝나도 아무 일 없음 (팀 · 이동 · 인벤 초기화 · 제목 없음). 다시 치면 꺼짐
+#   /TNT함정 [켬|끔]   : 켜 두면 라이터(부싯돌)나 화염구로 TNT 에 불 붙이는 사람을 '밴' 처럼 보이게 킥
+# ═════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────── 관전자 모드
+command /관전자 [<player>]:
+    aliases: /nogame
+    trigger:
+        set {_p} to player
+        if arg-1 is set:
+            if player is not op:
+                send "&c다른 사람의 관전자 모드는 관리자만 바꿀 수 있습니다."
+                stop
+            set {_p} to arg-1
+        if bgOptOut({_p}) is true:
+            delete {bg::optout::%uuid of {_p}%}
+            bgCmd("tag %name of {_p}% remove bg_optout")
+            send "&6[전장] &f관전자 모드 &c꺼짐 &7— 다음 게임부터 참가합니다" to {_p}
+            if {_p} is not player:
+                send "&6[전장] &f%name of {_p}% 관전자 모드 &c꺼짐"
+            stop
+        if bgIsFighter({_p}) is true:
+            send "&c게임에 참가 중일 때는 켤 수 없습니다. (게임이 끝난 뒤 다시)"
+            stop
+        set {bg::optout::%uuid of {_p}%} to true
+        bgCmd("tag %name of {_p}% add bg_optout")
+        if bgTeam({_p}) is not "none":
+            bgSetTeam({_p}, "none")
+        send "&6[전장] &f관전자 모드 &a켜짐 &7— 게임이 시작되거나 끝나도 하던 것 그대로 계속합니다. 다시 &e/관전자&7 치면 꺼짐" to {_p}
+        if {_p} is not player:
+            send "&6[전장] &f%name of {_p}% 관전자 모드 &a켜짐"
+
+command /관전자목록:
+    permission: op
+    trigger:
+        set {_n} to 0
+        loop all players:
+            if bgOptOut(loop-player) is true:
+                add 1 to {_n}
+                send "&7 - &f%name of loop-player%"
+        send "&6[전장] &f관전자 모드 %{_n}%명"
+
+# ─────────────────────────────────────────────────────────── TNT 함정
+command /tnt함정 [<text>]:
+    permission: op
+    trigger:
+        if arg-1 is "끔":
+            delete {bg::cfg::tnttrap}
+        else if arg-1 is "켬":
+            set {bg::cfg::tnttrap} to true
+        else if {bg::cfg::tnttrap} is true:
+            delete {bg::cfg::tnttrap}
+        else:
+            set {bg::cfg::tnttrap} to true
+        if {bg::cfg::tnttrap} is true:
+            send "&6[TNT 함정] &a켜짐 &7— TNT 에 라이터 · 화염구로 불 붙이면 '밴' 메시지와 함께 킥 &8(/TNT함정 으로 끄기)"
+        else:
+            send "&6[TNT 함정] &c꺼짐"
+
+on right click on tnt:
+    {bg::cfg::tnttrap} is true
+    set {_ok} to false
+    if player's tool is flint and steel:
+        set {_ok} to true
+    if player's tool is fire charge:
+        set {_ok} to true
+    {_ok} is true
+    cancel event
+    set {_n} to name of player
+    kick player due to colored "&c&l당신 밴이야%nl%%nl%&f왜그러고사세요 ㅋ"
+    bgSay("&c[TNT 함정] &e%{_n}%&f 님이 TNT 에 불을 붙이려다 &c&l밴&f 당했습니다 ㅋ")
+    bgSound("entity.generic.explode", 0.5, 1.4)

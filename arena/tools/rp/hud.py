@@ -22,7 +22,7 @@ NS = "bg"
 FONT_ID = f"{NS}:hud"
 LINE_Y = 3
 HUD_TOP = 1
-BOSS_TOP = 22
+BOSS_TOP = 50           # 거점 배지 줄(y 27~47) 아래
 TOTAL_W = 300            # 합성 폭 (가운데 정렬 기준)
 BOSS_W = 240
 BOSS_X = (TOTAL_W - BOSS_W) // 2
@@ -574,6 +574,178 @@ def team_hud(font):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+#  거점 배지 줄 (점수판 바로 아래): 어느 거점이 무슨 효과인지 + 누가 가졌는지
+#   배지 = 팀 색 깃발 판 + 왼쪽 거점 문장 메달 + 오른쪽 어두운 칸 (이름 · 효과)
+#   상태: neutral / <팀> / <팀>_me (우리 팀: 밝은 금테 · 왕관) + 쟁탈 겹침(hud/pt_contest, 깜빡임)
+# ─────────────────────────────────────────────────────────────────────────────
+PT_ORDER = ["ares", "athena", "temple", "hermes", "demeter"]
+PT_W, PT_H, PT_Y = 56, 20, 27
+PT_STEP = 59
+PT_X = {p: 4 + i * PT_STEP for i, p in enumerate(PT_ORDER)}
+PT_INFO = {
+    "temple": ("왕좌의 성소", "점수 ×3", (255, 200, 70)),
+    "ares": ("불꽃 제단", "힘 I", (255, 110, 50)),
+    "athena": ("수호 제단", "저항 I", (110, 200, 255)),
+    "hermes": ("바람 제단", "신속 I", (120, 240, 160)),
+    "demeter": ("생명 제단", "재생 · 포만", (255, 130, 190)),
+}
+
+
+def _pt_emblem(d, p, cx, cy, r, k):
+    """거점 문장 (메달 속 흰 그림)"""
+    W = (255, 250, 232, 255)
+    if p == "temple":        # 왕관
+        d.polygon([(cx - r, cy + r * 0.55), (cx - r, cy - r * 0.35), (cx - r * 0.5, cy + r * 0.05), (cx, cy - r * 0.8),
+                   (cx + r * 0.5, cy + r * 0.05), (cx + r, cy - r * 0.35), (cx + r, cy + r * 0.55)], fill=W)
+        d.rectangle([cx - r, cy + r * 0.62, cx + r, cy + r * 0.85], fill=W)
+        for dx in (-r, 0, r):
+            y = cy - r * 0.8 if dx == 0 else cy - r * 0.35
+            d.ellipse([cx + dx - r * 0.16, y - r * 0.3, cx + dx + r * 0.16, y + 0.02 * r], fill=W)
+    elif p == "ares":        # 불꽃 + 칼
+        d.polygon([(cx, cy - r), (cx + r * 0.6, cy - r * 0.05), (cx + r * 0.4, cy + r * 0.25), (cx + r * 0.65, cy + r * 0.55),
+                   (cx, cy + r), (cx - r * 0.65, cy + r * 0.55), (cx - r * 0.4, cy + r * 0.15), (cx - r * 0.2, cy - r * 0.35)], fill=W)
+        d.polygon([(cx, cy - r * 0.05), (cx + r * 0.32, cy + r * 0.48), (cx, cy + r * 0.82), (cx - r * 0.32, cy + r * 0.48)], fill=(255, 150, 60, 255))
+    elif p == "athena":      # 방패
+        d.polygon([(cx - r * 0.85, cy - r * 0.8), (cx + r * 0.85, cy - r * 0.8), (cx + r * 0.8, cy + r * 0.1), (cx, cy + r),
+                   (cx - r * 0.8, cy + r * 0.1)], fill=W)
+        d.polygon([(cx - r * 0.5, cy - r * 0.5), (cx + r * 0.5, cy - r * 0.5), (cx + r * 0.46, cy + r * 0.05), (cx, cy + r * 0.62),
+                   (cx - r * 0.46, cy + r * 0.05)], fill=(70, 150, 220, 255))
+        d.line([(cx, cy - r * 0.5), (cx, cy + r * 0.55)], fill=W, width=max(1, int(k * 0.7)))
+        d.line([(cx - r * 0.45, cy - r * 0.1), (cx + r * 0.45, cy - r * 0.1)], fill=W, width=max(1, int(k * 0.7)))
+    elif p == "hermes":      # 날개
+        for i in range(3):
+            y0 = cy - r * 0.7 + i * r * 0.45
+            d.polygon([(cx - r * 0.25, y0 + r * 0.25), (cx + r * (0.95 - i * 0.18), y0 - r * 0.1), (cx + r * (0.75 - i * 0.18), y0 + r * 0.25),
+                       (cx - r * 0.1, y0 + r * 0.55)], fill=W)
+        d.polygon([(cx - r * 0.95, cy + r * 0.9), (cx - r * 0.45, cy - r * 0.55), (cx - r * 0.05, cy - r * 0.55), (cx - r * 0.3, cy + r * 0.9)], fill=W)
+    else:                    # 하트 + 새싹
+        d.ellipse([cx - r * 0.9, cy - r * 0.55, cx + r * 0.02, cy + r * 0.35], fill=W)
+        d.ellipse([cx - r * 0.02, cy - r * 0.55, cx + r * 0.9, cy + r * 0.35], fill=W)
+        d.polygon([(cx - r * 0.86, cy - r * 0.02), (cx + r * 0.86, cy - r * 0.02), (cx, cy + r * 0.95)], fill=W)
+        d.polygon([(cx, cy - r * 0.25), (cx + r * 0.35, cy - r * 0.95), (cx + r * 0.05, cy - r * 0.2)], fill=(90, 200, 90, 255))
+
+
+def _pt_badge(p, owner, mine):
+    name, eff, pc = PT_INFO[p]
+    w, h = PT_W, PT_H
+    im = canvas(w, h)
+    ss = 4
+    big = Image.new("RGBA", (im.size[0] * ss, im.size[1] * ss), (0, 0, 0, 0))
+    d = ImageDraw.Draw(big)
+    k = S * ss
+    X0, Y0, X1, Y1 = 1 * k, 1 * k, (w - 1) * k, (h - 1) * k
+    # 판: 양쪽 끝이 비스듬한 깃발
+    shape = [(X0 + 3 * k, Y0), (X1 - 3 * k, Y0), (X1, Y0 + 3 * k), (X1, Y1 - 3 * k), (X1 - 3 * k, Y1),
+             (X0 + 3 * k, Y1), (X0, Y1 - 3 * k), (X0, Y0 + 3 * k)]
+    m = Image.new("L", big.size, 0)
+    ImageDraw.Draw(m).polygon(shape, fill=240)
+    if owner == "neutral":
+        stops = [(0, (92, 88, 96)), (0.5, (54, 50, 60)), (1, (26, 24, 30))]
+    else:
+        col = TEAM_COL[owner]
+        c_hi = tuple(min(255, int(v * 1.2 + 25)) for v in col)
+        c_lo = tuple(int(v * 0.35) for v in col)
+        stops = [(0, c_hi), (0.45, col), (0.8, c_lo), (1, c_lo)]
+    big.alpha_composite(fill_mask(m, grad_v(big.size[0], big.size[1], stops)))
+    # 천 결
+    tex = Image.new("RGBA", big.size, (0, 0, 0, 0))
+    td = ImageDraw.Draw(tex)
+    for xx in range(-big.size[1], big.size[0], 3 * k):
+        td.line([(xx, 0), (xx + big.size[1], big.size[1])], fill=(0, 0, 0, 36), width=k)
+    tex.putalpha(Image.fromarray(np.minimum(np.asarray(tex)[..., 3], np.asarray(m))))
+    big.alpha_composite(tex)
+    d = ImageDraw.Draw(big)
+    # 글자 칸 (어두운 안쪽 판)
+    d.rounded_rectangle([18 * k, 3 * k, (w - 3.5) * k, (h - 3) * k], radius=2 * k, fill=(10, 8, 14, 225),
+                        outline=(255, 214, 110, 210) if mine else (150, 130, 100, 170), width=max(1, k // 2))
+    # 금 테
+    gold_o = (255, 226, 120, 255) if mine else ((150, 130, 110, 255) if owner == "neutral" else (205, 165, 85, 255))
+    d.line(shape + [shape[0]], fill=(30, 16, 4, 255), width=int(1.6 * k), joint="curve")
+    d.line(shape + [shape[0]], fill=gold_o, width=int((1.05 if mine else 0.8) * k), joint="curve")
+    # 메달: 금 고리 + 거점 색 속 + 문장
+    mcx, mcy, mr = 10 * k, 10 * k, 7.8 * k
+    d.ellipse([mcx - mr - k, mcy - mr - k, mcx + mr + k, mcy + mr + k], fill=(30, 16, 4, 255))
+    ring = Image.new("L", big.size, 0)
+    ImageDraw.Draw(ring).ellipse([mcx - mr, mcy - mr, mcx + mr, mcy + mr], fill=255)
+    big.alpha_composite(fill_mask(ring, grad_v(big.size[0], big.size[1], GOLD)))
+    inner = Image.new("L", big.size, 0)
+    ImageDraw.Draw(inner).ellipse([mcx - mr + 1.6 * k, mcy - mr + 1.6 * k, mcx + mr - 1.6 * k, mcy + mr - 1.6 * k], fill=255)
+    ic_hi = tuple(min(255, int(v * 1.1 + 20)) for v in pc)
+    ic_lo = tuple(int(v * 0.3) for v in pc)
+    if owner == "neutral":
+        ic_hi = tuple(int(v * 0.75) for v in ic_hi); ic_lo = tuple(int(v * 0.75) for v in ic_lo)
+    big.alpha_composite(fill_mask(inner, grad_v(big.size[0], big.size[1], [(0, ic_hi), (1, ic_lo)])))
+    d = ImageDraw.Draw(big)
+    _pt_emblem(d, p, mcx, mcy + 0.2 * k, 4.3 * k, k)
+    if mine:
+        cy = 0.6 * k
+        d.polygon([(mcx - 4 * k, cy + 2.5 * k), (mcx - 4 * k, cy - 0.5 * k), (mcx - 2 * k, cy + 1 * k), (mcx, cy - 1.5 * k),
+                   (mcx + 2 * k, cy + 1 * k), (mcx + 4 * k, cy - 0.5 * k), (mcx + 4 * k, cy + 2.5 * k)],
+                  fill=(255, 214, 90, 255), outline=(60, 30, 6, 255))
+    im.alpha_composite(big.resize(im.size, Image.LANCZOS))
+    # 글자 (픽셀 글꼴 · 또렷하게 그대로)
+    dd = ImageDraw.Draw(im)
+    f_name = gfx.font("Galmuri9.ttf", 10)
+    f_eff = gfx.font("Galmuri11-Bold.ttf", 12)
+    tx0, tx1 = 19 * S, (w - 4) * S
+    def put(txt, fnt, y, col):
+        bb = dd.textbbox((0, 0), txt, font=fnt)
+        tw = bb[2] - bb[0]
+        x = tx0 + (tx1 - tx0 - tw) // 2 - bb[0]
+        for ox, oy in ((1, 1), (0, 1), (1, 0)):
+            dd.text((x + ox, y + oy), txt, font=fnt, fill=(0, 0, 0, 255))
+        dd.text((x, y), txt, font=fnt, fill=col)
+    dim = owner == "neutral"
+    put(name, f_name, 7, (178, 170, 156, 255) if dim else (255, 240, 205, 255))
+    put(eff, f_eff, 19, (214, 196, 120, 255) if dim else (255, 226, 90, 255))
+    if mine:
+        glow = Image.new("RGBA", im.size, (0, 0, 0, 0))
+        ImageDraw.Draw(glow).rounded_rectangle([1, 1, im.size[0] - 2, im.size[1] - 2], radius=8, outline=(255, 220, 120, 150), width=3)
+        g2 = glow.filter(ImageFilter.GaussianBlur(2))
+        g2.alpha_composite(im)
+        im = g2
+    return im
+
+
+def _pt_contest():
+    """쟁탈 중 겹침: 붉은 빛 테두리 + 오른쪽 위 교차한 칼"""
+    w, h = PT_W, PT_H
+    im = canvas(w, h)
+    glow = Image.new("RGBA", im.size, (0, 0, 0, 0))
+    ImageDraw.Draw(glow).rounded_rectangle([2, 2, im.size[0] - 3, im.size[1] - 3], radius=6, outline=(255, 50, 30, 255), width=3)
+    im.alpha_composite(glow.filter(ImageFilter.GaussianBlur(1.5)))
+    im.alpha_composite(glow)
+    ss = 4
+    big = Image.new("RGBA", (im.size[0] * ss, im.size[1] * ss), (0, 0, 0, 0))
+    d = ImageDraw.Draw(big); k = S * ss
+    # 메달 자리를 붉은 교차 칼 메달로 덮는다
+    cx, cy, r = 10 * k, 10 * k, 8.6 * k
+    d.ellipse([cx - r - k, cy - r - k, cx + r + k, cy + r + k], fill=(30, 4, 2, 255))
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(150, 20, 14, 255), outline=(255, 110, 70, 255), width=int(1.2 * k))
+    rr = r * 0.66
+    for sgn in (-1, 1):
+        # 칼끝(위) → 손잡이(아래)
+        tx, ty = cx - sgn * rr, cy - rr
+        bx, by = cx + sgn * rr * 0.8, cy + rr * 0.8
+        d.line([(tx, ty), (bx, by)], fill=(255, 248, 235, 255), width=int(1.4 * k))
+        gx, gy = cx + sgn * rr * 0.4, cy + rr * 0.4
+        px_, py_ = 0.7071, -sgn * 0.7071
+        g = rr * 0.38
+        d.line([(gx - px_ * g, gy - py_ * g), (gx + px_ * g, gy + py_ * g)], fill=(255, 200, 80, 255), width=int(1.0 * k))
+    im.alpha_composite(big.resize(im.size, Image.LANCZOS))
+    return im
+
+
+def point_badges(font):
+    for p in PT_ORDER:
+        for owner in ["neutral"] + list(TEAM_COL):
+            for mine in ((False,) if owner == "neutral" else (False, True)):
+                key = f"hud/pt_{p}_{owner}{'_me' if mine else ''}"
+                font.add(key, _pt_badge(p, owner, mine), PT_X[p], PT_Y, "hud")
+    font.add("hud/pt_contest", _pt_contest(), 0, PT_Y, "hud")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 #  문자열 합성 (Skript 도 같은 규칙) + 미리보기 엔진
 # ─────────────────────────────────────────────────────────────────────────────
 SPACE_BASE = 0xF000
@@ -633,7 +805,7 @@ class Layout:
     def __init__(self, font):
         self.by_char = {g["char"]: g for g in font.glyphs.values() if "char" in g}
 
-    def render(self, s, width=TOTAL_W, height=70, colors=None):
+    def render(self, s, width=TOTAL_W, height=100, colors=None):
         img = Image.new("RGBA", (width * S, height * S), (0, 0, 0, 0))
         cx = 0
         for i, ch in enumerate(s):

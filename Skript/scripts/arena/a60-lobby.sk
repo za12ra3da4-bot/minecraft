@@ -111,6 +111,10 @@ on join:
 # 들어올 때: 게임 전이면 모험 모드로 대기실 가운데 · 게임 중이면 관전 (중앙 성소 위에서 내려다봄)
 on join:
     wait 3 ticks
+    # 관전자 모드(/관전자): 접속해도 아무 일 없음
+    if bgOptOut(player) is true:
+        bgCmd("tag %name of player% add bg_optout")
+        stop
     if {-bg::on} is not true:
         bgToLobby(player)
         send title "&6&l왕관 쟁탈전" with subtitle "&f팀 발판을 밟아 팀을 고르세요" to player for 60 ticks
@@ -137,12 +141,15 @@ every 10 ticks:
                         if {-bg::freeteam} is not true:
                             send action bar "&7지금은 관리자가 팀을 정합니다 &8(/자유팀선택 으로 켜야 발판으로 팀 선택)" to loop-player
                         else:
-                            if bgTeam(loop-player) is not loop-value-2:
+                            if bgOptOut(loop-player) is true:
+                                send action bar "&7관전자 모드라 팀에 들어가지 않습니다 &8(/관전자 로 끄기)" to loop-player
+                            else if bgTeam(loop-player) is not loop-value-2:
                                 bgSetupTeams()
                                 bgSetTeam(loop-player, loop-value-2)
                                 play sound "block.note_block.pling" to loop-player
                                 bgParticle(location of loop-player, "happy_villager", 0.6, 1, 0.6, 0, 12)
-                            send action bar "%{-bg::tcol::%loop-value-2%}%&l%{-bg::tname::%loop-value-2%}% 팀 &7— 팀원 %bgTeamCount(loop-value-2)%명" to loop-player
+                            if bgOptOut(loop-player) is false:
+                                send action bar "%{-bg::tcol::%loop-value-2%}%&l%{-bg::tname::%loop-value-2%}% 팀 &7— 팀원 %bgTeamCount(loop-value-2)%명" to loop-player
 
 # 대기실 안 피해 없음 · 게임 밖에서는 사람끼리 못 때림
 on damage of player:

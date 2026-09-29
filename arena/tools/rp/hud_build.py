@@ -50,6 +50,7 @@ def build(pack):
     H.digits(f, "hud/d", "hud", 6)
     H.digits(f, "hud/t", "hud", 3)
     H.team_hud(f)
+    H.point_badges(f)
     for bid, b in BOSSES.items():
         H.label(f, f"boss/name_{bid}", b["name"], "name")
         p = os.path.join(PORTRAITS, f"{bid}.png")
@@ -128,6 +129,14 @@ def hud_str(f, scores, me, time_sec, owners):
         txt = str(int(scores.get(t, 0)))
         cx = H.PLATE_X[t] + 17 + (H.PLATE_W - 17) / 2
         s += digits_str(f, txt, cx, "hud/d")
+    for p in H.PT_ORDER:
+        o = owners.get(p, "none")
+        if o in ("none", "contest"):
+            s += H.place(f, f"hud/pt_{p}_neutral")
+        else:
+            s += H.place(f, f"hud/pt_{p}_{o}{'_me' if o == me else ''}")
+        if o == "contest":
+            s += H.place(f, "hud/pt_contest", H.PT_X[p])
     s += H.place(f, "hud/timer")
     m, sec = divmod(int(time_sec), 60)
     s += digits_str(f, f"{m:02d}:{sec:02d}", 150, "hud/t")
@@ -137,7 +146,7 @@ def hud_str(f, scores, me, time_sec, owners):
 def preview(f, path, boss="talos", **kw):
     L = H.Layout(f)
     s = hud_str(f, {"red": 245, "blue": 198, "green": 160, "yellow": 131}, "red", 734,
-                {"temple": "red", "nw": "yellow", "ne": "blue", "sw": "none", "se": "contest"})
+                {"temple": "blue", "ares": "red", "athena": "yellow", "hermes": "contest", "demeter": "none"})
     s += boss_str(f, boss, **kw) if kw else ""
     s += H.sp(H.TOTAL_W)
     img, cx = L.render(s)

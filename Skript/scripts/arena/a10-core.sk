@@ -125,6 +125,12 @@ function bgSetTeam(p: player, t: text):
     bgCmd("team join bg_%{_t}% %name of {_p}%")
     send "&6[전장] &f당신은 %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f 입니다." to {_p}
 
+# 관전자 모드 (/관전자): 게임이 시작 · 끝나도 이 사람은 아무 영향 없음 (팀 없음 · 이동 · 인벤 초기화 · 제목 없음)
+function bgOptOut(p: player) :: boolean:
+    if {bg::optout::%uuid of {_p}%} is true:
+        return true
+    return false
+
 function bgTeamCount(t: text) :: number:
     set {_n} to 0
     loop all players:
@@ -181,10 +187,11 @@ function bgTitle(t: text, s: text, fi: number, st: number, fo: number):
     set {_b} to bgTicks({_fi})
     set {_c} to bgTicks({_fo})
     loop all players:
-        send title {_t} with subtitle {_s} to loop-player for {_a} with fade in {_b} and fade out {_c}
+        if bgOptOut(loop-player) is false:
+            send title {_t} with subtitle {_s} to loop-player for {_a} with fade in {_b} and fade out {_c}
 
 function bgSound(s: text, vol: number, pitch: number):
-    bgCmd("execute as @a at @s run playsound %{_s}% master @s ~ ~ ~ %bgN({_vol})% %bgN({_pitch})%")
+    bgCmd("execute as @a[tag=!bg_optout] at @s run playsound %{_s}% master @s ~ ~ ~ %bgN({_vol})% %bgN({_pitch})%")
 
 function bgSoundAt(l: location, s: text, vol: number, pitch: number):
     bgCmd("playsound %{_s}% hostile @a %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% %bgN({_vol})% %bgN({_pitch})%")
