@@ -149,14 +149,10 @@ def build():
         kind = "legend" if idx in LEGEND else "boss" if idx in BOSS else "sell" if idx in SELL else "coin" if idx in COIN else "gear" if idx in GEAR else None
         if kind:
             slot(x, y, kind)
-        elif idx in side and side[idx][0]:
-            paste(art(side[idx][0], 20 * S, 1.0, glow=side[idx][1]), (x - 1) * S, (y - 1) * S)
         else:
-            # 물약 병 그림 (장비 줄 표시)
-            px, py = (x + 9) * S, (y + 10) * S
-            d.ellipse([px - 5 * S, py - 3 * S, px + 5 * S, py + 7 * S], fill=(200, 50, 60), outline=(240, 230, 220), width=S)
-            d.rectangle([px - 2 * S, py - 8 * S, px + 2 * S, py - 3 * S], fill=(210, 220, 230))
-            d.rectangle([px - 3 * S, py - 9 * S, px + 3 * S, py - 7 * S], fill=(150, 100, 60))
+            # 빈 칸: 아이템처럼 보이지 않게 작은 금 문양만
+            cx, cy = (x + 9) * S, (y + 9) * S
+            d.polygon([(cx, cy - 4 * S), (cx + 4 * S, cy), (cx, cy + 4 * S), (cx - 4 * S, cy)], outline=(150, 110, 50), width=S)
     # 구역 나누는 금선 + 이름표
     fs = ImageFont.truetype(FONT, 5 * S)
     for yline, label, col in ((71, "보스 전용", (255, 120, 110)), (89, "장비 · 물약", (255, 210, 140))):

@@ -509,22 +509,30 @@ def ore_lines(world, n_spots=48, seed=77):
         if world.pal[world.vox[x, top + 1, z]] != "air":
             continue
         spots.append((x, z))
-        kind = R.random()
-        ore = "iron_ore" if kind < 0.3 else ("gold_ore" if kind < 0.7 else ("emerald_ore" if kind < 0.9 else "diamond_ore"))
-        cells = [(0, 0)] + R.sample([(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)], R.randint(3, 5))
-        for dx, dz in cells:
-            xx, zz = x + dx, z + dz
-            ty = None
-            for yy in (top + 1, top, top - 1):
-                if world.pal[world.vox[xx, yy, zz]] != "air" and world.pal[world.vox[xx, yy + 1, zz]] == "air":
-                    ty = yy
-                    break
-            if ty is None:
-                continue
-            n2 = world.pal[world.vox[xx, ty, zz]].split("[")[0]
-            if not any(n2 == k or n2.endswith(k) for k in NATURAL):
-                continue
-            out.append(f"{at} ~{xx} ~{ty} ~{zz} minecraft:{ore}")
+        # 땅 위로 솟은 작은 바위 더미 (5x5 안 둥글게, 가운데 3칸 높이) — 광석 반 · 바위 반
+        rock = ["minecraft:stone", "minecraft:andesite", "minecraft:cobblestone", "minecraft:tuff", "minecraft:mossy_cobblestone"]
+        pool = ["minecraft:iron_ore"] * 3 + ["minecraft:gold_ore"] * 4 + ["minecraft:emerald_ore"] * 2 + ["minecraft:diamond_ore"]
+        for dx in range(-2, 3):
+            for dz in range(-2, 3):
+                dist = abs(dx) + abs(dz)
+                if dist > 3 or (abs(dx) == 2 and abs(dz) == 2):
+                    continue
+                # 둥근 바위 (팰월드 광석처럼): 가운데 4칸 · 둘레로 낮아짐, 광석은 겉면에 박힘
+                h = 4 if dist == 0 else (3 if dist == 1 else (2 if dist == 2 else 1))
+                xx, zz = x + dx, z + dz
+                ty = None
+                for yy in range(top + 2, top - 3, -1):
+                    if world.pal[world.vox[xx, yy, zz]] != "air" and world.pal[world.vox[xx, yy + 1, zz]] == "air":
+                        ty = yy
+                        break
+                if ty is None:
+                    continue
+                # 바닥 칸도 바위로 (예전에 바닥에 박았던 광석을 덮음)
+                out.append(f"{at} ~{xx} ~{ty} ~{zz} {R.choice(rock)}")
+                for k in range(1, h + 1):
+                    outer = k == h or dist >= 2
+                    blk = R.choice(pool) if (outer and R.random() < 0.55) else R.choice(rock)
+                    out.append(f"{at} ~{xx} ~{ty + k} ~{zz} {blk}")
     return out
 
 
