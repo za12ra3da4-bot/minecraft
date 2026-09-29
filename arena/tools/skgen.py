@@ -116,6 +116,9 @@ def write_hud(path, font):
         B.append(f"    set {{-bg::hud::{key}::s}} to {q(g[pre + '_slash']['char'])}")
         B.append(f"    set {{-bg::hud::{key}::c}} to {q(g[pre + '_colon']['char'])}")
     B.append(f"    set {{-bg::gui::shop}} to {q(g['gui/shop']['char'])}")
+    for k in sorted(g):
+        if k.startswith("gui/shop") and k != "gui/shop":
+            B.append(f"    set {{-bg::gui::{k.split('/')[1]}}} to {q(g[k]['char'])}")
     B.append(f"    set {{-bg::hud::total_w}} to {H.TOTAL_W}")
     B.append(f"    set {{-bg::hud::boss_x}} to {H.BOSS_X}")
     B.append(f"    set {{-bg::hud::fill_w}} to {H.FILL_W}")

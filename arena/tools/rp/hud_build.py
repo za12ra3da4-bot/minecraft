@@ -16,26 +16,28 @@ PORTRAITS = os.path.join(os.path.dirname(HERE), ".cache", "portraits")
 
 
 def gui_panel(f):
-    """상점 화면 배경 (6줄 상자 176x222, 텍스쳐 2배 352x444) — 글꼴 그림은 한 장이 256 픽셀을 넘으면 안 그려지므로 2x2 조각(각 176x222 텍셀)으로
-       조각 하나 = 화면 88x111. 제목 위치 (8, 6) · 기본 글꼴 ascent 7 → 위 조각 ascent 13, 아래 조각 13-111"""
+    """상점 화면 배경 (쪽마다 한 장, 6줄 상자 176x222 · 텍스쳐 2배 352x444)
+       글꼴 그림은 한 장이 256 픽셀을 넘으면 안 그려지므로 2x2 조각(각 176x222 텍셀 = 화면 88x111)
+       제목 위치 (8, 6) · 기본 글꼴 ascent 7 → 위 조각 ascent 13, 아래 조각 13-111"""
     import shopgui
-    im = shopgui.build()                      # 352 x 444
-    keys = []
-    for r in range(2):
-        for c in range(2):
-            tile = im.crop((c * 176, r * 222, (c + 1) * 176, (r + 1) * 222)).copy()
-            px = tile.load()
-            if px[175, 0][3] == 0:
-                px[175, 0] = (0, 0, 0, 1)
-            ch = chr(f.next); f.next += 1
-            fname = f"font/gui_shop6_{r}{c}.png"
-            f.files[fname] = tile
-            f.providers.append({"type": "bitmap", "file": f"{H.NS}:{fname}", "height": 111, "ascent": 13 - 111 * r, "chars": [ch]})
-            keys.append(ch)
-    # x=8 → 0 · 조각 폭 88 + 1 (글자 사이 1픽셀)
-    s = H.sp(-8) + keys[0] + H.sp(-1) + keys[1] + H.sp(-177) + keys[2] + H.sp(-1) + keys[3] + H.sp(-169)
-    f.glyphs["gui/shop"] = dict(char=s, adv=0, x=0, y=0, widget="hud")
-    return s
+    for page in shopgui.PAGES:
+        im = shopgui.build(page)
+        keys = []
+        for r in range(2):
+            for c in range(2):
+                tile = im.crop((c * 176, r * 222, (c + 1) * 176, (r + 1) * 222)).copy()
+                px = tile.load()
+                if px[175, 0][3] == 0:
+                    px[175, 0] = (0, 0, 0, 1)
+                ch = chr(f.next); f.next += 1
+                fname = f"font/gui_shop{page}_{r}{c}.png"
+                f.files[fname] = tile
+                f.providers.append({"type": "bitmap", "file": f"{H.NS}:{fname}", "height": 111, "ascent": 13 - 111 * r, "chars": [ch]})
+                keys.append(ch)
+        s = H.sp(-8) + keys[0] + H.sp(-1) + keys[1] + H.sp(-177) + keys[2] + H.sp(-1) + keys[3] + H.sp(-169)
+        f.glyphs[f"gui/shop{page}"] = dict(char=s, adv=0, x=0, y=0, widget="hud")
+        if page == 1:
+            f.glyphs["gui/shop"] = dict(char=s, adv=0, x=0, y=0, widget="hud")
 
 
 def build(pack):

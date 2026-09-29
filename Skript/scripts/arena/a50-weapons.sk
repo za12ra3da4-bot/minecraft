@@ -102,15 +102,15 @@ on death of player:
 on load:
     set {-bg::gear::list::*} to "iron", "diamond", "sword", "food", "arrows", "gapple", "heal", "ward", "arrows64", "spectral", "parrow", "pspeed", "pstr", "pregen", "pfire", "ppoison" and "pleap"
     # 빈칸: 화살 · 물약 (전부 짧고 약하게 — 전설 무기 스킬보다 약한 보조용)
-    bgGearDef("arrows64", "화살 64개", "소모품 · 한 묶음", 25, arrow, 45)
-    bgGearDef("spectral", "분광 화살 16개", "맞은 적 10초 발광 (벽 너머로 보임)", 20, spectral arrow, 46)
-    bgGearDef("parrow", "독 화살 6개", "맞으면 독 I 3초", 30, tipped arrow, 47)
-    bgGearDef("pspeed", "신속 물약", "마시면 신속 I · 15초", 30, potion, 48)
-    bgGearDef("pstr", "힘 물약", "마시면 힘 I · 8초", 50, potion, 50)
-    bgGearDef("pregen", "재생 물약", "마시면 재생 I · 8초 (약 3하트)", 35, potion, 51)
-    bgGearDef("pfire", "화염 저항 물약", "마시면 불 · 용암 무시 · 30초", 20, potion, 52)
-    bgGearDef("ppoison", "독의 투척 물약", "던지면 독 I · 4초", 35, splash potion, 30)
-    bgGearDef("pleap", "도약 물약", "마시면 점프 강화 II · 15초", 20, potion, 35)
+    bgGearDef("arrows64", "화살 64개", "소모품 · 한 묶음", 25, arrow, 29)
+    bgGearDef("spectral", "분광 화살 16개", "맞은 적 10초 발광 (벽 너머로 보임)", 20, spectral arrow, 30)
+    bgGearDef("parrow", "독 화살 6개", "맞으면 독 I 3초", 30, tipped arrow, 31)
+    bgGearDef("pspeed", "신속 물약", "마시면 신속 I · 15초", 30, potion, 20)
+    bgGearDef("pstr", "힘 물약", "마시면 힘 I · 8초", 50, potion, 21)
+    bgGearDef("pregen", "재생 물약", "마시면 재생 I · 8초 (약 3하트)", 35, potion, 22)
+    bgGearDef("pfire", "화염 저항 물약", "마시면 불 · 용암 무시 · 30초", 20, potion, 23)
+    bgGearDef("ppoison", "독의 투척 물약", "던지면 독 I · 4초", 35, splash potion, 24)
+    bgGearDef("pleap", "도약 물약", "마시면 점프 강화 II · 15초", 20, potion, 25)
     # 상점 아이콘 물약 색
     set {-bg::gear::parrow::rgb::*} to 78, 147 and 49
     set {-bg::gear::pspeed::rgb::*} to 124, 175 and 198
@@ -124,47 +124,52 @@ on load:
     set {-bg::gear::ward::desc} to "우클릭 → 60초 동안 적 본진 결계 피해 무시 (코어 공격용)"
     set {-bg::gear::ward::price} to 35
     set {-bg::gear::ward::icon} to echo shard
-    set {-bg::gear::ward::slot} to 44
+    set {-bg::gear::ward::slot} to 13
     set {-bg::gear::food::name} to "구운 스테이크 16개"
     set {-bg::gear::food::desc} to "소모품 · 배고픔 회복"
     set {-bg::gear::food::price} to 5
     set {-bg::gear::food::icon} to cooked beef
-    set {-bg::gear::food::slot} to 40
+    set {-bg::gear::food::slot} to 33
     set {-bg::gear::iron::name} to "철 갑옷 (투구 · 흉갑 · 부츠)"
     set {-bg::gear::iron::desc} to "바지는 병과 바지 그대로 (병과 구분) · 다이아 흉갑이 있으면 흉갑 유지 · 죽어도 유지"
     set {-bg::gear::iron::price} to 40
     set {-bg::gear::iron::icon} to iron chestplate
-    set {-bg::gear::iron::slot} to 37
+    set {-bg::gear::iron::slot} to 10
     set {-bg::gear::diamond::name} to "다이아몬드 흉갑"
     set {-bg::gear::diamond::desc} to "죽어도 유지됩니다"
     set {-bg::gear::diamond::price} to 80
     set {-bg::gear::diamond::icon} to diamond chestplate
-    set {-bg::gear::diamond::slot} to 38
+    set {-bg::gear::diamond::slot} to 11
     set {-bg::gear::sword::name} to "철 검"
     set {-bg::gear::sword::desc} to "죽어도 유지됩니다"
     set {-bg::gear::sword::price} to 25
     set {-bg::gear::sword::icon} to iron sword
-    set {-bg::gear::sword::slot} to 39
+    set {-bg::gear::sword::slot} to 12
     set {-bg::gear::arrows::name} to "화살 32개"
     set {-bg::gear::arrows::desc} to "소모품"
     set {-bg::gear::arrows::price} to 14
     set {-bg::gear::arrows::icon} to arrow
-    set {-bg::gear::arrows::slot} to 41
+    set {-bg::gear::arrows::slot} to 28
     set {-bg::gear::gapple::name} to "황금 사과"
     set {-bg::gear::gapple::desc} to "소모품"
     set {-bg::gear::gapple::price} to 15
     set {-bg::gear::gapple::icon} to golden apple
-    set {-bg::gear::gapple::slot} to 42
+    set {-bg::gear::gapple::slot} to 34
     set {-bg::gear::heal::name} to "치유의 투척 물약"
     set {-bg::gear::heal::desc} to "던지면 즉시 2하트 회복"
     set {-bg::gear::heal::price} to 25
     set {-bg::gear::heal::icon} to splash potion
-    set {-bg::gear::heal::slot} to 43
+    set {-bg::gear::heal::slot} to 19
+    # 칸 표 새로 만들기 (예전 배치의 칸 번호가 남아 있으면 빈칸을 눌러도 사지는 문제)
+    delete {-bg::gearslot::*}
+    delete {-bg::wslot::*}
+    delete {-bg::bslot::*}
     loop {-bg::gear::list::*}:
         set {-bg::gearslot::%{-bg::gear::%loop-value%::slot}%} to loop-value
     # 전설 무기 진열 칸
-    set {-bg::wslots::*} to 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28 and 29
-    set {-bg::bslots::*} to 31, 32, 33 and 34
+    # 1쪽: 전설 무기 2줄 x 8 · 보스 무기 4 (3줄 가운데) / 2쪽: 장비 · 물약 · 화살 · 광물 판매
+    set {-bg::wslots::*} to 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24 and 25
+    set {-bg::bslots::*} to 29, 30, 31 and 32
     set {_k} to 0
     loop {-bg::w::bosslist::*}:
         add 1 to {_k}
@@ -330,51 +335,62 @@ every 2 ticks:
 
 # 6줄 상자: 보라 유리판 바탕 + 전설 무기 8칸 (리소스팩 그림) + 장비 6칸 + 보유 코인
 function bgShopOpen(p: player):
+    bgShopPage({_p}, 1)
+
+# 1쪽 = 전설 무기 · 보스 무기   2쪽 = 장비 · 물약 · 화살 · 광물 판매   (아래 화살표 칸으로 넘기기)
+function bgShopPage(p: player, pg: number):
     set {_c} to {bg::coin::%uuid of {_p}%} ? 0
-    # 리소스팩 그림 배경 (제목 글리프가 창 전체를 덮음) — 글리프가 없으면 예전 유리판 상자
-    # (리소스팩이 기본 글꼴에 그림 글자를 연결해 둬서 일반 제목 글자로 된다 — 흰색이어야 그림 색이 안 변함)
-    if {-bg::gui::shop} is set:
-        set {_gui} to chest inventory with 6 rows named "&f%{-bg::gui::shop}%"
+    # 리소스팩 그림 배경 (제목 글리프가 창 전체를 덮음) — 글리프가 없으면 유리판 상자
+    set {_bgg} to {-bg::gui::shop%{_pg}%}
+    if {_bgg} is set:
+        set {_gui} to chest inventory with 6 rows named "&f%{_bgg}%"
     if {_gui} is not set:
-        set {_gui} to chest inventory with 6 rows named "&5&l왕국 무기고 &8| &6%{_c}% 코인"
+        set {_gui} to chest inventory with 6 rows named "&5&l왕국 무기고 %{_pg}%/2 &8| &6%{_c}% 코인"
         set {_pane} to purple stained glass pane named " "
         loop 54 times:
             set slot loop-number - 1 of {_gui} to {_pane}
-    set {_i} to 0
-    loop {-bg::w::list::*}:
-        add 1 to {_i}
-        set {_w} to loop-value
-        set {_it} to bgWeaponItem({_w})
-        set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&e가격: %{-bg::w::%{_w}%::price}% 코인 &7(클릭해서 구매)"
-        set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
-    set {_i} to 0
-    loop {-bg::w::bosslist::*}:
-        add 1 to {_i}
-        set {_w} to loop-value
-        set {_it} to bgWeaponItem({_w})
-        set name of {_it} to "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)"
-        set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&c상점에서 살 수 없습니다 — 그 보스의 보상 상자에서만"
-        set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
-    loop {-bg::gear::list::*}:
-        set {_g} to loop-value
-        set {_it} to {-bg::gear::%{_g}%::icon}
-        if {-bg::gear::%{_g}%::rgb::1} is set:
-            set {_it} to bgPotionIcon({_it}, {-bg::gear::%{_g}%::rgb::1}, {-bg::gear::%{_g}%::rgb::2}, {-bg::gear::%{_g}%::rgb::3})
-        set name of {_it} to "&f&l%{-bg::gear::%{_g}%::name}%"
-        set lore of {_it} to "&7%{-bg::gear::%{_g}%::desc}%", "" and "&e가격: %{-bg::gear::%{_g}%::price}% 코인"
-        set slot {-bg::gear::%{_g}%::slot} of {_gui} to {_it}
-    # 광물 일괄 판매 버튼 (가방의 원석 · 보석을 한 번에 코인으로)
-    set {_sell} to hopper named "&a&l광물 일괄 판매"
-    set {_tot} to bgOreTotal({_p})
-    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e1 &7· &f금 원석 &e2", "&f에메랄드 &e3 &7· &f다이아몬드 &e5", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
-    set slot 49 of {_gui} to {_sell}
+        if {_pg} is 1:
+            set slot 53 of {_gui} to arrow named "&e&l다음 쪽 ▶ &f장비 · 소모품"
+        else:
+            set slot 45 of {_gui} to arrow named "&e&l◀ 이전 쪽 &f전설 무기"
+    if {_pg} is 1:
+        set {_i} to 0
+        loop {-bg::w::list::*}:
+            add 1 to {_i}
+            set {_w} to loop-value
+            set {_it} to bgWeaponItem({_w})
+            set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&e가격: %{-bg::w::%{_w}%::price}% 코인 &7(클릭해서 구매)"
+            set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
+        set {_i} to 0
+        loop {-bg::w::bosslist::*}:
+            add 1 to {_i}
+            set {_w} to loop-value
+            set {_it} to bgWeaponItem({_w})
+            set name of {_it} to "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)"
+            set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&c상점에서 살 수 없습니다 — 그 보스의 보상 상자에서만"
+            set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
+    else:
+        loop {-bg::gear::list::*}:
+            set {_g} to loop-value
+            set {_it} to {-bg::gear::%{_g}%::icon}
+            if {-bg::gear::%{_g}%::rgb::1} is set:
+                set {_it} to bgPotionIcon({_it}, {-bg::gear::%{_g}%::rgb::1}, {-bg::gear::%{_g}%::rgb::2}, {-bg::gear::%{_g}%::rgb::3})
+            set name of {_it} to "&f&l%{-bg::gear::%{_g}%::name}%"
+            set lore of {_it} to "&7%{-bg::gear::%{_g}%::desc}%", "" and "&e가격: %{-bg::gear::%{_g}%::price}% 코인"
+            set slot {-bg::gear::%{_g}%::slot} of {_gui} to {_it}
+        # 광물 일괄 판매 버튼
+        set {_sell} to hopper named "&a&l광물 일괄 판매"
+        set {_tot} to bgOreTotal({_p})
+        set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e1 &7· &f금 원석 &e2", "&f에메랄드 &e3 &7· &f다이아몬드 &e5", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
+        set slot 40 of {_gui} to {_sell}
     set {_coin} to sunflower named "&6&l보유 코인: &e%{_c}%"
-    set lore of {_coin} to "&7처치 +10 · 점령 +15 · 보스 +40", "&710초마다 +1 (점령 지점당 +1)"
-    set slot 53 of {_gui} to {_coin}
+    set lore of {_coin} to "&7처치 +10 · 점령 +15 · 보스 기여도", "&710초마다 +1 (점령 지점당 +1)"
+    set slot 49 of {_gui} to {_coin}
     # 먼저 열고 나서 표시 (다시 열 때 이전 창의 '닫힘' 이 표시를 지워서 아이템을 빼 갈 수 있었음 — 복사 버그)
     open {_gui} to {_p}
     set {-bg::shop::%uuid of {_p}%} to true
-    play sound "block.chest.open" to {_p}
+    set {-bg::shoppage::%uuid of {_p}%} to {_pg}
+    play sound "item.book.page_turn" to {_p}
 
 # ─────────────────────────────────────────────────────────── 광물 (캐면 가방에, 죽으면 떨어뜨림, 상점에서 일괄 판매)
 # 광물 아이템: 마인크래프트 이름(Material)으로 판별 — 'raw iron' 같은 글자는 Skript 가 잘못 읽을 수 있어서 쓰지 않음
@@ -425,7 +441,7 @@ function bgOreSell(p: player):
     play sound "entity.experience_orb.pickup" to {_p}
     play sound "block.amethyst_block.resonate" to {_p}
     wait 1 tick
-    bgShopOpen({_p})
+    bgShopPage({_p}, 2)
 
 # 상점 진열용 전설 무기 아이템 (리소스팩 그림이 보이도록 item_model 지정)
 function bgWeaponItem(w: text) :: item:
@@ -454,7 +470,16 @@ on inventory click:
     set {_s} to raw index of event-slot
     if {_s} >= 54:
         stop
-    if {-bg::gearslot::%{_s}%} is set:
+    set {_pg} to {-bg::shoppage::%uuid of player%} ? 1
+    if {_pg} is 2:
+        if {_s} is 45:
+            bgShopPage(player, 1)
+            stop
+        if {_s} is 40:
+            bgOreSell(player)
+            stop
+        if {-bg::gearslot::%{_s}%} is not set:
+            stop
         set {_g} to {-bg::gearslot::%{_s}%}
         set {_price} to {-bg::gear::%{_g}%::price}
         if ({bg::coin::%uuid of player%} ? 0) < {_price}:
@@ -467,8 +492,8 @@ on inventory click:
         send "&6[상점] &f%{-bg::gear::%{_g}%::name}% 구매 &7(남은 코인 %{bg::coin::%uuid of player%}%)" to player
         play sound "entity.experience_orb.pickup" to player
         stop
-    if {_s} is 49:
-        bgOreSell(player)
+    if {_s} is 53:
+        bgShopPage(player, 2)
         stop
     if {-bg::bslot::%{_s}%} is set:
         send "&6[상점] &c보스 전용 무기는 보스를 쓰러뜨리고 보상 상자를 열어야 얻을 수 있습니다." to player

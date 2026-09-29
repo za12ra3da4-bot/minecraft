@@ -14,15 +14,17 @@ K = 2
 W, H = 176, 222
 FONT = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
 
-LEGEND = set(range(10, 17)) | set(range(19, 26)) | {28, 29}
-BOSS = {31, 32, 33, 34}
-GEAR = set(range(37, 45)) | {30, 35, 45, 46, 47, 48, 50, 51, 52}
-SELL = {49}
-COIN = {53}
-
+# 페이지별 칸 배치 (Skript a50 과 같아야 함)
+PAGES = {
+    1: dict(title="전설 무기", legend=set(range(9, 17)) | set(range(18, 26)), boss={29, 30, 31, 32}, gear=set(), sell=set(),
+            coin={49}, nav={53: "next"}, banners=[(151, 35, 65)], caption=(89, "보스 무기 — 보스를 쓰러뜨리면 보상 상자에서")),
+    2: dict(title="장비 · 소모품", legend=set(), boss=set(), gear={10, 11, 12, 13} | set(range(19, 26)) | {28, 29, 30, 31, 33, 34},
+            sell={40}, coin={49}, nav={45: "prev"}, banners=[(151, 35, 83)], icons={9: "armor", 18: "potion", 27: "arrow"},
+            caption=None),
+}
 FRAME = {"legend": ((150, 90, 230), (70, 30, 120)), "boss": ((220, 60, 50), (110, 16, 16)),
          "gear": ((200, 150, 80), (100, 64, 30)), "sell": ((90, 210, 110), (20, 90, 40)), "coin": ((255, 210, 80), (140, 90, 10)),
-         "inv": ((150, 120, 90), (70, 52, 38))}
+         "inv": ((150, 120, 90), (70, 52, 38)), "nav": ((255, 220, 120), (120, 80, 20))}
 
 
 def noise(w, h, s, seed):
@@ -70,7 +72,8 @@ def art(name, size, alpha=1.0, glow=None, rot=0):
     return im
 
 
-def build():
+def build(page=1):
+    P = PAGES[page]
     S = K
     Wp, Hp = W * S, H * S
     im = Image.fromarray(np.clip(wood(Wp, Hp), 0, 255).astype(np.uint8)).convert("RGBA")
@@ -111,7 +114,7 @@ def build():
     for gx, gc in ((-9, (200, 30, 50)), (0, (60, 120, 230)), (9, (40, 180, 90))):
         d.ellipse([cx + (gx - 2) * S, cy + 3 * S, cx + (gx + 2) * S, cy + 7 * S], fill=gc)
     f = ImageFont.truetype(FONT, 12 * S)
-    t = "왕국 무기고"
+    t = P["title"]
     tw = d.textlength(t, font=f)
     x = (W * S - tw) / 2
     for dx in range(-2, 3, 2):
@@ -140,17 +143,23 @@ def build():
         for ox, oy in ((1, 1), (16, 1), (1, 16), (16, 16)):
             d.point([((x + ox) * S, (y + oy) * S)], fill=(255, 230, 150))
 
-    # ── 상자 칸 + 빈 칸 장식 (구역 표시 그림)
-    side = {9: ("thunder", (180, 220, 255)), 17: ("wind", (140, 255, 170)), 18: ("staff", (200, 150, 255)), 26: ("blackiron", (255, 110, 110)),
-            27: ("b_sphinx", (255, 220, 120)), 36: (None, None)}
+    # ── 상자 칸 (종류별 테)
     for idx in range(9, 54):
         r, c = divmod(idx, 9)
         x, y = 7 + 18 * c, 17 + 18 * r
-        kind = "legend" if idx in LEGEND else "boss" if idx in BOSS else "sell" if idx in SELL else "coin" if idx in COIN else "gear" if idx in GEAR else None
+        kind = ("legend" if idx in P["legend"] else "boss" if idx in P["boss"] else "sell" if idx in P["sell"]
+                else "coin" if idx in P["coin"] else "gear" if idx in P["gear"] else "nav" if idx in P["nav"] else None)
         if kind:
             slot(x, y, kind)
+        if idx in P["nav"]:
+            # 넘기기 화살표 (빈칸이어도 눌러짐)
+            cx, cy = (x + 9) * S, (y + 9) * S
+            if P["nav"][idx] == "next":
+                d.polygon([(cx - 4 * S, cy - 5 * S), (cx + 5 * S, cy), (cx - 4 * S, cy + 5 * S)], fill=(255, 226, 130), outline=(60, 30, 6))
+            else:
+                d.polygon([(cx + 4 * S, cy - 5 * S), (cx - 5 * S, cy), (cx + 4 * S, cy + 5 * S)], fill=(255, 226, 130), outline=(60, 30, 6))
 
-    # 빈 칸 줄은 칸 모양 대신 이어진 깃발 장식 (왼쪽 1~4줄, 오른쪽 1~2줄)
+    # 빈 세로줄은 이어진 깃발 장식
     def banner(x, y0, y1):
         R(x + 1, y0 + 1, x + 17, y1, fill=(64, 26, 96))
         cloth = Image.fromarray((noise(16 * S, (y1 - y0) * S, 3, y0 + x) * 60).astype(np.uint8)).convert("L")
@@ -159,21 +168,43 @@ def build():
         R(x + 1, y0 + 1, x + 2, y1, fill=(214, 168, 70))
         R(x + 16, y0 + 1, x + 17, y1, fill=(214, 168, 70))
         R(x, y0, x + 18, y0 + 2, fill=(150, 100, 40))
-        # 아래 제비꼬리
         d.polygon([((x + 1) * S, y1 * S), ((x + 17) * S, y1 * S), ((x + 17) * S, (y1 + 5) * S), ((x + 9) * S, (y1 + 1) * S), ((x + 1) * S, (y1 + 5) * S)], fill=(64, 26, 96))
-        # 문장: 금 왕관 + 교차 칼
         cx = (x + 9) * S
         for cy in range(y0 + 12, y1 - 6, 24):
             cy *= S
             d.polygon([(cx - 5 * S, cy + 3 * S), (cx - 5 * S, cy - 2 * S), (cx - 2 * S, cy), (cx, cy - 4 * S), (cx + 2 * S, cy), (cx + 5 * S, cy - 2 * S), (cx + 5 * S, cy + 3 * S)], fill=(240, 190, 60))
             d.line([(cx - 5 * S, cy + 6 * S), (cx + 5 * S, cy + 14 * S)], fill=(220, 225, 235), width=S)
             d.line([(cx + 5 * S, cy + 6 * S), (cx - 5 * S, cy + 14 * S)], fill=(220, 225, 235), width=S)
-    banner(7, 35, 101)
-    banner(151, 35, 65)
-    # 구역 나누는 금선 + 이름표
-    fs = ImageFont.truetype(FONT, 5 * S)
-    for yline, label, col in ((71, "보스 전용", (255, 120, 110)), (89, "장비 · 물약", (255, 210, 140))):
-        R(25, yline, 168, yline + 1, fill=(214, 168, 70))
+    for bx, y0, y1 in P["banners"]:
+        banner(bx, y0, y1)
+    # 줄 이름 그림 (2쪽 왼쪽 칸: 갑옷 · 물약 · 화살)
+    for idx, kind in P.get("icons", {}).items():
+        r, c = divmod(idx, 9)
+        cx, cy = (7 + 18 * c + 9) * S, (17 + 18 * r + 9) * S
+        if kind == "armor":
+            d.polygon([(cx - 7 * S, cy - 5 * S), (cx - 3 * S, cy - 7 * S), (cx - 1 * S, cy - 5 * S), (cx + 1 * S, cy - 5 * S), (cx + 3 * S, cy - 7 * S), (cx + 7 * S, cy - 5 * S),
+                       (cx + 5 * S, cy - 1 * S), (cx + 4 * S, cy - 1 * S), (cx + 4 * S, cy + 7 * S), (cx - 4 * S, cy + 7 * S), (cx - 4 * S, cy - 1 * S), (cx - 5 * S, cy - 1 * S)],
+                      fill=(190, 198, 212), outline=(40, 30, 20))
+        elif kind == "potion":
+            d.ellipse([cx - 6 * S, cy - 2 * S, cx + 6 * S, cy + 8 * S], fill=(200, 60, 90), outline=(240, 230, 220), width=S)
+            d.rectangle([cx - 2 * S, cy - 7 * S, cx + 2 * S, cy - 2 * S], fill=(210, 220, 230))
+            d.rectangle([cx - 3 * S, cy - 8 * S, cx + 3 * S, cy - 6 * S], fill=(150, 100, 60))
+        elif kind == "arrow":
+            d.line([(cx - 6 * S, cy + 6 * S), (cx + 6 * S, cy - 6 * S)], fill=(160, 110, 60), width=S * 2)
+            d.polygon([(cx + 7 * S, cy - 7 * S), (cx + 1 * S, cy - 5 * S), (cx + 5 * S, cy - 1 * S)], fill=(210, 215, 225))
+            d.polygon([(cx - 7 * S, cy + 7 * S), (cx - 7 * S, cy + 2 * S), (cx - 2 * S, cy + 7 * S)], fill=(240, 240, 235))
+    # 설명 글씨 한 줄
+    if P.get("caption"):
+        cy, text = P["caption"]
+        fs = ImageFont.truetype(FONT, 7 * S)
+        tw = d.textlength(text, font=fs)
+        tx = (W * S - tw) / 2
+        d.text((tx + S, (cy + 5) * S + S), text, font=fs, fill=(20, 10, 20))
+        d.text((tx, (cy + 5) * S), text, font=fs, fill=(255, 200, 150))
+    # 쪽 번호
+    fs = ImageFont.truetype(FONT, 7 * S)
+    pg = f"{page} / {len(PAGES)}"
+    d.text(((7 + 18 * 2 + 3) * S, (17 + 18 * 5 + 5) * S), pg, font=fs, fill=(255, 226, 150))
     # ── 플레이어 가방 (아래): 양피지
     parch = np.zeros((90 * S, 166 * S, 3), np.float32)
     n2 = noise(166 * S, 90 * S, 6, 21)
@@ -189,8 +220,8 @@ def build():
     return im
 
 
-def preview(path):
-    im = build()
+def preview(path, page=1):
+    im = build(page)
     bg = Image.new("RGBA", im.size, (0, 0, 0, 255))
     bg.alpha_composite(im)
     bg.convert("RGB").resize((im.width * 2, im.height * 2), Image.NEAREST).save(path)
@@ -198,4 +229,4 @@ def preview(path):
 
 if __name__ == "__main__":
     import sys
-    preview(sys.argv[1])
+    preview(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 1)
