@@ -34,6 +34,7 @@ function bgPvpBuild(p: player):
     send "&6[연습장] &a완성! &f/연습장 으로 들어가 보세요." to {_p}
 
 function bgPvpKit(p: player):
+    bgClassReset({_p})
     set {_n} to name of {_p}
     bgCmd("clear %{_n}%")
     bgCmd("effect clear %{_n}%")

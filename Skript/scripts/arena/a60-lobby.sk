@@ -28,6 +28,7 @@ function bgToLobby(p: player):
     if {-bg::mk::lobby_spawn::x} is not set:
         stop
     teleport {_p} to bgLobbyLoc()
+    bgClassReset({_p})
     set gamemode of {_p} to adventure
     heal {_p}
     set food level of {_p} to 20

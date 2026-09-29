@@ -8,6 +8,11 @@
 # ═════════════════════════════════════════════════════════════════════════════
 
 on load:
+    set {-bg::clsdesc::0} to "&c체력 12칸 &7· &f공격력 +2 &7· &f공격 속도 +10%%"
+    set {-bg::clsdesc::1} to "&a체력 9칸 &7· &f이동 +15%% &7· &f낙하 피해 줄음 &7· &f점프 높음"
+    set {-bg::clsdesc::2} to "&9체력 14칸 &7· &f방어 +3 &7· &f넉백 저항 50%% &7· &f이동 -8%%"
+
+on load:
     set {-bg::pts::*} to "temple", "ares", "athena", "hermes" and "demeter"
     set {-bg::ptmk::temple} to "temple_core"
     set {-bg::ptr::temple} to 9
@@ -336,7 +341,59 @@ function bgKit(p: player):
 
 # 병과 장비: 바지 + 기본 무기 (다른 갑옷 · 산 물건은 건드리지 않음)
 #  전사 = 사슬 바지 · 돌 검 · 활 · 화살 8   궁수 = 팀 색 가죽 바지 · 나무 검 · 활 · 화살 24   수호자 = 철 바지 · 돌 도끼
+# 병과 능력치 (속성) — 병과를 바꾸거나 부활할 때 적용, 대기실로 가면 기본값
+#  전사   : 체력 12칸 · 공격력 +2 · 공격 속도 +10%
+#  궁수   : 체력 9칸  · 이동 속도 +15% · 낙하 피해 줄음 · 점프 조금 높음
+#  수호자 : 체력 14칸 · 방어 +3 · 넉백 저항 50% · 이동 속도 -8%
+function bgClassStats(p: player, c: number):
+    set {_n} to name of {_p}
+    set {_hp} to 24
+    set {_atk} to 3
+    set {_spd} to 0.1
+    set {_armor} to 0
+    set {_kb} to 0
+    set {_aspd} to 4.4
+    set {_fall} to 3
+    set {_jump} to 0.42
+    if {_c} is 1:
+        set {_hp} to 18
+        set {_atk} to 1
+        set {_spd} to 0.115
+        set {_aspd} to 4
+        set {_fall} to 7
+        set {_jump} to 0.48
+    else if {_c} is 2:
+        set {_hp} to 28
+        set {_atk} to 1
+        set {_spd} to 0.092
+        set {_armor} to 3
+        set {_kb} to 0.5
+        set {_aspd} to 4
+    bgCmd("attribute %{_n}% minecraft:max_health base set %{_hp}%")
+    bgCmd("attribute %{_n}% minecraft:attack_damage base set %{_atk}%")
+    bgCmd("attribute %{_n}% minecraft:movement_speed base set %{_spd}%")
+    bgCmd("attribute %{_n}% minecraft:armor base set %{_armor}%")
+    bgCmd("attribute %{_n}% minecraft:knockback_resistance base set %{_kb}%")
+    bgCmd("attribute %{_n}% minecraft:attack_speed base set %{_aspd}%")
+    bgCmd("attribute %{_n}% minecraft:safe_fall_distance base set %{_fall}%")
+    bgCmd("attribute %{_n}% minecraft:jump_strength base set %{_jump}%")
+    if health of {_p} > {_hp} / 2:
+        set health of {_p} to {_hp} / 2
+
+# 기본 능력치로 (대기실 · 연습장 · 게임 끝)
+function bgClassReset(p: player):
+    set {_n} to name of {_p}
+    bgCmd("attribute %{_n}% minecraft:max_health base set 20")
+    bgCmd("attribute %{_n}% minecraft:attack_damage base set 1")
+    bgCmd("attribute %{_n}% minecraft:movement_speed base set 0.1")
+    bgCmd("attribute %{_n}% minecraft:armor base set 0")
+    bgCmd("attribute %{_n}% minecraft:knockback_resistance base set 0")
+    bgCmd("attribute %{_n}% minecraft:attack_speed base set 4")
+    bgCmd("attribute %{_n}% minecraft:safe_fall_distance base set 3")
+    bgCmd("attribute %{_n}% minecraft:jump_strength base set 0.42")
+
 function bgClassGear(p: player, c: number):
+    bgClassStats({_p}, {_c})
     set {_n} to name of {_p}
     set {_t} to bgTeam({_p})
     if {_c} is 0:
@@ -378,7 +435,7 @@ function bgClassPads():
                             set {bg::cls::%uuid of loop-player%} to {_i}
                             # 바지와 기본 무기만 바뀐다 (다른 갑옷 · 음식 · 산 물건은 그대로)
                             bgClassSwitch(loop-player, {_i})
-                            send title "&6%{-bg::cls::%{_i}%}%" with subtitle "&f병과를 바꿨습니다" to loop-player for 30 ticks
+                            send title "&6%{-bg::cls::%{_i}%}%" with subtitle "%{-bg::clsdesc::%{_i}%}%" to loop-player for 40 ticks
                             play sound "block.anvil.use" to loop-player
 
 # 본진 보호: 적 팀이 본진 안쪽(16칸)에 들어오면 초당 2칸 피해. 자기 본진에서는 회복
