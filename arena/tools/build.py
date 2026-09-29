@@ -6,6 +6,7 @@
    Skript/scripts/arena/a90-generated-*.sk    Skript 데이터 (글리프 · 맵 좌표 · 보스 애니메이션)
 """
 import json
+from PIL import Image
 import shutil
 import os
 import sys
@@ -105,6 +106,16 @@ def main(args):
                 _bad.append(_fn + " → " + _p["file"])
     if _bad:
         raise SystemExit("[rp] 잘못된 파일 이름: " + ", ".join(_bad[:10]))
+    # 글꼴 그림은 한 장이 256 픽셀을 넘으면 게임에서 안 그려진다
+    import io as _io
+    _big = []
+    for _n in _zf.ZipFile(OUT_RP).namelist():
+        if _n.endswith(".png") and "/font/" in _n:
+            _im = Image.open(_io.BytesIO(_zf.ZipFile(OUT_RP).read(_n)))
+            if max(_im.size) > 256:
+                _big.append(f"{_n} {_im.size}")
+    if _big:
+        raise SystemExit("[rp] 256 픽셀 넘는 글꼴 그림: " + ", ".join(_big))
     # 리소스팩 주소 + sha1 → 접속할 때 서버가 최신 팩을 직접 보낸다 (sha1 이 없으면 클라이언트가 옛 팩을 계속 씀)
     import hashlib
     h = hashlib.sha1(open(OUT_RP, "rb").read()).hexdigest()
