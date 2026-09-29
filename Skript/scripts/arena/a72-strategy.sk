@@ -38,12 +38,19 @@ function bgSetOre(l: location):
 #  나침반은 월드에딧 길잡이 도구라 관리자가 쓰면 순간이동됨 → 깃발(종이 + 그림)로 바꿈
 #  우클릭 = 공격 핑 (붉은 핀) / 웅크리고 우클릭 = 도움 요청 (금빛 핀)
 #  공중에 빛나는 핀 그림 + 이름표 → 우리 팀에게만 보인다 (다른 팀 · 관전자는 안 보임). 15초 뒤 사라짐, 한 사람당 하나
-function bgPingVisible(e: entity, t: text):
+# 핀(태그 id) 을 우리 팀에게만 보이게: 모두에게 기본 숨김 + 우리 팀만 보이기 + 다른 사람에게는 직접 숨김
+#  (소환 직후 이미 보인 사람도 확실히 지우도록 핀이 떠 있는 동안 반복해서 맞춘다 · 새로 들어온 사람도 기본 숨김)
+function bgPingVisible(id: text, t: text):
     set {_pl} to Bukkit.getPluginManager().getPlugin("Skript")
-    {_e}.setVisibleByDefault(false)
-    loop all players:
-        if bgTeam(loop-player) is {_t}:
-            loop-player.showEntity({_pl}, {_e})
+    set {_es::*} to ...Bukkit.selectEntities(Bukkit.getConsoleSender(), "@e[tag=%{_id}%]")
+    loop {_es::*}:
+        set {_e} to loop-value
+        {_e}.setVisibleByDefault(false)
+        loop all players:
+            if bgTeam(loop-player) is {_t}:
+                loop-player.showEntity({_pl}, {_e})
+            else:
+                loop-player.hideEntity({_pl}, {_e})
 
 on right click:
     player's tool is paper
@@ -89,12 +96,9 @@ on right click:
     set {_z} to bgC(z-coordinate of {_l})
     set {_y} to bgN((y-coordinate of {_l}) + 2.6)
     set {_ty} to bgN((y-coordinate of {_l}) + 1.1)
-    bgCmd("execute in %bgDim()% run summon item_display %{_x}% %{_y}% %{_z}% {Tags:[""bg"",""bg_ping"",""%{_id}%"",""bgp_new""],billboard:""center"",Glowing:1b,glow_color_override:%{-bg::hex::%{_t}%}%,brightness:{sky:15,block:15},view_range:8f,item_display:""none"",interpolation_duration:10,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[2.2f,2.2f,2.2f]},item:{id:""minecraft:paper"",count:1,components:{""minecraft:item_model"":""bg:ping/%{_img}%""}}}")
-    bgCmd("execute in %bgDim()% run summon text_display %{_x}% %{_ty}% %{_z}% {Tags:[""bg"",""bg_ping"",""%{_id}%"",""bgp_new""],billboard:""center"",see_through:1b,shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:8f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.3f,1.3f,1.3f]},text:[{text:""%{_ic}% %{_kind}%"",color:""%{_tc}%"",bold:true},{text:"" · %name of player%"",color:""white"",bold:false}]}")
-    loop entities in radius 5 of {_l}:
-        if scoreboard tags of loop-entity contain "bgp_new":
-            remove "bgp_new" from scoreboard tags of loop-entity
-            bgPingVisible(loop-entity, {_t})
+    bgCmd("execute in %bgDim()% run summon item_display %{_x}% %{_y}% %{_z}% {Tags:[""bg"",""bg_ping"",""%{_id}%""],billboard:""center"",Glowing:1b,glow_color_override:%{-bg::hex::%{_t}%}%,brightness:{sky:15,block:15},view_range:8f,item_display:""none"",interpolation_duration:10,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[2.2f,2.2f,2.2f]},item:{id:""minecraft:paper"",count:1,components:{""minecraft:item_model"":""bg:ping/%{_img}%""}}}")
+    bgCmd("execute in %bgDim()% run summon text_display %{_x}% %{_ty}% %{_z}% {Tags:[""bg"",""bg_ping"",""%{_id}%""],billboard:""center"",see_through:1b,shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:8f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.3f,1.3f,1.3f]},text:[{text:""%{_ic}% %{_kind}%"",color:""%{_tc}%"",bold:true},{text:"" · %name of player%"",color:""white"",bold:false}]}")
+    bgPingVisible({_id}, {_t})
     loop all players:
         if bgTeam(loop-player) is {_t}:
             send "%{-bg::tcol::%{_t}%}%[핑] &f%name of player% &7→ %{_cc}%&l%{_kind}%! &7(%floor(x-coordinate of {_l})%, %floor(z-coordinate of {_l})%)" to loop-player
@@ -111,6 +115,7 @@ on right click:
             set {_up} to true
         bgCmd("execute in %bgDim()% run particle dust{color:[%{_col}%],scale:2} %{_x}% %bgN((y-coordinate of {_l}) + 3)% %{_z}% 0.1 3 0.1 0 20 force @a[team=bg_%{_t}%]")
         bgCmd("execute in %bgDim()% run particle end_rod %{_x}% %bgN((y-coordinate of {_l}) + 0.4)% %{_z}% 0.6 0.1 0.6 0 4 force @a[team=bg_%{_t}%]")
+        bgPingVisible({_id}, {_t})
         wait 10 ticks
         # 그새 새 핀을 찍었으면 이 핀 반복은 끝 (새 핀은 새 반복이 맡는다)
         if {-bg::pingseq::%uuid of player%} is not {_seq}:
