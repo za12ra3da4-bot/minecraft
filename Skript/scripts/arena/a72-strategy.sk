@@ -1,7 +1,6 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  왕관 쟁탈전 — 전략 · 지휘 · 광석 관리
 #   지휘 나침반 (기본템): 우클릭 = 공격 지점 / 웅크리고 우클릭 = 방어 지점 → 우리 팀에게만 빛기둥 · 알림 · 나침반 방향
-#   전략 아이템 (상점): 정찰 신호탄 · 성벽 키트 · 귀환 두루마리 · 왕실 공물(사는 즉시 팀 점수)
 #   광석 설치 막대 (관리자 /광석막대): 우클릭 = 그 자리에 광석 바위 / 웅크리고 우클릭 = 가까운 바위 지우기
 #   /전장 광석삭제 : 막대로 놓은 바위 + 데이터팩으로 놓은 광석 전부 지우고 원래 지형으로
 # ═════════════════════════════════════════════════════════════════════════════
@@ -54,93 +53,6 @@ on right click:
         bgCmd("execute in %bgDim()% run particle dust{color:[%{_col}%],scale:2.5} %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 4)% %bgC(z-coordinate of {_l})% 0.15 4 0.15 0 40 force @a[team=bg_%{_t}%]")
         bgCmd("execute in %bgDim()% run particle end_rod %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 0.5)% %bgC(z-coordinate of {_l})% 0.6 0.1 0.6 0 6 force @a[team=bg_%{_t}%]")
         wait 10 ticks
-
-# ─────────────────────────────────────────────────────────── 전략 아이템
-on right click:
-    set {_nm} to uncolored name of player's tool
-    {_nm} is set
-    if {_nm} contains "정찰 신호탄":
-        cancel event
-        remove 1 of player's tool from player's tool
-        bgScout(player)
-    else if {_nm} contains "성벽 키트":
-        cancel event
-        set {_b} to target block of player
-        if {_b} is not set:
-            send action bar "&7가까운 블록을 바라보세요" to player
-            stop
-        if distance between player and {_b} > 7:
-            send action bar "&7너무 멉니다 (7칸 안)" to player
-            stop
-        remove 1 of player's tool from player's tool
-        bgWall(player, location of {_b})
-    else if {_nm} contains "귀환 두루마리":
-        cancel event
-        if {-bg::recall::%uuid of player%} is true:
-            stop
-        remove 1 of player's tool from player's tool
-        bgRecall(player)
-
-function bgScout(p: player):
-    set {_t} to bgTeam({_p})
-    bgSoundAt(location of {_p}, "entity.firework_rocket.launch", 2, 1)
-    bgParticle(bgUp(location of {_p}, 8), "firework", 2, 2, 2, 0.1, 80)
-    set {_n} to 0
-    loop bgEnemies({_p}, location of {_p}, 45):
-        bgCmd("effect give %bgPName(loop-value)% glowing 10 0 true")
-        add 1 to {_n}
-    loop all players:
-        if bgTeam(loop-player) is {_t}:
-            send "%{-bg::tcol::%{_t}%}%[정찰] &f%name of {_p}% &7— 주변 45칸 적 &c%{_n}%명&7 발견 (10초 발광)" to loop-player
-
-function bgWall(p: player, at: location):
-    # 바라보는 방향에 수직인 5x3 벽 (빈칸에만)
-    set {_yaw} to yaw of {_p}
-    set {_sx} to cos({_yaw})
-    set {_sz} to sin({_yaw})
-    set {_base} to location(x-coordinate of {_at}, (y-coordinate of {_at}) + 1, z-coordinate of {_at}, world of {_at})
-    set {_n} to 0
-    loop 5 times:
-        set {_o} to loop-number - 3
-        loop 3 times:
-            set {_l} to location((x-coordinate of {_base}) + {_sx} * {_o}, (y-coordinate of {_base}) + loop-number-2 - 1, (z-coordinate of {_base}) + {_sz} * {_o}, world of {_base})
-            if block at {_l} is air:
-                set block at {_l} to stone bricks
-                add 1 to {_n}
-                add {_l} to {_placed::*}
-    bgSoundAt({_base}, "block.stone.place", 2, 0.7)
-    bgParticle(bgUp({_base}, 1), "block{block_state:""minecraft:stone_bricks""}", 2, 1, 2, 0.1, 40)
-    send action bar "&6성벽 &f%{_n}%칸 — 25초 뒤 무너집니다" to {_p}
-    wait 25 seconds
-    loop {_placed::*}:
-        if block at loop-value is stone bricks:
-            set block at loop-value to air
-    bgParticle(bgUp({_base}, 1), "block{block_state:""minecraft:stone_bricks""}", 2, 1, 2, 0.1, 30)
-    bgSoundAt({_base}, "block.stone.break", 2, 0.8)
-
-function bgRecall(p: player):
-    set {-bg::recall::%uuid of {_p}%} to true
-    set {_start} to location of {_p}
-    set {_hp} to health of {_p}
-    loop 4 times:
-        send title "" with subtitle "&e귀환 중... &f%5 - loop-number%초 &7(움직이거나 맞으면 취소)" to {_p} for 25 ticks
-        bgParticle(location of {_p}, "portal", 0.4, 1, 0.4, 0.5, 30)
-        wait 1 second
-        if {_p} is not online:
-            delete {-bg::recall::%uuid of {_p}%}
-            stop
-        if distance between {_p} and {_start} > 0.8:
-            send title "" with subtitle "&c귀환 취소 (움직임)" to {_p} for 20 ticks
-            delete {-bg::recall::%uuid of {_p}%}
-            stop
-        if health of {_p} < {_hp}:
-            send title "" with subtitle "&c귀환 취소 (공격받음)" to {_p} for 20 ticks
-            delete {-bg::recall::%uuid of {_p}%}
-            stop
-    delete {-bg::recall::%uuid of {_p}%}
-    if bgTeam({_p}) is not "none":
-        teleport {_p} to bgBaseSpawnLoc(bgTeam({_p}))
-        play sound "entity.enderman.teleport" to {_p}
 
 # ─────────────────────────────────────────────────────────── 광석 설치 막대 (관리자)
 command /광석막대:
