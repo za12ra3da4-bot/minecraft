@@ -331,13 +331,13 @@ function bgKit(p: player):
     bgCmd("clear %{_n}%")
     bgCmd("effect clear %{_n}%")
     # 시작 장비는 약하게 (팀 색 가죽) — 좋은 장비는 상점에서 코인으로. 병과는 바지로만 구분
-    bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
-    bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
-    bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
+    bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+    bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+    bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
     bgClassGear({_p}, {_c})
-    bgCmd("give %{_n}% bread 8")
-    bgCmd("give %{_n}% compass[custom_name={text:""지휘 나침반"",color:""aqua"",bold:true,italic:false},lore=[{text:""우클릭: 공격 지점 · 웅크리고 우클릭: 방어 지점 (팀에게 표시)"",color:""gray"",italic:false}],enchantments={""minecraft:binding_curse"":1}] 1")
-    bgCmd("give %{_n}% iron_pickaxe[unbreakable={},enchantments={""minecraft:binding_curse"":1},custom_name={text:""광부의 곡괭이"",color:""gold"",italic:false},lore=[{text:""본진 광석 바위 · 맵 곳곳 광맥을 캐서 상점에 팔기"",color:""gray"",italic:false}]]")
+    bgCmd("give %{_n}% bread[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 8")
+    bgCmd("give %{_n}% compass[custom_name={text:""지휘 나침반"",color:""aqua"",bold:true,italic:false},lore=[{text:""우클릭: 공격 지점 · 웅크리고 우클릭: 방어 지점 (팀에게 표시)"",color:""gray"",italic:false}],enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 1")
+    bgCmd("give %{_n}% iron_pickaxe[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,custom_name={text:""광부의 곡괭이"",color:""gold"",italic:false},lore=[{text:""본진 광석 바위 · 맵 곳곳 광맥을 캐서 상점에 팔기"",color:""gray"",italic:false}]]")
     bgShopRestore({_p})
 
 # 병과 장비: 바지 + 기본 무기 (다른 갑옷 · 산 물건은 건드리지 않음)
@@ -398,18 +398,18 @@ function bgClassGear(p: player, c: number):
     set {_n} to name of {_p}
     set {_t} to bgTeam({_p})
     if {_c} is 0:
-        bgCmd("item replace entity %{_n}% armor.legs with chainmail_leggings[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
-        bgCmd("give %{_n}% stone_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
-        bgCmd("give %{_n}% bow[unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
-        bgCmd("give %{_n}% arrow 8")
+        bgCmd("item replace entity %{_n}% armor.legs with chainmail_leggings[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
+        bgCmd("give %{_n}% stone_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+        bgCmd("give %{_n}% bow[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+        bgCmd("give %{_n}% arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 8")
     else if {_c} is 1:
-        bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
-        bgCmd("give %{_n}% wooden_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
-        bgCmd("give %{_n}% bow[unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
-        bgCmd("give %{_n}% arrow 24")
+        bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+        bgCmd("give %{_n}% wooden_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+        bgCmd("give %{_n}% bow[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+        bgCmd("give %{_n}% arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 24")
     else:
-        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
-        bgCmd("give %{_n}% stone_axe[unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
+        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
+        bgCmd("give %{_n}% stone_axe[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
 
 # 병과 바꾸기: 예전 병과의 기본 무기 · 화살만 빼고 새 병과 것을 준다
 function bgClassSwitch(p: player, c: number):

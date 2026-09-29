@@ -213,29 +213,29 @@ function bgGiveGear(p: player, g: text):
     set {_n} to name of {_p}
     if {_g} is "iron":
         set {bg::owned::%uuid of {_p}%::iron} to true
-        bgCmd("item replace entity %{_n}% armor.head with iron_helmet[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
-        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
+        bgCmd("item replace entity %{_n}% armor.head with iron_helmet[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
+        bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
         # 다이아 흉갑을 이미 샀으면 흉갑은 그대로
         if {bg::owned::%uuid of {_p}%::diamond} is not true:
-            bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
+            bgCmd("item replace entity %{_n}% armor.chest with iron_chestplate[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
     else if {_g} is "diamond":
         set {bg::owned::%uuid of {_p}%::diamond} to true
-        bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
+        bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
     else if {_g} is "sword":
         set {bg::owned::%uuid of {_p}%::sword} to true
-        bgCmd("give %{_n}% iron_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
+        bgCmd("give %{_n}% iron_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
     else if {_g} is "arrows":
-        bgCmd("give %{_n}% arrow 32")
+        bgCmd("give %{_n}% arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 32")
     else if {_g} is "gapple":
         bgCmd("give %{_n}% golden_apple 1")
     else if {_g} is "food":
         bgCmd("give %{_n}% cooked_beef 16")
     else if {_g} is "arrows64":
-        bgCmd("give %{_n}% arrow 64")
+        bgCmd("give %{_n}% arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 64")
     else if {_g} is "spectral":
-        bgCmd("give %{_n}% spectral_arrow 16")
+        bgCmd("give %{_n}% spectral_arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 16")
     else if {_g} is "parrow":
-        bgCmd("give %{_n}% tipped_arrow[potion_contents={custom_color:5149489,custom_effects:[{id:""minecraft:poison"",amplifier:0b,duration:480}]}] 6")
+        bgCmd("give %{_n}% tipped_arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,potion_contents={custom_color:5149489,custom_effects:[{id:""minecraft:poison"",amplifier:0b,duration:480}]}] 6")
     else if {_g} is "pspeed":
         bgCmd("give %{_n}% potion[potion_contents={custom_color:8171462,custom_effects:[{id:""minecraft:speed"",amplifier:0b,duration:300}]}] 1")
     else if {_g} is "pstr":
