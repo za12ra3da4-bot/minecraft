@@ -295,3 +295,26 @@ function bgIsRock(b: block) :: boolean:
     if {_b} is mossy cobblestone:
         return true
     return false
+
+# ─────────────────────────────────────────────────────────── 보관함 못 열게
+#  상자 · 통 · 셜커 상자 · 엔더 상자 · 호퍼 등에 아이템을 넣어 뒀다가 다음 판에 꺼내 쓰는 것을 막음 (크리에이티브 관리자는 예외)
+on right click on chest or trapped chest or barrel or ender chest or shulker box or hopper or dispenser or dropper or crafter or decorated pot or chiseled bookshelf:
+    player's gamemode is not creative
+    cancel event
+    send action bar "&c보관함은 열 수 없습니다" to player
+
+on inventory open:
+    player's gamemode is not creative
+    set {_t} to "%inventory type of event-inventory%"
+    if {_t} contains "shulker":
+        cancel event
+    else if {_t} contains "ender":
+        cancel event
+    else if {_t} contains "barrel":
+        cancel event
+    else if {_t} contains "hopper":
+        cancel event
+    else if {_t} contains "dispenser":
+        cancel event
+    else if {_t} contains "dropper":
+        cancel event
