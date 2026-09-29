@@ -1,0 +1,229 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 전략 · 지휘 · 광석 관리
+#   지휘 나침반 (기본템): 우클릭 = 공격 지점 / 웅크리고 우클릭 = 방어 지점 → 우리 팀에게만 빛기둥 · 알림 · 나침반 방향
+#   전략 아이템 (상점): 정찰 신호탄 · 성벽 키트 · 귀환 두루마리 · 왕실 공물(사는 즉시 팀 점수)
+#   광석 설치 막대 (관리자 /광석막대): 우클릭 = 그 자리에 광석 바위 / 웅크리고 우클릭 = 가까운 바위 지우기
+#   /전장 광석삭제 : 막대로 놓은 바위 + 데이터팩으로 놓은 광석 전부 지우고 원래 지형으로
+# ═════════════════════════════════════════════════════════════════════════════
+
+on load:
+    delete {-bg::orerock::*}
+    delete {-bg::orepool::*}
+    loop "stone", "andesite", "cobblestone", "tuff" and "mossy cobblestone":
+        add (loop-value parsed as item type) to {-bg::orerock::*}
+    loop "iron ore", "iron ore", "iron ore", "gold ore", "gold ore", "gold ore", "gold ore", "emerald ore", "emerald ore" and "diamond ore":
+        add (loop-value parsed as item type) to {-bg::orepool::*}
+
+# ─────────────────────────────────────────────────────────── 지휘 나침반
+on right click:
+    player's tool is compass
+    set {_nm} to uncolored name of player's tool
+    {_nm} is set
+    {_nm} contains "지휘 나침반"
+    cancel event
+    set {_t} to bgTeam(player)
+    if {_t} is "none":
+        stop
+    if {-bg::pingcd::%uuid of player%} is set:
+        if difference between {-bg::pingcd::%uuid of player%} and now < 3 seconds:
+            send action bar "&7잠시 뒤에 다시 (3초)" to player
+            stop
+    set {_b} to target block of player
+    if {_b} is not set:
+        send action bar "&7너무 멉니다 — 블록을 바라보세요" to player
+        stop
+    set {-bg::pingcd::%uuid of player%} to now
+    set {_l} to location of {_b}
+    add 1 to y-coordinate of {_l}
+    set {_kind} to "공격"
+    set {_col} to "1,0.25,0.2"
+    set {_cc} to "&c"
+    if player is sneaking:
+        set {_kind} to "방어"
+        set {_col} to "0.3,0.6,1"
+        set {_cc} to "&9"
+    set {_d} to round(distance between player and {_l})
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            send "%{-bg::tcol::%{_t}%}%[명령] &f%name of player% &7→ %{_cc}%&l%{_kind}%! &7(%floor(x-coordinate of {_l})%, %floor(z-coordinate of {_l})%)" to loop-player
+            send title "" with subtitle "%{_cc}%&l%{_kind}% 지점 &f— %name of player%" to loop-player for 30 ticks
+            play sound "block.note_block.bell" to loop-player
+            set compass target of loop-player to {_l}
+    # 우리 팀에게만 보이는 빛기둥 15초
+    loop 30 times:
+        bgCmd("execute in %bgDim()% run particle dust{color:[%{_col}%],scale:2.5} %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 4)% %bgC(z-coordinate of {_l})% 0.15 4 0.15 0 40 force @a[team=bg_%{_t}%]")
+        bgCmd("execute in %bgDim()% run particle end_rod %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 0.5)% %bgC(z-coordinate of {_l})% 0.6 0.1 0.6 0 6 force @a[team=bg_%{_t}%]")
+        wait 10 ticks
+
+# ─────────────────────────────────────────────────────────── 전략 아이템
+on right click:
+    set {_nm} to uncolored name of player's tool
+    {_nm} is set
+    if {_nm} contains "정찰 신호탄":
+        cancel event
+        remove 1 of player's tool from player's tool
+        bgScout(player)
+    else if {_nm} contains "성벽 키트":
+        cancel event
+        set {_b} to target block of player
+        if {_b} is not set:
+            send action bar "&7가까운 블록을 바라보세요" to player
+            stop
+        if distance between player and {_b} > 7:
+            send action bar "&7너무 멉니다 (7칸 안)" to player
+            stop
+        remove 1 of player's tool from player's tool
+        bgWall(player, location of {_b})
+    else if {_nm} contains "귀환 두루마리":
+        cancel event
+        if {-bg::recall::%uuid of player%} is true:
+            stop
+        remove 1 of player's tool from player's tool
+        bgRecall(player)
+
+function bgScout(p: player):
+    set {_t} to bgTeam({_p})
+    bgSoundAt(location of {_p}, "entity.firework_rocket.launch", 2, 1)
+    bgParticle(bgUp(location of {_p}, 8), "firework", 2, 2, 2, 0.1, 80)
+    set {_n} to 0
+    loop bgEnemies({_p}, location of {_p}, 45):
+        bgCmd("effect give %bgPName(loop-value)% glowing 10 0 true")
+        add 1 to {_n}
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            send "%{-bg::tcol::%{_t}%}%[정찰] &f%name of {_p}% &7— 주변 45칸 적 &c%{_n}%명&7 발견 (10초 발광)" to loop-player
+
+function bgWall(p: player, at: location):
+    # 바라보는 방향에 수직인 5x3 벽 (빈칸에만)
+    set {_yaw} to yaw of {_p}
+    set {_sx} to cos({_yaw})
+    set {_sz} to sin({_yaw})
+    set {_base} to location(x-coordinate of {_at}, (y-coordinate of {_at}) + 1, z-coordinate of {_at}, world of {_at})
+    set {_n} to 0
+    loop 5 times:
+        set {_o} to loop-number - 3
+        loop 3 times:
+            set {_l} to location((x-coordinate of {_base}) + {_sx} * {_o}, (y-coordinate of {_base}) + loop-number-2 - 1, (z-coordinate of {_base}) + {_sz} * {_o}, world of {_base})
+            if block at {_l} is air:
+                set block at {_l} to stone bricks
+                add 1 to {_n}
+                add {_l} to {_placed::*}
+    bgSoundAt({_base}, "block.stone.place", 2, 0.7)
+    bgParticle(bgUp({_base}, 1), "block{block_state:""minecraft:stone_bricks""}", 2, 1, 2, 0.1, 40)
+    send action bar "&6성벽 &f%{_n}%칸 — 25초 뒤 무너집니다" to {_p}
+    wait 25 seconds
+    loop {_placed::*}:
+        if block at loop-value is stone bricks:
+            set block at loop-value to air
+    bgParticle(bgUp({_base}, 1), "block{block_state:""minecraft:stone_bricks""}", 2, 1, 2, 0.1, 30)
+    bgSoundAt({_base}, "block.stone.break", 2, 0.8)
+
+function bgRecall(p: player):
+    set {-bg::recall::%uuid of {_p}%} to true
+    set {_start} to location of {_p}
+    set {_hp} to health of {_p}
+    loop 4 times:
+        send title "" with subtitle "&e귀환 중... &f%5 - loop-number%초 &7(움직이거나 맞으면 취소)" to {_p} for 25 ticks
+        bgParticle(location of {_p}, "portal", 0.4, 1, 0.4, 0.5, 30)
+        wait 1 second
+        if {_p} is not online:
+            delete {-bg::recall::%uuid of {_p}%}
+            stop
+        if distance between {_p} and {_start} > 0.8:
+            send title "" with subtitle "&c귀환 취소 (움직임)" to {_p} for 20 ticks
+            delete {-bg::recall::%uuid of {_p}%}
+            stop
+        if health of {_p} < {_hp}:
+            send title "" with subtitle "&c귀환 취소 (공격받음)" to {_p} for 20 ticks
+            delete {-bg::recall::%uuid of {_p}%}
+            stop
+    delete {-bg::recall::%uuid of {_p}%}
+    if bgTeam({_p}) is not "none":
+        teleport {_p} to bgBaseSpawnLoc(bgTeam({_p}))
+        play sound "entity.enderman.teleport" to {_p}
+
+# ─────────────────────────────────────────────────────────── 광석 설치 막대 (관리자)
+command /광석막대:
+    permission: op
+    trigger:
+        give player blaze rod named "&6&l광석 설치 막대"
+        send "&6[광석] &f우클릭: 그 자리에 광석 바위 · 웅크리고 우클릭: 가까운 바위 지우기 · &e/전장 광석삭제 &f: 전부 지우기"
+
+on right click:
+    player's tool is blaze rod
+    set {_nm} to uncolored name of player's tool
+    {_nm} is set
+    {_nm} contains "광석 설치 막대"
+    player is op
+    cancel event
+    set {_b} to target block of player
+    if {_b} is not set:
+        stop
+    if player is sneaking:
+        bgOreBoulderRemoveNear(location of {_b}, player)
+        stop
+    bgOreBoulder(location of {_b})
+    send action bar "&6광석 바위를 놓았습니다" to player
+
+# 광석 바위 하나: 5x5 안 둥글게, 가운데 4칸 높이 · 광석은 겉면에. 놓기 전 원래 블록을 기억 (지울 때 그대로 되돌림)
+function bgOreBoulder(c: location):
+    set {_id} to "%floor(x-coordinate of {_c})%_%floor(y-coordinate of {_c})%_%floor(z-coordinate of {_c})%"
+    set {bg::oreb::%{_id}%} to {_c}
+    set {_k} to 0
+    loop 5 times:
+        set {_dx} to loop-number-1 - 3
+        loop 5 times:
+            set {_dz} to loop-number-2 - 3
+            set {_dist} to abs({_dx}) + abs({_dz})
+            set {_skip} to false
+            if {_dist} > 3:
+                set {_skip} to true
+            if abs({_dx}) is 2:
+                if abs({_dz}) is 2:
+                    set {_skip} to true
+            if {_skip} is false:
+                set {_h} to 4 - {_dist}
+                if {_h} < 1:
+                    set {_h} to 1
+                # 바닥 높이 찾기 (위아래 3칸)
+                set {_g} to location((x-coordinate of {_c}) + {_dx}, (y-coordinate of {_c}) + 3, (z-coordinate of {_c}) + {_dz}, world of {_c})
+                loop 7 times:
+                    if block at {_g} is not air:
+                        exit loop
+                    remove 1 from y-coordinate of {_g}
+                loop {_h} + 1 times:
+                    set {_l} to location(x-coordinate of {_g}, (y-coordinate of {_g}) + loop-number-3 - 1, z-coordinate of {_g}, world of {_g})
+                    add 1 to {_k}
+                    set {bg::oreb::%{_id}%::l::%{_k}%} to {_l}
+                    set {bg::oreb::%{_id}%::t::%{_k}%} to type of block at {_l}
+                    set {_outer} to false
+                    if loop-number-3 is {_h} + 1:
+                        set {_outer} to true
+                    if {_dist} >= 2:
+                        set {_outer} to true
+                    if loop-number-3 is 1:
+                        set block at {_l} to random element out of {-bg::orerock::*}
+                    else if {_outer} is true:
+                        if chance of 55%:
+                            set block at {_l} to random element out of {-bg::orepool::*}
+                        else:
+                            set block at {_l} to random element out of {-bg::orerock::*}
+                    else:
+                        set block at {_l} to random element out of {-bg::orerock::*}
+    bgParticle(bgUp({_c}, 2), "block{block_state:""minecraft:stone""}", 1.5, 1.5, 1.5, 0.1, 40)
+    bgSoundAt({_c}, "block.stone.place", 2, 0.6)
+
+function bgOreBoulderRemove(id: text):
+    loop {bg::oreb::%{_id}%::l::*}:
+        set {_i} to loop-index
+        set block at loop-value to {bg::oreb::%{_id}%::t::%{_i}%}
+    delete {bg::oreb::%{_id}%::*}
+    delete {bg::oreb::%{_id}%}
+
+function bgOreBoulderRemoveNear(l: location, p: player):
+    loop {bg::oreb::*}:
+        if distance between loop-value and {_l} < 5:
+            bgOreBoulderRemove(loop-index)
+            send action bar "&6광석 바위를 지웠습니다 (원래 지형으로)" to {_p}
+            stop
+    send action bar "&7가까운 곳에 막대로 놓은 광석 바위가 없습니다" to {_p}

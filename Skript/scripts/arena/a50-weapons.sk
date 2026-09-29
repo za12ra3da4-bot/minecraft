@@ -100,17 +100,17 @@ on death of player:
 
 # ─────────────────────────────────────────────────────────── 장비 · 소모품 (상점 2~3줄)
 on load:
-    set {-bg::gear::list::*} to "iron", "diamond", "sword", "food", "arrows", "gapple", "heal", "ward", "arrows64", "spectral", "parrow", "pspeed", "pstr", "pregen", "pfire", "ppoison" and "pleap"
+    set {-bg::gear::list::*} to "iron", "diamond", "sword", "food", "arrows", "gapple", "heal", "ward", "scout", "spectral", "wall", "pspeed", "pstr", "pregen", "recall", "ppoison" and "tribute"
     # 빈칸: 화살 · 물약 (전부 짧고 약하게 — 전설 무기 스킬보다 약한 보조용)
-    bgGearDef("arrows64", "화살 64개", "소모품 · 한 묶음", 25, arrow, 45)
+    bgGearDef("scout", "정찰 신호탄", "우클릭: 45칸 안 적 전원 10초 발광 + 팀에게 적 수 알림", 40, firework rocket, 45)
     bgGearDef("spectral", "분광 화살 16개", "맞은 적 10초 발광 (벽 너머로 보임)", 20, spectral arrow, 46)
-    bgGearDef("parrow", "독 화살 6개", "맞으면 독 I 3초", 30, tipped arrow, 47)
+    bgGearDef("wall", "성벽 키트", "블록에 우클릭: 앞에 5x3 돌벽을 25초 동안 세움 (길 막기 · 지점 방어)", 30, bricks, 47)
     bgGearDef("pspeed", "신속 물약", "마시면 신속 I · 15초", 30, potion, 48)
     bgGearDef("pstr", "힘 물약", "마시면 힘 I · 8초", 50, potion, 50)
     bgGearDef("pregen", "재생 물약", "마시면 재생 I · 8초 (약 3하트)", 35, potion, 51)
-    bgGearDef("pfire", "화염 저항 물약", "마시면 불 · 용암 무시 · 30초", 20, potion, 52)
+    bgGearDef("recall", "귀환 두루마리", "우클릭: 4초 동안 가만히 있으면 본진으로 (맞으면 취소)", 20, paper, 52)
     bgGearDef("ppoison", "독의 투척 물약", "던지면 독 I · 4초", 35, splash potion, 30)
-    bgGearDef("pleap", "도약 물약", "마시면 점프 강화 II · 15초", 20, potion, 35)
+    bgGearDef("tribute", "왕실 공물", "사는 즉시 우리 팀 점수 +5 (싸우지 않고 이기는 길)", 40, gold ingot, 35)
     # 상점 아이콘 물약 색
     set {-bg::gear::parrow::rgb::*} to 78, 147 and 49
     set {-bg::gear::pspeed::rgb::*} to 124, 175 and 198
@@ -130,8 +130,8 @@ on load:
     set {-bg::gear::food::price} to 5
     set {-bg::gear::food::icon} to cooked beef
     set {-bg::gear::food::slot} to 40
-    set {-bg::gear::iron::name} to "철 갑옷 풀세트"
-    set {-bg::gear::iron::desc} to "투구 · 흉갑 · 레깅스 · 부츠 (다이아 흉갑이 있으면 흉갑은 유지) · 죽어도 유지"
+    set {-bg::gear::iron::name} to "철 갑옷 (투구 · 흉갑 · 부츠)"
+    set {-bg::gear::iron::desc} to "바지는 병과 바지 그대로 (병과 구분) · 다이아 흉갑이 있으면 흉갑 유지 · 죽어도 유지"
     set {-bg::gear::iron::price} to 40
     set {-bg::gear::iron::icon} to iron chestplate
     set {-bg::gear::iron::slot} to 37
@@ -214,7 +214,6 @@ function bgGiveGear(p: player, g: text):
     if {_g} is "iron":
         set {bg::owned::%uuid of {_p}%::iron} to true
         bgCmd("item replace entity %{_n}% armor.head with iron_helmet[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
-        bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
         bgCmd("item replace entity %{_n}% armor.feet with iron_boots[unbreakable={},enchantments={""minecraft:binding_curse"":1},trim=%bgTrim({_p})%]")
         # 다이아 흉갑을 이미 샀으면 흉갑은 그대로
         if {bg::owned::%uuid of {_p}%::diamond} is not true:
@@ -231,8 +230,17 @@ function bgGiveGear(p: player, g: text):
         bgCmd("give %{_n}% golden_apple 1")
     else if {_g} is "food":
         bgCmd("give %{_n}% cooked_beef 16")
-    else if {_g} is "arrows64":
-        bgCmd("give %{_n}% arrow 64")
+    else if {_g} is "scout":
+        bgCmd("give %{_n}% firework_rocket[custom_name={text:""정찰 신호탄"",color:""gold"",bold:true,italic:false},lore=[{text:""우클릭: 45칸 안 적 전원 10초 발광"",color:""gray"",italic:false}]] 1")
+    else if {_g} is "wall":
+        bgCmd("give %{_n}% bricks[custom_name={text:""성벽 키트"",color:""gold"",bold:true,italic:false},lore=[{text:""블록에 우클릭: 5x3 돌벽 25초"",color:""gray"",italic:false}]] 1")
+    else if {_g} is "recall":
+        bgCmd("give %{_n}% paper[custom_name={text:""귀환 두루마리"",color:""gold"",bold:true,italic:false},lore=[{text:""우클릭: 4초 가만히 → 본진"",color:""gray"",italic:false}]] 1")
+    else if {_g} is "tribute":
+        bgAddScore(bgTeam({_p}), 5)
+        loop all players:
+            if bgTeam(loop-player) is bgTeam({_p}):
+                send "%{-bg::tcol::%bgTeam({_p})%}%[왕실 공물] &f%name of {_p}%&7 님이 공물을 바쳐 &e팀 점수 +5" to loop-player
     else if {_g} is "spectral":
         bgCmd("give %{_n}% spectral_arrow 16")
     else if {_g} is "parrow":

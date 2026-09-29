@@ -753,6 +753,15 @@ def decor_functions(dp_root, world, fixes=()):
     chs = sorted({(int(m.group(1)) // 16, int(m.group(2)) // 16) for m in (_re.search(r"setblock ~(-?\d+) ~-?\d+ ~(-?\d+)", l) for l in ore) if m})
     fa = [f"$execute positioned $(x) $(y) $(z) run forceload add ~{cx * 16} ~{cz * 16}" for cx, cz in chs]
     fr = [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{cx * 16} ~{cz * 16}" for cx, cz in chs]
+    # 광석 전부 지우기: 광석 · 바위를 놓았던 칸을 원래 지형 블록으로 되돌림 (주변과 자연스럽게)
+    cells = sorted({(int(m.group(1)), int(m.group(2)), int(m.group(3))) for m in (_re.search(r"setblock ~(-?\d+) ~(-?\d+) ~(-?\d+)", l) for l in ore) if m})
+    X_, Y_, Z_ = world.vox.shape
+    clr = []
+    for x, y, z in cells:
+        if 0 <= x < X_ and 0 <= y < Y_ and 0 <= z < Z_:
+            clr.append(f"$execute positioned $(x) $(y) $(z) run setblock ~{x} ~{y} ~{z} {full_state(world.pal[world.vox[x, y, z]])}")
+    w(os.path.join(F, "ores_clear_run.mcfunction"), clr)
+    w(os.path.join(F, "ores_clear.mcfunction"), ["function bg:map/ores_clear_run with storage bg:map origin"])
     w(os.path.join(F, "ores_fl_run.mcfunction"), fa)
     w(os.path.join(F, "ores_rm_run.mcfunction"), fr)
     for k in ("ores_fl", "ores_rm"):

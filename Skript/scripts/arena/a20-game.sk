@@ -336,6 +336,7 @@ function bgKit(p: player):
     bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1}]")
     bgClassGear({_p}, {_c})
     bgCmd("give %{_n}% bread 8")
+    bgCmd("give %{_n}% compass[custom_name={text:""지휘 나침반"",color:""aqua"",bold:true,italic:false},lore=[{text:""우클릭: 공격 지점 · 웅크리고 우클릭: 방어 지점 (팀에게 표시)"",color:""gray"",italic:false}],enchantments={""minecraft:binding_curse"":1}] 1")
     bgCmd("give %{_n}% iron_pickaxe[unbreakable={},enchantments={""minecraft:binding_curse"":1},custom_name={text:""광부의 곡괭이"",color:""gold"",italic:false},lore=[{text:""본진 광석 바위 · 맵 곳곳 광맥을 캐서 상점에 팔기"",color:""gray"",italic:false}]]")
     bgShopRestore({_p})
 
@@ -602,6 +603,21 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             wait 5 ticks
             bgCmd("function bg:map/ores_rm")
             send "&6[전장] &f본진 광석 바위 + 맵 곳곳 광맥을 놓았습니다. &7(그 자리 블록을 덮어씀)"
+        else if arg-1 is "광석삭제":
+            # 막대로 놓은 광석 바위 + 데이터팩으로 놓은 광석(본진 바위 · 맵 광맥) 전부 지우고 원래 지형으로
+            delete {bg::oreq::*}
+            set {_n} to 0
+            loop {bg::oreb::*}:
+                bgOreBoulderRemove(loop-index)
+                add 1 to {_n}
+            bgSyncOrigin()
+            send "&6[전장] &e광석 지우는 중... &7(막대 바위 %{_n}%개 + 본진 바위 · 맵 광맥)"
+            bgCmd("function bg:map/ores_fl")
+            wait 40 ticks
+            bgCmd("function bg:map/ores_clear")
+            wait 5 ticks
+            bgCmd("function bg:map/ores_rm")
+            send "&6[전장] &f광석을 전부 지웠습니다. &7(원래 지형으로 되돌림)"
         else if arg-1 is "맵패치":
             # 예전 광산 자리 원래 지형으로 + 갇히는 곳 사다리 (블록을 덮어씀 — 한 번만)
             bgSyncOrigin()

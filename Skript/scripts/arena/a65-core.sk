@@ -69,6 +69,7 @@ function bgCoreHit(p: player, t: text):
         if difference between {-bg::corecd::%uuid of {_p}%} and now < 0.3 seconds:
             stop
     set {-bg::corecd::%uuid of {_p}%} to now
+    set {-bg::core::%{_t}%::last} to now
     add 1 to {-bg::core::%{_t}%::hits}
     set {_h} to {-bg::core::%{_t}%::hits}
     set {_m} to bgMk("base_%{_t}%_beacon")
@@ -179,13 +180,34 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
         set {_drop} to {-bg::it::diamond}
         set {_nm} to "다이아몬드 (5코인)"
     # 캔 자리는 기반암(못 캠)으로 → 2초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
-    set block at {_l} to bedrock
+    # 캔 자리는 주변 바위 블록으로 잠깐 메움 (기반암처럼 튀지 않게)
+    set {_ph} to stone
+    loop 6 times:
+        set {_q} to location(x-coordinate of {_l}, y-coordinate of {_l}, z-coordinate of {_l}, world of {_l})
+        if loop-number is 1:
+            remove 1 from y-coordinate of {_q}
+        else if loop-number is 2:
+            add 1 to x-coordinate of {_q}
+        else if loop-number is 3:
+            remove 1 from x-coordinate of {_q}
+        else if loop-number is 4:
+            add 1 to z-coordinate of {_q}
+        else if loop-number is 5:
+            remove 1 from z-coordinate of {_q}
+        else:
+            add 1 to y-coordinate of {_q}
+        set {_bt} to type of block at {_q}
+        if {-bg::orerock::*} contains {_bt}:
+            set {_ph} to {_bt}
+            exit loop
+    set block at {_l} to {_ph}
     set {_k} to "%floor(x-coordinate of {_l})%_%floor(y-coordinate of {_l})%_%floor(z-coordinate of {_l})%"
     set {bg::oreq::%{_k}%} to true
     set {bg::oreq::%{_k}%::l} to {_l}
     set {bg::oreq::%{_k}%::t} to {_ty}
     set {bg::oreq::%{_k}%::at} to now
     set {bg::oreq::%{_k}%::rg} to {_rg}
+    set {bg::oreq::%{_k}%::ph} to {_ph}
     if bgIsFighter(player) is true:
         give player 1 of {_drop}
         send action bar "&a+1 %{_nm}% &7— 상점 '광물 일괄 판매'에서 코인으로 · 죽으면 떨어뜨림" to player
@@ -203,7 +225,8 @@ function bgOreRegen(all: boolean):
                 set {_go} to true
             if {_go} is true:
                 set {_l} to {bg::oreq::%{_k}%::l}
-                if block at {_l} is bedrock:
+                set {_ph} to {bg::oreq::%{_k}%::ph} ? bedrock
+                if block at {_l} is {_ph}:
                     # 다시 채울 때 광석 종류는 무작위 (본진 바위: 철 · 구리 · 금 / 맵 광맥: 철 · 금 · 에메랄드 · 다이아)
                     set {_r} to random integer between 1 and 10
                     if {bg::oreq::%{_k}%::rg} is 5:
@@ -244,3 +267,19 @@ on drop:
     if bgIsLegend({_i}) is not "":
         cancel event
         send action bar "&c전설 무기는 버릴 수 없습니다" to player
+
+# 코어 자연 회복: 15초 동안 안 맞으면 3초마다 1칸씩 회복
+every 3 seconds:
+    {-bg::on} is true
+    loop {-bg::teams::*}:
+        set {_t} to loop-value
+        if {-bg::core::%{_t}%::down} is not true:
+            if ({-bg::core::%{_t}%::hits} ? 0) > 0:
+                set {_ok} to true
+                if {-bg::core::%{_t}%::last} is set:
+                    if difference between {-bg::core::%{_t}%::last} and now < 15 seconds:
+                        set {_ok} to false
+                if {_ok} is true:
+                    remove 1 from {-bg::core::%{_t}%::hits}
+                    bgCoreText({_t})
+                    bgParticle(bgUp(bgMk("base_%{_t}%_beacon"), 3), "happy_villager", 0.6, 0.6, 0.6, 0, 4)
