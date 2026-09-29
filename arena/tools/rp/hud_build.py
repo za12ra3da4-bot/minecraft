@@ -52,6 +52,12 @@ def build(pack):
     for name, img in f.files.items():
         pack.png(f"assets/{H.NS}/textures/{name}", img)
     pack.put(f"assets/{H.NS}/font/hud.json", H.build_font_json(f))
+    # 기본 글꼴에도 HUD 글리프(사용자 영역 문자)를 연결 → 상자 제목 같은 일반 글자에서도 그림이 나온다 (글꼴 지정 불필요)
+    pack.put("assets/minecraft/font/default.json", {"providers": [
+        {"type": "reference", "id": f"{H.NS}:hud"},
+        {"type": "reference", "id": "minecraft:include/space"},
+        {"type": "reference", "id": "minecraft:include/default", "filter": {"uniform": False}},
+        {"type": "reference", "id": "minecraft:include/unifont"}]})
     # 바닐라 white 보스바 숨김
     blank = Image.new("RGBA", (182, 5), (0, 0, 0, 0))
     pack.png("assets/minecraft/textures/gui/sprites/boss_bar/white_background.png", blank)

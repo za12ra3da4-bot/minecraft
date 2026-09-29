@@ -332,9 +332,9 @@ every 2 ticks:
 function bgShopOpen(p: player):
     set {_c} to {bg::coin::%uuid of {_p}%} ? 0
     # 리소스팩 그림 배경 (제목 글리프가 창 전체를 덮음) — 글리프가 없으면 예전 유리판 상자
+    # (리소스팩이 기본 글꼴에 그림 글자를 연결해 둬서 일반 제목 글자로 된다 — 흰색이어야 그림 색이 안 변함)
     if {-bg::gui::shop} is set:
-        set {_tt} to Component.text({-bg::gui::shop}).font(Key.key("bg", "hud")).color(TextColor.color(16777215))
-        set {_gui} to Bukkit.createInventory({_p}, 54, {_tt})
+        set {_gui} to chest inventory with 6 rows named "&f%{-bg::gui::shop}%"
     if {_gui} is not set:
         set {_gui} to chest inventory with 6 rows named "&5&l왕국 무기고 &8| &6%{_c}% 코인"
         set {_pane} to purple stained glass pane named " "
@@ -377,46 +377,49 @@ function bgShopOpen(p: player):
     play sound "block.chest.open" to {_p}
 
 # ─────────────────────────────────────────────────────────── 광물 (캐면 가방에, 죽으면 떨어뜨림, 상점에서 일괄 판매)
-# 광물 아이템 ('raw iron' 을 코드에 바로 쓰면 Skript 가 raw 식으로 잘못 읽는다 → 문자열에서 변환)
-on load:
-    set {-bg::it::riron} to "raw iron" parsed as item type
-    set {-bg::it::rcopper} to "raw copper" parsed as item type
-    set {-bg::it::rgold} to "raw gold" parsed as item type
-    set {-bg::it::emerald} to "emerald" parsed as item type
-    set {-bg::it::diamond} to "diamond" parsed as item type
+# 광물 아이템: 마인크래프트 이름(Material)으로 판별 — 'raw iron' 같은 글자는 Skript 가 잘못 읽을 수 있어서 쓰지 않음
+function bgOreKey(i: item) :: text:
+    set {_t} to {_i}.getType()
+    return "%{_t}%"
 
 function bgOreVal(i: item) :: number:
-    if {_i} is {-bg::it::riron}:
+    set {_m} to bgOreKey({_i})
+    if {_m} is "RAW_IRON":
         return 1
-    if {_i} is {-bg::it::rcopper}:
+    if {_m} is "RAW_COPPER":
         return 1
-    if {_i} is {-bg::it::rgold}:
+    if {_m} is "RAW_GOLD":
         return 2
-    if {_i} is {-bg::it::emerald}:
+    if {_m} is "EMERALD":
         return 3
-    if {_i} is {-bg::it::diamond}:
+    if {_m} is "DIAMOND":
         return 5
     return 0
 
 function bgOreTotal(p: player) :: number:
     set {_n} to 0
-    add 1 * (amount of {-bg::it::riron} in {_p}'s inventory) to {_n}
-    add 1 * (amount of {-bg::it::rcopper} in {_p}'s inventory) to {_n}
-    add 2 * (amount of {-bg::it::rgold} in {_p}'s inventory) to {_n}
-    add 3 * (amount of {-bg::it::emerald} in {_p}'s inventory) to {_n}
-    add 5 * (amount of {-bg::it::diamond} in {_p}'s inventory) to {_n}
+    loop all items in {_p}'s inventory:
+        set {_v} to bgOreVal(loop-item)
+        if {_v} > 0:
+            add {_v} * (item amount of loop-item) to {_n}
+    return {_n}
+
+function bgOreCount(p: player) :: number:
+    set {_n} to 0
+    loop all items in {_p}'s inventory:
+        if bgOreVal(loop-item) > 0:
+            add (item amount of loop-item) to {_n}
     return {_n}
 
 function bgOreSell(p: player):
     set {_n} to bgOreTotal({_p})
     if {_n} <= 0:
-        send "&6[상점] &7팔 광물이 없습니다. &f본진 광석 바위를 곡괭이로 캐 오세요." to {_p}
+        send "&6[상점] &7팔 광물이 없습니다. &f본진 광석 바위 · 맵 곳곳 광석 바위를 곡괭이로 캐 오세요." to {_p}
         play sound "entity.villager.no" to {_p}
         stop
-    set {_k} to 0
-    loop "riron", "rcopper", "rgold", "emerald" and "diamond":
-        add (amount of {-bg::it::%loop-value%} in {_p}'s inventory) to {_k}
-        remove all {-bg::it::%loop-value%} from {_p}'s inventory
+    set {_k} to bgOreCount({_p})
+    loop "raw_iron", "raw_copper", "raw_gold", "emerald" and "diamond":
+        bgCmd("clear %name of {_p}% minecraft:%loop-value%")
     add {_n} to {bg::coin::%uuid of {_p}%}
     send "&6[상점] &a광물 %{_k}%개 일괄 판매 &e+%{_n}% 코인 &7(보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
     play sound "entity.experience_orb.pickup" to {_p}

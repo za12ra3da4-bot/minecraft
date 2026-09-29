@@ -165,19 +165,19 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
         if {_lz} > 256:
             stop
     set {_ty} to type of event-block
-    set {_drop} to {-bg::it::riron}
+    set {_drop} to "raw_iron"
     set {_nm} to "철 원석 (1코인)"
     if event-block is copper ore:
-        set {_drop} to {-bg::it::rcopper}
+        set {_drop} to "raw_copper"
         set {_nm} to "구리 원석 (1코인)"
     else if event-block is gold ore:
-        set {_drop} to {-bg::it::rgold}
+        set {_drop} to "raw_gold"
         set {_nm} to "금 원석 (2코인)"
     else if event-block is emerald ore:
-        set {_drop} to {-bg::it::emerald}
+        set {_drop} to "emerald"
         set {_nm} to "에메랄드 (3코인)"
     else if event-block is diamond ore:
-        set {_drop} to {-bg::it::diamond}
+        set {_drop} to "diamond"
         set {_nm} to "다이아몬드 (5코인)"
     # 캔 자리는 기반암(못 캠)으로 → 2초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
     # 캔 자리는 주변 바위 블록으로 잠깐 메움 (기반암처럼 튀지 않게)
@@ -196,9 +196,8 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
             remove 1 from z-coordinate of {_q}
         else:
             add 1 to y-coordinate of {_q}
-        set {_bt} to type of block at {_q}
-        if {-bg::orerock::*} contains {_bt}:
-            set {_ph} to {_bt}
+        if bgIsRock(block at {_q}) is true:
+            set {_ph} to type of block at {_q}
             exit loop
     set block at {_l} to {_ph}
     set {_k} to "%floor(x-coordinate of {_l})%_%floor(y-coordinate of {_l})%_%floor(z-coordinate of {_l})%"
@@ -209,7 +208,7 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     set {bg::oreq::%{_k}%::rg} to {_rg}
     set {bg::oreq::%{_k}%::ph} to {_ph}
     if bgIsFighter(player) is true:
-        give player 1 of {_drop}
+        bgCmd("give %name of player% minecraft:%{_drop}% 1")
         send action bar "&a+1 %{_nm}% &7— 상점 '광물 일괄 판매'에서 코인으로 · 죽으면 떨어뜨림" to player
         play sound "entity.item.pickup" to player
     play sound "block.amethyst_block.break" to player
@@ -283,3 +282,16 @@ every 3 seconds:
                     remove 1 from {-bg::core::%{_t}%::hits}
                     bgCoreText({_t})
                     bgParticle(bgUp(bgMk("base_%{_t}%_beacon"), 3), "happy_villager", 0.6, 0.6, 0.6, 0, 4)
+
+function bgIsRock(b: block) :: boolean:
+    if {_b} is stone:
+        return true
+    if {_b} is andesite:
+        return true
+    if {_b} is cobblestone:
+        return true
+    if {_b} is tuff:
+        return true
+    if {_b} is mossy cobblestone:
+        return true
+    return false

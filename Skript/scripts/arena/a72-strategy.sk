@@ -5,13 +5,31 @@
 #   /전장 광석삭제 : 막대로 놓은 바위 + 데이터팩으로 놓은 광석 전부 지우고 원래 지형으로
 # ═════════════════════════════════════════════════════════════════════════════
 
-on load:
-    delete {-bg::orerock::*}
-    delete {-bg::orepool::*}
-    loop "stone", "andesite", "cobblestone", "tuff" and "mossy cobblestone":
-        add (loop-value parsed as item type) to {-bg::orerock::*}
-    loop "iron ore", "iron ore", "iron ore", "gold ore", "gold ore", "gold ore", "gold ore", "emerald ore", "emerald ore" and "diamond ore":
-        add (loop-value parsed as item type) to {-bg::orepool::*}
+# 바위 블록 무작위 (돌 · 안산암 · 조약돌 · 응회암 · 이끼 조약돌)
+function bgSetRock(l: location):
+    set {_r} to random integer between 1 and 5
+    if {_r} is 1:
+        set block at {_l} to stone
+    else if {_r} is 2:
+        set block at {_l} to andesite
+    else if {_r} is 3:
+        set block at {_l} to cobblestone
+    else if {_r} is 4:
+        set block at {_l} to tuff
+    else:
+        set block at {_l} to mossy cobblestone
+
+# 광석 무작위 (철 3 · 금 4 · 에메랄드 2 · 다이아 1)
+function bgSetOre(l: location):
+    set {_r} to random integer between 1 and 10
+    if {_r} <= 3:
+        set block at {_l} to iron ore
+    else if {_r} <= 7:
+        set block at {_l} to gold ore
+    else if {_r} <= 9:
+        set block at {_l} to emerald ore
+    else:
+        set block at {_l} to diamond ore
 
 # ─────────────────────────────────────────────────────────── 지휘 나침반
 on right click:
@@ -119,14 +137,14 @@ function bgOreBoulder(c: location):
                     if {_dist} >= 2:
                         set {_outer} to true
                     if {_j} is 1:
-                        set block at {_l} to random element out of {-bg::orerock::*}
+                        bgSetRock({_l})
                     else if {_outer} is true:
                         if chance of 55%:
-                            set block at {_l} to random element out of {-bg::orepool::*}
+                            bgSetOre({_l})
                         else:
-                            set block at {_l} to random element out of {-bg::orerock::*}
+                            bgSetRock({_l})
                     else:
-                        set block at {_l} to random element out of {-bg::orerock::*}
+                        bgSetRock({_l})
     bgParticle(bgUp({_c}, 2), "block{block_state:""minecraft:stone""}", 1.5, 1.5, 1.5, 0.1, 40)
     bgSoundAt({_c}, "block.stone.place", 2, 0.6)
 
