@@ -123,6 +123,12 @@ function bgStop(reason: text):
     if {-bg::on} is not true:
         stop
     set {-bg::on} to false
+    # 거점 색 · 점령 상태 초기화
+    loop {-bg::pts::*}:
+        set {-bg::own::%loop-value%} to "none"
+        set {-bg::capt::%loop-value%} to "none"
+        set {-bg::capv::%loop-value%} to 0
+        bgPointSet(loop-value, "none")
     bgBossRemove()
     bgCoreReset()
     bgRewardClear()
@@ -272,11 +278,23 @@ function bgGauge(v: number) :: text:
 # 점령 표시: 제단 위 점령 링 (리소스팩 deco/cap_ring_<팀>) 교체 · 불꽃 입자
 function bgPointVisual(p: text, t: text):
     set {_c} to bgMk({-bg::ptmk::%{_p}%})
+    bgPointSet({_p}, {_t})
+    bgParticle({_c}, "firework", 2, 3, 2, 0.1, 60)
+
+# 거점 바닥 고리 색만 바꾸기 (효과 없이)
+function bgPointSet(p: text, t: text):
     set {_m} to "neutral"
     if {_t} is not "none":
         set {_m} to {_t}
     bgCmd("execute as @e[type=item_display,tag=bg_cap_%{_p}%] run data modify entity @s item.components.""minecraft:item_model"" set value ""bg:deco/cap_ring_%{_m}%""")
-    bgParticle({_c}, "firework", 2, 3, 2, 0.1, 60)
+
+# 거점 색 맞추기: 게임 중이면 점령한 팀 색, 아니면 전부 중립 (멀리 있어서 안 바뀐 거점도 5초마다 다시 맞춤)
+every 5 seconds:
+    loop {-bg::pts::*}:
+        if {-bg::on} is true:
+            bgPointSet(loop-value, {-bg::own::%loop-value%} ? "none")
+        else:
+            bgPointSet(loop-value, "none")
 
 # ─────────────────────────────────────────────────────────── 버프
 function bgBuffTick():
