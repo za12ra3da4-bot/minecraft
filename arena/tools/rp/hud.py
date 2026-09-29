@@ -462,54 +462,113 @@ PLATE_W = 56
 PLATE = (0, 2, 0, 18)
 
 
+def _crest(d, kind, cx, cy, r, k, col=(255, 246, 210, 255)):
+    """팀 문장 (불꽃 · 물결 · 잎 · 해)"""
+    if kind == "red":        # 불꽃
+        pts = [(cx, cy - r), (cx + r * 0.55, cy - r * 0.1), (cx + r * 0.35, cy + r * 0.2), (cx + r * 0.6, cy + r * 0.5),
+               (cx, cy + r), (cx - r * 0.6, cy + r * 0.5), (cx - r * 0.35, cy + r * 0.1), (cx - r * 0.2, cy - r * 0.3)]
+        d.polygon(pts, fill=col)
+        d.polygon([(cx, cy - r * 0.1), (cx + r * 0.3, cy + r * 0.45), (cx, cy + r * 0.8), (cx - r * 0.3, cy + r * 0.45)], fill=(255, 150, 60, 255))
+    elif kind == "blue":     # 삼지창
+        d.line([(cx, cy - r), (cx, cy + r)], fill=col, width=int(k * 0.9))
+        for sx in (-1, 1):
+            d.line([(cx + sx * r * 0.6, cy - r * 0.8), (cx + sx * r * 0.6, cy - r * 0.1), (cx, cy + r * 0.15)], fill=col, width=int(k * 0.8))
+        d.polygon([(cx - r * 0.25, cy - r * 0.8), (cx, cy - r * 1.15), (cx + r * 0.25, cy - r * 0.8)], fill=col)
+    elif kind == "green":    # 잎
+        d.polygon([(cx, cy - r), (cx + r * 0.7, cy - r * 0.1), (cx + r * 0.3, cy + r * 0.7), (cx, cy + r),
+                   (cx - r * 0.3, cy + r * 0.7), (cx - r * 0.7, cy - r * 0.1)], fill=col)
+        d.line([(cx, cy - r * 0.7), (cx, cy + r)], fill=(40, 110, 40, 255), width=max(1, int(k * 0.5)))
+    else:                    # 해
+        for i in range(8):
+            a = i * math.pi / 4
+            d.polygon([(cx + math.cos(a - 0.25) * r * 0.5, cy + math.sin(a - 0.25) * r * 0.5), (cx + math.cos(a) * r, cy + math.sin(a) * r),
+                       (cx + math.cos(a + 0.25) * r * 0.5, cy + math.sin(a + 0.25) * r * 0.5)], fill=col)
+        d.ellipse([cx - r * 0.5, cy - r * 0.5, cx + r * 0.5, cy + r * 0.5], fill=col)
+
+
 def team_hud(font):
+    """팀 점수판: 팀 색 깃발 판 + 금 장식 테 + 왼쪽 문장 메달 + 점수 칸 + 아래 술 장식 (내 팀 = 밝은 금테 · 왕관)"""
     for t, col in TEAM_COL.items():
         for mine in (False, True):
             w, h = PLATE_W, 16
-            im = canvas(w + 2, h + 2)
+            im = canvas(w + 2, h + 8)                     # 아래 술 장식 6px 여유
             ss = 4
             big = Image.new("RGBA", (im.size[0] * ss, im.size[1] * ss), (0, 0, 0, 0))
             d = ImageDraw.Draw(big)
             k = S * ss
-            # 판: 어두운 반투명 + 금/은 테두리
-            d.rounded_rectangle([1 * k, 1 * k, (w + 1) * k, (h + 1) * k], radius=3 * k, fill=(14, 12, 20, 205),
-                                outline=(255, 214, 110, 255) if mine else (120, 110, 100, 255), width=int((1.4 if mine else 1.0) * k))
-            # 팀 색 방패
-            sx, sy = 3, 2
-            shield = [(sx, sy), (sx + 12, sy), (sx + 12, sy + 7), (sx + 6, sy + 13), (sx, sy + 7)]
-            d.polygon([((x + 1) * k, (y + 1) * k) for x, y in shield], fill=(20, 10, 6, 255))
-            inner = [(sx + 1.3, sy + 1.3), (sx + 10.7, sy + 1.3), (sx + 10.7, sy + 6.6), (sx + 6, sy + 11.4), (sx + 1.3, sy + 6.6)]
+            X0, Y0, X1, Y1 = 1 * k, 1 * k, (w + 1) * k, (h + 1) * k
+            # 술 장식 (판 아래 양쪽)
+            for tx in (10, w - 8):
+                d.polygon([((tx) * k, Y1 - k), ((tx + 4) * k, Y1 - k), ((tx + 4) * k, Y1 + 4 * k), ((tx + 2) * k, Y1 + 6 * k), (tx * k, Y1 + 4 * k)],
+                          fill=tuple(int(v * 0.8) for v in col) + (255,))
+                d.line([((tx + 2) * k, Y1), ((tx + 2) * k, Y1 + 5 * k)], fill=(255, 214, 110, 255), width=max(1, k // 2))
+            # 판: 팀 색 천 (위 밝게 · 아래 어둡게) — 오른쪽 끝은 깃발처럼 뾰족
+            shape = [(X0 + 2 * k, Y0), (X1 - 4 * k, Y0), (X1, (Y0 + Y1) / 2), (X1 - 4 * k, Y1), (X0 + 2 * k, Y1), (X0, Y1 - 2 * k), (X0, Y0 + 2 * k)]
             m = Image.new("L", big.size, 0)
-            ImageDraw.Draw(m).polygon([((x + 1) * k, (y + 1) * k) for x, y in inner], fill=255)
-            c2 = tuple(min(255, int(v * 1.35 + 30)) for v in col)
-            c3 = tuple(int(v * 0.55) for v in col)
-            big.alpha_composite(fill_mask(m, grad_v(big.size[0], big.size[1], [(0, c2), (0.5, col), (1, c3)])))
-            # 방패 위 작은 별 문양
-            cxs, cys = (sx + 6 + 1) * k, (sy + 5.8 + 1) * k
-            star = []
-            for i in range(10):
-                a = -math.pi / 2 + i * math.pi / 5
-                rr = (2.6 if i % 2 == 0 else 1.1) * k
-                star.append((cxs + math.cos(a) * rr, cys + math.sin(a) * rr))
-            d.polygon(star, fill=(255, 246, 210, 255))
+            ImageDraw.Draw(m).polygon(shape, fill=235)
+            c_hi = tuple(min(255, int(v * 1.2 + 25)) for v in col)
+            c_lo = tuple(int(v * 0.35) for v in col)
+            big.alpha_composite(fill_mask(m, grad_v(big.size[0], big.size[1], [(0, c_hi), (0.45, col), (0.75, c_lo), (1, c_lo)])))
+            # 천 결 (대각선 줄)
+            tex = Image.new("RGBA", big.size, (0, 0, 0, 0))
+            td = ImageDraw.Draw(tex)
+            for xx in range(-big.size[1], big.size[0], 3 * k):
+                td.line([(xx, 0), (xx + big.size[1], big.size[1])], fill=(0, 0, 0, 40), width=k)
+            tex.putalpha(Image.fromarray(np.minimum(np.asarray(tex)[..., 3], np.asarray(m))))
+            big.alpha_composite(tex)
+            # 점수 칸 (어두운 안쪽 판)
+            d.rounded_rectangle([19 * k, 3.5 * k, (w - 4) * k, (h - 1.5) * k], radius=2 * k, fill=(10, 8, 14, 215),
+                                outline=(255, 214, 110, 200) if mine else (150, 130, 100, 180), width=max(1, k // 2))
+            # 금 테
+            gold_o = (255, 222, 120, 255) if mine else (200, 160, 80, 255)
+            d.line(shape + [shape[0]], fill=(40, 22, 6, 255), width=int(1.6 * k), joint="curve")
+            d.line(shape + [shape[0]], fill=gold_o, width=int((1.0 if mine else 0.8) * k), joint="curve")
+            # 왼쪽 문장 메달 (금 고리 + 팀 색 속 + 문장)
+            mcx, mcy, mr = 10 * k, 9 * k, 7.6 * k
+            d.ellipse([mcx - mr - k, mcy - mr - k, mcx + mr + k, mcy + mr + k], fill=(40, 22, 6, 255))
+            ring = Image.new("L", big.size, 0)
+            ImageDraw.Draw(ring).ellipse([mcx - mr, mcy - mr, mcx + mr, mcy + mr], fill=255)
+            big.alpha_composite(fill_mask(ring, grad_v(big.size[0], big.size[1], GOLD)))
+            inner = Image.new("L", big.size, 0)
+            ImageDraw.Draw(inner).ellipse([mcx - mr + 1.6 * k, mcy - mr + 1.6 * k, mcx + mr - 1.6 * k, mcy + mr - 1.6 * k], fill=255)
+            big.alpha_composite(fill_mask(inner, grad_v(big.size[0], big.size[1], [(0, c_hi), (1, c_lo)])))
+            d = ImageDraw.Draw(big)
+            _crest(d, t, mcx, mcy, 4.2 * k, k)
+            for i in range(6):
+                a = i * math.pi / 3 + math.pi / 6
+                d.ellipse([mcx + math.cos(a) * (mr - 0.8 * k) - 0.5 * k, mcy + math.sin(a) * (mr - 0.8 * k) - 0.5 * k,
+                           mcx + math.cos(a) * (mr - 0.8 * k) + 0.5 * k, mcy + math.sin(a) * (mr - 0.8 * k) + 0.5 * k], fill=(255, 250, 220, 255))
+            if mine:
+                # 작은 왕관 (메달 위)
+                cy = 1.2 * k
+                d.polygon([(mcx - 4 * k, cy + 2.5 * k), (mcx - 4 * k, cy - 0.5 * k), (mcx - 2 * k, cy + 1 * k), (mcx, cy - 1.5 * k),
+                           (mcx + 2 * k, cy + 1 * k), (mcx + 4 * k, cy - 0.5 * k), (mcx + 4 * k, cy + 2.5 * k)], fill=(255, 214, 90, 255), outline=(60, 30, 6, 255))
             im.alpha_composite(big.resize(im.size, Image.LANCZOS))
             if mine:
                 glow = Image.new("RGBA", im.size, (0, 0, 0, 0))
                 gd = ImageDraw.Draw(glow)
-                gd.rounded_rectangle([0, 0, im.size[0] - 1, im.size[1] - 1], radius=8, outline=(255, 220, 120, 120), width=2)
-                im.alpha_composite(glow.filter(ImageFilter.GaussianBlur(1.5)))
+                gd.rounded_rectangle([0, 0, im.size[0] - 1, (h + 2) * S - 1], radius=8, outline=(255, 220, 120, 150), width=3)
+                im.alpha_composite(glow.filter(ImageFilter.GaussianBlur(2)))
             font.add(f"hud/plate_{t}{'_me' if mine else ''}", im, PLATE_X[t] - 1, PLATE[1] - 1, "hud")
-    # 가운데 타이머 판
+    # 가운데 타이머: 금 육각 메달 + 양쪽 모래시계
     w, h = 40, 14
-    im = canvas(w + 2, h + 2)
+    im = canvas(w + 2, h + 4)
     ss = 4
     big = Image.new("RGBA", (im.size[0] * ss, im.size[1] * ss), (0, 0, 0, 0))
     d = ImageDraw.Draw(big); k = S * ss
-    d.polygon([(1 * k, 1 * k), ((w + 1) * k, 1 * k), ((w - 3 + 1) * k, (h + 1) * k), (4 * k, (h + 1) * k)], fill=GOLD_DARK + (255,))
+    hexp = [(1 * k, (h / 2 + 1) * k), (5 * k, 1 * k), ((w - 3) * k, 1 * k), ((w + 1) * k, (h / 2 + 1) * k), ((w - 3) * k, (h + 1) * k), (5 * k, (h + 1) * k)]
+    d.polygon(hexp, fill=(40, 22, 6, 255))
     m = Image.new("L", big.size, 0)
-    ImageDraw.Draw(m).polygon([(2.2 * k, 2 * k), ((w - 0.2) * k, 2 * k), ((w - 3.2) * k, h * k), (5 * k, h * k)], fill=255)
-    big.alpha_composite(fill_mask(m, grad_v(big.size[0], big.size[1], [(0, (40, 30, 26)), (1, (14, 10, 10))])))
-    d.line([(2.2 * k, 2 * k), ((w - 0.2) * k, 2 * k)], fill=(255, 214, 110, 255), width=k)
+    ImageDraw.Draw(m).polygon(hexp, fill=255)
+    big.alpha_composite(fill_mask(m, grad_v(big.size[0], big.size[1], GOLD)))
+    inner = [(2.6 * k, (h / 2 + 1) * k), (6 * k, 2.4 * k), ((w - 4) * k, 2.4 * k), ((w - 0.6) * k, (h / 2 + 1) * k), ((w - 4) * k, (h - 0.4) * k), (6 * k, (h - 0.4) * k)]
+    m2 = Image.new("L", big.size, 0)
+    ImageDraw.Draw(m2).polygon(inner, fill=240)
+    big.alpha_composite(fill_mask(m2, grad_v(big.size[0], big.size[1], [(0, (46, 30, 60)), (1, (12, 8, 18))])))
+    d = ImageDraw.Draw(big)
+    for hx in (4.2 * k, (w - 2.2) * k):
+        cy = (h / 2 + 1) * k
+        d.polygon([(hx - 1.2 * k, cy - 2.2 * k), (hx + 1.2 * k, cy - 2.2 * k), (hx - 1.2 * k, cy + 2.2 * k), (hx + 1.2 * k, cy + 2.2 * k)], fill=(255, 226, 150, 255))
     im.alpha_composite(big.resize(im.size, Image.LANCZOS))
     font.add("hud/timer", im, 150 - (w + 2) / 2, 0, "hud")
 

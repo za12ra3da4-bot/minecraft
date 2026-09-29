@@ -149,14 +149,31 @@ def build():
         kind = "legend" if idx in LEGEND else "boss" if idx in BOSS else "sell" if idx in SELL else "coin" if idx in COIN else "gear" if idx in GEAR else None
         if kind:
             slot(x, y, kind)
-        else:
-            # 빈 칸: 아이템처럼 보이지 않게 작은 금 문양만
-            cx, cy = (x + 9) * S, (y + 9) * S
-            d.polygon([(cx, cy - 4 * S), (cx + 4 * S, cy), (cx, cy + 4 * S), (cx - 4 * S, cy)], outline=(150, 110, 50), width=S)
+
+    # 빈 칸 줄은 칸 모양 대신 이어진 깃발 장식 (왼쪽 1~4줄, 오른쪽 1~2줄)
+    def banner(x, y0, y1):
+        R(x + 1, y0 + 1, x + 17, y1, fill=(64, 26, 96))
+        cloth = Image.fromarray((noise(16 * S, (y1 - y0) * S, 3, y0 + x) * 60).astype(np.uint8)).convert("L")
+        dark = Image.new("RGBA", cloth.size, (20, 6, 34, 0)); dark.putalpha(cloth)
+        im.alpha_composite(dark, ((x + 1) * S, (y0 + 1) * S))
+        R(x + 1, y0 + 1, x + 2, y1, fill=(214, 168, 70))
+        R(x + 16, y0 + 1, x + 17, y1, fill=(214, 168, 70))
+        R(x, y0, x + 18, y0 + 2, fill=(150, 100, 40))
+        # 아래 제비꼬리
+        d.polygon([((x + 1) * S, y1 * S), ((x + 17) * S, y1 * S), ((x + 17) * S, (y1 + 5) * S), ((x + 9) * S, (y1 + 1) * S), ((x + 1) * S, (y1 + 5) * S)], fill=(64, 26, 96))
+        # 문장: 금 왕관 + 교차 칼
+        cx = (x + 9) * S
+        for cy in range(y0 + 12, y1 - 6, 24):
+            cy *= S
+            d.polygon([(cx - 5 * S, cy + 3 * S), (cx - 5 * S, cy - 2 * S), (cx - 2 * S, cy), (cx, cy - 4 * S), (cx + 2 * S, cy), (cx + 5 * S, cy - 2 * S), (cx + 5 * S, cy + 3 * S)], fill=(240, 190, 60))
+            d.line([(cx - 5 * S, cy + 6 * S), (cx + 5 * S, cy + 14 * S)], fill=(220, 225, 235), width=S)
+            d.line([(cx + 5 * S, cy + 6 * S), (cx - 5 * S, cy + 14 * S)], fill=(220, 225, 235), width=S)
+    banner(7, 35, 101)
+    banner(151, 35, 65)
     # 구역 나누는 금선 + 이름표
     fs = ImageFont.truetype(FONT, 5 * S)
     for yline, label, col in ((71, "보스 전용", (255, 120, 110)), (89, "장비 · 물약", (255, 210, 140))):
-        R(8, yline, 168, yline + 1, fill=(214, 168, 70))
+        R(25, yline, 168, yline + 1, fill=(214, 168, 70))
     # ── 플레이어 가방 (아래): 양피지
     parch = np.zeros((90 * S, 166 * S, 3), np.float32)
     n2 = noise(166 * S, 90 * S, 6, 21)
