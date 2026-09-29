@@ -71,6 +71,19 @@ command /리팩 [<text>]:
         # update 후 /sk reload 를 안 해도 최신 팩 주소 · sha1 을 쓰도록 팩 정보 스크립트만 다시 읽는다
         execute console command "sk reload arena/a04-gen-pack.sk"
         wait 20 ticks
+        if arg-1 is "확인":
+            send "&6[리팩 확인] &f주소: &7%{-bg::pack::url}%"
+            send "&6[리팩 확인] &fsha1: &7%{-bg::pack::sha1}%"
+            set {_o} to bgPackOwner()
+            if {_o} is "":
+                send "&6[리팩 확인] &f보내는 쪽: &a이 스크립트 &7(/리팩 으로 보냄)"
+            else:
+                send "&6[리팩 확인] &f보내는 쪽: &c%{_o}% &7(이 스크립트는 안 보냄 — /전장 팩 켬 으로 강제)"
+            stop
+        if arg-1 is "강제":
+            send the resource pack from {-bg::pack::url} with hash {-bg::pack::sha1} to player
+            send "&6[전장] &f리소스팩을 강제로 보냈습니다. &7(팩 %{-bg::pack::sha1}%)"
+            stop
         if arg-1 is "@a" or "all" or "전체":
             if sender is a player:
                 if player is not op:
