@@ -900,6 +900,8 @@ function bgMainWeapon(p: player, c: number):
     set {_n} to name of {_p}
     set {_lv} to {bg::owned::%uuid of {_p}%::wlv} ? 0
     set {_tag} to "custom_data={bgmain:1b},unbreakable={},enchantment_glint_override=false"
+    # 날카로움 · 힘 같은 진짜 인챈트가 붙은 무기는 반짝이게 (귀속 저주만 있으면 안 반짝임)
+    set {_tagg} to "custom_data={bgmain:1b},unbreakable={},enchantment_glint_override=true"
     if {_c} is 1:
         bgCmd("give %{_n}% wooden_sword[%{_tag}%,enchantments={""minecraft:binding_curse"":1}]")
         set {_e} to """minecraft:binding_curse"":1"
@@ -909,7 +911,10 @@ function bgMainWeapon(p: player, c: number):
             set {_e} to "%{_e}%,""minecraft:power"":2"
         else if {_lv} >= 3:
             set {_e} to "%{_e}%,""minecraft:power"":3,""minecraft:punch"":1"
-        bgCmd("give %{_n}% bow[%{_tag}%,enchantments={%{_e}%}]")
+        if {_lv} >= 1:
+            bgCmd("give %{_n}% bow[%{_tagg}%,enchantments={%{_e}%}]")
+        else:
+            bgCmd("give %{_n}% bow[%{_tag}%,enchantments={%{_e}%}]")
         stop
     set {_m} to "stone"
     if {_lv} is 1:
@@ -921,6 +926,7 @@ function bgMainWeapon(p: player, c: number):
     set {_e} to """minecraft:binding_curse"":1"
     if {_lv} is 2:
         set {_e} to "%{_e}%,""minecraft:sharpness"":1"
+        set {_tag} to {_tagg}
     if {_c} is 2:
         bgCmd("give %{_n}% %{_m}%_axe[%{_tag}%,enchantments={%{_e}%}]")
     else:
