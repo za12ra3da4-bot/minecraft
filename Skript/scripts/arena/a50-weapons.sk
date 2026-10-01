@@ -416,15 +416,15 @@ function bgOreKey(i: item) :: text:
 function bgOreVal(i: item) :: number:
     set {_m} to bgOreKey({_i})
     if {_m} is "RAW_IRON":
-        return 1
-    if {_m} is "RAW_COPPER":
-        return 1
-    if {_m} is "RAW_GOLD":
         return 2
-    if {_m} is "EMERALD":
+    if {_m} is "RAW_COPPER":
+        return 2
+    if {_m} is "RAW_GOLD":
         return 3
+    if {_m} is "EMERALD":
+        return 4
     if {_m} is "DIAMOND":
-        return 5
+        return 7
     return 0
 
 function bgOreTotal(p: player) :: number:
@@ -446,7 +446,7 @@ function bgOreCount(p: player) :: number:
 function bgSellItem(p: player) :: item:
     set {_sell} to hopper named "&a&l광물 일괄 판매"
     set {_tot} to bgOreTotal({_p})
-    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e1 &7· &f금 원석 &e2", "&f에메랄드 &e3 &7· &f다이아몬드 &e5", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
+    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e2 &7· &f금 원석 &e3", "&f에메랄드 &e4 &7· &f다이아몬드 &e7", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
     return {_sell}
 
 function bgOreSell(p: player):

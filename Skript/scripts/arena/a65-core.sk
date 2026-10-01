@@ -217,19 +217,19 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
             stop
     set {_ty} to type of event-block
     set {_drop} to "raw_iron"
-    set {_nm} to "철 원석 (1코인)"
+    set {_nm} to "철 원석 (2코인)"
     if event-block is copper ore:
         set {_drop} to "raw_copper"
-        set {_nm} to "구리 원석 (1코인)"
+        set {_nm} to "구리 원석 (2코인)"
     else if event-block is gold ore:
         set {_drop} to "raw_gold"
-        set {_nm} to "금 원석 (2코인)"
+        set {_nm} to "금 원석 (3코인)"
     else if event-block is emerald ore:
         set {_drop} to "emerald"
-        set {_nm} to "에메랄드 (3코인)"
+        set {_nm} to "에메랄드 (4코인)"
     else if event-block is diamond ore:
         set {_drop} to "diamond"
-        set {_nm} to "다이아몬드 (5코인)"
+        set {_nm} to "다이아몬드 (7코인)"
     # 캔 자리는 기반암(못 캠)으로 → 2초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
     # 캔 자리는 주변 바위 블록으로 잠깐 메움 (기반암처럼 튀지 않게)
     # 캔 자리는 다시 채워질 때까지 기반암 (쿨타임 표시 — 못 캠)
