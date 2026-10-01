@@ -736,28 +736,26 @@ def _pt_contest():
     return im
 
 
-PTF_TILE = 9
 PTF_W = PT_W - 2          # 배지 안쪽 채움 폭 (테두리 1칸씩 빼고)
+PTF_H = PT_H - 2          # 채움 높이 (아래에서 위로 1칸씩)
 
 
-def _pt_fill_tile(t, w):
-    """점령 진행 채움 조각: 팀 색 반투명 (위 밝게 · 아래 진하게) — w GUI 픽셀 폭, 배지 높이"""
+def _pt_fill(t, h):
+    """점령 진행 채움: 팀 색 반투명, 아래에서 위로 h GUI 픽셀 (위 끝은 밝은 수면 줄)"""
     col = TEAM_COL[t]
-    h = PT_H - 2
-    a = np.zeros((h * S, w * S, 4), np.uint8)
+    a = np.zeros((h * S, PTF_W * S, 4), np.uint8)
     for yy in range(h * S):
-        k = yy / (h * S - 1)
+        k = (PTF_H * S - h * S + yy) / (PTF_H * S - 1)       # 배지 전체 높이 기준 위치 (0 위 · 1 아래)
         c = tuple(int(min(255, v * (1.35 - 0.6 * k) + 30 * (1 - k))) for v in col)
         a[yy, :] = c + (int(150 - 40 * k),)
-    # 위 1줄 반짝임
-    a[0:2, :] = tuple(min(255, v + 90) for v in col) + (190,)
+    a[0:2, :] = tuple(min(255, v + 100) for v in col) + (210,)
     return Image.fromarray(a, "RGBA")
 
 
 def point_fills(font):
     for t in TEAM_COL:
-        for w in range(1, PTF_TILE + 1):
-            font.add(f"hud/ptf_{t}_{w}", _pt_fill_tile(t, w), 0, PT_Y + 1, "hud")
+        for h in range(1, PTF_H + 1):
+            font.add(f"hud/ptfv_{t}_{h}", _pt_fill(t, h), 0, PT_Y + 1 + (PTF_H - h), "hud")
 
 
 def point_badges(font):
