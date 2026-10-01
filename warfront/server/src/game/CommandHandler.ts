@@ -1,4 +1,5 @@
 import {
+  armyCost,
   CITY_TYPE_STATS,
   PRODUCTION,
   UNIT,
@@ -10,9 +11,9 @@ import {
 } from '@warfront/shared';
 import type { GameState } from './GameState';
 import type { Unit } from './Unit';
+import { getPathfinder } from './Pathfinder';
 import { applyDiplomacy } from './systems/DiplomacySystem';
 import { orderMove } from './systems/MovementSystem';
-import { armyCost } from './systems/ProductionSystem';
 import { mergeUnits, splitUnit } from './unitOps';
 
 export type CommandResult = { ok: true } | { ok: false; error: string };
@@ -130,7 +131,7 @@ function moveUnits(state: GameState, nation: NationId, ids: number[], x: number,
     }
     let tx = x + ox;
     let ty = y + oy;
-    if (!state.inBounds(tx, ty) || !state.isLand(tx, ty)) {
+    if (!state.inBounds(tx, ty) || !getPathfinder(state.map).passable(tx, ty)) {
       tx = x;
       ty = y;
     }

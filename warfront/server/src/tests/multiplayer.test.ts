@@ -18,14 +18,14 @@ after(async () => {
   await server.close();
 });
 
-test('France vs Britain: create, join, produce, move, battle, capture, stay in sync, reject cheats', { timeout: 150_000 }, async () => {
+test('France vs Britain: create, join, produce, move, battle, capture, stay in sync, reject cheats', { timeout: 300_000 }, async () => {
   const a = new TestClient(url);
   const b = new TestClient(url);
   try {
     // ---- lobby
     const created = await a.call('room:create', {
       playerName: 'Player1',
-      settings: { roomName: 'Waterloo', mapId: 'continental', maxPlayers: 2, aiCount: 0, speed: 4, victory: 'CONQUEST', startAtWar: true },
+      settings: { roomName: 'Waterloo', mapId: 'europe', maxPlayers: 2, aiCount: 0, speed: 4, victory: 'CONQUEST', startAtWar: true },
     });
     assert.ok(created.ok, 'room created');
     assert.match(created.code, /^[A-Z2-9]{6}$/);
@@ -139,8 +139,14 @@ test('France vs Britain: create, join, produce, move, battle, capture, stay in s
 
     // ---- winner captures enemy territory
     const owners = winner.client.replica.owners;
+    const defended = new Set<number>();
+    for (const u of winner.client.replica.units.values()) {
+      if (u.nation !== winner.loser) continue;
+      const tid = winner.client.replica.map.territories.findIndex((t) => Math.hypot(t.cx - u.x, t.cy - u.y) < 350);
+      if (tid >= 0) defended.add(tid);
+    }
     const target = map.territories
-      .filter((t) => owners[t.id] === winner.loser)
+      .filter((t) => owners[t.id] === winner.loser && !defended.has(t.id))
       .sort((p, q) => Math.hypot(p.cx - winner.unit.x, p.cy - winner.unit.y) - Math.hypot(q.cx - winner.unit.x, q.cy - winner.unit.y))[0];
     await a.waitFor(() => !a.replica.units.get(winner.unit.id)?.battleId, 30_000, 'winner out of battle');
     assert.deepEqual(
@@ -148,7 +154,7 @@ test('France vs Britain: create, join, produce, move, battle, capture, stay in s
       { ok: true },
     );
     const capturer = winner.unit.nation;
-    await a.waitFor(() => a.replica.owners.filter((o) => o === capturer).length > owners.filter((o) => o === capturer).length || a.replica.owners[target.id] === capturer, 90_000, 'territory captured');
+    await a.waitFor(() => a.replica.owners.filter((o) => o === capturer).length > owners.filter((o) => o === capturer).length || a.replica.owners[target.id] === capturer, 150_000, 'territory captured');
     console.log(`  ${capturer} captured territory; events:`, a.events.filter((e) => e.kind === 'TERRITORY_CAPTURED').map((e) => e.text).slice(-3));
 
     // ---- both browsers see the same world

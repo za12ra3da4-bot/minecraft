@@ -46,6 +46,7 @@ export class Pathfinder {
     for (let ny = 0; ny < this.rows; ny++) {
       for (let nx = 0; nx < this.cols; nx++) {
         let land = 0;
+        let shallow = 0;
         let total = 0;
         let sum = 0;
         let road = false;
@@ -59,7 +60,10 @@ export class Pathfinder {
             total++;
             const c = cy * cols + cx;
             const t = map.terrain[c] as Terrain;
-            if (t === Terrain.WATER) continue;
+            if (t === Terrain.WATER) {
+              if (map.flags[c] & CellFlag.SHALLOW) shallow++;
+              continue;
+            }
             land++;
             sum += 1 / terrainSpeed(t);
             const f = map.flags[c];
@@ -69,8 +73,13 @@ export class Pathfinder {
           }
         }
         const i = ny * this.cols + nx;
-        if (land * 2 < total || land === 0) {
+        if ((land + shallow) * 2 < total || land + shallow === 0) {
           this.cost[i] = Infinity;
+          continue;
+        }
+        if (land * 2 < total || land === 0) {
+          // Strait or channel: crossed slowly by boat.
+          this.cost[i] = 1 / TERRAIN_SPEED.SEA;
           continue;
         }
         let c = sum / land;
@@ -263,6 +272,8 @@ export function terrainSpeed(t: Terrain): number {
       return TERRAIN_SPEED.HILLS;
     case Terrain.MARSH:
       return TERRAIN_SPEED.MARSH;
+    case Terrain.WATER:
+      return TERRAIN_SPEED.SEA;
     default:
       return TERRAIN_SPEED.PLAINS;
   }

@@ -32,6 +32,14 @@ export interface AIPersonality {
   diplomacy: number;
 }
 
+/** Napoleonic-era flavour for army names. */
+export interface MilitaryStyle {
+  /** Name of the nation's main field army. */
+  fieldArmy: string;
+  /** Famous commanders, used to name the largest corps. */
+  generals: string[];
+}
+
 export interface NationDef {
   id: NationId;
   name: string;
@@ -42,4 +50,5 @@ export interface NationDef {
   flag: FlagSpec;
   nameStyle: NameStyleId;
   personality: AIPersonality;
+  military: MilitaryStyle;
 }

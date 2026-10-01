@@ -17,3 +17,4 @@ export * from './utils/diplomacy';
 export * from './utils/math';
 export * from './utils/polyline';
 export * from './sync/ReplicaState';
+export * from './utils/cost';

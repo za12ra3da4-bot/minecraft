@@ -35,6 +35,14 @@ export function setupGame(map: GeneratedMap, settings: GameSettings, participant
   for (const r of map.def.initialRelations) {
     if (state.isActive(r.a) && state.isActive(r.b)) state.setRelation(r.a, r.b, r.state);
   }
+  // Historical blocs and neutral powers.
+  for (const n of map.def.neutrals ?? []) {
+    for (const o of active) if (o !== n && state.isActive(n)) state.setRelation(n, o, 'PEACE');
+  }
+  for (const bloc of map.def.blocs ?? []) {
+    const members = bloc.filter((n) => state.isActive(n));
+    for (let i = 0; i < members.length; i++) for (let j = i + 1; j < members.length; j++) state.setRelation(members[i], members[j], 'ALLIANCE');
+  }
 
   for (const slot of map.def.nations) {
     const n = state.nations.get(slot.nation)!;
@@ -44,6 +52,8 @@ export function setupGame(map: GeneratedMap, settings: GameSettings, participant
   state.emit('INFO', `The campaign begins on ${map.def.name}.`, [], { major: false });
   return state;
 }
+
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
 function spawnStartingArmies(state: GameState, n: NationRuntime, total: number, count: number, grand: number): void {
   const { rng } = state;
@@ -71,13 +81,21 @@ function spawnStartingArmies(state: GameState, n: NationRuntime, total: number, 
   let remaining = total;
   if (grand > 0 && capital) {
     const [x, y] = place(capital.territoryId, capital.x, capital.y);
-    const unit = new Unit(n.id, 'INFANTRY', `${getNation(n.id).adjective} Grand Army`, grand, x, y);
+    const style = getNation(n.id).military;
+    const unit = new Unit(n.id, 'INFANTRY', `${style.fieldArmy} (${style.generals[0]})`, grand, x, y);
     state.addUnit(unit);
     remaining -= grand;
   }
   const others = Math.max(0, count - (grand > 0 ? 1 : 0));
   const weights = Array.from({ length: others }, () => rng.range(0.45, 1.5) ** 2);
   const wSum = weights.reduce((a, b) => a + b, 0) || 1;
+  const generals = getNation(n.id).military.generals.slice(1);
+  const corpsNames = new Map<number, string>();
+  weights
+    .map((w, i) => [w, i] as const)
+    .sort((a, b) => b[0] - a[0])
+    .slice(0, generals.length)
+    .forEach(([, i], k) => corpsNames.set(i, `${ROMAN[k]} Corps (${generals[k]})`));
   weights.forEach((w, i) => {
     const soldiers = Math.max(1_500, Math.round((remaining * w) / wSum + rng.range(-180, 180)));
     let type: ArmyType = 'INFANTRY';
@@ -89,6 +107,8 @@ function spawnStartingArmies(state: GameState, n: NationRuntime, total: number, 
     const t = type === 'GUARD' && capital ? state.map.data.territories[capital.territoryId] : order[i % order.length];
     const [x, y] = place(t.id, t.cx, t.cy);
     const unit = new Unit(n.id, type, state.nextUnitName(n, ARMY_TYPE_STATS[type].label), soldiers, x, y);
+    // The largest formations become named corps under famous commanders.
+    if (corpsNames.has(i)) unit.name = corpsNames.get(i)!;
     state.addUnit(unit);
   });
 }

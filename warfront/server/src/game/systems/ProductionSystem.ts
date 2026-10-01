@@ -1,24 +1,6 @@
-import { ARMY_TYPE_STATS, PRODUCTION, UNIT, formatNumber, getNation, type ArmyType } from '@warfront/shared';
+import { ARMY_TYPE_STATS, UNIT, formatNumber, getNation, type ArmyType } from '@warfront/shared';
 import type { GameState, NationRuntime } from '../GameState';
 import { Unit } from '../Unit';
-
-export interface ArmyCost {
-  manpower: number;
-  industry: number;
-  supplies: number;
-  seconds: number;
-}
-
-/** Cost of raising an army. Shared by validation, the AI and the UI preview. */
-export function armyCost(soldiers: number, type: ArmyType): ArmyCost {
-  const mult = ARMY_TYPE_STATS[type].cost;
-  return {
-    manpower: soldiers,
-    industry: Math.ceil(soldiers * PRODUCTION.INDUSTRY_PER_SOLDIER * mult),
-    supplies: Math.ceil(soldiers * PRODUCTION.SUPPLIES_PER_SOLDIER * mult),
-    seconds: (PRODUCTION.BASE_SECONDS + soldiers / PRODUCTION.SOLDIERS_PER_SECOND) * Math.sqrt(mult),
-  };
-}
 
 /** Advances the first order of every city queue and spawns finished armies. */
 export function updateProduction(state: GameState, dt: number): void {

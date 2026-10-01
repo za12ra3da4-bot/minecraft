@@ -15,7 +15,7 @@ export const NAME_STYLES: Record<NameStyleId, NameStyle> = {
   english: {
     prefixes: ['Ash', 'Brack', 'Chester', 'Dun', 'Elm', 'Fair', 'Glen', 'Hart', 'Kings', 'Lang', 'Marl', 'North', 'Oak', 'Pen', 'Red', 'Stan', 'Thorn', 'Wex', 'Bram', 'Cold', 'Hol', 'Mill', 'New', 'Rother', 'Sel', 'Wey', 'Brad', 'Hay', 'Cam', 'Dor'],
     suffixes: ['ford', 'ham', 'ton', 'bury', 'wick', 'field', 'by', 'stead', 'mouth', 'ley', 'worth', 'gate', 'well', 'combe', 'dale', 'minster', 'hurst', 'chester'],
-    whole: ['Mont Royal Ridge', 'Kingsbridge', 'Highcliff', 'Redmarsh', 'Thornwood'],
+    whole: ['Kingsbridge', 'Highcliff', 'Redmarsh', 'Thornwood'],
   },
   french: {
     prefixes: ['Belle', 'Mont', 'Fontaine', 'Beau', 'Clair', 'Roche', 'Val', 'Chateau', 'Ver', 'Cor', 'Lor', 'Sar', 'Bel', 'Mar', 'Haute', 'Plan', 'Neuf', 'Pont', 'Sainte-Mar', 'Saint-Val', 'Lan', 'Vic', 'Cha', 'Bri'],

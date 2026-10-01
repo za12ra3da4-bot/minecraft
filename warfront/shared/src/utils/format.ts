@@ -1,4 +1,4 @@
-import { GAME_MINUTES_PER_SIM_SECOND, START_MINUTE_OF_DAY, START_YEAR } from '../constants/game';
+import { GAME_MINUTES_PER_SIM_SECOND, START_DAY_OF_YEAR, START_MINUTE_OF_DAY, START_YEAR } from '../constants/game';
 
 /** 58456 -> "58,456" (fast, allocation-light, used in the render loop). */
 export function formatNumber(value: number): string {
@@ -29,7 +29,10 @@ function trim(v: number, digits: number): string {
 
 export interface GameClock {
   year: number;
+  /** Days since the campaign began (1-based). */
   day: number;
+  /** Calendar date, e.g. "24 JUN". */
+  date: string;
   hour: number;
   minute: number;
 }
@@ -38,9 +41,11 @@ export function toGameClock(simSeconds: number): GameClock {
   const totalMinutes = START_MINUTE_OF_DAY + Math.floor(simSeconds * GAME_MINUTES_PER_SIM_SECOND);
   const dayIndex = Math.floor(totalMinutes / 1440);
   const minuteOfDay = totalMinutes % 1440;
+  const doy = START_DAY_OF_YEAR + dayIndex;
   return {
-    year: START_YEAR + Math.floor(dayIndex / 365),
-    day: (dayIndex % 365) + 1,
+    year: START_YEAR + Math.floor(doy / 365),
+    day: dayIndex + 1,
+    date: calendarDate(doy % 365),
     hour: Math.floor(minuteOfDay / 60),
     minute: minuteOfDay % 60,
   };
@@ -49,4 +54,16 @@ export function toGameClock(simSeconds: number): GameClock {
 export function formatClock(simSeconds: number): string {
   const c = toGameClock(simSeconds);
   return `${String(c.hour).padStart(2, '0')}:${String(c.minute).padStart(2, '0')}`;
+}
+
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+const MONTH_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+function calendarDate(dayOfYear: number): string {
+  let d = dayOfYear;
+  for (let m = 0; m < 12; m++) {
+    if (d < MONTH_DAYS[m]) return `${d + 1} ${MONTHS[m]}`;
+    d -= MONTH_DAYS[m];
+  }
+  return `31 DEC`;
 }

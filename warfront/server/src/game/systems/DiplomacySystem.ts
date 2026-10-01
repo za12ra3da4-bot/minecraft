@@ -33,7 +33,8 @@ export function applyDiplomacy(state: GameState, from: NationId, action: DiploAc
       if (state.offers.filter((o) => o.from === from).length >= DIPLOMACY.MAX_OFFERS_PER_NATION) return { ok: false, error: 'Too many pending offers' };
       state.offers.push({ id: state.offerId(), from, to: target, kind, expires: state.time + DIPLOMACY.OFFER_TTL_SECONDS });
       state.diplomacyVersion++;
-      state.emit('OFFER', `${fromName} offers ${kind === 'PEACE' ? 'peace' : 'an alliance'} to ${targetName}`, [from, target]);
+      // AI-to-AI haggling stays private; offers involving a player are announced.
+      if (involvesPlayer(state, from, target)) state.emit('OFFER', `${fromName} offers ${kind === 'PEACE' ? 'peace' : 'an alliance'} to ${targetName}`, [from, target]);
       return { ok: true };
     }
     case 'ACCEPT_OFFER':
@@ -43,7 +44,7 @@ export function applyDiplomacy(state: GameState, from: NationId, action: DiploAc
       state.offers = state.offers.filter((o) => o !== offer);
       state.diplomacyVersion++;
       if (action === 'REJECT_OFFER') {
-        state.emit('OFFER_REJECTED', `${fromName} rejected the ${offer.kind === 'PEACE' ? 'peace' : 'alliance'} offer from ${targetName}`, [from, target]);
+        if (involvesPlayer(state, from, target)) state.emit('OFFER_REJECTED', `${fromName} rejected the ${offer.kind === 'PEACE' ? 'peace' : 'alliance'} offer from ${targetName}`, [from, target]);
         return { ok: true };
       }
       if (offer.kind === 'PEACE') {
@@ -64,6 +65,10 @@ export function applyDiplomacy(state: GameState, from: NationId, action: DiploAc
     }
   }
   return { ok: false, error: 'Unknown action' };
+}
+
+function involvesPlayer(state: GameState, a: NationId, b: NationId): boolean {
+  return state.nations.get(a)?.controller === 'PLAYER' || state.nations.get(b)?.controller === 'PLAYER';
 }
 
 export function makePeace(state: GameState, a: NationId, b: NationId): void {

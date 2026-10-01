@@ -7,6 +7,7 @@ import {
   type MapDef,
   type NationId,
 } from '@warfront/shared';
+import { generateGeo, geoDimensions } from './geoGen';
 import type { MapContext } from './MapContext';
 import { assignHomeNations } from './nationGen';
 import { generateRivers } from './riverGen';
@@ -42,6 +43,7 @@ export function getGeneratedMap(mapId: string): GeneratedMap {
 }
 
 export function generateMap(def: MapDef): GeneratedMap {
+  if (def.geo) def = { ...def, ...geoDimensions(def.geo) };
   const cols = Math.round(def.width / def.cellSize);
   const rows = Math.round(def.height / def.cellSize);
   const ctx: MapContext = {
@@ -58,11 +60,16 @@ export function generateMap(def: MapDef): GeneratedMap {
     territory: new Int16Array(cols * rows).fill(-1),
   };
 
-  generateTerrain(ctx);
-  const rivers = generateRivers(ctx);
-  const { drafts, capitalTerritories } = generateTerritories(ctx);
-  const home = assignHomeNations(ctx, drafts, capitalTerritories);
-  const { territories, cities, capitals } = generateSettlements(ctx, drafts, home, capitalTerritories);
+  let rivers, territories, cities, capitals, home;
+  if (def.geo) {
+    ({ rivers, territories, cities, capitals, home } = generateGeo(ctx));
+  } else {
+    generateTerrain(ctx);
+    rivers = generateRivers(ctx);
+    const { drafts, capitalTerritories } = generateTerritories(ctx);
+    home = assignHomeNations(ctx, drafts, capitalTerritories);
+    ({ territories, cities, capitals } = generateSettlements(ctx, drafts, home, capitalTerritories));
+  }
   const { roads, bridges } = generateRoads(ctx, territories, cities);
 
   const data: MapData = {

@@ -25,9 +25,18 @@ export interface StartingArmyPlan {
   grand: number;
 }
 
+/** Mountain range in longitude/latitude degrees (real-world maps). */
+export interface GeoMountain {
+  lon: number;
+  lat: number;
+  rx: number;
+  ry: number;
+  weight: number;
+}
+
 export interface MapNationSlot {
   nation: NationId;
-  /** Capital location in normalised coordinates. */
+  /** Capital location in normalised coordinates (procedural maps). */
   anchor: [number, number];
   /** Relative share of claimed land. */
   share: number;
@@ -36,6 +45,9 @@ export interface MapNationSlot {
 
 export interface MapDef {
   id: string;
+  /** Real-world geography dataset (shared/src/data/geo/<geo>.json); procedural when absent. */
+  geo?: 'europe';
+  mountains?: GeoMountain[];
   name: string;
   description: string;
   width: number;
@@ -61,63 +73,82 @@ export interface MapDef {
   cityShare: number;
   nations: MapNationSlot[];
   initialRelations: { a: NationId; b: NationId; state: DiploState }[];
+  /** Historical alliances: every pair inside a bloc starts allied. */
+  blocs?: NationId[][];
+  /** Nations that start at peace with everyone. */
+  neutrals?: NationId[];
 }
 
 export const MAPS: MapDef[] = [
   {
-    id: 'continental',
-    name: 'Continental',
-    description: 'A vast continent split between ten great powers. Long fronts, rivers and coastlines.',
+    id: 'europe',
+    name: 'Europe 1812',
+    geo: 'europe',
+    description: 'June 1812: Napoleon\'s empire at its height. Real geography from Lisbon to Moscow, the French bloc against the Coalition, Austria and Prussia undecided.',
     width: 4800,
-    height: 3200,
+    height: 3872,
     cellSize: 16,
     seed: 1815,
-    baseLand: -0.05,
-    edgeFalloff: 1.15,
-    landShapes: [
-      { x: 0.5, y: 0.5, rx: 0.47, ry: 0.43, weight: 0.95 },
-      { x: 0.16, y: 0.24, rx: 0.13, ry: 0.15, weight: 0.65 },
-      { x: 0.56, y: 0.13, rx: 0.16, ry: 0.12, weight: 0.6 },
-      { x: 0.87, y: 0.35, rx: 0.13, ry: 0.25, weight: 0.65 },
-      { x: 0.15, y: 0.78, rx: 0.14, ry: 0.15, weight: 0.65 },
-      { x: 0.8, y: 0.77, rx: 0.15, ry: 0.15, weight: 0.6 },
-      { x: 0.5, y: 0.9, rx: 0.15, ry: 0.09, weight: -1.25 },
-      { x: 0.37, y: 0.06, rx: 0.08, ry: 0.07, weight: -1.0 },
-      { x: 0.04, y: 0.5, rx: 0.07, ry: 0.12, weight: -0.7 },
-      { x: 0.66, y: 0.96, rx: 0.06, ry: 0.06, weight: -0.8 },
+    baseLand: 0,
+    edgeFalloff: 0,
+    landShapes: [],
+    noiseScale: 700,
+    hillShare: 0.13,
+    forestShare: 0.2,
+    rivers: [],
+    territoryCount: 0,
+    claimedShare: 1,
+    cityShare: 0,
+    mountains: [
+      { lon: 10, lat: 46.4, rx: 4.6, ry: 1.1, weight: 0.85 },
+      { lon: 0.5, lat: 42.7, rx: 2.8, ry: 0.45, weight: 0.75 },
+      { lon: 22.5, lat: 48.8, rx: 3, ry: 0.9, weight: 0.55 },
+      { lon: 25.6, lat: 46.3, rx: 1.2, ry: 1.8, weight: 0.55 },
+      { lon: 24, lat: 45.5, rx: 3, ry: 0.6, weight: 0.5 },
+      { lon: 13, lat: 63, rx: 3, ry: 4, weight: 0.7 },
+      { lon: 8, lat: 61, rx: 2.5, ry: 2, weight: 0.7 },
+      { lon: 18, lat: 43.6, rx: 3.5, ry: 1.4, weight: 0.55 },
+      { lon: 24.5, lat: 42.6, rx: 2, ry: 0.6, weight: 0.5 },
+      { lon: 13, lat: 42.5, rx: 1.2, ry: 3.6, weight: 0.5 },
+      { lon: 33, lat: 38, rx: 6, ry: 1.6, weight: 0.5 },
+      { lon: 36, lat: 40.8, rx: 6, ry: 0.7, weight: 0.45 },
+      { lon: 43, lat: 42.8, rx: 4, ry: 0.8, weight: 0.85 },
+      { lon: 3, lat: 45.3, rx: 1.3, ry: 1, weight: 0.4 },
+      { lon: -4.5, lat: 57, rx: 1.8, ry: 1, weight: 0.45 },
+      { lon: -4.5, lat: 40.5, rx: 3, ry: 1, weight: 0.35 },
+      { lon: -3.3, lat: 37.1, rx: 1.5, ry: 0.4, weight: 0.5 },
+      { lon: -5, lat: 33, rx: 6, ry: 1, weight: 0.6 },
+      { lon: 10, lat: 50.8, rx: 3, ry: 1, weight: 0.3 },
+      { lon: 13.5, lat: 50, rx: 2.5, ry: 1.2, weight: 0.35 },
+      { lon: 21.5, lat: 39.5, rx: 1, ry: 1.8, weight: 0.5 },
     ],
-    noiseScale: 900,
-    hillShare: 0.14,
-    forestShare: 0.22,
-    rivers: [
-      { points: [[0.44, 0.6], [0.43, 0.47], [0.39, 0.33], [0.37, 0.2], [0.36, 0.06]], width: 7 },
-      { points: [[0.47, 0.55], [0.58, 0.59], [0.7, 0.62], [0.83, 0.63], [0.98, 0.67]], width: 8 },
-      { points: [[0.31, 0.44], [0.22, 0.5], [0.12, 0.52], [0.02, 0.51]], width: 6 },
-      { points: [[0.68, 0.47], [0.66, 0.35], [0.65, 0.21], [0.66, 0.02]], width: 6 },
-      { points: [[0.26, 0.63], [0.3, 0.76], [0.37, 0.86], [0.43, 0.9]], width: 5 },
-      { points: [[0.85, 0.15], [0.8, 0.3], [0.79, 0.45], [0.83, 0.62]], width: 5 },
-    ],
-    territoryCount: 230,
-    claimedShare: 0.86,
-    cityShare: 0.3,
     nations: [
-      { nation: 'britain', anchor: [0.15, 0.22], share: 1.0, armies: { total: 190_000, count: 20, grand: 58_456 } },
-      { nation: 'france', anchor: [0.24, 0.5], share: 1.25, armies: { total: 230_000, count: 22, grand: 72_300 } },
-      { nation: 'prussia', anchor: [0.5, 0.3], share: 1.0, armies: { total: 180_000, count: 20, grand: 41_200 } },
-      { nation: 'austria', anchor: [0.56, 0.58], share: 1.1, armies: { total: 185_000, count: 20, grand: 45_000 } },
-      { nation: 'russia', anchor: [0.86, 0.3], share: 1.35, armies: { total: 220_000, count: 22, grand: 64_000 } },
-      { nation: 'spain', anchor: [0.14, 0.8], share: 0.9, armies: { total: 140_000, count: 16, grand: 36_000 } },
-      { nation: 'netherlands', anchor: [0.33, 0.25], share: 0.6, armies: { total: 100_000, count: 14, grand: 25_000 } },
-      { nation: 'sweden', anchor: [0.57, 0.1], share: 0.75, armies: { total: 110_000, count: 14, grand: 30_000 } },
-      { nation: 'ottoman', anchor: [0.82, 0.78], share: 1.15, armies: { total: 180_000, count: 20, grand: 48_000 } },
-      { nation: 'poland', anchor: [0.68, 0.36], share: 0.7, armies: { total: 110_000, count: 14, grand: 28_000 } },
+      { nation: 'france', anchor: [0, 0], share: 1, armies: { total: 300_000, count: 30, grand: 108_000 } },
+      { nation: 'britain', anchor: [0, 0], share: 1, armies: { total: 140_000, count: 16, grand: 58_456 } },
+      { nation: 'prussia', anchor: [0, 0], share: 1, armies: { total: 120_000, count: 14, grand: 42_000 } },
+      { nation: 'austria', anchor: [0, 0], share: 1, armies: { total: 200_000, count: 22, grand: 62_000 } },
+      { nation: 'russia', anchor: [0, 0], share: 1, armies: { total: 320_000, count: 32, grand: 120_000 } },
+      { nation: 'spain', anchor: [0, 0], share: 1, armies: { total: 120_000, count: 16, grand: 39_900 } },
+      { nation: 'portugal', anchor: [0, 0], share: 1, armies: { total: 50_000, count: 6, grand: 18_000 } },
+      { nation: 'sweden', anchor: [0, 0], share: 1, armies: { total: 70_000, count: 10, grand: 28_000 } },
+      { nation: 'denmark', anchor: [0, 0], share: 1, armies: { total: 60_000, count: 8, grand: 20_000 } },
+      { nation: 'ottoman', anchor: [0, 0], share: 1, armies: { total: 200_000, count: 22, grand: 60_000 } },
+      { nation: 'warsaw', anchor: [0, 0], share: 1, armies: { total: 90_000, count: 10, grand: 36_000 } },
+      { nation: 'rhine', anchor: [0, 0], share: 1, armies: { total: 130_000, count: 16, grand: 40_000 } },
+      { nation: 'italy', anchor: [0, 0], share: 1, armies: { total: 80_000, count: 10, grand: 30_000 } },
+      { nation: 'naples', anchor: [0, 0], share: 1, armies: { total: 60_000, count: 8, grand: 25_000 } },
     ],
     initialRelations: [],
+    blocs: [
+      ['france', 'rhine', 'warsaw', 'italy', 'naples', 'denmark'],
+      ['britain', 'russia', 'spain', 'portugal', 'sweden'],
+    ],
+    neutrals: ['austria', 'prussia', 'ottoman'],
   },
   {
     id: 'valois',
     name: 'Valois Ridge',
-    description: 'A dense battlefield of farms, woods and ridges. Britain and Prussia stand together against France.',
+    description: 'A dense battlefield of farms, woods and ridges. June 1815: Britain and Prussia stand together against the Emperor\'s last army.',
     width: 3600,
     height: 2400,
     cellSize: 12,

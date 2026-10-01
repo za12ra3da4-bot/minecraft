@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: warfront
+    runtime: node
+    rootDir: warfront
+    buildCommand: npm install && npm run build
+    startCommand: npm start

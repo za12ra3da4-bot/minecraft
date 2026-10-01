@@ -15,6 +15,10 @@ export const CellFlag = {
   BRIDGE: 4,
   COAST: 8,
   TOWN: 16,
+  /** Land outside the playable theatre (drawn, but impassable). */
+  OUTSIDE: 32,
+  /** Coastal water that armies can cross slowly (straits, channels). */
+  SHALLOW: 64,
 } as const;
 
 export const CITY_TYPES = ['CAPITAL', 'CITY', 'PORT', 'INDUSTRIAL_CITY', 'VILLAGE'] as const;

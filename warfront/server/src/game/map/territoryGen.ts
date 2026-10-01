@@ -74,7 +74,7 @@ export function generateTerritories(ctx: MapContext): TerritoryResult {
   // Multi-source Dijkstra.
   const owner = ctx.territory;
   owner.fill(-1);
-  const dist = new Float32Array(total).fill(Infinity);
+  const dist = new Float64Array(total).fill(Infinity);
   const heap = new MinHeap();
   const warpScale = Math.sqrt(area) * cs * 1.3;
   const costMul = new Float32Array(total);
@@ -155,7 +155,16 @@ export function generateTerritories(ctx: MapContext): TerritoryResult {
   const count = remap.size;
   const capitalTerritories = capitalSeedIdx.map((i) => remap.get(i) ?? 0);
 
-  // Territory statistics.
+  return { drafts: finaliseTerritories(ctx, count), capitalTerritories };
+}
+
+/** Statistics, neighbours and label centres for an already assigned territory grid. */
+export function finaliseTerritories(ctx: MapContext, count: number): TerritoryDraft[] {
+  const { cols, rows, cs } = ctx;
+  const total = cols * rows;
+  const owner = ctx.territory;
+  const landCells: number[] = [];
+  for (let c = 0; c < total; c++) if (owner[c] >= 0) landCells.push(c);
   const cellsCount = new Array<number>(count).fill(0);
   const sumX = new Array<number>(count).fill(0);
   const sumY = new Array<number>(count).fill(0);
@@ -243,5 +252,5 @@ export function generateTerritories(ctx: MapContext): TerritoryResult {
       riverside: riverside[t],
     });
   }
-  return { drafts, capitalTerritories };
+  return drafts;
 }

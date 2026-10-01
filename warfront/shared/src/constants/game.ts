@@ -1,6 +1,6 @@
 /** Rename the game here – every screen reads the title from this constant. */
 export const GAME_TITLE = 'WARFRONT';
-export const GAME_SUBTITLE = 'Real-time grand battle strategy';
+export const GAME_SUBTITLE = 'Napoleonic grand battle strategy, 1812';
 
 /** Server simulation tick. */
 export const SERVER_TICK_MS = 100;
@@ -11,7 +11,9 @@ export const PRIVATE_EVERY_TICKS = 5;
 
 /** In-game clock. One simulated second equals this many in-game minutes. */
 export const GAME_MINUTES_PER_SIM_SECOND = 10;
-export const START_YEAR = 1815;
+export const START_YEAR = 1812;
+/** Campaign starts on 24 June (day 176 of the year). */
+export const START_DAY_OF_YEAR = 175;
 /** In-game clock starts at 06:00 on day 1. */
 export const START_MINUTE_OF_DAY = 6 * 60;
 
@@ -52,6 +54,8 @@ export const TERRAIN_SPEED = {
   MARSH: 0.55,
   ROAD: 1.45,
   RIVER_CROSSING: 0.4,
+  /** Crossing straits and channels by boat. */
+  SEA: 0.35,
 } as const;
 
 export const COMBAT = {

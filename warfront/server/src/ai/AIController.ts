@@ -1,4 +1,5 @@
 import {
+  armyCost,
   ARMY_TYPE_STATS,
   CITY_TYPE_STATS,
   PRODUCTION,
@@ -12,7 +13,6 @@ import {
 import { executeCommand } from '../game/CommandHandler';
 import type { GameState, NationRuntime } from '../game/GameState';
 import type { Unit } from '../game/Unit';
-import { armyCost } from '../game/systems/ProductionSystem';
 import { SpatialHash } from '../game/util/SpatialHash';
 
 const MAX_ORDERS_PER_THINK = 10;
@@ -306,7 +306,7 @@ export class AIController {
     for (const e of enemies) {
       const theirs = this.strength(e);
       const last = this.lastPeaceOffer.get(e) ?? -999;
-      if (theirs > myStrength * 1.8 && s.time - last > 60 && s.rng.next() < 0.3 + personality.diplomacy * 0.4) {
+      if (s.time > 90 && theirs > myStrength * 1.8 && s.time - last > 150 && s.rng.next() < 0.2 + personality.diplomacy * 0.3) {
         this.lastPeaceOffer.set(e, s.time);
         executeCommand(s, this.nation, { type: 'DIPLOMACY', action: 'OFFER_PEACE', target: e });
       }

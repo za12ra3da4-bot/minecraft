@@ -109,7 +109,7 @@ export function sanitizePlayerName(v: unknown): string {
 export const DEFAULT_SETTINGS: GameSettings = {
   roomName: 'Waterloo',
   maxPlayers: 10,
-  mapId: 'continental',
+  mapId: 'europe',
   speed: 1,
   victory: 'CONQUEST',
   aiCount: 5,
