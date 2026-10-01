@@ -347,6 +347,115 @@ on load:
     set {-bg::fg::cast_35::c} to ""
     set {-bg::fg::cast_35::adv} to 36
     set {-bg::fg::cast_35::x} to 30
+    set {-bg::fg::ptf_red_1::c} to ""
+    set {-bg::fg::ptf_red_1::adv} to 2
+    set {-bg::fg::ptf_red_1::x} to 0
+    set {-bg::fg::ptf_red_2::c} to ""
+    set {-bg::fg::ptf_red_2::adv} to 3
+    set {-bg::fg::ptf_red_2::x} to 0
+    set {-bg::fg::ptf_red_3::c} to ""
+    set {-bg::fg::ptf_red_3::adv} to 4
+    set {-bg::fg::ptf_red_3::x} to 0
+    set {-bg::fg::ptf_red_4::c} to ""
+    set {-bg::fg::ptf_red_4::adv} to 5
+    set {-bg::fg::ptf_red_4::x} to 0
+    set {-bg::fg::ptf_red_5::c} to ""
+    set {-bg::fg::ptf_red_5::adv} to 6
+    set {-bg::fg::ptf_red_5::x} to 0
+    set {-bg::fg::ptf_red_6::c} to ""
+    set {-bg::fg::ptf_red_6::adv} to 7
+    set {-bg::fg::ptf_red_6::x} to 0
+    set {-bg::fg::ptf_red_7::c} to ""
+    set {-bg::fg::ptf_red_7::adv} to 8
+    set {-bg::fg::ptf_red_7::x} to 0
+    set {-bg::fg::ptf_red_8::c} to ""
+    set {-bg::fg::ptf_red_8::adv} to 9
+    set {-bg::fg::ptf_red_8::x} to 0
+    set {-bg::fg::ptf_red_9::c} to ""
+    set {-bg::fg::ptf_red_9::adv} to 10
+    set {-bg::fg::ptf_red_9::x} to 0
+    set {-bg::fg::ptf_blue_1::c} to ""
+    set {-bg::fg::ptf_blue_1::adv} to 2
+    set {-bg::fg::ptf_blue_1::x} to 0
+    set {-bg::fg::ptf_blue_2::c} to ""
+    set {-bg::fg::ptf_blue_2::adv} to 3
+    set {-bg::fg::ptf_blue_2::x} to 0
+    set {-bg::fg::ptf_blue_3::c} to ""
+    set {-bg::fg::ptf_blue_3::adv} to 4
+    set {-bg::fg::ptf_blue_3::x} to 0
+    set {-bg::fg::ptf_blue_4::c} to ""
+    set {-bg::fg::ptf_blue_4::adv} to 5
+    set {-bg::fg::ptf_blue_4::x} to 0
+    set {-bg::fg::ptf_blue_5::c} to ""
+    set {-bg::fg::ptf_blue_5::adv} to 6
+    set {-bg::fg::ptf_blue_5::x} to 0
+    set {-bg::fg::ptf_blue_6::c} to ""
+    set {-bg::fg::ptf_blue_6::adv} to 7
+    set {-bg::fg::ptf_blue_6::x} to 0
+    set {-bg::fg::ptf_blue_7::c} to ""
+    set {-bg::fg::ptf_blue_7::adv} to 8
+    set {-bg::fg::ptf_blue_7::x} to 0
+    set {-bg::fg::ptf_blue_8::c} to ""
+    set {-bg::fg::ptf_blue_8::adv} to 9
+    set {-bg::fg::ptf_blue_8::x} to 0
+    set {-bg::fg::ptf_blue_9::c} to ""
+    set {-bg::fg::ptf_blue_9::adv} to 10
+    set {-bg::fg::ptf_blue_9::x} to 0
+    set {-bg::fg::ptf_green_1::c} to ""
+    set {-bg::fg::ptf_green_1::adv} to 2
+    set {-bg::fg::ptf_green_1::x} to 0
+    set {-bg::fg::ptf_green_2::c} to ""
+    set {-bg::fg::ptf_green_2::adv} to 3
+    set {-bg::fg::ptf_green_2::x} to 0
+    set {-bg::fg::ptf_green_3::c} to ""
+    set {-bg::fg::ptf_green_3::adv} to 4
+    set {-bg::fg::ptf_green_3::x} to 0
+on load:
+    set {-bg::fg::ptf_green_4::c} to ""
+    set {-bg::fg::ptf_green_4::adv} to 5
+    set {-bg::fg::ptf_green_4::x} to 0
+    set {-bg::fg::ptf_green_5::c} to ""
+    set {-bg::fg::ptf_green_5::adv} to 6
+    set {-bg::fg::ptf_green_5::x} to 0
+    set {-bg::fg::ptf_green_6::c} to ""
+    set {-bg::fg::ptf_green_6::adv} to 7
+    set {-bg::fg::ptf_green_6::x} to 0
+    set {-bg::fg::ptf_green_7::c} to ""
+    set {-bg::fg::ptf_green_7::adv} to 8
+    set {-bg::fg::ptf_green_7::x} to 0
+    set {-bg::fg::ptf_green_8::c} to ""
+    set {-bg::fg::ptf_green_8::adv} to 9
+    set {-bg::fg::ptf_green_8::x} to 0
+    set {-bg::fg::ptf_green_9::c} to ""
+    set {-bg::fg::ptf_green_9::adv} to 10
+    set {-bg::fg::ptf_green_9::x} to 0
+    set {-bg::fg::ptf_yellow_1::c} to ""
+    set {-bg::fg::ptf_yellow_1::adv} to 2
+    set {-bg::fg::ptf_yellow_1::x} to 0
+    set {-bg::fg::ptf_yellow_2::c} to ""
+    set {-bg::fg::ptf_yellow_2::adv} to 3
+    set {-bg::fg::ptf_yellow_2::x} to 0
+    set {-bg::fg::ptf_yellow_3::c} to ""
+    set {-bg::fg::ptf_yellow_3::adv} to 4
+    set {-bg::fg::ptf_yellow_3::x} to 0
+    set {-bg::fg::ptf_yellow_4::c} to ""
+    set {-bg::fg::ptf_yellow_4::adv} to 5
+    set {-bg::fg::ptf_yellow_4::x} to 0
+    set {-bg::fg::ptf_yellow_5::c} to ""
+    set {-bg::fg::ptf_yellow_5::adv} to 6
+    set {-bg::fg::ptf_yellow_5::x} to 0
+    set {-bg::fg::ptf_yellow_6::c} to ""
+    set {-bg::fg::ptf_yellow_6::adv} to 7
+    set {-bg::fg::ptf_yellow_6::x} to 0
+    set {-bg::fg::ptf_yellow_7::c} to ""
+    set {-bg::fg::ptf_yellow_7::adv} to 8
+    set {-bg::fg::ptf_yellow_7::x} to 0
+    set {-bg::fg::ptf_yellow_8::c} to ""
+    set {-bg::fg::ptf_yellow_8::adv} to 9
+    set {-bg::fg::ptf_yellow_8::x} to 0
+    set {-bg::fg::ptf_yellow_9::c} to ""
+    set {-bg::fg::ptf_yellow_9::adv} to 10
+    set {-bg::fg::ptf_yellow_9::x} to 0
     set {-bg::hud::boss_back} to ""
     set {-bg::hud::boss_front} to ""
     set {-bg::hud::banner::normal} to ""
@@ -356,14 +465,14 @@ on load:
     set {-bg::hud::status::stun} to ""
     set {-bg::hud::diamond::idle} to ""
     set {-bg::hud::diamond::lit} to ""
-    set {-bg::hud::name::talos} to ""
-    set {-bg::hud::portrait::talos} to ""
-    set {-bg::hud::name::sphinx} to ""
-    set {-bg::hud::portrait::sphinx} to ""
-    set {-bg::hud::name::ladon} to ""
-    set {-bg::hud::portrait::ladon} to ""
-    set {-bg::hud::name::cyclops} to ""
-    set {-bg::hud::portrait::cyclops} to ""
+    set {-bg::hud::name::talos} to ""
+    set {-bg::hud::portrait::talos} to ""
+    set {-bg::hud::name::sphinx} to ""
+    set {-bg::hud::portrait::sphinx} to ""
+    set {-bg::hud::name::ladon} to ""
+    set {-bg::hud::portrait::ladon} to ""
+    set {-bg::hud::name::cyclops} to ""
+    set {-bg::hud::portrait::cyclops} to ""
     set {-bg::hud::plate::red} to ""
     set {-bg::hud::plate::red_me} to ""
     set {-bg::hud::platecx::red} to 42.5
@@ -387,6 +496,7 @@ on load:
     set {-bg::hud::pt::ares_yellow} to ""
     set {-bg::hud::pt::ares_yellow_me} to ""
     set {-bg::hud::ptc::ares} to ""
+    set {-bg::hud::ptx::ares} to 5
     set {-bg::hud::pt::athena_blue} to ""
     set {-bg::hud::pt::athena_blue_me} to ""
     set {-bg::hud::pt::athena_green} to ""
@@ -397,6 +507,7 @@ on load:
     set {-bg::hud::pt::athena_yellow} to ""
     set {-bg::hud::pt::athena_yellow_me} to ""
     set {-bg::hud::ptc::athena} to ""
+    set {-bg::hud::ptx::athena} to 64
     set {-bg::hud::pt::temple_blue} to ""
     set {-bg::hud::pt::temple_blue_me} to ""
     set {-bg::hud::pt::temple_green} to ""
@@ -407,10 +518,10 @@ on load:
     set {-bg::hud::pt::temple_yellow} to ""
     set {-bg::hud::pt::temple_yellow_me} to ""
     set {-bg::hud::ptc::temple} to ""
+    set {-bg::hud::ptx::temple} to 123
     set {-bg::hud::pt::hermes_blue} to ""
     set {-bg::hud::pt::hermes_blue_me} to ""
     set {-bg::hud::pt::hermes_green} to ""
-on load:
     set {-bg::hud::pt::hermes_green_me} to ""
     set {-bg::hud::pt::hermes_neutral} to ""
     set {-bg::hud::pt::hermes_red} to ""
@@ -418,7 +529,9 @@ on load:
     set {-bg::hud::pt::hermes_yellow} to ""
     set {-bg::hud::pt::hermes_yellow_me} to ""
     set {-bg::hud::ptc::hermes} to ""
+    set {-bg::hud::ptx::hermes} to 182
     set {-bg::hud::pt::demeter_blue} to ""
+on load:
     set {-bg::hud::pt::demeter_blue_me} to ""
     set {-bg::hud::pt::demeter_green} to ""
     set {-bg::hud::pt::demeter_green_me} to ""
@@ -428,6 +541,9 @@ on load:
     set {-bg::hud::pt::demeter_yellow} to ""
     set {-bg::hud::pt::demeter_yellow_me} to ""
     set {-bg::hud::ptc::demeter} to ""
+    set {-bg::hud::ptx::demeter} to 241
+    set {-bg::hud::ptfw} to 54
+    set {-bg::hud::ptft} to 9
     set {-bg::hud::ptorder::*} to "ares", "athena", "temple", "hermes" and "demeter"
     set {-bg::hud::bd::0} to ""
     set {-bg::hud::bd::1} to ""
@@ -465,10 +581,10 @@ on load:
     set {-bg::hud::td::9} to ""
     set {-bg::hud::td::s} to ""
     set {-bg::hud::td::c} to ""
-    set {-bg::gui::shop} to ""
-    set {-bg::gui::shop1} to ""
-    set {-bg::gui::shop2} to ""
-    set {-bg::gui::shop3} to ""
+    set {-bg::gui::shop} to ""
+    set {-bg::gui::shop1} to ""
+    set {-bg::gui::shop2} to ""
+    set {-bg::gui::shop3} to ""
     set {-bg::hud::total_w} to 300
     set {-bg::hud::boss_x} to 30
     set {-bg::hud::fill_w} to 174

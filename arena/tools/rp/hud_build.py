@@ -51,6 +51,7 @@ def build(pack):
     H.digits(f, "hud/t", "hud", 3)
     H.team_hud(f)
     H.point_badges(f)
+    H.point_fills(f)
     for bid, b in BOSSES.items():
         H.label(f, f"boss/name_{bid}", b["name"], "name")
         p = os.path.join(PORTRAITS, f"{bid}.png")

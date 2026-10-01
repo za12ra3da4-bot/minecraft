@@ -25,6 +25,17 @@ function bgPad2(n: number) :: text:
         return "0%{_n}%"
     return "%{_n}%"
 
+# 거점 배지 점령 진행 채움 (거점 · 팀 · 픽셀 폭마다 한 번만 만들어 둠)
+function bgPtFill(p: text, t: text, px: number) :: text:
+    if {_px} < 1:
+        return ""
+    if {-bg::hud::ptf::%{_p}%::%{_t}%::%{_px}%} is not set:
+        set {-bg::hud::ptf::%{_p}%::%{_t}%::%{_px}%} to bgFillBuild("ptf_%{_t}%", {_px}, {-bg::hud::ptft}, {-bg::hud::ptx::%{_p}%})
+    return {-bg::hud::ptf::%{_p}%::%{_t}%::%{_px}%}
+
+on load:
+    delete {-bg::hud::ptf::*}
+
 # 공통 윗줄 (점수 · 시간) — 내 팀 판만 다르다
 function bgHudTop(me: text) :: text:
     set {_s} to ""
@@ -50,7 +61,18 @@ function bgHudTop(me: text) :: text:
             set {_k} to {_o}
             if {_o} is {_me}:
                 set {_k} to "%{_o}%_me"
-        set {_s} to "%{_s}%%{-bg::hud::pt::%loop-value%_%{_k}%}%"
+        # 점령 진행 중(0~100%): 배지는 회색으로 두고 진행 중인 팀 색이 왼쪽부터 점점 차오름
+        #  (빼앗기는 중이면 원래 주인 색이 점점 줄어듦)
+        set {_fx} to ""
+        set {_v} to {-bg::capv::%loop-value%} ? 0
+        if {_v} > 0:
+            if {_v} < 100:
+                set {_ct} to {-bg::capt::%loop-value%} ? "none"
+                if {_ct} is not "none":
+                    set {_k} to "neutral"
+                    set {_px} to round({-bg::hud::ptfw} * {_v} / 100)
+                    set {_fx} to bgPtFill(loop-value, {_ct}, {_px})
+        set {_s} to "%{_s}%%{-bg::hud::pt::%loop-value%_%{_k}%}%%{_fx}%"
         if {-bg::contest::%loop-value%} is true:
             if mod({-bg::sec} ? 0, 2) is 0:
                 set {_s} to "%{_s}%%{-bg::hud::ptc::%loop-value%}%"

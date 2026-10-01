@@ -83,9 +83,11 @@ def write_hud(path, font):
     def placed(key, extra=0):
         return H.place(font, key, extra_x=extra)
     # 게이지 조각 글리프 (문자 · 폭 · 기준 x)
-    for kind, tile in (("hp", H.TILE), ("trail", H.TILE), ("cast", H.CAST_TILE)):
+    kinds = [("hp", H.TILE, "boss/"), ("trail", H.TILE, "boss/"), ("cast", H.CAST_TILE, "boss/")]
+    kinds += [(f"ptf_{t}", H.PTF_TILE, "hud/") for t in H.TEAM_COL]
+    for kind, tile, pre in kinds:
         for w in range(1, tile + 1):
-            k = f"boss/{kind}_{w}"
+            k = f"{pre}{kind}_{w}"
             if k not in g:
                 continue
             gl = g[k]
@@ -116,6 +118,9 @@ def write_hud(path, font):
             if k.startswith(f"hud/pt_{p}_"):
                 B.append(f"    set {{-bg::hud::pt::{k[len('hud/pt_'):]}}} to {q(placed(k))}")
         B.append(f"    set {{-bg::hud::ptc::{p}}} to {q(H.place(font, 'hud/pt_contest', H.PT_X[p]))}")
+        B.append(f"    set {{-bg::hud::ptx::{p}}} to {H.PT_X[p] + 1}")
+    B.append(f"    set {{-bg::hud::ptfw}} to {H.PTF_W}")
+    B.append(f"    set {{-bg::hud::ptft}} to {H.PTF_TILE}")
     B.append(f"    set {{-bg::hud::ptorder::*}} to {', '.join(q(p) for p in H.PT_ORDER[:-1])} and {q(H.PT_ORDER[-1])}")
     for pre, key in (("boss/d", "bd"), ("hud/d", "hd"), ("hud/t", "td")):
         for ch in "0123456789":
