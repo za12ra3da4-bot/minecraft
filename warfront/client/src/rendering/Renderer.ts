@@ -48,8 +48,9 @@ export class Renderer {
     this.labels = new LabelLayer(game);
     this.input = new InputController(canvas, this.camera, {
       tap: (x, y, info) => this.onTap(x, y, info),
-      box: (x0, y0, x1, y1) => this.onBox(x0, y0, x1, y1),
+      box: (x0, y0, x1, y1, add) => this.onBox(x0, y0, x1, y1, add),
       hover: (x, y) => this.onHover(x, y),
+      touchBoxMode: () => game.boxMode,
     });
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(canvas);
@@ -131,7 +132,7 @@ export class Renderer {
   };
 
   private drawBox(ctx: CanvasRenderingContext2D): void {
-    const b = this.input.box;
+    const b = this.input.visibleBox;
     if (!b) return;
     ctx.fillStyle = 'rgba(255,214,110,0.12)';
     ctx.strokeStyle = 'rgba(255,214,110,0.9)';
@@ -188,18 +189,6 @@ export class Renderer {
 
     if (info.button === 2) {
       if (own.length) this.order(own, item, wx, wy);
-      return;
-    }
-
-    if (game.joinMode && own.length) {
-      game.joinMode = false;
-      if (item && item.nation === you) {
-        const target = this.largest(item);
-        void game.command({ type: 'JOIN_UNIT', unitIds: own.filter((id) => id !== target.id), targetUnitId: target.id });
-      } else {
-        game.toast('Join cancelled — tap one of your armies to join', 'info');
-      }
-      game.notify();
       return;
     }
 
@@ -267,19 +256,37 @@ export class Renderer {
     game.effects.push({ kind: 'order', x: wx, y: wy });
   }
 
-  private onBox(x0: number, y0: number, x1: number, y1: number): void {
+  private onBox(x0: number, y0: number, x1: number, y1: number, add: boolean): void {
     const you = this.game.you;
-    const ids: number[] = [];
+    const ids = new Set(add ? this.selectedOwn() : []);
     for (const item of this.units.itemsIn(x0, y0, x1, y1)) {
-      if (item.nation === you) ids.push(...item.members.map((m) => m.unit.id));
+      if (item.nation === you) for (const m of item.members) ids.add(m.unit.id);
     }
+    if (ids.size) this.game.select({ kind: 'units', ids: [...ids] });
+    else if (!add) this.game.select({ kind: 'none' });
+  }
+
+  /** Selects every army of the player (UI button / Ctrl+A). */
+  selectAll(): void {
+    const ids = [...this.game.replica.units.values()].filter((u) => u.nation === this.game.you).map((u) => u.id);
     this.game.select(ids.length ? { kind: 'units', ids } : { kind: 'none' });
+    if (!ids.length) this.game.toast('남은 부대가 없습니다', 'info');
+  }
+
+  /** Centres on the capital and opens its panel (raise armies there). */
+  openCapital(): void {
+    const r = this.game.replica;
+    const cap = r.you ? r.nations.get(r.you)?.capitalCity : null;
+    if (cap === null || cap === undefined) return;
+    const city = r.map.cities[cap];
+    this.camera.animateTo(city.x, city.y, Math.max(this.camera.zoom, this.camera.fitZoom * 3));
+    this.game.select({ kind: 'territory', id: city.territoryId });
   }
 
   private onHover(sx: number, sy: number): void {
     const item = this.units.hitTest(sx, sy);
     const own = this.selectedOwn().length > 0;
-    this.canvas.style.cursor = item ? 'pointer' : own ? 'crosshair' : 'grab';
+    this.canvas.style.cursor = item ? 'pointer' : own ? 'crosshair' : 'default';
   }
 
   // ------------------------------------------------------------------ keyboard
@@ -292,7 +299,6 @@ export class Renderer {
     this.keys.add(key);
     const own = this.selectedOwn();
     if (key === 'escape') {
-      game.joinMode = false;
       game.select({ kind: 'none' });
     } else if (key === ' ' && game.isHost) {
       e.preventDefault();
@@ -304,15 +310,11 @@ export class Renderer {
       void game.command({ type: 'HALT', unitIds: own });
     } else if (key === 'm' && own.length > 1) {
       void game.command({ type: 'MERGE_UNIT', unitIds: own });
-    } else if (key === 'j' && own.length) {
-      game.joinMode = true;
-      game.notify();
     } else if (key === 'f') {
       this.focusSelection();
     } else if (key === 'a' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      const ids = [...game.replica.units.values()].filter((u) => u.nation === game.you).map((u) => u.id);
-      game.select(ids.length ? { kind: 'units', ids } : { kind: 'none' });
+      this.selectAll();
     } else if (key === '+' || key === '=') {
       this.camera.zoomAt(this.camera.viewW / 2, this.camera.viewH / 2, 1.4);
     } else if (key === '-' || key === '_') {

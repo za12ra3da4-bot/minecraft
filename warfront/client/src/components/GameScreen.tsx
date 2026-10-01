@@ -6,6 +6,7 @@ import { Renderer } from '../rendering/Renderer';
 import { CommandBar } from '../ui/CommandBar';
 import { DiplomacyPanel } from '../ui/DiplomacyPanel';
 import { EventLog } from '../ui/EventLog';
+import { GameHelp } from '../ui/GameHelp';
 import { GameOver } from '../ui/GameOver';
 import { Minimap } from '../ui/Minimap';
 import { NationPanel } from '../ui/NationPanel';
@@ -16,6 +17,8 @@ import { ChatBox } from './ChatBox';
 
 type Drawer = 'nation' | 'events' | 'chat' | null;
 
+const HELP_KEY = 'warfront.helpSeen';
+
 export function GameScreen({ game }: { game: GameClient }) {
   useStore(game);
   useStore(app);
@@ -25,6 +28,21 @@ export function GameScreen({ game }: { game: GameClient }) {
   const [drawer, setDrawer] = useState<Drawer>(null);
   const [hideOver, setHideOver] = useState(false);
   const [chatOpen, setChatOpen] = useState(true);
+  const [help, setHelp] = useState(() => {
+    try {
+      return localStorage.getItem(HELP_KEY) !== '1';
+    } catch {
+      return true;
+    }
+  });
+  const closeHelp = (): void => {
+    setHelp(false);
+    try {
+      localStorage.setItem(HELP_KEY, '1');
+    } catch {
+      /* ignore */
+    }
+  };
 
   useEffect(() => {
     const r = new Renderer(canvasRef.current!, game);
@@ -41,8 +59,9 @@ export function GameScreen({ game }: { game: GameClient }) {
       <TopBar
         game={game}
         onDiplomacy={() => setDiplomacy(true)}
+        onHelp={() => setHelp(true)}
         onMenu={() => {
-          if (confirm('Leave the battle and return to the main menu?')) app.leave();
+          if (confirm('전투를 떠나 메인 메뉴로 돌아갈까요?')) app.leave();
         }}
         onToggle={toggle}
       />
@@ -52,7 +71,7 @@ export function GameScreen({ game }: { game: GameClient }) {
       <div className={`hud panel chat-panel${drawer === 'chat' ? ' open' : ''}`}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div className="panel-title" style={{ flex: 1 }}>
-            Chat
+            채팅
           </div>
           <button className="btn small ghost desktop-only" onClick={() => setChatOpen(!chatOpen)}>
             {chatOpen ? '–' : '+'}
@@ -61,14 +80,15 @@ export function GameScreen({ game }: { game: GameClient }) {
         {(chatOpen || drawer === 'chat') && <ChatBox messages={game.chat} compact />}
       </div>
       <Minimap game={game} renderer={renderer} />
-      <CommandBar game={game} onFocus={() => renderer?.focusSelection()} />
+      <CommandBar game={game} onFocus={() => renderer?.focusSelection()} onSelectAll={() => renderer?.selectAll()} onCapital={() => renderer?.openCapital()} onHelp={() => setHelp(true)} />
       <Toasts game={game} />
       {diplomacy && <DiplomacyPanel game={game} onClose={() => setDiplomacy(false)} />}
+      {help && <GameHelp onClose={closeHelp} />}
       {game.over && !hideOver && <GameOver game={game} onLeave={() => app.leave()} onClose={() => setHideOver(true)} />}
       {!app.connected && (
         <div className="overlay" style={{ background: 'rgba(5,6,8,0.35)' }}>
           <div className="panel" style={{ width: 'auto' }}>
-            <div className="panel-title">Connection lost — reconnecting…</div>
+            <div className="panel-title">서버 연결이 끊겼습니다 — 다시 연결하는 중…</div>
           </div>
         </div>
       )}

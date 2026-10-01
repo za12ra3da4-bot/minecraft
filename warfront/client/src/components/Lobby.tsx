@@ -46,19 +46,19 @@ export function Lobby() {
     <MenuShell shade={false}>
       <div className="lobby">
         <section className="panel">
-          <div className="panel-title">War room</div>
+          <div className="panel-title">작전실</div>
           <div>
-            <div className="label">Room code — share with friends</div>
+            <div className="label">방 코드 — 친구에게 알려주세요</div>
             <div className="room-code" data-testid="room-code">
               {room.code}
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
               <button className="btn small" onClick={copy}>
-                {copied ? 'Copied!' : 'Copy invite link'}
+                {copied ? '복사됨!' : '초대 링크 복사'}
               </button>
             </div>
           </div>
-          <div className="panel-title">Commanders · {room.players.length}/{room.settings.maxPlayers}</div>
+          <div className="panel-title">플레이어 · {room.players.length}/{room.settings.maxPlayers}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, overflowY: 'auto' }}>
             {room.players.map((p) => (
               <div className="player-row" key={p.id} style={{ opacity: p.connected ? 1 : 0.5 }}>
@@ -66,16 +66,16 @@ export function Lobby() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="pname">
                     {p.name}
-                    {p.id === app.playerId && <span className="hint"> (you)</span>}
+                    {p.id === app.playerId && <span className="hint"> (나)</span>}
                   </div>
-                  <div className="sub">{p.nation ? getNation(p.nation).name : 'Choosing nation…'}</div>
+                  <div className="sub">{p.nation ? getNation(p.nation).name : '나라 고르는 중…'}</div>
                 </div>
-                {p.isHost && <span className="badge host">♛ Host</span>}
-                {!p.isHost && <span className={`badge${p.ready ? ' ready' : ''}`}>{p.ready ? 'Ready' : 'Not ready'}</span>}
+                {p.isHost && <span className="badge host">♛ 방장</span>}
+                {!p.isHost && <span className={`badge${p.ready ? ' ready' : ''}`}>{p.ready ? '준비 완료' : '준비 중'}</span>}
               </div>
             ))}
           </div>
-          <div className="panel-title">Settings</div>
+          <div className="panel-title">설정</div>
           {editing && isHost ? (
             <SettingsForm
               value={room.settings}
@@ -85,29 +85,29 @@ export function Lobby() {
             />
           ) : (
             <dl className="settings-summary">
-              <dt>Room</dt>
+              <dt>방</dt>
               <dd>{room.settings.roomName}</dd>
-              <dt>Map</dt>
+              <dt>지도</dt>
               <dd>{def?.name}</dd>
-              <dt>Speed</dt>
-              <dd>{room.settings.speed}x</dd>
-              <dt>Victory</dt>
+              <dt>속도</dt>
+              <dd>{room.settings.speed}배</dd>
+              <dt>승리 조건</dt>
               <dd>{VICTORY_LABELS[room.settings.victory].label}</dd>
-              <dt>AI nations</dt>
+              <dt>AI 나라</dt>
               <dd>{room.settings.aiCount}</dd>
-              <dt>Start</dt>
-              <dd>{room.settings.startAtWar ? 'At war' : 'At peace'}</dd>
+              <dt>시작</dt>
+              <dd>{room.settings.startAtWar ? '역사적 전쟁' : '평화'}</dd>
             </dl>
           )}
           {isHost && (
             <button className="btn small ghost" onClick={() => setEditing(!editing)}>
-              {editing ? 'Done editing' : 'Edit settings'}
+              {editing ? '설정 완료' : '설정 바꾸기'}
             </button>
           )}
         </section>
 
         <section className="panel" style={{ overflowY: 'auto' }}>
-          <div className="panel-title">Choose your nation</div>
+          <div className="panel-title">나라 고르기</div>
           <div className="nation-grid">
             {room.nations.map((n) => {
               const owner = taken.get(n);
@@ -117,36 +117,36 @@ export function Lobby() {
                   <Flag nation={n} height={24} />
                   <span style={{ display: 'flex', flexDirection: 'column' }}>
                     <span className="nname">{getNation(n).name}</span>
-                    <span className="taken">{owner ? (mine ? 'Your nation' : `Taken by ${owner}`) : 'Available'}</span>
+                    <span className="taken">{owner ? (mine ? '내 나라' : `${owner} 선택함`) : '선택 가능'}</span>
                   </span>
                 </button>
               );
             })}
           </div>
-          <p className="hint">Nations nobody picks are played by the AI (up to the AI count) or left as unclaimed land you can conquer.</p>
+          <p className="hint">아무도 고르지 않은 나라는 AI가 맡거나(AI 나라 수만큼), 정복할 수 있는 빈 땅이 됩니다.</p>
           {error && <div className="error-text">{error}</div>}
           <div className="dialog-actions" style={{ marginTop: 'auto' }}>
             <button className="btn ghost" onClick={() => app.leave()}>
-              Leave room
+              방 나가기
             </button>
             <div style={{ display: 'flex', gap: 10 }}>
               {!isHost && (
                 <button className={`btn${me?.ready ? ' active' : ''}`} disabled={!me?.nation} onClick={() => getSocket().emit('lobby:ready', !me?.ready)} data-testid="ready">
-                  {me?.ready ? '✓ Ready' : 'Ready'}
+                  {me?.ready ? '✓ 준비 완료' : '준비'}
                 </button>
               )}
               {isHost && (
                 <button className="btn primary" disabled={!canStart} onClick={() => void start()} data-testid="start">
-                  Start Game
+                  게임 시작
                 </button>
               )}
             </div>
           </div>
-          {isHost && !canStart && <div className="hint">Everyone must pick a nation and other players must be READY.</div>}
+          {isHost && !canStart && <div className="hint">모두 나라를 고르고, 다른 플레이어가 [준비]를 눌러야 시작할 수 있습니다.</div>}
         </section>
 
         <section className="panel">
-          <div className="panel-title">Dispatches</div>
+          <div className="panel-title">채팅</div>
           <ChatBox messages={app.lobbyChat} />
         </section>
       </div>

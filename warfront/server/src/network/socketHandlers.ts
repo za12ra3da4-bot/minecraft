@@ -5,7 +5,7 @@ import type { RoomPlayer } from '../rooms/RoomPlayer';
 import { TokenBucket } from './RateLimiter';
 import type { GameSocket, IO } from './types';
 
-const NOT_IN_ROOM: Ack = { ok: false, error: 'Not in a room' };
+const NOT_IN_ROOM: Ack = { ok: false, error: '방에 없습니다' };
 
 function safeAck<T>(ack: unknown): (res: T) => void {
   return typeof ack === 'function' ? (ack as (res: T) => void) : () => undefined;
@@ -39,7 +39,7 @@ export function registerSocketHandlers(io: IO, rooms: RoomManager): void {
     };
 
     const joinFlow = (fn: () => { room?: Room; player?: RoomPlayer; res: RoomJoinResult }, ack: (r: RoomJoinResult) => void): void => {
-      if (!roomActions.take()) return ack({ ok: false, error: 'Too many requests, wait a moment' });
+      if (!roomActions.take()) return ack({ ok: false, error: '요청이 너무 많습니다. 잠시 기다리세요' });
       const out = fn();
       if (out.res.ok && out.room && out.player) enter(out.room, out.player);
       ack(out.res);

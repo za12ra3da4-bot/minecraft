@@ -22,26 +22,26 @@ export function JoinGame() {
           }}
         >
           <div>
-            <div className="panel-title">Report for duty</div>
-            <h2>Join Game</h2>
+            <div className="panel-title">참전</div>
+            <h2>방 참가</h2>
           </div>
           <label className="field">
-            <span className="label">Room code</span>
+            <span className="label">방 코드 (친구에게 받은 6글자)</span>
             <div className="code-input">
               <input className="input" autoFocus maxLength={6} placeholder="W7K4P2" value={code} onChange={(e) => setCode(e.target.value.replace(/[^a-z0-9]/gi, '').toUpperCase())} />
             </div>
           </label>
           <label className="field">
-            <span className="label">Commander name</span>
-            <input className="input" maxLength={16} value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
+            <span className="label">사령관 이름</span>
+            <input className="input" maxLength={16} value={name} onChange={(e) => setName(e.target.value)} placeholder="이름" />
           </label>
           {app.error && <div className="error-text">{app.error}</div>}
           <div className="dialog-actions">
             <button type="button" className="btn ghost" onClick={() => app.go('menu')}>
-              ← Back
+              ← 뒤로
             </button>
             <button type="submit" className="btn primary" disabled={!valid || app.busy || !app.connected}>
-              {app.busy ? 'Joining…' : 'Join Game'}
+              {app.busy ? '참가하는 중…' : '참가하기'}
             </button>
           </div>
         </form>

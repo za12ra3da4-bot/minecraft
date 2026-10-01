@@ -82,9 +82,9 @@ export interface MapDef {
 export const MAPS: MapDef[] = [
   {
     id: 'europe',
-    name: 'Europe 1812',
+    name: '유럽 1812',
     geo: 'europe',
-    description: 'June 1812: Napoleon\'s empire at its height. Real geography from Lisbon to Moscow, the French bloc against the Coalition, Austria and Prussia undecided.',
+    description: '1812년 6월, 나폴레옹 제국의 절정. 리스본에서 모스크바까지 실제 지리 위에서 프랑스 동맹과 대프랑스 연합이 맞섭니다. 오스트리아·프로이센은 중립.',
     width: 4800,
     height: 3872,
     cellSize: 16,
@@ -147,8 +147,8 @@ export const MAPS: MapDef[] = [
   },
   {
     id: 'valois',
-    name: 'Valois Ridge',
-    description: 'A dense battlefield of farms, woods and ridges. June 1815: Britain and Prussia stand together against the Emperor\'s last army.',
+    name: '발루아 능선 1815',
+    description: '1815년 6월, 농장과 숲, 능선이 빽빽한 전장. 영국과 프로이센이 황제의 마지막 군대에 맞섭니다.',
     width: 3600,
     height: 2400,
     cellSize: 12,

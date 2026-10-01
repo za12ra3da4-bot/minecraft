@@ -82,7 +82,7 @@ class AppState extends Store {
     const res = await request('room:resume', token);
     if (!res.ok) {
       clearSession();
-      if (this.screen === 'lobby' || this.screen === 'game') this.leaveToMenu('Your session expired');
+      if (this.screen === 'lobby' || this.screen === 'game') this.leaveToMenu('세션이 만료되었습니다');
       return;
     }
     this.accept(res);

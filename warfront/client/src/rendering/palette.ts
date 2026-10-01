@@ -18,9 +18,9 @@ export const MAP_COLORS = {
   frontGlow: 'rgba(214,52,36,0.38)',
 } as const;
 
-export const UI_FONT = '"Barlow Condensed", "Arial Narrow", sans-serif';
-export const LABEL_FONT = '"Spectral", Georgia, serif';
-export const TITLE_FONT = '"IM Fell English SC", Georgia, serif';
+export const UI_FONT = '"Barlow Condensed", "Noto Sans KR", "Arial Narrow", sans-serif';
+export const LABEL_FONT = '"Spectral", "Nanum Myeongjo", Georgia, serif';
+export const TITLE_FONT = '"IM Fell English SC", "Nanum Myeongjo", Georgia, serif';
 
 const rgbCache = new Map<string, [number, number, number]>();
 

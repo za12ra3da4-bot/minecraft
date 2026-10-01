@@ -71,12 +71,12 @@ export class Room {
   // ------------------------------------------------------------- membership
 
   addPlayer(name: string): RoomPlayer | string {
-    if (this.status !== 'LOBBY') return 'Game already started';
-    if (this.players.size >= this.settings.maxPlayers) return 'Room is full';
+    if (this.status !== 'LOBBY') return '이미 시작된 게임입니다';
+    if (this.players.size >= this.settings.maxPlayers) return '방이 꽉 찼습니다';
     const player = new RoomPlayer(this.uniqueName(name));
     this.players.set(player.id, player);
     if (!this.hostId) this.hostId = player.id;
-    this.systemChat(`${player.name} joined the room`);
+    this.systemChat(`${player.name}님이 입장했습니다`);
     return player;
   }
 
@@ -95,7 +95,7 @@ export class Room {
       if (n && n.controller === 'AI') {
         n.controller = 'PLAYER';
         this.game.setAIControl(player.nation, false);
-        this.game.state.emit('PLAYER_JOINED', `${player.name} resumed command of ${getNation(player.nation).name}`, [player.nation]);
+        this.game.state.emit('PLAYER_JOINED', `${player.name}님이 ${getNation(player.nation).name} 지휘에 복귀했습니다`, [player.nation]);
       }
     }
   }
@@ -104,7 +104,7 @@ export class Room {
     player.socketId = null;
     player.disconnectedAt = Date.now();
     if (this.connectedCount() === 0) this.emptySince = Date.now();
-    this.systemChat(`${player.name} disconnected`);
+    this.systemChat(`${player.name}님의 연결이 끊어졌습니다`);
     this.broadcastRoom();
   }
 
@@ -116,7 +116,7 @@ export class Room {
     if (this.hostId === id) {
       const next = [...this.players.values()].find((p) => p.connected) ?? [...this.players.values()][0];
       this.hostId = next?.id ?? '';
-      if (next) this.systemChat(`${next.name} is now the host`);
+      if (next) this.systemChat(`이제 ${next.name}님이 방장입니다`);
     }
     if (this.game && player.nation) this.handToAI(player.nation, player.name);
   }
@@ -127,19 +127,19 @@ export class Room {
     if (!n || n.eliminated || n.controller !== 'PLAYER') return;
     n.controller = 'AI';
     this.game.setAIControl(nation, true);
-    this.game.state.emit('PLAYER_LEFT', `${name} left — AI takes command of ${getNation(nation).name}`, [nation]);
+    this.game.state.emit('PLAYER_LEFT', `${name}님이 나갔습니다 — ${getNation(nation).name}은(는) AI가 지휘합니다`, [nation]);
   }
 
   // ------------------------------------------------------------- lobby
 
   selectNation(playerId: string, nation: NationId | null): Ack {
-    if (this.status !== 'LOBBY') return { ok: false, error: 'Game already started' };
+    if (this.status !== 'LOBBY') return { ok: false, error: '이미 시작된 게임입니다' };
     const player = this.players.get(playerId);
-    if (!player) return { ok: false, error: 'Not in room' };
+    if (!player) return { ok: false, error: '방에 없습니다' };
     if (nation !== null) {
-      if (!this.info().nations.includes(nation)) return { ok: false, error: 'Nation not on this map' };
+      if (!this.info().nations.includes(nation)) return { ok: false, error: '이 지도에 없는 나라입니다' };
       const taken = [...this.players.values()].some((p) => p.id !== playerId && p.nation === nation);
-      if (taken) return { ok: false, error: 'Nation already taken' };
+      if (taken) return { ok: false, error: '이미 선택된 나라입니다' };
     }
     player.nation = nation;
     player.ready = false;
@@ -155,8 +155,8 @@ export class Room {
   }
 
   updateSettings(playerId: string, raw: unknown): Ack {
-    if (playerId !== this.hostId) return { ok: false, error: 'Only the host can change settings' };
-    if (this.status !== 'LOBBY') return { ok: false, error: 'Game already started' };
+    if (playerId !== this.hostId) return { ok: false, error: '방장만 설정을 바꿀 수 있습니다' };
+    if (this.status !== 'LOBBY') return { ok: false, error: '이미 시작된 게임입니다' };
     const before = this.settings.mapId;
     const next = sanitizeSettings(raw, this.settings);
     next.maxPlayers = Math.max(next.maxPlayers, this.players.size);
@@ -171,11 +171,11 @@ export class Room {
   }
 
   start(playerId: string): Ack {
-    if (playerId !== this.hostId) return { ok: false, error: 'Only the host can start the game' };
-    if (this.status !== 'LOBBY') return { ok: false, error: 'Game already started' };
+    if (playerId !== this.hostId) return { ok: false, error: '방장만 시작할 수 있습니다' };
+    if (this.status !== 'LOBBY') return { ok: false, error: '이미 시작된 게임입니다' };
     const players = [...this.players.values()];
-    if (players.some((p) => !p.nation)) return { ok: false, error: 'Every player must choose a nation' };
-    if (players.some((p) => p.id !== this.hostId && !p.ready)) return { ok: false, error: 'Waiting for all players to be READY' };
+    if (players.some((p) => !p.nation)) return { ok: false, error: '모든 플레이어가 나라를 골라야 합니다' };
+    if (players.some((p) => p.id !== this.hostId && !p.ready)) return { ok: false, error: '모든 플레이어가 준비 완료해야 합니다' };
     this.launch();
     return { ok: true };
   }
@@ -215,31 +215,31 @@ export class Room {
 
   handleCommand(playerId: string, raw: unknown): Ack {
     const player = this.players.get(playerId);
-    if (!player) return { ok: false, error: 'Not in room' };
-    if (!this.game || this.status === 'LOBBY') return { ok: false, error: 'Game not running' };
-    if (!player.commands.take()) return { ok: false, error: 'Too many commands — slow down' };
+    if (!player) return { ok: false, error: '방에 없습니다' };
+    if (!this.game || this.status === 'LOBBY') return { ok: false, error: '게임이 진행 중이 아닙니다' };
+    if (!player.commands.take()) return { ok: false, error: '명령이 너무 많습니다 — 잠시 후 다시' };
     const cmd = parseCommand(raw);
-    if (!cmd) return { ok: false, error: 'Malformed command' };
+    if (!cmd) return { ok: false, error: '잘못된 명령' };
     const state = this.game.state;
     if (cmd.type === 'SET_SPEED' || cmd.type === 'SET_PAUSED') {
-      if (playerId !== this.hostId) return { ok: false, error: 'Only the host controls game speed' };
+      if (playerId !== this.hostId) return { ok: false, error: '방장만 속도를 바꿀 수 있습니다' };
       if (cmd.type === 'SET_SPEED') state.speed = cmd.speed;
       else state.paused = cmd.paused;
-      state.emit('INFO', cmd.type === 'SET_SPEED' ? `Game speed set to ${cmd.speed}x` : cmd.paused ? 'Game paused' : 'Game resumed', []);
+      state.emit('INFO', cmd.type === 'SET_SPEED' ? `게임 속도 ${cmd.speed}배` : cmd.paused ? '일시정지' : '게임 재개', []);
       return { ok: true };
     }
-    if (!player.nation) return { ok: false, error: 'You are spectating' };
+    if (!player.nation) return { ok: false, error: '관전 중입니다' };
     return executeCommand(state, player.nation, cmd);
   }
 
   chat(playerId: string, raw: unknown): Ack {
     const player = this.players.get(playerId);
-    if (!player) return { ok: false, error: 'Not in room' };
+    if (!player) return { ok: false, error: '방에 없습니다' };
     const text = sanitizeText(raw, CHAT.MAX_LENGTH);
-    if (!text) return { ok: false, error: 'Empty message' };
+    if (!text) return { ok: false, error: '메시지를 입력하세요' };
     const now = Date.now();
-    if (text === player.lastChat && now - player.lastChatAt < 5_000) return { ok: false, error: 'Duplicate message' };
-    if (!player.chat.take()) return { ok: false, error: 'You are sending messages too fast' };
+    if (text === player.lastChat && now - player.lastChatAt < 5_000) return { ok: false, error: '같은 메시지를 연속으로 보낼 수 없습니다' };
+    if (!player.chat.take()) return { ok: false, error: '메시지를 너무 빨리 보내고 있습니다' };
     player.lastChat = text;
     player.lastChatAt = now;
     this.pushChat({ id: this.nextChatId++, from: player.name, nation: player.nation, text, time: now });
@@ -267,7 +267,7 @@ export class Room {
       if (p.connected || p.disconnectedAt === null) continue;
       const away = now - p.disconnectedAt;
       if (this.status === 'LOBBY' && away > LOBBY_GRACE_MS) {
-        this.removePlayer(p.id, `${p.name} left the room`);
+        this.removePlayer(p.id, `${p.name}님이 나갔습니다`);
         this.broadcastRoom();
       } else if (this.game && p.nation && away > AI_TAKEOVER_MS) {
         this.handToAI(p.nation, p.name);

@@ -8,19 +8,19 @@ export function GameOver({ game, onLeave, onClose }: { game: GameClient; onLeave
   return (
     <div className="overlay">
       <div className="panel">
-        <div className="panel-title">{won ? 'Victory' : 'The war is over'}</div>
-        <h2>{won ? 'Your nation is victorious' : info.winners.length ? `${info.winners.map((w) => getNation(w).name).join(' & ')} prevail` : 'No victor'}</h2>
+        <div className="panel-title">{won ? '승리' : '전쟁 종료'}</div>
+        <h2>{won ? '우리 나라의 승리입니다!' : info.winners.length ? `${info.winners.map((w) => getNation(w).name).join(' · ')} 승리` : '승자 없음'}</h2>
         <div className="hint" style={{ fontSize: 15 }}>
           {info.reason}
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15 }}>
           <thead>
             <tr className="label">
-              <th style={{ textAlign: 'left' }}>Nation</th>
-              <th>Territories</th>
-              <th>Soldiers</th>
-              <th>Inflicted</th>
-              <th>Lost</th>
+              <th style={{ textAlign: 'left' }}>나라</th>
+              <th>영토</th>
+              <th>병력</th>
+              <th>적 피해</th>
+              <th>아군 손실</th>
             </tr>
           </thead>
           <tbody>
@@ -39,10 +39,10 @@ export function GameOver({ game, onLeave, onClose }: { game: GameClient; onLeave
         </table>
         <div className="dialog-actions">
           <button className="btn ghost" onClick={onClose}>
-            View map
+            지도 보기
           </button>
           <button className="btn primary" onClick={onLeave}>
-            Return to menu
+            메뉴로
           </button>
         </div>
       </div>

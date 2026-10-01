@@ -1,6 +1,6 @@
 /** Rename the game here – every screen reads the title from this constant. */
 export const GAME_TITLE = 'WARFRONT';
-export const GAME_SUBTITLE = 'Napoleonic grand battle strategy, 1812';
+export const GAME_SUBTITLE = '나폴레옹 시대 실시간 대전략, 1812';
 
 /** Server simulation tick. */
 export const SERVER_TICK_MS = 100;

@@ -49,11 +49,9 @@ export function setupGame(map: GeneratedMap, settings: GameSettings, participant
     if (n.controller === 'NONE') continue;
     spawnStartingArmies(state, n, slot.armies.total, slot.armies.count, slot.armies.grand);
   }
-  state.emit('INFO', `The campaign begins on ${map.def.name}.`, [], { major: false });
+  state.emit('INFO', `${map.def.name} 전역이 시작되었습니다.`, [], { major: false });
   return state;
 }
-
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
 function spawnStartingArmies(state: GameState, n: NationRuntime, total: number, count: number, grand: number): void {
   const { rng } = state;
@@ -95,7 +93,7 @@ function spawnStartingArmies(state: GameState, n: NationRuntime, total: number, 
     .map((w, i) => [w, i] as const)
     .sort((a, b) => b[0] - a[0])
     .slice(0, generals.length)
-    .forEach(([, i], k) => corpsNames.set(i, `${ROMAN[k]} Corps (${generals[k]})`));
+    .forEach(([, i], k) => corpsNames.set(i, `제${k + 1}군단 (${generals[k]})`));
   weights.forEach((w, i) => {
     const soldiers = Math.max(1_500, Math.round((remaining * w) / wSum + rng.range(-180, 180)));
     let type: ArmyType = 'INFANTRY';

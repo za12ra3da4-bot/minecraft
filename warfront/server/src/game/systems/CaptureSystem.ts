@@ -94,7 +94,7 @@ export function transferTerritory(state: GameState, tid: number, to: NationId): 
   const toName = getNation(to).name;
   state.emit(
     'TERRITORY_CAPTURED',
-    from ? `${toName} captured ${territory.name} from ${getNation(from).name}` : `${toName} occupied ${territory.name}`,
+    from ? `점령: ${territory.name} (${getNation(from).name} → ${toName})` : `점령: ${territory.name} → ${toName}`,
     from ? [to, from] : [to],
     { x: territory.cx, y: territory.cy },
   );
@@ -114,8 +114,8 @@ export function transferTerritory(state: GameState, tid: number, to: NationId): 
       if (u.nation === from) u.morale = Math.max(0, u.morale - ECONOMY.CAPITAL_LOSS_MORALE);
     }
     loser.capitalCity = relocateCapital(state, from);
-    const moved = loser.capitalCity !== null ? ` Capital moved to ${state.map.data.cities[loser.capitalCity].name}.` : '';
-    state.emit('CAPITAL_CAPTURED', `${toName} captured the capital ${capitalName}!${moved}`, [to, from], {
+    const moved = loser.capitalCity !== null ? ` 수도 이전: ${state.map.data.cities[loser.capitalCity].name}` : '';
+    state.emit('CAPITAL_CAPTURED', `수도 함락! ${capitalName} → ${toName}.${moved}`, [to, from], {
       x: territory.cx,
       y: territory.cy,
       major: true,
@@ -152,7 +152,7 @@ export function eliminateNation(state: GameState, nation: NationId, by: NationId
   for (const [tid, cap] of state.captures) if (cap.nation === nation) state.captures.delete(tid);
   state.emit(
     'NATION_ELIMINATED',
-    by ? `${getNation(nation).name} has been conquered by ${getNation(by).name}!` : `${getNation(nation).name} has collapsed!`,
+    by ? `멸망: ${getNation(nation).name} (정복자 ${getNation(by).name})` : `멸망: ${getNation(nation).name}`,
     by ? [nation, by] : [nation],
     { major: true },
   );

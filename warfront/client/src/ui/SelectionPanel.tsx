@@ -14,13 +14,14 @@ import {
 import { useState } from 'react';
 import { Flag } from '../components/Flag';
 import type { GameClient } from '../game/GameClient';
+import { RELATION_KO, RESOURCE_KO, STATUS_KO } from './labels';
 
 function territoryName(game: GameClient, x: number, y: number): string {
   const m = game.replica.map;
   const cx = Math.floor(x / m.cellSize);
   const cy = Math.floor(y / m.cellSize);
   const t = cx >= 0 && cy >= 0 && cx < m.cols && cy < m.rows ? game.grids.territoryGrid[cy * m.cols + cx] : -1;
-  return t >= 0 ? m.territories[t].name : 'open water';
+  return t >= 0 ? m.territories[t].name : '바다';
 }
 
 function UnitDetails({ game, unit, own }: { game: GameClient; unit: UnitNet; own: boolean }) {
@@ -46,36 +47,36 @@ function UnitDetails({ game, unit, own }: { game: GameClient; unit: UnitNet; own
         <div className="big-number" data-testid="selected-soldiers">
           {formatNumber(r?.shown ?? unit.soldiers)}
         </div>
-        <div className="label">soldiers of {formatNumber(unit.maxSoldiers)}</div>
+        <div className="label">명 (최대 {formatNumber(unit.maxSoldiers)}명)</div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span className={`status-pill ${unit.status}`}>{unit.status}</span>
-        <span className="hint">near {territoryName(game, unit.x, unit.y)}</span>
+        <span className={`status-pill ${unit.status}`}>{STATUS_KO[unit.status]}</span>
+        <span className="hint">위치: {territoryName(game, unit.x, unit.y)}</span>
       </div>
       <dl className="kv">
-        <dt>Morale</dt>
+        <dt>사기</dt>
         <dd>
           <div className="bar" style={{ marginTop: 4 }}>
             <div style={{ width: `${unit.morale}%`, background: unit.morale > 60 ? '#7fbf5a' : unit.morale > 30 ? '#e2b33c' : '#d6493a' }} />
           </div>
         </dd>
-        <dt>Attack</dt>
+        <dt>공격력</dt>
         <dd>{unit.attack.toFixed(2)}</dd>
-        <dt>Defence</dt>
+        <dt>방어력</dt>
         <dd>{unit.defense.toFixed(2)}</dd>
-        <dt>Speed</dt>
+        <dt>속도</dt>
         <dd>{unit.speed.toFixed(0)}</dd>
-        <dt>Heading to</dt>
+        <dt>목적지</dt>
         <dd>{target ? `⚔ ${getNation(target.nation).adjective} ${target.name}` : (destination ?? '—')}</dd>
       </dl>
       {own && unit.battleId === null && maxSplit >= UNIT.MIN_SPLIT && (
         <div className="field">
           <span className="label">
-            Split · {formatNumber(splitValue)} / {formatNumber(unit.soldiers)}
+            원하는 만큼 나누기 · {formatNumber(splitValue)} / {formatNumber(unit.soldiers)}명
           </span>
           <input type="range" min={UNIT.MIN_SPLIT} max={maxSplit} step={100} value={splitValue} onChange={(e) => setSplit(Number(e.target.value))} data-testid="split-slider" />
           <button className="btn small" onClick={() => void game.command({ type: 'SPLIT_UNIT', unitId: unit.id, soldiers: splitValue })} data-testid="split">
-            Split army
+            ✂ 이만큼 떼어내기
           </button>
         </div>
       )}
@@ -93,9 +94,16 @@ function ProductionPanel({ game, cityId }: { game: GameClient; cityId: number })
   const queue = p.production.filter((o) => o.cityId === cityId);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-      <div className="panel-title">Create army</div>
+      <div className="panel-title">⚑ 군대 만들기</div>
+      <div className="quick-sizes">
+        {[5_000, 10_000, 20_000, 30_000].map((n) => (
+          <button key={n} className={`btn small${soldiers === n ? ' active' : ''}`} onClick={() => setSoldiers(n)}>
+            {n / 10_000 >= 1 ? `${n / 10_000}만` : `${n / 1_000}천`}명
+          </button>
+        ))}
+      </div>
       <div className="field">
-        <span className="label">Soldiers · {formatNumber(soldiers)}</span>
+        <span className="label">병력 · {formatNumber(soldiers)}명</span>
         <input type="range" min={PRODUCTION.MIN_SOLDIERS} max={PRODUCTION.MAX_SOLDIERS} step={500} value={soldiers} onChange={(e) => setSoldiers(Number(e.target.value))} data-testid="create-slider" />
       </div>
       <div className="segmented">
@@ -106,26 +114,26 @@ function ProductionPanel({ game, cityId }: { game: GameClient; cityId: number })
         ))}
       </div>
       <dl className="kv">
-        <dt>Manpower</dt>
+        <dt>인력</dt>
         <dd style={{ color: p.resources.manpower < cost.manpower ? 'var(--red)' : undefined }}>{formatNumber(cost.manpower)}</dd>
-        <dt>Industry</dt>
+        <dt>산업</dt>
         <dd style={{ color: p.resources.industry < cost.industry ? 'var(--red)' : undefined }}>{formatNumber(cost.industry)}</dd>
-        <dt>Supplies</dt>
+        <dt>보급</dt>
         <dd style={{ color: p.resources.supplies < cost.supplies ? 'var(--red)' : undefined }}>{formatNumber(cost.supplies)}</dd>
-        <dt>Time</dt>
-        <dd>{Math.ceil(cost.seconds)}s</dd>
+        <dt>걸리는 시간</dt>
+        <dd>{Math.ceil(cost.seconds)}초</dd>
       </dl>
       <button className="btn primary" disabled={!affordable} onClick={() => void game.command({ type: 'CREATE_ARMY', cityId, soldiers, armyType: type })} data-testid="create-army">
-        Create · {formatNumber(soldiers)}
+        {affordable ? `생산 · ${formatNumber(soldiers)}명` : '자원이 부족합니다'}
       </button>
       {queue.map((o) => (
         <div key={o.id} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 14 }}>
             <span>
-              {formatNumber(o.soldiers)} {ARMY_TYPE_STATS[o.type].label}
+              {formatNumber(o.soldiers)}명 {ARMY_TYPE_STATS[o.type].label}
             </span>
             <button className="btn small ghost" onClick={() => void game.command({ type: 'CANCEL_PRODUCTION', orderId: o.id })}>
-              Cancel
+              취소
             </button>
           </div>
           <div className="bar">
@@ -159,32 +167,32 @@ function TerritoryDetails({ game, id }: { game: GameClient; id: number }) {
         <div>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 26, lineHeight: 1, color: 'var(--parchment)' }}>{t.name}</div>
           <div className="hint">
-            {owner ? getNation(owner).name : 'Unclaimed land'}
-            {city ? ` · ${isCapital ? 'Capital' : CITY_TYPE_STATS[city.type].label}` : ''}
+            {owner ? getNation(owner).name : '주인 없는 땅'}
+            {city ? ` · ${isCapital ? '수도' : CITY_TYPE_STATS[city.type].label}` : ''}
           </div>
         </div>
       </div>
       <dl className="kv">
-        <dt>Population</dt>
+        <dt>인구</dt>
         <dd>{formatNumber(t.population)}</dd>
-        <dt>Industry</dt>
+        <dt>산업</dt>
         <dd>{t.industry}</dd>
-        <dt>Resource</dt>
-        <dd>{t.resource.toLowerCase()}</dd>
-        <dt>Coastal</dt>
-        <dd>{t.coastal ? 'yes' : 'no'}</dd>
+        <dt>자원</dt>
+        <dd>{RESOURCE_KO[t.resource]}</dd>
+        <dt>해안</dt>
+        <dd>{t.coastal ? '예' : '아니오'}</dd>
       </dl>
       {capture && (
         <div className="field">
           <span className="label">
-            Being captured by {getNation(capture.nation).name} · {Math.round(capture.progress * 100)}%
+            {getNation(capture.nation).name}이(가) 점령 중 · {Math.round(capture.progress * 100)}%
           </span>
           <div className="bar">
             <div style={{ width: `${capture.progress * 100}%`, background: getNation(capture.nation).color }} />
           </div>
         </div>
       )}
-      <div className="panel-title">Garrison</div>
+      <div className="panel-title">주둔 병력</div>
       {garrison.size ? (
         [...garrison.entries()].map(([n, s]) => (
           <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -196,10 +204,10 @@ function TerritoryDetails({ game, id }: { game: GameClient; id: number }) {
           </div>
         ))
       ) : (
-        <div className="hint">No armies stationed.</div>
+        <div className="hint">주둔한 부대가 없습니다.</div>
       )}
       {canProduce && city && <ProductionPanel game={game} cityId={city.id} />}
-      {owner === game.you && city && !canProduce && <div className="hint">Villages cannot raise armies — use a city or your capital.</div>}
+      {owner === game.you && city && !canProduce && <div className="hint">마을에서는 군대를 만들 수 없습니다 — 도시(■)나 수도(★)를 누르세요.</div>}
     </>
   );
 }
@@ -217,9 +225,9 @@ export function SelectionPanel({ game }: { game: GameClient }) {
       const total = units.reduce((s, u) => s + u.soldiers, 0);
       body = (
         <>
-          <div className="panel-title">{units.length} armies selected</div>
+          <div className="panel-title">부대 {units.length}개 선택됨</div>
           <div className="big-number">{formatNumber(total)}</div>
-          <div className="label">total soldiers</div>
+          <div className="label">명 (총 병력)</div>
           <div className="unit-list">
             {units
               .slice()
@@ -229,7 +237,7 @@ export function SelectionPanel({ game }: { game: GameClient }) {
                   <Flag nation={u.nation} height={12} />
                   <span>{u.name}</span>
                   <span className={`status-pill ${u.status}`} style={{ fontSize: 10, padding: '0 4px' }}>
-                    {u.status}
+                    {STATUS_KO[u.status]}
                   </span>
                   <span className="n">{formatNumber(u.soldiers)}</span>
                 </div>
@@ -248,13 +256,13 @@ export function SelectionPanel({ game }: { game: GameClient }) {
         <UnitDetails game={game} unit={u} own={false} />
         {you && u.nation !== you && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span className={`badge ${rel.toLowerCase()}`}>{rel}</span>
+            <span className={`badge ${rel.toLowerCase()}`}>{RELATION_KO[rel]}</span>
             {rel === 'PEACE' && (
               <button className="btn small danger" onClick={() => void game.command({ type: 'DIPLOMACY', action: 'DECLARE_WAR', target: u.nation })}>
-                Declare war
+                ⚔ 선전포고
               </button>
             )}
-            {rel === 'WAR' && <span className="hint">Select your armies, then click this army to attack.</span>}
+            {rel === 'WAR' && <span className="hint">내 부대를 고른 뒤 이 부대를 클릭하면 공격합니다.</span>}
           </div>
         )}
       </>
@@ -264,7 +272,7 @@ export function SelectionPanel({ game }: { game: GameClient }) {
   }
   return (
     <div className="hud panel right-panel" data-testid="selection-panel">
-      <button className="btn small ghost" style={{ position: 'absolute', top: 8, right: 8, minHeight: 22, padding: '0 7px' }} onClick={() => game.select({ kind: 'none' })} aria-label="Close">
+      <button className="btn small ghost" style={{ position: 'absolute', top: 8, right: 8, minHeight: 22, padding: '0 7px' }} onClick={() => game.select({ kind: 'none' })} aria-label="닫기">
         ✕
       </button>
       {body}

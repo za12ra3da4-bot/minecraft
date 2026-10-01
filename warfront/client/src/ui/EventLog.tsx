@@ -28,10 +28,10 @@ export function EventLog({ game, open }: { game: GameClient; open: boolean }) {
     <div className={`hud panel event-log${open ? ' open' : ''}`}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <div className="panel-title" style={{ flex: 1 }}>
-          War dispatches
+          전황 보고
         </div>
         <button className={`btn small${mineOnly ? ' active' : ''}`} onClick={() => setMineOnly(!mineOnly)}>
-          {mineOnly ? 'Mine' : 'All'}
+          {mineOnly ? '내 나라' : '전체'}
         </button>
       </div>
       <div className="events">

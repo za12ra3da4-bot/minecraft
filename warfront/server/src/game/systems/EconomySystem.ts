@@ -40,7 +40,7 @@ export function updateEconomy(state: GameState, dt: number): void {
       n.resources.supplies = 0;
       if (!n.outOfSupply) {
         n.outOfSupply = true;
-        state.emit('INFO', `${getNation(n.id).name}: supplies exhausted! Armies are starving.`, [n.id], { major: n.controller === 'PLAYER' });
+        state.emit('INFO', `${getNation(n.id).name}: 보급품 고갈! 군대가 굶주리고 있습니다.`, [n.id], { major: n.controller === 'PLAYER' });
       }
     } else if (n.outOfSupply && n.resources.supplies > 200) {
       n.outOfSupply = false;

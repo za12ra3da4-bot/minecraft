@@ -31,7 +31,7 @@ export interface GameClock {
   year: number;
   /** Days since the campaign began (1-based). */
   day: number;
-  /** Calendar date, e.g. "24 JUN". */
+  /** Calendar date, e.g. "6월 24일". */
   date: string;
   hour: number;
   minute: number;
@@ -56,14 +56,13 @@ export function formatClock(simSeconds: number): string {
   return `${String(c.hour).padStart(2, '0')}:${String(c.minute).padStart(2, '0')}`;
 }
 
-const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 const MONTH_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 function calendarDate(dayOfYear: number): string {
   let d = dayOfYear;
   for (let m = 0; m < 12; m++) {
-    if (d < MONTH_DAYS[m]) return `${d + 1} ${MONTHS[m]}`;
+    if (d < MONTH_DAYS[m]) return `${m + 1}월 ${d + 1}일`;
     d -= MONTH_DAYS[m];
   }
-  return `31 DEC`;
+  return '12월 31일';
 }

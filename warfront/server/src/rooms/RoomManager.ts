@@ -46,7 +46,7 @@ export class RoomManager {
   }
 
   create(req: CreateRoomRequest): { room: Room; player: RoomPlayer; res: RoomJoinResult } | { res: RoomJoinResult } {
-    if (this.rooms.size >= ROOM.MAX_ROOMS) return { res: { ok: false, error: 'Server is full, try again later' } };
+    if (this.rooms.size >= ROOM.MAX_ROOMS) return { res: { ok: false, error: '서버가 가득 찼습니다. 잠시 후 다시 시도하세요' } };
     const singleplayer = req.singleplayer === true;
     const settings = sanitizeSettings(req?.settings);
     if (singleplayer) {
@@ -64,7 +64,7 @@ export class RoomManager {
   join(codeRaw: unknown, nameRaw: unknown): { room: Room; player: RoomPlayer; res: RoomJoinResult } | { res: RoomJoinResult } {
     const code = typeof codeRaw === 'string' ? codeRaw.trim().toUpperCase() : '';
     const room = this.rooms.get(code);
-    if (!room) return { res: { ok: false, error: 'Room not found — check the code' } };
+    if (!room) return { res: { ok: false, error: '방을 찾을 수 없습니다 — 코드를 확인하세요' } };
     const player = room.addPlayer(sanitizePlayerName(nameRaw));
     if (typeof player === 'string') return { res: { ok: false, error: player } };
     return { room, player, res: this.result(room, player) };
@@ -74,14 +74,14 @@ export class RoomManager {
     const entry = typeof token === 'string' ? this.tokens.get(token) : undefined;
     const room = entry && this.rooms.get(entry.code);
     const player = entry && room?.players.get(entry.playerId);
-    if (!room || !player) return { res: { ok: false, error: 'Session expired' } };
+    if (!room || !player) return { res: { ok: false, error: '세션이 만료되었습니다' } };
     return { room, player, res: this.result(room, player) };
   }
 
   leave(room: Room, playerId: string): void {
     const player = room.players.get(playerId);
     if (player) this.tokens.delete(player.token);
-    room.removePlayer(playerId, player ? `${player.name} left the room` : undefined);
+    room.removePlayer(playerId, player ? `${player.name}님이 나갔습니다` : undefined);
     room.broadcastRoom();
   }
 
@@ -104,6 +104,6 @@ export class RoomManager {
   private close(room: Room): void {
     for (const p of room.players.values()) this.tokens.delete(p.token);
     this.rooms.delete(room.code);
-    this.io.to(`room:${room.code}`).emit('room:closed', 'Room closed');
+    this.io.to(`room:${room.code}`).emit('room:closed', '방이 닫혔습니다');
   }
 }

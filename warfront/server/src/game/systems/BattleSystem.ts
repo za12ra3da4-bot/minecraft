@@ -115,7 +115,7 @@ function startBattle(state: GameState, units: Unit[]): Battle {
     x,
     y,
     radius: 40,
-    name: `Battle of ${place}`,
+    name: `${place} 전투`,
     unitIds: new Set(units.map((u) => u.id)),
     sides: new Map(),
     startedAt: state.time,
@@ -131,7 +131,7 @@ function startBattle(state: GameState, units: Unit[]): Battle {
   const names = [...battle.sides.keys()].map((n) => getNation(n).name);
   state.emit(
     'BATTLE_STARTED',
-    `⚔ ${battle.name}: ${names.join(' vs ')} (${formatNumber(battle.initialSoldiers)} troops)`,
+    `⚔ ${battle.name}: ${names.join(' 대 ')} (${formatNumber(battle.initialSoldiers)}명)`,
     [...battle.sides.keys()],
     { x, y, major: battle.initialSoldiers >= 60_000 },
   );
@@ -145,7 +145,7 @@ function startBattle(state: GameState, units: Unit[]): Battle {
       if (!alerts) capitalAlertUntil.set(state, (alerts = new Map()));
       if ((alerts.get(owner) ?? -1) < state.time) {
         alerts.set(owner, state.time + 30);
-        state.emit('CAPITAL_ATTACKED', `Capital under attack! ${state.map.data.cities[cap].name} (${getNation(owner).name})`, [owner], { x, y, major: true });
+        state.emit('CAPITAL_ATTACKED', `수도 공격당함! ${state.map.data.cities[cap].name} (${getNation(owner).name})`, [owner], { x, y, major: true });
       }
     }
   }
@@ -166,8 +166,8 @@ function endBattle(state: GameState, battle: Battle): void {
   const losses = [...battle.sides.values()].reduce((s, side) => s + side.losses, 0);
   if (losses < 200) return;
   const text = winner
-    ? `${getNation(winner).name} won the ${battle.name} — ${formatNumber(losses)} casualties`
-    : `${battle.name} ended — ${formatNumber(losses)} casualties`;
+    ? `${battle.name} 승리: ${getNation(winner).name} — 사상자 ${formatNumber(losses)}명`
+    : `${battle.name} 종료 — 사상자 ${formatNumber(losses)}명`;
   state.emit('BATTLE_ENDED', text, [...battle.sides.keys()], { x: battle.x, y: battle.y, major: losses >= 25_000 });
 }
 
@@ -259,7 +259,7 @@ function resolveBattle(state: GameState, battle: Battle, units: Unit[], dt: numb
 function destroyUnit(state: GameState, u: Unit): void {
   const place = state.nearestPlaceName(u.x, u.y);
   if (u.maxSoldiers >= 4000) {
-    state.emit('ARMY_DESTROYED', `${getNation(u.nation).adjective} ${u.name} was destroyed near ${place}`, [u.nation], {
+    state.emit('ARMY_DESTROYED', `전멸: ${getNation(u.nation).adjective} ${u.name} (${place} 부근)`, [u.nation], {
       x: u.x,
       y: u.y,
       major: u.maxSoldiers >= 40_000,
@@ -296,6 +296,6 @@ export function rout(state: GameState, u: Unit, battle: { x: number; y: number }
   }
   orderMove(state, u, best.x, best.y);
   if (u.soldiers >= 15_000) {
-    state.emit('INFO', `${getNation(u.nation).adjective} ${u.name} is retreating! (${formatNumber(u.soldiers)} troops)`, [u.nation], { x: u.x, y: u.y });
+    state.emit('INFO', `후퇴: ${getNation(u.nation).adjective} ${u.name} (${formatNumber(u.soldiers)}명)`, [u.nation], { x: u.x, y: u.y });
   }
 }

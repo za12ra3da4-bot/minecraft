@@ -17,9 +17,9 @@
   --green: #84c160;
   --blue: #6aa2c0;
   --parchment: #e9dcbc;
-  --font-display: 'IM Fell English SC', Georgia, serif;
-  --font-ui: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-  --font-body: 'Spectral', Georgia, serif;
+  --font-display: 'IM Fell English SC', 'Nanum Myeongjo', Georgia, serif;
+  --font-ui: 'Barlow Condensed', 'Noto Sans KR', 'Arial Narrow', sans-serif;
+  --font-body: 'Spectral', 'Noto Sans KR', Georgia, serif;
   --radius: 3px;
   --shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -791,4 +791,24 @@ input[type='range']::-moz-range-thumb {
   .menu-item .desc {
     display: none;
   }
+}
+
+/* ------------------------------------------------------------------ Korean typography
+   Wide tracking suits Latin capitals but not Hangul. */
+.btn,
+.menu-item,
+.label,
+.panel-title,
+.badge,
+.segmented button,
+.status-dot,
+.settings-summary dt {
+  letter-spacing: 0.04em;
+}
+.menu-item {
+  font-size: 24px;
+}
+.dialog h2,
+.overlay h2 {
+  font-weight: 700;
 }

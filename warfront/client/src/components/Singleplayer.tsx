@@ -10,7 +10,7 @@ import { SettingsForm } from './SettingsForm';
 
 export function Singleplayer() {
   useStore(app);
-  const [value, setValue] = useState(() => ({ ...defaultSettings(), aiCount: 9, roomName: 'Solo campaign' }));
+  const [value, setValue] = useState(() => ({ ...defaultSettings(), aiCount: 9, roomName: '혼자 하기' }));
   const [nation, setNation] = useState('france');
   const def = getMapDef(value.mapId)!;
   const nations = def.nations.map((n) => n.nation);
@@ -26,11 +26,11 @@ export function Singleplayer() {
           }}
         >
           <div>
-            <div className="panel-title">Solo campaign</div>
-            <h2>Singleplayer</h2>
+            <div className="panel-title">AI와 대결</div>
+            <h2>혼자 하기</h2>
           </div>
           <div className="field">
-            <span className="label">Choose your nation</span>
+            <span className="label">지휘할 나라를 고르세요</span>
             <div className="nation-grid">
               {nations.map((n) => (
                 <button type="button" key={n} className={`nation-card${n === chosen ? ' mine' : ''}`} style={{ ['--nation' as string]: getNation(n).color }} onClick={() => setNation(n)}>
@@ -44,10 +44,10 @@ export function Singleplayer() {
           {app.error && <div className="error-text">{app.error}</div>}
           <div className="dialog-actions">
             <button type="button" className="btn ghost" onClick={() => app.go('menu')}>
-              ← Back
+              ← 뒤로
             </button>
             <button type="submit" className="btn primary" disabled={app.busy || !app.connected}>
-              {app.busy ? 'Mobilising…' : 'Start Campaign'}
+              {app.busy ? '동원하는 중…' : '전쟁 시작'}
             </button>
           </div>
         </form>

@@ -20,17 +20,17 @@ export function CreateGame() {
           }}
         >
           <div>
-            <div className="panel-title">New campaign</div>
-            <h2>Create Game</h2>
+            <div className="panel-title">새 전역</div>
+            <h2>방 만들기</h2>
           </div>
           <SettingsForm value={value} onChange={setValue} />
           {app.error && <div className="error-text">{app.error}</div>}
           <div className="dialog-actions">
             <button type="button" className="btn ghost" onClick={() => app.go('menu')}>
-              ← Back
+              ← 뒤로
             </button>
             <button type="submit" className="btn primary" disabled={app.busy || !app.connected}>
-              {app.busy ? 'Creating…' : 'Create Game'}
+              {app.busy ? '만드는 중…' : '방 만들기'}
             </button>
           </div>
         </form>

@@ -33,7 +33,7 @@ export function ChatBox({ messages, compact }: { messages: ChatMessage[]; compac
             {m.text}
           </div>
         ))}
-        {!messages.length && <div className="hint">No messages yet.</div>}
+        {!messages.length && <div className="hint">아직 메시지가 없습니다.</div>}
       </div>
       <form
         style={{ display: 'flex', gap: 6 }}
@@ -42,9 +42,9 @@ export function ChatBox({ messages, compact }: { messages: ChatMessage[]; compac
           void send();
         }}
       >
-        <input className="input" style={{ minHeight: 32, fontSize: 14 }} maxLength={CHAT.MAX_LENGTH} placeholder="Message…" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.stopPropagation()} />
+        <input className="input" style={{ minHeight: 32, fontSize: 14 }} maxLength={CHAT.MAX_LENGTH} placeholder="메시지 입력…" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.stopPropagation()} />
         <button className="btn small" type="submit">
-          Send
+          보내기
         </button>
       </form>
       {error && <div className="error-text" style={{ fontSize: 12 }}>{error}</div>}

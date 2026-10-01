@@ -4,7 +4,7 @@ import type { GameState } from '../GameState';
 /** Returns game over information once the room's victory condition is met. */
 export function checkVictory(state: GameState): GameOverInfo | null {
   const active = state.activeNations();
-  if (!active.length) return finish(state, [], 'All nations have fallen');
+  if (!active.length) return finish(state, [], '모든 나라가 멸망했습니다');
 
   const blocOf = (n: NationId): NationId[] => active.filter((o) => state.friendly(n, o.id)).map((o) => o.id);
 
@@ -12,7 +12,7 @@ export function checkVictory(state: GameState): GameOverInfo | null {
   const first = active[0].id;
   if (active.every((n) => state.friendly(first, n.id) && active.every((m) => state.friendly(n.id, m.id)))) {
     const names = active.map((n) => getNation(n.id).name).join(' & ');
-    return finish(state, active.map((n) => n.id), `${names} ${active.length > 1 ? 'are' : 'is'} victorious — all rivals conquered`);
+    return finish(state, active.map((n) => n.id), `${names} 승리 — 모든 적국을 정복했습니다`);
   }
 
   if (state.settings.victory === 'DOMINATION') {
@@ -20,7 +20,7 @@ export function checkVictory(state: GameState): GameOverInfo | null {
     for (const n of active) {
       const owned = state.owners.filter((o) => o === n.id).length;
       if (owned / total >= VICTORY.DOMINATION_SHARE) {
-        return finish(state, blocOf(n.id), `${getNation(n.id).name} dominates ${Math.round((owned / total) * 100)}% of the map`);
+        return finish(state, blocOf(n.id), `${getNation(n.id).name} 승리 — 지도의 ${Math.round((owned / total) * 100)}%를 지배`);
       }
     }
   }
@@ -36,7 +36,7 @@ export function checkVictory(state: GameState): GameOverInfo | null {
         return o !== null && bloc.includes(o);
       }).length;
       if (capitals.length > 1 && held === capitals.length) {
-        return finish(state, bloc, `${getNation(n.id).name} holds every capital`);
+        return finish(state, bloc, `${getNation(n.id).name} 승리 — 모든 수도 점령`);
       }
     }
   }

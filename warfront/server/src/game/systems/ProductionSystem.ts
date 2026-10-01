@@ -38,6 +38,6 @@ function spawnArmy(state: GameState, n: NationRuntime, cityId: number, soldiers:
   }
   const unit = new Unit(n.id, type, state.nextUnitName(n, stats.label), soldiers, x, y);
   state.addUnit(unit);
-  state.emit('ARMY_CREATED', `${getNation(n.id).adjective} ${unit.name} (${formatNumber(soldiers)}) raised at ${city.name}`, [n.id], { x, y });
+  state.emit('ARMY_CREATED', `편성 완료: ${getNation(n.id).adjective} ${unit.name} ${formatNumber(soldiers)}명 (${city.name})`, [n.id], { x, y });
   return unit;
 }

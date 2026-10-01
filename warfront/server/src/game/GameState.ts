@@ -257,7 +257,7 @@ export class GameState {
   nextUnitName(nation: NationRuntime, typeLabel: string): string {
     const n = (nation.unitCounters.get(typeLabel) ?? 0) + 1;
     nation.unitCounters.set(typeLabel, n);
-    return `${ordinal(n)} ${typeLabel}`;
+    return `제${n} ${typeLabel}`;
   }
 
   // ---------------------------------------------------------------- events
@@ -274,10 +274,4 @@ export class GameState {
     this.pendingEvents = [];
     return out;
   }
-}
-
-export function ordinal(n: number): string {
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }

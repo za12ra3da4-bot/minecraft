@@ -5,11 +5,11 @@ import { useStore } from '../game/store';
 import { MenuShell } from './MenuShell';
 
 const ITEMS: { screen: Screen; label: string; roman: string; desc: string; primary?: boolean }[] = [
-  { screen: 'create', label: 'Create Game', roman: 'I', desc: 'Host a room for friends', primary: true },
-  { screen: 'join', label: 'Join Game', roman: 'II', desc: 'Enter a room code' },
-  { screen: 'singleplayer', label: 'Singleplayer', roman: 'III', desc: 'Fight the AI powers' },
-  { screen: 'howto', label: 'How to Play', roman: 'IV', desc: '조작법 · Field manual' },
-  { screen: 'settings', label: 'Settings', roman: 'V', desc: 'Name and display' },
+  { screen: 'create', label: '방 만들기', roman: 'I', desc: '친구들과 함께 플레이', primary: true },
+  { screen: 'join', label: '방 참가', roman: 'II', desc: '방 코드 입력' },
+  { screen: 'singleplayer', label: '혼자 하기', roman: 'III', desc: 'AI 국가들과 전쟁' },
+  { screen: 'howto', label: '게임 방법', roman: 'IV', desc: '조작법 안내' },
+  { screen: 'settings', label: '설정', roman: 'V', desc: '이름과 화면' },
 ];
 
 export function MainMenu() {
@@ -24,15 +24,15 @@ export function MainMenu() {
             <span>{first}</span>
             {rest.join('')}
           </h1>
-          <div className="game-subtitle">{GAME_SUBTITLE} — command a hundred thousand men.</div>
+          <div className="game-subtitle">{GAME_SUBTITLE} — 수십만 대군을 지휘하라.</div>
           <div className="title-rule" />
         </div>
         <div className="field">
-          <span className="label">Commander name</span>
+          <span className="label">사령관 이름</span>
           <input
             className="input"
             maxLength={16}
-            placeholder="Enter your name"
+            placeholder="이름을 입력하세요"
             value={settings.value.playerName}
             onChange={(e) => settings.update({ playerName: e.target.value })}
           />
@@ -47,7 +47,7 @@ export function MainMenu() {
           ))}
         </nav>
         {app.error && <div className="error-text">{app.error}</div>}
-        <span className={`status-dot${app.connected ? ' on' : ''}`}>{app.connected ? 'Connected to war office' : app.everConnected ? 'Reconnecting…' : 'Connecting to server…'}</span>
+        <span className={`status-dot${app.connected ? ' on' : ''}`}>{app.connected ? '서버에 연결됨' : app.everConnected ? '다시 연결하는 중…' : '서버에 연결하는 중…'}</span>
       </div>
     </MenuShell>
   );

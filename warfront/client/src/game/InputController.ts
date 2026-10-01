@@ -10,8 +10,10 @@ export interface TapInfo {
 
 export interface InputHandlers {
   tap(sx: number, sy: number, info: TapInfo): void;
-  box(x0: number, y0: number, x1: number, y1: number): void;
+  box(x0: number, y0: number, x1: number, y1: number, add: boolean): void;
   hover(sx: number, sy: number): void;
+  /** Touch "range select" mode: one-finger drag draws a selection box instead of panning. */
+  touchBoxMode(): boolean;
 }
 
 interface PointerState {
@@ -28,8 +30,9 @@ const DRAG_THRESHOLD = 6;
 const LONG_PRESS_MS = 520;
 
 /**
- * Unified mouse / touch / pen input: drag to pan, wheel and pinch to zoom,
- * tap and long-press, shift-drag box selection.
+ * Unified mouse / touch / pen input.
+ * Mouse: left-drag = box select, right/middle-drag = pan, wheel = zoom.
+ * Touch: one finger = pan (or box select in range mode), pinch = zoom, long-press = inspect.
  */
 export class InputController {
   private pointers = new Map<number, PointerState>();
@@ -41,6 +44,13 @@ export class InputController {
   private longFired = false;
   private samples: { x: number; y: number; t: number }[] = [];
   box: { x0: number; y0: number; x1: number; y1: number } | null = null;
+
+  /** Visible selection rectangle (only once the drag is large enough). */
+  get visibleBox(): { x0: number; y0: number; x1: number; y1: number } | null {
+    const b = this.box;
+    if (!b || (Math.abs(b.x1 - b.x0) <= DRAG_THRESHOLD && Math.abs(b.y1 - b.y0) <= DRAG_THRESHOLD)) return null;
+    return b;
+  }
 
   constructor(
     private el: HTMLElement,
@@ -87,7 +97,7 @@ export class InputController {
       this.pinchMid = [(a.x + b.x) / 2, (a.y + b.y) / 2];
       return;
     }
-    if (e.shiftKey && e.button === 0 && !touch) {
+    if ((!touch && e.button === 0) || (touch && this.handlers.touchBoxMode())) {
       this.boxing = true;
       this.box = { x0: x, y0: y, x1: x, y1: y };
       return;
@@ -156,10 +166,10 @@ export class InputController {
       const b = this.box;
       this.box = null;
       this.boxing = false;
-      if (Math.abs(b.x1 - b.x0) > 4 || Math.abs(b.y1 - b.y0) > 4) {
-        this.handlers.box(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.max(b.x0, b.x1), Math.max(b.y0, b.y1));
+      if (Math.abs(b.x1 - b.x0) > DRAG_THRESHOLD || Math.abs(b.y1 - b.y0) > DRAG_THRESHOLD) {
+        this.handlers.box(Math.min(b.x0, b.x1), Math.min(b.y0, b.y1), Math.max(b.x0, b.x1), Math.max(b.y0, b.y1), e.shiftKey);
       } else {
-        this.handlers.tap(p.x, p.y, { button: 0, shift: true, long: false, touch: false });
+        this.handlers.tap(p.x, p.y, { button: 0, shift: e.shiftKey, long: false, touch: p.touch });
       }
       return;
     }

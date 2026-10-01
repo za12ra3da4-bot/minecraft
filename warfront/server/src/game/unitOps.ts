@@ -43,7 +43,7 @@ export function mergeUnits(state: GameState, units: Unit[]): Unit {
 export function splitUnit(state: GameState, unit: Unit, soldiers: number): Unit {
   const nation = state.nations.get(unit.nation)!;
   const share = soldiers / unit.soldiers;
-  const name = state.nextUnitName(nation, 'Detachment');
+  const name = state.nextUnitName(nation, '분견대');
   const angle = state.rng.range(0, Math.PI * 2);
   let nx = unit.x + Math.cos(angle) * 26;
   let ny = unit.y + Math.sin(angle) * 26;

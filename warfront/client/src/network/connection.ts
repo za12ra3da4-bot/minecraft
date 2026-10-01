@@ -31,7 +31,7 @@ type ArgsOf<E extends keyof ClientToServerEvents> = Parameters<ClientToServerEve
 export function request<E extends keyof ClientToServerEvents>(event: E, ...args: ArgsOf<E>): Promise<AckOf<E>> {
   const s = getSocket();
   return new Promise((resolve) => {
-    const timer = setTimeout(() => resolve({ ok: false, error: 'Server did not respond' } as AckOf<E>), REQUEST_TIMEOUT_MS);
+    const timer = setTimeout(() => resolve({ ok: false, error: '서버가 응답하지 않습니다' } as AckOf<E>), REQUEST_TIMEOUT_MS);
     const done = (res: AckOf<E>): void => {
       clearTimeout(timer);
       resolve(res);

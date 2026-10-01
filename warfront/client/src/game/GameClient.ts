@@ -73,8 +73,8 @@ export class GameClient extends Store {
   toasts: Toast[] = [];
   over: GameOverInfo | null = null;
   selection: Selection = { kind: 'none' };
-  /** Next tap on an own army joins the selection into it. */
-  joinMode = false;
+  /** Touch range-select mode (one-finger drag selects instead of panning). */
+  boxMode = false;
   /** Queue drained by the renderer. */
   effects: EffectEvent[] = [];
   /** Camera requests (e.g. minimap clicks, event clicks) consumed by the renderer. */
@@ -220,7 +220,6 @@ export class GameClient extends Store {
 
   select(sel: Selection): void {
     this.selection = sel;
-    this.joinMode = false;
     this.notify();
   }
 
