@@ -37,20 +37,26 @@ function bgSetOre(l: location):
 # ─────────────────────────────────────────────────────────── 지휘 깃발 (기본템 · 핑)
 #  나침반은 월드에딧 길잡이 도구라 관리자가 쓰면 순간이동됨 → 깃발(종이 + 그림)로 바꿈
 #  우클릭 = 공격 핑 (붉은 핀) / 웅크리고 우클릭 = 도움 요청 (금빛 핀)
-#  공중에 빛나는 핀 그림 + 이름표 → 우리 팀에게만 보인다 (다른 팀 · 관전자는 안 보임). 15초 뒤 사라짐, 한 사람당 하나
-# 핀(태그 id) 을 우리 팀에게만 보이게: 모두에게 기본 숨김 + 우리 팀만 보이기 + 다른 사람에게는 직접 숨김
-#  (소환 직후 이미 보인 사람도 확실히 지우도록 핀이 떠 있는 동안 반복해서 맞춘다 · 새로 들어온 사람도 기본 숨김)
-function bgPingVisible(id: text, t: text):
-    set {_pl} to Bukkit.getPluginManager().getPlugin("Skript")
-    set {_es::*} to ...Bukkit.selectEntities(Bukkit.getConsoleSender(), "@e[tag=%{_id}%]")
+#  공중에 빛나는 핀 그림 + 이름표 → 우리 팀에게만 보인다 (다른 팀 · 관전자는 안 보임). 3초 뒤 사라짐, 한 사람당 하나
+# 핀을 우리 팀이 아닌 모든 사람에게서 숨긴다 (Skript 기본 기능 hide … from …)
+#  소환한 바로 그 틱에 숨겨서 다른 팀 화면에는 아예 안 나타남 · 떠 있는 동안 반복해서 다시 숨김
+function bgPingVisible(l: location, id: text, t: text):
+    loop entities in radius 8 of {_l}:
+        if scoreboard tags of loop-entity contain {_id}:
+            add loop-entity to {_es::*}
+    size of {_es::*} > 0
+    loop all players:
+        if bgTeam(loop-player) is not {_t}:
+            add loop-player to {_others::*}
+    if size of {_others::*} > 0:
+        hide {_es::*} from {_others::*}
+    # 나중에 들어온 사람에게도 기본으로 안 보이게 (실패해도 위 숨김은 이미 적용됨)
+    bgPingDefaultHidden({_es::*})
+
+function bgPingDefaultHidden(es: entities):
     loop {_es::*}:
         set {_e} to loop-value
         {_e}.setVisibleByDefault(false)
-        loop all players:
-            if bgTeam(loop-player) is {_t}:
-                loop-player.showEntity({_pl}, {_e})
-            else:
-                loop-player.hideEntity({_pl}, {_e})
 
 on right click:
     player's tool is paper
@@ -98,15 +104,15 @@ on right click:
     set {_ty} to bgN((y-coordinate of {_l}) + 1.1)
     bgCmd("execute in %bgDim()% run summon item_display %{_x}% %{_y}% %{_z}% {Tags:[""bg"",""bg_ping"",""%{_id}%""],billboard:""center"",Glowing:1b,glow_color_override:%{-bg::hex::%{_t}%}%,brightness:{sky:15,block:15},view_range:8f,item_display:""none"",interpolation_duration:10,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[2.2f,2.2f,2.2f]},item:{id:""minecraft:paper"",count:1,components:{""minecraft:item_model"":""bg:ping/%{_img}%""}}}")
     bgCmd("execute in %bgDim()% run summon text_display %{_x}% %{_ty}% %{_z}% {Tags:[""bg"",""bg_ping"",""%{_id}%""],billboard:""center"",see_through:1b,shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:8f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.3f,1.3f,1.3f]},text:[{text:""%{_ic}% %{_kind}%"",color:""%{_tc}%"",bold:true},{text:"" · %name of player%"",color:""white"",bold:false}]}")
-    bgPingVisible({_id}, {_t})
+    bgPingVisible({_l}, {_id}, {_t})
     loop all players:
         if bgTeam(loop-player) is {_t}:
             send "%{-bg::tcol::%{_t}%}%[핑] &f%name of player% &7→ %{_cc}%&l%{_kind}%! &7(%floor(x-coordinate of {_l})%, %floor(z-coordinate of {_l})%)" to loop-player
             send title "" with subtitle "%{_cc}%&l%{_ic}% %{_kind}% &f— %name of player%" to loop-player for 30 ticks
             play sound {_snd} to loop-player
-    # 15초: 위아래로 살짝 떠다니고 · 우리 팀에게만 빛기둥
+    # 3초: 위아래로 살짝 떠다니고 · 우리 팀에게만 빛기둥 → 3초 뒤 사라짐
     set {_up} to true
-    loop 30 times:
+    loop 6 times:
         if {_up} is true:
             bgCmd("data merge entity @e[type=item_display,tag=%{_id}%,limit=1] {start_interpolation:0,interpolation_duration:10,transformation:{translation:[0f,0.3f,0f],scale:[2.2f,2.2f,2.2f]}}")
             set {_up} to false
@@ -115,7 +121,7 @@ on right click:
             set {_up} to true
         bgCmd("execute in %bgDim()% run particle dust{color:[%{_col}%],scale:2} %{_x}% %bgN((y-coordinate of {_l}) + 3)% %{_z}% 0.1 3 0.1 0 20 force @a[team=bg_%{_t}%]")
         bgCmd("execute in %bgDim()% run particle end_rod %{_x}% %bgN((y-coordinate of {_l}) + 0.4)% %{_z}% 0.6 0.1 0.6 0 4 force @a[team=bg_%{_t}%]")
-        bgPingVisible({_id}, {_t})
+        bgPingVisible({_l}, {_id}, {_t})
         wait 10 ticks
         # 그새 새 핀을 찍었으면 이 핀 반복은 끝 (새 핀은 새 반복이 맡는다)
         if {-bg::pingseq::%uuid of player%} is not {_seq}:
