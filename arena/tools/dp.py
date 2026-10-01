@@ -476,6 +476,8 @@ def ore_lines(world, n_spots=48, seed=77):
     """맵 곳곳 자연 지면에 광맥(금 · 에메랄드 · 다이아) 박기 — 본진 · 제단 · 성소 · 투기장 · 대기실은 피함"""
     import random
     R = random.Random(seed)
+    R2 = random.Random(seed + 1000)
+    ore_idx = []
     X, Y, Z = world.vox.shape
     avoid = []
     for n, m in world.markers.items():
@@ -532,7 +534,15 @@ def ore_lines(world, n_spots=48, seed=77):
                 for k in range(1, h + 1):
                     outer = k == h or dist >= 2
                     blk = R.choice(pool) if (outer and R.random() < 0.55) else R.choice(rock)
+                    if blk in pool:
+                        ore_idx.append(len(out))
                     out.append(f"{at} ~{xx} ~{ty + k} ~{zz} {blk}")
+        # 바위 하나에 광석은 3~4개만 (나머지는 바위로) — 자리 · 바위 모양은 예전과 같게 (R 순서 유지, 줄이기는 따로 R2)
+        keep = set(R2.sample(ore_idx, min(len(ore_idx), R2.randint(3, 4))))
+        for i in ore_idx:
+            if i not in keep:
+                out[i] = out[i].rsplit(" ", 1)[0] + " " + R2.choice(rock)
+        ore_idx = []
     return out
 
 

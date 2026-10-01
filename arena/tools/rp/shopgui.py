@@ -17,11 +17,11 @@ FONT = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
 # 페이지별 칸 배치 (Skript a50 과 같아야 함)
 PAGES = {
     1: dict(title="전설 무기", legend=set(range(9, 17)) | set(range(18, 26)), boss={29, 30, 31, 32}, gear=set(), sell={40},
-            coin={49}, nav={53: "next"}, banners=[(151, 35, 65)], caption=[(89, "↑ 보스 처치 보상", "left")]),
+            coin={49}, nav={53: "next"}, refund={44}, banners=[(151, 35, 65)], caption=[(89, "↑ 보스 처치 보상", "left")]),
     2: dict(title="장비 · 소모품", legend=set(), boss=set(), gear={10, 11, 12, 13} | set(range(19, 26)) | {28, 29, 30, 31, 33, 34},
             sell={40}, coin={49}, nav={45: "prev", 53: "next"}, banners=[(151, 35, 83)], icons={9: "armor", 18: "potion", 27: "arrow"},
             caption=None),
-    3: dict(title="팀 강화 · 함정", legend=set(), boss=set(), gear=set(), sell=set(), team={10, 11, 12, 13, 14, 15, 16}, trap={28, 29, 30},
+    3: dict(title="팀 강화 · 함정", legend=set(), boss=set(), gear=set(), sell=set(), team={10, 11, 12, 13, 14, 15, 16, 17}, trap={28, 29, 30},
             coin={49}, nav={45: "prev"}, banners=[],
             icons={9: "up", 27: "trap"},
             caption=[(53, "팀 강화 — 한 명이 사면 팀 전체 적용"), (89, "기지 함정 — 적이 본진에 들어오면 자동 발동")]),
@@ -154,7 +154,7 @@ def build(page=1):
         x, y = 7 + 18 * c, 17 + 18 * r
         kind = ("legend" if idx in P["legend"] else "boss" if idx in P["boss"] else "sell" if idx in P["sell"]
                 else "coin" if idx in P["coin"] else "gear" if idx in P["gear"] else "nav" if idx in P["nav"]
-                else "team" if idx in P.get("team", ()) else "trap" if idx in P.get("trap", ()) else None)
+                else "team" if idx in P.get("team", ()) else "trap" if idx in P.get("trap", ()) else "boss" if idx in P.get("refund", ()) else None)
         if kind:
             slot(x, y, kind)
         if idx in P["nav"]:

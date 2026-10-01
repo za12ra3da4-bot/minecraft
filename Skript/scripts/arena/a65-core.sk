@@ -176,7 +176,7 @@ function bgWardOn(p: player) :: boolean:
     return false
 
 # ─────────────────────────────────────────────────────────── 광산 (본진 광석 바위)
-#  본진 광석 바위(5초 리젠) + 맵 곳곳 광맥(거의 바로 리젠, 금 · 에메랄드 · 다이아 많음): 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 2초 뒤 다시 채워짐
+#  본진 광석 바위(6초 리젠) + 맵 곳곳 광맥(5초 리젠, 캔 자리는 그동안 기반암 · 금 · 에메랄드 · 다이아 많음): 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 2초 뒤 다시 채워짐
 #  죽으면 광물은 그 자리에 떨어져서 적이 주워 갈 수 있다
 #  (다른 곳 광석은 캘 수 없음 · 창작 모드 관리자는 예외)
 function bgAtBaseOre(l: location) :: boolean:
@@ -198,9 +198,9 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     player's gamemode is not creative
     cancel event
     set {_l} to location of event-block
-    # 본진 광석 바위 = 5초 리젠 (팀 강화 '광산 강화' 로 4 · 3 · 2초) · 맵 곳곳 광맥 = 거의 바로(0.2초) 리젠 (전장 맵 안에서만)
-    # 맵 곳곳 광맥(기지 밖)은 거의 바로 (0.2초) 다시 채워짐
-    set {_rg} to 0.2
+    # 본진 광석 바위 = 5초 리젠 (팀 강화 '광산 강화' 로 4 · 3 · 2초) · 맵 곳곳 광맥 = 5초 리젠 (전장 맵 안에서만) · 그동안 그 자리는 기반암
+    # 맵 곳곳 광맥(기지 밖) 5초 · 본진 광석 6초 (팀 강화 '광산 강화' 로 5 · 4 · 3초)
+    set {_rg} to 5
     set {_bt} to bgBaseOreTeam({_l})
     if {_bt} is not "none":
         set {_rg} to bgMineRegen({_bt})
@@ -232,24 +232,8 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
         set {_nm} to "다이아몬드 (5코인)"
     # 캔 자리는 기반암(못 캠)으로 → 2초 뒤 매초 검사가 원래 광석으로 되돌림 (리로드 · 재시작해도 유지)
     # 캔 자리는 주변 바위 블록으로 잠깐 메움 (기반암처럼 튀지 않게)
-    set {_ph} to stone
-    loop 6 times:
-        set {_q} to location(x-coordinate of {_l}, y-coordinate of {_l}, z-coordinate of {_l}, world of {_l})
-        if loop-number is 1:
-            remove 1 from y-coordinate of {_q}
-        else if loop-number is 2:
-            add 1 to x-coordinate of {_q}
-        else if loop-number is 3:
-            remove 1 from x-coordinate of {_q}
-        else if loop-number is 4:
-            add 1 to z-coordinate of {_q}
-        else if loop-number is 5:
-            remove 1 from z-coordinate of {_q}
-        else:
-            add 1 to y-coordinate of {_q}
-        if bgIsRock(block at {_q}) is true:
-            set {_ph} to type of block at {_q}
-            exit loop
+    # 캔 자리는 다시 채워질 때까지 기반암 (쿨타임 표시 — 못 캠)
+    set {_ph} to bedrock
     set block at {_l} to {_ph}
     set {_k} to "%floor(x-coordinate of {_l})%_%floor(y-coordinate of {_l})%_%floor(z-coordinate of {_l})%"
     set {bg::oreq::%{_k}%} to true
@@ -271,10 +255,6 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
         play sound "entity.item.pickup" to player
     play sound "block.amethyst_block.break" to player
     bgParticle({_l}, "wax_on", 0.4, 0.4, 0.4, 0.1, 10)
-    # 기지 밖 광맥: 매초 검사를 기다리지 않고 바로 다시 채움
-    if {_bt} is "none":
-        wait 4 ticks
-        bgOreRegen(false)
 
 function bgOreRegen(all: boolean):
     loop {bg::oreq::*}:
@@ -292,11 +272,9 @@ function bgOreRegen(all: boolean):
                 if block at {_l} is {_ph}:
                     # 다시 채울 때 광석 종류는 무작위 (본진 바위: 철 · 구리 · 금 / 맵 광맥: 철 · 금 · 에메랄드 · 다이아)
                     set {_r} to random integer between 1 and 10
-                    # 본진 바위인지 (예전 기록은 리젠 5초 = 본진)
+                    # 본진 바위인지
                     set {_isb} to false
                     if {bg::oreq::%{_k}%::base} is true:
-                        set {_isb} to true
-                    if {bg::oreq::%{_k}%::rg} is 5:
                         set {_isb} to true
                     if {_isb} is true:
                         if {_r} <= 4:

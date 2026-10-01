@@ -44,14 +44,26 @@ function bgPingVisible(l: location, id: text, t: text):
     loop entities in radius 8 of {_l}:
         if scoreboard tags of loop-entity contain {_id}:
             add loop-entity to {_es::*}
+    # 근처에서 못 찾으면 태그로 서버 전체에서 찾기
+    if size of {_es::*} is 0:
+        set {_es::*} to ...Bukkit.selectEntities(Bukkit.getConsoleSender(), "@e[tag=%{_id}%]")
     size of {_es::*} > 0
     loop all players:
         if bgTeam(loop-player) is not {_t}:
             add loop-player to {_others::*}
     if size of {_others::*} > 0:
         hide {_es::*} from {_others::*}
-    # 나중에 들어온 사람에게도 기본으로 안 보이게 (실패해도 위 숨김은 이미 적용됨)
+    # 2중 안전장치: 서버 API 로도 한 사람씩 직접 숨김 + 나중에 들어온 사람도 기본 숨김 (각각 따로라 하나가 실패해도 나머지는 적용)
+    bgPingHideApi({_es::*}, {_t})
     bgPingDefaultHidden({_es::*})
+
+function bgPingHideApi(es: entities, t: text):
+    set {_pl} to Bukkit.getPluginManager().getPlugin("Skript")
+    loop {_es::*}:
+        set {_e} to loop-value
+        loop all players:
+            if bgTeam(loop-player) is not {_t}:
+                loop-player.hideEntity({_pl}, {_e})
 
 function bgPingDefaultHidden(es: entities):
     loop {_es::*}:
@@ -159,6 +171,8 @@ function bgOreBoulder(c: location):
     set {_id} to "%floor(x-coordinate of {_c})%_%floor(y-coordinate of {_c})%_%floor(z-coordinate of {_c})%"
     set {bg::oreb::%{_id}%} to {_c}
     set {_k} to 0
+    set {_ores} to 0
+    set {_maxore} to random integer between 3 and 4
     set {_dx} to -3
     loop 5 times:
         add 1 to {_dx}
@@ -198,8 +212,13 @@ function bgOreBoulder(c: location):
                     if {_j} is 1:
                         bgSetRock({_l})
                     else if {_outer} is true:
-                        if chance of 55%:
-                            bgSetOre({_l})
+                        # 바위 하나에 광석은 3~4개만
+                        if {_ores} < {_maxore}:
+                            if chance of 25%:
+                                bgSetOre({_l})
+                                add 1 to {_ores}
+                            else:
+                                bgSetRock({_l})
                         else:
                             bgSetRock({_l})
                     else:

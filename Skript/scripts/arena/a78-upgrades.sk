@@ -31,14 +31,15 @@ function bgUpDef(id: text, name: text, slot: number, icon: item, kind: text, p1:
 on load:
     delete {-bg::up::*}
     delete {-bg::upslot::*}
-    set {-bg::up::list::*} to "mine", "rich", "armor", "core", "heal", "haste", "sharp", "alarm", "curse" and "counter"
-    bgUpDef("mine", "광산 강화", 10, iron pickaxe, "up", 60, 120, 200, "본진 광석 리젠 3초", "본진 광석 리젠 2초", "본진 광석 리젠 1초")
+    set {-bg::up::list::*} to "mine", "rich", "armor", "core", "heal", "haste", "sharp", "cdr", "alarm", "curse" and "counter"
+    bgUpDef("mine", "광산 강화", 10, iron pickaxe, "up", 60, 120, 200, "본진 광석 리젠 5초", "본진 광석 리젠 4초", "본진 광석 리젠 3초")
     bgUpDef("rich", "풍부한 광맥", 11, gold ingot, "up", 80, 150, 240, "광물 2배 확률 40%%", "광물 2배 확률 75%%", "광물 항상 2배 + 30%% 확률 3배")
     bgUpDef("armor", "강철 피부", 12, iron chestplate, "up", 80, 160, 260, "받는 피해 -10%%", "받는 피해 -20%%", "받는 피해 -30%%")
     bgUpDef("core", "코어 보강", 13, beacon, "up", 70, 140, 220, "코어 체력 75", "코어 체력 100", "코어 체력 125 + 코어 회복 2배")
     bgUpDef("heal", "치유의 샘", 14, glistering melon slice, "up", 80, 150, 240, "본진 안에서 재생 I", "본진 안에서 재생 II", "본진 안에서 재생 II + 흡수 II")
     bgUpDef("haste", "신속 채굴", 15, golden pickaxe, "up", 60, 140, 240, "팀 전원 성급함 I", "팀 전원 성급함 II", "성급함 II + 팀 전원 신속 I")
     bgUpDef("sharp", "날카로운 칼날", 16, diamond sword, "up", 90, 180, 280, "주는 피해 +10%%", "주는 피해 +20%%", "주는 피해 +30%%")
+    bgUpDef("cdr", "전설의 숨결", 17, nether star, "up", 100, 200, 320, "전설 무기 재사용 대기 -20%%", "전설 무기 재사용 대기 -35%%", "전설 무기 재사용 대기 -50%%")
     bgUpDef("alarm", "경보 함정", 28, bell, "trap", 40, 80, 120, "적 침입 알림 + 발광 5초 (재발동 20초)", "알림 + 발광 12초 (12초)", "알림 + 발광 20초 + 위치 표시 (6초)")
     bgUpDef("curse", "저주 함정", 29, cobweb, "trap", 70, 140, 220, "구속 II 5초 + 나약함 5초", "구속 II 6초 + 채굴 피로 II 10초 + 나약함 6초", "구속 III 6초 + 실명 3초 + 나약함 II 8초 + 독 3초")
     bgUpDef("counter", "반격의 함성", 30, feather, "trap", 60, 120, 200, "본진 아군 신속 I + 저항 I 10초", "신속 II + 저항 I + 힘 I 10초", "신속 II + 저항 II + 힘 I + 재생 II 12초")
@@ -50,6 +51,7 @@ function bgUpReset():
     delete {-bg::uplv::*}
     delete {-bg::trapcd::*}
     delete {-bg::inb::*}
+    delete {-bg::bbuf::*}
 
 # ─────────────────────────────────────────────────────────── 상점 3쪽 (팀 강화 · 함정)
 function bgUpItem(t: text, id: text) :: item:
@@ -179,18 +181,55 @@ every 2 seconds:
         set {_r} to bgUpLv({_t}, "heal")
         if {_r} > 0:
             set {_b} to bgMk("base_%{_t}%")
-            bgCmd("execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..20] regeneration 3 %min(2, {_r}) - 1% true")
-            if {_r} >= 3:
-                bgCmd("execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..20] absorption 6 1 true")
+            loop all players:
+                if bgTeam(loop-player) is {_t}:
+                    if bgInOwnBase(loop-player) is true:
+                        bgBaseBuff(loop-player, "regeneration", 3, min(2, {_r}) - 1)
+                        if {_r} >= 3:
+                            bgBaseBuff(loop-player, "absorption", 6, 1)
             # 샘 효과: 본진 바닥에 초록 빛
             bgParticle(bgUp({_b}, 0.3), "happy_villager", 6, 0.3, 6, 0, 10 * {_r})
 
-# 본진 광석 리젠 시간 (광산 강화): 5 → 3 → 2 → 1초
+# 본진 광석 리젠 시간 (광산 강화): 6 → 5 → 4 → 3초 (맵 곳곳 광맥 5초)
 function bgMineRegen(t: text) :: number:
-    set {_lv} to bgUpLv({_t}, "mine")
-    if {_lv} <= 0:
-        return 5
-    return 4 - {_lv}
+    return 6 - bgUpLv({_t}, "mine")
+
+# 전설의 숨결: 전설 무기 재사용 대기 감소 비율 (0 / 0.2 / 0.35 / 0.5)
+function bgCdrRate(p: player) :: number:
+    set {_lv} to bgUpLv(bgTeam({_p}), "cdr")
+    if {_lv} is 1:
+        return 0.2
+    if {_lv} is 2:
+        return 0.35
+    if {_lv} >= 3:
+        return 0.5
+    return 0
+
+# ─────────────────────────────────────────────────────────── 본진 전용 버프 (본진 24칸 안에서만)
+function bgInOwnBase(p: player) :: boolean:
+    set {_t} to bgTeam({_p})
+    if {_t} is "none":
+        return false
+    set {_b} to bgMk("base_%{_t}%")
+    if world of {_p} is not world of {_b}:
+        return false
+    if bgDist2(location of {_p}, {_b}) < 24:
+        return true
+    return false
+
+# 본진 버프 주기 + 기록 (나가면 이 기록대로 지움)
+function bgBaseBuff(p: player, eff: text, sec: number, amp: number):
+    bgCmd("effect give %name of {_p}% %{_eff}% %{_sec}% %{_amp}% true")
+    set {-bg::bbuf::%uuid of {_p}%::%{_eff}%} to true
+
+function bgBaseBuffClear(p: player):
+    set {_n} to 0
+    loop {-bg::bbuf::%uuid of {_p}%::*}:
+        bgCmd("effect clear %name of {_p}% %loop-index%")
+        add 1 to {_n}
+    delete {-bg::bbuf::%uuid of {_p}%::*}
+    if {_n} > 0:
+        send action bar "&7본진을 나가서 본진 버프(치유의 샘 · 반격의 함성)가 사라졌습니다" to {_p}
 
 # 풍부한 광맥: 광물 2배 확률 40 / 75% · Lv.3 은 항상 2배 + 30% 확률 3배
 function bgOreBonus(p: player) :: number:
@@ -224,6 +263,9 @@ every 10 ticks:
                     if world of {_p} is world of {_b}:
                         if bgDist2(location of {_p}, {_b}) < 24:
                             set {_in} to loop-value-2
+            # 우리 본진을 나가면 본진에서만 주는 버프(치유의 샘 · 반격의 함성)를 없앤다
+            if bgInOwnBase({_p}) is false:
+                bgBaseBuffClear({_p})
             set {_was} to {-bg::inb::%uuid of {_p}%} ? "none"
             if {_in} is not {_was}:
                 set {-bg::inb::%uuid of {_p}%} to {_in}
@@ -305,22 +347,24 @@ function bgTrapFire(t: text, p: player):
     if {_k} > 0:
         if bgTrapReady("%{_t}%::counter", 25) is true:
             set {_b} to bgMk("base_%{_t}%")
-            set {_at} to "execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..30]"
-            if {_k} is 1:
-                bgCmd("%{_at}% speed 10 0 true")
-                bgCmd("%{_at}% resistance 10 0 true")
-            else if {_k} is 2:
-                bgCmd("%{_at}% speed 10 1 true")
-                bgCmd("%{_at}% resistance 10 0 true")
-                bgCmd("%{_at}% strength 10 0 true")
-            else:
-                bgCmd("%{_at}% speed 12 1 true")
-                bgCmd("%{_at}% resistance 12 1 true")
-                bgCmd("%{_at}% strength 12 0 true")
-                bgCmd("%{_at}% regeneration 12 1 true")
+            loop all players:
+                if bgTeam(loop-player) is {_t}:
+                    if bgInOwnBase(loop-player) is true:
+                        if {_k} is 1:
+                            bgBaseBuff(loop-player, "speed", 10, 0)
+                            bgBaseBuff(loop-player, "resistance", 10, 0)
+                        else if {_k} is 2:
+                            bgBaseBuff(loop-player, "speed", 10, 1)
+                            bgBaseBuff(loop-player, "resistance", 10, 0)
+                            bgBaseBuff(loop-player, "strength", 10, 0)
+                        else:
+                            bgBaseBuff(loop-player, "speed", 12, 1)
+                            bgBaseBuff(loop-player, "resistance", 12, 1)
+                            bgBaseBuff(loop-player, "strength", 12, 0)
+                            bgBaseBuff(loop-player, "regeneration", 12, 1)
             bgParticle(bgUp({_b}, 1), "totem_of_undying", 5, 1.5, 5, 0.3, 120)
             loop all players:
                 if bgTeam(loop-player) is {_t}:
-                    if bgDist2(location of loop-player, {_b}) < 30:
+                    if bgInOwnBase(loop-player) is true:
                         send title "" with subtitle "&a&l반격의 함성! &f본진의 아군이 강해집니다" to loop-player for 30 ticks
                         play sound "event.raid.horn" to loop-player
