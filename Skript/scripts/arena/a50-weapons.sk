@@ -142,7 +142,7 @@ on load:
     set {-bg::gear::diamond::slot} to 11
     set {-bg::gear::sword::name} to "주무기 강화"
     set {-bg::gear::sword::desc} to "병과에 맞는 주무기 (전사 검 · 수호자 도끼 · 궁수 활)"
-    set {-bg::gear::sword::price} to 40
+    set {-bg::gear::sword::price} to 50
     set {-bg::gear::sword::icon} to iron sword
     set {-bg::gear::sword::slot} to 12
     set {-bg::gear::arrows::name} to "화살 32개"
@@ -891,9 +891,10 @@ function bgSkillArt(l: location, w: text, k: number):
     stop
 
 # ─────────────────────────────────────────────────────────── 병과 주무기 (상점 2쪽 '주무기 강화' Lv.0~3)
-#  전사   : 돌 검 → 철 검 → 다이아 검 → 다이아 검 + 날카로움 II
-#  수호자 : 돌 도끼 → 철 도끼 → 다이아 도끼 → 다이아 도끼 + 날카로움 II   (+ 방패, 검은 못 씀)
-#  궁수   : 나무 검(근접은 이것만) + 활 → 힘 II → 힘 III · 밀치기 I → 힘 IV · 화염 · 밀치기 I
+#  전사   : 돌 검 → 철 검 → 철 검 + 날카로움 I → 다이아 검   (Lv.3 은 아주 비쌈 — 전설 무기보다 비쌈)
+#  수호자 : 돌 도끼 → 철 도끼 → 철 도끼 + 날카로움 I → 다이아 도끼   (+ 방패, 검은 못 씀)
+#  궁수   : 나무 검(근접은 이것만) + 활 → 힘 I → 힘 II → 힘 III · 밀치기 I
+#  Lv.2 까지는 전설 무기(스킬)보다 약하게 — 주무기는 기본기, 전설 무기가 진짜 강화
 #  단계는 사람마다 저장 → 병과를 바꾸면 새 병과의 같은 단계 무기로. 모든 주무기에 custom_data {bgmain:1b} (병과 바꿀 때 지우기용)
 function bgMainWeapon(p: player, c: number):
     set {_n} to name of {_p}
@@ -903,21 +904,23 @@ function bgMainWeapon(p: player, c: number):
         bgCmd("give %{_n}% wooden_sword[%{_tag}%,enchantments={""minecraft:binding_curse"":1}]")
         set {_e} to """minecraft:binding_curse"":1"
         if {_lv} is 1:
-            set {_e} to "%{_e}%,""minecraft:power"":2"
+            set {_e} to "%{_e}%,""minecraft:power"":1"
         else if {_lv} is 2:
-            set {_e} to "%{_e}%,""minecraft:power"":3,""minecraft:punch"":1"
+            set {_e} to "%{_e}%,""minecraft:power"":2"
         else if {_lv} >= 3:
-            set {_e} to "%{_e}%,""minecraft:power"":4,""minecraft:flame"":1,""minecraft:punch"":1"
+            set {_e} to "%{_e}%,""minecraft:power"":3,""minecraft:punch"":1"
         bgCmd("give %{_n}% bow[%{_tag}%,enchantments={%{_e}%}]")
         stop
     set {_m} to "stone"
     if {_lv} is 1:
         set {_m} to "iron"
-    else if {_lv} >= 2:
+    else if {_lv} is 2:
+        set {_m} to "iron"
+    else if {_lv} >= 3:
         set {_m} to "diamond"
     set {_e} to """minecraft:binding_curse"":1"
-    if {_lv} >= 3:
-        set {_e} to "%{_e}%,""minecraft:sharpness"":2"
+    if {_lv} is 2:
+        set {_e} to "%{_e}%,""minecraft:sharpness"":1"
     if {_c} is 2:
         bgCmd("give %{_n}% %{_m}%_axe[%{_tag}%,enchantments={%{_e}%}]")
         bgCmd("item replace entity %{_n}% weapon.offhand with shield[%{_tag}%,enchantments={""minecraft:binding_curse"":1}]")
@@ -928,25 +931,25 @@ function bgMainWeapon(p: player, c: number):
 function bgMainName(c: number, lv: number) :: text:
     if {_c} is 1:
         if {_lv} is 1:
-            return "활 강화 I &7(힘 II)"
+            return "활 강화 I &7(힘 I)"
         if {_lv} is 2:
-            return "활 강화 II &7(힘 III · 밀치기 I)"
-        return "활 강화 III &7(힘 IV · 화염 · 밀치기 I)"
+            return "활 강화 II &7(힘 II)"
+        return "활 강화 III &7(힘 III · 밀치기 I)"
     set {_w} to "검"
     if {_c} is 2:
         set {_w} to "도끼"
     if {_lv} is 1:
         return "철 %{_w}%"
     if {_lv} is 2:
-        return "다이아 %{_w}%"
-    return "다이아 %{_w}% &7(날카로움 II)"
+        return "철 %{_w}% &7(날카로움 I)"
+    return "다이아 %{_w}%"
 
 function bgMainPrice(lv: number) :: number:
     if {_lv} is 1:
-        return 40
+        return 50
     if {_lv} is 2:
-        return 100
-    return 180
+        return 120
+    return 450
 
 function bgMainShopItem(p: player) :: item:
     set {_c} to {bg::cls::%uuid of {_p}%} ? 0
