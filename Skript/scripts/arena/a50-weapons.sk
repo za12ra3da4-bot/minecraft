@@ -367,7 +367,7 @@ function bgShopPage(p: player, pg: number):
         set slot 40 of {_gui} to bgSellItem({_p})
         # 전설 무기 반납 (반값 환불) — 다음 쪽 화살표 바로 위
         set {_rf} to barrier named "&c&l전설 무기 반납"
-        set lore of {_rf} to "&7마음에 안 드는 전설 무기를 돌려주고", "&7가격의 반(&e200 코인&7)을 돌려받습니다", "", "&f지금 가진 전설 무기: &e%bgLegendCount({_p})%&7/3", "&7(보스 · 신화 무기는 개수에 안 들어감)", "", "&c클릭해서 고르기"
+        set lore of {_rf} to "&7마음에 안 드는 전설 무기를 돌려주고", "&7가격의 30%%(&e120 코인&7)를 돌려받습니다", "", "&f지금 가진 전설 무기: &e%bgLegendCount({_p})%&7/3", "&7(보스 · 신화 무기는 개수에 안 들어감)", "", "&c클릭해서 고르기"
         set slot 44 of {_gui} to {_rf}
         set {_i} to 0
         loop {-bg::w::list::*}:
@@ -545,7 +545,7 @@ on inventory click:
     set {_w} to {-bg::wslot::%{_s}%}
     # 한 사람 전설 무기 최대 3개 (보스 · 신화 무기는 따로)
     if bgLegendCount(player) >= 3:
-        send "&6[상점] &c전설 무기는 한 사람 최대 3개까지입니다. &7오른쪽 아래 &c반납&7 칸에서 하나를 반값에 돌려주고 사세요." to player
+        send "&6[상점] &c전설 무기는 한 사람 최대 3개까지입니다. &7오른쪽 아래 &c반납&7 칸에서 하나를 돌려주고(30%% 환불) 사세요." to player
         play sound "entity.villager.no" to player
         stop
     set {_price} to {-bg::w::%{_w}%::price}
@@ -1075,9 +1075,9 @@ on pickup:
         wait 2 seconds
         delete {-bg::pickmsg::%uuid of player%}
 
-# 반납 창: 가방의 전설 무기를 보여 주고, 클릭하면 그 무기를 없애고 반값 환불
+# 반납 창: 가방의 전설 무기를 보여 주고, 클릭하면 그 무기를 없애고 가격의 30% 환불
 function bgRefundOpen(p: player):
-    set {_gui} to chest inventory with 3 rows named "&4&l전설 무기 반납 &8| &7클릭하면 반값 환불"
+    set {_gui} to chest inventory with 3 rows named "&4&l전설 무기 반납 &8| &7클릭하면 30%% 환불"
     set {_pane} to gray stained glass pane named " "
     loop 27 times:
         set slot loop-number - 1 of {_gui} to {_pane}
@@ -1089,7 +1089,7 @@ function bgRefundOpen(p: player):
             if {_i} <= 16:
                 if {_i} >= 10:
                     set {_it} to bgWeaponItem({_w})
-                    set {_back} to floor({-bg::w::%{_w}%::price} / 2)
+                    set {_back} to floor({-bg::w::%{_w}%::price} * 0.3)
                     set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "", "&c클릭하면 반납 &7→ &e+%{_back}% 코인"
                     set slot {_i} of {_gui} to {_it}
                     set {-bg::refslot::%uuid of {_p}%::%{_i}%} to {_w}
@@ -1134,7 +1134,7 @@ function bgRefund(p: player, w: text):
         stop
     bgCmd("clear %name of {_p}% %{-bg::w::%{_w}%::base}%[minecraft:custom_data={bgw:""%{_w}%""}] 1")
     delete {bg::owned::%uuid of {_p}%::%{_w}%}
-    set {_back} to floor({-bg::w::%{_w}%::price} / 2)
+    set {_back} to floor({-bg::w::%{_w}%::price} * 0.3)
     add {_back} to {bg::coin::%uuid of {_p}%}
     send "&6[상점] &f%{-bg::w::%{_w}%::name}% 반납 &e+%{_back}% 코인 &7(보유 %{bg::coin::%uuid of {_p}%}%)" to {_p}
     play sound "block.anvil.destroy" to {_p}
