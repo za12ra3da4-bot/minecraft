@@ -8,9 +8,9 @@
 # ═════════════════════════════════════════════════════════════════════════════
 
 on load:
-    set {-bg::clsdesc::0} to "&c체력 12칸 &7· &f공격력 +2 &7· &f공격 속도 +10%%"
-    set {-bg::clsdesc::1} to "&a체력 9칸 &7· &f이동 +15%% &7· &f낙하 피해 줄음 &7· &f점프 높음"
-    set {-bg::clsdesc::2} to "&9체력 14칸 &7· &f방어 +3 &7· &f넉백 저항 50%% &7· &f이동 -8%%"
+    set {-bg::clsdesc::0} to "&c체력 12칸 &7· &f공격력 +2 &7· &f공격 속도 +10%% &7· &f검"
+    set {-bg::clsdesc::1} to "&a체력 10칸 &7· &f이동 +15%% &7· &f낙하 피해 줄음 &7· &f활 강화 (근접은 나무 검만)"
+    set {-bg::clsdesc::2} to "&9체력 14칸 &7· &f방어 +3 &7· &f넉백 저항 50%% &7· &f방패 &7· &f도끼만"
 
 on load:
     set {-bg::pts::*} to "temple", "ares", "athena", "hermes" and "demeter"
@@ -366,10 +366,11 @@ function bgKit(p: player):
     bgShopRestore({_p})
 
 # 병과 장비: 바지 + 기본 무기 (다른 갑옷 · 산 물건은 건드리지 않음)
-#  전사 = 사슬 바지 · 돌 검   궁수 = 팀 색 가죽 바지 · 나무 검 · 활 · 화살 24   수호자 = 철 바지 · 돌 도끼
+#  전사 = 사슬 바지 · 검   궁수 = 팀 색 가죽 바지 · 나무 검 · 활 · 화살 32   수호자 = 철 바지 · 도끼 · 방패
+#  검 · 도끼 · 활은 상점 2쪽 '주무기 강화'(Lv.0~3, 병과에 맞게)로 좋아진다 → bgMainWeapon (a50)
 # 병과 능력치 (속성) — 병과를 바꾸거나 부활할 때 적용, 대기실로 가면 기본값
 #  전사   : 체력 12칸 · 공격력 +2 · 공격 속도 +10%
-#  궁수   : 체력 9칸  · 이동 속도 +15% · 낙하 피해 줄음 · 점프 조금 높음
+#  궁수   : 체력 10칸 · 이동 속도 +15% · 낙하 피해 줄음 · 점프 조금 높음
 #  수호자 : 체력 14칸 · 방어 +3 · 넉백 저항 50% · 이동 속도 -8%
 function bgClassStats(p: player, c: number):
     set {_n} to name of {_p}
@@ -382,7 +383,7 @@ function bgClassStats(p: player, c: number):
     set {_fall} to 3
     set {_jump} to 0.42
     if {_c} is 1:
-        set {_hp} to 18
+        set {_hp} to 20
         set {_atk} to 1
         set {_spd} to 0.115
         set {_aspd} to 4
@@ -391,10 +392,10 @@ function bgClassStats(p: player, c: number):
     else if {_c} is 2:
         set {_hp} to 28
         set {_atk} to 1
-        set {_spd} to 0.092
+        set {_spd} to 0.095
         set {_armor} to 3
         set {_kb} to 0.5
-        set {_aspd} to 4
+        set {_aspd} to 4.3
     bgCmd("attribute %{_n}% minecraft:max_health base set %{_hp}%")
     bgCmd("attribute %{_n}% minecraft:attack_damage base set %{_atk}%")
     bgCmd("attribute %{_n}% minecraft:movement_speed base set %{_spd}%")
@@ -424,15 +425,14 @@ function bgClassGear(p: player, c: number):
     set {_t} to bgTeam({_p})
     if {_c} is 0:
         bgCmd("item replace entity %{_n}% armor.legs with chainmail_leggings[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
-        bgCmd("give %{_n}% stone_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+        bgMainWeapon({_p}, {_c})
     else if {_c} is 1:
         bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=%{-bg::hex::%{_t}%}%,unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
-        bgCmd("give %{_n}% wooden_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
-        bgCmd("give %{_n}% bow[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
-        bgCmd("give %{_n}% arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 24")
+        bgMainWeapon({_p}, {_c})
+        bgCmd("give %{_n}% arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 32")
     else:
         bgCmd("item replace entity %{_n}% armor.legs with iron_leggings[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
-        bgCmd("give %{_n}% stone_axe[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+        bgMainWeapon({_p}, {_c})
 
 # 병과 바꾸기: 예전 병과의 기본 무기 · 화살만 빼고 새 병과 것을 준다
 function bgClassSwitch(p: player, c: number):
@@ -441,6 +441,7 @@ function bgClassSwitch(p: player, c: number):
     bgCmd("clear %{_n}% wooden_sword")
     bgCmd("clear %{_n}% stone_axe")
     bgCmd("clear %{_n}% bow")
+    bgCmd("clear %{_n}% *[minecraft:custom_data={bgmain:1b}]")
     bgCmd("clear %{_n}% arrow")
     bgCmd("effect clear %{_n}% slowness")
     bgClassGear({_p}, {_c})

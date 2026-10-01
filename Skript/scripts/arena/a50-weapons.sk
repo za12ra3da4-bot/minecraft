@@ -36,22 +36,22 @@ on load:
     set {-bg::w::bosslist::*} to "b_talos", "b_sphinx", "b_ladon" and "b_cyclops"
     set {-bg::w::all::*} to {-bg::w::list::*}
     add {-bg::w::bosslist::*} to {-bg::w::all::*}
-    bgWDef("thunder", "천둥의 성검", 400, 15, "aqua", "우클릭 심판의 낙뢰: 하늘에서 성검이 내리꽂힘 — 반경 4 강한 피해 · 20초")
-    bgWDef("dragon", "용살자의 도끼", 400, 12, "red", "우클릭 화염 선풍: 도끼가 두 바퀴 돌며 앞 120° 베기 · 16초")
-    bgWDef("wind", "질풍의 레이피어", 400, 8, "green", "우클릭 질풍 삼연격: 질주하며 세 번 찌르기 · 10초")
-    bgWDef("phoenix", "성기사의 전쟁망치", 400, 18, "gold", "우클릭 신성 강타: 거대한 망치가 떨어져 결계 (저항 II) · 23초")
-    bgWDef("blackiron", "흑기사의 대검", 400, 12, "dark_red", "우클릭 피의 돌진: 돌진 뒤 거대한 대검으로 가로 베기 · 16초")
-    bgWDef("tiger", "그림자 쌍단검", 400, 10, "dark_purple", "우클릭 그림자 교차: 단검 두 자루가 X자로 교차 (3연속) · 13초")
-    bgWDef("staff", "대마법사의 지팡이", 400, 14, "light_purple", "우클릭 비전 폭발: 비전 구체를 모았다 터뜨려 적을 띄움 · 18초")
-    bgWDef("peachwood", "불사조의 창", 400, 16, "gold", "우클릭 불창의 비: 불창 여섯 자루가 쏟아짐 (화상) · 21초")
-    bgWDef("frost", "서리 여왕의 장궁", 400, 12, "aqua", "우클릭 빙결 사격: 얼음 화살 세 발 — 맞은 적 자리에 얼음 가시 (구속 IV) · 16초")
-    bgWDef("storm", "폭풍의 삼지창", 400, 16, "blue", "우클릭 폭풍 투척: 삼지창을 던져 번개가 적 3명에게 튀어감 · 21초")
-    bgWDef("scythe", "망자의 낫", 400, 14, "dark_gray", "우클릭 영혼 수확: 낫이 한 바퀴 돌며 베고, 맞은 적마다 2.5하트 회복 + 재생 · 18초")
-    bgWDef("lance", "성광의 기병창", 400, 12, "yellow", "우클릭 성광 돌격: 9칸 돌격 — 길 위의 적을 띄우고 발광 · 16초")
-    bgWDef("skull", "저주받은 해골 지팡이", 400, 12, "dark_green", "우클릭 저주의 해골: 날아가는 해골이 터지며 독 구름 · 16초")
-    bgWDef("chakram", "태양의 원반", 400, 10, "gold", "우클릭 태양 원반: 원반이 날아갔다 돌아오며 두 번 벰 · 13초")
-    bgWDef("chain", "사냥꾼의 사슬낫", 400, 12, "gray", "우클릭 사슬 끌어오기: 앞의 적을 사슬로 끌어와 기절 · 16초")
-    bgWDef("gauntlet", "거인의 건틀렛", 400, 14, "gold", "우클릭 대지 분쇄: 앞으로 돌기둥이 줄지어 솟아 적을 띄움 · 18초")
+    bgWDef("thunder", "천둥의 성검", 200, 15, "aqua", "우클릭 심판의 낙뢰: 하늘에서 성검이 내리꽂힘 — 반경 4 강한 피해 · 20초")
+    bgWDef("dragon", "용살자의 도끼", 200, 12, "red", "우클릭 화염 선풍: 도끼가 두 바퀴 돌며 앞 120° 베기 · 16초")
+    bgWDef("wind", "질풍의 레이피어", 200, 8, "green", "우클릭 질풍 삼연격: 질주하며 세 번 찌르기 · 10초")
+    bgWDef("phoenix", "성기사의 전쟁망치", 200, 18, "gold", "우클릭 신성 강타: 거대한 망치가 떨어져 결계 (저항 II) · 23초")
+    bgWDef("blackiron", "흑기사의 대검", 200, 12, "dark_red", "우클릭 피의 돌진: 돌진 뒤 거대한 대검으로 가로 베기 · 16초")
+    bgWDef("tiger", "그림자 쌍단검", 200, 10, "dark_purple", "우클릭 그림자 교차: 단검 두 자루가 X자로 교차 (3연속) · 13초")
+    bgWDef("staff", "대마법사의 지팡이", 200, 14, "light_purple", "우클릭 비전 폭발: 비전 구체를 모았다 터뜨려 적을 띄움 · 18초")
+    bgWDef("peachwood", "불사조의 창", 200, 16, "gold", "우클릭 불창의 비: 불창 여섯 자루가 쏟아짐 (화상) · 21초")
+    bgWDef("frost", "서리 여왕의 장궁", 200, 12, "aqua", "우클릭 빙결 사격: 얼음 화살 세 발 — 맞은 적 자리에 얼음 가시 (구속 IV) · 16초")
+    bgWDef("storm", "폭풍의 삼지창", 200, 16, "blue", "우클릭 폭풍 투척: 삼지창을 던져 번개가 적 3명에게 튀어감 · 21초")
+    bgWDef("scythe", "망자의 낫", 200, 14, "dark_gray", "우클릭 영혼 수확: 낫이 한 바퀴 돌며 베고, 맞은 적마다 2.5하트 회복 + 재생 · 18초")
+    bgWDef("lance", "성광의 기병창", 200, 12, "yellow", "우클릭 성광 돌격: 9칸 돌격 — 길 위의 적을 띄우고 발광 · 16초")
+    bgWDef("skull", "저주받은 해골 지팡이", 200, 12, "dark_green", "우클릭 저주의 해골: 날아가는 해골이 터지며 독 구름 · 16초")
+    bgWDef("chakram", "태양의 원반", 200, 10, "gold", "우클릭 태양 원반: 원반이 날아갔다 돌아오며 두 번 벰 · 13초")
+    bgWDef("chain", "사냥꾼의 사슬낫", 200, 12, "gray", "우클릭 사슬 끌어오기: 앞의 적을 사슬로 끌어와 기절 · 16초")
+    bgWDef("gauntlet", "거인의 건틀렛", 200, 14, "gold", "우클릭 대지 분쇄: 앞으로 돌기둥이 줄지어 솟아 적을 띄움 · 18초")
     bgWDef("b_talos", "탈로스의 청동 대검", 0, 18, "gold", "보스 전용 · 우클릭 청동 폭주: 세 번 연속 돌진 + 저항 · 힘 (5초) · 23초")
     bgWDef("b_sphinx", "스핑크스의 모래시계", 0, 20, "yellow", "보스 전용 · 우클릭 시간의 모래폭풍: 반경 7 적 구속 V · 실명 (3초) · 26초")
     bgWDef("b_ladon", "히드라의 삼두 채찍", 0, 14, "dark_green", "보스 전용 · 우클릭 삼두 채찍질: 세 갈래로 독 채찍 (독 · 시듦) · 18초")
@@ -140,9 +140,9 @@ on load:
     set {-bg::gear::diamond::price} to 80
     set {-bg::gear::diamond::icon} to diamond chestplate
     set {-bg::gear::diamond::slot} to 11
-    set {-bg::gear::sword::name} to "철 검"
-    set {-bg::gear::sword::desc} to "죽어도 유지됩니다"
-    set {-bg::gear::sword::price} to 25
+    set {-bg::gear::sword::name} to "주무기 강화"
+    set {-bg::gear::sword::desc} to "병과에 맞는 주무기 (전사 검 · 수호자 도끼 · 궁수 활)"
+    set {-bg::gear::sword::price} to 40
     set {-bg::gear::sword::icon} to iron sword
     set {-bg::gear::sword::slot} to 12
     set {-bg::gear::arrows::name} to "화살 32개"
@@ -227,8 +227,7 @@ function bgGiveGear(p: player, g: text):
         set {bg::owned::%uuid of {_p}%::diamond} to true
         bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false,trim=%bgTrim({_p})%]")
     else if {_g} is "sword":
-        set {bg::owned::%uuid of {_p}%::sword} to true
-        bgCmd("give %{_n}% iron_sword[unbreakable={},enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false]")
+        bgMainBuy({_p})
     else if {_g} is "arrows":
         bgCmd("give %{_n}% arrow[enchantments={""minecraft:binding_curse"":1},enchantment_glint_override=false] 32")
     else if {_g} is "gapple":
@@ -265,8 +264,12 @@ function bgShopRestore(p: player):
         bgGiveGear({_p}, "iron")
     if {bg::owned::%{_u}%::diamond} is true:
         bgGiveGear({_p}, "diamond")
+    # 예전 '철 검' 구매 기록 → 주무기 강화 Lv.1 (주무기는 bgClassGear 가 단계에 맞게 준다)
     if {bg::owned::%{_u}%::sword} is true:
-        bgGiveGear({_p}, "sword")
+        delete {bg::owned::%{_u}%::sword}
+        if ({bg::owned::%{_u}%::wlv} ? 0) < 1:
+            set {bg::owned::%{_u}%::wlv} to 1
+            bgClassSwitch({_p}, {bg::cls::%{_u}%} ? 0)
     loop {-bg::w::all::*}:
         if {bg::owned::%{_u}%::%loop-value%} is true:
             bgGiveWeapon({_p}, loop-value)
@@ -357,6 +360,8 @@ function bgShopPage(p: player, pg: number):
         else:
             set slot 45 of {_gui} to arrow named "&e&l◀ 이전 쪽 &f장비 · 소모품"
     if {_pg} is 1:
+        # 광물 일괄 판매 (1쪽에도)
+        set slot 34 of {_gui} to bgSellItem({_p})
         set {_i} to 0
         loop {-bg::w::list::*}:
             add 1 to {_i}
@@ -383,11 +388,9 @@ function bgShopPage(p: player, pg: number):
             set name of {_it} to "&f&l%{-bg::gear::%{_g}%::name}%"
             set lore of {_it} to "&7%{-bg::gear::%{_g}%::desc}%", "" and "&e가격: %{-bg::gear::%{_g}%::price}% 코인"
             set slot {-bg::gear::%{_g}%::slot} of {_gui} to {_it}
-        # 광물 일괄 판매 버튼
-        set {_sell} to hopper named "&a&l광물 일괄 판매"
-        set {_tot} to bgOreTotal({_p})
-        set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e1 &7· &f금 원석 &e2", "&f에메랄드 &e3 &7· &f다이아몬드 &e5", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
-        set slot 40 of {_gui} to {_sell}
+        # 주무기 강화 칸은 사람마다 (병과 · 단계)
+        set slot 12 of {_gui} to bgMainShopItem({_p})
+        set slot 40 of {_gui} to bgSellItem({_p})
     set {_coin} to sunflower named "&6&l보유 코인: &e%{_c}%"
     set lore of {_coin} to "&7처치 +10 · 점령 +15 · 보스 기여도", "&710초마다 +1 (점령 지점당 +1)"
     set slot 49 of {_gui} to {_coin}
@@ -432,6 +435,13 @@ function bgOreCount(p: player) :: number:
             add (item amount of loop-item) to {_n}
     return {_n}
 
+# 광물 일괄 판매 버튼
+function bgSellItem(p: player) :: item:
+    set {_sell} to hopper named "&a&l광물 일괄 판매"
+    set {_tot} to bgOreTotal({_p})
+    set lore of {_sell} to "&7가방의 광물을 전부 한 번에 코인으로 바꿉니다", "", "&f철 원석 · 구리 원석 &e1 &7· &f금 원석 &e2", "&f에메랄드 &e3 &7· &f다이아몬드 &e5", "", "&a지금 팔면: &e%{_tot}% 코인 &7(클릭)"
+    return {_sell}
+
 function bgOreSell(p: player):
     set {_n} to bgOreTotal({_p})
     if {_n} <= 0:
@@ -446,7 +456,7 @@ function bgOreSell(p: player):
     play sound "entity.experience_orb.pickup" to {_p}
     play sound "block.amethyst_block.resonate" to {_p}
     wait 1 tick
-    bgShopPage({_p}, 2)
+    bgShopPage({_p}, {-bg::shoppage::%uuid of {_p}%} ? 2)
 
 # 상점 진열용 전설 무기 아이템 (리소스팩 그림이 보이도록 item_model 지정)
 function bgWeaponItem(w: text) :: item:
@@ -496,6 +506,10 @@ on inventory click:
         if {-bg::gearslot::%{_s}%} is not set:
             stop
         set {_g} to {-bg::gearslot::%{_s}%}
+        # 주무기 강화는 단계별 가격 (bgMainBuy 가 코인 처리)
+        if {_g} is "sword":
+            bgMainBuy(player)
+            stop
         set {_price} to {-bg::gear::%{_g}%::price}
         if ({bg::coin::%uuid of player%} ? 0) < {_price}:
             set {_c} to {bg::coin::%uuid of player%} ? 0
@@ -509,6 +523,9 @@ on inventory click:
         stop
     if {_s} is 53:
         bgShopPage(player, 2)
+        stop
+    if {_s} is 34:
+        bgOreSell(player)
         stop
     if {-bg::bslot::%{_s}%} is set:
         send "&6[상점] &c보스 전용 무기는 보스를 쓰러뜨리고 보상 상자를 열어야 얻을 수 있습니다." to player
@@ -872,3 +889,132 @@ function bgIsLegend(i: item) :: text:
 function bgSkillArt(l: location, w: text, k: number):
     # 솟아오르는 세로 효과는 쓰지 않음 (바닥 마법진 효과만)
     stop
+
+# ─────────────────────────────────────────────────────────── 병과 주무기 (상점 2쪽 '주무기 강화' Lv.0~3)
+#  전사   : 돌 검 → 철 검 → 다이아 검 → 다이아 검 + 날카로움 II
+#  수호자 : 돌 도끼 → 철 도끼 → 다이아 도끼 → 다이아 도끼 + 날카로움 II   (+ 방패, 검은 못 씀)
+#  궁수   : 나무 검(근접은 이것만) + 활 → 힘 II → 힘 III · 밀치기 I → 힘 IV · 화염 · 밀치기 I
+#  단계는 사람마다 저장 → 병과를 바꾸면 새 병과의 같은 단계 무기로. 모든 주무기에 custom_data {bgmain:1b} (병과 바꿀 때 지우기용)
+function bgMainWeapon(p: player, c: number):
+    set {_n} to name of {_p}
+    set {_lv} to {bg::owned::%uuid of {_p}%::wlv} ? 0
+    set {_tag} to "custom_data={bgmain:1b},unbreakable={},enchantment_glint_override=false"
+    if {_c} is 1:
+        bgCmd("give %{_n}% wooden_sword[%{_tag}%,enchantments={""minecraft:binding_curse"":1}]")
+        set {_e} to """minecraft:binding_curse"":1"
+        if {_lv} is 1:
+            set {_e} to "%{_e}%,""minecraft:power"":2"
+        else if {_lv} is 2:
+            set {_e} to "%{_e}%,""minecraft:power"":3,""minecraft:punch"":1"
+        else if {_lv} >= 3:
+            set {_e} to "%{_e}%,""minecraft:power"":4,""minecraft:flame"":1,""minecraft:punch"":1"
+        bgCmd("give %{_n}% bow[%{_tag}%,enchantments={%{_e}%}]")
+        stop
+    set {_m} to "stone"
+    if {_lv} is 1:
+        set {_m} to "iron"
+    else if {_lv} >= 2:
+        set {_m} to "diamond"
+    set {_e} to """minecraft:binding_curse"":1"
+    if {_lv} >= 3:
+        set {_e} to "%{_e}%,""minecraft:sharpness"":2"
+    if {_c} is 2:
+        bgCmd("give %{_n}% %{_m}%_axe[%{_tag}%,enchantments={%{_e}%}]")
+        bgCmd("item replace entity %{_n}% weapon.offhand with shield[%{_tag}%,enchantments={""minecraft:binding_curse"":1}]")
+    else:
+        bgCmd("give %{_n}% %{_m}%_sword[%{_tag}%,enchantments={%{_e}%}]")
+
+# 단계별 이름 · 가격
+function bgMainName(c: number, lv: number) :: text:
+    if {_c} is 1:
+        if {_lv} is 1:
+            return "활 강화 I &7(힘 II)"
+        if {_lv} is 2:
+            return "활 강화 II &7(힘 III · 밀치기 I)"
+        return "활 강화 III &7(힘 IV · 화염 · 밀치기 I)"
+    set {_w} to "검"
+    if {_c} is 2:
+        set {_w} to "도끼"
+    if {_lv} is 1:
+        return "철 %{_w}%"
+    if {_lv} is 2:
+        return "다이아 %{_w}%"
+    return "다이아 %{_w}% &7(날카로움 II)"
+
+function bgMainPrice(lv: number) :: number:
+    if {_lv} is 1:
+        return 40
+    if {_lv} is 2:
+        return 100
+    return 180
+
+function bgMainShopItem(p: player) :: item:
+    set {_c} to {bg::cls::%uuid of {_p}%} ? 0
+    set {_lv} to {bg::owned::%uuid of {_p}%::wlv} ? 0
+    set {_it} to iron sword
+    if {_c} is 1:
+        set {_it} to bow
+    else if {_c} is 2:
+        set {_it} to iron axe
+    set {_nx} to {_lv} + 1
+    if {_lv} >= 3:
+        set name of {_it} to "&6&l주무기 강화 &7[최대]"
+        set lore of {_it} to "&7지금: &f%bgMainName({_c}, 3)%", "", "&6&l최대 단계"
+    else:
+        set name of {_it} to "&f&l주무기 강화 &7[Lv.%{_lv}% → %{_nx}%]"
+        set lore of {_it} to "&a다음: &f%bgMainName({_c}, {_nx})%", "&7병과를 바꾸면 그 병과의 같은 단계 무기로 바뀝니다", "&7(수호자는 도끼만 · 궁수는 근접에 나무 검만)", "", "&e가격: %bgMainPrice({_nx})% 코인"
+    return {_it}
+
+function bgMainBuy(p: player):
+    set {_u} to uuid of {_p}
+    set {_lv} to {bg::owned::%{_u}%::wlv} ? 0
+    if {_lv} >= 3:
+        send "&6[상점] &7주무기는 이미 최대 단계입니다." to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    set {_nx} to {_lv} + 1
+    set {_price} to bgMainPrice({_nx})
+    if ({bg::coin::%{_u}%} ? 0) < {_price}:
+        set {_c} to {bg::coin::%{_u}%} ? 0
+        send "&6[상점] &c코인이 부족합니다. &7(필요 %{_price}%, 보유 %{_c}%)" to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    remove {_price} from {bg::coin::%{_u}%}
+    set {bg::owned::%{_u}%::wlv} to {_nx}
+    set {_c} to {bg::cls::%{_u}%} ? 0
+    bgClassSwitch({_p}, {_c})
+    send "&6[상점] &f주무기 강화 → &e%bgMainName({_c}, {_nx})% &7(남은 코인 %{bg::coin::%{_u}%}%)" to {_p}
+    play sound "block.anvil.use" to {_p}
+    play sound "entity.player.levelup" to {_p}
+    wait 1 tick
+    bgShopPage({_p}, 2)
+
+# 병과 무기 제한: 수호자는 검(전설 무기 제외) 못 씀 · 궁수는 나무 검 말고 다른 검 · 도끼 못 씀
+function bgWeaponOk(p: player) :: boolean:
+    if bgIsFighter({_p}) is false:
+        return true
+    set {_tool} to tool of {_p}
+    if bgIsLegend({_tool}) is not "":
+        return true
+    set {_k} to bgOreKey({_tool})
+    set {_c} to {bg::cls::%uuid of {_p}%} ? 0
+    if {_c} is 2:
+        if {_k} ends with "_SWORD":
+            send action bar "&9수호자는 도끼만 쓸 수 있습니다" to {_p}
+            return false
+    else if {_c} is 1:
+        if {_k} ends with "_AXE":
+            send action bar "&a궁수는 근접 무기로 나무 검만 쓸 수 있습니다" to {_p}
+            return false
+        if {_k} ends with "_SWORD":
+            if {_k} is not "WOODEN_SWORD":
+                send action bar "&a궁수는 근접 무기로 나무 검만 쓸 수 있습니다" to {_p}
+                return false
+    return true
+
+on damage of player:
+    {-bg::on} is true
+    attacker is a player
+    set {_a} to attacker
+    if bgWeaponOk({_a}) is false:
+        cancel event

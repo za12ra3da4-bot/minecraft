@@ -16,7 +16,7 @@ FONT = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
 
 # 페이지별 칸 배치 (Skript a50 과 같아야 함)
 PAGES = {
-    1: dict(title="전설 무기", legend=set(range(9, 17)) | set(range(18, 26)), boss={29, 30, 31, 32}, gear=set(), sell=set(),
+    1: dict(title="전설 무기", legend=set(range(9, 17)) | set(range(18, 26)), boss={29, 30, 31, 32}, gear=set(), sell={34},
             coin={49}, nav={53: "next"}, banners=[(151, 35, 65)], caption=(89, "보스 무기 — 보스를 쓰러뜨리면 보상 상자에서")),
     2: dict(title="장비 · 소모품", legend=set(), boss=set(), gear={10, 11, 12, 13} | set(range(19, 26)) | {28, 29, 30, 31, 33, 34},
             sell={40}, coin={49}, nav={45: "prev", 53: "next"}, banners=[(151, 35, 83)], icons={9: "armor", 18: "potion", 27: "arrow"},

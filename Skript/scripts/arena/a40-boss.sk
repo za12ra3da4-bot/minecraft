@@ -647,6 +647,9 @@ function bgBossContrib(id: text):
 function bgBossTake(d: number, p: player, at: location):
     if {-bg::boss::state} is "dead" or "spawn":
         stop
+    # 병과 무기 제한 (수호자 검 · 궁수 나무 검 외) — a50
+    if bgWeaponOk({_p}) is false:
+        stop
     if {-bg::boss::state} is "stun":
         set {_d} to {_d} * 1.5
     # 결집한 팀은 보스에게 주는 피해 +30% (a79)
