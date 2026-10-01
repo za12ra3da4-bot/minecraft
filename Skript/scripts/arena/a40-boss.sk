@@ -131,6 +131,9 @@ function bgInCone(p: player, c: location, yaw: number, deg: number, r: number) :
 
 # 피해 (하트 단위) + 밀쳐내기
 function bgHit(p: player, hearts: number, from: location, kb: number, up: number):
+    # 결집한 팀은 보스에게 받는 피해 -30% (a79)
+    if bgRally(bgTeam({_p})) is true:
+        set {_hearts} to {_hearts} * 0.7
     damage {_p} by {_hearts} * 1.1
     set {_dx} to (x-coordinate of {_p}) - (x-coordinate of {_from})
     set {_dz} to (z-coordinate of {_p}) - (z-coordinate of {_from})
@@ -646,6 +649,9 @@ function bgBossTake(d: number, p: player, at: location):
         stop
     if {-bg::boss::state} is "stun":
         set {_d} to {_d} * 1.5
+    # 결집한 팀은 보스에게 주는 피해 +30% (a79)
+    if bgRally(bgTeam({_p})) is true:
+        set {_d} to {_d} * 1.3
     set {_d} to {_d} * 6
     set {-bg::boss::lasthit} to {_p}
     add {_d} to {-bg::boss::pdmg::%uuid of {_p}%}
@@ -716,6 +722,8 @@ function bgBossDie():
     if {_win} is "none":
         if {-bg::boss::lasthit} is set:
             set {_win} to bgTeam({-bg::boss::lasthit})
+    # 쓰러뜨린 순간 결집 중이었는지 (a79)
+    set {_rally} to bgRally({_win})
     bgSoundAt(bgBossPos(), "entity.wither.death", 3, 0.8)
     wait 50 ticks
     if {-bg::boss::gen} is not {_g}:
@@ -733,6 +741,8 @@ function bgBossDie():
         set {-bg::bless::%{_win}%::boss} to {_id}
         bgTitle("&6&l%{-bg::bd::%{_id}%::name}% 처치!", "%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀 &f+300점 · %{-bg::blessname::%{_id}%}% 3분", 10, 70, 20)
         bgSay("%{-bg::tcol::%{_win}%}%%{-bg::tname::%{_win}%}% 팀&f이 &c%{-bg::bd::%{_id}%::name}%&f 을(를) 쓰러뜨렸습니다! (+300, 축복: %{-bg::blessname::%{_id}%}%)")
+        if {_rally} is true:
+            bgRallyReward({_win}, {_id})
     bgSound("ui.toast.challenge_complete", 0.8, 1)
     bgBossRemove()
 

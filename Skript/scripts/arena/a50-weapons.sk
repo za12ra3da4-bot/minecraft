@@ -337,7 +337,7 @@ every 2 ticks:
 function bgShopOpen(p: player):
     bgShopPage({_p}, 1)
 
-# 1쪽 = 전설 무기 · 보스 무기   2쪽 = 장비 · 물약 · 화살 · 광물 판매   (아래 화살표 칸으로 넘기기)
+# 1쪽 = 전설 무기 · 보스 무기   2쪽 = 장비 · 물약 · 화살 · 광물 판매   3쪽 = 팀 강화 · 기지 함정 (a78)   (아래 화살표 칸으로 넘기기)
 function bgShopPage(p: player, pg: number):
     set {_c} to {bg::coin::%uuid of {_p}%} ? 0
     # 리소스팩 그림 배경 (제목 글리프가 창 전체를 덮음) — 글리프가 없으면 유리판 상자
@@ -345,14 +345,17 @@ function bgShopPage(p: player, pg: number):
     if {_bgg} is set:
         set {_gui} to chest inventory with 6 rows named "&f%{_bgg}%"
     if {_gui} is not set:
-        set {_gui} to chest inventory with 6 rows named "&5&l왕국 무기고 %{_pg}%/2 &8| &6%{_c}% 코인"
+        set {_gui} to chest inventory with 6 rows named "&5&l왕국 무기고 %{_pg}%/3 &8| &6%{_c}% 코인"
         set {_pane} to purple stained glass pane named " "
         loop 54 times:
             set slot loop-number - 1 of {_gui} to {_pane}
         if {_pg} is 1:
             set slot 53 of {_gui} to arrow named "&e&l다음 쪽 ▶ &f장비 · 소모품"
-        else:
+        else if {_pg} is 2:
             set slot 45 of {_gui} to arrow named "&e&l◀ 이전 쪽 &f전설 무기"
+            set slot 53 of {_gui} to arrow named "&e&l다음 쪽 ▶ &f팀 강화 · 함정"
+        else:
+            set slot 45 of {_gui} to arrow named "&e&l◀ 이전 쪽 &f장비 · 소모품"
     if {_pg} is 1:
         set {_i} to 0
         loop {-bg::w::list::*}:
@@ -369,6 +372,8 @@ function bgShopPage(p: player, pg: number):
             set name of {_it} to "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)"
             set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&c상점에서 살 수 없습니다 — 그 보스의 보상 상자에서만"
             set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
+    else if {_pg} is 3:
+        bgUpFill({_gui}, bgTeam({_p}))
     else:
         loop {-bg::gear::list::*}:
             set {_g} to loop-value
@@ -471,9 +476,19 @@ on inventory click:
     if {_s} >= 54:
         stop
     set {_pg} to {-bg::shoppage::%uuid of player%} ? 1
+    if {_pg} is 3:
+        if {_s} is 45:
+            bgShopPage(player, 2)
+            stop
+        if {-bg::upslot::%{_s}%} is set:
+            bgUpBuy(player, {-bg::upslot::%{_s}%})
+        stop
     if {_pg} is 2:
         if {_s} is 45:
             bgShopPage(player, 1)
+            stop
+        if {_s} is 53:
+            bgShopPage(player, 3)
             stop
         if {_s} is 40:
             bgOreSell(player)

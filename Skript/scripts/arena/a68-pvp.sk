@@ -2,6 +2,7 @@
 #  왕관 쟁탈전 — PvP 연습장 (전장 맵 북쪽 하늘에 떠 있는 석영 원형 투기장, 게임이 없을 때 자유 대전)
 #   관리자: /전장 연습장건설 (처음 한 번)
 #   /연습장 (/pvp장, /pvp) : 들어가기 · 나가기     /무기 : 무료 무기고 다시 열기
+#   관리자: /연습장 전체나가기 (모두 대기실로) · /연습장 잠금 (잠그고 모두 내보냄) · /연습장 열기
 #   전설 무기 16종 + 보스 무기 4종을 공짜로 골라서 스킬 연습. 죽어도 가방 유지, 연습장에서 부활
 #   게임이 시작되면 모두 대기실로 돌아감
 # ═════════════════════════════════════════════════════════════════════════════
@@ -52,6 +53,11 @@ function bgPvpEnter(p: player):
     if {-bg::on} is true:
         send "&6[연습장] &c게임 중에는 연습장에 갈 수 없습니다." to {_p}
         stop
+    if {bg::cfg::pvplock} is true:
+        if {_p} is not op:
+            send "&6[연습장] &c지금은 연습장이 잠겨 있습니다. &7(관리자가 /연습장 열기 로 엶)" to {_p}
+            stop
+        send "&6[연습장] &7잠겨 있지만 관리자라 들어갑니다." to {_p}
     if block at bgUp(bgPvpCenter(), -1) is air:
         send "&6[연습장] &c연습장이 아직 없습니다. &7관리자가 &e/전장 연습장건설 &7을 한 번 실행해 주세요." to {_p}
         stop
@@ -71,9 +77,46 @@ function bgPvpLeave(p: player):
     bgToLobby({_p})
     send "&6[연습장] &f대기실로 돌아왔습니다." to {_p}
 
-command /연습장:
+# 연습장에 있는 사람 모두 대기실로 (몇 명인지 돌려줌)
+function bgPvpKickAll() :: number:
+    set {_n} to 0
+    loop all players:
+        if {-bg::pvp::%uuid of loop-player%} is true:
+            bgPvpLeave(loop-player)
+            add 1 to {_n}
+    return {_n}
+
+command /연습장 [<text>]:
     aliases: /pvp장, /pvp
     trigger:
+        if arg-1 is "전체나가기":
+            if player is not op:
+                send "&c관리자만 쓸 수 있습니다."
+                stop
+            set {_n} to bgPvpKickAll()
+            bgSay("&c[연습장] &f관리자가 연습장을 비웠습니다 &7(%{_n}%명 대기실로)")
+            stop
+        if arg-1 is "잠금":
+            if player is not op:
+                send "&c관리자만 쓸 수 있습니다."
+                stop
+            set {bg::cfg::pvplock} to true
+            set {_n} to bgPvpKickAll()
+            bgSay("&c[연습장] &f연습장이 &c잠겼습니다 &7(있던 %{_n}%명 대기실로 · 관리자가 /연습장 열기 로 엶)")
+            stop
+        if arg-1 is "열기":
+            if player is not op:
+                send "&c관리자만 쓸 수 있습니다."
+                stop
+            delete {bg::cfg::pvplock}
+            bgSay("&a[연습장] &f연습장이 열렸습니다 &7— /연습장 으로 들어가기")
+            stop
+        if arg-1 is "나가기":
+            if {-bg::pvp::%uuid of player%} is true:
+                bgPvpLeave(player)
+            else:
+                send "&6[연습장] &7연습장에 있지 않습니다."
+            stop
         if {-bg::pvp::%uuid of player%} is true:
             bgPvpLeave(player)
             stop

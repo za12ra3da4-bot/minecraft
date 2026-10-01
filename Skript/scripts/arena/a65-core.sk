@@ -1,6 +1,7 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  왕관 쟁탈전 — 본진 코어 (본진 앞 신호기) · 결계 부적
-#   적 코어를 30번 때리면 파괴: 그 팀 -50점 + 30초 약화 · 구속 · 발광. 90초 뒤 코어 복구 (복구 뒤 60초 보호막)
+#   코어 체력 50 (+팀 강화 '코어 보강' 단계마다 +15). 다 깎이면 파괴: 그 팀 -50점 + 복구될 때까지(90초) 점수 정지
+#   + 30초 약화 · 구속 · 발광 + 50% 확률로 그 팀이 점령한 거점 하나를 무작위로 잃음. 복구 뒤 60초 보호막
 #   결계 부적(상점): 우클릭하면 60초 동안 적 본진의 수호 결계 피해를 받지 않음
 # ═════════════════════════════════════════════════════════════════════════════
 
@@ -14,17 +15,23 @@ function bgCoreReset():
         bgCoreText(loop-value)
 
 # 코어 위 체력 글씨 (데이터팩 장식 bg_coretext_<팀>)
+# 코어 최대 체력 (기본 50 + 팀 강화 '코어 보강' Lv 당 15)
+function bgCoreMax(t: text) :: number:
+    return 50 + 15 * bgUpLv({_t}, "core")
+
 function bgCoreText(t: text):
-    set {_h} to 30 - ({-bg::core::%{_t}%::hits} ? 0)
+    set {_max} to bgCoreMax({_t})
+    set {_h} to {_max} - ({-bg::core::%{_t}%::hits} ? 0)
     set {_c} to "white"
-    if {_h} <= 10:
+    if {_h} <= {_max} / 3:
         set {_c} to "red"
-    else if {_h} <= 20:
+    else if {_h} <= {_max} * 2 / 3:
         set {_c} to "gold"
     if {-bg::core::%{_t}%::down} is true:
-        bgCmd("data merge entity @e[tag=bg_coretext_%{_t}%,limit=1] {text:{text:""파괴됨 — 90초 뒤 복구"",color:""dark_gray"",bold:true}}")
+        set {_left} to bgCoreLeft({_t})
+        bgCmd("data merge entity @e[tag=bg_coretext_%{_t}%,limit=1] {text:[{text:""파괴됨 — %{_left}%초 뒤 복구"",color:""gray"",bold:true},{text:""\n점수 정지"",color:""red"",bold:true}]}")
         stop
-    bgCmd("data merge entity @e[tag=bg_coretext_%{_t}%,limit=1] {text:{text:""%{_h}% / 30"",color:""%{_c}%"",bold:true}}")
+    bgCmd("data merge entity @e[tag=bg_coretext_%{_t}%,limit=1] {text:{text:""%{_h}% / %{_max}%"",color:""%{_c}%"",bold:true}}")
 
 # 부서지면 수정 · 빛기둥 숨기기
 function bgCoreShow(t: text, on: boolean):
@@ -61,8 +68,9 @@ function bgCoreHit(p: player, t: text):
     if {-bg::core::%{_t}%::down} is true:
         stop
     if {-bg::core::%{_t}%::shield} is set:
-        if difference between {-bg::core::%{_t}%::shield} and now < 60 seconds:
-            send action bar "&b복구된 코어 — 보호막 중입니다 (60초)" to {_p}
+        set {_sl} to {-bg::core::%{_t}%::shieldlen} ? 60
+        if difference between {-bg::core::%{_t}%::shield} and now < bgTicks({_sl} * 20):
+            send action bar "&b코어 보호막 중입니다 (%{_sl}%초)" to {_p}
             stop
     # 너무 빠른 연타 방지 (0.3초)
     if {-bg::corecd::%uuid of {_p}%} is set:
@@ -72,22 +80,24 @@ function bgCoreHit(p: player, t: text):
     set {-bg::core::%{_t}%::last} to now
     add 1 to {-bg::core::%{_t}%::hits}
     set {_h} to {-bg::core::%{_t}%::hits}
+    set {_max} to bgCoreMax({_t})
     set {_m} to bgMk("base_%{_t}%_beacon")
     bgParticle({_m}, "crit", 0.6, 0.8, 0.6, 0.3, 12)
     bgSoundAt({_m}, "block.anvil.land", 1, 1.6)
-    send action bar "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 코어 &f%{_h}%&7/30" to {_p}
+    send action bar "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 코어 &f%{_h}%&7/%{_max}%" to {_p}
     bgCoreText({_t})
     if mod({_h}, 10) is 0:
-        if {_h} < 30:
+        if {_h} < {_max}:
             loop all players:
                 if bgTeam(loop-player) is {_t}:
-                    send title "" with subtitle "&c&l우리 코어가 공격받고 있습니다! &7(%{_h}%/30)" to loop-player for 40 ticks
+                    send title "" with subtitle "&c&l우리 코어가 공격받고 있습니다! &7(%{_h}%/%{_max}%)" to loop-player for 40 ticks
                     play sound "block.bell.use" to loop-player
-    if {_h} >= 30:
+    if {_h} >= {_max}:
         bgCoreBreak({_t}, bgTeam({_p}))
 
 function bgCoreBreak(t: text, by: text):
     set {-bg::core::%{_t}%::down} to true
+    set {-bg::core::%{_t}%::downsec} to {-bg::sec} ? 0
     set {_m} to bgMk("base_%{_t}%_beacon")
     set block at {_m} to air
     bgCoreShow({_t}, false)
@@ -97,20 +107,53 @@ function bgCoreBreak(t: text, by: text):
     bgSoundAt({_m}, "entity.generic.explode", 4, 0.7)
     bgSoundAt({_m}, "block.beacon.deactivate", 4, 0.6)
     set {-bg::score::%{_t}%} to max(0, ({-bg::score::%{_t}%} ? 0) - 50)
+    # 50% 확률로 점령해 둔 거점 하나를 무작위로 잃는다
+    set {_lost} to ""
+    if chance of 50%:
+        loop {-bg::pts::*}:
+            if {-bg::own::%loop-value%} is {_t}:
+                add loop-value to {_mine::*}
+        if size of {_mine::*} > 0:
+            set {_lp} to random element out of {_mine::*}
+            set {-bg::own::%{_lp}%} to "none"
+            set {-bg::capt::%{_lp}%} to "none"
+            set {-bg::capv::%{_lp}%} to 0
+            bgPointVisual({_lp}, "none")
+            bgSoundAt(bgMk({-bg::ptmk::%{_lp}%}), "block.beacon.deactivate", 3, 0.8)
+            set {_lost} to " &7· &e%{-bg::ptname::%{_lp}%}% &c박탈"
     bgCmd("effect give @a[team=bg_%{_t}%] weakness 30 0 true")
     bgCmd("effect give @a[team=bg_%{_t}%] slowness 30 0 true")
     bgCmd("effect give @a[team=bg_%{_t}%] glowing 30 0 true")
-    bgTitle("%{-bg::tcol::%{_t}%}%&l%{-bg::tname::%{_t}%}% 코어 파괴!", "%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 부쉈습니다 · &c-50점 · 30초 약화", 10, 60, 20)
-    bgSay("%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어를 파괴했습니다! &c(-50점, 30초 약화 · 구속 · 발광) &7— 90초 뒤 복구 · 복구 뒤 60초 보호막")
+    bgTitle("%{-bg::tcol::%{_t}%}%&l%{-bg::tname::%{_t}%}% 코어 파괴!", "%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 부쉈습니다 · &c-50점 · 복구까지 점수 정지%{_lost}%", 10, 60, 20)
+    bgSay("%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어를 파괴했습니다! &c(-50점, 복구까지 90초 동안 점수 정지, 30초 약화 · 구속 · 발광) &7— 복구 뒤 60초 보호막")
+    if {_lost} is not "":
+        bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 코어를 잃으며 &e%{-bg::ptname::%{_lp}%}%&f 의 점령도 잃었습니다!")
     wait 90 seconds
     if {-bg::on} is true:
         set block at {_m} to beacon
         set {-bg::core::%{_t}%::hits} to 0
         set {-bg::core::%{_t}%::down} to false
         set {-bg::core::%{_t}%::shield} to now
+        set {-bg::core::%{_t}%::shieldlen} to 60
         bgCoreShow({_t}, true)
         bgCoreText({_t})
-        bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어가 복구되었습니다.")
+        bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어가 복구되었습니다. &a점수가 다시 오릅니다.")
+
+# 코어 복구까지 남은 초
+function bgCoreLeft(t: text) :: number:
+    return max(0, 90 - (({-bg::sec} ? 0) - ({-bg::core::%{_t}%::downsec} ? 0)))
+
+# 코어가 부서진 팀: 코어 글씨에 남은 시간 · 팀원에게 "점수 정지" 알림 (매초)
+every 1 second:
+    {-bg::on} is true
+    loop {-bg::teams::*}:
+        if {-bg::core::%loop-value%::down} is true:
+            bgCoreText(loop-value)
+            set {_left} to bgCoreLeft(loop-value)
+            set {_t} to loop-value
+            loop all players:
+                if bgTeam(loop-player) is {_t}:
+                    send action bar "&c&l코어 파괴됨 &7— &f복구까지 &e%{_left}%초 &7· &c점수가 오르지 않습니다" to loop-player
 
 # ─────────────────────────────────────────────────────────── 결계 부적
 on right click:
@@ -137,22 +180,29 @@ function bgWardOn(p: player) :: boolean:
 #  죽으면 광물은 그 자리에 떨어져서 적이 주워 갈 수 있다
 #  (다른 곳 광석은 캘 수 없음 · 창작 모드 관리자는 예외)
 function bgAtBaseOre(l: location) :: boolean:
+    if bgBaseOreTeam({_l}) is "none":
+        return false
+    return true
+
+# 어느 팀 본진 광석 바위인지 (아니면 "none")
+function bgBaseOreTeam(l: location) :: text:
     loop {-bg::teams::*}:
         if {-bg::mk::base_%loop-value%_class_2::x} is set:
             set {_m} to bgMk("base_%loop-value%_class_2")
             if world of {_l} is world of {_m}:
                 if bgDist2({_l}, {_m}) <= 14:
-                    return true
-    return false
+                    return loop-value
+    return "none"
 
 on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     player's gamemode is not creative
     cancel event
     set {_l} to location of event-block
-    # 본진 광석 바위 = 5초 리젠 · 맵 곳곳 광맥 = 3초 리젠 (전장 맵 안에서만)
+    # 본진 광석 바위 = 5초 리젠 (팀 강화 '광산 강화' 로 4 · 3 · 2초) · 맵 곳곳 광맥 = 3초 리젠 (전장 맵 안에서만)
     set {_rg} to 3
-    if bgAtBaseOre({_l}) is true:
-        set {_rg} to 5
+    set {_bt} to bgBaseOreTeam({_l})
+    if {_bt} is not "none":
+        set {_rg} to bgMineRegen({_bt})
     else:
         set {_lx} to (x-coordinate of {_l}) - {bg::cfg::ox}
         set {_lz} to (z-coordinate of {_l}) - {bg::cfg::oz}
@@ -206,10 +256,17 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     set {bg::oreq::%{_k}%::t} to {_ty}
     set {bg::oreq::%{_k}%::at} to now
     set {bg::oreq::%{_k}%::rg} to {_rg}
+    if {_bt} is not "none":
+        set {bg::oreq::%{_k}%::base} to true
     set {bg::oreq::%{_k}%::ph} to {_ph}
     if bgIsFighter(player) is true:
-        bgCmd("give %name of player% minecraft:%{_drop}% 1")
-        send action bar "&a+1 %{_nm}% &7— 상점 '광물 일괄 판매'에서 코인으로 · 죽으면 떨어뜨림" to player
+        # 풍부한 광맥 (팀 강화): 확률로 2개
+        set {_amt} to bgOreBonus(player)
+        bgCmd("give %name of player% minecraft:%{_drop}% %{_amt}%")
+        if {_amt} > 1:
+            send action bar "&e&l+%{_amt}% %{_nm}% &6(풍부한 광맥!) &7— 상점 '광물 일괄 판매'에서 코인으로" to player
+        else:
+            send action bar "&a+1 %{_nm}% &7— 상점 '광물 일괄 판매'에서 코인으로 · 죽으면 떨어뜨림" to player
         play sound "entity.item.pickup" to player
     play sound "block.amethyst_block.break" to player
     bgParticle({_l}, "wax_on", 0.4, 0.4, 0.4, 0.1, 10)
@@ -228,7 +285,13 @@ function bgOreRegen(all: boolean):
                 if block at {_l} is {_ph}:
                     # 다시 채울 때 광석 종류는 무작위 (본진 바위: 철 · 구리 · 금 / 맵 광맥: 철 · 금 · 에메랄드 · 다이아)
                     set {_r} to random integer between 1 and 10
+                    # 본진 바위인지 (예전 기록은 리젠 5초 = 본진)
+                    set {_isb} to false
+                    if {bg::oreq::%{_k}%::base} is true:
+                        set {_isb} to true
                     if {bg::oreq::%{_k}%::rg} is 5:
+                        set {_isb} to true
+                    if {_isb} is true:
                         if {_r} <= 4:
                             set block at {_l} to iron ore
                         else if {_r} <= 8:

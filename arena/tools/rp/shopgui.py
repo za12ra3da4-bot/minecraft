@@ -19,12 +19,17 @@ PAGES = {
     1: dict(title="전설 무기", legend=set(range(9, 17)) | set(range(18, 26)), boss={29, 30, 31, 32}, gear=set(), sell=set(),
             coin={49}, nav={53: "next"}, banners=[(151, 35, 65)], caption=(89, "보스 무기 — 보스를 쓰러뜨리면 보상 상자에서")),
     2: dict(title="장비 · 소모품", legend=set(), boss=set(), gear={10, 11, 12, 13} | set(range(19, 26)) | {28, 29, 30, 31, 33, 34},
-            sell={40}, coin={49}, nav={45: "prev"}, banners=[(151, 35, 83)], icons={9: "armor", 18: "potion", 27: "arrow"},
+            sell={40}, coin={49}, nav={45: "prev", 53: "next"}, banners=[(151, 35, 83)], icons={9: "armor", 18: "potion", 27: "arrow"},
             caption=None),
+    3: dict(title="팀 강화 · 함정", legend=set(), boss=set(), gear=set(), sell=set(), team={10, 11, 12, 13, 14, 15}, trap={28, 29, 30},
+            coin={49}, nav={45: "prev"}, banners=[],
+            icons={9: "up", 27: "trap"},
+            caption=[(53, "팀 강화 — 한 명이 사면 팀 전체 적용"), (89, "기지 함정 — 적이 본진에 들어오면 자동 발동")]),
 }
 FRAME = {"legend": ((150, 90, 230), (70, 30, 120)), "boss": ((220, 60, 50), (110, 16, 16)),
          "gear": ((200, 150, 80), (100, 64, 30)), "sell": ((90, 210, 110), (20, 90, 40)), "coin": ((255, 210, 80), (140, 90, 10)),
-         "inv": ((150, 120, 90), (70, 52, 38)), "nav": ((255, 220, 120), (120, 80, 20))}
+         "inv": ((150, 120, 90), (70, 52, 38)), "nav": ((255, 220, 120), (120, 80, 20)),
+         "team": ((90, 210, 240), (16, 70, 100)), "trap": ((240, 110, 60), (110, 30, 16))}
 
 
 def noise(w, h, s, seed):
@@ -148,7 +153,8 @@ def build(page=1):
         r, c = divmod(idx, 9)
         x, y = 7 + 18 * c, 17 + 18 * r
         kind = ("legend" if idx in P["legend"] else "boss" if idx in P["boss"] else "sell" if idx in P["sell"]
-                else "coin" if idx in P["coin"] else "gear" if idx in P["gear"] else "nav" if idx in P["nav"] else None)
+                else "coin" if idx in P["coin"] else "gear" if idx in P["gear"] else "nav" if idx in P["nav"]
+                else "team" if idx in P.get("team", ()) else "trap" if idx in P.get("trap", ()) else None)
         if kind:
             slot(x, y, kind)
         if idx in P["nav"]:
@@ -189,13 +195,28 @@ def build(page=1):
             d.ellipse([cx - 6 * S, cy - 2 * S, cx + 6 * S, cy + 8 * S], fill=(200, 60, 90), outline=(240, 230, 220), width=S)
             d.rectangle([cx - 2 * S, cy - 7 * S, cx + 2 * S, cy - 2 * S], fill=(210, 220, 230))
             d.rectangle([cx - 3 * S, cy - 8 * S, cx + 3 * S, cy - 6 * S], fill=(150, 100, 60))
+        elif kind == "up":
+            # 금빛 위 화살표 (강화)
+            d.polygon([(cx, cy - 8 * S), (cx + 7 * S, cy - 1 * S), (cx + 3 * S, cy - 1 * S), (cx + 3 * S, cy + 7 * S),
+                       (cx - 3 * S, cy + 7 * S), (cx - 3 * S, cy - 1 * S), (cx - 7 * S, cy - 1 * S)], fill=(255, 214, 90), outline=(70, 40, 6))
+            d.line([(cx - 1 * S, cy - 5 * S), (cx - 1 * S, cy + 5 * S)], fill=(255, 246, 200), width=S)
+        elif kind == "trap":
+            # 종 (경보)
+            d.polygon([(cx - 6 * S, cy + 5 * S), (cx - 4 * S, cy - 3 * S), (cx - 2 * S, cy - 6 * S), (cx + 2 * S, cy - 6 * S),
+                       (cx + 4 * S, cy - 3 * S), (cx + 6 * S, cy + 5 * S)], fill=(230, 170, 50), outline=(70, 30, 6))
+            d.rectangle([cx - 7 * S, cy + 5 * S, cx + 7 * S, cy + 6 * S], fill=(180, 110, 30))
+            d.ellipse([cx - 2 * S, cy + 6 * S, cx + 2 * S, cy + 9 * S], fill=(120, 60, 20))
+            d.line([(cx - 9 * S, cy - 4 * S), (cx - 7 * S, cy - 6 * S)], fill=(255, 90, 60), width=S)
+            d.line([(cx + 9 * S, cy - 4 * S), (cx + 7 * S, cy - 6 * S)], fill=(255, 90, 60), width=S)
         elif kind == "arrow":
             d.line([(cx - 6 * S, cy + 6 * S), (cx + 6 * S, cy - 6 * S)], fill=(160, 110, 60), width=S * 2)
             d.polygon([(cx + 7 * S, cy - 7 * S), (cx + 1 * S, cy - 5 * S), (cx + 5 * S, cy - 1 * S)], fill=(210, 215, 225))
             d.polygon([(cx - 7 * S, cy + 7 * S), (cx - 7 * S, cy + 2 * S), (cx - 2 * S, cy + 7 * S)], fill=(240, 240, 235))
     # 설명 글씨 한 줄
-    if P.get("caption"):
-        cy, text = P["caption"]
+    caps = P.get("caption")
+    if caps and not isinstance(caps, list):
+        caps = [caps]
+    for cy, text in caps or []:
         fs = ImageFont.truetype(FONT, 7 * S)
         tw = d.textlength(text, font=fs)
         tx = (W * S - tw) / 2

@@ -1,0 +1,85 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 월드 보스 '결집' 보너스
+#   보스가 살아 있는 동안, 한 팀 전투 참가자의 60% 이상이 보스 투기장(24칸)에 모이면 그 팀은 '결집'
+#    · 보스에게 주는 피해 +30%  · 보스에게 받는 피해 -30%
+#    · 결집한 채로 보스를 쓰러뜨리면 추가 보상: +100점 · 팀 전원 코인 +40 · 보스 축복 3분 → 5분
+#      · 우리 코어 완전 회복 + 2분 보호막 (다 같이 보스 잡으러 간 사이 비운 본진을 지켜 줌)
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgRally(t: text) :: boolean:
+    if {-bg::boss::id} is not set:
+        return false
+    if {-bg::rally::%{_t}%} is true:
+        return true
+    return false
+
+function bgNearBoss(p: player) :: boolean:
+    set {_h} to {-bg::boss::home}
+    if {_h} is not set:
+        return false
+    if world of {_p} is not world of {_h}:
+        return false
+    if bgDist2(location of {_p}, {_h}) >= 24:
+        return false
+    if abs((y-coordinate of {_p}) - (y-coordinate of {_h})) >= 10:
+        return false
+    return true
+
+every 1 second:
+    {-bg::on} is true
+    if {-bg::boss::id} is not set:
+        delete {-bg::rally::*}
+        stop
+    # 보스가 나오면 한 번 안내
+    set {_g} to "%{-bg::boss::gen}%"
+    if "%{-bg::rallyhint}%" is not {_g}:
+        set {-bg::rallyhint} to {_g}
+        bgSay("&6⚑ 결집 보너스&f: 팀원 &e60%%&f 이상이 보스 투기장에 모이면 &a보스에게 주는 피해 +30%% · 받는 피해 -30%%&f, 결집한 채로 처치하면 &e+100점 · 축복 5분 · 코어 완전 회복 + 2분 보호막")
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            set {_t} to bgTeam(loop-player)
+            add 1 to {_tot::%{_t}%}
+            if bgNearBoss(loop-player) is true:
+                add 1 to {_near::%{_t}%}
+    loop {-bg::teams::*}:
+        set {_t} to loop-value
+        set {_n} to {_tot::%{_t}%} ? 0
+        set {_k} to {_near::%{_t}%} ? 0
+        set {_on} to false
+        if {_n} > 0:
+            if {_k} >= 1:
+                if {_k} / {_n} >= 0.6:
+                    set {_on} to true
+        set {_was} to false
+        if {-bg::rally::%{_t}%} is true:
+            set {_was} to true
+        if {_on} is not {_was}:
+            set {-bg::rally::%{_t}%} to {_on}
+            loop all players:
+                if bgTeam(loop-player) is {_t}:
+                    if {_on} is true:
+                        send title "" with subtitle "&6&l⚑ 결집! &f보스 피해 &a+30%% &7· &f받는 피해 &a-30%%" to loop-player for 40 ticks
+                        play sound "event.raid.horn" to loop-player
+                    else:
+                        send "%{-bg::tcol::%{_t}%}%[결집] &7흩어져서 결집 보너스가 꺼졌습니다." to loop-player
+        set {_need} to ceil(0.6 * {_n})
+        loop all players:
+            if bgTeam(loop-player) is {_t}:
+                if bgNearBoss(loop-player) is true:
+                    if {_on} is true:
+                        send action bar "&6&l⚑ 결집 &e%{_k}%/%{_n}% &7— &f보스 피해 &a+30%% &7· &f받는 피해 &a-30%% &7· 처치하면 추가 보상" to loop-player
+                    else:
+                        send action bar "&7결집 &f%{_k}%/%{_need}% &7— 팀원 60%% 이상 모이면 보스 피해 +30%% · 받는 피해 -30%%" to loop-player
+
+# 결집한 채로 보스를 잡은 팀의 추가 보상 (a40 bgBossDie 에서 호출)
+function bgRallyReward(t: text, id: text):
+    bgAddScore({_t}, 100)
+    bgCoinTeam({_t}, 40, "결집 보너스")
+    set {-bg::bless::%{_t}%::until} to ({-bg::sec} ? 0) + 300
+    set {-bg::bless::%{_t}%::boss} to {_id}
+    if {-bg::core::%{_t}%::down} is not true:
+        set {-bg::core::%{_t}%::hits} to 0
+        set {-bg::core::%{_t}%::shield} to now
+        set {-bg::core::%{_t}%::shieldlen} to 120
+        bgCoreText({_t})
+    bgSay("&6⚑ [결집 보너스] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 다 함께 보스를 쓰러뜨렸습니다! &e+100점 · 코인 +40 · 축복 5분 · 코어 완전 회복 + 2분 보호막")

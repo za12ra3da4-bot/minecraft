@@ -1,0 +1,271 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 팀 강화 · 기지 함정 (상점 3쪽, 배드워즈처럼)
+#   한 명이 코인으로 사면 팀 전체에 적용. 단계(Lv)가 오를수록 비싸짐 → 팀원이 사면 상점을 열고 있는 다른 팀원 화면도 바로 갱신
+#   팀 강화: 광산 강화(본진 광석 리젠) · 풍부한 광맥(광물 2배 확률) · 강철 피부(받는 피해 감소) · 코어 보강(코어 체력)
+#            치유의 샘(본진에서 재생) · 신속 채굴(성급함)
+#   기지 함정: 적이 본진(24칸)에 들어오면 자동 발동 — 경보(알림 · 발광) · 저주(구속 · 피로 · 실명) · 반격의 함성(본진 아군 강화)
+#   게임이 시작할 때 모두 Lv.0
+# ═════════════════════════════════════════════════════════════════════════════
+
+# 강화 정의: 이름 · 상점 칸 · 아이콘 · 종류(up/trap) · 단계별 가격(0 = 그 단계 없음) · 단계별 효과 설명 (0단계 = 없음)
+function bgUpDef(id: text, name: text, slot: number, icon: item, kind: text, p1: number, p2: number, p3: number, d1: text, d2: text, d3: text):
+    set {-bg::up::%{_id}%::name} to {_name}
+    set {-bg::up::%{_id}%::slot} to {_slot}
+    set {-bg::up::%{_id}%::icon} to {_icon}
+    set {-bg::up::%{_id}%::kind} to {_kind}
+    set {-bg::up::%{_id}%::price::1} to {_p1}
+    set {-bg::up::%{_id}%::price::2} to {_p2}
+    set {-bg::up::%{_id}%::price::3} to {_p3}
+    set {-bg::up::%{_id}%::desc::0} to "없음"
+    set {-bg::up::%{_id}%::desc::1} to {_d1}
+    set {-bg::up::%{_id}%::desc::2} to {_d2}
+    set {-bg::up::%{_id}%::desc::3} to {_d3}
+    set {_max} to 1
+    if {_p2} > 0:
+        set {_max} to 2
+    if {_p3} > 0:
+        set {_max} to 3
+    set {-bg::up::%{_id}%::max} to {_max}
+    set {-bg::upslot::%{_slot}%} to {_id}
+
+on load:
+    delete {-bg::up::*}
+    delete {-bg::upslot::*}
+    set {-bg::up::list::*} to "mine", "rich", "armor", "core", "heal", "haste", "alarm", "curse" and "counter"
+    bgUpDef("mine", "광산 강화", 10, iron pickaxe, "up", 60, 120, 200, "본진 광석 리젠 4초", "본진 광석 리젠 3초", "본진 광석 리젠 2초")
+    bgUpDef("rich", "풍부한 광맥", 11, gold ingot, "up", 80, 150, 240, "광물 2배 확률 25%%", "광물 2배 확률 50%%", "광물 2배 확률 75%%")
+    bgUpDef("armor", "강철 피부", 12, iron chestplate, "up", 80, 160, 260, "받는 피해 -6%%", "받는 피해 -12%%", "받는 피해 -18%%")
+    bgUpDef("core", "코어 보강", 13, beacon, "up", 70, 140, 220, "코어 체력 65", "코어 체력 80", "코어 체력 95")
+    bgUpDef("heal", "치유의 샘", 14, glistering melon slice, "up", 100, 180, 0, "본진 안에서 재생 I", "본진 안에서 재생 II", "")
+    bgUpDef("haste", "신속 채굴", 15, golden pickaxe, "up", 60, 140, 0, "팀 전원 성급함 I", "팀 전원 성급함 II", "")
+    bgUpDef("alarm", "경보 함정", 28, bell, "trap", 40, 80, 120, "적 침입 알림 (재발동 30초)", "알림 + 침입자 발광 8초 (20초)", "알림 + 침입자 발광 15초 (12초)")
+    bgUpDef("curse", "저주 함정", 29, cobweb, "trap", 70, 140, 220, "침입자 구속 I 4초", "구속 II 5초 + 채굴 피로 8초", "구속 II 6초 + 실명 2초 + 나약함 6초")
+    bgUpDef("counter", "반격의 함성", 30, feather, "trap", 60, 120, 200, "본진 아군 신속 I 8초", "신속 I + 저항 I 8초", "신속 II + 저항 I + 힘 I 6초")
+
+function bgUpLv(t: text, id: text) :: number:
+    return {-bg::uplv::%{_t}%::%{_id}%} ? 0
+
+function bgUpReset():
+    delete {-bg::uplv::*}
+    delete {-bg::trapcd::*}
+    delete {-bg::inb::*}
+
+# ─────────────────────────────────────────────────────────── 상점 3쪽 (팀 강화 · 함정)
+function bgUpItem(t: text, id: text) :: item:
+    set {_lv} to bgUpLv({_t}, {_id})
+    set {_max} to {-bg::up::%{_id}%::max}
+    set {_it} to {-bg::up::%{_id}%::icon}
+    set {_c} to "&b"
+    set {_what} to "팀 강화"
+    if {-bg::up::%{_id}%::kind} is "trap":
+        set {_c} to "&c"
+        set {_what} to "기지 함정"
+    set name of {_it} to "%{_c}%&l%{-bg::up::%{_id}%::name}% &7[Lv.%{_lv}%/%{_max}%]"
+    add "&8%{_what}% · 팀 전체 적용" to {_lore::*}
+    add "" to {_lore::*}
+    add "&7지금: &f%{-bg::up::%{_id}%::desc::%{_lv}%}%" to {_lore::*}
+    if {_lv} < {_max}:
+        set {_nx} to {_lv} + 1
+        add "&a다음 Lv.%{_nx}%: &f%{-bg::up::%{_id}%::desc::%{_nx}%}%" to {_lore::*}
+        add "" to {_lore::*}
+        add "&e가격: %{-bg::up::%{_id}%::price::%{_nx}%}% 코인 &7(클릭해서 구매)" to {_lore::*}
+    else:
+        add "" to {_lore::*}
+        add "&6&l최대 단계" to {_lore::*}
+    set lore of {_it} to {_lore::*}
+    if {_lv} > 0:
+        set {_it} to {_lv} of {_it}
+    return {_it}
+
+function bgUpFill(inv: inventory, t: text):
+    loop {-bg::up::list::*}:
+        set slot {-bg::up::%loop-value%::slot} of {_inv} to bgUpItem({_t}, loop-value)
+    # 상점 그림이 없을 때(유리판 상자) 줄 이름
+    if {-bg::gui::shop3} is not set:
+        set {_a} to nether star named "&b&l팀 강화 &7— 한 명이 사면 팀 전체"
+        set slot 9 of {_inv} to {_a}
+        set {_b} to tripwire hook named "&c&l기지 함정 &7— 적이 본진에 들어오면 발동"
+        set slot 27 of {_inv} to {_b}
+
+# 팀원이 사면 그 팀 사람 중 3쪽을 열고 있는 사람 화면을 바로 갱신
+function bgUpRefresh(t: text):
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            if {-bg::shop::%uuid of loop-player%} is true:
+                if {-bg::shoppage::%uuid of loop-player%} is 3:
+                    bgUpFill(current inventory of loop-player, {_t})
+
+function bgUpBuy(p: player, id: text):
+    set {_t} to bgTeam({_p})
+    if {-bg::on} is not true:
+        send "&6[팀 강화] &7게임 중에만 살 수 있습니다." to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    if {_t} is "none":
+        send "&6[팀 강화] &7팀에 속한 사람만 살 수 있습니다." to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    set {_lv} to bgUpLv({_t}, {_id})
+    if {_lv} >= {-bg::up::%{_id}%::max}:
+        send "&6[팀 강화] &7이미 최대 단계입니다." to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    set {_nx} to {_lv} + 1
+    set {_price} to {-bg::up::%{_id}%::price::%{_nx}%}
+    if ({bg::coin::%uuid of {_p}%} ? 0) < {_price}:
+        set {_c} to {bg::coin::%uuid of {_p}%} ? 0
+        send "&6[팀 강화] &c코인이 부족합니다. &7(필요 %{_price}%, 보유 %{_c}%)" to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    remove {_price} from {bg::coin::%uuid of {_p}%}
+    set {-bg::uplv::%{_t}%::%{_id}%} to {_nx}
+    set {_c} to "&b"
+    if {-bg::up::%{_id}%::kind} is "trap":
+        set {_c} to "&c"
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            send "%{-bg::tcol::%{_t}%}%[팀 강화] &f%name of {_p}% 님이 %{_c}%&l%{-bg::up::%{_id}%::name}% Lv.%{_nx}%&f 을(를) 샀습니다! &7(%{-bg::up::%{_id}%::desc::%{_nx}%}%)" to loop-player
+            play sound "block.beacon.power_select" to loop-player
+            play sound "entity.player.levelup" to loop-player
+    if {_id} is "core":
+        bgCoreText({_t})
+    bgUpRefresh({_t})
+    # 산 사람의 보유 코인 칸
+    set {_cc} to {bg::coin::%uuid of {_p}%} ? 0
+    set {_coin} to sunflower named "&6&l보유 코인: &e%{_cc}%"
+    set slot 49 of current inventory of {_p} to {_coin}
+
+# ─────────────────────────────────────────────────────────── 팀 강화 효과
+# 강철 피부: 받는 모든 피해 감소 (전투 참가자만)
+on damage of player:
+    {-bg::on} is true
+    set {_t} to bgTeam(victim)
+    {_t} is not "none"
+    set {_lv} to bgUpLv({_t}, "armor")
+    {_lv} > 0
+    set damage to damage * (1 - 0.06 * {_lv})
+
+# 치유의 샘 · 신속 채굴 (2초마다)
+every 2 seconds:
+    {-bg::on} is true
+    loop {-bg::teams::*}:
+        set {_t} to loop-value
+        set {_h} to bgUpLv({_t}, "haste")
+        if {_h} > 0:
+            bgCmd("effect give @a[team=bg_%{_t}%,gamemode=!spectator] haste 3 %{_h} - 1% true")
+        set {_r} to bgUpLv({_t}, "heal")
+        if {_r} > 0:
+            set {_b} to bgMk("base_%{_t}%")
+            bgCmd("execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..20] regeneration 3 %{_r} - 1% true")
+
+# 본진 광석 리젠 시간 (광산 강화): 5 → 4 → 3 → 2초
+function bgMineRegen(t: text) :: number:
+    return 5 - bgUpLv({_t}, "mine")
+
+# 풍부한 광맥: 광물 2배 확률 25 / 50 / 75%
+function bgOreBonus(p: player) :: number:
+    set {_lv} to bgUpLv(bgTeam({_p}), "rich")
+    if {_lv} <= 0:
+        return 1
+    set {_r} to random number between 0 and 1
+    if {_r} < 0.25 * {_lv}:
+        return 2
+    return 1
+
+# ─────────────────────────────────────────────────────────── 기지 함정
+#  0.5초마다: 전투 참가자가 '적 본진 24칸' 안으로 새로 들어오면 그 본진 팀의 함정 발동
+every 10 ticks:
+    {-bg::on} is true
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            set {_p} to loop-player
+            set {_me} to bgTeam({_p})
+            set {_in} to "none"
+            loop {-bg::teams::*}:
+                if loop-value-2 is not {_me}:
+                    set {_b} to bgMk("base_%loop-value-2%")
+                    if world of {_p} is world of {_b}:
+                        if bgDist2(location of {_p}, {_b}) < 24:
+                            set {_in} to loop-value-2
+            set {_was} to {-bg::inb::%uuid of {_p}%} ? "none"
+            if {_in} is not {_was}:
+                set {-bg::inb::%uuid of {_p}%} to {_in}
+                if {_in} is not "none":
+                    bgTrapFire({_in}, {_p})
+        else:
+            delete {-bg::inb::%uuid of loop-player%}
+
+# 함정 재발동 대기 (팀 공통 · 초)
+function bgTrapReady(key: text, sec: number) :: boolean:
+    if {-bg::trapcd::%{_key}%} is set:
+        if ({-bg::sec} ? 0) - {-bg::trapcd::%{_key}%} < {_sec}:
+            return false
+    set {-bg::trapcd::%{_key}%} to {-bg::sec} ? 0
+    return true
+
+function bgTrapFire(t: text, p: player):
+    set {_n} to name of {_p}
+    set {_pt} to bgTeam({_p})
+    set {_tc} to {-bg::tcol::%{_pt}%}
+    # 경보
+    set {_a} to bgUpLv({_t}, "alarm")
+    if {_a} > 0:
+        set {_cd} to 30
+        if {_a} is 2:
+            set {_cd} to 20
+        else if {_a} is 3:
+            set {_cd} to 12
+        if bgTrapReady("%{_t}%::alarm", {_cd}) is true:
+            loop all players:
+                if bgTeam(loop-player) is {_t}:
+                    send title "&c&l⚠ 적 침입!" with subtitle "%{_tc}%%{_n}% &f이(가) 본진에 들어왔습니다" to loop-player for 40 ticks
+                    send "%{-bg::tcol::%{_t}%}%[경보 함정] &c적 침입! %{_tc}%%{_n}% &7(%{-bg::tname::%{_pt}%}% 팀)" to loop-player
+                    play sound "block.bell.use" to loop-player
+                    play sound "entity.experience_orb.pickup" to loop-player
+            if {_a} >= 2:
+                set {_gl} to 8
+                if {_a} is 3:
+                    set {_gl} to 15
+                bgCmd("effect give %{_n}% glowing %{_gl}% 0 true")
+            send action bar "&c%{-bg::tname::%{_t}%}% 팀의 경보 함정이 울렸습니다!" to {_p}
+    # 저주 (침입자마다 25초에 한 번 · 결계 부적이 막음)
+    set {_c} to bgUpLv({_t}, "curse")
+    if {_c} > 0:
+        if bgWardOn({_p}) is true:
+            send action bar "&b결계 부적이 %{-bg::tname::%{_t}%}% 팀의 저주 함정을 막았습니다" to {_p}
+        else if bgTrapReady("%{_t}%::curse::%uuid of {_p}%", 25) is true:
+            if {_c} is 1:
+                bgCmd("effect give %{_n}% slowness 4 0 true")
+            else if {_c} is 2:
+                bgCmd("effect give %{_n}% slowness 5 1 true")
+                bgCmd("effect give %{_n}% mining_fatigue 8 1 true")
+            else:
+                bgCmd("effect give %{_n}% slowness 6 1 true")
+                bgCmd("effect give %{_n}% blindness 2 0 true")
+                bgCmd("effect give %{_n}% weakness 6 0 true")
+            send title "" with subtitle "&5&l저주 함정! &7(%{-bg::tname::%{_t}%}% 팀)" to {_p} for 30 ticks
+            play sound "entity.evoker.cast_spell" to {_p}
+            bgParticle(location of {_p}, "witch", 0.5, 1, 0.5, 0.1, 40)
+            loop all players:
+                if bgTeam(loop-player) is {_t}:
+                    send "%{-bg::tcol::%{_t}%}%[저주 함정] &f%{_tc}%%{_n}%&f 에게 저주가 걸렸습니다" to loop-player
+    # 반격의 함성 (팀 공통 30초에 한 번): 본진 안 아군 강화
+    set {_k} to bgUpLv({_t}, "counter")
+    if {_k} > 0:
+        if bgTrapReady("%{_t}%::counter", 30) is true:
+            set {_b} to bgMk("base_%{_t}%")
+            set {_at} to "execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..30]"
+            if {_k} is 1:
+                bgCmd("%{_at}% speed 8 0 true")
+            else if {_k} is 2:
+                bgCmd("%{_at}% speed 8 0 true")
+                bgCmd("%{_at}% resistance 8 0 true")
+            else:
+                bgCmd("%{_at}% speed 6 1 true")
+                bgCmd("%{_at}% resistance 6 0 true")
+                bgCmd("%{_at}% strength 6 0 true")
+            loop all players:
+                if bgTeam(loop-player) is {_t}:
+                    if bgDist2(location of loop-player, {_b}) < 30:
+                        send title "" with subtitle "&a&l반격의 함성! &f본진의 아군이 강해집니다" to loop-player for 30 ticks
+                        play sound "event.raid.horn" to loop-player
