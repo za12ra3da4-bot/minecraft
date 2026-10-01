@@ -176,7 +176,7 @@ function bgWardOn(p: player) :: boolean:
     return false
 
 # ─────────────────────────────────────────────────────────── 광산 (본진 광석 바위)
-#  본진 광석 바위(5초 리젠) + 맵 곳곳 광맥(3초 리젠, 금 · 에메랄드 · 다이아 많음): 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 2초 뒤 다시 채워짐
+#  본진 광석 바위(5초 리젠) + 맵 곳곳 광맥(거의 바로 리젠, 금 · 에메랄드 · 다이아 많음): 캐면 원석 · 보석이 가방에 (상점에서 일괄 판매: 철 · 구리 2 · 금 3 · 에메랄드 6 · 다이아 10). 2초 뒤 다시 채워짐
 #  죽으면 광물은 그 자리에 떨어져서 적이 주워 갈 수 있다
 #  (다른 곳 광석은 캘 수 없음 · 창작 모드 관리자는 예외)
 function bgAtBaseOre(l: location) :: boolean:
@@ -198,8 +198,9 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
     player's gamemode is not creative
     cancel event
     set {_l} to location of event-block
-    # 본진 광석 바위 = 5초 리젠 (팀 강화 '광산 강화' 로 4 · 3 · 2초) · 맵 곳곳 광맥 = 3초 리젠 (전장 맵 안에서만)
-    set {_rg} to 3
+    # 본진 광석 바위 = 5초 리젠 (팀 강화 '광산 강화' 로 4 · 3 · 2초) · 맵 곳곳 광맥 = 거의 바로(0.2초) 리젠 (전장 맵 안에서만)
+    # 맵 곳곳 광맥(기지 밖)은 거의 바로 (0.2초) 다시 채워짐
+    set {_rg} to 0.2
     set {_bt} to bgBaseOreTeam({_l})
     if {_bt} is not "none":
         set {_rg} to bgMineRegen({_bt})
@@ -270,6 +271,10 @@ on break of iron ore or copper ore or gold ore or emerald ore or diamond ore:
         play sound "entity.item.pickup" to player
     play sound "block.amethyst_block.break" to player
     bgParticle({_l}, "wax_on", 0.4, 0.4, 0.4, 0.1, 10)
+    # 기지 밖 광맥: 매초 검사를 기다리지 않고 바로 다시 채움
+    if {_bt} is "none":
+        wait 4 ticks
+        bgOreRegen(false)
 
 function bgOreRegen(all: boolean):
     loop {bg::oreq::*}:
@@ -277,6 +282,8 @@ function bgOreRegen(all: boolean):
         if {bg::oreq::%{_k}%::at} is set:
             set {_go} to {_all}
             set {_rgs} to "%{bg::oreq::%{_k}%::rg} ? 3% seconds" parsed as timespan
+            if {_rgs} is not set:
+                set {_go} to true
             if difference between {bg::oreq::%{_k}%::at} and now >= {_rgs}:
                 set {_go} to true
             if {_go} is true:
