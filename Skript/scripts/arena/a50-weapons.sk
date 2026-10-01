@@ -892,7 +892,7 @@ function bgSkillArt(l: location, w: text, k: number):
 
 # ─────────────────────────────────────────────────────────── 병과 주무기 (상점 2쪽 '주무기 강화' Lv.0~3)
 #  전사   : 돌 검 → 철 검 → 철 검 + 날카로움 I → 다이아 검   (Lv.3 은 아주 비쌈 — 전설 무기보다 비쌈)
-#  수호자 : 돌 도끼 → 철 도끼 → 철 도끼 + 날카로움 I → 다이아 도끼   (+ 방패, 검은 못 씀)
+#  수호자 : 돌 도끼 → 철 도끼 → 철 도끼 + 날카로움 I → 다이아 도끼   (검은 못 씀)
 #  궁수   : 나무 검(근접은 이것만) + 활 → 힘 I → 힘 II → 힘 III · 밀치기 I
 #  Lv.2 까지는 전설 무기(스킬)보다 약하게 — 주무기는 기본기, 전설 무기가 진짜 강화
 #  단계는 사람마다 저장 → 병과를 바꾸면 새 병과의 같은 단계 무기로. 모든 주무기에 custom_data {bgmain:1b} (병과 바꿀 때 지우기용)
@@ -923,7 +923,6 @@ function bgMainWeapon(p: player, c: number):
         set {_e} to "%{_e}%,""minecraft:sharpness"":1"
     if {_c} is 2:
         bgCmd("give %{_n}% %{_m}%_axe[%{_tag}%,enchantments={%{_e}%}]")
-        bgCmd("item replace entity %{_n}% weapon.offhand with shield[%{_tag}%,enchantments={""minecraft:binding_curse"":1}]")
     else:
         bgCmd("give %{_n}% %{_m}%_sword[%{_tag}%,enchantments={%{_e}%}]")
 
