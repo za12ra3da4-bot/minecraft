@@ -360,8 +360,8 @@ function bgShopPage(p: player, pg: number):
         else:
             set slot 45 of {_gui} to arrow named "&e&l◀ 이전 쪽 &f장비 · 소모품"
     if {_pg} is 1:
-        # 광물 일괄 판매 (1쪽에도)
-        set slot 34 of {_gui} to bgSellItem({_p})
+        # 광물 일괄 판매 (1쪽에도, 보유 코인 바로 위)
+        set slot 40 of {_gui} to bgSellItem({_p})
         set {_i} to 0
         loop {-bg::w::list::*}:
             add 1 to {_i}
@@ -524,7 +524,7 @@ on inventory click:
     if {_s} is 53:
         bgShopPage(player, 2)
         stop
-    if {_s} is 34:
+    if {_s} is 40:
         bgOreSell(player)
         stop
     if {-bg::bslot::%{_s}%} is set:

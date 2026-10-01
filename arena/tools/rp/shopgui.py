@@ -16,8 +16,8 @@ FONT = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
 
 # 페이지별 칸 배치 (Skript a50 과 같아야 함)
 PAGES = {
-    1: dict(title="전설 무기", legend=set(range(9, 17)) | set(range(18, 26)), boss={29, 30, 31, 32}, gear=set(), sell={34},
-            coin={49}, nav={53: "next"}, banners=[(151, 35, 65)], caption=(89, "보스 무기 — 보스를 쓰러뜨리면 보상 상자에서")),
+    1: dict(title="전설 무기", legend=set(range(9, 17)) | set(range(18, 26)), boss={29, 30, 31, 32}, gear=set(), sell={40},
+            coin={49}, nav={53: "next"}, banners=[(151, 35, 65)], caption=[(89, "↑ 보스 처치 보상", "left")]),
     2: dict(title="장비 · 소모품", legend=set(), boss=set(), gear={10, 11, 12, 13} | set(range(19, 26)) | {28, 29, 30, 31, 33, 34},
             sell={40}, coin={49}, nav={45: "prev", 53: "next"}, banners=[(151, 35, 83)], icons={9: "armor", 18: "potion", 27: "arrow"},
             caption=None),
@@ -216,10 +216,14 @@ def build(page=1):
     caps = P.get("caption")
     if caps and not isinstance(caps, list):
         caps = [caps]
-    for cy, text in caps or []:
+    for cap in caps or []:
+        cy, text = cap[0], cap[1]
         fs = ImageFont.truetype(FONT, 7 * S)
         tw = d.textlength(text, font=fs)
         tx = (W * S - tw) / 2
+        if len(cap) > 2 and cap[2] == "left":
+            # 왼쪽 칸들(0~3열) 가운데
+            tx = (7 + 36) * S - tw / 2
         d.text((tx + S, (cy + 5) * S + S), text, font=fs, fill=(20, 10, 20))
         d.text((tx, (cy + 5) * S), text, font=fs, fill=(255, 200, 150))
     # 쪽 번호
