@@ -21,7 +21,7 @@ PAGES = {
     2: dict(title="장비 · 소모품", legend=set(), boss=set(), gear={10, 11, 12, 13} | set(range(19, 26)) | {28, 29, 30, 31, 33, 34},
             sell={40}, coin={49}, nav={45: "prev", 53: "next"}, banners=[(151, 35, 83)], icons={9: "armor", 18: "potion", 27: "arrow"},
             caption=None),
-    3: dict(title="팀 강화 · 함정", legend=set(), boss=set(), gear=set(), sell=set(), team={10, 11, 12, 13, 14, 15}, trap={28, 29, 30},
+    3: dict(title="팀 강화 · 함정", legend=set(), boss=set(), gear=set(), sell=set(), team={10, 11, 12, 13, 14, 15, 16}, trap={28, 29, 30},
             coin={49}, nav={45: "prev"}, banners=[],
             icons={9: "up", 27: "trap"},
             caption=[(53, "팀 강화 — 한 명이 사면 팀 전체 적용"), (89, "기지 함정 — 적이 본진에 들어오면 자동 발동")]),

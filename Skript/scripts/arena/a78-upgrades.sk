@@ -31,16 +31,17 @@ function bgUpDef(id: text, name: text, slot: number, icon: item, kind: text, p1:
 on load:
     delete {-bg::up::*}
     delete {-bg::upslot::*}
-    set {-bg::up::list::*} to "mine", "rich", "armor", "core", "heal", "haste", "alarm", "curse" and "counter"
-    bgUpDef("mine", "광산 강화", 10, iron pickaxe, "up", 60, 120, 200, "본진 광석 리젠 4초", "본진 광석 리젠 3초", "본진 광석 리젠 2초")
-    bgUpDef("rich", "풍부한 광맥", 11, gold ingot, "up", 80, 150, 240, "광물 2배 확률 25%%", "광물 2배 확률 50%%", "광물 2배 확률 75%%")
-    bgUpDef("armor", "강철 피부", 12, iron chestplate, "up", 80, 160, 260, "받는 피해 -6%%", "받는 피해 -12%%", "받는 피해 -18%%")
-    bgUpDef("core", "코어 보강", 13, beacon, "up", 70, 140, 220, "코어 체력 65", "코어 체력 80", "코어 체력 95")
-    bgUpDef("heal", "치유의 샘", 14, glistering melon slice, "up", 100, 180, 0, "본진 안에서 재생 I", "본진 안에서 재생 II", "")
-    bgUpDef("haste", "신속 채굴", 15, golden pickaxe, "up", 60, 140, 0, "팀 전원 성급함 I", "팀 전원 성급함 II", "")
-    bgUpDef("alarm", "경보 함정", 28, bell, "trap", 40, 80, 120, "적 침입 알림 (재발동 30초)", "알림 + 침입자 발광 8초 (20초)", "알림 + 침입자 발광 15초 (12초)")
-    bgUpDef("curse", "저주 함정", 29, cobweb, "trap", 70, 140, 220, "침입자 구속 I 4초", "구속 II 5초 + 채굴 피로 8초", "구속 II 6초 + 실명 2초 + 나약함 6초")
-    bgUpDef("counter", "반격의 함성", 30, feather, "trap", 60, 120, 200, "본진 아군 신속 I 8초", "신속 I + 저항 I 8초", "신속 II + 저항 I + 힘 I 6초")
+    set {-bg::up::list::*} to "mine", "rich", "armor", "core", "heal", "haste", "sharp", "alarm", "curse" and "counter"
+    bgUpDef("mine", "광산 강화", 10, iron pickaxe, "up", 60, 120, 200, "본진 광석 리젠 3초", "본진 광석 리젠 2초", "본진 광석 리젠 1초")
+    bgUpDef("rich", "풍부한 광맥", 11, gold ingot, "up", 80, 150, 240, "광물 2배 확률 40%%", "광물 2배 확률 75%%", "광물 항상 2배 + 30%% 확률 3배")
+    bgUpDef("armor", "강철 피부", 12, iron chestplate, "up", 80, 160, 260, "받는 피해 -10%%", "받는 피해 -20%%", "받는 피해 -30%%")
+    bgUpDef("core", "코어 보강", 13, beacon, "up", 70, 140, 220, "코어 체력 75", "코어 체력 100", "코어 체력 125 + 코어 회복 2배")
+    bgUpDef("heal", "치유의 샘", 14, glistering melon slice, "up", 80, 150, 240, "본진 안에서 재생 I", "본진 안에서 재생 II", "본진 안에서 재생 II + 흡수 II")
+    bgUpDef("haste", "신속 채굴", 15, golden pickaxe, "up", 60, 140, 240, "팀 전원 성급함 I", "팀 전원 성급함 II", "성급함 II + 팀 전원 신속 I")
+    bgUpDef("sharp", "날카로운 칼날", 16, diamond sword, "up", 90, 180, 280, "주는 피해 +10%%", "주는 피해 +20%%", "주는 피해 +30%%")
+    bgUpDef("alarm", "경보 함정", 28, bell, "trap", 40, 80, 120, "적 침입 알림 + 발광 5초 (재발동 20초)", "알림 + 발광 12초 (12초)", "알림 + 발광 20초 + 위치 표시 (6초)")
+    bgUpDef("curse", "저주 함정", 29, cobweb, "trap", 70, 140, 220, "구속 II 5초 + 나약함 5초", "구속 II 6초 + 채굴 피로 II 10초 + 나약함 6초", "구속 III 6초 + 실명 3초 + 나약함 II 8초 + 독 3초")
+    bgUpDef("counter", "반격의 함성", 30, feather, "trap", 60, 120, 200, "본진 아군 신속 I + 저항 I 10초", "신속 II + 저항 I + 힘 I 10초", "신속 II + 저항 II + 힘 I + 재생 II 12초")
 
 function bgUpLv(t: text, id: text) :: number:
     return {-bg::uplv::%{_t}%::%{_id}%} ? 0
@@ -127,6 +128,15 @@ function bgUpBuy(p: player, id: text):
             send "%{-bg::tcol::%{_t}%}%[팀 강화] &f%name of {_p}% 님이 %{_c}%&l%{-bg::up::%{_id}%::name}% Lv.%{_nx}%&f 을(를) 샀습니다! &7(%{-bg::up::%{_id}%::desc::%{_nx}%}%)" to loop-player
             play sound "block.beacon.power_select" to loop-player
             play sound "entity.player.levelup" to loop-player
+    # 구매 연출: 팀 전원 머리 위 불사의 토템 빛 + 제목, 본진에 폭죽
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            send title "" with subtitle "%{_c}%&l%{-bg::up::%{_id}%::name}% Lv.%{_nx}% &f— %{-bg::up::%{_id}%::desc::%{_nx}%}%" to loop-player for 50 ticks
+            bgParticle(bgUp(location of loop-player, 1.2), "totem_of_undying", 0.5, 0.8, 0.5, 0.25, 30)
+    set {_b} to bgMk("base_%{_t}%")
+    bgParticle(bgUp({_b}, 2), "firework", 3, 2, 3, 0.15, 80)
+    bgParticle(bgUp({_b}, 1), "end_rod", 4, 1, 4, 0.05, 40)
+    bgSoundAt({_b}, "entity.firework_rocket.twinkle", 2, 1)
     if {_id} is "core":
         bgCoreText({_t})
     bgUpRefresh({_t})
@@ -143,7 +153,18 @@ on damage of player:
     {_t} is not "none"
     set {_lv} to bgUpLv({_t}, "armor")
     {_lv} > 0
-    set damage to damage * (1 - 0.06 * {_lv})
+    set damage to damage * (1 - 0.1 * {_lv})
+
+# 날카로운 칼날: 사람에게 주는 피해 증가 (전설 무기 스킬 포함)
+on damage of player:
+    {-bg::on} is true
+    attacker is a player
+    set {_t} to bgTeam(attacker)
+    {_t} is not "none"
+    {_t} is not bgTeam(victim)
+    set {_lv} to bgUpLv({_t}, "sharp")
+    {_lv} > 0
+    set damage to damage * (1 + 0.1 * {_lv})
 
 # 치유의 샘 · 신속 채굴 (2초마다)
 every 2 seconds:
@@ -152,23 +173,39 @@ every 2 seconds:
         set {_t} to loop-value
         set {_h} to bgUpLv({_t}, "haste")
         if {_h} > 0:
-            bgCmd("effect give @a[team=bg_%{_t}%,gamemode=!spectator] haste 3 %{_h} - 1% true")
+            bgCmd("effect give @a[team=bg_%{_t}%,gamemode=!spectator] haste 3 %min(2, {_h}) - 1% true")
+            if {_h} >= 3:
+                bgCmd("effect give @a[team=bg_%{_t}%,gamemode=!spectator] speed 3 0 true")
         set {_r} to bgUpLv({_t}, "heal")
         if {_r} > 0:
             set {_b} to bgMk("base_%{_t}%")
-            bgCmd("execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..20] regeneration 3 %{_r} - 1% true")
+            bgCmd("execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..20] regeneration 3 %min(2, {_r}) - 1% true")
+            if {_r} >= 3:
+                bgCmd("execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..20] absorption 6 1 true")
+            # 샘 효과: 본진 바닥에 초록 빛
+            bgParticle(bgUp({_b}, 0.3), "happy_villager", 6, 0.3, 6, 0, 10 * {_r})
 
-# 본진 광석 리젠 시간 (광산 강화): 5 → 4 → 3 → 2초
+# 본진 광석 리젠 시간 (광산 강화): 5 → 3 → 2 → 1초
 function bgMineRegen(t: text) :: number:
-    return 5 - bgUpLv({_t}, "mine")
+    set {_lv} to bgUpLv({_t}, "mine")
+    if {_lv} <= 0:
+        return 5
+    return 4 - {_lv}
 
-# 풍부한 광맥: 광물 2배 확률 25 / 50 / 75%
+# 풍부한 광맥: 광물 2배 확률 40 / 75% · Lv.3 은 항상 2배 + 30% 확률 3배
 function bgOreBonus(p: player) :: number:
     set {_lv} to bgUpLv(bgTeam({_p}), "rich")
     if {_lv} <= 0:
         return 1
     set {_r} to random number between 0 and 1
-    if {_r} < 0.25 * {_lv}:
+    if {_lv} >= 3:
+        if {_r} < 0.3:
+            return 3
+        return 2
+    set {_ch} to 0.4
+    if {_lv} is 2:
+        set {_ch} to 0.75
+    if {_r} < {_ch}:
         return 2
     return 1
 
@@ -203,6 +240,14 @@ function bgTrapReady(key: text, sec: number) :: boolean:
     set {-bg::trapcd::%{_key}%} to {-bg::sec} ? 0
     return true
 
+# 경보 Lv.3 위치 표시: 우리 팀에게만 침입자 머리 위 빨간 빛기둥 (5초, 따라다님)
+function bgTrapBeam(p: player, t: text):
+    loop 10 times:
+        if {_p} is online:
+            set {_pl} to location of {_p}
+            bgCmd("execute in %bgDim()% run particle dust{color:[1,0.1,0.1],scale:2} %bgC(x-coordinate of {_pl})% %bgN((y-coordinate of {_pl}) + 3)% %bgC(z-coordinate of {_pl})% 0.1 2 0.1 0 15 force @a[team=bg_%{_t}%]")
+        wait 10 ticks
+
 function bgTrapFire(t: text, p: player):
     set {_n} to name of {_p}
     set {_pt} to bgTeam({_p})
@@ -210,11 +255,11 @@ function bgTrapFire(t: text, p: player):
     # 경보
     set {_a} to bgUpLv({_t}, "alarm")
     if {_a} > 0:
-        set {_cd} to 30
+        set {_cd} to 20
         if {_a} is 2:
-            set {_cd} to 20
-        else if {_a} is 3:
             set {_cd} to 12
+        else if {_a} is 3:
+            set {_cd} to 6
         if bgTrapReady("%{_t}%::alarm", {_cd}) is true:
             loop all players:
                 if bgTeam(loop-player) is {_t}:
@@ -222,27 +267,33 @@ function bgTrapFire(t: text, p: player):
                     send "%{-bg::tcol::%{_t}%}%[경보 함정] &c적 침입! %{_tc}%%{_n}% &7(%{-bg::tname::%{_pt}%}% 팀)" to loop-player
                     play sound "block.bell.use" to loop-player
                     play sound "entity.experience_orb.pickup" to loop-player
-            if {_a} >= 2:
-                set {_gl} to 8
-                if {_a} is 3:
-                    set {_gl} to 15
-                bgCmd("effect give %{_n}% glowing %{_gl}% 0 true")
+            set {_gl} to 5
+            if {_a} is 2:
+                set {_gl} to 12
+            else if {_a} is 3:
+                set {_gl} to 20
+            bgCmd("effect give %{_n}% glowing %{_gl}% 0 true")
+            if {_a} >= 3:
+                bgTrapBeam({_p}, {_t})
             send action bar "&c%{-bg::tname::%{_t}%}% 팀의 경보 함정이 울렸습니다!" to {_p}
     # 저주 (침입자마다 25초에 한 번 · 결계 부적이 막음)
     set {_c} to bgUpLv({_t}, "curse")
     if {_c} > 0:
         if bgWardOn({_p}) is true:
             send action bar "&b결계 부적이 %{-bg::tname::%{_t}%}% 팀의 저주 함정을 막았습니다" to {_p}
-        else if bgTrapReady("%{_t}%::curse::%uuid of {_p}%", 25) is true:
+        else if bgTrapReady("%{_t}%::curse::%uuid of {_p}%", 20) is true:
             if {_c} is 1:
-                bgCmd("effect give %{_n}% slowness 4 0 true")
-            else if {_c} is 2:
                 bgCmd("effect give %{_n}% slowness 5 1 true")
-                bgCmd("effect give %{_n}% mining_fatigue 8 1 true")
-            else:
+                bgCmd("effect give %{_n}% weakness 5 0 true")
+            else if {_c} is 2:
                 bgCmd("effect give %{_n}% slowness 6 1 true")
-                bgCmd("effect give %{_n}% blindness 2 0 true")
+                bgCmd("effect give %{_n}% mining_fatigue 10 1 true")
                 bgCmd("effect give %{_n}% weakness 6 0 true")
+            else:
+                bgCmd("effect give %{_n}% slowness 6 2 true")
+                bgCmd("effect give %{_n}% blindness 3 0 true")
+                bgCmd("effect give %{_n}% weakness 8 1 true")
+                bgCmd("effect give %{_n}% poison 3 0 true")
             send title "" with subtitle "&5&l저주 함정! &7(%{-bg::tname::%{_t}%}% 팀)" to {_p} for 30 ticks
             play sound "entity.evoker.cast_spell" to {_p}
             bgParticle(location of {_p}, "witch", 0.5, 1, 0.5, 0.1, 40)
@@ -252,18 +303,22 @@ function bgTrapFire(t: text, p: player):
     # 반격의 함성 (팀 공통 30초에 한 번): 본진 안 아군 강화
     set {_k} to bgUpLv({_t}, "counter")
     if {_k} > 0:
-        if bgTrapReady("%{_t}%::counter", 30) is true:
+        if bgTrapReady("%{_t}%::counter", 25) is true:
             set {_b} to bgMk("base_%{_t}%")
             set {_at} to "execute in %bgDim()% positioned %bgC(x-coordinate of {_b})% %bgN(y-coordinate of {_b})% %bgC(z-coordinate of {_b})% run effect give @a[team=bg_%{_t}%,gamemode=!spectator,distance=..30]"
             if {_k} is 1:
-                bgCmd("%{_at}% speed 8 0 true")
+                bgCmd("%{_at}% speed 10 0 true")
+                bgCmd("%{_at}% resistance 10 0 true")
             else if {_k} is 2:
-                bgCmd("%{_at}% speed 8 0 true")
-                bgCmd("%{_at}% resistance 8 0 true")
+                bgCmd("%{_at}% speed 10 1 true")
+                bgCmd("%{_at}% resistance 10 0 true")
+                bgCmd("%{_at}% strength 10 0 true")
             else:
-                bgCmd("%{_at}% speed 6 1 true")
-                bgCmd("%{_at}% resistance 6 0 true")
-                bgCmd("%{_at}% strength 6 0 true")
+                bgCmd("%{_at}% speed 12 1 true")
+                bgCmd("%{_at}% resistance 12 1 true")
+                bgCmd("%{_at}% strength 12 0 true")
+                bgCmd("%{_at}% regeneration 12 1 true")
+            bgParticle(bgUp({_b}, 1), "totem_of_undying", 5, 1.5, 5, 0.3, 120)
             loop all players:
                 if bgTeam(loop-player) is {_t}:
                     if bgDist2(location of loop-player, {_b}) < 30:

@@ -1,6 +1,6 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  왕관 쟁탈전 — 본진 코어 (본진 앞 신호기) · 결계 부적
-#   코어 체력 50 (+팀 강화 '코어 보강' 단계마다 +15). 다 깎이면 파괴: 그 팀 -50점 + 복구될 때까지(90초) 점수 정지
+#   코어 체력 50 (+팀 강화 '코어 보강' 단계마다 +25, Lv.3 은 자연 회복 2배). 다 깎이면 파괴: 그 팀 -50점 + 복구될 때까지(90초) 점수 정지
 #   + 30초 약화 · 구속 · 발광 + 50% 확률로 그 팀이 점령한 거점 하나를 무작위로 잃음. 복구 뒤 60초 보호막
 #   결계 부적(상점): 우클릭하면 60초 동안 적 본진의 수호 결계 피해를 받지 않음
 # ═════════════════════════════════════════════════════════════════════════════
@@ -15,9 +15,9 @@ function bgCoreReset():
         bgCoreText(loop-value)
 
 # 코어 위 체력 글씨 (데이터팩 장식 bg_coretext_<팀>)
-# 코어 최대 체력 (기본 50 + 팀 강화 '코어 보강' Lv 당 15)
+# 코어 최대 체력 (기본 50 + 팀 강화 '코어 보강' Lv 당 25)
 function bgCoreMax(t: text) :: number:
-    return 50 + 15 * bgUpLv({_t}, "core")
+    return 50 + 25 * bgUpLv({_t}, "core")
 
 function bgCoreText(t: text):
     set {_max} to bgCoreMax({_t})
@@ -343,6 +343,10 @@ every 3 seconds:
                         set {_ok} to false
                 if {_ok} is true:
                     remove 1 from {-bg::core::%{_t}%::hits}
+                    # 코어 보강 Lv.3: 회복 2배
+                    if bgUpLv({_t}, "core") >= 3:
+                        if {-bg::core::%{_t}%::hits} > 0:
+                            remove 1 from {-bg::core::%{_t}%::hits}
                     bgCoreText({_t})
                     bgParticle(bgUp(bgMk("base_%{_t}%_beacon"), 3), "happy_villager", 0.6, 0.6, 0.6, 0, 4)
 
