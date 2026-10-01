@@ -6,6 +6,10 @@
 #  모든 공격은 바닥 장판(붉은 먹 붓터치)이 먼저 깔리고, 게이지가 다 차는 순간 판정한다.
 # ═════════════════════════════════════════════════════════════════════════════
 
+import:
+    org.bukkit.Bukkit
+    java.util.UUID
+
 on load:
     set {-bg::lairname::forge} to "드워프 대장간"
     set {-bg::lairname::sands} to "잊힌 모래 신전"
@@ -346,9 +350,25 @@ function bgBossPurge():
     bgCmd("kill @e[tag=bgb_dead]")
     bgCmd("kill @e[type=item_display,tag=bgb]")
 
+# 스크립트를 다시 불러와도(/sk reload) 싸우던 보스는 그대로 둔다 — 보스가 없을 때만 남은 찌꺼기 정리
 on load:
     delete {-bg::boss::spawning}
+    if {-bg::boss::id} is set:
+        if bgBossFind() is true:
+            stop
     bgBossPurge()
+
+# 히트박스를 UUID 로 다시 찾는다 (청크를 다시 불러오면 예전 엔티티 참조가 무효가 됨) — 찾으면 참조를 새로 묶음
+function bgBossFind() :: boolean:
+    if {-bg::boss::ent} is alive:
+        return true
+    {-bg::boss::uuid} is set
+    set {_f} to Bukkit.getEntity(UUID.fromString({-bg::boss::uuid}))
+    {_f} is set
+    if {_f}.isDead() is true:
+        return false
+    set {-bg::boss::ent} to {_f}
+    return true
 
 function bgBossRemove():
     if {-bg::boss::id} is not set:
@@ -396,6 +416,9 @@ every tick:
 function bgBossTick():
     set {_e} to {-bg::boss::ent}
     if {_e} is not alive:
+        # 참조만 끊긴 경우(청크 다시 불러옴 등)는 UUID 로 다시 찾아서 이어 감
+        if bgBossFind() is true:
+            stop
         if {-bg::boss::state} is not "dead":
             bgSay("&7보스 히트박스가 사라져 보스를 정리했습니다. &8(다시: /전장 보스)")
         bgBossRemove()
