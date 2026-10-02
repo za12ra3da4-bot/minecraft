@@ -35,6 +35,7 @@ import portraits
 import ping_art
 import title_logo
 import impactfx
+import shoptip
 
 OUT_RP = os.path.join(ROOT, "arena", "resourcepack", "bg_arena_pack.zip")
 OUT_RP_DIR = os.path.join(HERE, ".cache", "rp_folder")
@@ -94,6 +95,7 @@ def main(args):
     pixel_art.export(pack)
     weapons_legend.export(pack)
     ping_art.export(pack)
+    shoptip.export(pack, lambda p: pack.files[p])   # 무기 · 바닥 효과 그림을 쓰므로 그 뒤에
     n = pack.write(OUT_RP_DIR, OUT_RP, "신화쟁탈전 + 올림포스 통합 팩")
     merge_olympus(OUT_RP)
     print(f"[rp] 파일 {n}개 → {OUT_RP} ({os.path.getsize(OUT_RP) // 1024} KB)")

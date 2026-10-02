@@ -139,16 +139,15 @@ function bgPvpShop(p: player):
     loop {-bg::w::list::*}:
         add 1 to {_i}
         set {_w} to loop-value
-        set {_it} to bgWeaponItem({_w})
-        set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&a클릭해서 받기 (무료)"
+        set {_info::*} to "&a클릭해서 받기 (무료)"
+        set {_it} to bgWShopItem({_w}, "&6&l%{-bg::w::%{_w}%::name}% &7(전설)", {_info::*})
         set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
     set {_i} to 0
     loop {-bg::w::bosslist::*}:
         add 1 to {_i}
         set {_w} to loop-value
-        set {_it} to bgWeaponItem({_w})
-        set name of {_it} to "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)"
-        set lore of {_it} to "&7%{-bg::w::%{_w}%::desc}%", "" and "&a연습장에서는 무료"
+        set {_info::*} to "&a연습장에서는 무료"
+        set {_it} to bgWShopItem({_w}, "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)", {_info::*})
         set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
     set {_x} to barrier named "&c&l가방 비우고 기본 장비로"
     set slot 49 of {_gui} to {_x}
