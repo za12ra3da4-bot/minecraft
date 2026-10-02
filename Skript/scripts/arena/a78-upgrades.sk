@@ -1,5 +1,5 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  왕관 쟁탈전 — 팀 강화 · 기지 함정 (상점 3쪽, 배드워즈처럼)
+#  신화쟁탈전 — 팀 강화 · 기지 함정 (상점 3쪽, 배드워즈처럼)
 #   한 명이 코인으로 사면 팀 전체에 적용. 단계(Lv)가 오를수록 비싸짐 → 팀원이 사면 상점을 열고 있는 다른 팀원 화면도 바로 갱신
 #   팀 강화: 광산 강화(본진 광석 리젠) · 풍부한 광맥(광물 2배 확률) · 강철 피부(받는 피해 감소) · 코어 보강(코어 체력)
 #            치유의 샘(본진에서 재생) · 신속 채굴(성급함)
@@ -32,17 +32,17 @@ on load:
     delete {-bg::up::*}
     delete {-bg::upslot::*}
     set {-bg::up::list::*} to "mine", "rich", "armor", "core", "heal", "haste", "sharp", "cdr", "alarm", "curse" and "counter"
-    bgUpDef("mine", "광산 강화", 10, iron pickaxe, "up", 60, 120, 200, "본진 광석 리젠 5초", "본진 광석 리젠 4초", "본진 광석 리젠 3초")
-    bgUpDef("rich", "풍부한 광맥", 11, gold ingot, "up", 80, 150, 240, "광물 2배 확률 40%%", "광물 2배 확률 75%%", "광물 항상 2배 + 30%% 확률 3배")
-    bgUpDef("armor", "강철 피부", 12, iron chestplate, "up", 80, 160, 260, "받는 피해 -10%%", "받는 피해 -20%%", "받는 피해 -30%%")
-    bgUpDef("core", "코어 보강", 13, beacon, "up", 70, 140, 220, "코어 체력 75", "코어 체력 100", "코어 체력 125 + 코어 회복 2배")
-    bgUpDef("heal", "치유의 샘", 14, glistering melon slice, "up", 80, 150, 240, "본진 안에서 재생 I", "본진 안에서 재생 II", "본진 안에서 재생 II + 흡수 II")
-    bgUpDef("haste", "신속 채굴", 15, golden pickaxe, "up", 60, 140, 240, "팀 전원 성급함 I", "팀 전원 성급함 II", "성급함 II + 팀 전원 신속 I")
-    bgUpDef("sharp", "날카로운 칼날", 16, diamond sword, "up", 90, 180, 280, "주는 피해 +10%%", "주는 피해 +20%%", "주는 피해 +30%%")
-    bgUpDef("cdr", "전설의 숨결", 17, nether star, "up", 100, 200, 320, "전설 무기 재사용 대기 -20%%", "전설 무기 재사용 대기 -35%%", "전설 무기 재사용 대기 -50%%")
-    bgUpDef("alarm", "경보 함정", 28, bell, "trap", 40, 80, 120, "적 침입 알림 + 발광 5초 (재발동 20초)", "알림 + 발광 12초 (12초)", "알림 + 발광 20초 + 위치 표시 (6초)")
-    bgUpDef("curse", "저주 함정", 29, cobweb, "trap", 70, 140, 220, "구속 II 5초 + 나약함 5초", "구속 II 6초 + 채굴 피로 II 10초 + 나약함 6초", "구속 III 6초 + 실명 3초 + 나약함 II 8초 + 독 3초")
-    bgUpDef("counter", "반격의 함성", 30, feather, "trap", 60, 120, 200, "본진 아군 신속 I + 저항 I 10초", "신속 II + 저항 I + 힘 I 10초", "신속 II + 저항 II + 힘 I + 재생 II 12초")
+    bgUpDef("mine", "광산 강화", 10, iron pickaxe, "up", 80, 160, 260, "본진 광석 리젠 5초", "본진 광석 리젠 4초", "본진 광석 리젠 3초")
+    bgUpDef("rich", "풍부한 광맥", 11, gold ingot, "up", 100, 200, 320, "광물 2배 확률 40%%", "광물 2배 확률 75%%", "광물 항상 2배 + 30%% 확률 3배")
+    bgUpDef("armor", "강철 피부", 12, iron chestplate, "up", 300, 600, 1000, "받는 피해 -8%%", "받는 피해 -15%%", "받는 피해 -22%%")
+    bgUpDef("core", "코어 보강", 13, beacon, "up", 90, 180, 300, "코어 체력 75", "코어 체력 100", "코어 체력 125 + 코어 회복 2배")
+    bgUpDef("heal", "치유의 샘", 14, glistering melon slice, "up", 150, 300, 500, "본진 안에서 재생 I", "본진 안에서 재생 II", "본진 안에서 재생 II + 흡수 II")
+    bgUpDef("haste", "신속 채굴", 15, golden pickaxe, "up", 80, 180, 300, "팀 전원 성급함 I", "팀 전원 성급함 II", "성급함 II + 팀 전원 신속 I")
+    bgUpDef("sharp", "날카로운 칼날", 16, diamond sword, "up", 350, 700, 1200, "주는 피해 +8%%", "주는 피해 +15%%", "주는 피해 +22%%")
+    bgUpDef("cdr", "전설의 숨결", 17, nether star, "up", 250, 500, 850, "전설 무기 재사용 대기 -15%%", "전설 무기 재사용 대기 -25%%", "전설 무기 재사용 대기 -35%%")
+    bgUpDef("alarm", "경보 함정", 28, bell, "trap", 50, 100, 150, "적 침입 알림 + 발광 5초 (재발동 20초)", "알림 + 발광 12초 (12초)", "알림 + 발광 20초 + 위치 표시 (6초)")
+    bgUpDef("curse", "저주 함정", 29, cobweb, "trap", 120, 240, 380, "구속 II 5초 + 나약함 5초", "구속 II 6초 + 채굴 피로 II 10초 + 나약함 6초", "구속 III 6초 + 실명 3초 + 나약함 II 8초 + 독 3초")
+    bgUpDef("counter", "반격의 함성", 30, feather, "trap", 120, 240, 380, "본진 아군 신속 I + 저항 I 10초", "신속 II + 저항 I + 힘 I 10초", "신속 II + 저항 II + 힘 I + 재생 II 12초")
 
 function bgUpLv(t: text, id: text) :: number:
     return {-bg::uplv::%{_t}%::%{_id}%} ? 0
@@ -155,7 +155,13 @@ on damage of player:
     {_t} is not "none"
     set {_lv} to bgUpLv({_t}, "armor")
     {_lv} > 0
-    set damage to damage * (1 - 0.1 * {_lv})
+    # -8 / -15 / -22% (너프: 원래 -10 / -20 / -30%)
+    set {_r} to 0.08
+    if {_lv} is 2:
+        set {_r} to 0.15
+    else if {_lv} >= 3:
+        set {_r} to 0.22
+    set damage to damage * (1 - {_r})
 
 # 날카로운 칼날: 사람에게 주는 피해 증가 (전설 무기 스킬 포함)
 on damage of player:
@@ -166,7 +172,13 @@ on damage of player:
     {_t} is not bgTeam(victim)
     set {_lv} to bgUpLv({_t}, "sharp")
     {_lv} > 0
-    set damage to damage * (1 + 0.1 * {_lv})
+    # +8 / +15 / +22% (너프: 원래 +10 / +20 / +30%)
+    set {_r} to 0.08
+    if {_lv} is 2:
+        set {_r} to 0.15
+    else if {_lv} >= 3:
+        set {_r} to 0.22
+    set damage to damage * (1 + {_r})
 
 # 치유의 샘 · 신속 채굴 (2초마다)
 every 2 seconds:
@@ -194,15 +206,15 @@ every 2 seconds:
 function bgMineRegen(t: text) :: number:
     return 6 - bgUpLv({_t}, "mine")
 
-# 전설의 숨결: 전설 무기 재사용 대기 감소 비율 (0 / 0.2 / 0.35 / 0.5)
+# 전설의 숨결: 전설 무기 재사용 대기 감소 비율 (0 / 0.15 / 0.25 / 0.35)
 function bgCdrRate(p: player) :: number:
     set {_lv} to bgUpLv(bgTeam({_p}), "cdr")
     if {_lv} is 1:
-        return 0.2
+        return 0.15
     if {_lv} is 2:
-        return 0.35
+        return 0.25
     if {_lv} >= 3:
-        return 0.5
+        return 0.35
     return 0
 
 # ─────────────────────────────────────────────────────────── 본진 전용 버프 (본진 24칸 안에서만)

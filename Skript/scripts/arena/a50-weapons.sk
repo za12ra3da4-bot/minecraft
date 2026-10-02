@@ -24,7 +24,7 @@ function bgWDef(id: text, name: text, price: number, cd: number, col: text, desc
     set {-bg::w::%{_id}%::name} to {_name}
     set {-bg::w::%{_id}%::base} to "iron_sword"
     set {-bg::w::%{_id}%::price} to {_price}
-    # 재사용 대기: 처음 값 × 1.3 × 2.5 (팀 강화 '전설의 숨결' 로 최대 -50%%)
+    # 재사용 대기: 처음 값 × 1.3 × 2.5 (팀 강화 '전설의 숨결' 로 최대 -35%)
     set {-bg::w::%{_id}%::cd} to round({_cd} * 1.3 * 2.5)
     # 보스(신화) 무기는 예전 그대로
     if {_id} starts with "b_":
