@@ -593,7 +593,7 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
     trigger:
         if arg-1 is not set:
             send "&6[전장] &f/전장 건설 (내 위치) | 건설 원점 | 장식 | 광석바위 | 맵패치 | 연습장건설 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
-            send "&6[전장] &f/전장 자동팀 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops] | 보스제거"
+            send "&6[전장] &f/전장 자동팀 | 팀초기화 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops] | 보스제거"
             send "&6[전장] &f/전장 코인 <플레이어|all> <n> | 점수 <팀> <n> | 목표 <n> | 시간 <분> | 이동 <마커>"
             stop
         if arg-1 is "건설":
@@ -689,6 +689,12 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
                         bgSetTeam(loop-player, {_t})
                         add 1 to {_i}
             bgSay("%{_i}%명을 네 팀으로 나눴습니다.")
+        else if arg-1 is "팀초기화":
+            if {-bg::on} is true:
+                send "&c[전장] 게임 중에는 팀을 초기화할 수 없습니다. 먼저 /전장 종료"
+                stop
+            set {_n} to bgResetTeams()
+            bgSay("모든 팀을 초기화했습니다 &7(%{_n}%명 팀 없음)&f — 다시 팀을 고르세요.")
         else if arg-1 is "시작":
             bgStart()
         else if arg-1 is "종료":

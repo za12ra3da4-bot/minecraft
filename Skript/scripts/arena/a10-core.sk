@@ -178,6 +178,17 @@ function bgSetupTeams():
 function bgSay(msg: text):
     broadcast "&6[전장] &f%{_msg}%"
 
+# ── 팀 한 번에 초기화 (접속 안 한 사람 기록까지 전부 지우고 마크 팀도 비움) → 접속 중이던 팀원 수
+function bgResetTeams() :: number:
+    set {_n} to 0
+    loop all players:
+        if {bg::team::%uuid of loop-player%} is set:
+            add 1 to {_n}
+    delete {bg::team::*}
+    loop {-bg::teams::*}:
+        bgCmd("team empty bg_%loop-value%")
+    return {_n}
+
 # 숫자(틱) → 시간 (변수 뒤에 "ticks" 를 바로 붙일 수 없어서)
 function bgTicks(n: number) :: timespan:
     return "%max(0, round({_n}))% ticks" parsed as timespan
