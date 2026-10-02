@@ -28,8 +28,9 @@ import skillanim as A
 TW, TH = 204, 176            # 설명창 전체 (픽셀 = 화면 GUI 1칸)
 VX0, VY0, VX1, VY1 = 12, 86, 192, 164      # 영상 칸
 VW, VH = VX1 - VX0, VY1 - VY0
-FRAMES = 36
-FT = 1                       # 한 장 1틱 → 1.8초 (부드럽게)
+FRAMES = 18
+FT = 2                       # 한 장 2틱 → 1.8초 (초당 10장)
+SC = 2                       # 그림 해상도 = 설명창 1칸에 2픽셀 (선명하게) — 그래픽 메모리: 20종 x 18장 x 408x352
 SKINS = os.path.join(TOOLS, ".cache", "skins")
 SKIN_URL = "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21.11/assets/minecraft/textures/entity/player/wide/{}.png"
 
@@ -528,7 +529,7 @@ def scene(st, wid, f, tex, wtex, imp, skins, skill):
             h = 0.46 * pop
             billboard(mesh, "name", ti, pos, h * ti.width / ti.height, h, cam_right, Y + 2.3 + c.jump + 0.25 * min(1, t * 3), light=1.25)
     fov = 54
-    im = R.render(st.vox, st.pal, VW, VH, cam, look_at, fov=fov, mesh=mesh, ss=3, sun=tuple(sun), fog_dist=60,
+    im = R.render(st.vox, st.pal, VW * SC, VH * SC, cam, look_at, fov=fov, mesh=mesh, ss=2, sun=tuple(sun), fog_dist=60,
                   sky_top=(0.22, 0.30, 0.52), sky_hor=(0.62, 0.58, 0.62), fog_col=(0.55, 0.53, 0.60))
     # 큰 타격 순간: 번쩍 + 만화 집중선
     for (t0, pos, r, deb) in c.impacts:
@@ -536,9 +537,10 @@ def scene(st, wid, f, tex, wtex, imp, skins, skill):
             _, fw, rt, up = R.look(cam, look_at)
             v = np.array([pos[0], Y + 1.0, pos[2]]) - cam
             z = v @ fw
-            focal = (VW * 0.5) / math.tan(math.radians(fov) * 0.5)
-            sx = VW / 2 + (v @ rt) / z * focal
-            sy_ = VH / 2 - (v @ up) / z * focal
+            W_, H_ = im.size
+            focal = (W_ * 0.5) / math.tan(math.radians(fov) * 0.5)
+            sx = W_ / 2 + (v @ rt) / z * focal
+            sy_ = H_ / 2 - (v @ up) / z * focal
             st_ = 1.0 - (t - t0) / 0.05 * 0.5
             im = Image.blend(im, Image.new("RGB", im.size, tuple(int(c_ * 0.5 + 127) for c_ in acc)), 0.35 * st_)
             im = speed_lines(im, sx, sy_, acc, st_)
@@ -547,15 +549,16 @@ def scene(st, wid, f, tex, wtex, imp, skins, skill):
 
 
 def panel(wid):
-    """설명창 판 (영상 칸 바깥) — 어두운 판 + 무기 색 테두리"""
+    """설명창 판 (영상 칸 바깥) — 어두운 판 + 무기 색 테두리 (SC 배 해상도)"""
     acc = ACCENT[SPEC[wid][1]]
-    im = Image.new("RGBA", (TW, TH), (0, 0, 0, 0))
+    k = SC
+    im = Image.new("RGBA", (TW * k, TH * k), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    d.rounded_rectangle([3, 3, TW - 4, TH - 4], radius=5, fill=(16, 10, 24, 240))
-    d.rounded_rectangle([3, 3, TW - 4, TH - 4], radius=5, outline=acc + (255,), width=1)
-    d.rounded_rectangle([5, 5, TW - 6, TH - 6], radius=4, outline=tuple(int(c * 0.45) for c in acc) + (255,), width=1)
-    d.line([(12, 24), (TW - 12, 24)], fill=tuple(int(c * 0.7) for c in acc) + (200,), width=1)
-    d.rectangle([VX0 - 2, VY0 - 2, VX1 + 1, VY1 + 1], outline=acc + (255,), width=1)
+    d.rounded_rectangle([3 * k, 3 * k, (TW - 4) * k, (TH - 4) * k], radius=5 * k, fill=(16, 10, 24, 240))
+    d.rounded_rectangle([3 * k, 3 * k, (TW - 4) * k, (TH - 4) * k], radius=5 * k, outline=acc + (255,), width=k)
+    d.rounded_rectangle([5 * k, 5 * k, (TW - 6) * k, (TH - 6) * k], radius=4 * k, outline=tuple(int(c * 0.45) for c in acc) + (255,), width=k)
+    d.line([(12 * k, 24 * k), ((TW - 12) * k, 24 * k)], fill=tuple(int(c * 0.7) for c in acc) + (200,), width=k)
+    d.rectangle([(VX0 - 2) * k, (VY0 - 2) * k, (VX1 + 1) * k + k - 1, (VY1 + 1) * k + k - 1], outline=acc + (255,), width=k)
     return im
 
 
@@ -563,11 +566,11 @@ def frames(st, wid, tex, wtex, skins, skill=""):
     kind = SPEC[wid][1]
     imp = {"shock": impactfx.shock(kind), "crater": impactfx.crater(kind), "burst": impactfx.burst(kind)}
     base = panel(wid)
-    out = Image.new("RGBA", (TW, TH * FRAMES))
+    out = Image.new("RGBA", (TW * SC, TH * SC * FRAMES))
     for f in range(FRAMES):
         fr = base.copy()
-        fr.paste(scene(st, wid, f, tex, wtex, imp, skins, skill).convert("RGBA"), (VX0, VY0))
-        out.alpha_composite(fr, (0, TH * f))
+        fr.paste(scene(st, wid, f, tex, wtex, imp, skins, skill).convert("RGBA"), (VX0 * SC, VY0 * SC))
+        out.alpha_composite(fr, (0, TH * SC * f))
     return out
 
 
@@ -596,23 +599,23 @@ def export(pack, read):
         strip = frames(st, wid, tex, wtex, skins, SKILL.get(wid, ""))
         base = f"assets/bg/textures/gui/sprites/tooltip/w_{wid}"
         pack.png(f"{base}_background.png", strip)
-        pack.put(f"{base}_background.png.mcmeta", {"animation": {"frametime": FT, "interpolate": False, "width": TW, "height": TH},
+        pack.put(f"{base}_background.png.mcmeta", {"animation": {"frametime": FT, "interpolate": False, "width": TW * SC, "height": TH * SC},
                                                    "gui": {"scaling": {"type": "stretch"}}})
         pack.png(f"{base}_frame.png", blank)
         pack.put(f"{base}_frame.png.mcmeta", {"gui": {"scaling": {"type": "stretch"}}})
         print("  tooltip", wid)
 
 
-def preview(path, read, wids=("thunder", "dragon", "wind", "scythe", "gauntlet", "b_cyclops"), pick=(3, 8, 12, 15, 19, 24)):
+def preview(path, read, wids=("thunder", "dragon", "wind", "scythe", "gauntlet", "b_cyclops"), pick=(2, 5, 7, 9, 12, 15)):
     tex, skins = _inputs(read)
     st = Stage()
     rows = []
     for wid in wids:
         wtex = Image.open(io.BytesIO(read(f"assets/bg/textures/item/weapon/{wid}.png"))).convert("RGBA")
         imp = {"shock": impactfx.shock(SPEC[wid][1]), "crater": impactfx.crater(SPEC[wid][1]), "burst": impactfx.burst(SPEC[wid][1])}
-        row = Image.new("RGB", ((VW + 6) * len(pick), VH + 6), (30, 30, 30))
+        row = Image.new("RGB", ((VW * SC + 6) * len(pick), VH * SC + 6), (30, 30, 30))
         for i, f in enumerate(pick):
-            row.paste(scene(st, wid, f, tex, wtex, imp, skins, SKILL.get(wid, "")), (i * (VW + 6) + 3, 3))
+            row.paste(scene(st, wid, f, tex, wtex, imp, skins, SKILL.get(wid, "")), (i * (VW * SC + 6) + 3, 3))
         rows.append(row)
     out = Image.new("RGB", (rows[0].width, rows[0].height * len(rows)))
     for i, r in enumerate(rows):
