@@ -68,6 +68,7 @@ def build(pack):
     # 기본 글꼴에도 HUD 글리프(사용자 영역 문자)를 연결 → 상자 제목 같은 일반 글자에서도 그림이 나온다 (글꼴 지정 불필요)
     pack.put("assets/minecraft/font/default.json", {"providers": [
         {"type": "reference", "id": f"{H.NS}:hud"},
+        {"type": "reference", "id": f"{H.NS}:title"},
         {"type": "reference", "id": "minecraft:include/space"},
         {"type": "reference", "id": "minecraft:include/default", "filter": {"uniform": False}},
         {"type": "reference", "id": "minecraft:include/unifont"}]})

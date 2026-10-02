@@ -74,6 +74,12 @@ function bgHudBuild(fw: number, tile: number, x0: number, cw: number, ctile: num
 """
 
 
+def write_title(path, logo):
+    """'신화쟁탈전' 로고 글자 (title_logo.py) — 색 코드 없이 타이틀에 그대로 넣는다"""
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(HEAD + "on load:\n    set {-bg::title::logo} to " + q(logo) + "\n")
+
+
 def write_hud(path, font):
     B = []
     for v, ch in H.SP_CH.items():

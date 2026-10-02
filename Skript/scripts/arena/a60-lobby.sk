@@ -99,7 +99,7 @@ command /리팩 [<text>]:
             send "&c사용법: /리팩 @a"
             stop
         if bgPackOwner() is not "":
-            send "&6[전장] &f리소스팩은 &e%bgPackOwner()%&f 가 보냅니다. &7(왕관 쟁탈전 팩은 Nexo 의 external_packs 에 넣어 합치세요)"
+            send "&6[전장] &f리소스팩은 &e%bgPackOwner()%&f 가 보냅니다. &7(신화쟁탈전 팩은 Nexo 의 external_packs 에 넣어 합치세요)"
             stop
         bgSendPack(player)
         send "&6[전장] &f최신 리소스팩을 보냈습니다. 화면에서 '예' 를 눌러주세요. &7(팩 %{-bg::pack::sha1}%)"
@@ -117,7 +117,8 @@ on join:
         stop
     if {-bg::on} is not true:
         bgToLobby(player)
-        send title "&6&l왕관 쟁탈전" with subtitle "&f팀 발판을 밟아 팀을 고르세요" to player for 60 ticks
+        set {_logo} to {-bg::title::logo} ? "&6&l신화쟁탈전"
+        send title {_logo} with subtitle "&f팀 발판을 밟아 팀을 고르세요" to player for 60 ticks
         stop
     bgSetTeam(player, "none")
     clear player's inventory

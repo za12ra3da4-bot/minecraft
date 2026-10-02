@@ -84,10 +84,12 @@ function bgStart():
             bgSpawn(loop-player)
     loop 5 times:
         set {_n} to 6 - loop-number
-        bgTitle("&6&l%{_n}%", "&f왕관 쟁탈전이 곧 시작됩니다", 0, 22, 0)
+        bgTitle("&6&l%{_n}%", "&f신화쟁탈전이 곧 시작됩니다", 0, 22, 0)
         bgSound("block.note_block.hat", 1, 1)
         wait 1 second
-    bgTitle("&6&l왕관 쟁탈전", "&f대신전과 제단을 점령하라!", 5, 50, 15)
+    # 로고 글자 (a05-gen-title.sk · 리소스팩 bg:title) — 없으면 글자 타이틀
+    set {_logo} to {-bg::title::logo} ? "&6&l신화쟁탈전"
+    bgTitle({_logo}, "&f대신전과 제단을 점령하라!", 5, 50, 15)
     bgSound("entity.ender_dragon.growl", 0.6, 1.2)
     set {-bg::on} to true
     bgSay("목표 &e%{bg::cfg::goal}%점&f · 제한 시간 &e%{bg::cfg::minutes}%분")

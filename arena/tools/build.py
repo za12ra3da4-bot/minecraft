@@ -33,6 +33,7 @@ import decor_w
 import skgen
 import portraits
 import ping_art
+import title_logo
 
 OUT_RP = os.path.join(ROOT, "arena", "resourcepack", "bg_arena_pack.zip")
 OUT_RP_DIR = os.path.join(HERE, ".cache", "rp_folder")
@@ -84,18 +85,20 @@ def main(args):
     portraits.render_all()
     bmeta = bossgen.export(pack, os.path.join(OUT_DP, "data", "bg", "function"))
     font = hud_build.build(pack)
+    title_str, _ = title_logo.export(pack)
     telegraphs.export(pack)
     decor.export(pack)
     decor_w.export(pack)
     pixel_art.export(pack)
     weapons_legend.export(pack)
     ping_art.export(pack)
-    n = pack.write(OUT_RP_DIR, OUT_RP, "왕관 쟁탈전 + 올림포스 통합 팩")
+    n = pack.write(OUT_RP_DIR, OUT_RP, "신화쟁탈전 + 올림포스 통합 팩")
     merge_olympus(OUT_RP)
     print(f"[rp] 파일 {n}개 → {OUT_RP} ({os.path.getsize(OUT_RP) // 1024} KB)")
     # Skript 데이터
     os.makedirs(OUT_SK, exist_ok=True)
     skgen.write_hud(os.path.join(OUT_SK, "a01-gen-hud.sk"), font)
+    skgen.write_title(os.path.join(OUT_SK, "a05-gen-title.sk"), title_str)
     skgen.write_map(os.path.join(OUT_SK, "a02-gen-map.sk"), world)
     skgen.write_boss(os.path.join(OUT_SK, "a03-gen-boss.sk"), bmeta)
     # 리소스팩 파일 이름 검사: 마크는 [a-z0-9_.-/] 만 허용 (하나라도 틀리면 그 폰트/모델 파일 전체가 무시됨)
