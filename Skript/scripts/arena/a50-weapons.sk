@@ -377,14 +377,14 @@ function bgShopPage(p: player, pg: number):
         loop {-bg::w::list::*}:
             add 1 to {_i}
             set {_w} to loop-value
-            set {_info::*} to "&7재사용 대기 &f%bgWCd({_p}, {_w})%초 &8(기본 %{-bg::w::%{_w}%::cd}%초)" and "&e가격 %{-bg::w::%{_w}%::price}% 코인 &7· 클릭해서 구매 &8(최대 3개)"
+            set {_info::*} to "&7재사용 대기 &f%bgWCd({_p}, {_w})%초" and "&e%{-bg::w::%{_w}%::price}% 코인 &7· 클릭해서 구매"
             set {_it} to bgWShopItem({_w}, "&6&l%{-bg::w::%{_w}%::name}% &7(전설)", {_info::*})
             set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
         set {_i} to 0
         loop {-bg::w::bosslist::*}:
             add 1 to {_i}
             set {_w} to loop-value
-            set {_info::*} to "&c상점에서 살 수 없습니다" and "&7그 보스의 보상 상자에서만"
+            set {_info::*} to "&c상점에서 못 삼" and "&7보스 보상 상자에서만"
             set {_it} to bgWShopItem({_w}, "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)", {_info::*})
             set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
     else if {_pg} is 3:
@@ -477,8 +477,8 @@ function bgWeaponItem(w: text) :: item:
     return {_it}
 
 # 설명창에 스킬 미리보기 영상이 나오는 진열용 무기 (리소스팩 tooltip/w_<무기>_background — arena/tools/rp/shoptip.py)
-#  설명창 배경은 설명창 크기에 맞게 늘어나므로 크기를 고정한다: 글자 폭 230 · 줄 18 (이름 + 설명 3 + 빈 줄 + 안내 2 + 영상 11)
-#  설명은 22글자씩 끊어 3줄 · 안내(info)는 2줄까지 (한 줄이 230 픽셀을 넘지 않게 짧게)
+#  설명창 배경은 설명창 크기에 맞게 늘어나므로 크기를 고정한다: 글자 폭 180 · 줄 15 (이름 + 설명 3 + 빈 줄 + 안내 2 + 영상 8)
+#  설명은 17글자씩 끊어 3줄 · 안내(info)는 2줄까지 (한 줄이 180 픽셀을 넘지 않게 짧게)
 function bgWShopItem(w: text, name: text, info: texts) :: item:
     set {_it} to bgWeaponItem({_w})
     set name of {_it} to {_name}
@@ -488,7 +488,7 @@ function bgWShopItem(w: text, name: text, info: texts) :: item:
     loop {_ws::*}:
         if {_cur} is "":
             set {_cur} to loop-value
-        else if length of "%{_cur}% %loop-value%" > 22:
+        else if length of "%{_cur}% %loop-value%" > 17:
             set {_dl::%{_ln}%} to {_cur}
             add 1 to {_ln}
             set {_cur} to loop-value
@@ -509,10 +509,10 @@ function bgWShopItem(w: text, name: text, info: texts) :: item:
     while {_k} < 2:
         add "" to {_lines::*}
         add 1 to {_k}
-    # 영상 칸 (빈 줄 10 + 폭을 230 으로 고정하는 공백 글자 줄)
-    loop 10 times:
+    # 영상 칸 (빈 줄 7 + 폭을 180 으로 고정하는 공백 글자 줄)
+    loop 7 times:
         add "" to {_lines::*}
-    add bgSpBuild(230) to {_lines::*}
+    add bgSpBuild(180) to {_lines::*}
     set lore of {_it} to {_lines::*}
     set {_m} to {_it}.getItemMeta()
     {_m}.setTooltipStyle(new NamespacedKey("bg", "w_%{_w}%"))
@@ -1145,7 +1145,7 @@ function bgRefundOpen(p: player):
             if {_i} <= 16:
                 if {_i} >= 10:
                     set {_back} to floor({-bg::w::%{_w}%::price} * 0.3)
-                    set {_info::*} to "&c클릭하면 반납 &7→ &e+%{_back}% 코인"
+                    set {_info::*} to "&c클릭하면 반납 &e+%{_back}% 코인"
                     set {_it} to bgWShopItem({_w}, "&6&l%{-bg::w::%{_w}%::name}% &7(전설)", {_info::*})
                     set slot {_i} of {_gui} to {_it}
                     set {-bg::refslot::%uuid of {_p}%::%{_i}%} to {_w}
