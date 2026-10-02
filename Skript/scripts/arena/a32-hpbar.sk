@@ -1,8 +1,8 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  신화쟁탈전 — 머리 위 체력바 (이름 밑)
-#   스코어보드 below_name 칸의 숫자 자리에 체력 막대 글자를 띄운다 (마크 1.20.3+ numberformat)
+#   스코어보드 below_name 칸의 숫자 자리에 빨간 체력 막대 글자 + HP 숫자 "15/20" 을 띄운다 (마크 1.20.3+ numberformat)
 #   막대 글자 21개 = 리소스팩 bg:hpbar 글꼴 (arena/tools/rp/hpbar.py) · {-bg::hpbar::0..20} (a07-gen-hpbar.sk)
-#   0.25초마다 체력이 바뀐 사람만 갱신 (명령 2개)
+#   0.25초마다 체력(숫자)이 바뀐 사람만 갱신 (명령 2개)
 # ═════════════════════════════════════════════════════════════════════════════
 
 on load:
@@ -18,12 +18,16 @@ every 5 ticks:
         if {_mx} > 0:
             set {_i} to round((health of loop-player) / {_mx} * 20)
             set {_i} to min(20, max(0, {_i}))
-            set {_old} to {-bg::hpidx::%uuid of loop-player%} ? -1
-            if {_old} is not {_i}:
-                set {-bg::hpidx::%uuid of loop-player%} to {_i}
+            # 하트 → HP (하트 1칸 = 2)
+            set {_hp} to max(0, ceil((health of loop-player) * 2))
+            set {_mhp} to round({_mx} * 2)
+            set {_key} to "%{_i}%/%{_hp}%/%{_mhp}%"
+            set {_old} to {-bg::hpidx::%uuid of loop-player%} ? ""
+            if {_old} is not {_key}:
+                set {-bg::hpidx::%uuid of loop-player%} to {_key}
                 set {_n} to name of loop-player
                 bgCmd("scoreboard players set %{_n}% bg_hp 0")
-                bgCmd("scoreboard players display numberformat %{_n}% bg_hp fixed {text:""%{-bg::hpbar::%{_i}%}%"",font:""bg:hpbar""}")
+                bgCmd("scoreboard players display numberformat %{_n}% bg_hp fixed {text:"""",extra:[{text:""%{-bg::hpbar::%{_i}%}%"",font:""bg:hpbar""},{text:"" %{_hp}%/%{_mhp}%"",color:""red""}]}")
 
 on join:
     delete {-bg::hpidx::%uuid of player%}
