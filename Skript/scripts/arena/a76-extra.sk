@@ -108,7 +108,7 @@ function bgMidJoin(p: player):
     if ({bg::coin::%uuid of {_p}%} ? 0) < {_c}:
         set {bg::coin::%uuid of {_p}%} to {_c}
     bgSpawn({_p})
-    send title "%{-bg::tcol::%{_best}%}%&l%{-bg::tname::%{_best}%}% 팀 합류!" with subtitle "&f늦게 온 만큼 코인 &e%{_c}%&f 지급 · &e/상점" to {_p} for 60 ticks
+    bgTitleP({_p}, "%{-bg::tcol::%{_best}%}%&l%{-bg::tname::%{_best}%}% 팀 합류!", "&f늦게 온 만큼 코인 &e%{_c}%&f 지급 · &e/상점")
     bgSay("&a[중참] %{-bg::tcol::%{_best}%}%%name of {_p}%&f 님이 %{-bg::tcol::%{_best}%}%%{-bg::tname::%{_best}%}% 팀&f으로 중간 참가했습니다!")
 
 command /중참 [<text>]:

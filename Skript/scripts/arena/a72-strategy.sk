@@ -120,7 +120,7 @@ on right click:
     loop all players:
         if bgTeam(loop-player) is {_t}:
             send "%{-bg::tcol::%{_t}%}%[핑] &f%name of player% &7→ %{_cc}%&l%{_kind}%! &7(%floor(x-coordinate of {_l})%, %floor(z-coordinate of {_l})%)" to loop-player
-            send title "" with subtitle "%{_cc}%&l%{_ic}% %{_kind}% &f— %name of player%" to loop-player for 30 ticks
+            bgTitleP(loop-player, "", "%{_cc}%&l%{_ic}% %{_kind}% &f— %name of player%")
             play sound {_snd} to loop-player
     # 3초: 위아래로 살짝 떠다니고 · 우리 팀에게만 빛기둥 → 3초 뒤 사라짐
     set {_up} to true

@@ -67,7 +67,7 @@ function bgPvpEnter(p: player):
     heal {_p}
     set food level of {_p} to 20
     bgPvpKit({_p})
-    send title "&c&lPvP 연습장" with subtitle "&f무기를 고르고 마음껏 싸우세요 · &e/무기 &f다시 고르기 · &e/연습장 &f나가기" to {_p} for 70 ticks
+    bgTitleP({_p}, "&c&lPvP 연습장", "&f무기를 고르고 마음껏 싸우세요 · &e/무기 &f다시 고르기 · &e/연습장 &f나가기")
     play sound "item.goat_horn.sound.0" to {_p}
     wait 10 ticks
     bgPvpShop({_p})

@@ -545,6 +545,8 @@ on inventory click:
             stop
         if {-bg::upslot::%{_s}%} is set:
             bgUpBuy(player, {-bg::upslot::%{_s}%})
+        else if {_s} is 31:
+            bgCoreFixBuy(player)
         stop
     if {_pg} is 2:
         if {_s} is 45:
@@ -604,7 +606,7 @@ on inventory click:
     remove {_price} from {bg::coin::%uuid of player%}
     bgGiveWeapon(player, {_w})
     close player's inventory
-    send title "&6&l%{-bg::w::%{_w}%::name}%" with subtitle "&f획득! 우클릭으로 전용 스킬" to player for 50 ticks
+    bgTitleP(player, "&6&l%{-bg::w::%{_w}%::name}%", "&f획득! 우클릭으로 전용 스킬")
     play sound "ui.toast.challenge_complete" to player
     bgWfx(location of player, "wfx_barrier", 5, 30, 0)
 

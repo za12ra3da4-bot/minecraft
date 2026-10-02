@@ -83,7 +83,7 @@ function bgRewardClaim(p: player):
         set {_w} to random element out of {-bg::w::bosslist::*}
     bgGiveWeapon({_p}, {_w})
     set {bg::owned::%uuid of {_p}%::%{_w}%} to true
-    send title "&6&l보상 상자!" with subtitle "&c보스 전용 무기 &6%{-bg::w::%{_w}%::name}%&f 획득" to {_p} for 60 ticks
+    bgTitleP({_p}, "&6&l보상 상자!", "&c보스 전용 무기 &6%{-bg::w::%{_w}%::name}%&f 획득")
     loop all players:
         if bgTeam(loop-player) is {_t}:
             add 150 to {bg::coin::%uuid of loop-player%}

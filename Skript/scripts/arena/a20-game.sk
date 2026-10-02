@@ -465,7 +465,7 @@ function bgClassPads():
                             set {bg::cls::%uuid of loop-player%} to {_i}
                             # 바지와 기본 무기만 바뀐다 (다른 갑옷 · 음식 · 산 물건은 그대로)
                             bgClassSwitch(loop-player, {_i})
-                            send title "&6%{-bg::cls::%{_i}%}%" with subtitle "%{-bg::clsdesc::%{_i}%}%" to loop-player for 40 ticks
+                            bgTitleP(loop-player, "&6%{-bg::cls::%{_i}%}%", "%{-bg::clsdesc::%{_i}%}%")
                             play sound "block.anvil.use" to loop-player
 
 # 본진 보호: 적 팀이 본진 안쪽(16칸)에 들어오면 초당 2칸 피해. 자기 본진에서는 회복

@@ -252,7 +252,7 @@ function bgSkSphinxMark(g: number):
 function bgSandMark(g: number, p: player):
     set {_mk} to bgTMark({_p}, 56)
     set {_c} to bgTCircle(location of {_p}, 6, 56)
-    send title "&c!" with subtitle "&6모래 표식 — 동료에게서 떨어지세요" to {_p} for 30 ticks
+    bgTitleP({_p}, "&c!", "&6모래 표식 — 동료에게서 떨어지세요")
     loop 20 times:
         wait 2 ticks
         if bgOk({_g}) is false:
@@ -331,7 +331,7 @@ function bgSkLadonApple(g: number):
     bgLateCircle({_g}, {_pos}, 4.5, 20, 1.5, 1.6, 0.5, "wax_on", "")
     set {_ps::*} to bgLairPlayers()
     loop {_ps::*}:
-        send title "" with subtitle "&6히드라가 황금 사과를 삼키려 한다! &f강하게 공격해 저지하세요" to loop-value for 50 ticks
+        bgTitleP(loop-value, "", "&6히드라가 황금 사과를 삼키려 한다! &f강하게 공격해 저지하세요")
     loop 8 times:
         wait 10 ticks
         if bgOk({_g}) is false:
@@ -378,7 +378,7 @@ function bgSkCyclopsBoulder(g: number):
     set {_t} to bgRT(22, 18)
     bgCastLen(({_n} - 1) * {_gap} + {_t})
     bgAnim("boulder")
-    send title "" with subtitle "&6거암이 당신을 쫓습니다 — 멈추지 마세요!" to {_p} for 40 ticks
+    bgTitleP({_p}, "", "&6거암이 당신을 쫓습니다 — 멈추지 마세요!")
     loop {_n} times:
         if bgOk({_g}) is false:
             stop

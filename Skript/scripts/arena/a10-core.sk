@@ -196,7 +196,15 @@ function bgResetTeams() :: number:
 function bgTicks(n: number) :: timespan:
     return "%max(0, round({_n}))% ticks" parsed as timespan
 
+# 타이틀은 3초(60틱) 안에 끝나고 1초 동안 서서히 사라진다 — 짧은 것(카운트다운 등 머무는 시간 30틱 미만)은 그대로
+function bgTitleP(p: player, t: text, s: text):
+    send title {_t} with subtitle {_s} to {_p} for 35 ticks with fade in 5 ticks and fade out 20 ticks
+
 function bgTitle(t: text, s: text, fi: number, st: number, fo: number):
+    if {_st} >= 30:
+        set {_fi} to min({_fi}, 5)
+        set {_fo} to 20
+        set {_st} to 60 - {_fi} - {_fo}
     set {_a} to bgTicks({_st})
     set {_b} to bgTicks({_fi})
     set {_c} to bgTicks({_fo})

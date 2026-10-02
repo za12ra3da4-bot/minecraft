@@ -2,6 +2,7 @@
 #  왕관 쟁탈전 — 본진 코어 (본진 앞 신호기) · 결계 부적
 #   코어 체력 50 (+팀 강화 '코어 보강' 단계마다 +25, Lv.3 은 자연 회복 2배). 다 깎이면 파괴: 그 팀 -50점 + 복구될 때까지(90초) 점수 정지
 #   + 30초 약화 · 구속 · 발광 + 50% 확률로 그 팀이 점령한 거점 하나를 무작위로 잃음. 복구 뒤 60초 보호막
+#   상점 3쪽 '코어 즉시 복구': 남은 1초 = 30코인 (모자라면 가진 만큼 앞당김)
 #   결계 부적(상점): 우클릭하면 60초 동안 적 본진의 수호 결계 피해를 받지 않음
 # ═════════════════════════════════════════════════════════════════════════════
 
@@ -90,7 +91,7 @@ function bgCoreHit(p: player, t: text):
         if {_h} < {_max}:
             loop all players:
                 if bgTeam(loop-player) is {_t}:
-                    send title "" with subtitle "&c&l우리 코어가 공격받고 있습니다! &7(%{_h}%/%{_max}%)" to loop-player for 40 ticks
+                    bgTitleP(loop-player, "", "&c&l우리 코어가 공격받고 있습니다! &7(%{_h}%/%{_max}%)")
                     play sound "block.bell.use" to loop-player
     if {_h} >= {_max}:
         bgCoreBreak({_t}, bgTeam({_p}))
@@ -128,16 +129,79 @@ function bgCoreBreak(t: text, by: text):
     bgSay("%{-bg::tcol::%{_by}%}%%{-bg::tname::%{_by}%}% 팀&f이 %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어를 파괴했습니다! &c(-50점, 복구까지 90초 동안 점수 정지, 30초 약화 · 구속 · 발광) &7— 복구 뒤 60초 보호막")
     if {_lost} is not "":
         bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 코어를 잃으며 &e%{-bg::ptname::%{_lp}%}%&f 의 점령도 잃었습니다!")
-    wait 90 seconds
+    bgUpRefresh({_t})
+    # 90초 기다림 — 상점 '코어 즉시 복구'로 앞당기면 남은 시간이 줄어든다 (bgCoreLeft 가 0 이 되면 복구)
+    set {_g} to random integer between 1 and 999999999
+    set {-bg::core::%{_t}%::downgen} to {_g}
+    loop 400 times:
+        wait 1 second
+        if {-bg::core::%{_t}%::down} is not true:
+            stop
+        if {-bg::core::%{_t}%::downgen} is not {_g}:
+            stop
+        if bgCoreLeft({_t}) <= 0:
+            exit loop
     if {-bg::on} is true:
-        set block at {_m} to beacon
-        set {-bg::core::%{_t}%::hits} to 0
-        set {-bg::core::%{_t}%::down} to false
-        set {-bg::core::%{_t}%::shield} to now
-        set {-bg::core::%{_t}%::shieldlen} to 60
-        bgCoreShow({_t}, true)
-        bgCoreText({_t})
-        bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어가 복구되었습니다. &a점수가 다시 오릅니다.")
+        bgCoreRestore({_t})
+
+# 코어 복구 (90초가 지났거나 상점에서 즉시 복구) — 복구 뒤 60초 보호막
+function bgCoreRestore(t: text):
+    {-bg::core::%{_t}%::down} is true
+    set {_m} to bgMk("base_%{_t}%_beacon")
+    set block at {_m} to beacon
+    set {-bg::core::%{_t}%::hits} to 0
+    set {-bg::core::%{_t}%::down} to false
+    set {-bg::core::%{_t}%::shield} to now
+    set {-bg::core::%{_t}%::shieldlen} to 60
+    bgCoreShow({_t}, true)
+    bgCoreText({_t})
+    bgSoundAt({_m}, "block.beacon.activate", 4, 1)
+    bgParticle({_m}, "totem_of_undying", 1, 1.5, 1, 0.3, 60)
+    bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 코어가 복구되었습니다. &a점수가 다시 오릅니다.")
+    bgUpRefresh({_t})
+
+# ─────────────────────────────────────────── 코어 즉시 복구 (상점 3쪽 31번 칸) — 남은 1초 = 30코인, 모자라면 가진 만큼 앞당김
+function bgCoreFixItem(t: text) :: item:
+    if {_t} is not "none":
+        if {-bg::core::%{_t}%::down} is true:
+            set {_left} to bgCoreLeft({_t})
+            set {_it} to beacon named "&b&l코어 즉시 복구"
+            set lore of {_it} to "&f복구까지 남은 시간 &e%{_left}%초", "&e%{_left} * 30% 코인&f이면 바로 복구", "&71초 = 30코인 · 모자라면 가진 만큼 앞당김", "", "&a클릭해서 복구"
+            return {_it}
+    set {_it} to gray dye named "&7코어 즉시 복구"
+    set lore of {_it} to "&7우리 코어가 부서졌을 때만 쓸 수 있습니다", "&71초 = 30코인 (90초 기다리는 대신 바로 복구)"
+    return {_it}
+
+function bgCoreFixBuy(p: player):
+    set {_t} to bgTeam({_p})
+    if {-bg::on} is not true:
+        stop
+    if {_t} is "none":
+        stop
+    if {-bg::core::%{_t}%::down} is not true:
+        send "&6[코어] &7우리 코어는 멀쩡합니다." to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    set {_left} to bgCoreLeft({_t})
+    if {_left} <= 0:
+        stop
+    set {_c} to {bg::coin::%uuid of {_p}%} ? 0
+    set {_k} to min({_left}, floor({_c} / 30))
+    if {_k} < 1:
+        send "&6[코어] &c코인이 부족합니다. &7(1초 = 30코인, 보유 %{_c}%)" to {_p}
+        play sound "entity.villager.no" to {_p}
+        stop
+    remove {_k} * 30 from {bg::coin::%uuid of {_p}%}
+    set {-bg::core::%{_t}%::downsec} to ({-bg::core::%{_t}%::downsec} ? 0) - {_k}
+    play sound "entity.experience_orb.pickup" to {_p}
+    if {_k} >= {_left}:
+        bgSay("%{-bg::tcol::%{_t}%}%%name of {_p}%&f이(가) &e%{_k} * 30% 코인&f으로 코어를 즉시 복구했습니다!")
+        bgCoreRestore({_t})
+    else:
+        loop all players:
+            if bgTeam(loop-player) is {_t}:
+                send "&6[코어] %{-bg::tcol::%{_t}%}%%name of {_p}%&f이(가) 코어 복구를 &e%{_k}%초&f 앞당겼습니다 &7(%{_k} * 30% 코인 · 남은 %{_left} - {_k}%초)" to loop-player
+        bgUpRefresh({_t})
 
 # 코어 복구까지 남은 초
 function bgCoreLeft(t: text) :: number:
@@ -164,7 +228,7 @@ on right click:
     cancel event
     remove 1 of player's tool from player's tool
     set {-bg::ward::%uuid of player%} to now
-    send title "&b&l결계 부적" with subtitle "&f60초 동안 적 본진의 수호 결계를 무시합니다" to player for 40 ticks
+    bgTitleP(player, "&b&l결계 부적", "&f60초 동안 적 본진의 수호 결계를 무시합니다")
     play sound "block.beacon.power_select" to player
     bgParticle(location of player, "enchant", 0.6, 1, 0.6, 0.5, 60)
 

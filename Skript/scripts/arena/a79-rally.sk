@@ -58,7 +58,7 @@ every 1 second:
             loop all players:
                 if bgTeam(loop-player) is {_t}:
                     if {_on} is true:
-                        send title "" with subtitle "&6&l⚑ 결집! &f보스 피해 &a+30%% &7· &f받는 피해 &a-30%%" to loop-player for 40 ticks
+                        bgTitleP(loop-player, "", "&6&l⚑ 결집! &f보스 피해 &a+30%% &7· &f받는 피해 &a-30%%")
                         play sound "event.raid.horn" to loop-player
                     else:
                         send "%{-bg::tcol::%{_t}%}%[결집] &7흩어져서 결집 보너스가 꺼졌습니다." to loop-player
