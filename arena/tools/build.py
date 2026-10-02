@@ -34,6 +34,7 @@ import skgen
 import portraits
 import ping_art
 import title_logo
+import impactfx
 
 OUT_RP = os.path.join(ROOT, "arena", "resourcepack", "bg_arena_pack.zip")
 OUT_RP_DIR = os.path.join(HERE, ".cache", "rp_folder")
@@ -87,6 +88,7 @@ def main(args):
     font = hud_build.build(pack)
     title_str, _ = title_logo.export(pack)
     telegraphs.export(pack)
+    impactfx.export(pack)
     decor.export(pack)
     decor_w.export(pack)
     pixel_art.export(pack)

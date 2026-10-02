@@ -1,10 +1,11 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  왕관 쟁탈전 — 보스 스킬 12개 (보스마다 3개, 모두 바닥 경고 → 게이지가 차면 판정)
+#  신화쟁탈전 — 보스 스킬 12개 (보스마다 3개, 모두 바닥 경고 → 게이지가 차면 판정)
 #
 #  청동 골렘 청동 돌진(직선 돌진, 기둥에 박으면 기절) · 대지 가르기(부채꼴 직선 연속) · 용광로 폭주(주변 폭발 + 불바닥)
 #  스핑크스 석화의 수수께끼(번호 순서 폭발) · 모래 표식(추적 표식) · 봉인의 고리(도넛, 보스 곁이 안전)
 #  히드라    백두 폭풍(머리마다 부채꼴 연속) · 독 숨결(부채꼴 + 독 웅덩이) · 황금 사과의 재생(회복 시전, 딜로 저지)
 #  사이클롭스 대지 진동(안→밖 퍼지는 고리) · 거암 추격(대상 발밑 연속) · 회전 강타(주변 원)
+#  터지는 순간의 연출(충격파 · 기둥 · 파편 · 자국 · 화면 흔들림)은 a39-impact.sk
 #  강한 공격일수록 경고가 길다. 격노(체력 50%↓) 때는 경고가 조금 짧아지고 횟수가 늘어난다.
 #  피해는 하트 단위 (플레이어 최대 10하트). 한 번에 4.5하트를 넘는 공격은 없다.
 # ═════════════════════════════════════════════════════════════════════════════
@@ -23,8 +24,7 @@ function bgLateCircle(g: number, c: location, r: number, t: number, hearts: numb
         if bgInCircle(loop-value, {_c}, {_r}) is true:
             bgHit(loop-value, {_hearts}, {_c}, {_kb}, {_up})
             bgFx(loop-value, {_fx})
-    bgParticle({_c}, {_pt}, {_r} / 2, 0.4, {_r} / 2, 0.03, 40)
-    bgSoundAt({_c}, "entity.generic.explode", 1.5, 1.2)
+    bgImpactCircle({_c}, {_r}, {_pt})
 
 function bgLateDonut(g: number, c: location, rin: number, rout: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
     wait bgTicks({_t})
@@ -35,12 +35,7 @@ function bgLateDonut(g: number, c: location, rin: number, rout: number, t: numbe
         if bgInDonut(loop-value, {_c}, {_rin}, {_rout}) is true:
             bgHit(loop-value, {_hearts}, {_c}, {_kb}, {_up})
             bgFx(loop-value, {_fx})
-    loop 12 times:
-        set {_a} to loop-number * 30
-        set {_rr} to ({_rin} + {_rout}) / 2
-        set {_l} to location((x-coordinate of {_c}) + cos({_a}) * {_rr}, (y-coordinate of {-bg::boss::home}) + 0.3, (z-coordinate of {_c}) + sin({_a}) * {_rr}, world of {_c})
-        bgParticle({_l}, {_pt}, 1, 0.3, 1, 0.02, 8)
-    bgSoundAt({_c}, "entity.generic.explode", 2, 0.8)
+    bgImpactRing({_c}, {_rin}, {_rout}, {_pt})
 
 function bgLateRect(g: number, c: location, yaw: number, wd: number, len: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
     wait bgTicks({_t})
@@ -51,10 +46,7 @@ function bgLateRect(g: number, c: location, yaw: number, wd: number, len: number
         if bgInRect(loop-value, {_c}, {_yaw}, {_wd}, {_len}) is true:
             bgHit(loop-value, {_hearts}, {_c}, {_kb}, {_up})
             bgFx(loop-value, {_fx})
-    set {_n} to ceil({_len} / 2)
-    loop {_n} times:
-        bgParticle(bgOff({_c}, {_yaw}, loop-number * 2, 0), {_pt}, {_wd} / 4, 0.3, 0.6, 0.02, 8)
-    bgSoundAt({_c}, "entity.generic.explode", 1.5, 1)
+    bgImpactLine({_c}, {_yaw}, {_wd}, {_len}, {_pt})
 
 function bgLateCone(g: number, c: location, yaw: number, deg: number, r: number, t: number, hearts: number, kb: number, up: number, pt: text, fx: text):
     wait bgTicks({_t})
@@ -65,8 +57,7 @@ function bgLateCone(g: number, c: location, yaw: number, deg: number, r: number,
         if bgInCone(loop-value, {_c}, {_yaw}, {_deg}, {_r}) is true:
             bgHit(loop-value, {_hearts}, {_c}, {_kb}, {_up})
             bgFx(loop-value, {_fx})
-    loop 3 times:
-        bgParticle(bgOff({_c}, {_yaw}, {_r} * loop-number / 4, 0), {_pt}, loop-number, 0.4, loop-number, 0.03, 16)
+    bgImpactCone({_c}, {_yaw}, {_deg}, {_r}, {_pt})
     bgSoundAt({_c}, "entity.ender_dragon.flap", 2, 0.7)
 
 # 남는 바닥 (불 · 독): 10틱마다 판정
@@ -163,6 +154,8 @@ function bgSkTalosRush(g: number):
         bgCmd("execute in %bgDim()% run tp %{-bg::boss::uuid}% %bgC(x-coordinate of {_n})% %bgN(y-coordinate of {_n})% %bgC(z-coordinate of {_n})% %bgN({_yaw})% 0")
         bgBossSync()
         bgParticle({_n}, "large_smoke", 1, 0.3, 1, 0.02, 6)
+        if mod(loop-number, 2) is 0:
+            bgImpact({_n}, 2, "stone", false)
         wait 1 tick
         if bgOk({_g}) is false:
             stop
@@ -172,7 +165,9 @@ function bgSkTalosRush(g: number):
         loop {_ps::*}:
             send action bar "&6청동 골렘이 기둥에 부딪혀 기절했습니다! &f(받는 피해 1.5배)" to loop-value
         bgSoundAt(bgBossPos(), "block.anvil.destroy", 3, 0.5)
+        bgImpact(bgBossPos(), 4.5, "stone", true)
         stop
+    bgImpact(bgBossPos(), 3, "fire", true)
     bgCastEnd()
 
 # 대지 가르기: 대상 쪽으로 직선 3줄(격노 5줄)이 6틱 간격으로 차례로
@@ -214,6 +209,7 @@ function bgSkTalosOverheat(g: number):
         set {_l} to bgRandLair(13)
         add {_l} to {_locs::*}
         bgTDecal({_l}, "scorch", 5, 100, random number between 0 and 360)
+        bgImpact({_l}, 2.5, "fire", false)
     bgHazard({_g}, {_locs::*}, 2.5, 100, "fire")
 
 # ═══════════════════════════════════════════════════════════ 스핑크스
@@ -321,6 +317,7 @@ function bgSkLadonVenom(g: number):
         set {_l} to bgOff({_pos}, {_yaw} + (random number between -20 and 20), loop-value, 0)
         add {_l} to {_locs::*}
         bgTDecal({_l}, "poison", 6, 120, random number between 0 and 360)
+        bgImpact({_l}, 3, "venom", false)
     bgHazard({_g}, {_locs::*}, 3, 120, "poison")
 
 # 황금 사과의 재생: 4초 시전 → 체력 12% 회복. 시전 중 최대 체력 8% 이상 피해를 주면 저지 + 기절
@@ -342,12 +339,14 @@ function bgSkLadonApple(g: number):
         if {-bg::boss::hurt} >= {-bg::boss::max} * 0.08:
             bgTClear({_rune})
             bgStun(50)
+            bgImpact(bgBossPos(), 4, "stone", true)
             set {_ps::*} to bgLairPlayers()
             loop {_ps::*}:
                 send action bar "&a저지 성공! &f히드라가 비틀거립니다 (받는 피해 1.5배)" to loop-value-2
             stop
     set {-bg::boss::hp} to min({-bg::boss::max}, {-bg::boss::hp} + {-bg::boss::max} * 0.12)
     bgParticle(bgBossPos(), "wax_on", 2, 3, 2, 0.1, 60)
+    bgImpact(bgBossPos(), 4, "holy", false)
     bgSoundAt(bgBossPos(), "entity.player.burp", 3, 0.6)
     bgCastEnd()
 

@@ -673,8 +673,10 @@ function bgBossTake(d: number, p: player, at: location):
     # 병과 무기 제한 (수호자 검 · 궁수 나무 검 외) — a50
     if bgWeaponOk({_p}) is false:
         stop
+    set {_crit} to false
     if {-bg::boss::state} is "stun":
         set {_d} to {_d} * 1.5
+        set {_crit} to true
     # 결집한 팀은 보스에게 주는 피해 +30% (a79)
     if bgRally(bgTeam({_p})) is true:
         set {_d} to {_d} * 1.3
@@ -687,6 +689,7 @@ function bgBossTake(d: number, p: player, at: location):
     add {_d} to {-bg::boss::hurt}
     remove {_d} from {-bg::boss::hp}
     bgParticle({_at}, "damage_indicator", 0.6, 1.5, 0.6, 0.1, 3)
+    bgDmgNum({_at}, {_d}, {_crit})
     if {-bg::boss::hp} <= 0:
         bgBossDie()
 

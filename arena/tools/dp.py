@@ -149,6 +149,7 @@ def core_functions(dp_root):
     ])
     w(os.path.join(F, "tick.mcfunction"), [
         "execute as @e[type=item_display,tag=bg_tg] run function bg:tele/tick",
+        "execute as @e[tag=bgx] run function bg:impact/tick",
         "execute as @e[type=!player,tag=bg_spin_fast] at @s run tp @s ~ ~ ~ ~3 ~",
         "execute as @e[type=!player,tag=bg_spin] at @s run tp @s ~ ~ ~ ~0.8 ~",
         # 상점 상인 클릭 (interaction) → 누른 사람에게 태그 → Skript 가 상점을 연다
@@ -165,6 +166,93 @@ def core_functions(dp_root):
         "execute if score #run bg_build matches 1 run function bg:map/build/step with storage bg:map origin",
     ])
     tele_functions(F)
+    impact_functions(F)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  보스 스킬 타격 연출 bg:impact/*  (Skript a39-impact.sk 가 부름, 수명은 매 틱 bg:impact/tick 이 관리)
+#   shock  {x,y,z,k,s0,s1}         바닥 충격파: s0 → s1 로 퍼지고 사라짐
+#   crater {x,y,z,k,d,cl}          자국: cl 틱 남았다가 줄어듦
+#   burst  {x,y,z,k,bw,bh,bw0,bh0} 세로 폭발 기둥 (늘 플레이어를 봄): 솟았다가 가늘어지며 사라짐
+#   debris {x,y,z,c,b1,b2}         블록 파편 8개가 사방으로 튀었다 떨어짐 (c = 크기 1~3, 방향은 무작위)
+#   num    {x,y,z,txt,col,s}       데미지 숫자 (떠오르며 사라짐)
+# ─────────────────────────────────────────────────────────────────────────────
+IMP_DEB = {1: (0.32, 1.1, 1.3, 0.8), 2: (0.48, 1.9, 2.4, 1.5), 3: (0.62, 2.8, 3.8, 2.3)}   # 크기 · 높이 · 먼 거리 · 가까운 거리
+
+
+def _qx(deg):
+    h = math.radians(deg) / 2
+    ax, az = 1 / math.hypot(1, 0.4), 0.4 / math.hypot(1, 0.4)        # 비스듬한 축으로 굴러감 (단위 쿼터니언)
+    return f"[{math.sin(h) * ax:.3f}f,0f,{math.sin(h) * az:.3f}f,{math.cos(h):.3f}f]"
+
+
+def impact_functions(fdir):
+    T = os.path.join(fdir, "impact")
+    NEW = '"bg","bgfx","bgx","bgx_new"'
+    life0 = ["scoreboard players set @e[tag=bgx_new] bg_age 0", "tag @e[tag=bgx_new] remove bgx_new"]
+    w(os.path.join(T, "shock.mcfunction"), [
+        '$summon item_display $(x) $(y) $(z) {Tags:[' + NEW + ',"bgx_shock"],' + item("bg:impact/shock_$(k)", "s1:$(s1)") + "," + BASE + ","
+        + tf(0, 0.1, 0, "$(s0)", 1, "$(s0)") + "}", *life0])
+    w(os.path.join(T, "crater.mcfunction"), [
+        '$summon item_display $(x) $(y) $(z) {Tags:[' + NEW + ',"bgx_crater"],' + item("bg:impact/crater_$(k)") + "," + BASE + ","
+        + tf(0, 0.02, 0, "$(d)", 1, "$(d)") + "}",
+        "$scoreboard players set @e[tag=bgx_new] bg_life $(cl)",
+        "scoreboard players set @e[tag=bgx_new] bg_frames 0", *life0])
+    w(os.path.join(T, "burst.mcfunction"), [
+        '$summon item_display $(x) $(y) $(z) {Tags:[' + NEW + ',"bgx_burst"],' + item("bg:impact/burst_$(k)", "bw:$(bw),bh:$(bh)") + "," + BASE
+        + ',billboard:"vertical",' + tf(0, "$(bh0)", 0, "$(bw0)", "$(bh0)", "$(bw0)") + "}", *life0])
+    for c, (sz, up, far, near) in IMP_DEB.items():
+        lines = []
+        for i in range(8):
+            b = "$(b1)" if i % 2 == 0 else "$(b2)"
+            grp = "bgx_dA" if i < 4 else "bgx_dB"
+            s_ = round(sz * (1.0 if i % 3 else 0.7), 2)
+            lines.append('$summon block_display $(x) $(y) $(z) {Tags:[' + NEW + ',"bgx_deb","' + grp + '","bgx_c' + str(c) + '"],block_state:{Name:"' + b + '"},'
+                         + "brightness:{sky:15,block:12},view_range:3f," + tf(round(-s_ / 2, 2), 0.1, round(-s_ / 2, 2), s_, s_, s_) + "}")
+        lines.append("execute as @e[tag=bgx_new,tag=bgx_deb] store result entity @s Rotation[0] float 1 run random value 0..359")
+        w(os.path.join(T, f"debris_{c}.mcfunction"), lines + life0)
+    w(os.path.join(T, "debris.mcfunction"), ['$function bg:impact/debris_$(c) {x:$(x),y:$(y),z:$(z),b1:"$(b1)",b2:"$(b2)"}'])
+    w(os.path.join(T, "num.mcfunction"), [
+        '$summon text_display $(x) $(y) $(z) {Tags:[' + NEW + ',"bgx_num"],billboard:"center",shadow:1b,see_through:0b,background:0,'
+        'brightness:{sky:15,block:15},view_range:3f,text:{text:"$(txt)",color:"$(col)",bold:true},'
+        + tf(0, 0, 0, "$(s)", "$(s)", "$(s)") + "}", *life0])
+    # 수명 (bg_age 는 소환 다음 틱에 1 → 2틱째에 움직이기 시작해야 보간이 먹는다)
+    tick = [
+        "scoreboard players add @s bg_age 1",
+        # 충격파: 퍼지기(7틱) → 사라짐
+        'execute if entity @s[tag=bgx_shock] if score @s bg_age matches 2 run function bg:impact/expand with entity @s item.components."minecraft:custom_data"',
+        "execute if entity @s[tag=bgx_shock] if score @s bg_age matches 9.. run return run kill @s",
+        # 기둥: 솟기(4틱) → 가늘어지기(5틱) → 사라짐
+        'execute if entity @s[tag=bgx_burst] if score @s bg_age matches 2 run function bg:impact/rise with entity @s item.components."minecraft:custom_data"',
+        'execute if entity @s[tag=bgx_burst] if score @s bg_age matches 7 run function bg:impact/thin with entity @s item.components."minecraft:custom_data"',
+        "execute if entity @s[tag=bgx_burst] if score @s bg_age matches 12.. run return run kill @s",
+        # 자국: 수명이 다하면 10틱 동안 줄어들고 사라짐
+        "execute if entity @s[tag=bgx_crater] if score @s bg_age = @s bg_life run data merge entity @s {start_interpolation:0,interpolation_duration:10,transformation:{scale:[0f,1f,0f]}}",
+        "execute if entity @s[tag=bgx_crater] if score @s bg_age >= @s bg_life run scoreboard players add @s bg_frames 1",
+        "execute if entity @s[tag=bgx_crater] if score @s bg_frames matches 11.. run return run kill @s",
+        # 데미지 숫자: 떠오르며 → 줄어들며 사라짐
+        "execute if entity @s[tag=bgx_num] if score @s bg_age matches 2 run data merge entity @s {start_interpolation:0,interpolation_duration:12,transformation:{translation:[0f,1.2f,0f]}}",
+        "execute if entity @s[tag=bgx_num] if score @s bg_age matches 15 run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,1.5f,0f],scale:[0f,0f,0f]}}",
+        "execute if entity @s[tag=bgx_num] if score @s bg_age matches 21.. run return run kill @s",
+    ]
+    for c, (sz, up, far, near) in IMP_DEB.items():
+        for grp, dist in (("bgx_dA", far), ("bgx_dB", near)):
+            sel = f"execute if entity @s[tag={grp},tag=bgx_c{c}] if score @s bg_age matches"
+            hx = round(-sz / 2, 2)
+            tick.append(f"{sel} 2 run data merge entity @s {{start_interpolation:0,interpolation_duration:5,transformation:{{"
+                        f"translation:[{hx}f,{up * (1 if grp == 'bgx_dA' else 1.25):.2f}f,{dist * 0.55:.2f}f],left_rotation:{_qx(140)}}}}}")
+            tick.append(f"{sel} 7 run data merge entity @s {{start_interpolation:0,interpolation_duration:6,transformation:{{"
+                        f"translation:[{hx}f,0.02f,{dist:.2f}f],left_rotation:{_qx(290)}}}}}")
+    tick += [
+        "execute if entity @s[tag=bgx_deb] if score @s bg_age matches 26 run data merge entity @s {start_interpolation:0,interpolation_duration:8,transformation:{scale:[0f,0f,0f]}}",
+        "execute if entity @s[tag=bgx_deb] if score @s bg_age matches 35.. run return run kill @s",
+        # 혹시 남은 것 (스크립트 재시작 등)
+        "execute if score @s bg_age matches 400.. run kill @s",
+    ]
+    w(os.path.join(T, "tick.mcfunction"), tick)
+    w(os.path.join(T, "expand.mcfunction"), ["$data merge entity @s {start_interpolation:0,interpolation_duration:7,transformation:{scale:[$(s1)f,1f,$(s1)f]}}"])
+    w(os.path.join(T, "rise.mcfunction"), ["$data merge entity @s {start_interpolation:0,interpolation_duration:4,transformation:{translation:[0f,$(bh)f,0f],scale:[$(bw)f,$(bh)f,$(bw)f]}}"])
+    w(os.path.join(T, "thin.mcfunction"), ["$data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,$(bh)f,0f],scale:[0f,$(bh)f,0f]}}"])
 
 
 # ─────────────────────────────────────────────────────────────────────────────
