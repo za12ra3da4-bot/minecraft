@@ -27,7 +27,7 @@ every 5 ticks:
                 set {-bg::hpidx::%uuid of loop-player%} to {_key}
                 set {_n} to name of loop-player
                 bgCmd("scoreboard players set %{_n}% bg_hp 0")
-                bgCmd("scoreboard players display numberformat %{_n}% bg_hp fixed {text:"""",extra:[{text:""%{-bg::hpbar::%{_i}%}%"",font:""bg:hpbar""},{text:""  %{_hp}%/%{_mhp}%"",color:""red"",bold:true}]}")
+                bgCmd("scoreboard players display numberformat %{_n}% bg_hp fixed {text:"""",extra:[{text:""%{-bg::hpbar::%{_i}%}%"",font:""bg:hpbar""},{text:""%{_hp}%/%{_mhp}%"",color:""red"",bold:true}]}")
 
 on join:
     delete {-bg::hpidx::%uuid of player%}
