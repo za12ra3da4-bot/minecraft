@@ -1,4 +1,4 @@
 # 자동 생성 — 리소스팩 주소와 sha1 (arena/tools/build.py)
 on load:
-    set {-bg::pack::url} to "https://raw.githubusercontent.com/za12ra3da4-bot/minecraft/claude/wonderful-cray-expxq7/arena/resourcepack/v/eb33160ff5d9.zip"
-    set {-bg::pack::sha1} to "eb33160ff5d96485f2fb8922e37697f9a842bead"
+    set {-bg::pack::url} to "https://raw.githubusercontent.com/za12ra3da4-bot/minecraft/claude/wonderful-cray-expxq7/arena/resourcepack/v/f3fa37ac75b7.zip"
+    set {-bg::pack::sha1} to "f3fa37ac75b7e54ab8cf44da159753369ec2aea7"
