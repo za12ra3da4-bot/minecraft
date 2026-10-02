@@ -5,8 +5,8 @@
  로 바뀐다. 배경은 설명창 크기에 맞게 늘어나므로(stretch) 설명창 크기를 고정한다 (a50 bgWShopItem):
    글자 영역 폭 180 · 줄 수 15 (이름 1 + 설명 6 + 영상 8) → 설명창 204 x 176 (글자 영역 + 테두리 12씩)
    위 84px = 글자가 올라가는 판, 아래 = 영상 (30장 · 1틱 = 1.5초)
- 영상: 3D 렌더 (arena/tools/render.py) — 마크 기본 스킨 플레이어가 무기를 들어 휘두르면
-   실제 게임의 바닥 효과(tele/wfx_* · fx2_*) → 타격 연출(impactfx) → 맞은 적이 붉게 밀려나며 숫자
+ 영상: 3D 렌더 (arena/tools/render.py) — 마크 기본 스킨 플레이어가 무기마다 다른 동작으로 스킬을 씀
+   (안무 = skillanim.py: 자세 · 소품 · 타격 지점 · 적 반응)  + 실제 게임의 바닥 효과(tele/wfx_* · fx2_*) · 타격 연출(impactfx)
  주의: 세로로 이어 붙인 애니메이션은 mcmeta 에 한 장 크기(width · height)를 꼭 적는다
        (안 적으면 마크가 정사각형으로 자르려다 실패해서 검정·보라 깨진 그림이 나옴)
 """
@@ -23,14 +23,13 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 import impactfx
+import skillanim as A
 
 TW, TH = 204, 176            # 설명창 전체 (픽셀 = 화면 GUI 1칸)
 VX0, VY0, VX1, VY1 = 12, 86, 192, 164      # 영상 칸
 VW, VH = VX1 - VX0, VY1 - VY0
-FRAMES = 30
-FT = 1                       # 한 장 1틱 → 1.5초 (부드럽게)
-HIT = 0.40                   # 터지는 순간 (영상 비율)
-STOP = 2                     # 터질 때 멈칫하는 장 수 (히트스톱)
+FRAMES = 36
+FT = 1                       # 한 장 1틱 → 1.8초 (부드럽게)
 SKINS = os.path.join(TOOLS, ".cache", "skins")
 SKIN_URL = "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21.11/assets/minecraft/textures/entity/player/wide/{}.png"
 
@@ -123,13 +122,14 @@ def _box(mesh, R, sun, tex, M, pivot, lo, hi, uv0, size, light_mul=(1, 1, 1), gr
         mesh.quad(a, b, c, e, (uu0 / 64, vv0 / 64, uu1 / 64, vv1 / 64), tex, flags=flags, light=lt)
 
 
-def player(mesh, R, sun, skin_key, skin, pos, yaw, arm=0.0, arm_side=0.0, legs=0.0, hurt=0.0, wtex=None, wscale=1.0):
-    """pos = 발 위치(블록), yaw = 바라보는 방향(라디안, 0 = +z), arm = 오른팔 들어 올린 각(라디안, + = 앞으로/위로)"""
+def player(mesh, R, sun, skin_key, skin, pos, yaw, arm=0.0, arm_side=0.0, arm_l=0.0, legs=0.0, tint=(1, 1, 1), wtex=None, wscale=1.0):
+    """pos = 발 위치(블록), yaw = 바라보는 방향(라디안, 0 = +z), arm/arm_l = 오른팔/왼팔 들어 올린 각(+ = 앞으로/위로),
+       arm_side = 오른팔을 옆으로 벌린 각, tint = 몸 색 (맞음 · 빙결 · 중독 ...)"""
     t = mesh.texture(skin_key, skin)
     Y = _ry(yaw)
     base = np.array(pos, float)
     S = 1 / 16 * 0.9375
-    mul = (1, 1, 1) if hurt <= 0 else (1 + 0.7 * hurt, 1 - 0.55 * hurt, 1 - 0.55 * hurt)
+    mul = tint
     # 다리
     for side, uv, ouv, sw in ((-1, (0, 16), (0, 32), 1), (1, (16, 48), (0, 48), -1)):
         M = Y @ _rx(legs * sw)
@@ -145,7 +145,7 @@ def player(mesh, R, sun, skin_key, skin, pos, yaw, arm=0.0, arm_side=0.0, legs=0
     _box(mesh, R, sun, t, Y, piv, (-4, 0, -4), (4, 8, 4), (0, 0), (8, 8, 8), mul)
     _box(mesh, R, sun, t, Y, piv, (-4, 0, -4), (4, 8, 4), (32, 0), (8, 8, 8), mul, grow=0.5)
     # 왼팔 (+x)
-    M = Y @ _rx(-legs * 0.8)
+    M = Y @ _rx(-arm_l - legs * 0.8)
     piv = base + Y @ (np.array([6, 22, 0]) * S)
     _box(mesh, R, sun, t, M, piv, (-2, -12, -2), (2, 0, 2), (32, 48), (4, 12, 4), mul)
     _box(mesh, R, sun, t, M, piv, (-2, -12, -2), (2, 0, 2), (48, 48), (4, 12, 4), mul, grow=0.25)
@@ -159,13 +159,11 @@ def player(mesh, R, sun, skin_key, skin, pos, yaw, arm=0.0, arm_side=0.0, legs=0
         wt = mesh.texture("w_" + skin_key + str(id(wtex)), wtex)
         L = 1.15 * wscale
         hand = piv + M @ (np.array([0, -11, 0]) * S)
-        # 팔 지역 좌표에서 그림 평면 = yz 평면, 손잡이에서 날끝이 (앞 + 아래) 방향
         fwd = M @ np.array([0, 0, 1.0]); dn = M @ np.array([0, -1.0, 0])
         a = hand - fwd * 0.18 * L - dn * 0.18 * L
         bq = a + fwd * L
         c = bq + dn * L
         d = a + dn * L
-        # 그림의 왼아래(손잡이) = a, 오른위(날끝) = c
         mesh.quad(a, bq, c, d, (0, 0, 1, 1), wt, flags=0, light=(1.1, 1.1, 1.1))
 
 
@@ -292,28 +290,6 @@ class Stage:
         self.origin = np.array([N / 2, self.floor, 12.0])     # 시전자 발 위치
 
 
-def back_out(t, k=1.7):
-    """살짝 넘쳤다 돌아오는 움직임"""
-    t = max(0.0, min(1.0, t)) - 1
-    return 1 + t * t * ((k + 1) * t + k)
-
-
-def ease_in(t):
-    t = max(0.0, min(1.0, t))
-    return t * t * t
-
-
-def timeline(f):
-    """장 번호 → 영상 시간 (터지는 순간 STOP 장 동안 멈춤) + 멈춘 장인지"""
-    hf = int(round(HIT * FRAMES))
-    if f < hf:
-        return f / FRAMES, False
-    if f < hf + STOP:
-        return HIT, True
-    rest = FRAMES - hf - STOP
-    return HIT + (f - hf - STOP + 1) / rest * (1 - HIT), False
-
-
 def speed_lines(im, cx, cy, col, strength):
     """만화 집중선 (터지는 순간)"""
     W, H = im.size
@@ -334,163 +310,239 @@ def speed_lines(im, cx, cy, col, strength):
     return im.convert("RGB")
 
 
+REACT_TINT = {"freeze": (0.65, 0.85, 1.45), "poison": (0.75, 1.3, 0.6), "slow": (1.05, 0.95, 0.55), "burn": (1.45, 0.85, 0.5)}
+BLOCK_TEX = {"skull": "bone_block_side"}
+NUMS = "7564"
+
+
+def _btex(name):
+    import blocks as B
+    return Image.fromarray((B.load_tex(BLOCK_TEX.get(name, name)) * 255).astype(np.uint8), "RGBA")
+
+
+def weapon_quad(mesh, key, wtex, H, T, q, cam_fwd, alpha=1.0, light=1.15):
+    """무기 그림을 손잡이 H → 날끝 T 로 (그림의 왼아래 → 오른위 대각선). q = 그림 평면의 다른 방향 (없으면 카메라를 봄)"""
+    d = T - H
+    L = float(np.linalg.norm(d))
+    if L < 1e-3:
+        return
+    du = d / L
+    if q is None:
+        q = np.cross(du, cam_fwd)
+    q = np.array(q, float)
+    q = q - du * (q @ du)
+    n = np.linalg.norm(q)
+    if n < 1e-3:
+        q = np.cross(du, np.array([0, 1.0, 0])); n = np.linalg.norm(q) or 1
+    q = q / n
+    mid = (H + T) / 2
+    Bq = mid + q * L / 2
+    Dq = mid - q * L / 2
+    t = mesh.texture(f"{key}_{round(alpha, 2)}", _alpha(wtex, alpha))
+    mesh.quad(H, Bq, T, Dq, (0, 0, 1, 1), t, flags=0 if alpha >= 0.99 else 2, light=(light, light, light))
+
+
+def streak_quad(mesh, key, img, a, b, w, cam_fwd, alpha=1.0):
+    d = b - a
+    side = np.cross(d, cam_fwd)
+    n = np.linalg.norm(side)
+    if n < 1e-4:
+        return
+    side = side / n * w / 2
+    t = mesh.texture(f"{key}_{round(alpha, 2)}", _alpha(img, alpha))
+    mesh.quad(a - side, b - side, b + side, a + side, (0, 0, 1, 1), t, flags=6, light=(1.2, 1.2, 1.2))
+
+
 def scene(st, wid, f, tex, wtex, imp, skins, skill):
     R = st.R
     ground_fx, kind, shape, caster_skin = SPEC[wid]
     acc = ACCENT[kind]
-    t, frozen = timeline(f)
-    after = t - HIT
-    a = after / (1 - HIT) if after >= 0 else -1.0
+    t = f / FRAMES
     sun = np.array([-0.45, 0.78, -0.35]); sun /= np.linalg.norm(sun)
     o = st.origin
     Y = st.floor
+    c = A.Ctx(t, f, o.copy(), Y, kind, acc)
+    A.CHOREO[wid](c, t)
     mesh = R.Mesh()
     rng = np.random.default_rng(f * 31 + len(wid))
-    # 위치 (시전자 = o, 앞 = +z)
-    me = o.copy()
-    foes = [(1.1, 6.0), (-1.4, 6.8)]
-    if shape == "self":
-        foes = [(2.3, 1.6), (-2.3, 1.2)]
-    elif shape == "cone":
-        foes = [(0.9, 3.0), (-1.2, 3.5)]
-    elif shape == "dash":
-        foes = [(0.6, 3.6), (-0.7, 5.0)]
-        me = o + np.array([0, 0, 4.4 * ease((t - 0.12) / (HIT - 0.12))])
-    jump = 0.0
-    if shape == "self" and t < HIT:
-        u = max(0.0, (t - 0.1) / (HIT - 0.1))
-        jump = 1.1 * math.sin(math.pi * u) if u > 0 else 0.0           # 뛰어올랐다가 내리꽂음
-    tgt = me.copy() if shape == "self" else o + np.array({"far": (0, 0, 6.4), "cone": (0, 0, 2.8), "dash": (0, 0, 3.2), "shot": (1.1, 0, 6.0)}[shape])
-    tgt[1] = o[1]
-    gs = {"far": 5.5, "self": 6.5, "cone": 6.0, "dash": 5.5, "shot": 4.5}[shape]
-    # 카메라: 천천히 돌며, 터질 때 확 당기고 흔들림
+    # 카메라: 시전자 오른쪽 뒤 위 · 천천히 돎 · 큰 타격 때 확 당기고 흔들림
+    look_at = o + np.array([0, 1.1, A.FOCUS.get(wid, 2.0)]) + (c.me - o) * 0.35
     phi = -0.28 + 0.42 * (f / FRAMES)
     base = np.array([-5.0, 3.6, -6.6])
     cam_off = np.array([base[0] * math.cos(phi) - base[2] * math.sin(phi), base[1], base[0] * math.sin(phi) + base[2] * math.cos(phi)])
-    look_at = (me + tgt) / 2 + np.array([0, 1.1, 0])
-    zoom = 1.0
-    if a >= 0:
-        zoom = 1 - 0.15 * math.exp(-a * 7)
-    elif t > HIT - 0.12:
-        zoom = 1 - 0.08 * (t - (HIT - 0.12)) / 0.12
-    cam = look_at + cam_off * zoom
-    if 0 <= a < 0.18 or frozen:
-        k = 0.12 * (1 - max(a, 0) / 0.18)
-        cam = cam + rng.uniform(-k, k, 3)
-    _, fwd, cam_right, cam_up = R.look(cam, look_at)
-    # 바닥 효과 (시전부터 빙글빙글 커지며 빛나다가 터짐)
-    grow = back_out(t / HIT)
-    fade = 1.0 if t < 0.74 else max(0.0, 1 - (t - 0.74) / 0.26)
-    gyaw = t * 3.0 if shape in ("self", "far", "shot") else 0.0
-    ground_quad(mesh, "g_" + ground_fx, tex[ground_fx], tgt, gs * (0.3 + 0.7 * grow), Y + 0.02, gyaw, fade * (0.5 + 0.5 * min(1, grow)), add=kind in ADDITIVE)
-    # 날아가는 것 (빛 구슬 + 꼬리)
-    if shape == "shot" and 0.12 < t < HIT:
-        u = ease((t - 0.12) / (HIT - 0.12))
-        st0 = me + np.array([-0.35, 1.3, 0.6])
-        en = tgt + np.array([0, 1.0, 0])
-        yy, xx = np.mgrid[0:64, 0:64]
-        rr = np.sqrt((xx - 32) ** 2 + (yy - 32) ** 2) / 32
-        arr = np.zeros((64, 64, 4), np.float32)
-        arr[..., :3] = np.array(acc) / 255 * 0.6 + 0.4
-        arr[..., 3] = np.clip(1 - rr, 0, 1) ** 1.6
-        orb = Image.fromarray((arr * 255).astype(np.uint8), "RGBA")
-        for j in range(5):
-            uu = max(0.0, u - j * 0.06)
-            pp = st0 + (en - st0) * uu
-            sz = 0.95 * (1 - j * 0.16)
-            billboard(mesh, f"orb{j}", orb, pp, sz, sz, cam_right, pp[1] - sz / 2, alpha=1 - j * 0.18, add=True, light=1.4)
-    # 터진 뒤: 자국 · 충격파 두 겹 · 기둥(늘었다 줄었다) · 파편
-    if a >= 0:
-        ground_quad(mesh, "crater", imp["crater"], tgt, gs * 0.8, Y + 0.03, 0, 1 - a)
+    zoom, shake = 1.0, 0.0
+    for (t0, pos, r, deb) in c.impacts:
+        if t >= t0:
+            k = math.exp(-(t - t0) * 22) * min(1.0, r / 3)
+            zoom = min(zoom, 1 - 0.14 * k)
+            shake = max(shake, 0.13 * k)
+    cam = look_at + cam_off * zoom + (rng.uniform(-shake, shake, 3) if shake > 0.01 else 0)
+    _, cam_fwd, cam_right, cam_up = R.look(cam, look_at)
+    # 바닥 효과 (실제 게임 그림)
+    for (t0, t1, pos, d, gyaw) in c.ground[:1]:
+        if t0 <= t < t1:
+            u = A.seg(t, t0, t0 + 0.15)
+            fade = 1 - A.seg(t, t1 - 0.15, t1)
+            ground_quad(mesh, "g_" + ground_fx, tex[ground_fx], pos, d * (0.35 + 0.65 * A.back_out(u)), Y + 0.02, gyaw,
+                        fade * (0.5 + 0.5 * u), add=kind in ADDITIVE)
+    # 타격 지점: 자국 · 충격파 두 겹 · 기둥(늘었다 줄었다) · 파편
+    for ii, (t0, pos, r, deb) in enumerate(c.impacts):
+        a = (t - t0) / 0.55
+        if not 0 <= a < 1:
+            continue
+        gs = r * 2.2
+        ground_quad(mesh, f"crater{ii}", imp["crater"], pos, gs * 0.8, Y + 0.03, 0, 1 - a)
         for j, (dl, sc) in enumerate(((0.0, 1.7), (0.1, 1.15))):
             aa = (a - dl) / 0.42
             if 0 <= aa < 1:
-                ground_quad(mesh, f"shock{j}", imp["shock"], tgt, gs * (0.3 + sc * ease(aa)), Y + 0.06 + j * 0.01, 0, 1 - aa, add=True)
+                ground_quad(mesh, f"shock{ii}_{j}", imp["shock"], pos, gs * (0.3 + sc * A.ease(aa)), Y + 0.06 + j * 0.01, 0, 1 - aa, add=True)
         if a < 0.5:
             u = a / 0.5
             sy = 1.25 * math.sin(math.pi * min(1.0, u * 1.4)) if u < 0.7 else max(0.0, 1 - (u - 0.7) / 0.3) * 0.6
-            sx = 1.6 - 0.9 * u                                             # 처음엔 납작하고 넓게 → 위로 길게
-            billboard(mesh, "burst", imp["burst"], tgt, 1.2 * sx + 0.2, 3.4 * max(0.15, sy), cam_right, Y, alpha=min(1.0, 2.2 * (1 - u) + 0.1),
-                      add=kind in ADDITIVE, light=1.2)
-        if a < 0.8 and kind in DEBRIS:
-            import blocks as B
-            rr_ = np.random.default_rng(11)
-            for i in range(12):
-                ang = rr_.uniform(0, 2 * math.pi); dist = rr_.uniform(1.0, 2.8)
+            sx = 1.6 - 0.9 * u
+            k = min(1.0, r / 2.5)
+            billboard(mesh, f"burst{ii}", imp["burst"], pos, (1.2 * sx + 0.2) * k, 3.4 * max(0.15, sy) * k, cam_right, Y,
+                      alpha=min(1.0, 2.2 * (1 - u) + 0.1), add=kind in ADDITIVE, light=1.2)
+        if deb and a < 0.8 and kind in DEBRIS:
+            rr_ = np.random.default_rng(11 + ii)
+            for i in range(10):
+                ang = rr_.uniform(0, 2 * math.pi); dist = rr_.uniform(0.6, 1.0) * r
                 u = a / 0.8
-                c = tgt + np.array([math.cos(ang) * dist * ease(u), 0, math.sin(ang) * dist * ease(u)])
-                c[1] = Y + 0.15 + 2.8 * 4 * u * (1 - u) * rr_.uniform(0.6, 1.1)
+                cpos = pos + np.array([math.cos(ang) * dist * A.ease(u), 0, math.sin(ang) * dist * A.ease(u)])
+                cpos[1] = Y + 0.15 + 2.4 * A.arc(u) * rr_.uniform(0.6, 1.1)
                 nm = DEBRIS[kind][i % 2]
-                bt = Image.fromarray((B.load_tex(nm) * 255).astype(np.uint8), "RGBA")
-                cube(mesh, "deb_" + nm, bt, c, 0.28 * (1 - max(0, u - 0.75) * 4), u * 9 + i, R.face_light((0, 1, 0), sun))
-    # 적: 맞으면 번쩍번쩍 붉어지고, 공중으로 떠올랐다 떨어지며 빙글 돌고, 숫자가 튀어오름
-    for i, (fx, fz) in enumerate(foes):
-        hurt = 0.0; push = 0.0; lift = 0.0; spin = 0.0
-        if a >= 0:
-            hurt = 1.0 if (a < 0.35 and f % 2 == 0) or frozen else max(0.0, 0.6 - a * 2)
-            u = min(1.0, a / 0.55)
-            push = 1.5 * ease(u)
-            lift = 0.85 * 4 * u * (1 - u)
-            spin = a * 7 * (1 if i == 0 else -1)
-        p = o + np.array([fx, 0, fz])
-        dv = p - tgt; dv[1] = 0
-        dl = np.linalg.norm(dv) or 1
-        p = p + dv / dl * push
+                cube(mesh, "deb_" + nm, _btex(nm), cpos, 0.26 * (1 - max(0, u - 0.75) * 4), u * 9 + i, R.face_light((0, 1, 0), sun))
+    # 소품 (안무가 정한 것)
+    for pr in c.props:
+        typ = pr[0]
+        if typ == "weapon":
+            _, H, T, q, al, lt = pr
+            weapon_quad(mesh, "bigw", wtex, H, T, q, cam_fwd, al, lt)
+        elif typ == "orb":
+            _, pp, sz, col, al = pr
+            billboard(mesh, f"orb{col}", A.glow_img(tuple(col)), pp, sz, sz, cam_right, pp[1] - sz / 2, alpha=al, add=True, light=1.3)
+        elif typ == "block":
+            _, nm, pp, sz, rot = pr
+            cube(mesh, "blk_" + nm, _btex(nm), pp, sz, rot, R.face_light((0.3, 1, -0.2), sun))
+        elif typ == "streak":
+            _, a0, b0, w, col, al = pr
+            streak_quad(mesh, f"st{col}", A.streak_img(tuple(col)), a0, b0, w, cam_fwd, al)
+        elif typ == "sprite":
+            _, key, pp, sz, al = pr
+            img = A.heart_img() if key == "heart" else A.star_img()
+            billboard(mesh, key, img, pp, sz, sz * img.height / img.width, cam_right, pp[1], alpha=al, light=1.3)
+        elif typ == "bolt":
+            _, pp, h, al = pr
+            billboard(mesh, "bolt", impactfx.burst("thunder") if "bolt_img" not in st.__dict__ else st.bolt_img, pp, 1.6, h, cam_right, Y,
+                      alpha=al, add=True, light=1.4)
+        elif typ == "zap":
+            _, a0, b0, al = pr
+            pts = [a0]
+            for k in range(1, 6):
+                pts.append(a0 + (b0 - a0) * (k / 6) + rng.uniform(-0.35, 0.35, 3))
+            pts.append(b0)
+            for k in range(len(pts) - 1):
+                streak_quad(mesh, "zap", A.streak_img((170, 220, 255)), pts[k], pts[k + 1], 0.25, cam_fwd, al)
+        elif typ == "pillar":
+            _, pp, u = pr
+            billboard(mesh, "lp", imp["burst"] if kind == "holy" else impactfx.burst("holy"), pp, 0.9, 4.2 * A.back_out(min(1, u * 2.5)),
+                      cam_right, Y, alpha=1 - u, add=True, light=1.3)
+        elif typ == "pillar_stone":
+            _, pp, h, k = pr
+            nm = ["cobblestone", "stone", "andesite"][k % 3]
+            n = int(math.ceil(h / 0.9))
+            for j in range(n):
+                cy = Y + h - 0.45 - j * 0.9
+                cube(mesh, "ps_" + nm, _btex(nm), np.array([pp[0], cy, pp[2]]), 0.9, k * 0.4, R.face_light((0.3, 1, -0.2), sun))
+        elif typ == "icespike":
+            _, pp, h = pr
+            n = max(1, int(h / 0.35))
+            for j in range(n):
+                sz = 0.42 * (1 - j / (n + 1))
+                cube(mesh, "ice", _btex("packed_ice"), np.array([pp[0], Y + 0.2 + j * 0.33, pp[2]]), sz, j * 0.5, R.face_light((0.3, 1, -0.2), sun))
+    # 적: 맞을 때마다 번쩍 · 반응 (밀려남 · 띄움 · 끌려옴 · 빙결 · 중독 · 둔화 · 화상)
+    for i, base_p in enumerate(c.foes):
+        p = base_p.copy()
+        lift, spin, flash = 0.0, 0.0, 0.0
+        tint = np.array([1.0, 1.0, 1.0])
+        arms = 0.25
+        nhit = 0
+        for (fi, t0, how, src) in c.hits:
+            if fi != i or t < t0:
+                continue
+            dt = t - t0
+            nhit += 1
+            dv = p - src; dv[1] = 0
+            dl = float(np.linalg.norm(dv)) or 1.0
+            dv = dv / dl
+            if how == "launch":
+                u = min(1.0, dt / 0.45)
+                lift += 1.5 * A.arc(u); spin += dt * 9
+                p = p + dv * 0.5 * A.ease(u)
+            elif how == "pull":
+                u = A.ease(min(1.0, dt / 0.18))
+                p = p + (src - p) * u
+            elif how in ("freeze",):
+                pass
+            else:
+                u = min(1.0, dt / 0.3)
+                p = p + dv * 1.2 * A.ease(u)
+                lift += 0.45 * A.arc(u)
+            if how in REACT_TINT:
+                tint = np.array(REACT_TINT[how])
+            if dt < 0.22:
+                flash = max(flash, 1.0 if f % 2 == 0 else 0.4)
+                arms = 1.4
+            if dt < 0.45:
+                img = num_img(NUMS[(i + nhit) % 4], (255, 154, 60))
+                pop = A.back_out(min(1.0, dt / 0.08))
+                billboard(mesh, f"num{i}_{nhit}", img, p, 0.95 * pop, 0.48 * pop, cam_right, Y + 2.1 + dt * 2.6 + lift * 0.5,
+                          alpha=1 if dt < 0.3 else (0.45 - dt) / 0.15, light=1.25)
+        if flash > 0:
+            tint = tint * (1 - flash) + np.array([1.7, 0.45, 0.45]) * flash
         p[1] += lift
-        yaw_f = math.atan2(me[0] - p[0], me[2] - p[2]) + spin
+        yaw_f = math.atan2(c.me[0] - p[0], c.me[2] - p[2]) + spin
         nm = FOES[(i + len(wid)) % len(FOES)]
         if nm == caster_skin:
             nm = FOES[(i + len(wid) + 2) % len(FOES)]
-        idle = 0.18 * math.sin(f / FRAMES * 2 * math.pi * 2 + i)
-        player(mesh, R, sun, nm, skins[nm], p, yaw_f, arm=0.25 + (1.6 if 0 <= a < 0.5 else 0) , arm_side=0.4 if 0 <= a < 0.5 else 0,
-               legs=idle if a < 0 else 0.6 * math.sin(a * 20), hurt=hurt)
-        if 0 <= a < 0.85:
-            img = num_img("7" if i == 0 else "5", (255, 154, 60))
-            pop = back_out(min(1.0, a / 0.2))
-            billboard(mesh, f"num{i}", img, p, 0.95 * pop, 0.48 * pop, cam_right, Y + 2.1 + a * 1.3 + lift * 0.5,
-                      alpha=1 if a < 0.6 else (0.85 - a) / 0.25, light=1.25)
-    # 시전자: 몸을 틀며 무기를 머리 위로 → 순식간에 내려침 → 천천히 원래 자세
-    wind_end = HIT - 0.1
-    if t < wind_end:
-        u = back_out(t / wind_end)
-        arm = 0.3 + 2.7 * u
-        twist = -0.55 * u
-    elif t < HIT:
-        u = ease_in((t - wind_end) / (HIT - wind_end))
-        arm = 3.0 - 2.9 * u
-        twist = -0.55 + 0.95 * u
-    else:
-        u = ease(min(1.0, (t - HIT) / 0.45))
-        arm = 0.1 + 0.4 * u
-        twist = 0.4 * (1 - u)
-    legs = 0.0
-    if shape == "dash" and 0.12 < t < HIT:
-        legs = 0.7 * math.sin(f * 1.6)
-    elif t >= wind_end - 0.05 and t < HIT + 0.2:
-        legs = 0.35                                                       # 한 발 내딛기
-    pos = me + np.array([0, jump, 0])
-    player(mesh, R, sun, caster_skin, skins[caster_skin], pos, twist, arm=arm, arm_side=0.12, legs=legs, wtex=wtex)
+        frozen = any(h[0] == i and h[2] == "freeze" and t >= h[1] for h in c.hits)
+        idle = 0.0 if frozen else 0.18 * math.sin(f / FRAMES * 2 * math.pi * 2 + i)
+        player(mesh, R, sun, nm, skins[nm], p, yaw_f, arm=arms, arm_side=0.4 if arms > 1 else 0, arm_l=arms,
+               legs=idle, tint=tuple(tint))
+    # 시전자
+    tint = (1, 1, 1)
+    if c.heal > 0:
+        tint = (1 - 0.2 * c.heal, 1 + 0.35 * c.heal, 1 - 0.2 * c.heal)
+        for k in range(4):
+            a = t * 8 + k * 1.57
+            billboard(mesh, "healorb", A.glow_img((120, 255, 140)), c.me + np.array([math.cos(a) * 0.6, 0, math.sin(a) * 0.6]), 0.35, 0.35,
+                      cam_right, Y + 0.6 + (t * 3 + k * 0.3) % 1.8, alpha=c.heal, add=True)
+    pos = c.me + np.array([0, c.jump, 0])
+    player(mesh, R, sun, caster_skin, skins[caster_skin], pos, c.yaw, arm=c.arm, arm_side=c.arm_side, arm_l=c.arm_l, legs=c.legs,
+           tint=tint, wtex=wtex if c.hold else None)
     # 스킬 이름 (머리 위로 튀어오름)
-    if 0.03 < t < 0.75 and skill:
+    if 0.02 < t < 0.8 and skill:
         ti = text_img(f"« {skill} »", acc)
         if ti is not None:
-            pop = back_out(min(1.0, (t - 0.03) / 0.12))
+            pop = A.back_out(min(1.0, (t - 0.02) / 0.1))
             h = 0.46 * pop
-            billboard(mesh, "name", ti, pos, h * ti.width / ti.height, h, cam_right, Y + 2.25 + jump + 0.25 * min(1, t * 3), light=1.25)
+            billboard(mesh, "name", ti, pos, h * ti.width / ti.height, h, cam_right, Y + 2.3 + c.jump + 0.25 * min(1, t * 3), light=1.25)
     fov = 54
     im = R.render(st.vox, st.pal, VW, VH, cam, look_at, fov=fov, mesh=mesh, ss=3, sun=tuple(sun), fog_dist=60,
                   sky_top=(0.22, 0.30, 0.52), sky_hor=(0.62, 0.58, 0.62), fog_col=(0.55, 0.53, 0.60))
-    # 터지는 순간: 멈칫 + 번쩍 + 집중선
-    if frozen or 0 <= after < 0.05:
-        c, fw, rt, up = R.look(cam, look_at)
-        v = np.array([tgt[0], Y + 1.0, tgt[2]]) - c
-        z = v @ fw
-        focal = (VW * 0.5) / math.tan(math.radians(fov) * 0.5)
-        sx = VW / 2 + (v @ rt) / z * focal
-        sy_ = VH / 2 - (v @ up) / z * focal
-        st_ = 1.0 if frozen else 0.5
-        im = Image.blend(im, Image.new("RGB", im.size, tuple(int(c_ * 0.5 + 127) for c_ in acc)), 0.4 * st_)
-        im = speed_lines(im, sx, sy_, acc, st_)
+    # 큰 타격 순간: 번쩍 + 만화 집중선
+    for (t0, pos, r, deb) in c.impacts:
+        if r >= 1.8 and 0 <= t - t0 < 0.05:
+            _, fw, rt, up = R.look(cam, look_at)
+            v = np.array([pos[0], Y + 1.0, pos[2]]) - cam
+            z = v @ fw
+            focal = (VW * 0.5) / math.tan(math.radians(fov) * 0.5)
+            sx = VW / 2 + (v @ rt) / z * focal
+            sy_ = VH / 2 - (v @ up) / z * focal
+            st_ = 1.0 - (t - t0) / 0.05 * 0.5
+            im = Image.blend(im, Image.new("RGB", im.size, tuple(int(c_ * 0.5 + 127) for c_ in acc)), 0.35 * st_)
+            im = speed_lines(im, sx, sy_, acc, st_)
+            break
     return im
 
 
@@ -551,7 +603,7 @@ def export(pack, read):
         print("  tooltip", wid)
 
 
-def preview(path, read, wids=("thunder", "dragon", "wind", "scythe", "gauntlet", "b_cyclops"), pick=(3, 9, 12, 14, 18, 24)):
+def preview(path, read, wids=("thunder", "dragon", "wind", "scythe", "gauntlet", "b_cyclops"), pick=(3, 8, 12, 15, 19, 24)):
     tex, skins = _inputs(read)
     st = Stage()
     rows = []
