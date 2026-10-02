@@ -10,7 +10,7 @@
 on load:
     set {-bg::clsdesc::0} to "&c체력 12칸 &7· &f공격력 +2 &7· &f공격 속도 +10%% &7· &f검"
     set {-bg::clsdesc::1} to "&a체력 10칸 &7· &f이동 +15%% &7· &f낙하 피해 줄음 &7· &f활 강화 (근접은 나무 검만)"
-    set {-bg::clsdesc::2} to "&9체력 14칸 &7· &f방어 +3 &7· &f넉백 저항 50%% &7· &f도끼만"
+    set {-bg::clsdesc::2} to "&9체력 14칸 &7· &f방어 +3 &7· &f넉백 저항 50%% &7· &c공격력 -25%% &7· &f도끼만"
 
 on load:
     set {-bg::pts::*} to "temple", "ares", "athena", "hermes" and "demeter"
@@ -373,7 +373,7 @@ function bgKit(p: player):
 # 병과 능력치 (속성) — 병과를 바꾸거나 부활할 때 적용, 대기실로 가면 기본값
 #  전사   : 체력 12칸 · 공격력 +2 · 공격 속도 +10%
 #  궁수   : 체력 10칸 · 이동 속도 +15% · 낙하 피해 줄음 · 점프 조금 높음
-#  수호자 : 체력 14칸 · 방어 +3 · 넉백 저항 50% · 이동 속도 -8%
+#  수호자 : 체력 14칸 · 방어 +3 · 넉백 저항 50% · 이동 속도 -8% · 근접 공격력 -25% (탱커가 딜까지 다 해서)
 function bgClassStats(p: player, c: number):
     set {_n} to name of {_p}
     set {_hp} to 24
@@ -406,6 +406,10 @@ function bgClassStats(p: player, c: number):
     bgCmd("attribute %{_n}% minecraft:attack_speed base set %{_aspd}%")
     bgCmd("attribute %{_n}% minecraft:safe_fall_distance base set %{_fall}%")
     bgCmd("attribute %{_n}% minecraft:jump_strength base set %{_jump}%")
+    # 수호자 공격력 -25% (무기 피해까지 전부 곱해서 줄임 — 전설 무기 스킬 피해는 따로라 그대로)
+    bgCmd("attribute %{_n}% minecraft:attack_damage modifier remove bg:guardian_atk")
+    if {_c} is 2:
+        bgCmd("attribute %{_n}% minecraft:attack_damage modifier add bg:guardian_atk -0.25 add_multiplied_total")
     if health of {_p} > {_hp} / 2:
         set health of {_p} to {_hp} / 2
 
@@ -420,6 +424,7 @@ function bgClassReset(p: player):
     bgCmd("attribute %{_n}% minecraft:attack_speed base set 4")
     bgCmd("attribute %{_n}% minecraft:safe_fall_distance base set 3")
     bgCmd("attribute %{_n}% minecraft:jump_strength base set 0.42")
+    bgCmd("attribute %{_n}% minecraft:attack_damage modifier remove bg:guardian_atk")
 
 function bgClassGear(p: player, c: number):
     bgClassStats({_p}, {_c})

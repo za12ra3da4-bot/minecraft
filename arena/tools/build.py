@@ -36,6 +36,7 @@ import ping_art
 import title_logo
 import impactfx
 import shoptip
+import impactframe
 
 OUT_RP = os.path.join(ROOT, "arena", "resourcepack", "bg_arena_pack.zip")
 OUT_RP_DIR = os.path.join(HERE, ".cache", "rp_folder")
@@ -88,6 +89,7 @@ def main(args):
     bmeta = bossgen.export(pack, os.path.join(OUT_DP, "data", "bg", "function"))
     font = hud_build.build(pack)
     title_str, _ = title_logo.export(pack)
+    fx_frame = impactframe.export(pack)
     telegraphs.export(pack)
     impactfx.export(pack)
     decor.export(pack)
@@ -103,6 +105,7 @@ def main(args):
     os.makedirs(OUT_SK, exist_ok=True)
     skgen.write_hud(os.path.join(OUT_SK, "a01-gen-hud.sk"), font)
     skgen.write_title(os.path.join(OUT_SK, "a05-gen-title.sk"), title_str)
+    skgen.write_var(os.path.join(OUT_SK, "a06-gen-fx.sk"), "-bg::fx::frame", fx_frame)
     skgen.write_map(os.path.join(OUT_SK, "a02-gen-map.sk"), world)
     skgen.write_boss(os.path.join(OUT_SK, "a03-gen-boss.sk"), bmeta)
     # 리소스팩 파일 이름 검사: 마크는 [a-z0-9_.-/] 만 허용 (하나라도 틀리면 그 폰트/모델 파일 전체가 무시됨)

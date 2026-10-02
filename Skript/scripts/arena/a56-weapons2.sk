@@ -60,6 +60,7 @@ function bgFrostArrow(p: player, o: location, a: number, pit: number):
             loop {_es::*}:
                 bgDmg(loop-value-2, 2)
                 bgCmd("effect give %bgPName(loop-value-2)% slowness 3 3 true")
+                bgFreezeShell(loop-value-2, 60)
             bgIceSpikes({_q})
             bgSoundAt({_q}, "block.glass.break", 1.2, 1.3)
             stop
@@ -101,6 +102,7 @@ function bgSkStorm(p: player):
         wait 1 tick
     strike lightning effect at {_end}
     bgImpact(bgGround({_end}), 3.5, "thunder", true)
+    bgImpactFrame({_p}, "storm")
     bgFxGrow(bgGround({_end}), "fx2_storm_strike", 1, 7, 7, 0.05)
     bgWfx(bgGround({_end}), "fx2_storm_strike", 6, 30, 0)
     bgParticle({_end}, "electric_spark", 1.5, 1, 1.5, 0.5, 60)
@@ -142,9 +144,11 @@ function bgSkScythe(p: player):
     bgImpactRing(location of {_p}, 1, 4.5, "soul")
     set {_es::*} to bgNear({_p}, location of {_p}, 4.5)
     set {_n} to 0
+    if size of {_es::*} > 0:
+        bgImpactFrame({_p}, "scythe")
     loop {_es::*}:
         bgDmg(loop-value, 2)
-        bgLine(bgUp(location of loop-value, 1), bgUp(location of {_p}, 1), "soul", 10)
+        bgHeartFlow(location of loop-value, {_p})
         add 1 to {_n}
     # 회복: 맞은 적마다 2.5하트 (최대 6하트) + 재생 II 4초 — 아무도 못 맞혀도 1하트
     set {_hl} to 1
@@ -179,6 +183,7 @@ function bgSkLance(p: player):
                 bgImpact(location of loop-value-2, 1.6, "holy", false)
         wait 1 tick
     bgImpact(location of {_p}, 2.6, "holy", true)
+    bgImpactFrame({_p}, "lance")
     bgShrinkKill({_t}, 4)
 
 # ─────────────────────────────────────────── 저주받은 해골 지팡이: 날아가는 해골 → 폭발 + 4초 독 구름
@@ -208,6 +213,7 @@ function bgSkSkull(p: player):
     bgSoundAt({_end}, "entity.generic.explode", 1.2, 1.4)
     set {_gl} to bgGround({_end})
     bgImpact({_gl}, 3, "venom", true)
+    bgImpactFrame({_p}, "skull")
     bgFxGrow({_gl}, "fx2_skull_miasma", 1, 7, 6, 0.05)
     bgWfx({_gl}, "fx2_skull_miasma", 6.6, 84, 0)
     set {_es::*} to bgNear({_p}, {_end}, 3)
@@ -291,6 +297,8 @@ function bgSkChain(p: player):
     bgVel({_tg}, vector({_dx} / {_d} * min(2.2, {_d} * 0.22), 0.45, {_dz} / {_d} * min(2.2, {_d} * 0.22)))
     bgDmg({_tg}, 1.5)
     bgImpact(location of {_tg}, 1.6, "blood", false)
+    bgImpactFrame({_p}, "chain")
+    bgStunStars({_tg}, 40)
     bgCmd("effect give %bgPName({_tg})% slowness 2 9 true")
     bgSoundAt(location of {_tg}, "block.chain.break", 1.5, 0.6)
     bgFxGrow(location of {_tg}, "fx2_chain_hook", 1, 4, 6, 0.08)
@@ -302,6 +310,7 @@ function bgSkGauntlet(p: player):
     set {_o} to location of {_p}
     bgSoundAt({_o}, "item.mace.smash_ground_heavy", 1.8, 0.7)
     bgParticle(bgUp({_o}, 0.2), "explosion", 0.3, 0.1, 0.3, 0, 2)
+    bgImpactFrame({_p}, "gauntlet")
     bgWfx(bgGround(bgFwd({_o}, {_yaw}, 7.2, 0, 0.6)), "fx2_gauntlet_fissure", 13, 50, {_yaw})
     # 땅속에서 돌기둥이 하나씩 솟아오른다 (지형 높이를 따라감)
     loop 9 times:
@@ -385,6 +394,7 @@ function bgSkBSphinx(p: player):
     bgSoundAt({_l}, "entity.illusioner.cast_spell", 2, 0.7)
     bgFxGrow({_l}, "fx2_sphinx_vortex", 2, 15, 10, 0.08)
     bgImpactRing({_l}, 1.5, 7, "sand")
+    bgImpactFrame({_p}, "b_sphinx")
     bgWRune({_l}, "fx2_sphinx_vortex", 13, 60)
     bgSoundAt({_l}, "block.sand.break", 2, 0.5)
     set {_es::*} to bgNear({_p}, {_l}, 7)
@@ -471,6 +481,7 @@ function bgSkBCyclops(p: player):
         wait 1 tick
     bgParticle({_to}, "explosion_emitter", 0, 0, 0, 0, 1)
     bgImpact({_to}, 4.5, "stone", true)
+    bgImpactFrame({_p}, "b_cyclops")
     bgFxGrow({_to}, "fx2_cyclops_crater", 2, 10, 7, 0.05)
     bgWfx({_to}, "fx2_cyclops_crater", 8, 70, 0)
     bgParticle(bgUp({_to}, 0.3), "block{block_state:""minecraft:stone""}", 3, 0.3, 3, 0.2, 120)

@@ -69,6 +69,7 @@ def build(pack):
     pack.put("assets/minecraft/font/default.json", {"providers": [
         {"type": "reference", "id": f"{H.NS}:hud"},
         {"type": "reference", "id": f"{H.NS}:title"},
+        {"type": "reference", "id": f"{H.NS}:fx"},
         {"type": "reference", "id": "minecraft:include/space"},
         {"type": "reference", "id": "minecraft:include/default", "filter": {"uniform": False}},
         {"type": "reference", "id": "minecraft:include/unifont"}]})

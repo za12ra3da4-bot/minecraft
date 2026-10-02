@@ -1,5 +1,5 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  신화쟁탈전 — 타격 연출 (보스 스킬 · 특수무기 스킬이 터지는 순간 · 데미지 숫자 · 스킬 이름)
+#  신화쟁탈전 — 타격 연출 (보스 스킬 · 특수무기 스킬이 터지는 순간 · 데미지 숫자 · 스킬 이름 · 집중선 · 기절 별 · 빙결)
 #   충격파 고리 → 세로 폭발 기둥 → 블록 파편이 튀었다 떨어짐 → 터진 자국이 잠깐 남음 + 파티클 · 소리 여러 겹
 #   (시야를 흔드는 연출은 쓰지 않는다 — 맞을 때 화면이 돌아가 불편함)
 #   그림: 리소스팩 bg:impact/{shock,crater,burst}_<종류>   움직임 · 수명: 데이터팩 bg:impact/* (매 틱 bg:impact/tick)
@@ -26,6 +26,19 @@ on load:
     set {-bg::imp::b2::frost} to "minecraft:blue_ice"
     set {-bg::imp::b1::soul} to "minecraft:soul_soil"
     set {-bg::imp::b2::soul} to "minecraft:soul_sand"
+    # 무기 색 이름 → 색 코드 (집중선 물들이기)
+    set {-bg::fx::code::aqua} to "&b"
+    set {-bg::fx::code::red} to "&c"
+    set {-bg::fx::code::green} to "&a"
+    set {-bg::fx::code::gold} to "&6"
+    set {-bg::fx::code::dark_red} to "&4"
+    set {-bg::fx::code::dark_purple} to "&5"
+    set {-bg::fx::code::light_purple} to "&d"
+    set {-bg::fx::code::blue} to "&9"
+    set {-bg::fx::code::dark_gray} to "&3"
+    set {-bg::fx::code::yellow} to "&e"
+    set {-bg::fx::code::dark_green} to "&2"
+    set {-bg::fx::code::gray} to "&f"
 
 # 경고 장판에 쓰던 파티클 이름 → 연출 종류 (종류 이름을 그대로 주면 그대로)
 function bgImpKind(pt: text) :: text:
@@ -273,3 +286,61 @@ function bgSkillCall(p: player, w: text):
     set {_at} to location of {_p}
     set {_l} to location(x-coordinate of {_at}, (y-coordinate of {_at}) + 2.5, z-coordinate of {_at}, world of {_at})
     bgFloatText({_l}, "« %{_nm}% »", {_col}, 1.0)
+
+# ─────────────────────────────────────────── 타격 순간 화면 연출: 시전자 화면에 무기 색 집중선 (0.3초, 가운데는 비어 있음)
+#  그림 = 리소스팩 bg:fx 글꼴 (arena/tools/rp/impactframe.py) · 글자 = {-bg::fx::frame} (a06-gen-fx.sk)
+function bgImpactFrame(p: player, w: text):
+    {-bg::fx::frame} is set
+    set {_col} to {-bg::w::%{_w}%::col} ? "gold"
+    set {_c} to {-bg::fx::code::%{_col}%} ? "&f"
+    send title "%{_c}%%{-bg::fx::frame}%" with subtitle "" to {_p} for 2 ticks with fade in 0 ticks and fade out 5 ticks
+
+# 기절 별: 머리 위에서 별 세 개가 빙글빙글 (ticks 동안 따라다님)
+function bgStunStars(p: player, ticks: number):
+    set {_id} to "bgstar%random integer between 1 and 99999999%"
+    set {_l} to location of {_p}
+    loop 3 times:
+        bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 2.1)% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bgfx"",""%{_id}%"",""%{_id}%_%loop-number%""],billboard:""center"",shadow:1b,background:0,brightness:{sky:15,block:15},view_range:2f,teleport_duration:2,text:{text:""★"",color:""gold"",bold:true},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.8f,0.8f,0.8f]}}")
+    loop floor({_ticks} / 2) times:
+        if {_p} is not online:
+            exit loop
+        set {_l} to location of {_p}
+        loop 3 times:
+            set {_a} to loop-number-1 * 40 + loop-number-2 * 120
+            bgCmd("execute in %bgDim()% run tp @e[tag=%{_id}%_%loop-number-2%,limit=1] %bgC((x-coordinate of {_l}) + cos({_a}) * 0.5)% %bgN((y-coordinate of {_l}) + 2.1 + sin({_a} * 2) * 0.08)% %bgC((z-coordinate of {_l}) + sin({_a}) * 0.5)%")
+        wait 2 ticks
+    bgCmd("kill @e[tag=%{_id}%]")
+
+# 영혼 하트: 맞은 적에게서 시전자에게 하트가 포물선으로 날아감
+function bgHeartFlow(from: location, p: player):
+    set {_a} to location(x-coordinate of {_from}, (y-coordinate of {_from}) + 1.2, z-coordinate of {_from}, world of {_from})
+    loop 10 times:
+        {_p} is online
+        set {_f} to loop-number / 10
+        set {_b} to location of {_p}
+        set {_q} to location((x-coordinate of {_a}) + ((x-coordinate of {_b}) - (x-coordinate of {_a})) * {_f}, (y-coordinate of {_a}) + ((y-coordinate of {_b}) + 1.2 - (y-coordinate of {_a})) * {_f} + 4 * {_f} * (1 - {_f}) * 0.8, (z-coordinate of {_a}) + ((z-coordinate of {_b}) - (z-coordinate of {_a})) * {_f}, world of {_a})
+        bgParticle({_q}, "heart", 0.05, 0.05, 0.05, 0, 1)
+        bgParticle({_q}, "soul", 0.1, 0.1, 0.1, 0.01, 2)
+        wait 1 tick
+
+# 빙결: 맞은 적이 얼음 덩어리에 갇힘 (ticks 동안 따라다니다 깨짐) — 같은 사람은 겹치지 않게
+function bgFreezeShell(p: player, ticks: number):
+    if {-bg::frozen::%uuid of {_p}%} is set:
+        if difference between {-bg::frozen::%uuid of {_p}%} and now < 2 seconds:
+            stop
+    set {-bg::frozen::%uuid of {_p}%} to now
+    set {_id} to "bgice%random integer between 1 and 99999999%"
+    set {_l} to location of {_p}
+    bgCmd("execute in %bgDim()% run summon block_display %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bgfx"",""%{_id}%""],block_state:{Name:""minecraft:ice""},brightness:{sky:15,block:12},teleport_duration:2,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.6f,-0.05f,-0.6f],scale:[1.2f,2.1f,1.2f]}}")
+    bgSoundAt({_l}, "block.glass.place", 1.4, 0.7)
+    loop floor({_ticks} / 2) times:
+        if {_p} is not online:
+            exit loop
+        set {_l} to location of {_p}
+        bgCmd("execute in %bgDim()% run tp @e[tag=%{_id}%,limit=1] %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})%")
+        if mod(loop-number, 5) is 0:
+            bgParticle(location((x-coordinate of {_l}), (y-coordinate of {_l}) + 1, (z-coordinate of {_l}), world of {_l}), "snowflake", 0.5, 0.8, 0.5, 0.02, 6)
+        wait 2 ticks
+    bgParticle(location((x-coordinate of {_l}), (y-coordinate of {_l}) + 1, (z-coordinate of {_l}), world of {_l}), "block{block_state:{Name:""minecraft:ice""}}", 0.5, 0.8, 0.5, 0.2, 30)
+    bgSoundAt({_l}, "block.glass.break", 1.4, 0.9)
+    bgCmd("kill @e[tag=%{_id}%]")

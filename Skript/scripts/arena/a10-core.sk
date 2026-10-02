@@ -35,6 +35,9 @@ on load:
     set {-bg::tcol::blue} to "&9"
     set {-bg::tcol::green} to "&a"
     set {-bg::tcol::yellow} to "&e"
+    # 팀 없음 (연습장 · 팀 고르기 전) — 메시지에 <none> 이 찍히지 않게
+    set {-bg::tcol::none} to "&7"
+    set {-bg::tname::none} to "무소속"
     set {-bg::tvan::red} to "red"
     set {-bg::tvan::blue} to "blue"
     set {-bg::tvan::green} to "green"
