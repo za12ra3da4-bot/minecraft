@@ -5,6 +5,7 @@
    crater_k : 터진 자리에 잠깐 남는 자국 (균열 · 그을음 · 독 · 모래 물결)   → bg:impact/crater_k (평면)
    burst_k  : 세로로 솟는 폭발 기둥 (불기둥 · 흙먼지 · 독 물보라 · 돌풍 · 빛기둥) → bg:impact/burst_k (세로, 늘 플레이어를 봄)
  종류: fire(탈로스) · sand(스핑크스) · venom/gale(라돈) · stone(키클롭스) · holy(황금 사과)
+       + 특수무기용 thunder(번개) · arcane(비전) · blood(피) · frost(서리) · soul(영혼)
 """
 import math
 import os
@@ -16,7 +17,7 @@ sys.path.insert(0, HERE)
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-from skillfx import Canvas, _crack, _noise, _radial, _dark_under, _rng
+from skillfx import Canvas, _crack, _noise, _radial, _dark_under, _rng, _rune_ring
 
 PAL = {
     # (번짐 색, 중간 색, 장식 색)
@@ -26,6 +27,11 @@ PAL = {
     "gale": ((90, 180, 255), (195, 235, 255), (255, 255, 255)),
     "stone": ((150, 125, 95), (215, 195, 160), (250, 240, 220)),
     "holy": ((255, 190, 50), (255, 235, 140), (255, 255, 230)),
+    "thunder": ((70, 150, 255), (170, 225, 255), (255, 240, 160)),
+    "arcane": ((150, 70, 255), (215, 160, 255), (255, 225, 255)),
+    "blood": ((205, 10, 40), (255, 80, 90), (255, 190, 190)),
+    "frost": ((80, 170, 255), (190, 235, 255), (245, 252, 255)),
+    "soul": ((20, 200, 200), (120, 255, 240), (220, 255, 250)),
 }
 KINDS = list(PAL)
 
@@ -65,7 +71,7 @@ def shock(k):
 
 
 # ─────────────────────────────────────────────────────────────── 남는 자국
-def crater(k):
+def _crater_base(k):
     c = Canvas(S, S); R = _rng(_seed(k) % 991 + 7)
     cx = cy = S / 2
     rr, ang = _radial(S * 2, S, S)
@@ -143,7 +149,8 @@ def crater(k):
 
 
 # ─────────────────────────────────────────────────────────────── 세로 폭발 기둥 (아래 가운데 = 땅)
-def burst(k):
+def _burst_base(k, pal=None):
+    pk = pal or k
     W, H = 64, 128
     c = Canvas(W, H); R = _rng(_seed(k) % 983 + 3)
     cx, by = W / 2, H - 4
@@ -164,7 +171,7 @@ def burst(k):
                 c.poly(kk, pts, v)
         for i in range(70):
             c.disc("gold", cx + R.normal(0, 14), by - R.uniform(10, 124), R.uniform(0.5, 1.4), int(R.uniform(150, 255)))
-        return c.render(PAL[k], bloom=0.8, core_white=0.55, tex=0.55)
+        return c.render(PAL[pk], bloom=0.8, core_white=0.55, tex=0.55)
     if k in ("stone", "sand"):
         # 흙먼지 기둥: 바닥에 퍼지는 먼지 + 위로 솟으며 가늘어지는 연기 + 튀는 돌 (부드럽게 번진 덩어리)
         for i in range(70):
@@ -181,7 +188,7 @@ def burst(k):
             a = R.uniform(-2.5, -0.65)
             r = R.uniform(8, 70)
             c.disc("gold", cx + math.cos(a) * r * 0.45, by + math.sin(a) * r, R.uniform(0.7, 1.8), int(R.uniform(150, 240)))
-        img = c.render(PAL[k], bloom=0.5, core_white=0.15, tex=0.9)
+        img = c.render(PAL[pk], bloom=0.5, core_white=0.15, tex=0.9)
         a = np.asarray(img).astype(np.float32)
         a[..., 3] *= 0.9
         return Image.fromarray(a.astype(np.uint8), "RGBA")
@@ -197,7 +204,7 @@ def burst(k):
         c.disc("mid", cx, by - 6, 13, 150)
         for i in range(50):
             c.disc("gold", cx + R.normal(0, 8), by - R.uniform(4, 110), R.uniform(0.6, 2.2), int(R.uniform(140, 255)))
-        return c.render(PAL[k], bloom=0.65, core_white=0.4, tex=0.5)
+        return c.render(PAL[pk], bloom=0.65, core_white=0.4, tex=0.5)
     if k == "gale":
         # 돌풍 회오리
         for j in range(12):
@@ -212,13 +219,129 @@ def burst(k):
             a0 = R.uniform(0, 6.28)
             pts = [(cx + math.cos(a0 + u) * r, y + math.sin(a0 + u) * r * 0.25) for u in np.linspace(0, 1.4, 12)]
             c.line("gold", pts, 0.9, 200)
-        return c.render(PAL[k], bloom=0.7, core_white=0.7, tex=0.4)
+        return c.render(PAL[pk], bloom=0.7, core_white=0.7, tex=0.4)
     # holy: 빛기둥
     c.poly("mid", [(cx - 14, by), (cx + 14, by), (cx + 9, by - 124), (cx - 9, by - 124)], 130)
     c.poly("core", [(cx - 5, by), (cx + 5, by), (cx + 3, by - 124), (cx - 3, by - 124)], 255)
     for i in range(40):
         c.disc("gold", cx + R.normal(0, 12), by - R.uniform(0, 124), R.uniform(0.5, 1.5), 230)
-    return c.render(PAL[k], bloom=1.0, core_white=0.7, tex=0.2)
+    return c.render(PAL[pk], bloom=1.0, core_white=0.7, tex=0.2)
+
+
+# ─────────────────────────────────────────────────────────────── 특수무기용 종류
+def _shard(c, k, cx, cy, ang, L, wd, val):
+    """뾰족한 조각 (얼음 가시 · 베기 자국 · 영혼 불꽃)"""
+    ca, sa = math.cos(ang), math.sin(ang)
+    px, py = -sa, ca
+    c.poly(k, [(cx + px * wd, cy + py * wd), (cx + ca * L, cy + sa * L), (cx - px * wd, cy - py * wd), (cx - ca * wd * 1.5, cy - sa * wd * 1.5)], val)
+
+
+def crater(k):
+    c = Canvas(S, S); R = _rng(_seed(k) % 991 + 7)
+    cx = cy = S / 2
+    rr, ang = _radial(S * 2, S, S)
+    n = _noise(S * 2, 26, _seed(k) % 89, 5)
+    edge = np.clip(1 - rr / (100 + 26 * (n - 0.5)), 0, 1)
+    if k == "thunder":
+        for i in range(10):
+            _crack(c, cx, cy, R.uniform(0, 2 * math.pi), R.uniform(36, 60), 2.0, R, "core")
+        c.disc("core", cx, cy, 7, 255)
+        c.circle("mid", cx, cy, 30, 2, 120)
+        g = c.render(PAL[k], bloom=0.9, core_white=0.7, tex=0.4)
+        return _dark_under(g, edge ** 0.7 * (0.45 + 0.3 * n))
+    if k == "arcane":
+        c.circle("core", cx, cy, 54, 1.8, 230)
+        c.circle("mid", cx, cy, 46, 1.2, 200)
+        c.circle("gold", cx, cy, 22, 1.4, 220)
+        _rune_ring(c, cx, cy, 50, 14, 4, "gold", 3)
+        for i in range(6):
+            a = i * math.pi / 3
+            c.line("mid", [(cx + math.cos(a) * 22, cy + math.sin(a) * 22), (cx + math.cos(a + math.pi / 3) * 22, cy + math.sin(a + math.pi / 3) * 22)], 1.2, 200)
+            c.line("mid", [(cx + math.cos(a) * 22, cy + math.sin(a) * 22), (cx + math.cos(a) * 46, cy + math.sin(a) * 46)], 1.0, 170)
+        c.disc("core", cx, cy, 6, 255)
+        g = c.render(PAL[k], bloom=0.9, core_white=0.5, tex=0.3)
+        return _dark_under(g, edge ** 0.8 * 0.28)
+    if k == "blood":
+        for j in range(3):
+            a = R.uniform(0, math.pi)
+            _shard(c, "mid", cx, cy, a, 60, 5.5, 200)
+            _shard(c, "mid", cx, cy, a + math.pi, 56, 5.5, 200)
+            _shard(c, "core", cx, cy, a, 50, 1.6, 255)
+            _shard(c, "core", cx, cy, a + math.pi, 46, 1.6, 255)
+        for i in range(60):
+            a = R.uniform(0, 2 * math.pi); r = R.uniform(8, 58)
+            c.disc("mid", cx + math.cos(a) * r, cy + math.sin(a) * r, R.uniform(0.8, 3.2), int(R.uniform(150, 240)))
+        g = c.render(PAL[k], bloom=0.6, core_white=0.3, tex=0.5)
+        return _dark_under(g, edge ** 0.7 * (0.4 + 0.25 * n))
+    if k == "frost":
+        for i in range(9):
+            a = i * 2 * math.pi / 9 + R.uniform(-0.15, 0.15)
+            _shard(c, "mid", cx, cy, a, R.uniform(40, 60), 6, 180)
+            _shard(c, "core", cx, cy, a, R.uniform(30, 48), 2, 240)
+            _shard(c, "gold", cx + math.cos(a) * 26, cy + math.sin(a) * 26, a + 0.7, 12, 2.4, 200)
+            _shard(c, "gold", cx + math.cos(a) * 26, cy + math.sin(a) * 26, a - 0.7, 12, 2.4, 200)
+        c.disc("core", cx, cy, 8, 240)
+        g = c.render(PAL[k], bloom=0.7, core_white=0.75, tex=0.6)
+        return _dark_under(g, edge ** 0.8 * 0.2)
+    if k == "soul":
+        c.circle("mid", cx, cy, 44, 6, 150)
+        c.circle("core", cx, cy, 44, 1.6, 240)
+        for i in range(22):
+            a = i * 2 * math.pi / 22 + R.uniform(-0.1, 0.1)
+            _shard(c, "mid", cx + math.cos(a) * 44, cy + math.sin(a) * 44, a + R.uniform(-0.4, 0.4), R.uniform(8, 16), 3, 200)
+        for i in range(30):
+            a = R.uniform(0, 2 * math.pi); r = R.uniform(0, 36)
+            c.disc("gold", cx + math.cos(a) * r, cy + math.sin(a) * r, R.uniform(0.6, 1.6), 200)
+        g = c.render(PAL[k], bloom=0.85, core_white=0.5, tex=0.5)
+        return _dark_under(g, edge ** 0.7 * (0.5 + 0.25 * n))
+    return _crater_base(k)
+
+
+def burst(k):
+    W, H = 64, 128
+    c = Canvas(W, H); R = _rng(_seed(k) % 983 + 3)
+    cx, by = W / 2, H - 4
+    if k == "thunder":
+        for j in range(3):
+            x = cx + R.normal(0, 3)
+            pts = [(x, 2)]
+            for i in range(1, 12):
+                x = cx + R.normal(0, 5) * (1 - i / 14)
+                pts.append((x, 2 + (by - 2) * i / 12))
+            pts.append((cx, by))
+            c.line("core" if j == 0 else "mid", pts, 2.6 if j == 0 else 1.2, 255 if j == 0 else 170)
+            if j == 0:
+                for i in (3, 6, 8):
+                    x0, y0 = pts[i]
+                    c.line("mid", [(x0, y0), (x0 + R.choice([-1, 1]) * R.uniform(8, 16), y0 + R.uniform(8, 18))], 1.0, 200)
+        c.disc("mid", cx, by - 4, 12, 170)
+        for i in range(40):
+            c.disc("gold", cx + R.normal(0, 10), by - R.uniform(0, 30), R.uniform(0.5, 1.4), 230)
+        return c.render(PAL[k], bloom=0.9, core_white=0.8, tex=0.2)
+    if k == "arcane":
+        c.poly("mid", [(cx - 12, by), (cx + 12, by), (cx + 6, by - 124), (cx - 6, by - 124)], 110)
+        c.poly("core", [(cx - 4, by), (cx + 4, by), (cx + 2, by - 124), (cx - 2, by - 124)], 230)
+        for j in range(2):
+            pts = [(cx + math.sin(t * 2.2 + j * math.pi) * (14 - t * 0.6), by - t * 6) for t in np.linspace(0, 20, 120)]
+            c.line("gold", pts, 1.2, 220)
+        for i in range(40):
+            c.disc("gold", cx + R.normal(0, 12), by - R.uniform(0, 124), R.uniform(0.5, 1.6), 220)
+        return c.render(PAL[k], bloom=1.0, core_white=0.6, tex=0.2)
+    if k == "frost":
+        for i in range(9):
+            x = cx + R.uniform(-22, 22)
+            h = R.uniform(40, 110) * (1 - abs(x - cx) / 40)
+            w = R.uniform(4, 8)
+            c.poly("mid", [(x - w, by), (x + w, by), (x + R.uniform(-3, 3), by - h)], 190)
+            c.poly("core", [(x - w * 0.3, by), (x + w * 0.3, by), (x, by - h * 0.92)], 240)
+        for i in range(40):
+            c.disc("gold", cx + R.normal(0, 14), by - R.uniform(0, 110), R.uniform(0.5, 1.4), 230)
+        return c.render(PAL[k], bloom=0.6, core_white=0.75, tex=0.4)
+    if k == "blood":
+        return _burst_base("venom", "blood")
+    if k == "soul":
+        return _burst_base("fire", "soul")
+    return _burst_base(k)
 
 
 # ─────────────────────────────────────────────────────────────── 모델

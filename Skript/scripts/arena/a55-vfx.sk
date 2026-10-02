@@ -1,5 +1,5 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  왕관 쟁탈전 — 전설 무기 연출 (무기마다 전혀 다른 동작)
+#  신화쟁탈전 — 전설 무기 연출 (무기마다 전혀 다른 동작)
 #   무기 그림 그대로(bg:weapon/<무기>)를 크게 띄워 움직인다 + 파티클 · 소리 · 블록 디스플레이
 #   무기 그림은 손잡이 왼쪽 아래 → 날끝 오른쪽 위. 아이템 디스플레이는 그림을 좌우로 뒤집어 그리므로
 #   실제 날끝은 135° 방향 → Z 축 회전: 날끝 아래 = +135°   날끝 옆(+X) = -135°   날끝 위 = -45°
@@ -134,6 +134,7 @@ function bgVfxHammer(l: location, yaw: number):
     bgParticle(bgUp({_l}, 0.2), "explosion", 1.5, 0.1, 1.5, 0, 3)
     bgSoundAt({_l}, "item.mace.smash_ground_heavy", 2, 0.8)
     bgSoundAt({_l}, "block.anvil.land", 1.5, 0.5)
+    bgImpact({_l}, 4.5, "holy", true)
     loop 8 times:
         set {_c} to bgFwd({_l}, loop-number * 45, 4.5, 0, 0)
         bgLightPillar({_c})
@@ -145,6 +146,7 @@ function bgLightPillar(c: location):
         bgParticle(bgUp({_c}, loop-number * 0.6), "end_rod", 0.08, 0.2, 0.08, 0.01, 3)
         bgParticle(bgUp({_c}, loop-number * 0.6), "wax_on", 0.15, 0.2, 0.15, 0.02, 2)
     bgParticle({_c}, "firework", 0.3, 0.3, 0.3, 0.2, 25)
+    bgImpact({_c}, 1.2, "holy", false)
 
 # ─────────────────────────────────────────── 흑기사의 대검: 돌진 뒤 앞을 크게 휩쓰는 유령 대검
 function bgVfxGreatsword(p: player):
@@ -241,6 +243,7 @@ function bgSpearDrop(c: location, a: number):
     bgParticle(bgUp({_c}, 0.2), "flame", 0.8, 0.3, 0.8, 0.08, 30)
     bgParticle(bgUp({_c}, 0.2), "lava", 0.5, 0.2, 0.5, 0, 4)
     bgParticle(bgUp({_c}, 0.2), "explosion", 0, 0, 0, 0, 1)
+    bgImpact({_c}, 1.8, "fire", false)
     bgSoundAt({_c}, "entity.blaze.shoot", 1.2, 0.8)
     wait 16 ticks
     bgShrinkKill({_t}, 5)

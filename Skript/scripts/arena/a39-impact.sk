@@ -1,11 +1,15 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  신화쟁탈전 — 타격 연출 (보스 스킬이 터지는 순간 · 보스에게 준 데미지 숫자)
-#   충격파 고리 → 세로 폭발 기둥 → 블록 파편이 튀었다 떨어짐 → 터진 자국이 잠깐 남음 + 파티클 · 소리 여러 겹 + 큰 것은 화면 흔들림
+#  신화쟁탈전 — 타격 연출 (보스 스킬 · 특수무기 스킬이 터지는 순간 · 데미지 숫자 · 스킬 이름)
+#   충격파 고리 → 세로 폭발 기둥 → 블록 파편이 튀었다 떨어짐 → 터진 자국이 잠깐 남음 + 파티클 · 소리 여러 겹
+#   (시야를 흔드는 연출은 쓰지 않는다 — 맞을 때 화면이 돌아가 불편함)
 #   그림: 리소스팩 bg:impact/{shock,crater,burst}_<종류>   움직임 · 수명: 데이터팩 bg:impact/* (매 틱 bg:impact/tick)
-#   종류: fire(탈로스) · sand(스핑크스) · venom · gale(라돈) · stone(키클롭스) · holy(황금 사과)
+#   종류: fire(탈로스) · sand(스핑크스) · venom · gale(라돈) · stone(키클롭스) · holy(빛)
+#         thunder(번개) · arcane(비전) · blood(피) · frost(서리) · soul(영혼)
 # ═════════════════════════════════════════════════════════════════════════════
 
 on load:
+    loop "fire", "sand", "venom", "gale", "stone", "holy", "thunder", "arcane", "blood", "frost" and "soul":
+        set {-bg::imp::kind::%loop-value%} to true
     set {-bg::imp::b1::fire} to "minecraft:magma_block"
     set {-bg::imp::b2::fire} to "minecraft:blackstone"
     set {-bg::imp::b1::sand} to "minecraft:sandstone"
@@ -14,9 +18,19 @@ on load:
     set {-bg::imp::b2::venom} to "minecraft:moss_block"
     set {-bg::imp::b1::stone} to "minecraft:cobblestone"
     set {-bg::imp::b2::stone} to "minecraft:coarse_dirt"
+    set {-bg::imp::b1::arcane} to "minecraft:amethyst_block"
+    set {-bg::imp::b2::arcane} to "minecraft:purple_stained_glass"
+    set {-bg::imp::b1::blood} to "minecraft:redstone_block"
+    set {-bg::imp::b2::blood} to "minecraft:nether_wart_block"
+    set {-bg::imp::b1::frost} to "minecraft:packed_ice"
+    set {-bg::imp::b2::frost} to "minecraft:blue_ice"
+    set {-bg::imp::b1::soul} to "minecraft:soul_soil"
+    set {-bg::imp::b2::soul} to "minecraft:soul_sand"
 
-# 경고 장판에 쓰던 파티클 이름 → 연출 종류
+# 경고 장판에 쓰던 파티클 이름 → 연출 종류 (종류 이름을 그대로 주면 그대로)
 function bgImpKind(pt: text) :: text:
+    if {-bg::imp::kind::%{_pt}%} is set:
+        return {_pt}
     if {_pt} is "lava" or "flame":
         return "fire"
     if {_pt} is "dust_plume" or "enchant":
@@ -29,10 +43,13 @@ function bgImpKind(pt: text) :: text:
         return "holy"
     return "stone"
 
-# 바닥 높이 (투기장 바닥) 기준 좌표 문자열 "x:..,y:..,z:.."
+# 바닥 높이: 보스 투기장 안이면 투기장 바닥, 밖(특수무기)이면 그 자리 높이
 function bgImpY(c: location) :: number:
     if {-bg::boss::home} is set:
-        return y-coordinate of {-bg::boss::home}
+        if world of {_c} is world of {-bg::boss::home}:
+            if bgDist2({_c}, {-bg::boss::home}) < 26:
+                if abs((y-coordinate of {_c}) - (y-coordinate of {-bg::boss::home})) < 5:
+                    return y-coordinate of {-bg::boss::home}
     return y-coordinate of {_c}
 
 function bgImpXYZ(c: location) :: text:
@@ -44,17 +61,6 @@ function bgImpAt(c: location, dy: number) :: location:
 # yaw 방향으로 f 만큼 앞
 function bgImpFwd(c: location, yaw: number, f: number) :: location:
     return location((x-coordinate of {_c}) - sin({_yaw}) * {_f}, y-coordinate of {_c}, (z-coordinate of {_c}) + cos({_yaw}) * {_f}, world of {_c})
-
-# ─────────────────────────────────────────── 화면 흔들림 (시야만 살짝 — 위치 · 넉백은 그대로)
-function bgShake(c: location, rad: number, amp: number):
-    set {_sel} to "execute in %bgDim()% positioned %bgC(x-coordinate of {_c})% %bgN(bgImpY({_c}))% %bgC(z-coordinate of {_c})% as @a[distance=..%bgN({_rad})%,gamemode=!spectator] run rotate @s"
-    bgCmd("%{_sel}% ~%bgN({_amp})% ~%bgN({_amp} * -0.6)%")
-    wait 1 tick
-    bgCmd("%{_sel}% ~%bgN({_amp} * -2)% ~%bgN({_amp} * 1.2)%")
-    wait 1 tick
-    bgCmd("%{_sel}% ~%bgN({_amp} * 1.4)% ~%bgN({_amp} * -0.9)%")
-    wait 1 tick
-    bgCmd("%{_sel}% ~%bgN({_amp} * -0.4)% ~%bgN({_amp} * 0.3)%")
 
 # ─────────────────────────────────────────── 파티클 · 소리 (종류별로 여러 겹)
 function bgImpFx(c: location, r: number, k: text):
@@ -100,6 +106,41 @@ function bgImpFx(c: location, r: number, k: text):
         bgParticle({_l}, "wax_on", {_h}, 1.5, {_h}, 0.1, 30)
         bgSoundAt({_c}, "block.beacon.activate", 2, 1.4)
         bgSoundAt({_c}, "entity.player.levelup", 1.5, 0.6)
+    else if {_k} is "thunder":
+        bgParticle(bgImpAt({_c}, 0.8), "electric_spark", {_h}, 0.8, {_h}, 0.4, {_n} * 2)
+        bgParticle(bgImpAt({_c}, 1), "end_rod", {_h} * 0.6, 1.2, {_h} * 0.6, 0.15, round({_n} / 2))
+        bgParticle({_l}, "dust{color:[0.55,0.8,1.0],scale:2.2}", {_h}, 0.3, {_h}, 0, {_n})
+        bgParticle(bgImpAt({_c}, 0.5), "firework", {_h} * 0.5, 0.3, {_h} * 0.5, 0.15, round({_n} / 3))
+        bgSoundAt({_c}, "entity.lightning_bolt.impact", 1.6, 1.1)
+        bgSoundAt({_c}, "item.trident.thunder", 1, 1.4)
+    else if {_k} is "arcane":
+        bgParticle(bgImpAt({_c}, 1), "witch", {_h}, 0.8, {_h}, 0.3, {_n})
+        bgParticle(bgImpAt({_c}, 0.5), "portal", {_h}, 0.5, {_h}, 1.2, {_n} * 2)
+        bgParticle(bgImpAt({_c}, 1), "end_rod", {_h} * 0.5, 1, {_h} * 0.5, 0.2, round({_n} / 2))
+        bgParticle(bgImpAt({_c}, 1.2), "enchant", {_h}, 1, {_h}, 1, {_n})
+        bgSoundAt({_c}, "entity.evoker.cast_spell", 1.6, 0.8)
+        bgSoundAt({_c}, "block.amethyst_block.resonate", 2, 0.7)
+    else if {_k} is "blood":
+        bgParticle(bgImpAt({_c}, 0.8), "dust{color:[0.75,0.02,0.08],scale:2.2}", {_h}, 0.6, {_h}, 0, {_n})
+        bgParticle(bgImpAt({_c}, 1), "damage_indicator", {_h} * 0.6, 0.5, {_h} * 0.6, 0.2, round({_n} / 3))
+        bgParticle(bgImpAt({_c}, 1), "crimson_spore", {_h}, 0.8, {_h}, 0, {_n})
+        bgParticle(bgImpAt({_c}, 1), "sweep_attack", {_h} * 0.6, 0.3, {_h} * 0.6, 0, max(1, round({_n} / 6)))
+        bgSoundAt({_c}, "entity.player.attack.sweep", 1.5, 0.6)
+        bgSoundAt({_c}, "entity.player.attack.strong", 1.5, 0.7)
+    else if {_k} is "frost":
+        bgParticle(bgImpAt({_c}, 0.8), "snowflake", {_h}, 0.8, {_h}, 0.15, {_n})
+        bgParticle(bgImpAt({_c}, 0.6), "item_snowball", {_h}, 0.4, {_h}, 0.2, round({_n} / 2))
+        bgParticle(bgImpAt({_c}, 1), "end_rod", {_h} * 0.5, 0.8, {_h} * 0.5, 0.1, round({_n} / 3))
+        bgParticle({_l}, "dust{color:[0.7,0.9,1.0],scale:2.0}", {_h}, 0.3, {_h}, 0, {_n})
+        bgSoundAt({_c}, "block.glass.break", 1.4, 0.8)
+        bgSoundAt({_c}, "entity.player.hurt_freeze", 1.4, 1.2)
+    else if {_k} is "soul":
+        bgParticle({_l}, "soul_fire_flame", {_h}, 0.4, {_h}, 0.08, {_n})
+        bgParticle(bgImpAt({_c}, 1), "soul", {_h}, 0.8, {_h}, 0.05, round({_n} / 2))
+        bgParticle(bgImpAt({_c}, 1), "sculk_soul", {_h}, 0.8, {_h}, 0.05, round({_n} / 3))
+        bgParticle(bgImpAt({_c}, 1.2), "large_smoke", {_h}, 0.5, {_h}, 0.03, round({_n} / 3))
+        bgSoundAt({_c}, "particle.soul_escape", 2, 0.8)
+        bgSoundAt({_c}, "block.soul_sand.break", 1.6, 0.6)
     else:
         bgParticle({_l}, "dust_pillar{block_state:{Name:""minecraft:cobblestone""}}", {_h}, 0.2, {_h}, 0, {_n})
         bgParticle(bgImpAt({_c}, 0.6), "block{block_state:{Name:""minecraft:stone""}}", {_h}, 0.4, {_h}, 0.3, {_n})
@@ -111,8 +152,9 @@ function bgImpFx(c: location, r: number, k: text):
         bgSoundAt({_c}, "entity.generic.explode", 1.4, 0.6)
         bgSoundAt({_c}, "block.stone.break", 2, 0.5)
 
-# ─────────────────────────────────────────── 한 점 타격 (반지름 r) — deb: 파편 · 자국 · 화면 흔들림까지
+# ─────────────────────────────────────────── 한 점 타격 (반지름 r) — deb: 파편 · 자국까지
 function bgImpact(c: location, r: number, k: text, deb: boolean):
+    set {_k} to bgImpKind({_k})
     set {_p} to bgImpXYZ({_c})
     set {_dim} to bgDim()
     bgCmd("execute in %{_dim}% run function bg:impact/shock {%{_p}%,k:%{_k}%,s0:%bgN(max(0.6, {_r} * 0.5))%,s1:%bgN({_r} * 2.5)%}")
@@ -132,8 +174,6 @@ function bgImpact(c: location, r: number, k: text, deb: boolean):
         else if {_r} < 6:
             set {_sz} to 2
         bgCmd("execute in %{_dim}% run function bg:impact/debris {%{_p}%,c:%{_sz}%,b1:""%{-bg::imp::b1::%{_k}%}%"",b2:""%{-bg::imp::b2::%{_k}%}%""}")
-    if {_r} >= 4:
-        bgShake({_c}, {_r} + 8, min(2.2, {_r} * 0.22))
 
 # 원 (bgLateCircle)
 function bgImpactCircle(c: location, r: number, pt: text):
@@ -144,13 +184,13 @@ function bgImpactRing(c: location, rin: number, rout: number, pt: text):
     set {_k} to bgImpKind({_pt})
     set {_p} to bgImpXYZ({_c})
     set {_dim} to bgDim()
-    bgCmd("execute in %{_dim}% run function bg:impact/shock {%{_p}%,k:%{_k}%,s0:%bgN({_rin} * 1.6)%,s1:%bgN({_rout} * 2.25)%}")
+    bgCmd("execute in %{_dim}% run function bg:impact/shock {%{_p}%,k:%{_k}%,s0:%bgN(max(1, {_rin} * 1.6))%,s1:%bgN({_rout} * 2.25)%}")
     set {_rm} to ({_rin} + {_rout}) / 2
     set {_ir} to min(3.5, ({_rout} - {_rin}) * 0.45)
-    bgShake({_c}, {_rout} + 6, 1.6)
     set {_a0} to random number between 0 and 360
-    loop 10 times:
-        set {_a} to {_a0} + loop-number * 36
+    set {_cnt} to min(10, max(6, round({_rm} * 1.6)))
+    loop {_cnt} times:
+        set {_a} to {_a0} + loop-number * 360 / {_cnt}
         set {_l} to location((x-coordinate of {_c}) + cos({_a}) * {_rm}, y-coordinate of {_c}, (z-coordinate of {_c}) + sin({_a}) * {_rm}, world of {_c})
         set {_d} to false
         if mod(loop-number, 2) is 0:
@@ -164,7 +204,6 @@ function bgImpactLine(c: location, yaw: number, wd: number, len: number, pt: tex
     set {_k} to bgImpKind({_pt})
     set {_n} to max(1, ceil({_len} / 3))
     set {_r} to max(1.5, {_wd} * 0.6)
-    bgShake({_c}, {_len} + 4, 1)
     loop {_n} times:
         set {_d} to false
         if mod(loop-number, 2) is 1:
@@ -179,6 +218,8 @@ function bgImpactCone(c: location, yaw: number, deg: number, r: number, pt: text
     set {_rows::*} to 0.38, 0.62 and 0.88
     set {_i} to 0
     set {_cols} to 2
+    if {_r} < 8:
+        set {_cols} to 1
     loop {_rows::*}:
         set {_f} to {_r} * loop-value-1
         add 1 to {_cols}
@@ -191,12 +232,14 @@ function bgImpactCone(c: location, yaw: number, deg: number, r: number, pt: text
             bgImpact(bgImpFwd({_c}, {_a}, {_f}), {_ir}, {_k}, {_d})
         wait 1 tick
 
-# ─────────────────────────────────────────── 데미지 숫자 (보스를 때렸을 때, 기절 중이면 붉은 큰 숫자)
+# ─────────────────────────────────────────── 떠오르는 글자 (데미지 숫자 · 스킬 이름)
+function bgFloatText(l: location, txt: text, col: text, s: number):
+    bgCmd("execute in %bgDim()% run function bg:impact/num {x:%bgC(x-coordinate of {_l})%,y:%bgN(y-coordinate of {_l})%,z:%bgC(z-coordinate of {_l})%,txt:""%{_txt}%"",col:""%{_col}%"",s:%bgN({_s})%}")
+
+# 보스를 때렸을 때 (기절 중이면 붉은 큰 숫자)
 function bgDmgNum(at: location, d: number, crit: boolean):
     set {_hs} to {-bg::bd::%{-bg::boss::id}%::hitscale} ? 2
-    set {_x} to (x-coordinate of {_at}) + (random number between -0.7 and 0.7)
-    set {_y} to (y-coordinate of {_at}) + 1.3 * {_hs} + (random number between 0 and 0.6)
-    set {_z} to (z-coordinate of {_at}) + (random number between -0.7 and 0.7)
+    set {_l} to location((x-coordinate of {_at}) + (random number between -0.7 and 0.7), (y-coordinate of {_at}) + 1.3 * {_hs} + (random number between 0 and 0.6), (z-coordinate of {_at}) + (random number between -0.7 and 0.7), world of {_at})
     set {_v} to max(1, round({_d}))
     set {_t} to "%{_v}%"
     set {_col} to "#FFD54A"
@@ -207,4 +250,26 @@ function bgDmgNum(at: location, d: number, crit: boolean):
         set {_t} to "✦%{_v}%"
         set {_col} to "#FF4A3A"
         set {_s} to {_s} + 0.4
-    bgCmd("execute in %bgDim()% run function bg:impact/num {x:%bgC({_x})%,y:%bgN({_y})%,z:%bgC({_z})%,txt:""%{_t}%"",col:""%{_col}%"",s:%bgN({_s})%}")
+    bgFloatText({_l}, {_t}, {_col}, {_s})
+
+# 특수무기 스킬에 맞은 사람: 머리 위 주황 숫자(체력 칸) + 타격 불꽃
+function bgHitFx(p: player, h: number):
+    set {_at} to location of {_p}
+    set {_l} to location((x-coordinate of {_at}) + (random number between -0.4 and 0.4), (y-coordinate of {_at}) + 2.1 + (random number between 0 and 0.4), (z-coordinate of {_at}) + (random number between -0.4 and 0.4), world of {_at})
+    set {_v} to round({_h} * 2 * 10) / 10
+    set {_s} to 0.9
+    if {_h} >= 3:
+        set {_s} to 1.15
+    bgFloatText({_l}, "%{_v}%", "#FF9A3C", {_s})
+    set {_c} to location(x-coordinate of {_at}, (y-coordinate of {_at}) + 1.1, z-coordinate of {_at}, world of {_at})
+    bgParticle({_c}, "crit", 0.3, 0.5, 0.3, 0.35, 14)
+    bgParticle({_c}, "enchanted_hit", 0.3, 0.5, 0.3, 0.3, 10)
+
+# 스킬 이름 외치기: 시전자 머리 위에 무기 색으로 « 스킬 이름 » 이 떠오름
+function bgSkillCall(p: player, w: text):
+    set {_nm} to {-bg::w::%{_w}%::skill}
+    {_nm} is set
+    set {_col} to {-bg::w::%{_w}%::col} ? "gold"
+    set {_at} to location of {_p}
+    set {_l} to location(x-coordinate of {_at}, (y-coordinate of {_at}) + 2.5, z-coordinate of {_at}, world of {_at})
+    bgFloatText({_l}, "« %{_nm}% »", {_col}, 1.0)

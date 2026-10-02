@@ -1,5 +1,5 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  왕관 쟁탈전 — 보스 보상 상자 (블록 디스플레이로 조립한 보물 상자)
+#  신화쟁탈전 — 보스 보상 상자 (블록 디스플레이로 조립한 보물 상자)
 #   보스를 가장 많이 때린 팀이 가까이 가면 열린다:
 #     연 사람: 그 보스의 전용 무기 (상점에서 못 삼)   ·   그 팀 전원: 코인 +150 · 마법 황금 사과 1 · 황금 사과 3 · 치유 물약 2
 #   3분 동안 아무도 안 열면 사라짐
@@ -7,6 +7,8 @@
 
 function bgRewardSpawn(t: text, boss: text, c: location):
     bgRewardClear()
+    # 이 상자의 번호 — 열리거나 지워지면 바뀌므로, 기다린 뒤에는 번호가 같을 때만 계속 (뒤늦게 장식을 다시 만들지 않음)
+    set {_g} to {-bg::reward::gen}
     set {-bg::reward::team} to {_t}
     set {-bg::reward::boss} to {_boss}
     set {-bg::reward::loc} to {_c}
@@ -24,6 +26,8 @@ function bgRewardSpawn(t: text, boss: text, c: location):
     set {-bg::reward::fl} to "%floor({_xn})% %floor({_zn})%"
     bgCmd("execute in %bgDim()% run forceload add %{-bg::reward::fl}%")
     wait 10 ticks
+    if {-bg::reward::gen} is not {_g}:
+        stop
     # (보스 제거가 투기장 강제 로드를 풀었을 수 있으니 한 번 더)
     bgCmd("execute in %bgDim()% run forceload add %{-bg::reward::fl}%")
     set {_look} to {_t}
@@ -40,6 +44,8 @@ function bgRewardSpawn(t: text, boss: text, c: location):
             add 1 to {_n}
     if {_n} is 0:
         wait 20 ticks
+        if {-bg::reward::gen} is not {_g}:
+            stop
         bgCmd("execute in %bgDim()% positioned %{_p}% run function bg:reward/chest_%{_look}%")
         wait 2 ticks
         loop entities in radius 6 of {_c}:
@@ -55,6 +61,7 @@ function bgRewardSpawn(t: text, boss: text, c: location):
     bgSay("%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f의 &6보상 상자&f가 &e보스 투기장 가운데&f에 나타났습니다! 가까이 가서 여세요. &7(%{_p}%)")
 
 function bgRewardClear():
+    add 1 to {-bg::reward::gen}
     bgCmd("kill @e[tag=bg_reward]")
     if {-bg::reward::fl} is set:
         bgCmd("execute in %bgDim()% run forceload remove %{-bg::reward::fl}%")
@@ -97,6 +104,11 @@ every 10 ticks:
         if world of loop-player is world of {_c}:
             if distance between loop-player and {_c} < 5:
                 send action bar "&6보상 상자 &f— &e우클릭&f해서 열기" to loop-player
+
+# 열린 · 사라진 상자의 장식이 혹시 남아 있으면 치움
+every 2 seconds:
+    {-bg::reward::team} is not set
+    bgCmd("kill @e[tag=bg_reward]")
 
 # 우클릭: Skript 이벤트 + 데이터팩(tick) 둘 다 bg_wantreward 태그를 붙인다
 on right click on entity:

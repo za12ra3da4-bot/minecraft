@@ -1,5 +1,5 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  왕관 쟁탈전 — 추가 전설 무기 8종 + 보스 전용 무기 4종 (스킬 판정 + 연출)
+#  신화쟁탈전 — 추가 전설 무기 8종 + 보스 전용 무기 4종 (스킬 판정 + 연출)
 #   피해는 bgDmg (하트, 1.6배 적용). 무기 그림 방향: 날끝 아래 +135 · 옆(+X) -135 · 위 -45
 # ═════════════════════════════════════════════════════════════════════════════
 
@@ -67,6 +67,7 @@ function bgFrostArrow(p: player, o: location, a: number, pit: number):
 
 function bgIceSpikes(l: location):
     bgFxGrow(bgGround({_l}), "fx2_frost_burst", 0.8, 4.6, 8, 0.05)
+    bgImpact(bgGround({_l}), 2.5, "frost", true)
     set {_t} to bgVTag()
     set {_g} to bgUp(bgGround({_l}), -1.2)
     loop 6 times:
@@ -99,6 +100,7 @@ function bgSkStorm(p: player):
         bgParticle({_q}, "electric_spark", 0.2, 0.2, 0.2, 0.1, 6)
         wait 1 tick
     strike lightning effect at {_end}
+    bgImpact(bgGround({_end}), 3.5, "thunder", true)
     bgFxGrow(bgGround({_end}), "fx2_storm_strike", 1, 7, 7, 0.05)
     bgWfx(bgGround({_end}), "fx2_storm_strike", 6, 30, 0)
     bgParticle({_end}, "electric_spark", 1.5, 1, 1.5, 0.5, 60)
@@ -119,6 +121,7 @@ function bgSkStorm(p: player):
                 bgDmg(loop-value, 2.5)
                 bgCmd("effect give %bgPName(loop-value)% glowing 3 0 true")
                 bgSoundAt({_to}, "entity.lightning_bolt.impact", 0.8, 1.6)
+                bgImpact(location of loop-value, 1.2, "thunder", false)
                 set {_from} to {_to}
                 add 1 to {_n}
     wait 10 ticks
@@ -136,6 +139,7 @@ function bgSkScythe(p: player):
         bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle soul ^ ^ ^2.6 0.3 0.2 0.3 0.02 6 force")
         bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle sculk_soul ^ ^ ^2 0.2 0.2 0.2 0.02 3 force")
         wait 1 tick
+    bgImpactRing(location of {_p}, 1, 4.5, "soul")
     set {_es::*} to bgNear({_p}, location of {_p}, 4.5)
     set {_n} to 0
     loop {_es::*}:
@@ -172,7 +176,9 @@ function bgSkLance(p: player):
                 bgVel(loop-value-2, vector(0, 0.95, 0))
                 bgCmd("effect give %bgPName(loop-value-2)% glowing 5 0 true")
                 bgSoundAt(location of loop-value-2, "entity.player.attack.knockback", 1.2, 1)
+                bgImpact(location of loop-value-2, 1.6, "holy", false)
         wait 1 tick
+    bgImpact(location of {_p}, 2.6, "holy", true)
     bgShrinkKill({_t}, 4)
 
 # ─────────────────────────────────────────── 저주받은 해골 지팡이: 날아가는 해골 → 폭발 + 4초 독 구름
@@ -201,6 +207,7 @@ function bgSkSkull(p: player):
     bgParticle({_end}, "soul", 1.5, 0.8, 1.5, 0.05, 30)
     bgSoundAt({_end}, "entity.generic.explode", 1.2, 1.4)
     set {_gl} to bgGround({_end})
+    bgImpact({_gl}, 3, "venom", true)
     bgFxGrow({_gl}, "fx2_skull_miasma", 1, 7, 6, 0.05)
     bgWfx({_gl}, "fx2_skull_miasma", 6.6, 84, 0)
     set {_es::*} to bgNear({_p}, {_end}, 3)
@@ -230,6 +237,7 @@ function bgSkChakram(p: player):
             if {_out::%uuid of loop-value-2%} is not set:
                 set {_out::%uuid of loop-value-2%} to true
                 bgDmg(loop-value-2, 1.5)
+                bgImpact(location of loop-value-2, 1.2, "holy", false)
         wait 1 tick
     set {_far} to bgFwd({_o}, {_yaw}, 10.4, 0, 0)
     loop 8 times:
@@ -242,6 +250,7 @@ function bgSkChakram(p: player):
             if {_in::%uuid of loop-value-2%} is not set:
                 set {_in::%uuid of loop-value-2%} to true
                 bgDmg(loop-value-2, 1.5)
+                bgImpact(location of loop-value-2, 1.2, "holy", false)
         wait 1 tick
     bgSoundAt(location of {_p}, "item.armor.equip_gold", 1, 1.4)
     bgCmd("kill @e[tag=%{_t}%]")
@@ -281,6 +290,7 @@ function bgSkChain(p: player):
     set {_d} to max(0.5, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
     bgVel({_tg}, vector({_dx} / {_d} * min(2.2, {_d} * 0.22), 0.45, {_dz} / {_d} * min(2.2, {_d} * 0.22)))
     bgDmg({_tg}, 1.5)
+    bgImpact(location of {_tg}, 1.6, "blood", false)
     bgCmd("effect give %bgPName({_tg})% slowness 2 9 true")
     bgSoundAt(location of {_tg}, "block.chain.break", 1.5, 0.6)
     bgFxGrow(location of {_tg}, "fx2_chain_hook", 1, 4, 6, 0.08)
@@ -305,6 +315,10 @@ function bgSkGauntlet(p: player):
         set {_g} to bgUp({_c}, 1)
         bgParticle({_g}, "block{block_state:""minecraft:stone""}", 0.5, 0.2, 0.5, 0.1, 14)
         bgParticle({_g}, "crit", 0.6, 0.3, 0.6, 0.2, 8)
+        set {_dd} to false
+        if mod(loop-number, 2) is 1:
+            set {_dd} to true
+        bgImpact({_c}, 1.5, "stone", {_dd})
         bgSoundAt({_g}, "block.stone.break", 1.2, 0.6)
         loop bgNear({_p}, {_g}, 1.8):
             if {_done::%uuid of loop-value-2%} is not set:
@@ -350,6 +364,7 @@ function bgSkBTalos(p: player):
                     bgDmg(loop-value-3, 2.5)
                     bgCmd("effect give %bgPName(loop-value-3)% slowness 1 2 true")
             wait 1 tick
+        bgImpact(location of {_p}, 2.6, "fire", true)
         bgShrinkKill({_t}, 6)
         wait 3 ticks
     bgParticle(bgUp(location of {_p}, 0.2), "sweep_attack", 1.5, 0.2, 1.5, 0, 6)
@@ -369,6 +384,7 @@ function bgSkBSphinx(p: player):
         bgCmd("execute in %bgDim()% run summon block_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 0.3 + mod(loop-number, 4) * 0.7)% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bgfx"",""%{_ts}%""],Rotation:[%loop-number * 22.5%f,0f],block_state:{Name:""minecraft:%{_blk}%""},brightness:{sky:15,block:12},teleport_duration:1,transformation:{left_rotation:[0.2f,0.1f,0.2f,0.95f],right_rotation:[0f,0f,0f,1f],translation:[-0.2f,0f,%bgN(3 + mod(loop-number, 5) * 0.9)%f],scale:[0.4f,0.4f,0.4f]}}")
     bgSoundAt({_l}, "entity.illusioner.cast_spell", 2, 0.7)
     bgFxGrow({_l}, "fx2_sphinx_vortex", 2, 15, 10, 0.08)
+    bgImpactRing({_l}, 1.5, 7, "sand")
     bgWRune({_l}, "fx2_sphinx_vortex", 13, 60)
     bgSoundAt({_l}, "block.sand.break", 2, 0.5)
     set {_es::*} to bgNear({_p}, {_l}, 7)
@@ -401,6 +417,7 @@ function bgSkBLadon(p: player):
     set {_fx} to -1 * sin({_yaw})
     set {_fz} to cos({_yaw})
     wait 3 ticks
+    bgImpactCone(location of {_p}, {_yaw}, 96, 6.8, "venom")
     loop bgNear({_p}, location of {_p}, 6.8):
         set {_dx} to (x-coordinate of loop-value) - (x-coordinate of {_p})
         set {_dz} to (z-coordinate of loop-value) - (z-coordinate of {_p})
@@ -453,6 +470,7 @@ function bgSkBCyclops(p: player):
         bgParticle({_q}, "large_smoke", 0.3, 0.3, 0.3, 0.01, 3)
         wait 1 tick
     bgParticle({_to}, "explosion_emitter", 0, 0, 0, 0, 1)
+    bgImpact({_to}, 4.5, "stone", true)
     bgFxGrow({_to}, "fx2_cyclops_crater", 2, 10, 7, 0.05)
     bgWfx({_to}, "fx2_cyclops_crater", 8, 70, 0)
     bgParticle(bgUp({_to}, 0.3), "block{block_state:""minecraft:stone""}", 3, 0.3, 3, 0.2, 120)
