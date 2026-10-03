@@ -544,16 +544,28 @@ on respawn:
     set respawn location to bgBaseSpawnLoc(bgTeam(player))
     wait 1 tick
     # 부활 대기 (기본 5초, /전장 리스폰 <초>) — 그동안 관전 모드
+    #  관전 모드로 날아다니며 다른 팀 인원 · 위치를 엿보지 못하게 우리 본진 위 한 자리에 묶어 둔다
+    #  (4칸 넘게 벗어나거나 · 다른 사람 시점으로 들어가거나 · 관전 메뉴로 순간이동하면 0.1초 안에 되돌림)
     set {_d} to {bg::cfg::respawn} ? 5
     if {_d} > 0:
         set gamemode of player to spectator
-        loop {_d} times:
-            send title "&c&l쓰러짐" with subtitle "&f%{_d} - loop-number + 1%초 뒤 부활" to player for 25 ticks
-            wait 1 second
+        set {_base} to bgBaseSpawnLoc(bgTeam(player))
+        set {_a} to bgUp({_base}, 4)
+        set yaw of {_a} to yaw of {_base}
+        set pitch of {_a} to 35
+        teleport player to {_a}
+        loop {_d} * 10 times:
+            if mod(loop-number - 1, 10) is 0:
+                send title "&c&l쓰러짐" with subtitle "&f%{_d} - floor((loop-number - 1) / 10)%초 뒤 부활" to player for 25 ticks
+            wait 2 ticks
             if player is not online:
                 stop
             if {-bg::on} is not true:
                 stop
+            if world of player is not world of {_a}:
+                teleport player to {_a}
+            else if distance between location of player and {_a} > 4:
+                teleport player to {_a}
         set gamemode of player to survival
         teleport player to bgBaseSpawnLoc(bgTeam(player))
         heal player
