@@ -155,6 +155,8 @@ function bgStop(reason: text):
         bgSay("  %{-bg::tcol::%loop-value%}%%{-bg::tname::%loop-value%}%&f : %{-bg::score::%loop-value%}%점")
     # 자유 팀 선택은 판마다 꺼짐 (관리자가 /자유팀선택 으로 다시 켬)
     delete {-bg::freeteam}
+    # 팀 잠금도 판마다 풀림
+    delete {bg::lock::*}
     wait 5 seconds
     if {-bg::on} is not true:
         bgHudRemove()
@@ -694,21 +696,31 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
                 if arg-3 is not "none":
                     send "&c팀: red / blue / green / yellow / none"
                     stop
+            if arg-3 is not "none":
+                if bgLocked(arg-3) is true:
+                    send "&c[전장] %{-bg::tname::%arg-3%}% 팀은 잠겨 있습니다 &7(/팀잠금 %arg-3% 으로 풀기)"
+                    stop
             bgSetupTeams()
             bgSetTeam({_p}, arg-3)
         else if arg-1 is "자동팀":
             bgSetupTeams()
             # 접속 순서대로 돌아가며 넣으면 매번 같은 팀이 됨 → 사람 순서 · 팀 순서를 둘 다 섞는다 (인원 차이는 최대 1명)
             set {_ps::*} to shuffled all players
-            set {_tl::*} to shuffled {-bg::teams::*}
+            # 잠긴 팀(/팀잠금)은 빼고 나눈다
+            loop shuffled {-bg::teams::*}:
+                if bgLocked(loop-value) is false:
+                    add loop-value to {_tl::*}
+            if size of {_tl::*} is 0:
+                send "&c[전장] 모든 팀이 잠겨 있습니다. &7(/팀잠금 해제)"
+                stop
             set {_i} to 0
             loop {_ps::*}:
                 if gamemode of loop-value is not spectator:
                     if bgOptOut(loop-value) is false:
-                        set {_t} to {_tl::%mod({_i}, 4) + 1%}
+                        set {_t} to {_tl::%mod({_i}, size of {_tl::*}) + 1%}
                         bgSetTeam(loop-value, {_t})
                         add 1 to {_i}
-            bgSay("%{_i}%명을 네 팀으로 나눴습니다.")
+            bgSay("%{_i}%명을 %size of {_tl::*}%팀으로 나눴습니다.")
         else if arg-1 is "팀초기화":
             if {-bg::on} is true:
                 send "&c[전장] 게임 중에는 팀을 초기화할 수 없습니다. 먼저 /전장 종료"

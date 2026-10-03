@@ -148,13 +148,16 @@ every 10 ticks:
                         else:
                             if bgOptOut(loop-player) is true:
                                 send action bar "&7관전자 모드라 팀에 들어가지 않습니다 &8(/관전자 로 끄기)" to loop-player
+                            else if bgLocked(loop-value-2) is true:
+                                send action bar "&c%{-bg::tname::%loop-value-2%}% 팀은 잠겨 있습니다" to loop-player
                             else if bgTeam(loop-player) is not loop-value-2:
                                 bgSetupTeams()
                                 bgSetTeam(loop-player, loop-value-2)
                                 play sound "block.note_block.pling" to loop-player
                                 bgParticle(location of loop-player, "happy_villager", 0.6, 1, 0.6, 0, 12)
                             if bgOptOut(loop-player) is false:
-                                send action bar "%{-bg::tcol::%loop-value-2%}%&l%{-bg::tname::%loop-value-2%}% 팀 &7— 팀원 %bgTeamCount(loop-value-2)%명" to loop-player
+                                if bgLocked(loop-value-2) is false:
+                                    send action bar "%{-bg::tcol::%loop-value-2%}%&l%{-bg::tname::%loop-value-2%}% 팀 &7— 팀원 %bgTeamCount(loop-value-2)%명" to loop-player
 
 # 대기실 안 피해 없음 · 게임 밖에서는 사람끼리 못 때림
 on damage of player:

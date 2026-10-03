@@ -73,6 +73,59 @@ on right click on tnt:
     bgSay("&c[TNT 함정] &e%{_n}%&f 님이 TNT 에 불을 붙이려다 &c&l밴&f 당했습니다 ㅋ")
     bgSound("entity.generic.explode", 0.5, 1.4)
 
+# ─────────────────────────────────────────────────────────── 팀 잠금 (/팀잠금 <팀>)
+#  1대1 · 1대1대1 판용: 잠근 팀에는 자동팀 · 중참 · 대기실 발판 · /전장 팀 으로 아무도 배정되지 않는다
+#  /팀잠금 <팀> (다시 치면 풀림) · /팀잠금 해제 (전부 풀기) · /팀잠금 (지금 상태)   판이 끝나면 전부 풀림 (bgStop)
+function bgTeamId(s: text) :: text:
+    loop {-bg::teams::*}:
+        if {_s} is loop-value:
+            return loop-value
+        if {_s} is {-bg::tname::%loop-value%}:
+            return loop-value
+    if {_s} is "빨강" or "빨간" or "빨":
+        return "red"
+    if {_s} is "파랑" or "파란" or "파":
+        return "blue"
+    if {_s} is "초록" or "초" or "녹":
+        return "green"
+    if {_s} is "노랑" or "노란" or "노":
+        return "yellow"
+    return "none"
+
+function bgLockStatus() :: text:
+    set {_s} to ""
+    loop {-bg::teams::*}:
+        if bgLocked(loop-value) is true:
+            set {_s} to "%{_s}%%{-bg::tcol::%loop-value%}%%{-bg::tname::%loop-value%}% "
+    if {_s} is "":
+        return "&7없음"
+    return {_s}
+
+command /팀잠금 [<text>]:
+    aliases: /teamlock
+    permission: op
+    trigger:
+        if arg-1 is not set:
+            send "&6[팀잠금] &f잠긴 팀: %bgLockStatus()% &7(/팀잠금 <레드|블루|그린|옐로> · /팀잠금 해제)"
+            stop
+        if arg-1 is "해제" or "초기화" or "전체해제":
+            delete {bg::lock::*}
+            bgSay("&6[팀잠금] &f모든 팀 잠금을 풀었습니다.")
+            stop
+        set {_t} to bgTeamId(arg-1)
+        if {_t} is "none":
+            send "&c[팀잠금] 팀: 레드 · 블루 · 그린 · 옐로 (red · blue · green · yellow)"
+            stop
+        if bgLocked({_t}) is true:
+            delete {bg::lock::%{_t}%}
+            bgSay("&6[팀잠금] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f 잠금 해제")
+        else:
+            set {bg::lock::%{_t}%} to true
+            bgSay("&6[팀잠금] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f 잠금 — 이 팀에는 아무도 배정되지 않습니다")
+            if bgTeamCount({_t}) > 0:
+                send "&7  이미 이 팀에 있는 %bgTeamCount({_t})%명은 그대로입니다. &e/전장 자동팀&7 을 다시 하면 다른 팀으로 나뉩니다." to sender
+        send "&6[팀잠금] &f잠긴 팀: %bgLockStatus()%" to sender
+
 # ─────────────────────────────────────────────────────────── 중간 참가 (/중참)
 #  게임 중에 들어온 사람(관전 중)이 /중참 → 이번 판에 참가한 팀 중 인원이 가장 적은 팀(같으면 점수가 낮은 팀)으로 바로 참가
 #  늦게 온 만큼 코인을 채워 줌 (20 + 지난 10초마다 1, 최대 200)
@@ -88,9 +141,16 @@ function bgMidJoin(p: player):
         send "&6[중참] &7관전자 모드입니다. 먼저 &e/관전자&7 로 끄세요." to {_p}
         stop
     # 이번 판에 참가한 팀 중에서 (시작할 때 사람이 있던 팀 · 2팀 판이면 그 2팀) 인원이 가장 적은 팀 (같으면 점수가 낮은 팀)
-    set {_cand::*} to {-bg::playing::*}
+    set {_all::*} to {-bg::playing::*}
+    if size of {_all::*} is 0:
+        set {_all::*} to {-bg::teams::*}
+    # 잠긴 팀(/팀잠금)은 빼고
+    loop {_all::*}:
+        if bgLocked(loop-value) is false:
+            add loop-value to {_cand::*}
     if size of {_cand::*} is 0:
-        set {_cand::*} to {-bg::teams::*}
+        send "&6[중참] &c들어갈 수 있는 팀이 없습니다 &7(모든 팀이 잠김)" to {_p}
+        stop
     set {_best} to "none"
     set {_bn} to 999
     set {_bs} to 999999
