@@ -684,12 +684,15 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             bgSetTeam({_p}, arg-3)
         else if arg-1 is "자동팀":
             bgSetupTeams()
+            # 접속 순서대로 돌아가며 넣으면 매번 같은 팀이 됨 → 사람 순서 · 팀 순서를 둘 다 섞는다 (인원 차이는 최대 1명)
+            set {_ps::*} to shuffled all players
+            set {_tl::*} to shuffled {-bg::teams::*}
             set {_i} to 0
-            loop all players:
-                if gamemode of loop-player is not spectator:
-                    if bgOptOut(loop-player) is false:
-                        set {_t} to {-bg::teams::%mod({_i}, 4) + 1%}
-                        bgSetTeam(loop-player, {_t})
+            loop {_ps::*}:
+                if gamemode of loop-value is not spectator:
+                    if bgOptOut(loop-value) is false:
+                        set {_t} to {_tl::%mod({_i}, 4) + 1%}
+                        bgSetTeam(loop-value, {_t})
                         add 1 to {_i}
             bgSay("%{_i}%명을 네 팀으로 나눴습니다.")
         else if arg-1 is "팀초기화":
