@@ -373,7 +373,7 @@ function bgKit(p: player):
 # 병과 능력치 (속성) — 병과를 바꾸거나 부활할 때 적용, 대기실로 가면 기본값
 #  전사   : 체력 12칸 · 공격력 +2 · 공격 속도 +10%
 #  궁수   : 체력 10칸 · 이동 속도 +15% · 낙하 피해 줄음 · 점프 조금 높음
-#  수호자 : 체력 14칸 · 방어 +3 · 넉백 저항 50% · 이동 속도 -8%  (첫 무기 돌도끼는 피해 절반 — a50 bgMainWeapon)
+#  수호자 : 체력 14칸 · 방어 +3 · 넉백 저항 50% · 이동 속도 -8%  (첫 무기 돌도끼는 피해 6.5 — a50 bgMainWeapon)
 function bgClassStats(p: player, c: number):
     set {_n} to name of {_p}
     set {_hp} to 24

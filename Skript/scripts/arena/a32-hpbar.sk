@@ -1,7 +1,8 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  신화쟁탈전 — 머리 위 체력바 (이름 밑)
-#   스코어보드 below_name 칸의 숫자 자리에 빨간 체력 막대 글자 + HP 숫자 "15/20" 을 띄운다 (마크 1.20.3+ numberformat)
-#   막대 글자 21개 = 리소스팩 bg:hpbar 글꼴 (arena/tools/rp/hpbar.py) · {-bg::hpbar::0..20} (a07-gen-hpbar.sk)
+#   스코어보드 below_name 칸의 숫자 자리에 빨간 체력 막대 "■■■■■■■□□□" + HP 숫자 "15/20" 를 띄운다 (마크 1.20.3+ numberformat)
+#   막대는 기본 글꼴의 ■ 10칸 (빨강 = 남은 체력 · 진회색 = 잃은 체력) → 리소스팩이 없거나 옛 팩이어도 보인다
+#   (리소스팩 bg:hpbar 글꼴 · a07-gen-hpbar.sk 는 이제 안 씀)
 #   0.25초마다 체력(숫자)이 바뀐 사람만 갱신 (명령 2개)
 # ═════════════════════════════════════════════════════════════════════════════
 
@@ -12,12 +13,11 @@ on load:
     delete {-bg::hpidx::*}
 
 every 5 ticks:
-    {-bg::hpbar::20} is set
     loop all players:
         set {_mx} to max health of loop-player
         if {_mx} > 0:
-            set {_i} to round((health of loop-player) / {_mx} * 20)
-            set {_i} to min(20, max(0, {_i}))
+            set {_i} to round((health of loop-player) / {_mx} * 10)
+            set {_i} to min(10, max(0, {_i}))
             # 하트 → HP (하트 1칸 = 2)
             set {_hp} to max(0, ceil((health of loop-player) * 2))
             set {_mhp} to round({_mx} * 2)
@@ -25,9 +25,16 @@ every 5 ticks:
             set {_old} to {-bg::hpidx::%uuid of loop-player%} ? ""
             if {_old} is not {_key}:
                 set {-bg::hpidx::%uuid of loop-player%} to {_key}
+                set {_on} to ""
+                set {_off} to ""
+                loop 10 times:
+                    if loop-number <= {_i}:
+                        set {_on} to "%{_on}%■"
+                    else:
+                        set {_off} to "%{_off}%■"
                 set {_n} to name of loop-player
                 bgCmd("scoreboard players set %{_n}% bg_hp 0")
-                bgCmd("scoreboard players display numberformat %{_n}% bg_hp fixed {text:"""",extra:[{text:""%{-bg::hpbar::%{_i}%}%"",font:""bg:hpbar""},{text:""%{_hp}%/%{_mhp}%"",color:""red"",bold:true}]}")
+                bgCmd("scoreboard players display numberformat %{_n}% bg_hp fixed {text:"""",extra:[{text:""%{_on}%"",color:""red""},{text:""%{_off}%"",color:""dark_gray""},{text:""%{_hp}%/%{_mhp}%"",color:""red"",bold:true}]}")
 
 on join:
     delete {-bg::hpidx::%uuid of player%}

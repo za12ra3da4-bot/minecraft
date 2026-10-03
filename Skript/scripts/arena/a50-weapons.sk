@@ -1013,9 +1013,9 @@ function bgMainWeapon(p: player, c: number):
         set {_e} to "%{_e}%,""minecraft:sharpness"":1"
         set {_tag} to {_tagg}
     if {_c} is 2:
-        # 돌도끼(Lv.0)는 피해 절반: 원래 9 → 4.5 (수호자 기본 공격력 1 + 3.5). 공격 속도는 원래 돌도끼 그대로 (0.8)
+        # 돌도끼(Lv.0)는 원래 9 → 6.5 (절반 4.5 에서 +2 · 수호자 기본 공격력 1 + 5.5). 공격 속도는 원래 돌도끼 그대로 (0.8)
         if {_m} is "stone":
-            set {_tag} to "%{_tag}%,attribute_modifiers=[{type:""minecraft:attack_damage"",id:""minecraft:base_attack_damage"",amount:3.5,operation:""add_value"",slot:""mainhand""},{type:""minecraft:attack_speed"",id:""minecraft:base_attack_speed"",amount:-3.2,operation:""add_value"",slot:""mainhand""}]"
+            set {_tag} to "%{_tag}%,attribute_modifiers=[{type:""minecraft:attack_damage"",id:""minecraft:base_attack_damage"",amount:5.5,operation:""add_value"",slot:""mainhand""},{type:""minecraft:attack_speed"",id:""minecraft:base_attack_speed"",amount:-3.2,operation:""add_value"",slot:""mainhand""}]"
         bgCmd("give %{_n}% %{_m}%_axe[%{_tag}%,enchantments={%{_e}%}]")
     else:
         bgCmd("give %{_n}% %{_m}%_sword[%{_tag}%,enchantments={%{_e}%}]")

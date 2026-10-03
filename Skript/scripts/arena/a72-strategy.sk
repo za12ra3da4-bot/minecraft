@@ -37,7 +37,8 @@ function bgSetOre(l: location):
 # ─────────────────────────────────────────────────────────── 지휘 깃발 (기본템 · 핑)
 #  나침반은 월드에딧 길잡이 도구라 관리자가 쓰면 순간이동됨 → 깃발(종이 + 그림)로 바꿈
 #  우클릭 = 공격 핑 (붉은 핀) / 웅크리고 우클릭 = 도움 요청 (금빛 핀)
-#  공중에 빛나는 핀 그림 + 이름표 → 우리 팀에게만 보인다 (다른 팀 · 관전자는 안 보임). 3초 뒤 사라짐, 한 사람당 하나
+#  공중에 빛나는 핀 그림 + 이름표 + 찍은 블록 발광 + 빛나는 기둥 → 우리 팀에게만 보인다 (알림은 채팅 · 소리만, 화면 자막 없음)
+#  다른 팀 · 관전자에게는 안 보임. 3초 뒤 사라짐, 한 사람당 하나
 # 핀을 우리 팀이 아닌 모든 사람에게서 숨긴다 (Skript 기본 기능 hide … from …)
 #  소환한 바로 그 틱에 숨겨서 다른 팀 화면에는 아예 안 나타남 · 떠 있는 동안 반복해서 다시 숨김
 function bgPingVisible(l: location, id: text, t: text):
@@ -116,11 +117,16 @@ on right click:
     set {_ty} to bgN((y-coordinate of {_l}) + 1.1)
     bgCmd("execute in %bgDim()% run summon item_display %{_x}% %{_y}% %{_z}% {Tags:[""bg"",""bg_ping"",""%{_id}%""],billboard:""center"",Glowing:1b,glow_color_override:%{-bg::hex::%{_t}%}%,brightness:{sky:15,block:15},view_range:8f,item_display:""none"",interpolation_duration:10,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[2.2f,2.2f,2.2f]},item:{id:""minecraft:paper"",count:1,components:{""minecraft:item_model"":""bg:ping/%{_img}%""}}}")
     bgCmd("execute in %bgDim()% run summon text_display %{_x}% %{_ty}% %{_z}% {Tags:[""bg"",""bg_ping"",""%{_id}%""],billboard:""center"",see_through:1b,shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:8f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.3f,1.3f,1.3f]},text:[{text:""%{_ic}% %{_kind}%"",color:""%{_tc}%"",bold:true},{text:"" · %name of player%"",color:""white"",bold:false}]}")
+    # 찍은 블록 자체를 팀 색으로 빛나게 (발광 테두리는 벽 너머로도 보임) + 위로 솟는 빛나는 기둥
+    set {_bx} to floor(x-coordinate of location of {_b})
+    set {_by} to floor(y-coordinate of location of {_b})
+    set {_bz} to floor(z-coordinate of location of {_b})
+    bgCmd("execute in %bgDim()% run summon block_display %{_bx}%.0 %{_by}%.0 %{_bz}%.0 {Tags:[""bg"",""bg_ping"",""%{_id}%""],Glowing:1b,glow_color_override:%{-bg::hex::%{_t}%}%,brightness:{sky:15,block:15},view_range:8f,block_state:{Name:""minecraft:%{_t}%_stained_glass""},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.05f,-0.05f,-0.05f],scale:[1.1f,1.1f,1.1f]}}")
+    bgCmd("execute in %bgDim()% run summon block_display %{_bx}%.0 %{_by}%.0 %{_bz}%.0 {Tags:[""bg"",""bg_ping"",""%{_id}%""],Glowing:1b,glow_color_override:%{-bg::hex::%{_t}%}%,brightness:{sky:15,block:15},view_range:8f,block_state:{Name:""minecraft:%{_t}%_stained_glass""},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0.4f,1.1f,0.4f],scale:[0.2f,30f,0.2f]}}")
     bgPingVisible({_l}, {_id}, {_t})
     loop all players:
         if bgTeam(loop-player) is {_t}:
             send "%{-bg::tcol::%{_t}%}%[핑] &f%name of player% &7→ %{_cc}%&l%{_kind}%! &7(%floor(x-coordinate of {_l})%, %floor(z-coordinate of {_l})%)" to loop-player
-            bgTitleP(loop-player, "", "%{_cc}%&l%{_ic}% %{_kind}% &f— %name of player%")
             play sound {_snd} to loop-player
     # 3초: 위아래로 살짝 떠다니고 · 우리 팀에게만 빛기둥 → 3초 뒤 사라짐
     set {_up} to true
