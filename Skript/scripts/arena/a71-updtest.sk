@@ -1,0 +1,102 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — /업데이트테스트 (OP)
+#   1) 버전 3곳 비교: GitHub 최신 · 서버에 깔린 파일 · 지금 실제로 불러온 스크립트 → 어디서 막혔는지 바로 알려 줌
+#   2) 체력바가 실제로 돌고 있는지: bg_hp 점수판 · 닉네임 밑 칸 · 사람마다 점수 · 내 점수판 · 실패한 명령
+#   3) 다른 사람 머리 위에 보이는 내 체력바를 채팅으로 그대로 보여 줌
+# ═════════════════════════════════════════════════════════════════════════════
+import:
+    java.io.File
+    java.net.URI
+    java.nio.file.Files
+    java.nio.charset.StandardCharsets
+    java.util.regex.Pattern
+    com.google.common.io.Resources
+    org.bukkit.Bukkit
+    org.bukkit.scoreboard.DisplaySlot
+
+# a00-version.sk 내용에서 버전 글자만 꺼낸다
+function bgVerParse(txt: text) :: text:
+    set {_m} to Pattern.compile("ver\} to ""([^""]+)""").matcher({_txt})
+    if {_m}.find() is true:
+        return {_m}.group(1)
+    return "읽기 실패"
+
+function bgVerDisk() :: text:
+    set {_f} to new File("plugins/Skript/scripts/arena/a00-version.sk")
+    if {_f}.exists() is not true:
+        return "파일 없음"
+    set {_txt} to Files.readString({_f}.toPath())
+    if {_txt} is not set:
+        return "읽기 실패"
+    return bgVerParse({_txt})
+
+function bgVerGitHub() :: text:
+    set {_u} to "https://raw.githubusercontent.com/za12ra3da4-bot/minecraft/claude/wonderful-cray-expxq7/Skript/scripts/arena/a00-version.sk?t=%unix timestamp of now%"
+    set {_txt} to Resources.toString(URI.create({_u}).toURL(), StandardCharsets.UTF_8)
+    if {_txt} is not set:
+        return "확인 실패"
+    return bgVerParse({_txt})
+
+command /업데이트테스트:
+    aliases: /updatetest
+    permission: op
+    trigger:
+        send "&6&l[업데이트 테스트]"
+        # 1) 버전 비교
+        set {_gh} to bgVerGitHub()
+        set {_disk} to bgVerDisk()
+        set {_live} to {-bg::ver} ? "없음 (예전 스크립트)"
+        send "&7 · GitHub 최신:       &f%{_gh}%"
+        send "&7 · 서버에 깔린 파일: &f%{_disk}%"
+        send "&7 · 지금 돌고 있는 것: &f%{_live}%"
+        if {_gh} is "확인 실패":
+            send "&e  ! GitHub 에 접속하지 못해 최신 버전은 비교 못 함 (서버 인터넷 확인)"
+        else if {_disk} is not {_gh}:
+            send "&c✘ 서버 파일이 최신이 아닙니다 → 서버를 켠 사람이 update.bat 실행 (창에 [실패] 가 있으면 캡처)"
+        if {_disk} is not {_live}:
+            send "&c✘ 파일은 바뀌었는데 아직 안 불러왔습니다 → /sk reload all"
+        if {_gh} is {_disk}:
+            if {_disk} is {_live}:
+                send "&a✔ 최신 버전이 실제로 돌고 있습니다 &7(%{-bg::verinfo}%)"
+        # 2) 체력바
+        send "&6&l[체력바]"
+        set {_main} to Bukkit.getScoreboardManager().getMainScoreboard()
+        set {_obj} to {_main}.getObjective("bg_hp")
+        if {_obj} is not set:
+            send "&c✘ bg_hp 점수판이 없습니다 (체력바 스크립트 a32-hpbar.sk 가 안 돌고 있음 → /sk reload arena/a32-hpbar.sk 오류 확인)"
+        else:
+            send "&a✔ bg_hp 점수판 있음"
+            set {_slot} to {_main}.getObjective(DisplaySlot.BELOW_NAME)
+            if {_slot} is not set:
+                send "&c✘ 닉네임 밑 칸에 아무 점수판도 없습니다"
+            else if {_slot}.getName() is "bg_hp":
+                send "&a✔ 닉네임 밑 칸 = bg_hp"
+            else:
+                send "&c✘ 닉네임 밑 칸을 다른 점수판(%{_slot}.getName()%)이 쓰고 있습니다 → 그 플러그인/스크립트를 끄세요 (5초마다 되찾긴 함)"
+            set {_all} to 0
+            set {_ok} to 0
+            loop all players:
+                add 1 to {_all}
+                if {_obj}.getScore(name of loop-player).isScoreSet() is true:
+                    add 1 to {_ok}
+            if {_ok} is {_all}:
+                send "&a✔ 접속자 %{_all}%명 모두 체력바 점수 있음"
+            else:
+                send "&c✘ 접속자 %{_all}%명 중 %{_ok}%명만 체력바 점수 있음"
+        # 다른 플러그인이 점수판을 바꿔 끼우면 닉네임 밑 바 · 사이드바가 안 보임
+        set {_other} to 0
+        loop all players:
+            if loop-player.getScoreboard().equals({_main}) is false:
+                add 1 to {_other}
+                send "&c✘ %name of loop-player% 는 다른 플러그인의 점수판을 보고 있음 → 체력바 · 사이드바가 안 보임" to sender
+        if {_other} is 0:
+            send "&a✔ 모두 서버 기본 점수판을 보고 있음 (다른 플러그인이 가로채지 않음)"
+        set {_ce} to {-bg::cmderr} ? 0
+        if {_ce} > 0:
+            send "&c✘ 실패한 명령 %{_ce}%개 → 서버 콘솔의 '[전장] 명령 오류' 줄을 보내주세요"
+        else:
+            send "&a✔ 실패한 명령 없음"
+        # 3) 내 체력바 미리보기 (다른 사람 머리 위에 보이는 그대로)
+        if sender is a player:
+            bgCmd("tellraw %name of player% [{text:"" · 다른 사람에게 보이는 내 체력바: "",color:""gray""},%bgHpComp(player)%]")
+            send "&7  (닉네임 밑 줄은 10칸 이내에서만 보이고, 내 머리 위 것은 나한테 안 보입니다)"

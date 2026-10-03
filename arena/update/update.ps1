@@ -70,6 +70,11 @@ try {
         if (Test-Path $dup) { Remove-Item $dup -Force; Say "   중복 파일 삭제: $dup" }
     }
     Get-ChildItem $skRoot -File -Filter "-old-*.sk" -ErrorAction SilentlyContinue | Remove-Item -Force
+    try {
+        $vt = Get-Content (Join-Path $srcSk "a00-version.sk") -Raw -Encoding UTF8
+        $vv = [regex]::Match($vt, 'ver\} to "([^"]+)"').Groups[1].Value
+        if ($vv) { Say "   스크립트 버전: $vv  (게임에서 /업데이트테스트 로 실제 적용 확인)" }
+    } catch {}
 } catch { Fail "스크립트 교체 (서버가 파일을 잡고 있으면 서버를 끄고 다시)" $_ }
 try {
     Say "4/4 데이터팩 교체 중... ($dp)"
@@ -102,3 +107,4 @@ try {
 try { Remove-Item $tmp -Recurse -Force } catch {}
 Say ""
 Say "완료! 서버를 재시작하세요 (리소스팩 설정 적용). 재시작이 어려우면 게임에서  /sk reload all  →  /minecraft:reload  →  /리팩 @a"
+Say "적용됐는지 확인: 게임에서  /업데이트테스트  (OP)"
