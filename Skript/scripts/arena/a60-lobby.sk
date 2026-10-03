@@ -120,6 +120,9 @@ on join:
         set {_logo} to {-bg::title::logo} ? "&6&l신화쟁탈전"
         bgTitleP(player, {_logo}, "&f팀 발판을 밟아 팀을 고르세요")
         stop
+    # 게임 중에 나갔다 다시 들어온 참가자는 원래 팀 그대로 (a20 on join 이 팀 · 본진 · 장비를 되돌림)
+    if bgTeam(player) is not "none":
+        stop
     bgSetTeam(player, "none")
     clear player's inventory
     set gamemode of player to spectator

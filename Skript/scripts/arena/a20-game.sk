@@ -522,6 +522,15 @@ on death of player:
                 stop
     set death message to "%{-bg::tcol::%bgTeam(victim)%}%%name of victim% &7쓰러짐"
 
+# 죽은 채로 멈추는 것 방지: 부활 화면이 안 뜨거나(리소스팩 창 등에 가려짐) 안 누르면
+#  다른 사람에게는 붉은 시체로 남고 본인은 닉네임 · 코어도 안 보이고 아무것도 못 함 → 서버가 강제로 부활시킨다
+#  (부활 대기 5초는 아래 on respawn 의 관전 모드가 맡으므로 부활 화면은 필요 없음)
+on death of player:
+    wait 10 ticks
+    victim is online
+    victim is dead
+    force victim to respawn
+
 on respawn:
     {-bg::on} is true
     bgTeam(player) is not "none"
