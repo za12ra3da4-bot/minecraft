@@ -74,7 +74,7 @@ on right click on tnt:
     bgSound("entity.generic.explode", 0.5, 1.4)
 
 # ─────────────────────────────────────────────────────────── 중간 참가 (/중참)
-#  게임 중에 들어온 사람(관전 중)이 /중참 → 인원이 가장 적은 팀(같으면 점수가 낮은 팀)으로 바로 참가
+#  게임 중에 들어온 사람(관전 중)이 /중참 → 이번 판에 참가한 팀 중 인원이 가장 적은 팀(같으면 점수가 낮은 팀)으로 바로 참가
 #  늦게 온 만큼 코인을 채워 줌 (20 + 지난 10초마다 1, 최대 200)
 #  관리자: /중참 <닉네임> (대신 넣기) · /중참 끔 | 켬 (중간 참가 막기 · 허용)
 function bgMidJoin(p: player):
@@ -87,11 +87,14 @@ function bgMidJoin(p: player):
     if bgOptOut({_p}) is true:
         send "&6[중참] &7관전자 모드입니다. 먼저 &e/관전자&7 로 끄세요." to {_p}
         stop
-    # 인원이 가장 적은 팀 (같으면 점수가 낮은 팀)
+    # 이번 판에 참가한 팀 중에서 (시작할 때 사람이 있던 팀 · 2팀 판이면 그 2팀) 인원이 가장 적은 팀 (같으면 점수가 낮은 팀)
+    set {_cand::*} to {-bg::playing::*}
+    if size of {_cand::*} is 0:
+        set {_cand::*} to {-bg::teams::*}
     set {_best} to "none"
     set {_bn} to 999
     set {_bs} to 999999
-    loop {-bg::teams::*}:
+    loop {_cand::*}:
         set {_n} to bgTeamCount(loop-value)
         set {_s} to {-bg::score::%loop-value%} ? 0
         if {_n} < {_bn}:

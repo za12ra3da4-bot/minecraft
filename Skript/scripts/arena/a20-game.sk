@@ -79,6 +79,11 @@ function bgStart():
             if ({bg::coin::%uuid of loop-player%} ? 0) < 20:
                 set {bg::coin::%uuid of loop-player%} to 20
     bgHudCreate()
+    # 이번 판에 사람이 있는 팀만 기록 → /중참 은 이 팀들 중에서만 고른다 (1대1 · 2팀 판이면 그 2팀 중 하나로)
+    delete {-bg::playing::*}
+    loop {-bg::teams::*}:
+        if bgTeamCount(loop-value) > 0:
+            add loop-value to {-bg::playing::*}
     loop all players:
         if bgTeam(loop-player) is not "none":
             bgSpawn(loop-player)
