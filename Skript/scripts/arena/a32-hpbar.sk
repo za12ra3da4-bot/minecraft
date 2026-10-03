@@ -6,11 +6,19 @@
 #   0.25초마다 체력(숫자)이 바뀐 사람만 갱신 (명령 2개)
 # ═════════════════════════════════════════════════════════════════════════════
 
-on load:
+function bgHpSetup():
     bgCmd("scoreboard objectives add bg_hp dummy")
     bgCmd("scoreboard objectives modify bg_hp displayname """"")
     bgCmd("scoreboard objectives setdisplay below_name bg_hp")
     delete {-bg::hpidx::*}
+
+on load:
+    bgHpSetup()
+
+# 다른 플러그인 · 스크립트 · 월드 교체로 bg_hp 가 지워지거나 below_name 칸을 뺏겨도 5초 안에 되살린다
+#  (이미 있으면 add 는 조용히 실패 · 캐시를 지워서 모든 사람의 막대를 다시 보낸다)
+every 5 seconds:
+    bgHpSetup()
 
 every 5 ticks:
     loop all players:
