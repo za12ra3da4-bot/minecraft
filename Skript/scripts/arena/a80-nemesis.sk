@@ -5,10 +5,10 @@
 #    · 20초 전에 예고 · 1등 팀 본진 앞(본진 중심에서 22칸, 바깥)에 나온다
 #    · 1등 팀만 노리고, 1등 팀만 때릴 수 있다 (다른 팀은 맞지도 않고 때리지도 못함)
 #    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 시듦 효과 없음
-#    · 90초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +50점 (막아 낸 보상)
+#    · 90초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +150점 + 팀원 코인 +30 (막아 낸 보상 · 미니 보스와 같은 점수)
 #   그동안 1등 팀은 네메시스를 막느라 바쁘고, 다른 팀은 거점을 되찾을 기회
 #  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
-#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200)
+#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 150)
 # ═════════════════════════════════════════════════════════════════════════════
 import:
     org.bukkit.Bukkit
@@ -18,6 +18,8 @@ on load:
         set {bg::cfg::nem_ratio} to 2
     if {bg::cfg::nem_min} is not set:
         set {bg::cfg::nem_min} to 200
+    if {bg::cfg::nem_reward} is not set:
+        set {bg::cfg::nem_reward} to 150
 
 # 지금 1등 팀과 (그 팀을 뺀) 2등 점수
 function bgNemTop() :: text:
@@ -66,7 +68,7 @@ function bgNemStart(t: text):
     bgSay("&5&l[복수의 신] &f%{_tn}% 팀&f이 너무 앞서갑니다. &d20초 뒤&f 네메시스가 %{_tn}% 팀&f 본진 앞에 나타납니다!")
     loop all players:
         if bgTeam(loop-player) is {_t}:
-            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f90초 동안 우리 팀을 노립니다 — 쓰러뜨리면 &e+50점" to loop-player for 4 seconds
+            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f90초 동안 우리 팀을 노립니다 — 쓰러뜨리면 &e+%{bg::cfg::nem_reward}%점 · 코인 +30" to loop-player for 4 seconds
         else if bgTeam(loop-player) is not "none":
             send title "&5&l복수의 신이 깨어납니다" with subtitle "&f%{_tn}% 팀&f을 노립니다 — 지금이 거점을 되찾을 기회!" to loop-player for 4 seconds
     bgSound("entity.wither.ambient", 1, 0.6)
@@ -127,7 +129,7 @@ function bgNemSpawn(t: text):
     bgCmd("bossbar set bg:nemesis value %{_hp}%")
     bgCmd("bossbar set bg:nemesis players @a[tag=!bg_optout]")
     set {_tn} to "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}%"
-    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(90초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +50점)")
+    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(90초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +%{bg::cfg::nem_reward}%점 · 코인 +30)")
     bgSound("entity.wither.spawn", 0.8, 0.8)
 
 function bgNemTick():
@@ -211,8 +213,9 @@ on death:
         delete {-bg::nem::alive}
         delete {-bg::nem::ent}
         bgCmd("bossbar remove bg:nemesis")
-        bgAddScore({_t}, 50)
-        bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+50점")
+        bgAddScore({_t}, {bg::cfg::nem_reward})
+        bgCoinTeam({_t}, 30, "네메시스 격퇴")
+        bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+%{bg::cfg::nem_reward}%점 · 팀원 코인 +30")
         bgSound("ui.toast.challenge_complete", 0.8, 1)
 
 command /네메시스 [<text>]:
