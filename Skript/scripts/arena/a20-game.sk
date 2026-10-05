@@ -357,11 +357,11 @@ function bgSpawn(p: player):
     bgCmd("effect give %name of {_p}% resistance 3 4 true")
     bgSpawnShield({_p})
 
-# 스폰킬 방지: 부활하면 황금사과처럼 흡수 I (노란 하트 2칸) — 우리 본진(16칸)을 벗어나는 순간 사라진다 (bgBaseGuard)
+# 스폰킬 방지: 부활하면 마법이 부여된 황금사과처럼 흡수 IV (노란 하트 8칸) — 우리 본진(16칸)을 벗어나는 순간 사라진다 (bgBaseGuard)
 #  본진 안에 있는 동안 다시 채워 주지는 않음 (한 번 깎이면 끝)
 function bgSpawnShield(p: player):
     set {-bg::shield::%uuid of {_p}%} to true
-    bgCmd("effect give %name of {_p}% absorption infinite 0 true")
+    bgCmd("effect give %name of {_p}% absorption infinite 3 true")
 
 function bgKit(p: player):
     set {_n} to name of {_p}
