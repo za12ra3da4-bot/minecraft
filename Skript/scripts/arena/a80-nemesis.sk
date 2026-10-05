@@ -1,0 +1,239 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  신화쟁탈전 — 복수의 신 네메시스 (역전 이벤트)
+#   후반(제한 시간 절반 이후)에 1등 팀 점수가 2등의 2배 이상이면 한 판에 한 번 나타난다
+#   불쾌하지 않게:
+#    · 20초 전에 예고 · 1등 팀 본진 앞(본진 중심에서 22칸, 바깥)에 나온다
+#    · 1등 팀만 노리고, 1등 팀만 때릴 수 있다 (다른 팀은 맞지도 않고 때리지도 못함)
+#    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 시듦 효과 없음
+#    · 90초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +50점 (막아 낸 보상)
+#   그동안 1등 팀은 네메시스를 막느라 바쁘고, 다른 팀은 거점을 되찾을 기회
+#  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
+#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200)
+# ═════════════════════════════════════════════════════════════════════════════
+import:
+    org.bukkit.Bukkit
+
+on load:
+    if {bg::cfg::nem_ratio} is not set:
+        set {bg::cfg::nem_ratio} to 2
+    if {bg::cfg::nem_min} is not set:
+        set {bg::cfg::nem_min} to 200
+
+# 지금 1등 팀과 (그 팀을 뺀) 2등 점수
+function bgNemTop() :: text:
+    set {_best} to -1
+    set {_w} to "none"
+    loop {-bg::teams::*}:
+        if ({-bg::score::%loop-value%} ? 0) > {_best}:
+            set {_best} to {-bg::score::%loop-value%} ? 0
+            set {_w} to loop-value
+    return {_w}
+
+function bgNemSecond(t: text) :: number:
+    set {_s} to 0
+    loop {-bg::teams::*}:
+        if loop-value is not {_t}:
+            if bgTeamCount(loop-value) > 0:
+                if ({-bg::score::%loop-value%} ? 0) > {_s}:
+                    set {_s} to {-bg::score::%loop-value%} ? 0
+    return {_s}
+
+# 매초: 조건을 보고 한 번만 발동 · 살아 있으면 움직임 관리
+every 1 second:
+    if {-bg::on} is not true:
+        if {-bg::nem::alive} is true:
+            bgNemRemove("")
+        delete {-bg::nem::done}
+        stop
+    if {-bg::nem::alive} is true:
+        bgNemTick()
+        stop
+    {-bg::nem::done} is not true
+    # 후반만 (제한 시간의 절반 이후)
+    {-bg::sec} >= {bg::cfg::minutes} * 30
+    set {_t} to bgNemTop()
+    {_t} is not "none"
+    set {_b} to {-bg::score::%{_t}%} ? 0
+    {_b} >= {bg::cfg::nem_min}
+    set {_s} to max(bgNemSecond({_t}), 1)
+    {_b} >= {_s} * {bg::cfg::nem_ratio}
+    bgNemStart({_t})
+
+function bgNemStart(t: text):
+    set {-bg::nem::done} to true
+    set {-bg::nem::team} to {_t}
+    set {_tn} to "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}%"
+    bgSay("&5&l[복수의 신] &f%{_tn}% 팀&f이 너무 앞서갑니다. &d20초 뒤&f 네메시스가 %{_tn}% 팀&f 본진 앞에 나타납니다!")
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f90초 동안 우리 팀을 노립니다 — 쓰러뜨리면 &e+50점" to loop-player for 4 seconds
+        else if bgTeam(loop-player) is not "none":
+            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f%{_tn}% 팀&f을 노립니다 — 지금이 거점을 되찾을 기회!" to loop-player for 4 seconds
+    bgSound("entity.wither.ambient", 1, 0.6)
+    wait 20 seconds
+    if {-bg::on} is not true:
+        stop
+    bgNemSpawn({_t})
+
+# 1등 팀 본진 중심에서 대신전 쪽으로 22칸 (본진 바깥) 땅 위
+function bgNemHome(t: text) :: location:
+    set {_b} to bgMk("base_%{_t}%")
+    set {_c} to bgMk("temple_core")
+    set {_dx} to (x-coordinate of {_c}) - (x-coordinate of {_b})
+    set {_dz} to (z-coordinate of {_c}) - (z-coordinate of {_b})
+    set {_d} to sqrt({_dx} * {_dx} + {_dz} * {_dz})
+    if {_d} < 1:
+        set {_d} to 1
+    set {_l} to location((x-coordinate of {_b}) + {_dx} / {_d} * 22, y-coordinate of {_b}, (z-coordinate of {_b}) + {_dz} / {_d} * 22, world of {_b})
+    set {_g} to highest block at {_l}
+    if {_g} is set:
+        set {_l} to location of {_g}
+        add 1 to y-coordinate of {_l}
+    return {_l}
+
+function bgNemSpawn(t: text):
+    set {_l} to bgNemHome({_t})
+    set {-bg::nem::home} to {_l}
+    spawn a wither skeleton at {_l}
+    set {_e} to last spawned entity
+    set {-bg::nem::ent} to {_e}
+    set {-bg::nem::alive} to true
+    set {-bg::nem::left} to 90
+    add "bg" to scoreboard tags of {_e}
+    add "bg_nemesis" to scoreboard tags of {_e}
+    set name of {_e} to "&5&l복수의 신 네메시스"
+    {_e}.setRemoveWhenFarAway(false)
+    {_e}.setPersistent(true)
+    {_e}.setGlowing(true)
+    {_e}.setCustomNameVisible(true)
+    set tool of {_e} to netherite sword
+    # 체력: 1등 팀 인원에 맞춰 (80 + 1명당 40, 최대 400) · 한 대 5 (하트 2.5칸)
+    set {_n} to bgTeamCount({_t})
+    set {_hp} to min(400, 80 + 40 * {_n})
+    set {-bg::nem::max} to {_hp}
+    set {_u} to "%uuid of {_e}%"
+    bgCmd("attribute %{_u}% minecraft:max_health base set %{_hp}%")
+    bgCmd("attribute %{_u}% minecraft:attack_damage base set 5")
+    bgCmd("attribute %{_u}% minecraft:scale base set 1.7")
+    bgCmd("attribute %{_u}% minecraft:movement_speed base set 0.3")
+    bgCmd("attribute %{_u}% minecraft:follow_range base set 48")
+    bgCmd("attribute %{_u}% minecraft:knockback_resistance base set 0.6")
+    heal {_e}
+    bgCmd("bossbar remove bg:nemesis")
+    bgCmd("bossbar add bg:nemesis {text:""복수의 신 네메시스"",color:""dark_purple"",bold:true}")
+    bgCmd("bossbar set bg:nemesis color purple")
+    bgCmd("bossbar set bg:nemesis style notched_10")
+    bgCmd("bossbar set bg:nemesis max %{_hp}%")
+    bgCmd("bossbar set bg:nemesis value %{_hp}%")
+    bgCmd("bossbar set bg:nemesis players @a[tag=!bg_optout]")
+    set {_tn} to "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}%"
+    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(90초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +50점)")
+    bgSound("entity.wither.spawn", 0.8, 0.8)
+
+function bgNemTick():
+    set {_e} to {-bg::nem::ent}
+    if {_e} is not alive:
+        bgNemRemove("")
+        stop
+    set {_t} to {-bg::nem::team}
+    remove 1 from {-bg::nem::left}
+    if {-bg::nem::left} <= 0:
+        bgNemRemove("&5&l[복수의 신] &f네메시스가 할 일을 마치고 떠났습니다.")
+        stop
+    # 1등 팀 본진 안으로는 못 들어감 (스폰킬 방지) → 나올 자리로 되돌림
+    set {_b} to bgMk("base_%{_t}%")
+    if world of {_e} is world of {_b}:
+        if bgDist2(location of {_e}, {_b}) < 18:
+            teleport {_e} to {-bg::nem::home}
+    # 1등 팀에서 가장 가까운 사람을 노린다 (다른 팀은 안 노림)
+    set {_best} to 49
+    loop all players:
+        if bgTeam(loop-player) is {_t}:
+            if gamemode of loop-player is survival or adventure:
+                if world of loop-player is world of {_e}:
+                    set {_d} to distance between loop-player and {_e}
+                    if {_d} < {_best}:
+                        # 본진 안에 숨은 사람은 안 쫓음
+                        if bgDist2(location of loop-player, {_b}) >= 16:
+                            set {_best} to {_d}
+                            set {_p} to loop-player
+    if {_p} is set:
+        set target of {_e} to {_p}
+    else:
+        delete target of {_e}
+    bgCmd("bossbar set bg:nemesis value %max(0, round((health of {_e}) * 2))%")
+    bgCmd("bossbar set bg:nemesis name {text:""복수의 신 네메시스 · %{-bg::nem::left}%초"",color:""dark_purple"",bold:true}")
+
+function bgNemRemove(msg: text):
+    set {_e} to {-bg::nem::ent}
+    delete {-bg::nem::alive}
+    delete {-bg::nem::ent}
+    if {_e} is alive:
+        kill {_e}
+    bgCmd("kill @e[tag=bg_nemesis]")
+    bgCmd("bossbar remove bg:nemesis")
+    if {_msg} is not "":
+        bgSay({_msg})
+
+# 다른 팀은 노리지 않는다
+on target:
+    event-entity has scoreboard tag "bg_nemesis"
+    if target is not a player:
+        cancel event
+        stop
+    if bgTeam(target) is not {-bg::nem::team}:
+        cancel event
+
+# 다른 팀은 때리지도 맞지도 않는다 · 1등 팀이 맞아도 시듦은 안 걸림
+on damage:
+    victim has scoreboard tag "bg_nemesis"
+    if attacker is a player:
+        if bgTeam(attacker) is not {-bg::nem::team}:
+            cancel event
+            send action bar "&5네메시스는 %{-bg::tname::%{-bg::nem::team}%}% 팀만 노립니다 — 지금은 거점을 노리세요" to attacker
+    else:
+        cancel event
+
+on damage of player:
+    attacker has scoreboard tag "bg_nemesis"
+    if bgTeam(victim) is not {-bg::nem::team}:
+        cancel event
+        stop
+    wait 1 tick
+    remove wither from victim
+
+on death:
+    victim has scoreboard tag "bg_nemesis"
+    clear drops
+    set dropped exp to 0
+    if {-bg::nem::alive} is true:
+        set {_t} to {-bg::nem::team}
+        delete {-bg::nem::alive}
+        delete {-bg::nem::ent}
+        bgCmd("bossbar remove bg:nemesis")
+        bgAddScore({_t}, 50)
+        bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+50점")
+        bgSound("ui.toast.challenge_complete", 0.8, 1)
+
+command /네메시스 [<text>]:
+    aliases: /nemesis
+    permission: op
+    trigger:
+        if arg-1 is "제거":
+            bgNemRemove("&5&l[복수의 신] &7관리자가 네메시스를 거두었습니다.")
+            stop
+        if {-bg::on} is not true:
+            send "&c[복수의 신] 게임 중에만 소환할 수 있습니다."
+            stop
+        if {-bg::nem::alive} is true:
+            send "&c[복수의 신] 이미 나와 있습니다. (/네메시스 제거)"
+            stop
+        set {_t} to bgNemTop()
+        if arg-1 is set:
+            set {_t} to bgTeamId(arg-1)
+        if {_t} is "none":
+            send "&c[복수의 신] 팀: 레드 · 블루 · 그린 · 옐로"
+            stop
+        set {-bg::nem::done} to true
+        set {-bg::nem::team} to {_t}
+        bgNemSpawn({_t})

@@ -1,4 +1,4 @@
 # 버전 표시 — 스크립트를 바꿀 때마다 올린다. /업데이트테스트 가 GitHub 최신 · 서버 파일 · 실제로 불러온 것을 비교한다
 on load:
-    set {-bg::ver} to "2026-10-05 r12"
-    set {-bg::verinfo} to "부활 보호 흡수 IV · 노란 하트 8칸 (본진 안) · 체력바 API"
+    set {-bg::ver} to "2026-10-05 r13"
+    set {-bg::verinfo} to "복수의 신 네메시스 (역전 이벤트) · 부활 보호 흡수 IV · 체력바 API"
