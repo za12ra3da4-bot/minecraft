@@ -83,6 +83,16 @@ command /업데이트테스트:
                 send "&a✔ 접속자 %{_all}%명 모두 체력바 점수 있음"
             else:
                 send "&c✘ 접속자 %{_all}%명 중 %{_ok}%명만 체력바 점수 있음"
+            send "&7 · 체력바 루프 %{-bg::hp::runs} ? 0%회 돎 · 막대 붙이기 %{-bg::hp::sent} ? 0%회"
+            # 내 체력바를 지금 바로 붙여 보고 정말 붙었는지 확인
+            if sender is a player:
+                bgHpApply(player, bgHpComp(player))
+                set {_o2} to Bukkit.getScoreboardManager().getMainScoreboard().getObjective("bg_hp")
+                if {_o2} is set:
+                    if {_o2}.getScore(name of player).isScoreSet() is true:
+                        send "&a✔ 내 체력바를 방금 직접 붙임 → 붙었음"
+                    else:
+                        send "&c✘ 내 체력바를 방금 직접 붙였는데도 점수가 없음 → 다른 플러그인이 바로 지우는 중 (플러그인 목록 /plugins 캡처)"
         # 다른 플러그인이 점수판을 바꿔 끼우면 닉네임 밑 바 · 사이드바가 안 보임
         set {_other} to 0
         loop all players:

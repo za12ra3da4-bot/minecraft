@@ -3,12 +3,35 @@
 #   스코어보드 below_name 칸의 숫자 자리에 빨간 체력 막대 "■■■■■■■□□□" + HP 숫자 "15/20" 를 띄운다 (마크 1.20.3+ numberformat)
 #   막대는 기본 글꼴의 ■ 10칸 (빨강 = 남은 체력 · 진회색 = 잃은 체력) → 리소스팩이 없거나 옛 팩이어도 보인다
 #   (리소스팩 bg:hpbar 글꼴 · a07-gen-hpbar.sk 는 이제 안 씀)
-#   0.25초마다 체력(숫자)이 바뀐 사람만 갱신 (명령 2개) · 5초마다 점수판 · 닉네임 밑 칸을 다시 확인 · 상태 확인은 /업데이트테스트
+#   0.25초마다 체력(숫자)이 바뀐 사람만 갱신 · 5초마다 점수판 · 닉네임 밑 칸을 다시 확인 · 상태 확인은 /업데이트테스트
+#   점수 · 표시 형식은 서버 API(Paper)로 직접 넣는다 (명령이 조용히 안 먹히는 서버가 있었음) + 같은 내용을 명령으로도 한 번 더
 # ═════════════════════════════════════════════════════════════════════════════
 
+import:
+    org.bukkit.Bukkit
+    org.bukkit.scoreboard.Criteria
+    org.bukkit.scoreboard.DisplaySlot
+    io.papermc.paper.scoreboard.numbers.NumberFormat
+    net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
+
+# bg_hp 점수판을 (없으면 만들고) 닉네임 밑 칸에 건다 → 그 점수판을 돌려줌
+function bgHpObj() :: object:
+    set {_sb} to Bukkit.getScoreboardManager().getMainScoreboard()
+    set {_o} to {_sb}.getObjective("bg_hp")
+    if {_o} is not set:
+        set {_o} to {_sb}.registerNewObjective("bg_hp", Criteria.DUMMY, "")
+        delete {-bg::hpidx::*}
+    set {_cur} to {_sb}.getObjective(DisplaySlot.BELOW_NAME)
+    if {_cur} is not set:
+        {_o}.setDisplaySlot(DisplaySlot.BELOW_NAME)
+    else if {_cur}.getName() is not "bg_hp":
+        {_o}.setDisplaySlot(DisplaySlot.BELOW_NAME)
+    return {_o}
+
 function bgHpSetup():
+    bgHpObj()
+    # 명령으로도 한 번 더 (API 가 막힌 서버 대비)
     bgCmd("scoreboard objectives add bg_hp dummy")
-    bgCmd("scoreboard objectives modify bg_hp displayname """"")
     bgCmd("scoreboard objectives setdisplay below_name bg_hp")
     delete {-bg::hpidx::*}
 
@@ -16,11 +39,11 @@ on load:
     bgHpSetup()
 
 # 다른 플러그인 · 스크립트 · 월드 교체로 bg_hp 가 지워지거나 below_name 칸을 뺏겨도 5초 안에 되살린다
-#  (이미 있으면 add 는 조용히 실패 · 캐시를 지워서 모든 사람의 막대를 다시 보낸다)
+#  (캐시를 지워서 모든 사람의 막대를 다시 보낸다)
 every 5 seconds:
     bgHpSetup()
 
-# 이 사람의 체력바 글자 (명령용 텍스트 컴포넌트) — /업데이트테스트 도 같은 것을 채팅으로 보여 준다
+# 이 사람의 체력바 글자 (텍스트 컴포넌트 JSON — 명령 · API · /업데이트테스트 미리보기 모두 이것을 쓴다)
 function bgHpComp(p: player) :: text:
     set {_mx} to max health of {_p}
     if {_mx} <= 0:
@@ -37,16 +60,26 @@ function bgHpComp(p: player) :: text:
             set {_on} to "%{_on}%■"
         else:
             set {_off} to "%{_off}%■"
-    return "{text:"""",extra:[{text:""%{_on}%"",color:""red""},{text:""%{_off}%"",color:""dark_gray""},{text:""%{_hp}%/%{_mhp}%"",color:""red"",bold:true}]}"
+    return "{""text"":"""",""extra"":[{""text"":""%{_on}%"",""color"":""red""},{""text"":""%{_off}%"",""color"":""dark_gray""},{""text"":""%{_hp}%/%{_mhp}%"",""color"":""red"",""bold"":true}]}"
+
+# 한 사람의 체력바를 실제로 붙인다 (API 로 점수 0 + 표시 형식, 그리고 같은 것을 명령으로)
+function bgHpApply(p: player, c: text):
+    set {_o} to bgHpObj()
+    set {_n} to name of {_p}
+    set {_sc} to {_o}.getScore({_n})
+    {_sc}.setScore(0)
+    {_sc}.numberFormat(NumberFormat.fixed(GsonComponentSerializer.gson().deserialize({_c})))
+    bgCmd("scoreboard players set %{_n}% bg_hp 0")
+    bgCmd("scoreboard players display numberformat %{_n}% bg_hp fixed %{_c}%")
+    add 1 to {-bg::hp::sent}
 
 every 5 ticks:
+    add 1 to {-bg::hp::runs}
     loop all players:
         set {_c} to bgHpComp(loop-player)
         if ({-bg::hpidx::%uuid of loop-player%} ? "") is not {_c}:
             set {-bg::hpidx::%uuid of loop-player%} to {_c}
-            set {_n} to name of loop-player
-            bgCmd("scoreboard players set %{_n}% bg_hp 0")
-            bgCmd("scoreboard players display numberformat %{_n}% bg_hp fixed %{_c}%")
+            bgHpApply(loop-player, {_c})
 
 on join:
     delete {-bg::hpidx::%uuid of player%}
