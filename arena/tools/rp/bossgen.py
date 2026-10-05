@@ -99,50 +99,65 @@ def add_to_mesh(mesh, R, parts_by_bone, atlas_img, pose, pos, yaw, sun, key, ext
 
 
 def export(pack, dp_dir):
-    """리소스팩 파츠 + 데이터팩 함수 전부"""
+    """리소스팩 파츠 + 데이터팩 함수 전부 (미니 보스 — a03-gen-boss.sk 의 보스 목록에 들어감)"""
     meta = {}
     for bi, bid in enumerate(BOSS_IDS):
-        m, R, parts, anims, atlas = load(bid)
-        img = atlas.image()
-        ref = pack.texture(f"boss/{bid}", img)
-        for p in parts:
-            pack.item_model(f"boss/{bid}/{p.name}", model_json(p, ref, img.size[0], img.size[1]))
-        fdir = os.path.join(dp_dir, "boss", bid)
-        os.makedirs(os.path.join(fdir, "anim"), exist_ok=True)
-        bones = [n for n in R.order if R.bones[n].part is not None]
-        rest = R.display_mats({})
-        # 소환 (실행 위치 = 히트박스)
-        lines = []
-        for pi, n in enumerate(bones):
-            u = part_uuid(bi, pi)
-            ints = uuid_ints(u)
-            M = rest[n]
-            part = R.bones[n].part
-            bright = ",brightness:{sky:15,block:15}" if part.glow else ""
-            lines.append(
-                f"summon minecraft:item_display ~ ~ ~ {{UUID:[I;{ints[0]},{ints[1]},{ints[2]},{ints[3]}],"
-                f"Tags:[\"bg\",\"bgb\",\"bgb_{bid}\",\"bgb_part\"],item:{{id:\"minecraft:paper\",count:1,"
-                f"components:{{\"minecraft:item_model\":\"bg:boss/{bid}/{part.name}\"}}}},item_display:\"none\","
-                f"transformation:{mat_str(M)},teleport_duration:2,interpolation_duration:0,view_range:3.0f,shadow_radius:0f{bright}}}")
-        lines.append(f"function bg:boss/{bid}/tp")
-        write(os.path.join(fdir, "spawn.mcfunction"), lines)
-        write(os.path.join(fdir, "remove.mcfunction"), [f"kill @e[type=item_display,tag=bgb_{bid}]"])
-        # 위치 동기화 (히트박스로 실행: execute as <hb> at @s run function ...)
-        write(os.path.join(fdir, "tp.mcfunction"), [f"execute rotated as @s as @e[type=item_display,tag=bgb_{bid},distance=..16] run tp @s ~ ~ ~ ~ 0"])
-        am = {}
-        for an, spec in anims.items():
-            keys = spec["keys"]
-            adir = os.path.join(fdir, "anim", an)
-            os.makedirs(adir, exist_ok=True)
-            for k, (pose, ticks) in enumerate(keys):
-                mats = R.display_mats(pose)
-                ls = []
-                for pi, n in enumerate(bones):
-                    ls.append(f"data merge entity {part_uuid(bi, pi)} {{transformation:{mat_str(mats[n])},start_interpolation:0,interpolation_duration:{int(ticks)}}}")
-                write(os.path.join(adir, f"{k}.mcfunction"), ls)
-            am[an] = {"loop": bool(spec.get("loop")), "ticks": [int(t) for _, t in keys]}
-        meta[bid] = {"anims": am, "parts": len(bones), "info": getattr(m, "INFO", {})}
+        meta[bid] = export_one(pack, dp_dir, bi, bid, "bgb")
     return meta
+
+
+# 이벤트 보스 (미니 보스 목록 · 무작위 소환에 안 들어감). 파츠 태그는 bgn — 미니 보스 정리(kill tag=bgb)에 안 지워짐
+EXTRA_IDS = ["nemesis"]
+
+
+def export_extra(pack, dp_dir):
+    meta = {}
+    for i, bid in enumerate(EXTRA_IDS):
+        meta[bid] = export_one(pack, dp_dir, len(BOSS_IDS) + i, bid, "bgn")
+    return meta
+
+
+def export_one(pack, dp_dir, bi, bid, tg):
+    m, R, parts, anims, atlas = load(bid)
+    img = atlas.image()
+    ref = pack.texture(f"boss/{bid}", img)
+    for p in parts:
+        pack.item_model(f"boss/{bid}/{p.name}", model_json(p, ref, img.size[0], img.size[1]))
+    fdir = os.path.join(dp_dir, "boss", bid)
+    os.makedirs(os.path.join(fdir, "anim"), exist_ok=True)
+    bones = [n for n in R.order if R.bones[n].part is not None]
+    rest = R.display_mats({})
+    # 소환 (실행 위치 = 히트박스)
+    lines = []
+    for pi, n in enumerate(bones):
+        u = part_uuid(bi, pi)
+        ints = uuid_ints(u)
+        M = rest[n]
+        part = R.bones[n].part
+        bright = ",brightness:{sky:15,block:15}" if part.glow else ""
+        lines.append(
+            f"summon minecraft:item_display ~ ~ ~ {{UUID:[I;{ints[0]},{ints[1]},{ints[2]},{ints[3]}],"
+            f"Tags:[\"bg\",\"{tg}\",\"{tg}_{bid}\",\"{tg}_part\"],item:{{id:\"minecraft:paper\",count:1,"
+            f"components:{{\"minecraft:item_model\":\"bg:boss/{bid}/{part.name}\"}}}},item_display:\"none\","
+            f"transformation:{mat_str(M)},teleport_duration:2,interpolation_duration:0,view_range:3.0f,shadow_radius:0f{bright}}}")
+    lines.append(f"function bg:boss/{bid}/tp")
+    write(os.path.join(fdir, "spawn.mcfunction"), lines)
+    write(os.path.join(fdir, "remove.mcfunction"), [f"kill @e[type=item_display,tag={tg}_{bid}]"])
+    # 위치 동기화 (히트박스로 실행: execute as <hb> at @s run function ...)
+    write(os.path.join(fdir, "tp.mcfunction"), [f"execute rotated as @s as @e[type=item_display,tag={tg}_{bid},distance=..16] run tp @s ~ ~ ~ ~ 0"])
+    am = {}
+    for an, spec in anims.items():
+        keys = spec["keys"]
+        adir = os.path.join(fdir, "anim", an)
+        os.makedirs(adir, exist_ok=True)
+        for k, (pose, ticks) in enumerate(keys):
+            mats = R.display_mats(pose)
+            ls = []
+            for pi, n in enumerate(bones):
+                ls.append(f"data merge entity {part_uuid(bi, pi)} {{transformation:{mat_str(mats[n])},start_interpolation:0,interpolation_duration:{int(ticks)}}}")
+            write(os.path.join(adir, f"{k}.mcfunction"), ls)
+        am[an] = {"loop": bool(spec.get("loop")), "ticks": [int(t) for _, t in keys]}
+    return {"anims": am, "parts": len(bones), "info": getattr(m, "INFO", {})}
 
 
 def write(path, lines):

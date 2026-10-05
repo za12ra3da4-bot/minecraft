@@ -88,6 +88,7 @@ def main(args):
     # 보스 (초상화 먼저)
     portraits.render_all()
     bmeta = bossgen.export(pack, os.path.join(OUT_DP, "data", "bg", "function"))
+    nmeta = bossgen.export_extra(pack, os.path.join(OUT_DP, "data", "bg", "function"))
     font = hud_build.build(pack)
     title_str, _ = title_logo.export(pack)
     fx_frame = impactframe.export(pack)
@@ -111,6 +112,7 @@ def main(args):
     skgen.write_list(os.path.join(OUT_SK, "a07-gen-hpbar.sk"), "-bg::hpbar", hp_chars)
     skgen.write_map(os.path.join(OUT_SK, "a02-gen-map.sk"), world)
     skgen.write_boss(os.path.join(OUT_SK, "a03-gen-boss.sk"), bmeta)
+    skgen.write_anims(os.path.join(OUT_SK, "a08-gen-nemesis.sk"), nmeta)
     # 리소스팩 파일 이름 검사: 마크는 [a-z0-9_.-/] 만 허용 (하나라도 틀리면 그 폰트/모델 파일 전체가 무시됨)
     import re as _re, zipfile as _zf
     _bad = [n for n in _zf.ZipFile(OUT_RP).namelist()

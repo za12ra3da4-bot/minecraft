@@ -7,6 +7,8 @@
 #    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 시듦 효과 없음
 #    · 90초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +150점 + 팀원 코인 +30 (막아 낸 보상 · 미니 보스와 같은 점수)
 #   그동안 1등 팀은 네메시스를 막느라 바쁘고, 다른 팀은 거점을 되찾을 기회
+#   모습: 보랏빛 두건 · 은빛 가면 · 후광 · 검보라 날개 · 응보의 검 · 정의의 저울 (arena/tools/rp/bosses/nemesis.py · 파츠 26개)
+#    히트박스 = 투명한 위더 스켈레톤 (1.7배) · 파츠는 매 틱 히트박스를 따라감 · 애니메이션 idle/glide/slash/death (a08-gen-nemesis.sk)
 #  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
 #  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 150)
 # ═════════════════════════════════════════════════════════════════════════════
@@ -14,6 +16,12 @@ import:
     org.bukkit.Bukkit
 
 on load:
+    # 리로드로 상태 변수가 지워지면 남은 모델 · 히트박스가 떠다니지 않게 정리
+    delete {-bg::nem::alive}
+    bgCmd("function bg:boss/nemesis/remove")
+    bgCmd("kill @e[type=text_display,tag=bgn_nemesis]")
+    bgCmd("kill @e[tag=bg_nemesis]")
+    bgCmd("bossbar remove bg:nemesis")
     if {bg::cfg::nem_ratio} is not set:
         set {bg::cfg::nem_ratio} to 2
     if {bg::cfg::nem_min} is not set:
@@ -106,9 +114,10 @@ function bgNemSpawn(t: text):
     set name of {_e} to "&5&l복수의 신 네메시스"
     {_e}.setRemoveWhenFarAway(false)
     {_e}.setPersistent(true)
-    {_e}.setGlowing(true)
-    {_e}.setCustomNameVisible(true)
-    set tool of {_e} to netherite sword
+    {_e}.setSilent(true)
+    # 이름표는 모델 머리 위 글자(text_display)로 — 투명 히트박스의 이름표는 모델 가슴께에 떠서 숨김
+    {_e}.setCustomNameVisible(false)
+    set tool of {_e} to air
     # 체력: 1등 팀 인원에 맞춰 (80 + 1명당 40, 최대 400) · 한 대 5 (하트 2.5칸)
     set {_n} to bgTeamCount({_t})
     set {_hp} to min(400, 80 + 40 * {_n})
@@ -121,6 +130,14 @@ function bgNemSpawn(t: text):
     bgCmd("attribute %{_u}% minecraft:follow_range base set 48")
     bgCmd("attribute %{_u}% minecraft:knockback_resistance base set 0.6")
     heal {_e}
+    bgCmd("effect give %{_u}% invisibility infinite 0 true")
+    bgCmd("effect give %{_u}% fire_resistance infinite 0 true")
+    set {-bg::nem::uuid} to {_u}
+    # 모델 파츠 소환 (히트박스 위치) + 머리 위 이름
+    bgCmd("execute as %{_u}% at @s run function bg:boss/nemesis/spawn")
+    bgCmd("execute as %{_u}% at @s run summon text_display ~ ~ ~ {Tags:[""bg"",""bgn"",""bgn_nemesis""],billboard:""center"",see_through:1b,shadow:1b,background:0,teleport_duration:2,view_range:3f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,5.9f,0f],scale:[1.4f,1.4f,1.4f]},text:{text:""복수의 신 네메시스"",color:""light_purple"",bold:true}}")
+    set {-bg::nem::lastloc} to location of {_e}
+    bgNemAnim("idle")
     bgCmd("bossbar remove bg:nemesis")
     bgCmd("bossbar add bg:nemesis {text:""복수의 신 네메시스"",color:""dark_purple"",bold:true}")
     bgCmd("bossbar set bg:nemesis color purple")
@@ -171,11 +188,79 @@ function bgNemRemove(msg: text):
     delete {-bg::nem::alive}
     delete {-bg::nem::ent}
     if {_e} is alive:
+        bgParticle(location of {_e}, "reverse_portal", 1.5, 2.5, 1.5, 0.05, 160)
         kill {_e}
     bgCmd("kill @e[tag=bg_nemesis]")
+    bgNemParts()
     bgCmd("bossbar remove bg:nemesis")
     if {_msg} is not "":
         bgSay({_msg})
+
+# ─────────────────────────────────────────────────────────── 모델 (파츠 동기화 · 애니메이션)
+function bgNemParts():
+    bgCmd("function bg:boss/nemesis/remove")
+    bgCmd("kill @e[type=text_display,tag=bgn_nemesis]")
+
+function bgNemAnim(a: text):
+    if {-bg::anim::nemesis::%{_a}%::n} is not set:
+        stop
+    set {-bg::nem::anim} to {_a}
+    set {-bg::nem::frame} to 0
+    set {-bg::nem::ft} to {-bg::anim::nemesis::%{_a}%::t::0}
+    set {-bg::nem::animdone} to false
+    bgCmd("function bg:boss/nemesis/anim/%{_a}%/0")
+
+function bgNemAnimStep():
+    if {-bg::nem::animdone} is true:
+        stop
+    set {_a} to {-bg::nem::anim}
+    remove 1 from {-bg::nem::ft}
+    if {-bg::nem::ft} > 0:
+        stop
+    set {_f} to {-bg::nem::frame} + 1
+    if {_f} >= {-bg::anim::nemesis::%{_a}%::n}:
+        if {-bg::anim::nemesis::%{_a}%::loop} is true:
+            set {_f} to 0
+        else:
+            set {-bg::nem::animdone} to true
+            stop
+    set {-bg::nem::frame} to {_f}
+    set {-bg::nem::ft} to {-bg::anim::nemesis::%{_a}%::t::%{_f}%}
+    bgCmd("function bg:boss/nemesis/anim/%{_a}%/%{_f}%")
+
+# 매 틱: 파츠가 히트박스를 따라감 · 움직이면 활공 / 멈추면 떠 있기 (베는 중이면 그대로)
+every tick:
+    {-bg::nem::alive} is true
+    set {_e} to {-bg::nem::ent}
+    {_e} is alive
+    bgCmd("execute as %{-bg::nem::uuid}% at @s run function bg:boss/nemesis/tp")
+    bgCmd("execute as %{-bg::nem::uuid}% at @s run tp @e[type=text_display,tag=bgn_nemesis,distance=..16] ~ ~ ~")
+    set {_mv} to false
+    if {-bg::nem::lastloc} is set:
+        if world of {_e} is world of {-bg::nem::lastloc}:
+            if distance between location of {_e} and {-bg::nem::lastloc} > 0.04:
+                set {_mv} to true
+    set {-bg::nem::lastloc} to location of {_e}
+    if {-bg::nem::anim} is "slash":
+        if {-bg::nem::animdone} is not true:
+            bgNemAnimStep()
+            stop
+    if {_mv} is true:
+        if {-bg::nem::anim} is not "glide":
+            bgNemAnim("glide")
+    else if {-bg::nem::anim} is not "idle":
+        bgNemAnim("idle")
+    bgNemAnimStep()
+
+# 쓰러짐: 날개가 꺾이며 가라앉고 보랏빛으로 흩어진다
+function bgNemDeath(l: location):
+    bgNemAnim("death")
+    bgParticle({_l}, "reverse_portal", 1.5, 2.5, 1.5, 0.05, 200)
+    wait 14 ticks
+    bgCmd("function bg:boss/nemesis/anim/death/1")
+    wait 22 ticks
+    bgParticle({_l}, "end_rod", 1.2, 2, 1.2, 0.08, 80)
+    bgNemParts()
 
 # 다른 팀은 노리지 않는다
 on target:
@@ -201,6 +286,11 @@ on damage of player:
     if bgTeam(victim) is not {-bg::nem::team}:
         cancel event
         stop
+    if {-bg::nem::anim} is not "slash":
+        bgNemAnim("slash")
+    else if {-bg::nem::animdone} is true:
+        bgNemAnim("slash")
+    play sound "entity.player.attack.sweep" with volume 1.2 with pitch 0.7 at location of victim
     wait 1 tick
     remove wither from victim
 
@@ -213,6 +303,7 @@ on death:
         delete {-bg::nem::alive}
         delete {-bg::nem::ent}
         bgCmd("bossbar remove bg:nemesis")
+        bgNemDeath(location of victim)
         bgAddScore({_t}, {bg::cfg::nem_reward})
         bgCoinTeam({_t}, 30, "네메시스 격퇴")
         bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+%{bg::cfg::nem_reward}%점 · 팀원 코인 +30")

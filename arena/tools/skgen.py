@@ -178,6 +178,18 @@ def write_map(path, world):
     write_blocks(path, [HEAD, "# 맵 좌표 (맵 로컬, 원점 = 설정 {bg::cfg::ox/oy/oz})"], L)
 
 
+def write_anims(path, meta):
+    """이벤트 보스 애니메이션 길이 (네메시스 · a80) — 미니 보스 목록에는 넣지 않는다"""
+    L = []
+    for bid, m in meta.items():
+        for an, a in m["anims"].items():
+            L.append(f"    set {{-bg::anim::{bid}::{an}::n}} to {len(a['ticks'])}")
+            L.append(f"    set {{-bg::anim::{bid}::{an}::loop}} to {'true' if a['loop'] else 'false'}")
+            for k, t in enumerate(a["ticks"]):
+                L.append(f"    set {{-bg::anim::{bid}::{an}::t::{k}}} to {t}")
+    write_blocks(path, [HEAD], L)
+
+
 def write_boss(path, meta):
     L = []
     for bid, m in meta.items():
