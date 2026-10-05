@@ -14,7 +14,8 @@ import bossgen as BG
 
 OUT = os.path.join(os.path.dirname(HERE), ".cache", "portraits")
 BG_COL = {"talos": ((90, 40, 20), (20, 10, 8)), "sphinx": ((40, 70, 140), (10, 16, 36)),
-          "ladon": ((30, 110, 90), (6, 26, 22)), "cyclops": ((110, 70, 40), (22, 14, 10))}
+          "ladon": ((30, 110, 90), (6, 26, 22)), "cyclops": ((110, 70, 40), (22, 14, 10)),
+          "nemesis": ((110, 50, 160), (20, 8, 34))}
 
 
 def render_one(bid, size=256):

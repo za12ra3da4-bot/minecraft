@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(HERE))
 from PIL import Image
 
 import hud as H
-from bossdata import BOSSES
+from bossdata import BOSSES, EXTRA_BOSSES
 
 PORTRAITS = os.path.join(os.path.dirname(HERE), ".cache", "portraits")
 
@@ -61,6 +61,15 @@ def build(pack):
             img = Image.new("RGBA", (64, 64), (60, 40, 30, 255))
         H.portrait(f, bid, img)
     gui_panel(f)
+    # 이벤트 보스 (네메시스) — 맨 뒤에 덧붙여서 기존 글리프 번호가 바뀌지 않게
+    for bid, b in EXTRA_BOSSES.items():
+        H.label(f, f"boss/name_{bid}", b["name"], "name")
+        p = os.path.join(PORTRAITS, f"{bid}.png")
+        if os.path.exists(p):
+            img = Image.open(p)
+        else:
+            img = Image.new("RGBA", (64, 64), (60, 30, 90, 255))
+        H.portrait(f, bid, img)
     # 파일
     for name, img in f.files.items():
         pack.png(f"assets/{H.NS}/textures/{name}", img)

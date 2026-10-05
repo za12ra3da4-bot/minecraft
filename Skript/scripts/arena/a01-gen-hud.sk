@@ -364,6 +364,8 @@ on load:
     set {-bg::hud::portrait::ladon} to ""
     set {-bg::hud::name::cyclops} to ""
     set {-bg::hud::portrait::cyclops} to ""
+    set {-bg::hud::name::nemesis} to ""
+    set {-bg::hud::portrait::nemesis} to ""
     set {-bg::hud::plate::red} to ""
     set {-bg::hud::plate::red_me} to ""
     set {-bg::hud::platecx::red} to 42.5
@@ -408,9 +410,9 @@ on load:
     set {-bg::hud::ptfv::ares::blue::1} to ""
     set {-bg::hud::ptfv::ares::blue::2} to ""
     set {-bg::hud::ptfv::ares::blue::3} to ""
+on load:
     set {-bg::hud::ptfv::ares::blue::4} to ""
     set {-bg::hud::ptfv::ares::blue::5} to ""
-on load:
     set {-bg::hud::ptfv::ares::blue::6} to ""
     set {-bg::hud::ptfv::ares::blue::7} to ""
     set {-bg::hud::ptfv::ares::blue::8} to ""
@@ -529,9 +531,9 @@ on load:
     set {-bg::hud::ptfv::athena::yellow::3} to ""
     set {-bg::hud::ptfv::athena::yellow::4} to ""
     set {-bg::hud::ptfv::athena::yellow::5} to ""
+on load:
     set {-bg::hud::ptfv::athena::yellow::6} to ""
     set {-bg::hud::ptfv::athena::yellow::7} to ""
-on load:
     set {-bg::hud::ptfv::athena::yellow::8} to ""
     set {-bg::hud::ptfv::athena::yellow::9} to ""
     set {-bg::hud::ptfv::athena::yellow::10} to ""
@@ -650,9 +652,9 @@ on load:
     set {-bg::hud::ptfv::hermes::red::13} to ""
     set {-bg::hud::ptfv::hermes::red::14} to ""
     set {-bg::hud::ptfv::hermes::red::15} to ""
+on load:
     set {-bg::hud::ptfv::hermes::red::16} to ""
     set {-bg::hud::ptfv::hermes::red::17} to ""
-on load:
     set {-bg::hud::ptfv::hermes::red::18} to ""
     set {-bg::hud::ptfv::hermes::blue::1} to ""
     set {-bg::hud::ptfv::hermes::blue::2} to ""
@@ -771,9 +773,9 @@ on load:
     set {-bg::hud::ptfv::demeter::green::15} to ""
     set {-bg::hud::ptfv::demeter::green::16} to ""
     set {-bg::hud::ptfv::demeter::green::17} to ""
+on load:
     set {-bg::hud::ptfv::demeter::green::18} to ""
     set {-bg::hud::ptfv::demeter::yellow::1} to ""
-on load:
     set {-bg::hud::ptfv::demeter::yellow::2} to ""
     set {-bg::hud::ptfv::demeter::yellow::3} to ""
     set {-bg::hud::ptfv::demeter::yellow::4} to ""

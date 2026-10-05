@@ -5,7 +5,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "rp"))
 import hud as H
-from bossdata import BOSSES
+from bossdata import BOSSES, EXTRA_BOSSES
 
 HEAD = "# 자동 생성 파일 — 직접 고치지 말 것 (arena/tools/build.py 가 다시 만든다)\n"
 
@@ -123,7 +123,7 @@ def write_hud(path, font):
         B.append(f"    set {{-bg::hud::status::{st}}} to {q(placed('boss/status_' + st))}")
     for st in ("idle", "lit"):
         B.append(f"    set {{-bg::hud::diamond::{st}}} to {q(placed('boss/diamond_' + st))}")
-    for bid in BOSSES:
+    for bid in list(BOSSES) + list(EXTRA_BOSSES):
         B.append(f"    set {{-bg::hud::name::{bid}}} to {q(placed('boss/name_' + bid))}")
         B.append(f"    set {{-bg::hud::portrait::{bid}}} to {q(placed('boss/portrait_' + bid))}")
     for t in H.TEAM_COL:
