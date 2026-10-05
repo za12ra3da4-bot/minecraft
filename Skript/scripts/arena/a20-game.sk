@@ -355,6 +355,13 @@ function bgSpawn(p: player):
     set food level of {_p} to 20
     bgKit({_p})
     bgCmd("effect give %name of {_p}% resistance 3 4 true")
+    bgSpawnShield({_p})
+
+# 스폰킬 방지: 부활하면 황금사과처럼 흡수 I (노란 하트 2칸) — 우리 본진(16칸)을 벗어나는 순간 사라진다 (bgBaseGuard)
+#  본진 안에 있는 동안 다시 채워 주지는 않음 (한 번 깎이면 끝)
+function bgSpawnShield(p: player):
+    set {-bg::shield::%uuid of {_p}%} to true
+    bgCmd("effect give %name of {_p}% absorption infinite 0 true")
 
 function bgKit(p: player):
     set {_n} to name of {_p}
@@ -480,6 +487,17 @@ function bgBaseGuard():
     loop all players:
         if bgIsFighter(loop-player) is true:
             set {_me} to bgTeam(loop-player)
+            # 부활 보호 흡수: 우리 본진을 벗어나면 없앤다
+            if {-bg::shield::%uuid of loop-player%} is true:
+                set {_hb} to bgMk("base_%{_me}%")
+                set {_out} to true
+                if world of loop-player is world of {_hb}:
+                    if bgDist2(location of loop-player, {_hb}) < 16:
+                        set {_out} to false
+                if {_out} is true:
+                    delete {-bg::shield::%uuid of loop-player%}
+                    bgCmd("effect clear %name of loop-player% absorption")
+                    send action bar "&e부활 보호(흡수)가 사라졌습니다 — 본진을 나왔습니다" to loop-player
             loop {-bg::teams::*}:
                 set {_b} to bgMk("base_%loop-value-2%")
                 if world of loop-player is world of {_b}:
@@ -571,6 +589,7 @@ on respawn:
         heal player
     bgKit(player)
     bgCmd("effect give %name of player% resistance 3 4 true")
+    bgSpawnShield(player)
 
 on join:
     wait 2 ticks
