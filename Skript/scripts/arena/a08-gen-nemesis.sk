@@ -1,10 +1,12 @@
 # 자동 생성 파일 — 직접 고치지 말 것 (arena/tools/build.py 가 다시 만든다)
 
 on load:
-    set {-bg::anim::nemesis::idle::n} to 2
+    set {-bg::anim::nemesis::idle::n} to 4
     set {-bg::anim::nemesis::idle::loop} to true
-    set {-bg::anim::nemesis::idle::t::0} to 20
-    set {-bg::anim::nemesis::idle::t::1} to 20
+    set {-bg::anim::nemesis::idle::t::0} to 12
+    set {-bg::anim::nemesis::idle::t::1} to 12
+    set {-bg::anim::nemesis::idle::t::2} to 12
+    set {-bg::anim::nemesis::idle::t::3} to 12
     set {-bg::anim::nemesis::glide::n} to 4
     set {-bg::anim::nemesis::glide::loop} to true
     set {-bg::anim::nemesis::glide::t::0} to 5
@@ -13,11 +15,18 @@ on load:
     set {-bg::anim::nemesis::glide::t::3} to 5
     set {-bg::anim::nemesis::slash::n} to 4
     set {-bg::anim::nemesis::slash::loop} to false
-    set {-bg::anim::nemesis::slash::t::0} to 7
+    set {-bg::anim::nemesis::slash::t::0} to 8
     set {-bg::anim::nemesis::slash::t::1} to 3
-    set {-bg::anim::nemesis::slash::t::2} to 5
-    set {-bg::anim::nemesis::slash::t::3} to 8
+    set {-bg::anim::nemesis::slash::t::2} to 6
+    set {-bg::anim::nemesis::slash::t::3} to 9
+    set {-bg::anim::nemesis::rise::n} to 5
+    set {-bg::anim::nemesis::rise::loop} to false
+    set {-bg::anim::nemesis::rise::t::0} to 1
+    set {-bg::anim::nemesis::rise::t::1} to 24
+    set {-bg::anim::nemesis::rise::t::2} to 12
+    set {-bg::anim::nemesis::rise::t::3} to 16
+    set {-bg::anim::nemesis::rise::t::4} to 12
     set {-bg::anim::nemesis::death::n} to 2
     set {-bg::anim::nemesis::death::loop} to false
     set {-bg::anim::nemesis::death::t::0} to 14
-    set {-bg::anim::nemesis::death::t::1} to 20
+    set {-bg::anim::nemesis::death::t::1} to 22

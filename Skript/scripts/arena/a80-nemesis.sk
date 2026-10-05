@@ -7,8 +7,10 @@
 #    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 시듦 효과 없음
 #    · 90초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +150점 + 팀원 코인 +30 (막아 낸 보상 · 미니 보스와 같은 점수)
 #   그동안 1등 팀은 네메시스를 막느라 바쁘고, 다른 팀은 거점을 되찾을 기회
-#   모습: 보랏빛 두건 · 은빛 가면 · 후광 · 검보라 날개 · 응보의 검 · 정의의 저울 (arena/tools/rp/bosses/nemesis.py · 파츠 26개)
-#    히트박스 = 투명한 위더 스켈레톤 (1.7배) · 파츠는 매 틱 히트박스를 따라감 · 애니메이션 idle/glide/slash/death (a08-gen-nemesis.sk)
+#   모습: 키 9블록 · 날개폭 12블록 — 흑요석·은 갑옷과 금 장식, 가슴의 '심판의 눈', 날개 투구 · 가면 · 금관, 두 겹 후광과 빛살,
+#    날개 두 쌍(따로 움직이는 첫째깃), 8자락 옷자락, 룬 대검, 정의의 저울, 떠다니는 수정 4개 (arena/tools/rp/bosses/nemesis.py · 파츠 85개)
+#    히트박스 = 투명한 위더 스켈레톤 (2.6배) · 파츠는 매 틱 히트박스를 따라감
+#    애니메이션 rise(등장: 접은 날개를 활짝 · 3초 동안 안 움직임) / idle / glide / slash / death (a08-gen-nemesis.sk)
 #  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
 #  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 150)
 # ═════════════════════════════════════════════════════════════════════════════
@@ -125,7 +127,7 @@ function bgNemSpawn(t: text):
     set {_u} to "%uuid of {_e}%"
     bgCmd("attribute %{_u}% minecraft:max_health base set %{_hp}%")
     bgCmd("attribute %{_u}% minecraft:attack_damage base set 5")
-    bgCmd("attribute %{_u}% minecraft:scale base set 1.7")
+    bgCmd("attribute %{_u}% minecraft:scale base set 2.6")
     bgCmd("attribute %{_u}% minecraft:movement_speed base set 0.3")
     bgCmd("attribute %{_u}% minecraft:follow_range base set 48")
     bgCmd("attribute %{_u}% minecraft:knockback_resistance base set 0.6")
@@ -135,9 +137,15 @@ function bgNemSpawn(t: text):
     set {-bg::nem::uuid} to {_u}
     # 모델 파츠 소환 (히트박스 위치) + 머리 위 이름
     bgCmd("execute as %{_u}% at @s run function bg:boss/nemesis/spawn")
-    bgCmd("execute as %{_u}% at @s run summon text_display ~ ~ ~ {Tags:[""bg"",""bgn"",""bgn_nemesis""],billboard:""center"",see_through:1b,shadow:1b,background:0,teleport_duration:2,view_range:3f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,5.9f,0f],scale:[1.4f,1.4f,1.4f]},text:{text:""복수의 신 네메시스"",color:""light_purple"",bold:true}}")
+    bgCmd("execute as %{_u}% at @s run summon text_display ~ ~ ~ {Tags:[""bg"",""bgn"",""bgn_nemesis""],billboard:""center"",see_through:1b,shadow:1b,background:0,teleport_duration:2,view_range:3f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,12.5f,0f],scale:[2.2f,2.2f,2.2f]},text:{text:""복수의 신 네메시스"",color:""light_purple"",bold:true}}")
     set {-bg::nem::lastloc} to location of {_e}
-    bgNemAnim("idle")
+    # 등장 연출: 빛기둥 + 천둥 · 3초 동안 날개를 펴며 떠오름 (그동안 움직이지 않음)
+    set ai of {_e} to false
+    bgNemAnim("rise")
+    bgParticle({_l}, "end_rod", 0.4, 12, 0.4, 0.02, 260)
+    bgParticle({_l}, "reverse_portal", 3, 3, 3, 0.1, 300)
+    bgSound("item.trident.thunder", 1, 0.7)
+    bgNemWake({_e})
     bgCmd("bossbar remove bg:nemesis")
     bgCmd("bossbar add bg:nemesis {text:""복수의 신 네메시스"",color:""dark_purple"",bold:true}")
     bgCmd("bossbar set bg:nemesis color purple")
@@ -241,7 +249,7 @@ every tick:
             if distance between location of {_e} and {-bg::nem::lastloc} > 0.04:
                 set {_mv} to true
     set {-bg::nem::lastloc} to location of {_e}
-    if {-bg::nem::anim} is "slash":
+    if {-bg::nem::anim} is "slash" or "rise":
         if {-bg::nem::animdone} is not true:
             bgNemAnimStep()
             stop
@@ -251,6 +259,14 @@ every tick:
     else if {-bg::nem::anim} is not "idle":
         bgNemAnim("idle")
     bgNemAnimStep()
+
+# 등장 연출이 끝나면 움직이기 시작
+function bgNemWake(e: entity):
+    wait 66 ticks
+    if {_e} is alive:
+        set ai of {_e} to true
+        bgParticle(location of {_e}, "sonic_boom", 0, 0, 0, 0, 1)
+        bgSound("entity.ender_dragon.growl", 0.7, 1.3)
 
 # 쓰러짐: 날개가 꺾이며 가라앉고 보랏빛으로 흩어진다
 function bgNemDeath(l: location):
