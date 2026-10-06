@@ -134,9 +134,11 @@ function bgNemHome(t: text) :: location:
     set {_dist::*} to 30, 34, 26, 38 and 42
     set {_side::*} to 0, 6, -6, 12 and -12
     loop {_dist::*}:
+        set {_dd} to loop-value
         loop {_side::*}:
-            set {_x} to (x-coordinate of {_b}) + {_ux} * loop-value-1 - {_uz} * loop-value-2
-            set {_z} to (z-coordinate of {_b}) + {_uz} * loop-value-1 + {_ux} * loop-value-2
+            set {_ss} to loop-value-2
+            set {_x} to (x-coordinate of {_b}) + {_ux} * {_dd} - {_uz} * {_ss}
+            set {_z} to (z-coordinate of {_b}) + {_uz} * {_dd} + {_ux} * {_ss}
             set {_l} to bgNemGround({_x}, {_z}, {_w}, {_by})
             if {_l} is set:
                 if abs((y-coordinate of {_l}) - {_by}) <= 4:
@@ -630,22 +632,25 @@ every 1 second:
     loop all entities:
         if loop-entity has scoreboard tag "bg_nemvex":
             add 1 to {_found}
+            set {_v} to loop-entity
             if {-bg::nem::alive} is not true:
-                kill loop-entity
+                kill {_v}
             else:
+                set {_vl} to location of {_v}
                 set {_best} to 40
                 delete {_p}
                 loop all players:
                     if bgNemCanHit(loop-player) is true:
-                        if world of loop-player is world of loop-entity:
-                            set {_d} to distance between loop-player and loop-entity
+                        set {_pl} to location of loop-player
+                        if world of {_pl} is world of {_vl}:
+                            set {_d} to distance between {_pl} and {_vl}
                             if {_d} < {_best}:
                                 set {_best} to {_d}
                                 set {_p} to loop-player
                 if {_p} is set:
-                    set target of loop-entity to {_p}
+                    set target of {_v} to {_p}
                 else:
-                    delete target of loop-entity
+                    delete target of {_v}
     if {_found} is 0:
         delete {-bg::nem::vex}
 
@@ -671,7 +676,6 @@ on damage of player:
 on death:
     victim has scoreboard tag "bg_nemvex"
     clear drops
-    set dropped exp to 0
 
 # 애니메이션을 특정 장면부터
 function bgNemAnimAt(a: text, f: number):
@@ -721,7 +725,6 @@ on damage of player:
 on death:
     victim has scoreboard tag "bg_nemesis"
     clear drops
-    set dropped exp to 0
     if {-bg::nem::alive} is true:
         set {_t} to {-bg::nem::team}
         delete {-bg::nem::alive}

@@ -77,7 +77,7 @@ command /업데이트테스트:
             set {_ok} to 0
             loop all players:
                 add 1 to {_all}
-                if {_obj}.getScore(name of loop-player).isScoreSet() is true:
+                if {_obj}.getScore("%name of loop-player%").isScoreSet() is true:
                     add 1 to {_ok}
             if {_ok} is {_all}:
                 send "&a✔ 접속자 %{_all}%명 모두 체력바 점수 있음"
@@ -89,7 +89,7 @@ command /업데이트테스트:
                 bgHpApply(player, bgHpComp(player))
                 set {_o2} to Bukkit.getScoreboardManager().getMainScoreboard().getObjective("bg_hp")
                 if {_o2} is set:
-                    if {_o2}.getScore(name of player).isScoreSet() is true:
+                    if {_o2}.getScore("%name of player%").isScoreSet() is true:
                         send "&a✔ 내 체력바를 방금 직접 붙임 → 붙었음"
                     else:
                         send "&c✘ 내 체력바를 방금 직접 붙였는데도 점수가 없음 → 다른 플러그인이 바로 지우는 중 (플러그인 목록 /plugins 캡처)"

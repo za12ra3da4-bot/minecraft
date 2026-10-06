@@ -421,7 +421,8 @@ on right click on chest or trapped chest or barrel or ender chest or shulker box
 
 on inventory open:
     player's gamemode is not creative
-    set {_t} to "%inventory type of event-inventory%"
+    # Skript 2.15 에서 'inventory type of' 가 안 읽혀서 자바 API 로 (SHULKER_BOX · ENDER_CHEST · BARREL …)
+    set {_t} to "%event-inventory.getType()%"
     if {_t} contains "shulker":
         cancel event
     else if {_t} contains "ender":
