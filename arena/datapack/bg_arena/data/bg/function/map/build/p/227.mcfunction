@@ -1,3 +1,262 @@
+setblock ~174 ~25 ~212 minecraft:short_grass strict
+setblock ~178 ~25 ~212 minecraft:bush strict
+fill ~193 ~25 ~212 ~193 ~25 ~213 minecraft:short_grass strict
+setblock ~95 ~25 ~213 minecraft:short_grass strict
+setblock ~160 ~25 ~213 minecraft:short_grass strict
+setblock ~166 ~25 ~213 minecraft:short_grass strict
+fill ~168 ~25 ~213 ~168 ~25 ~215 minecraft:short_grass strict
+setblock ~170 ~25 ~213 minecraft:fern strict
+setblock ~173 ~25 ~213 minecraft:short_grass strict
+setblock ~174 ~25 ~213 minecraft:oxeye_daisy strict
+setblock ~93 ~25 ~214 minecraft:fern strict
+setblock ~95 ~25 ~214 minecraft:oxeye_daisy strict
+setblock ~161 ~25 ~214 minecraft:fern strict
+setblock ~163 ~25 ~214 minecraft:short_grass strict
+setblock ~165 ~25 ~214 minecraft:short_grass strict
+fill ~171 ~25 ~214 ~171 ~25 ~215 minecraft:short_grass strict
+setblock ~175 ~25 ~214 minecraft:short_grass strict
+fill ~177 ~25 ~214 ~177 ~25 ~215 minecraft:short_grass strict
+setblock ~179 ~25 ~214 minecraft:short_grass strict
+fill ~169 ~25 ~215 ~169 ~25 ~216 minecraft:short_grass strict
+setblock ~178 ~25 ~215 minecraft:fern strict
+setblock ~192 ~25 ~215 minecraft:fern strict
+setblock ~90 ~25 ~216 minecraft:short_grass strict
+fill ~173 ~25 ~216 ~173 ~25 ~217 minecraft:short_grass strict
+fill ~178 ~25 ~216 ~178 ~25 ~217 minecraft:short_grass strict
+setblock ~179 ~25 ~216 minecraft:fern strict
+setblock ~89 ~25 ~217 minecraft:short_grass strict
+fill ~171 ~25 ~217 ~172 ~25 ~218 minecraft:short_grass strict
+fill ~176 ~25 ~217 ~176 ~25 ~218 minecraft:short_grass strict
+setblock ~181 ~25 ~217 minecraft:short_grass strict
+setblock ~192 ~25 ~217 minecraft:short_grass strict
+setblock ~86 ~25 ~218 minecraft:fern strict
+setblock ~87 ~25 ~218 minecraft:bush strict
+setblock ~88 ~25 ~218 minecraft:fern strict
+fill ~90 ~25 ~218 ~91 ~25 ~218 minecraft:short_grass strict
+fill ~99 ~25 ~218 ~99 ~25 ~221 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
+fill ~101 ~25 ~218 ~101 ~25 ~221 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
+setblock ~167 ~25 ~218 minecraft:short_grass strict
+setblock ~168 ~25 ~218 minecraft:poppy strict
+fill ~169 ~25 ~218 ~170 ~25 ~218 minecraft:short_grass strict
+fill ~175 ~25 ~218 ~175 ~25 ~219 minecraft:short_grass strict
+setblock ~177 ~25 ~218 minecraft:short_grass strict
+setblock ~178 ~25 ~218 minecraft:fern strict
+setblock ~192 ~25 ~218 minecraft:fern strict
+setblock ~64 ~25 ~219 minecraft:fern strict
+fill ~66 ~25 ~219 ~67 ~25 ~219 minecraft:short_grass strict
+setblock ~172 ~25 ~219 minecraft:short_grass strict
+fill ~179 ~25 ~219 ~179 ~25 ~220 minecraft:short_grass strict
+setblock ~193 ~25 ~219 minecraft:short_grass strict
+setblock ~194 ~25 ~219 minecraft:cornflower strict
+fill ~64 ~25 ~220 ~64 ~25 ~221 minecraft:short_grass strict
+setblock ~66 ~25 ~220 minecraft:short_grass strict
+setblock ~84 ~25 ~220 minecraft:short_grass strict
+fill ~86 ~25 ~220 ~86 ~25 ~221 minecraft:short_grass strict
+fill ~91 ~25 ~220 ~91 ~25 ~221 minecraft:fern strict
+setblock ~166 ~25 ~220 minecraft:short_grass strict
+setblock ~173 ~25 ~220 minecraft:short_grass strict
+setblock ~174 ~25 ~220 minecraft:fern strict
+fill ~177 ~25 ~220 ~178 ~25 ~223 minecraft:short_grass strict
+setblock ~192 ~25 ~220 minecraft:short_grass strict
+setblock ~194 ~25 ~220 minecraft:short_grass strict
+setblock ~67 ~25 ~221 minecraft:short_grass strict
+setblock ~83 ~25 ~221 minecraft:short_grass strict
+fill ~87 ~25 ~221 ~87 ~25 ~223 minecraft:short_grass strict
+setblock ~89 ~25 ~221 minecraft:short_grass strict
+setblock ~168 ~25 ~221 minecraft:short_grass strict
+setblock ~174 ~25 ~221 minecraft:bush strict
+setblock ~176 ~25 ~221 minecraft:short_grass strict
+fill ~193 ~25 ~221 ~193 ~25 ~223 minecraft:short_grass strict
+setblock ~85 ~25 ~222 minecraft:short_grass strict
+setblock ~179 ~25 ~222 minecraft:short_grass strict
+fill ~181 ~25 ~222 ~181 ~25 ~223 minecraft:short_grass strict
+setblock ~191 ~25 ~222 minecraft:short_grass strict
+setblock ~66 ~25 ~223 minecraft:short_grass strict
+setblock ~67 ~25 ~223 minecraft:fern strict
+setblock ~82 ~25 ~223 minecraft:cornflower strict
+setblock ~83 ~25 ~223 minecraft:short_grass strict
+setblock ~85 ~25 ~223 minecraft:fern strict
+setblock ~88 ~25 ~223 minecraft:fern strict
+fill ~91 ~25 ~223 ~93 ~25 ~223 minecraft:short_grass strict
+setblock ~171 ~25 ~223 minecraft:short_grass strict
+fill ~175 ~25 ~223 ~176 ~25 ~224 minecraft:short_grass strict
+fill ~192 ~25 ~223 ~192 ~25 ~224 minecraft:short_grass strict
+fill ~65 ~25 ~224 ~65 ~25 ~225 minecraft:short_grass strict
+fill ~82 ~25 ~224 ~82 ~25 ~225 minecraft:short_grass strict
+fill ~88 ~25 ~224 ~88 ~25 ~226 minecraft:short_grass strict
+setblock ~96 ~25 ~224 minecraft:short_grass strict
+setblock ~170 ~25 ~224 minecraft:short_grass strict
+fill ~173 ~25 ~224 ~173 ~25 ~225 minecraft:short_grass strict
+setblock ~179 ~25 ~224 minecraft:allium strict
+setblock ~191 ~25 ~224 minecraft:short_grass strict
+setblock ~64 ~25 ~225 minecraft:short_grass strict
+setblock ~66 ~25 ~225 minecraft:fern strict
+setblock ~84 ~25 ~225 minecraft:fern strict
+setblock ~86 ~25 ~225 minecraft:short_grass strict
+setblock ~87 ~25 ~225 minecraft:oxeye_daisy strict
+setblock ~90 ~25 ~225 minecraft:bush strict
+setblock ~92 ~25 ~225 minecraft:short_grass strict
+setblock ~98 ~25 ~225 minecraft:short_grass strict
+setblock ~169 ~25 ~225 minecraft:short_grass strict
+setblock ~171 ~25 ~225 minecraft:short_grass strict
+fill ~174 ~25 ~225 ~174 ~25 ~227 minecraft:short_grass strict
+fill ~176 ~25 ~225 ~177 ~25 ~225 minecraft:short_grass strict
+fill ~179 ~25 ~225 ~182 ~25 ~225 minecraft:short_grass strict
+setblock ~87 ~25 ~226 minecraft:short_grass strict
+setblock ~90 ~25 ~226 minecraft:short_grass strict
+fill ~95 ~25 ~226 ~95 ~25 ~227 minecraft:short_grass strict
+setblock ~170 ~25 ~226 minecraft:short_grass strict
+fill ~176 ~25 ~226 ~176 ~25 ~227 minecraft:short_grass strict
+setblock ~178 ~25 ~226 minecraft:short_grass strict
+setblock ~180 ~25 ~226 minecraft:cornflower strict
+fill ~181 ~25 ~226 ~182 ~25 ~226 minecraft:short_grass strict
+setblock ~82 ~25 ~227 minecraft:short_grass strict
+setblock ~83 ~25 ~227 minecraft:fern strict
+fill ~85 ~25 ~227 ~85 ~25 ~229 minecraft:short_grass strict
+fill ~93 ~25 ~227 ~93 ~25 ~228 minecraft:short_grass strict
+setblock ~94 ~25 ~227 minecraft:fern strict
+setblock ~98 ~25 ~227 minecraft:short_grass strict
+fill ~168 ~25 ~227 ~169 ~25 ~227 minecraft:short_grass strict
+setblock ~183 ~25 ~227 minecraft:short_grass strict
+fill ~83 ~25 ~228 ~83 ~25 ~229 minecraft:short_grass strict
+setblock ~84 ~25 ~228 minecraft:bush strict
+setblock ~88 ~25 ~228 minecraft:fern strict
+fill ~91 ~25 ~228 ~92 ~25 ~228 minecraft:short_grass strict
+setblock ~168 ~25 ~228 minecraft:fern strict
+fill ~172 ~25 ~228 ~173 ~25 ~228 minecraft:short_grass strict
+setblock ~174 ~25 ~228 minecraft:bush strict
+setblock ~175 ~25 ~228 minecraft:fern strict
+setblock ~190 ~25 ~228 minecraft:short_grass strict
+setblock ~193 ~25 ~228 minecraft:short_grass strict
+setblock ~88 ~25 ~229 minecraft:short_grass strict
+setblock ~91 ~25 ~229 minecraft:short_grass strict
+setblock ~94 ~25 ~229 minecraft:short_grass strict
+setblock ~95 ~25 ~229 minecraft:fern strict
+fill ~167 ~25 ~229 ~167 ~25 ~230 minecraft:short_grass strict
+fill ~171 ~25 ~229 ~171 ~25 ~230 minecraft:short_grass strict
+setblock ~173 ~25 ~229 minecraft:short_grass strict
+setblock ~175 ~25 ~229 minecraft:short_grass strict
+setblock ~178 ~25 ~229 minecraft:short_grass strict
+fill ~180 ~25 ~229 ~180 ~25 ~230 minecraft:fern strict
+setblock ~184 ~25 ~229 minecraft:short_grass strict
+setblock ~190 ~25 ~229 minecraft:oxeye_daisy strict
+setblock ~87 ~25 ~230 minecraft:short_grass strict
+setblock ~168 ~25 ~230 minecraft:poppy strict
+setblock ~170 ~25 ~230 minecraft:short_grass strict
+setblock ~182 ~25 ~230 minecraft:short_grass strict
+setblock ~192 ~25 ~230 minecraft:short_grass strict
+setblock ~17 ~25 ~231 minecraft:lantern[hanging=false,waterlogged=false] strict
+setblock ~83 ~25 ~231 minecraft:oxeye_daisy strict
+setblock ~86 ~25 ~231 minecraft:short_grass strict
+setblock ~88 ~25 ~231 minecraft:short_grass strict
+setblock ~95 ~25 ~231 minecraft:short_grass strict
+setblock ~168 ~25 ~231 minecraft:fern strict
+fill ~184 ~25 ~231 ~184 ~25 ~232 minecraft:bush strict
+setblock ~84 ~25 ~232 minecraft:short_grass strict
+setblock ~89 ~25 ~232 minecraft:fern strict
+setblock ~92 ~25 ~232 minecraft:short_grass strict
+setblock ~95 ~25 ~232 minecraft:fern strict
+setblock ~169 ~25 ~232 minecraft:short_grass strict
+setblock ~170 ~25 ~232 minecraft:fern strict
+fill ~174 ~25 ~232 ~175 ~25 ~232 minecraft:short_grass strict
+setblock ~179 ~25 ~232 minecraft:short_grass strict
+setblock ~183 ~25 ~232 minecraft:short_grass strict
+fill ~88 ~25 ~233 ~88 ~25 ~234 minecraft:short_grass strict
+fill ~90 ~25 ~233 ~90 ~25 ~234 minecraft:short_grass strict
+fill ~94 ~25 ~233 ~95 ~25 ~233 minecraft:short_grass strict
+setblock ~170 ~25 ~233 minecraft:short_grass strict
+setblock ~172 ~25 ~233 minecraft:short_grass strict
+setblock ~175 ~25 ~233 minecraft:stone_brick_slab[type=bottom,waterlogged=false] strict
+setblock ~178 ~25 ~233 minecraft:short_grass strict
+setblock ~180 ~25 ~233 minecraft:short_grass strict
+setblock ~182 ~25 ~233 minecraft:short_grass strict
+setblock ~185 ~25 ~233 minecraft:short_grass strict
+fill ~192 ~25 ~233 ~192 ~25 ~234 minecraft:short_grass strict
+setblock ~87 ~25 ~234 minecraft:poppy strict
+setblock ~91 ~25 ~234 minecraft:short_grass strict
+setblock ~96 ~25 ~234 minecraft:poppy strict
+fill ~98 ~25 ~234 ~98 ~25 ~235 minecraft:short_grass strict
+setblock ~168 ~25 ~234 minecraft:short_grass strict
+setblock ~183 ~25 ~234 minecraft:short_grass strict
+setblock ~193 ~25 ~234 minecraft:bush strict
+setblock ~93 ~25 ~235 minecraft:fern strict
+setblock ~95 ~25 ~235 minecraft:short_grass strict
+setblock ~168 ~25 ~235 minecraft:fern strict
+fill ~176 ~25 ~235 ~177 ~25 ~235 minecraft:short_grass strict
+setblock ~178 ~25 ~235 minecraft:bush strict
+setblock ~179 ~25 ~235 minecraft:short_grass strict
+fill ~184 ~25 ~235 ~184 ~25 ~236 minecraft:short_grass strict
+setblock ~194 ~25 ~235 minecraft:short_grass strict
+setblock ~160 ~25 ~236 minecraft:short_grass strict
+setblock ~165 ~25 ~236 minecraft:fern strict
+setblock ~170 ~25 ~236 minecraft:short_grass strict
+fill ~173 ~25 ~236 ~173 ~25 ~241 minecraft:short_grass strict
+setblock ~174 ~25 ~236 minecraft:allium strict
+setblock ~175 ~25 ~236 minecraft:fern strict
+fill ~177 ~25 ~236 ~177 ~25 ~238 minecraft:short_grass strict
+setblock ~183 ~25 ~236 minecraft:short_grass strict
+fill ~196 ~25 ~236 ~196 ~25 ~237 minecraft:short_grass strict
+setblock ~161 ~25 ~237 minecraft:short_grass strict
+setblock ~169 ~25 ~237 minecraft:short_grass strict
+fill ~185 ~25 ~237 ~185 ~25 ~238 minecraft:short_grass strict
+setblock ~99 ~25 ~238 minecraft:short_grass strict
+fill ~158 ~25 ~238 ~159 ~25 ~239 minecraft:short_grass strict
+setblock ~162 ~25 ~238 minecraft:short_grass strict
+setblock ~164 ~25 ~238 minecraft:fern strict
+setblock ~165 ~25 ~238 minecraft:short_grass strict
+fill ~167 ~25 ~238 ~167 ~25 ~239 minecraft:short_grass strict
+fill ~176 ~25 ~238 ~176 ~25 ~239 minecraft:short_grass strict
+setblock ~180 ~25 ~238 minecraft:fern strict
+setblock ~184 ~25 ~238 minecraft:short_grass strict
+setblock ~194 ~25 ~238 minecraft:short_grass strict
+fill ~161 ~25 ~239 ~161 ~25 ~241 minecraft:short_grass strict
+setblock ~163 ~25 ~239 minecraft:short_grass strict
+setblock ~168 ~25 ~239 minecraft:short_grass strict
+setblock ~172 ~25 ~239 minecraft:short_grass strict
+setblock ~175 ~25 ~239 minecraft:short_grass strict
+setblock ~179 ~25 ~239 minecraft:azure_bluet strict
+fill ~181 ~25 ~239 ~182 ~25 ~239 minecraft:short_grass strict
+setblock ~26 ~25 ~240 minecraft:lantern[hanging=false,waterlogged=false] strict
+fill ~159 ~25 ~240 ~159 ~25 ~241 minecraft:short_grass strict
+setblock ~162 ~25 ~240 minecraft:oxeye_daisy strict
+setblock ~169 ~25 ~240 minecraft:fern strict
+fill ~171 ~25 ~240 ~171 ~25 ~242 minecraft:short_grass strict
+fill ~177 ~25 ~240 ~178 ~25 ~240 minecraft:short_grass strict
+fill ~182 ~25 ~240 ~183 ~25 ~240 minecraft:short_grass strict
+setblock ~196 ~25 ~240 minecraft:short_grass strict
+setblock ~197 ~25 ~240 minecraft:fern strict
+setblock ~100 ~25 ~241 minecraft:short_grass strict
+setblock ~156 ~25 ~241 minecraft:fern strict
+fill ~157 ~25 ~241 ~157 ~25 ~242 minecraft:short_grass strict
+setblock ~158 ~25 ~241 minecraft:azure_bluet strict
+fill ~163 ~25 ~241 ~164 ~25 ~241 minecraft:short_grass strict
+setblock ~166 ~25 ~241 minecraft:short_grass strict
+fill ~169 ~25 ~241 ~170 ~25 ~241 minecraft:short_grass strict
+setblock ~177 ~25 ~241 minecraft:short_grass strict
+setblock ~179 ~25 ~241 minecraft:short_grass strict
+fill ~181 ~25 ~241 ~182 ~25 ~241 minecraft:short_grass strict
+setblock ~183 ~25 ~241 minecraft:fern strict
+setblock ~197 ~25 ~241 minecraft:short_grass strict
+setblock ~155 ~25 ~242 minecraft:short_grass strict
+setblock ~161 ~25 ~242 minecraft:dandelion strict
+setblock ~167 ~25 ~242 minecraft:short_grass strict
+setblock ~170 ~25 ~242 minecraft:short_grass strict
+setblock ~172 ~25 ~242 minecraft:short_grass strict
+setblock ~178 ~25 ~242 minecraft:short_grass strict
+setblock ~180 ~25 ~242 minecraft:short_grass strict
+setblock ~182 ~25 ~242 minecraft:short_grass strict
+fill ~62 ~26 ~13 ~62 ~26 ~14 minecraft:short_grass strict
+setblock ~102 ~26 ~13 minecraft:short_grass strict
+fill ~154 ~26 ~13 ~155 ~26 ~13 minecraft:short_grass strict
+setblock ~61 ~26 ~14 minecraft:azure_bluet strict
+fill ~64 ~26 ~14 ~65 ~26 ~14 minecraft:short_grass strict
+fill ~68 ~26 ~14 ~68 ~26 ~15 minecraft:short_grass strict
+fill ~70 ~26 ~14 ~70 ~26 ~15 minecraft:short_grass strict
+setblock ~72 ~26 ~14 minecraft:short_grass strict
+setblock ~155 ~26 ~14 minecraft:short_grass strict
+setblock ~157 ~26 ~14 minecraft:fern strict
+fill ~31 ~26 ~15 ~31 ~26 ~16 minecraft:short_grass strict
+setblock ~37 ~26 ~15 minecraft:short_grass strict
 fill ~66 ~26 ~15 ~67 ~26 ~15 minecraft:short_grass strict
 setblock ~72 ~26 ~15 minecraft:cornflower strict
 fill ~73 ~26 ~15 ~74 ~26 ~15 minecraft:short_grass strict
@@ -15,6 +274,7 @@ setblock ~65 ~26 ~17 minecraft:short_grass strict
 setblock ~73 ~26 ~17 minecraft:short_grass strict
 setblock ~158 ~26 ~17 minecraft:short_grass strict
 setblock ~196 ~26 ~17 minecraft:short_grass strict
+setblock ~225 ~26 ~17 minecraft:fire[age=1,east=false,north=false,south=false,up=false,west=false] strict
 fill ~24 ~26 ~18 ~25 ~26 ~18 minecraft:short_grass strict
 setblock ~31 ~26 ~18 minecraft:azure_bluet strict
 setblock ~35 ~26 ~18 minecraft:dandelion strict
@@ -88,263 +348,3 @@ fill ~70 ~26 ~26 ~70 ~26 ~27 minecraft:short_grass strict
 fill ~72 ~26 ~26 ~73 ~26 ~26 minecraft:short_grass strict
 fill ~80 ~26 ~26 ~80 ~26 ~28 minecraft:short_grass strict
 setblock ~81 ~26 ~26 minecraft:fern strict
-fill ~82 ~26 ~26 ~83 ~26 ~26 minecraft:short_grass strict
-setblock ~159 ~26 ~26 minecraft:short_grass strict
-setblock ~193 ~26 ~26 minecraft:bush strict
-setblock ~20 ~26 ~27 minecraft:pink_tulip strict
-setblock ~24 ~26 ~27 minecraft:oxeye_daisy strict
-setblock ~33 ~26 ~27 minecraft:pink_tulip strict
-setblock ~34 ~26 ~27 minecraft:orange_tulip strict
-setblock ~35 ~26 ~27 minecraft:pink_tulip strict
-fill ~36 ~26 ~27 ~37 ~26 ~27 minecraft:azure_bluet strict
-setblock ~38 ~26 ~27 minecraft:short_grass strict
-setblock ~48 ~26 ~27 minecraft:cornflower strict
-setblock ~69 ~26 ~27 minecraft:fern strict
-setblock ~71 ~26 ~27 minecraft:short_grass strict
-setblock ~79 ~26 ~27 minecraft:short_grass strict
-setblock ~81 ~26 ~27 minecraft:short_grass strict
-setblock ~83 ~26 ~27 minecraft:fern strict
-setblock ~86 ~26 ~27 minecraft:fern strict
-setblock ~94 ~26 ~27 minecraft:short_grass strict
-setblock ~160 ~26 ~27 minecraft:short_grass strict
-fill ~192 ~26 ~27 ~192 ~26 ~28 minecraft:short_grass strict
-setblock ~16 ~26 ~28 minecraft:short_grass strict
-setblock ~31 ~26 ~28 minecraft:short_grass strict
-setblock ~37 ~26 ~28 minecraft:orange_tulip strict
-setblock ~38 ~26 ~28 minecraft:oxeye_daisy strict
-setblock ~41 ~26 ~28 minecraft:short_grass strict
-setblock ~45 ~26 ~28 minecraft:azure_bluet strict
-setblock ~48 ~26 ~28 minecraft:allium strict
-setblock ~49 ~26 ~28 minecraft:poppy strict
-fill ~73 ~26 ~28 ~75 ~26 ~28 minecraft:short_grass strict
-setblock ~81 ~26 ~28 minecraft:fern strict
-fill ~82 ~26 ~28 ~86 ~26 ~28 minecraft:short_grass strict
-setblock ~94 ~26 ~28 minecraft:azure_bluet strict
-setblock ~96 ~26 ~28 minecraft:short_grass strict
-setblock ~23 ~26 ~29 minecraft:pink_tulip strict
-setblock ~39 ~26 ~29 minecraft:short_grass strict
-setblock ~49 ~26 ~29 minecraft:azure_bluet strict
-setblock ~69 ~26 ~29 minecraft:fern strict
-fill ~72 ~26 ~29 ~73 ~26 ~30 minecraft:short_grass strict
-setblock ~83 ~26 ~29 minecraft:short_grass strict
-fill ~85 ~26 ~29 ~85 ~26 ~30 minecraft:short_grass strict
-setblock ~91 ~26 ~29 minecraft:short_grass strict
-fill ~93 ~26 ~29 ~94 ~26 ~29 minecraft:short_grass strict
-fill ~97 ~26 ~29 ~97 ~26 ~31 minecraft:short_grass strict
-fill ~159 ~26 ~29 ~160 ~26 ~29 minecraft:short_grass strict
-setblock ~19 ~26 ~30 minecraft:lily_of_the_valley strict
-setblock ~22 ~26 ~30 minecraft:azure_bluet strict
-setblock ~23 ~26 ~30 minecraft:short_grass strict
-setblock ~26 ~26 ~30 minecraft:short_grass strict
-setblock ~40 ~26 ~30 minecraft:cornflower strict
-fill ~42 ~26 ~30 ~42 ~26 ~31 minecraft:short_grass strict
-setblock ~45 ~26 ~30 minecraft:short_grass strict
-setblock ~49 ~26 ~30 minecraft:poppy strict
-setblock ~65 ~26 ~30 minecraft:bush strict
-fill ~67 ~26 ~30 ~68 ~26 ~30 minecraft:short_grass strict
-setblock ~71 ~26 ~30 minecraft:fern strict
-setblock ~75 ~26 ~30 minecraft:short_grass strict
-setblock ~79 ~26 ~30 minecraft:short_grass strict
-setblock ~82 ~26 ~30 minecraft:short_grass strict
-fill ~89 ~26 ~30 ~90 ~26 ~30 minecraft:short_grass strict
-fill ~92 ~26 ~30 ~92 ~26 ~31 minecraft:short_grass strict
-setblock ~95 ~26 ~30 minecraft:oxeye_daisy strict
-setblock ~158 ~26 ~30 minecraft:fern strict
-setblock ~159 ~26 ~30 minecraft:short_grass strict
-fill ~191 ~26 ~30 ~191 ~26 ~31 minecraft:short_grass strict
-fill ~193 ~26 ~30 ~193 ~26 ~31 minecraft:short_grass strict
-setblock ~16 ~26 ~31 minecraft:short_grass strict
-fill ~18 ~26 ~31 ~18 ~26 ~32 minecraft:azure_bluet strict
-setblock ~19 ~26 ~31 minecraft:oxeye_daisy strict
-setblock ~22 ~26 ~31 minecraft:pink_tulip strict
-setblock ~24 ~26 ~31 minecraft:short_grass strict
-setblock ~27 ~26 ~31 minecraft:lily_of_the_valley strict
-setblock ~28 ~26 ~31 minecraft:allium strict
-setblock ~43 ~26 ~31 minecraft:short_grass strict
-setblock ~46 ~26 ~31 minecraft:short_grass strict
-setblock ~50 ~26 ~31 minecraft:orange_tulip strict
-fill ~51 ~26 ~31 ~51 ~26 ~32 minecraft:short_grass strict
-setblock ~53 ~26 ~31 minecraft:short_grass strict
-fill ~62 ~26 ~31 ~62 ~26 ~32 minecraft:short_grass strict
-fill ~65 ~26 ~31 ~65 ~26 ~32 minecraft:short_grass strict
-fill ~69 ~26 ~31 ~69 ~26 ~33 minecraft:short_grass strict
-setblock ~72 ~26 ~31 minecraft:short_grass strict
-setblock ~74 ~26 ~31 minecraft:short_grass strict
-setblock ~75 ~26 ~31 minecraft:bush strict
-setblock ~80 ~26 ~31 minecraft:short_grass strict
-fill ~86 ~26 ~31 ~86 ~26 ~32 minecraft:short_grass strict
-setblock ~88 ~26 ~31 minecraft:short_grass strict
-fill ~95 ~26 ~31 ~96 ~26 ~31 minecraft:short_grass strict
-setblock ~160 ~26 ~31 minecraft:short_grass strict
-setblock ~187 ~26 ~31 minecraft:short_grass strict
-setblock ~190 ~26 ~31 minecraft:short_grass strict
-setblock ~22 ~26 ~32 minecraft:azure_bluet strict
-setblock ~26 ~26 ~32 minecraft:short_grass strict
-setblock ~46 ~26 ~32 minecraft:lily_of_the_valley strict
-setblock ~50 ~26 ~32 minecraft:azure_bluet strict
-setblock ~75 ~26 ~32 minecraft:short_grass strict
-setblock ~76 ~26 ~32 minecraft:fern strict
-fill ~81 ~26 ~32 ~83 ~26 ~32 minecraft:short_grass strict
-setblock ~85 ~26 ~32 minecraft:short_grass strict
-fill ~87 ~26 ~32 ~87 ~26 ~33 minecraft:short_grass strict
-setblock ~89 ~26 ~32 minecraft:short_grass strict
-setblock ~91 ~26 ~32 minecraft:short_grass strict
-setblock ~93 ~26 ~32 minecraft:azure_bluet strict
-setblock ~96 ~26 ~32 minecraft:short_grass strict
-setblock ~98 ~26 ~32 minecraft:short_grass strict
-fill ~158 ~26 ~32 ~159 ~26 ~33 minecraft:short_grass strict
-fill ~192 ~26 ~32 ~192 ~26 ~33 minecraft:short_grass strict
-setblock ~17 ~26 ~33 minecraft:short_grass strict
-setblock ~27 ~26 ~33 minecraft:lily_of_the_valley strict
-setblock ~53 ~26 ~33 minecraft:short_grass strict
-setblock ~66 ~26 ~33 minecraft:fern strict
-setblock ~67 ~26 ~33 minecraft:short_grass strict
-fill ~71 ~26 ~33 ~71 ~26 ~34 minecraft:short_grass strict
-fill ~81 ~26 ~33 ~81 ~26 ~35 minecraft:quartz_slab[type=bottom,waterlogged=false] strict
-setblock ~88 ~26 ~33 minecraft:short_grass strict
-fill ~93 ~26 ~33 ~94 ~26 ~33 minecraft:short_grass strict
-fill ~189 ~26 ~33 ~189 ~26 ~34 minecraft:short_grass strict
-setblock ~193 ~26 ~33 minecraft:short_grass strict
-setblock ~16 ~26 ~34 minecraft:short_grass strict
-setblock ~18 ~26 ~34 minecraft:poppy strict
-setblock ~22 ~26 ~34 minecraft:lily_of_the_valley strict
-setblock ~62 ~26 ~34 minecraft:bush strict
-fill ~64 ~26 ~34 ~66 ~26 ~34 minecraft:short_grass strict
-fill ~72 ~26 ~34 ~73 ~26 ~35 minecraft:short_grass strict
-setblock ~75 ~26 ~34 minecraft:oxeye_daisy strict
-setblock ~90 ~26 ~34 minecraft:short_grass strict
-setblock ~92 ~26 ~34 minecraft:short_grass strict
-setblock ~158 ~26 ~34 minecraft:short_grass strict
-setblock ~184 ~26 ~34 minecraft:dandelion strict
-fill ~188 ~26 ~34 ~188 ~26 ~37 minecraft:short_grass strict
-setblock ~190 ~26 ~34 minecraft:short_grass strict
-fill ~15 ~26 ~35 ~15 ~26 ~36 minecraft:short_grass strict
-fill ~17 ~26 ~35 ~17 ~26 ~36 minecraft:short_grass strict
-setblock ~27 ~26 ~35 minecraft:azure_bluet strict
-setblock ~53 ~26 ~35 minecraft:short_grass strict
-fill ~67 ~26 ~35 ~68 ~26 ~35 minecraft:short_grass strict
-setblock ~70 ~26 ~35 minecraft:short_grass strict
-setblock ~93 ~26 ~35 minecraft:fern strict
-setblock ~95 ~26 ~35 minecraft:short_grass strict
-fill ~97 ~26 ~35 ~98 ~26 ~35 minecraft:short_grass strict
-fill ~186 ~26 ~35 ~186 ~26 ~36 minecraft:short_grass strict
-setblock ~189 ~26 ~35 minecraft:fern strict
-fill ~191 ~26 ~35 ~193 ~26 ~35 minecraft:short_grass strict
-setblock ~16 ~26 ~36 minecraft:short_grass strict
-setblock ~18 ~26 ~36 minecraft:poppy strict
-setblock ~22 ~26 ~36 minecraft:oxeye_daisy strict
-setblock ~27 ~26 ~36 minecraft:poppy strict
-setblock ~46 ~26 ~36 minecraft:cornflower strict
-setblock ~50 ~26 ~36 minecraft:cornflower strict
-fill ~64 ~26 ~36 ~65 ~26 ~36 minecraft:short_grass strict
-fill ~68 ~26 ~36 ~69 ~26 ~36 minecraft:short_grass strict
-setblock ~74 ~26 ~36 minecraft:short_grass strict
-setblock ~91 ~26 ~36 minecraft:short_grass strict
-fill ~157 ~26 ~36 ~157 ~26 ~37 minecraft:short_grass strict
-setblock ~185 ~26 ~36 minecraft:fern strict
-setblock ~187 ~26 ~36 minecraft:dandelion strict
-fill ~189 ~26 ~36 ~189 ~26 ~37 minecraft:short_grass strict
-fill ~192 ~26 ~36 ~192 ~26 ~37 minecraft:short_grass strict
-setblock ~22 ~26 ~37 minecraft:cornflower strict
-setblock ~28 ~26 ~37 minecraft:lily_of_the_valley strict
-setblock ~40 ~26 ~37 minecraft:orange_tulip strict
-setblock ~46 ~26 ~37 minecraft:orange_tulip strict
-setblock ~49 ~26 ~37 minecraft:dandelion strict
-setblock ~63 ~26 ~37 minecraft:short_grass strict
-setblock ~91 ~26 ~37 minecraft:fern strict
-fill ~97 ~26 ~37 ~98 ~26 ~37 minecraft:short_grass strict
-setblock ~158 ~26 ~37 minecraft:short_grass strict
-fill ~191 ~26 ~37 ~191 ~26 ~38 minecraft:short_grass strict
-setblock ~19 ~26 ~38 minecraft:azure_bluet strict
-fill ~24 ~26 ~38 ~25 ~26 ~38 minecraft:short_grass strict
-setblock ~44 ~26 ~38 minecraft:short_grass strict
-setblock ~49 ~26 ~38 minecraft:cornflower strict
-setblock ~51 ~26 ~38 minecraft:short_grass strict
-setblock ~97 ~26 ~38 minecraft:short_grass strict
-setblock ~157 ~26 ~38 minecraft:fern strict
-setblock ~19 ~26 ~39 minecraft:short_grass strict
-setblock ~23 ~26 ~39 minecraft:azure_bluet strict
-setblock ~42 ~26 ~39 minecraft:short_grass strict
-setblock ~45 ~26 ~39 minecraft:allium strict
-fill ~92 ~26 ~39 ~92 ~26 ~40 minecraft:short_grass strict
-fill ~156 ~26 ~39 ~158 ~26 ~39 minecraft:short_grass strict
-setblock ~19 ~26 ~40 minecraft:allium strict
-setblock ~29 ~26 ~40 minecraft:short_grass strict
-setblock ~37 ~26 ~40 minecraft:poppy strict
-setblock ~45 ~26 ~40 minecraft:lily_of_the_valley strict
-setblock ~48 ~26 ~40 minecraft:orange_tulip strict
-setblock ~49 ~26 ~40 minecraft:poppy strict
-setblock ~50 ~26 ~40 minecraft:short_grass strict
-setblock ~93 ~26 ~40 minecraft:short_grass strict
-setblock ~95 ~26 ~40 minecraft:short_grass strict
-fill ~98 ~26 ~40 ~99 ~26 ~41 minecraft:short_grass strict
-fill ~157 ~26 ~40 ~158 ~26 ~40 minecraft:short_grass strict
-setblock ~192 ~26 ~40 minecraft:short_grass strict
-setblock ~24 ~26 ~41 minecraft:allium strict
-setblock ~31 ~26 ~41 minecraft:short_grass strict
-setblock ~38 ~26 ~41 minecraft:short_grass strict
-setblock ~44 ~26 ~41 minecraft:lily_of_the_valley strict
-setblock ~48 ~26 ~41 minecraft:cornflower strict
-setblock ~97 ~26 ~41 minecraft:short_grass strict
-setblock ~100 ~26 ~41 minecraft:short_grass strict
-fill ~191 ~26 ~41 ~191 ~26 ~42 minecraft:short_grass strict
-setblock ~18 ~26 ~42 minecraft:short_grass strict
-setblock ~21 ~26 ~42 minecraft:short_grass strict
-setblock ~26 ~26 ~42 minecraft:short_grass strict
-setblock ~47 ~26 ~42 minecraft:orange_tulip strict
-setblock ~93 ~26 ~42 minecraft:short_grass strict
-setblock ~98 ~26 ~42 minecraft:short_grass strict
-fill ~188 ~26 ~42 ~189 ~26 ~42 minecraft:short_grass strict
-setblock ~192 ~26 ~42 minecraft:fern strict
-setblock ~21 ~26 ~43 minecraft:oxeye_daisy strict
-fill ~48 ~26 ~43 ~49 ~26 ~43 minecraft:short_grass strict
-fill ~91 ~26 ~43 ~91 ~26 ~44 minecraft:short_grass strict
-setblock ~95 ~26 ~43 minecraft:short_grass strict
-setblock ~189 ~26 ~43 minecraft:short_grass strict
-setblock ~22 ~26 ~44 minecraft:oxeye_daisy strict
-fill ~26 ~26 ~44 ~27 ~26 ~44 minecraft:pink_tulip strict
-fill ~31 ~26 ~44 ~32 ~26 ~44 minecraft:short_grass strict
-setblock ~39 ~26 ~44 minecraft:short_grass strict
-setblock ~48 ~26 ~44 minecraft:short_grass strict
-setblock ~93 ~26 ~44 minecraft:short_grass strict
-setblock ~190 ~26 ~44 minecraft:fern strict
-setblock ~192 ~26 ~44 minecraft:bush strict
-fill ~20 ~26 ~45 ~21 ~26 ~45 minecraft:short_grass strict
-setblock ~22 ~26 ~45 minecraft:allium strict
-setblock ~23 ~26 ~45 minecraft:lily_of_the_valley strict
-fill ~92 ~26 ~45 ~92 ~26 ~46 minecraft:short_grass strict
-fill ~158 ~26 ~45 ~159 ~26 ~45 minecraft:short_grass strict
-fill ~174 ~26 ~45 ~175 ~26 ~45 minecraft:short_grass strict
-setblock ~30 ~26 ~46 minecraft:lily_of_the_valley strict
-setblock ~31 ~26 ~46 minecraft:allium strict
-setblock ~32 ~26 ~46 minecraft:lily_of_the_valley strict
-setblock ~36 ~26 ~46 minecraft:oxeye_daisy strict
-fill ~159 ~26 ~46 ~160 ~26 ~46 minecraft:short_grass strict
-fill ~171 ~26 ~46 ~173 ~26 ~46 minecraft:short_grass strict
-setblock ~175 ~26 ~46 minecraft:short_grass strict
-setblock ~43 ~26 ~47 minecraft:dandelion strict
-setblock ~44 ~26 ~47 minecraft:short_grass strict
-fill ~173 ~26 ~47 ~173 ~26 ~48 minecraft:short_grass strict
-setblock ~22 ~26 ~48 minecraft:short_grass strict
-setblock ~26 ~26 ~48 minecraft:cornflower strict
-setblock ~28 ~26 ~48 minecraft:pink_tulip strict
-fill ~40 ~26 ~48 ~41 ~26 ~48 minecraft:oxeye_daisy strict
-setblock ~42 ~26 ~48 minecraft:poppy strict
-fill ~45 ~26 ~48 ~45 ~26 ~49 minecraft:short_grass strict
-setblock ~47 ~26 ~48 minecraft:short_grass strict
-setblock ~90 ~26 ~48 minecraft:cornflower strict
-setblock ~161 ~26 ~48 minecraft:short_grass strict
-fill ~164 ~26 ~48 ~164 ~26 ~49 minecraft:short_grass strict
-setblock ~171 ~26 ~48 minecraft:short_grass strict
-setblock ~27 ~26 ~49 minecraft:short_grass strict
-setblock ~28 ~26 ~49 minecraft:orange_tulip strict
-setblock ~29 ~26 ~49 minecraft:dandelion strict
-setblock ~30 ~26 ~49 minecraft:oxeye_daisy strict
-setblock ~37 ~26 ~49 minecraft:dandelion strict
-setblock ~40 ~26 ~49 minecraft:lily_of_the_valley strict
-setblock ~41 ~26 ~49 minecraft:short_grass strict
-setblock ~90 ~26 ~49 minecraft:fern strict
-fill ~100 ~26 ~49 ~100 ~26 ~50 minecraft:short_grass strict
-setblock ~103 ~26 ~49 minecraft:short_grass strict
-fill ~163 ~26 ~49 ~163 ~26 ~50 minecraft:short_grass strict
-fill ~165 ~26 ~49 ~166 ~26 ~49 minecraft:short_grass strict

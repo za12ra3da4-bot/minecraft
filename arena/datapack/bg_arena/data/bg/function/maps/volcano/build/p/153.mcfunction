@@ -1,0 +1,350 @@
+setblock ~64 ~30 ~239 minecraft:smooth_basalt strict
+fill ~65 ~30 ~239 ~65 ~32 ~239 minecraft:blackstone strict
+fill ~66 ~30 ~239 ~66 ~30 ~240 minecraft:basalt[axis=y] strict
+fill ~67 ~30 ~239 ~67 ~32 ~239 minecraft:blackstone strict
+fill ~72 ~30 ~239 ~72 ~30 ~240 minecraft:tuff strict
+setblock ~82 ~30 ~239 minecraft:magma_block strict
+fill ~107 ~30 ~239 ~107 ~37 ~239 minecraft:polished_andesite strict
+fill ~111 ~30 ~239 ~111 ~37 ~239 minecraft:polished_andesite strict
+setblock ~116 ~30 ~239 minecraft:mossy_cobblestone strict
+setblock ~117 ~30 ~239 minecraft:cobblestone_wall[east=low,north=none,south=none,up=false,waterlogged=false,west=low] strict
+setblock ~118 ~30 ~239 minecraft:mossy_cobblestone strict
+fill ~138 ~30 ~239 ~140 ~35 ~239 minecraft:stone_bricks strict
+fill ~145 ~30 ~239 ~145 ~37 ~239 minecraft:polished_andesite strict
+fill ~146 ~30 ~239 ~146 ~31 ~245 minecraft:stone_bricks strict
+fill ~149 ~30 ~239 ~149 ~37 ~239 minecraft:polished_andesite strict
+setblock ~161 ~30 ~239 minecraft:tuff strict
+fill ~164 ~30 ~239 ~164 ~32 ~239 minecraft:blackstone strict
+fill ~210 ~30 ~239 ~210 ~40 ~242 minecraft:red_sandstone strict
+fill ~211 ~30 ~239 ~212 ~38 ~239 minecraft:cut_red_sandstone strict
+fill ~232 ~30 ~239 ~232 ~30 ~240 minecraft:cut_red_sandstone strict
+fill ~4 ~30 ~240 ~5 ~31 ~240 minecraft:blackstone strict
+setblock ~10 ~30 ~240 minecraft:blackstone strict
+fill ~11 ~30 ~240 ~11 ~43 ~240 minecraft:basalt[axis=y] strict
+fill ~13 ~30 ~240 ~13 ~31 ~240 minecraft:polished_deepslate strict
+fill ~14 ~30 ~240 ~14 ~33 ~240 minecraft:basalt[axis=y] strict
+fill ~25 ~30 ~240 ~25 ~31 ~240 minecraft:polished_deepslate strict
+fill ~52 ~30 ~240 ~52 ~31 ~240 minecraft:basalt[axis=y] strict
+fill ~53 ~30 ~240 ~53 ~31 ~240 minecraft:smooth_basalt strict
+fill ~54 ~30 ~240 ~55 ~31 ~240 minecraft:polished_deepslate strict
+fill ~56 ~30 ~240 ~56 ~33 ~240 minecraft:basalt[axis=y] strict
+fill ~57 ~30 ~240 ~57 ~33 ~240 minecraft:polished_deepslate strict
+fill ~58 ~30 ~240 ~58 ~31 ~240 minecraft:blackstone strict
+fill ~59 ~30 ~240 ~59 ~31 ~241 minecraft:basalt[axis=y] strict
+fill ~61 ~30 ~240 ~61 ~31 ~240 minecraft:basalt[axis=y] strict
+fill ~62 ~30 ~240 ~62 ~31 ~244 minecraft:blackstone strict
+fill ~67 ~30 ~240 ~67 ~34 ~240 minecraft:basalt[axis=y] strict
+fill ~68 ~30 ~240 ~68 ~32 ~240 minecraft:blackstone strict
+fill ~110 ~30 ~240 ~110 ~31 ~245 minecraft:stone_bricks strict
+fill ~138 ~30 ~240 ~138 ~33 ~240 minecraft:stone_brick_wall[east=tall,north=tall,south=none,up=true,waterlogged=false,west=none] strict
+fill ~139 ~30 ~240 ~139 ~35 ~240 minecraft:stone_bricks strict
+fill ~140 ~30 ~240 ~140 ~33 ~240 minecraft:stone_brick_wall[east=none,north=tall,south=none,up=true,waterlogged=false,west=tall] strict
+setblock ~161 ~30 ~240 minecraft:smooth_basalt strict
+fill ~163 ~30 ~240 ~163 ~32 ~241 minecraft:blackstone strict
+fill ~164 ~30 ~240 ~164 ~30 ~241 minecraft:basalt[axis=y] strict
+fill ~211 ~30 ~240 ~211 ~40 ~242 minecraft:red_sandstone strict
+fill ~212 ~30 ~240 ~214 ~30 ~240 minecraft:cut_red_sandstone strict
+fill ~230 ~30 ~240 ~231 ~30 ~240 minecraft:cut_red_sandstone strict
+fill ~233 ~30 ~240 ~233 ~40 ~242 minecraft:red_sandstone strict
+fill ~5 ~30 ~241 ~5 ~31 ~241 minecraft:basalt[axis=y] strict
+fill ~7 ~30 ~241 ~7 ~31 ~241 minecraft:blackstone strict
+fill ~11 ~30 ~241 ~11 ~31 ~241 minecraft:polished_deepslate strict
+fill ~14 ~30 ~241 ~14 ~31 ~241 minecraft:polished_deepslate strict
+setblock ~23 ~30 ~241 minecraft:blackstone strict
+fill ~26 ~30 ~241 ~26 ~31 ~242 minecraft:polished_deepslate strict
+fill ~28 ~30 ~241 ~29 ~31 ~241 minecraft:basalt[axis=y] strict
+fill ~48 ~30 ~241 ~50 ~35 ~241 minecraft:basalt[axis=y] strict
+fill ~51 ~30 ~241 ~51 ~31 ~241 minecraft:smooth_basalt strict
+fill ~53 ~30 ~241 ~53 ~33 ~241 minecraft:polished_deepslate strict
+fill ~54 ~30 ~241 ~54 ~31 ~241 minecraft:basalt[axis=y] strict
+fill ~55 ~30 ~241 ~55 ~31 ~241 minecraft:polished_deepslate strict
+fill ~57 ~30 ~241 ~57 ~33 ~241 minecraft:blackstone strict
+fill ~58 ~30 ~241 ~58 ~31 ~242 minecraft:basalt[axis=y] strict
+fill ~61 ~30 ~241 ~61 ~31 ~245 minecraft:blackstone strict
+fill ~64 ~30 ~241 ~64 ~34 ~243 minecraft:blackstone strict
+fill ~67 ~30 ~241 ~67 ~33 ~241 minecraft:blackstone strict
+fill ~68 ~30 ~241 ~69 ~30 ~241 minecraft:smooth_basalt strict
+setblock ~72 ~30 ~241 minecraft:smooth_basalt strict
+setblock ~124 ~30 ~241 minecraft:quartz_bricks strict
+fill ~125 ~30 ~241 ~131 ~30 ~242 minecraft:smooth_quartz strict
+setblock ~132 ~30 ~241 minecraft:quartz_bricks strict
+setblock ~160 ~30 ~241 minecraft:basalt[axis=y] strict
+fill ~209 ~30 ~241 ~209 ~40 ~241 minecraft:red_sandstone strict
+fill ~212 ~30 ~241 ~214 ~40 ~243 minecraft:red_sandstone strict
+fill ~215 ~30 ~241 ~218 ~30 ~241 minecraft:cut_red_sandstone strict
+fill ~226 ~30 ~241 ~229 ~30 ~241 minecraft:cut_red_sandstone strict
+fill ~230 ~30 ~241 ~232 ~40 ~243 minecraft:red_sandstone strict
+fill ~7 ~30 ~242 ~7 ~31 ~242 minecraft:smooth_basalt strict
+fill ~11 ~30 ~242 ~11 ~33 ~244 minecraft:basalt[axis=y] strict
+fill ~13 ~30 ~242 ~14 ~33 ~242 minecraft:basalt[axis=y] strict
+fill ~16 ~30 ~242 ~16 ~31 ~242 minecraft:polished_deepslate strict
+fill ~17 ~30 ~242 ~17 ~31 ~242 minecraft:smooth_basalt strict
+fill ~24 ~30 ~242 ~24 ~31 ~243 minecraft:basalt[axis=y] strict
+fill ~25 ~30 ~242 ~25 ~31 ~242 minecraft:blackstone strict
+fill ~28 ~30 ~242 ~28 ~31 ~242 minecraft:polished_deepslate strict
+fill ~29 ~30 ~242 ~29 ~31 ~242 minecraft:smooth_basalt strict
+fill ~30 ~30 ~242 ~32 ~31 ~242 minecraft:basalt[axis=y] strict
+fill ~39 ~30 ~242 ~39 ~31 ~243 minecraft:basalt[axis=y] strict
+fill ~45 ~30 ~242 ~48 ~35 ~242 minecraft:basalt[axis=y] strict
+fill ~49 ~30 ~242 ~49 ~31 ~242 minecraft:smooth_basalt strict
+fill ~51 ~30 ~242 ~51 ~33 ~242 minecraft:polished_deepslate strict
+fill ~52 ~30 ~242 ~52 ~31 ~242 minecraft:basalt[axis=y] strict
+fill ~54 ~30 ~242 ~54 ~33 ~242 minecraft:polished_deepslate strict
+fill ~55 ~30 ~242 ~55 ~31 ~242 minecraft:blackstone strict
+fill ~57 ~30 ~242 ~57 ~31 ~243 minecraft:basalt[axis=y] strict
+fill ~59 ~30 ~242 ~60 ~31 ~242 minecraft:blackstone strict
+fill ~63 ~30 ~242 ~63 ~33 ~244 minecraft:blackstone strict
+fill ~68 ~30 ~242 ~69 ~32 ~243 minecraft:blackstone strict
+fill ~70 ~30 ~242 ~71 ~30 ~243 minecraft:smooth_basalt strict
+setblock ~72 ~30 ~242 minecraft:basalt[axis=y] strict
+setblock ~73 ~30 ~242 minecraft:smooth_basalt strict
+setblock ~124 ~30 ~242 minecraft:smooth_quartz strict
+setblock ~132 ~30 ~242 minecraft:smooth_quartz strict
+fill ~160 ~30 ~242 ~161 ~30 ~242 minecraft:smooth_basalt strict
+fill ~162 ~30 ~242 ~162 ~32 ~242 minecraft:blackstone strict
+setblock ~163 ~30 ~242 minecraft:basalt[axis=y] strict
+fill ~215 ~30 ~242 ~217 ~40 ~244 minecraft:red_sandstone strict
+fill ~218 ~30 ~242 ~226 ~30 ~242 minecraft:cut_red_sandstone strict
+fill ~227 ~30 ~242 ~229 ~40 ~244 minecraft:red_sandstone strict
+fill ~8 ~30 ~243 ~9 ~35 ~243 minecraft:blackstone strict
+fill ~12 ~30 ~243 ~12 ~31 ~243 minecraft:polished_deepslate strict
+fill ~15 ~30 ~243 ~15 ~31 ~243 minecraft:polished_deepslate strict
+fill ~16 ~30 ~243 ~16 ~33 ~243 minecraft:basalt[axis=y] strict
+fill ~17 ~30 ~243 ~17 ~31 ~243 minecraft:polished_deepslate strict
+fill ~18 ~30 ~243 ~18 ~31 ~243 minecraft:smooth_basalt strict
+fill ~20 ~30 ~243 ~21 ~30 ~243 minecraft:blackstone strict
+fill ~23 ~30 ~243 ~23 ~31 ~243 minecraft:blackstone strict
+fill ~25 ~30 ~243 ~25 ~31 ~244 minecraft:basalt[axis=y] strict
+fill ~26 ~30 ~243 ~26 ~33 ~243 minecraft:blackstone strict
+fill ~28 ~30 ~243 ~28 ~31 ~243 minecraft:basalt[axis=y] strict
+fill ~30 ~30 ~243 ~30 ~31 ~243 minecraft:polished_deepslate strict
+fill ~31 ~30 ~243 ~32 ~31 ~243 minecraft:smooth_basalt strict
+fill ~33 ~30 ~243 ~38 ~31 ~243 minecraft:basalt[axis=y] strict
+fill ~40 ~30 ~243 ~45 ~32 ~243 minecraft:basalt[axis=y] strict
+fill ~46 ~30 ~243 ~47 ~31 ~243 minecraft:smooth_basalt strict
+fill ~48 ~30 ~243 ~49 ~31 ~243 minecraft:polished_deepslate strict
+fill ~52 ~30 ~243 ~52 ~31 ~243 minecraft:polished_deepslate strict
+fill ~53 ~30 ~243 ~53 ~30 ~244 minecraft:basalt[axis=y] strict
+fill ~55 ~30 ~243 ~56 ~31 ~243 minecraft:basalt[axis=y] strict
+fill ~58 ~30 ~243 ~59 ~31 ~243 minecraft:blackstone strict
+setblock ~72 ~30 ~243 minecraft:smooth_basalt strict
+fill ~73 ~30 ~243 ~74 ~30 ~243 minecraft:basalt[axis=y] strict
+fill ~109 ~30 ~243 ~109 ~31 ~244 minecraft:stone_bricks strict
+fill ~111 ~30 ~243 ~111 ~31 ~246 minecraft:stone_bricks strict
+fill ~124 ~30 ~243 ~132 ~30 ~243 minecraft:quartz_bricks strict
+fill ~145 ~30 ~243 ~145 ~31 ~246 minecraft:stone_bricks strict
+fill ~159 ~30 ~243 ~160 ~30 ~244 minecraft:smooth_basalt strict
+setblock ~162 ~30 ~243 minecraft:basalt[axis=y] strict
+fill ~218 ~30 ~243 ~226 ~40 ~245 minecraft:red_sandstone strict
+fill ~7 ~30 ~244 ~7 ~31 ~244 minecraft:blackstone strict
+fill ~8 ~30 ~244 ~8 ~31 ~244 minecraft:smooth_basalt strict
+fill ~9 ~30 ~244 ~10 ~30 ~246 minecraft:blackstone strict
+fill ~12 ~30 ~244 ~12 ~35 ~244 minecraft:basalt[axis=y] strict
+fill ~13 ~30 ~244 ~13 ~31 ~244 minecraft:polished_deepslate strict
+fill ~14 ~30 ~244 ~14 ~37 ~244 minecraft:basalt[axis=y] strict
+fill ~16 ~30 ~244 ~16 ~31 ~244 minecraft:polished_deepslate strict
+fill ~17 ~30 ~244 ~18 ~30 ~244 minecraft:basalt[axis=y] strict
+fill ~19 ~30 ~244 ~19 ~31 ~244 minecraft:smooth_basalt strict
+fill ~21 ~30 ~244 ~21 ~31 ~244 minecraft:polished_deepslate strict
+fill ~22 ~30 ~244 ~22 ~33 ~244 minecraft:smooth_basalt strict
+fill ~24 ~30 ~244 ~24 ~31 ~245 minecraft:blackstone strict
+fill ~26 ~30 ~244 ~27 ~31 ~244 minecraft:basalt[axis=y] strict
+fill ~28 ~30 ~244 ~28 ~31 ~244 minecraft:blackstone strict
+fill ~29 ~30 ~244 ~29 ~33 ~244 minecraft:polished_deepslate strict
+fill ~30 ~30 ~244 ~31 ~31 ~244 minecraft:basalt[axis=y] strict
+fill ~32 ~30 ~244 ~34 ~31 ~244 minecraft:polished_deepslate strict
+fill ~35 ~30 ~244 ~43 ~31 ~244 minecraft:smooth_basalt strict
+fill ~44 ~30 ~244 ~46 ~31 ~244 minecraft:polished_deepslate strict
+fill ~47 ~30 ~244 ~48 ~31 ~244 minecraft:basalt[axis=y] strict
+fill ~49 ~30 ~244 ~50 ~31 ~244 minecraft:polished_deepslate strict
+fill ~51 ~30 ~244 ~51 ~30 ~246 minecraft:basalt[axis=y] strict
+setblock ~52 ~30 ~244 minecraft:blackstone strict
+fill ~56 ~30 ~244 ~57 ~31 ~244 minecraft:blackstone strict
+fill ~59 ~30 ~244 ~60 ~31 ~245 minecraft:blackstone strict
+fill ~70 ~30 ~244 ~70 ~34 ~244 minecraft:blackstone strict
+fill ~73 ~30 ~244 ~76 ~30 ~244 minecraft:smooth_basalt strict
+fill ~112 ~30 ~244 ~112 ~31 ~247 minecraft:stone_bricks strict
+setblock ~122 ~30 ~244 minecraft:quartz_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false] strict
+fill ~123 ~30 ~244 ~133 ~30 ~244 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~134 ~30 ~244 minecraft:quartz_stairs[facing=west,half=bottom,shape=outer_right,waterlogged=false] strict
+fill ~144 ~30 ~244 ~144 ~31 ~247 minecraft:stone_bricks strict
+fill ~147 ~30 ~244 ~147 ~31 ~244 minecraft:stone_bricks strict
+fill ~157 ~30 ~244 ~158 ~30 ~244 minecraft:smooth_basalt strict
+fill ~161 ~30 ~244 ~161 ~34 ~244 minecraft:blackstone strict
+fill ~214 ~30 ~244 ~214 ~40 ~244 minecraft:red_sandstone strict
+fill ~230 ~30 ~244 ~230 ~40 ~244 minecraft:red_sandstone strict
+fill ~15 ~30 ~245 ~15 ~35 ~248 minecraft:basalt[axis=y] strict
+fill ~17 ~30 ~245 ~17 ~31 ~245 minecraft:polished_deepslate strict
+fill ~18 ~30 ~245 ~18 ~31 ~246 minecraft:basalt[axis=y] strict
+fill ~20 ~30 ~245 ~20 ~31 ~245 minecraft:smooth_basalt strict
+fill ~21 ~30 ~245 ~21 ~31 ~245 minecraft:blackstone strict
+fill ~22 ~30 ~245 ~22 ~31 ~245 minecraft:polished_deepslate strict
+fill ~23 ~30 ~245 ~23 ~33 ~245 minecraft:smooth_basalt strict
+fill ~25 ~30 ~245 ~26 ~31 ~245 minecraft:blackstone strict
+fill ~27 ~30 ~245 ~29 ~31 ~245 minecraft:basalt[axis=y] strict
+fill ~30 ~30 ~245 ~30 ~31 ~245 minecraft:blackstone strict
+fill ~32 ~30 ~245 ~32 ~31 ~245 minecraft:polished_deepslate strict
+fill ~33 ~30 ~245 ~35 ~31 ~245 minecraft:basalt[axis=y] strict
+fill ~37 ~30 ~245 ~41 ~31 ~246 minecraft:polished_deepslate strict
+fill ~42 ~30 ~245 ~42 ~31 ~245 minecraft:basalt[axis=y] strict
+fill ~44 ~30 ~245 ~45 ~31 ~245 minecraft:basalt[axis=y] strict
+fill ~46 ~30 ~245 ~48 ~31 ~245 minecraft:polished_deepslate strict
+fill ~49 ~30 ~245 ~50 ~30 ~245 minecraft:blackstone strict
+fill ~52 ~30 ~245 ~52 ~31 ~245 minecraft:basalt[axis=y] strict
+fill ~72 ~30 ~245 ~72 ~34 ~245 minecraft:blackstone strict
+setblock ~73 ~30 ~245 minecraft:basalt[axis=y] strict
+fill ~74 ~30 ~245 ~82 ~30 ~245 minecraft:smooth_basalt strict
+fill ~113 ~30 ~245 ~114 ~31 ~247 minecraft:stone_bricks strict
+fill ~142 ~30 ~245 ~143 ~31 ~247 minecraft:stone_bricks strict
+fill ~154 ~30 ~245 ~157 ~30 ~245 minecraft:smooth_basalt strict
+fill ~159 ~30 ~245 ~159 ~35 ~245 minecraft:blackstone strict
+fill ~11 ~30 ~246 ~14 ~33 ~247 minecraft:basalt[axis=y] strict
+fill ~16 ~30 ~246 ~17 ~35 ~246 minecraft:basalt[axis=y] strict
+setblock ~19 ~30 ~246 minecraft:blackstone strict
+fill ~20 ~30 ~246 ~20 ~31 ~246 minecraft:polished_deepslate strict
+fill ~21 ~30 ~246 ~21 ~31 ~246 minecraft:smooth_basalt strict
+fill ~22 ~30 ~246 ~22 ~31 ~246 minecraft:blackstone strict
+fill ~23 ~30 ~246 ~23 ~31 ~246 minecraft:polished_deepslate strict
+fill ~24 ~30 ~246 ~24 ~31 ~246 minecraft:smooth_basalt strict
+fill ~25 ~30 ~246 ~25 ~31 ~246 minecraft:blackstone strict
+fill ~27 ~30 ~246 ~28 ~31 ~246 minecraft:blackstone strict
+fill ~29 ~30 ~246 ~34 ~31 ~246 minecraft:basalt[axis=y] strict
+fill ~35 ~30 ~246 ~36 ~33 ~246 minecraft:polished_deepslate strict
+fill ~42 ~30 ~246 ~44 ~33 ~246 minecraft:polished_deepslate strict
+fill ~45 ~30 ~246 ~45 ~31 ~246 minecraft:blackstone strict
+setblock ~50 ~30 ~246 minecraft:blackstone strict
+fill ~77 ~30 ~246 ~78 ~34 ~246 minecraft:blackstone strict
+fill ~96 ~30 ~246 ~104 ~31 ~246 minecraft:blackstone strict
+fill ~115 ~30 ~246 ~116 ~31 ~248 minecraft:stone_bricks strict
+fill ~140 ~30 ~246 ~141 ~31 ~248 minecraft:stone_bricks strict
+fill ~156 ~30 ~246 ~156 ~35 ~246 minecraft:basalt[axis=y] strict
+fill ~9 ~30 ~247 ~9 ~36 ~247 minecraft:blackstone strict
+fill ~10 ~30 ~247 ~10 ~43 ~247 minecraft:basalt[axis=y] strict
+fill ~17 ~30 ~247 ~17 ~35 ~248 minecraft:basalt[axis=y] strict
+fill ~19 ~30 ~247 ~19 ~33 ~247 minecraft:basalt[axis=y] strict
+fill ~20 ~30 ~247 ~20 ~34 ~247 minecraft:blackstone strict
+fill ~21 ~30 ~247 ~21 ~31 ~247 minecraft:polished_deepslate strict
+fill ~23 ~30 ~247 ~23 ~31 ~247 minecraft:smooth_basalt strict
+fill ~25 ~30 ~247 ~25 ~31 ~247 minecraft:polished_deepslate strict
+fill ~26 ~30 ~247 ~26 ~33 ~247 minecraft:smooth_basalt strict
+fill ~27 ~30 ~247 ~27 ~31 ~247 minecraft:blackstone strict
+fill ~29 ~30 ~247 ~31 ~31 ~247 minecraft:blackstone strict
+fill ~32 ~30 ~247 ~37 ~31 ~247 minecraft:basalt[axis=y] strict
+fill ~42 ~30 ~247 ~48 ~31 ~247 minecraft:basalt[axis=y] strict
+fill ~52 ~30 ~247 ~52 ~31 ~248 minecraft:blackstone strict
+fill ~54 ~30 ~247 ~54 ~34 ~247 minecraft:blackstone strict
+fill ~55 ~30 ~247 ~56 ~30 ~247 minecraft:smooth_basalt strict
+fill ~57 ~30 ~247 ~57 ~31 ~247 minecraft:polished_deepslate strict
+fill ~83 ~30 ~247 ~86 ~30 ~247 minecraft:basalt[axis=y] strict
+fill ~87 ~30 ~247 ~87 ~34 ~247 minecraft:blackstone strict
+fill ~92 ~30 ~247 ~100 ~34 ~247 minecraft:blackstone strict
+fill ~117 ~30 ~247 ~119 ~31 ~249 minecraft:stone_bricks strict
+fill ~137 ~30 ~247 ~139 ~31 ~249 minecraft:stone_bricks strict
+fill ~150 ~30 ~247 ~151 ~31 ~247 minecraft:smooth_basalt strict
+fill ~152 ~30 ~247 ~152 ~35 ~247 minecraft:basalt[axis=y] strict
+fill ~11 ~30 ~248 ~11 ~31 ~248 minecraft:smooth_basalt strict
+fill ~16 ~30 ~248 ~16 ~31 ~248 minecraft:polished_deepslate strict
+fill ~18 ~30 ~248 ~18 ~37 ~249 minecraft:basalt[axis=y] strict
+fill ~20 ~30 ~248 ~20 ~31 ~248 minecraft:polished_deepslate strict
+fill ~21 ~30 ~248 ~21 ~31 ~249 minecraft:blackstone strict
+fill ~23 ~30 ~248 ~23 ~31 ~249 minecraft:blackstone strict
+fill ~24 ~30 ~248 ~24 ~31 ~248 minecraft:smooth_basalt strict
+fill ~25 ~30 ~248 ~25 ~31 ~249 minecraft:blackstone strict
+fill ~26 ~30 ~248 ~27 ~31 ~248 minecraft:polished_deepslate strict
+fill ~28 ~30 ~248 ~28 ~33 ~248 minecraft:smooth_basalt strict
+fill ~29 ~30 ~248 ~29 ~31 ~248 minecraft:blackstone strict
+fill ~32 ~30 ~248 ~34 ~31 ~248 minecraft:basalt[axis=y] strict
+fill ~35 ~30 ~248 ~35 ~33 ~248 minecraft:deepslate[axis=y] strict
+fill ~36 ~30 ~248 ~37 ~31 ~248 minecraft:basalt[axis=y] strict
+fill ~42 ~30 ~248 ~44 ~31 ~248 minecraft:basalt[axis=y] strict
+fill ~45 ~30 ~248 ~47 ~30 ~248 minecraft:blackstone strict
+fill ~48 ~30 ~248 ~48 ~31 ~249 minecraft:basalt[axis=y] strict
+fill ~51 ~30 ~248 ~51 ~43 ~248 minecraft:basalt[axis=y] strict
+fill ~53 ~30 ~248 ~54 ~31 ~248 minecraft:smooth_basalt strict
+fill ~55 ~30 ~248 ~55 ~31 ~248 minecraft:polished_deepslate strict
+fill ~56 ~30 ~248 ~57 ~31 ~248 minecraft:blackstone strict
+fill ~107 ~30 ~248 ~109 ~31 ~248 minecraft:stone strict
+setblock ~113 ~30 ~248 minecraft:polished_blackstone_brick_wall[east=tall,north=tall,south=none,up=true,waterlogged=false,west=none] strict
+fill ~114 ~30 ~248 ~114 ~31 ~248 minecraft:stone_bricks strict
+fill ~120 ~30 ~248 ~122 ~31 ~250 minecraft:stone_bricks strict
+fill ~126 ~30 ~248 ~126 ~39 ~248 minecraft:polished_andesite strict
+setblock ~127 ~30 ~248 minecraft:mossy_stone_bricks strict
+setblock ~128 ~30 ~248 minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~129 ~30 ~248 ~129 ~30 ~250 minecraft:stone_bricks strict
+fill ~130 ~30 ~248 ~130 ~39 ~248 minecraft:polished_andesite strict
+fill ~134 ~30 ~248 ~136 ~31 ~250 minecraft:stone_bricks strict
+fill ~142 ~30 ~248 ~142 ~31 ~248 minecraft:stone_bricks strict
+setblock ~143 ~30 ~248 minecraft:polished_blackstone_brick_wall[east=none,north=tall,south=none,up=true,waterlogged=false,west=tall] strict
+fill ~149 ~30 ~248 ~149 ~34 ~248 minecraft:stone strict
+fill ~12 ~30 ~249 ~12 ~31 ~249 minecraft:smooth_basalt strict
+fill ~16 ~30 ~249 ~16 ~40 ~249 minecraft:basalt[axis=y] strict
+fill ~17 ~30 ~249 ~17 ~31 ~249 minecraft:polished_deepslate strict
+fill ~19 ~30 ~249 ~19 ~42 ~250 minecraft:basalt[axis=y] strict
+fill ~22 ~30 ~249 ~22 ~31 ~249 minecraft:polished_deepslate strict
+fill ~24 ~30 ~249 ~24 ~31 ~249 minecraft:polished_deepslate strict
+fill ~26 ~30 ~249 ~26 ~31 ~249 minecraft:smooth_basalt strict
+fill ~27 ~30 ~249 ~27 ~31 ~249 minecraft:blackstone strict
+fill ~28 ~30 ~249 ~29 ~31 ~249 minecraft:polished_deepslate strict
+fill ~30 ~30 ~249 ~31 ~31 ~249 minecraft:smooth_basalt strict
+fill ~32 ~30 ~249 ~32 ~31 ~249 minecraft:basalt[axis=y] strict
+setblock ~35 ~30 ~249 minecraft:basalt[axis=y] strict
+fill ~36 ~30 ~249 ~37 ~31 ~249 minecraft:deepslate[axis=y] strict
+fill ~41 ~30 ~249 ~44 ~31 ~250 minecraft:blackstone strict
+fill ~49 ~30 ~249 ~49 ~31 ~249 minecraft:basalt[axis=y] strict
+fill ~50 ~30 ~249 ~51 ~31 ~249 minecraft:smooth_basalt strict
+fill ~52 ~30 ~249 ~53 ~31 ~249 minecraft:polished_deepslate strict
+fill ~54 ~30 ~249 ~55 ~31 ~249 minecraft:blackstone strict
+fill ~56 ~30 ~249 ~56 ~31 ~249 minecraft:smooth_basalt strict
+fill ~116 ~30 ~249 ~116 ~31 ~249 minecraft:stone_bricks strict
+fill ~123 ~30 ~249 ~128 ~30 ~249 minecraft:stone_bricks strict
+fill ~130 ~30 ~249 ~133 ~30 ~250 minecraft:stone_bricks strict
+fill ~140 ~30 ~249 ~140 ~31 ~249 minecraft:stone_bricks strict
+fill ~148 ~30 ~249 ~148 ~35 ~249 minecraft:stone strict
+fill ~18 ~30 ~250 ~18 ~31 ~250 minecraft:polished_deepslate strict
+fill ~22 ~30 ~250 ~22 ~38 ~250 minecraft:blackstone strict
+fill ~23 ~30 ~250 ~23 ~31 ~250 minecraft:polished_deepslate strict
+fill ~28 ~30 ~250 ~28 ~31 ~250 minecraft:smooth_basalt strict
+fill ~29 ~30 ~250 ~30 ~31 ~250 minecraft:blackstone strict
+fill ~31 ~30 ~250 ~32 ~31 ~250 minecraft:polished_deepslate strict
+fill ~33 ~30 ~250 ~35 ~31 ~250 minecraft:smooth_basalt strict
+setblock ~36 ~30 ~250 minecraft:deepslate[axis=y] strict
+fill ~37 ~30 ~250 ~39 ~31 ~250 minecraft:basalt[axis=y] strict
+fill ~45 ~30 ~250 ~48 ~31 ~250 minecraft:smooth_basalt strict
+fill ~49 ~30 ~250 ~51 ~31 ~250 minecraft:polished_deepslate strict
+fill ~52 ~30 ~250 ~53 ~30 ~250 minecraft:blackstone strict
+fill ~54 ~30 ~250 ~54 ~31 ~250 minecraft:smooth_basalt strict
+fill ~110 ~30 ~250 ~113 ~30 ~250 minecraft:stone strict
+fill ~119 ~30 ~250 ~119 ~31 ~250 minecraft:stone_bricks strict
+fill ~123 ~30 ~250 ~127 ~30 ~250 minecraft:stone_bricks strict
+setblock ~128 ~30 ~250 minecraft:cracked_stone_bricks strict
+fill ~137 ~30 ~250 ~137 ~31 ~250 minecraft:stone_bricks strict
+fill ~145 ~30 ~250 ~146 ~32 ~250 minecraft:stone strict
+fill ~18 ~30 ~251 ~18 ~31 ~253 minecraft:basalt[axis=y] strict
+fill ~19 ~30 ~251 ~19 ~31 ~251 minecraft:polished_deepslate strict
+fill ~22 ~30 ~251 ~22 ~33 ~251 minecraft:basalt[axis=y] strict
+fill ~23 ~30 ~251 ~24 ~35 ~251 minecraft:blackstone strict
+fill ~25 ~30 ~251 ~25 ~31 ~251 minecraft:polished_deepslate strict
+fill ~26 ~30 ~251 ~26 ~33 ~251 minecraft:blackstone strict
+fill ~28 ~30 ~251 ~28 ~31 ~251 minecraft:polished_deepslate strict
+fill ~30 ~30 ~251 ~31 ~31 ~251 minecraft:smooth_basalt strict
+setblock ~32 ~30 ~251 minecraft:blackstone strict
+fill ~33 ~30 ~251 ~34 ~41 ~251 minecraft:basalt[axis=y] strict
+fill ~35 ~30 ~251 ~47 ~31 ~251 minecraft:polished_deepslate strict
+fill ~48 ~30 ~251 ~50 ~31 ~251 minecraft:basalt[axis=y] strict
+fill ~51 ~30 ~251 ~52 ~31 ~251 minecraft:smooth_basalt strict
+fill ~111 ~30 ~251 ~114 ~34 ~251 minecraft:stone strict
+fill ~117 ~30 ~251 ~119 ~32 ~251 minecraft:stone strict
+fill ~120 ~30 ~251 ~120 ~32 ~251 minecraft:ladder[facing=east,waterlogged=false] strict
+fill ~122 ~30 ~251 ~126 ~31 ~251 minecraft:stone_bricks strict
+fill ~129 ~30 ~251 ~130 ~30 ~251 minecraft:mossy_stone_bricks strict
+fill ~131 ~30 ~251 ~134 ~31 ~251 minecraft:stone_bricks strict
+fill ~135 ~30 ~251 ~136 ~32 ~252 minecraft:stone strict
+fill ~141 ~30 ~251 ~145 ~37 ~251 minecraft:stone strict
+fill ~19 ~30 ~252 ~20 ~31 ~253 minecraft:basalt[axis=y] strict
+fill ~21 ~30 ~252 ~21 ~31 ~252 minecraft:polished_deepslate strict
+fill ~23 ~30 ~252 ~24 ~33 ~252 minecraft:basalt[axis=y] strict
+fill ~25 ~30 ~252 ~25 ~35 ~252 minecraft:blackstone strict
+fill ~26 ~30 ~252 ~27 ~31 ~252 minecraft:polished_deepslate strict
+fill ~28 ~30 ~252 ~28 ~31 ~253 minecraft:blackstone strict
+fill ~30 ~30 ~252 ~30 ~31 ~252 minecraft:polished_deepslate strict
+fill ~33 ~30 ~252 ~36 ~31 ~252 minecraft:smooth_basalt strict

@@ -1,4 +1,4 @@
-"""맵 미리보기 렌더: python3 render_map.py [shot ...]"""
+"""맵 미리보기 렌더: [MAP=frost|volcano] python3 render_map.py [shot ...]"""
 import os
 import sys
 import time
@@ -37,7 +37,8 @@ def shots():
 
 
 def main(names):
-    w = load()
+    th = os.environ.get("MAP", "olympus")          # MAP=frost python3 render_map.py overview
+    w = load(th)
     pal = R.Palette(w.pal)
     S = shots()
     for n in names or S.keys():
@@ -46,7 +47,7 @@ def main(names):
         W = p.get("W", 1280); H = p.get("H", 720)
         im = R.render(w.vox, pal, W, H, p["cam"], p["target"], fov=p.get("fov", 60), ortho_scale=p.get("ortho"),
                       ss=p.get("ss", 2), fog_dist=1e9 if p.get("ortho") else 600)
-        im.save(os.path.join(OUT, f"map_{n}.png"))
+        im.save(os.path.join(OUT, f"map_{n}.png" if th == "olympus" else f"map_{th}_{n}.png"))
         print(n, f"{time.time() - t:.1f}s")
 
 

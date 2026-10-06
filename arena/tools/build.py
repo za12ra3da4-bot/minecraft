@@ -68,21 +68,11 @@ def main(args):
     if os.path.exists(OUT_DP):
         shutil.rmtree(OUT_DP)
     dp.core_functions(OUT_DP)
-    # 맵
-    import build_map
-    if "--no-map" in args and os.path.exists(os.path.join(HERE, ".cache", "map.npz")):
-        world = build_map.load()
-    else:
-        world, T = build_map.generate()
-        build_map.save(world, T)
-    # 갇히는 곳 찾아서 고치기 (사다리 · 메우기) — 새로 짓는 맵과 이미 지은 맵(patch) 둘 다에 반영
-    import escape
-    seeds = [m["pos"] for n, m in world.markers.items() if n.startswith("base_") and "_spawn_" in n]
-    fixes = escape.fix(world, seeds)
-    ncmd, nparts = dp.map_functions(OUT_DP, world)
-    ndeco = dp.decor_functions(OUT_DP, world, fixes)
+    # 맵 3개 (올림포스 = 직접 고친 맵 · 빙하 왕국 · 화산 군도) → bg:map/* · bg:maps/<id>/* + a02-gen-map*.sk
+    import build_maps
+    for mid in dp.MAPS:
+        build_maps.build_one(mid)
     dp.pvp_functions(OUT_DP)
-    print(f"[dp] 맵 명령 {ncmd} ({nparts} 단계), 장식 {ndeco}")
     # 리소스팩
     pack = Pack("bg")
     # 보스 (초상화 먼저)
@@ -110,7 +100,6 @@ def main(args):
     skgen.write_title(os.path.join(OUT_SK, "a05-gen-title.sk"), title_str)
     skgen.write_var(os.path.join(OUT_SK, "a06-gen-fx.sk"), "-bg::fx::frame", fx_frame)
     skgen.write_list(os.path.join(OUT_SK, "a07-gen-hpbar.sk"), "-bg::hpbar", hp_chars)
-    skgen.write_map(os.path.join(OUT_SK, "a02-gen-map.sk"), world)
     skgen.write_boss(os.path.join(OUT_SK, "a03-gen-boss.sk"), bmeta)
     skgen.write_anims(os.path.join(OUT_SK, "a08-gen-nemesis.sk"), nmeta)
     # 리소스팩 파일 이름 검사: 마크는 [a-z0-9_.-/] 만 허용 (하나라도 틀리면 그 폰트/모델 파일 전체가 무시됨)

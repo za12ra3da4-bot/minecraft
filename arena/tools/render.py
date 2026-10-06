@@ -33,7 +33,15 @@ class Palette:
         tex_index = {}
         texs = [np.zeros((16, 16, 4), np.float32)]
         for i, s in enumerate(states):
-            d = B.describe(s)
+            try:
+                d = B.describe(s)
+                for f in range(6):
+                    if d.tex[f] is not None:
+                        B.load_tex(d.tex[f])
+            except Exception:                    # 렌더러가 모르는 블록 (직접 고친 맵) → 돌로 그림
+                d = B.describe("stone")
+            if s.split("[")[0] in ("barrier", "light", "structure_void"):   # 보이지 않는 블록
+                continue
             self.kind[i] = d.kind
             self.nbox[i] = len(d.boxes)
             for j, b in enumerate(d.boxes[:6]):

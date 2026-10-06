@@ -204,7 +204,31 @@ def ruins(b):
 
 
 # ───────────────────────────────────────── 식생
+TREES = []           # (줄기 (x, z), [(x, y, z, 원래, 나무)]) — 숲 나무만
+
+
+def clear_road_trees(w, T, gap=8.0):
+    """길 (대로 · 흙길 · 자갈길) 에서 gap 칸 안에 줄기가 있는 숲 나무를 통째로 없앤다 → 길이 트이게
+       되돌린 칸 [(x, y, z, 블록)] 반환 (이미 지은 맵 고치기용)"""
+    from scipy import ndimage
+    road = T.road > 0.3
+    d = ndimage.distance_transform_edt(~road)
+    out = []
+    n = 0
+    for (x, z), cells in TREES:
+        if d[x, z] >= gap:
+            continue
+        n += 1
+        for cx, cy, cz, old, new in cells:
+            if w.vox[cx, cy, cz] == new:
+                w.vox[cx, cy, cz] = old
+                out.append((cx, cy, cz, w.pal[old]))
+    print(f"[midfield] 길가 나무 {n}/{len(TREES)}그루 치움 ({len(out)}칸)")
+    return out
+
+
 def vegetation(b):
+    TREES.clear()
     T = b.T
     rng = b.r
     forest = value_noise(SIZE, 20, 77)
@@ -243,7 +267,14 @@ def vegetation(b):
                         kind = "olive"
                     if gy > G + 12:
                         kind = "spruce"
+                    # 나무가 바꾼 칸을 기억 (길가 나무 치우기 — clear_road_trees)
+                    x0, x1, z0, z1 = max(0, x - 9), min(SIZE, x + 10), max(0, z - 9), min(SIZE, z + 10)
+                    y0, y1 = gy, min(HEIGHT, gy + 24)
+                    before = b.w.vox[x0:x1, y0:y1, z0:z1].copy()
                     b.tree(x, gy + 1, z, kind, 0.8 + rng.random() * 0.5)
+                    after = b.w.vox[x0:x1, y0:y1, z0:z1]
+                    ch = np.nonzero(before != after)
+                    TREES.append(((x, z), [(int(i + x0), int(j + y0), int(k + z0), int(before[i, j, k]), int(after[i, j, k])) for i, j, k in zip(*ch)]))
                     trees += 1
                     continue
             r2 = rng.random()

@@ -394,16 +394,19 @@ function bgBossClock():
         stop
     remove 1 from {-bg::boss::next}
     if {-bg::boss::next} is 20:
-        set {_pick} to random element out of {-bg::bd::list::*}
+        # 맵마다 나오는 보스가 다름 (a09 bgBossPool)
+        set {_pool::*} to bgBossPool()
+        set {_pick} to random element out of {_pool::*}
         if {_pick} is {-bg::boss::last}:
-            set {_pick} to random element out of {-bg::bd::list::*}
+            set {_pick} to random element out of {_pool::*}
         set {-bg::boss::pending} to {_pick}
         bgSay("&e20초 후 &f%{-bg::lairname::%{-bg::bd::%{_pick}%::lair}%}%에 &c%{-bg::bd::%{_pick}%::name}%&f이(가) 깨어납니다!")
         bgSound("block.bell.resonate", 0.6, 0.7)
     if {-bg::boss::next} <= 0:
         set {_b} to {-bg::boss::pending}
         if {_b} is not set:
-            set {_b} to random element out of {-bg::bd::list::*}
+            set {_pool::*} to bgBossPool()
+            set {_b} to random element out of {_pool::*}
         set {-bg::boss::last} to {_b}
         delete {-bg::boss::pending}
         bgBossSpawn({_b})

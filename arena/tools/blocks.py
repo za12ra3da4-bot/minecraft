@@ -372,7 +372,11 @@ _desc_cache = {}
 def describe(state):
     if state in _desc_cache:
         return _desc_cache[state]
-    d = _describe(state)
+    try:
+        d = _describe(state)
+    except Exception:
+        # 미리보기 렌더러가 모르는 블록 (직접 고친 맵의 표지판 등) — 작은 부착물로 취급 (렌더는 돌 무늬)
+        d = Desc(3, [(0.3, 0.3, 0.3, 0.7, 0.7, 0.7)], ["stone"] * 6)
     _desc_cache[state] = d
     return d
 

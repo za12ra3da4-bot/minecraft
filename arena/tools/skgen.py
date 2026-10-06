@@ -161,21 +161,23 @@ def write_hud(path, font):
     write_blocks(path, [HEAD, HUD_FUNCS], B + tail)
 
 
-def write_map(path, world):
-    L = []
+def write_map(path, world, map_id="olympus"):
+    """맵 마커 → {-bg::mks::<맵>::<이름>::x|y|z|radius|yaw|boss} + 이름 목록 (a09-maps.sk 가 고른 맵 것을 {-bg::mk::*} 로 옮김)"""
+    M = f"-bg::mks::{map_id}"
+    L = [f"    delete {{{M}::*}}"]
     for name, m in sorted(world.markers.items()):
         x, y, z = m["pos"]
-        L.append(f"    set {{-bg::mk::{name}::x}} to {x}")
-        L.append(f"    set {{-bg::mk::{name}::y}} to {y}")
-        L.append(f"    set {{-bg::mk::{name}::z}} to {z}")
+        L.append(f"    add {q(name)} to {{{M}::names::*}}")
+        L.append(f"    set {{{M}::{name}::x}} to {x}")
+        L.append(f"    set {{{M}::{name}::y}} to {y}")
+        L.append(f"    set {{{M}::{name}::z}} to {z}")
         for k in ("radius", "yaw"):
             if k in m:
-                L.append(f"    set {{-bg::mk::{name}::{k}}} to {round(float(m[k]), 2)}")
+                L.append(f"    set {{{M}::{name}::{k}}} to {round(float(m[k]), 2)}")
         if "boss" in m:
-            L.append(f"    set {{-bg::mk::{name}::boss}} to {q(m['boss'])}")
-    L.append(f"    set {{-bg::mk::size}} to {world.size[0]}")
-    L.append(f"    set {{-bg::mk::ready}} to true")
-    write_blocks(path, [HEAD, "# 맵 좌표 (맵 로컬, 원점 = 설정 {bg::cfg::ox/oy/oz})"], L)
+            L.append(f"    set {{{M}::{name}::boss}} to {q(m['boss'])}")
+    L.append(f"    set {{{M}::size}} to {world.size[0]}")
+    write_blocks(path, [HEAD, f"# 맵 좌표 — {map_id} (맵 로컬, 원점 = 설정 {{bg::cfg::ox/oy/oz}}) · a09-maps.sk 가 고른 맵 것을 {{-bg::mk::*}} 로 옮김"], L)
 
 
 def write_anims(path, meta):

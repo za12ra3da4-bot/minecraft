@@ -1,0 +1,350 @@
+setblock ~110 ~25 ~106 minecraft:cracked_polished_blackstone_bricks strict
+fill ~111 ~25 ~106 ~111 ~25 ~107 minecraft:polished_blackstone_bricks strict
+fill ~112 ~25 ~106 ~112 ~25 ~107 minecraft:cracked_polished_blackstone_bricks strict
+fill ~113 ~25 ~106 ~113 ~25 ~108 minecraft:polished_blackstone_bricks strict
+fill ~115 ~25 ~106 ~115 ~25 ~107 minecraft:polished_blackstone_bricks strict
+fill ~116 ~25 ~106 ~117 ~25 ~106 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~119 ~25 ~106 minecraft:cobbled_deepslate strict
+setblock ~121 ~25 ~106 minecraft:cobbled_deepslate strict
+fill ~134 ~25 ~106 ~134 ~28 ~106 minecraft:calcite strict
+setblock ~135 ~25 ~106 minecraft:polished_blackstone_bricks strict
+fill ~136 ~25 ~106 ~137 ~25 ~106 minecraft:cracked_polished_blackstone_bricks strict
+fill ~138 ~25 ~106 ~138 ~25 ~109 minecraft:polished_blackstone_bricks strict
+setblock ~139 ~25 ~106 minecraft:polished_blackstone strict
+fill ~140 ~25 ~106 ~140 ~25 ~111 minecraft:polished_blackstone_bricks strict
+setblock ~141 ~25 ~106 minecraft:polished_blackstone strict
+setblock ~143 ~25 ~106 minecraft:cobbled_deepslate strict
+fill ~144 ~25 ~106 ~144 ~25 ~108 minecraft:polished_blackstone_bricks strict
+setblock ~145 ~25 ~106 minecraft:basalt[axis=y] strict
+fill ~146 ~25 ~106 ~146 ~25 ~107 minecraft:polished_blackstone_bricks strict
+setblock ~147 ~25 ~106 minecraft:polished_blackstone strict
+setblock ~148 ~25 ~106 minecraft:polished_blackstone_bricks strict
+setblock ~149 ~25 ~106 minecraft:calcite strict
+fill ~150 ~25 ~106 ~151 ~25 ~106 minecraft:polished_deepslate strict
+setblock ~152 ~25 ~106 minecraft:polished_blackstone_bricks strict
+setblock ~153 ~25 ~106 minecraft:basalt[axis=y] strict
+setblock ~154 ~25 ~106 minecraft:cracked_polished_blackstone_bricks strict
+fill ~155 ~25 ~106 ~157 ~25 ~106 minecraft:polished_diorite strict
+fill ~158 ~25 ~106 ~159 ~25 ~107 minecraft:smooth_basalt strict
+fill ~161 ~25 ~106 ~161 ~25 ~109 minecraft:smooth_basalt strict
+fill ~163 ~25 ~106 ~163 ~25 ~109 minecraft:smooth_basalt strict
+setblock ~164 ~25 ~106 minecraft:polished_blackstone_bricks strict
+setblock ~173 ~25 ~106 minecraft:polished_blackstone strict
+fill ~175 ~25 ~106 ~175 ~25 ~107 minecraft:smooth_basalt strict
+fill ~179 ~25 ~106 ~179 ~25 ~112 minecraft:smooth_basalt strict
+fill ~182 ~25 ~106 ~182 ~27 ~106 minecraft:blackstone strict
+fill ~199 ~25 ~106 ~199 ~27 ~107 minecraft:blackstone strict
+fill ~210 ~25 ~106 ~210 ~26 ~106 minecraft:blackstone strict
+setblock ~212 ~25 ~106 minecraft:soul_soil strict
+fill ~218 ~25 ~106 ~218 ~25 ~150 minecraft:stone strict
+setblock ~219 ~25 ~106 minecraft:mossy_stone_bricks strict
+fill ~220 ~25 ~106 ~220 ~32 ~106 minecraft:stone_bricks strict
+fill ~221 ~25 ~106 ~222 ~25 ~106 minecraft:mossy_stone_bricks strict
+fill ~223 ~25 ~106 ~233 ~25 ~120 minecraft:stone strict
+setblock ~238 ~25 ~106 minecraft:mossy_stone_bricks strict
+setblock ~239 ~25 ~106 minecraft:cracked_stone_bricks strict
+fill ~240 ~25 ~106 ~242 ~25 ~106 minecraft:stone strict
+fill ~246 ~25 ~106 ~246 ~26 ~107 minecraft:stone strict
+fill ~11 ~25 ~107 ~11 ~25 ~109 minecraft:stone strict
+fill ~14 ~25 ~107 ~14 ~27 ~107 minecraft:blackstone strict
+fill ~15 ~25 ~107 ~16 ~25 ~107 minecraft:stone_bricks strict
+fill ~18 ~25 ~107 ~18 ~29 ~107 minecraft:stone_bricks strict
+fill ~20 ~25 ~107 ~22 ~25 ~135 minecraft:stone strict
+fill ~34 ~25 ~107 ~36 ~25 ~149 minecraft:stone strict
+setblock ~37 ~25 ~107 minecraft:stone_bricks strict
+setblock ~41 ~25 ~107 minecraft:coarse_dirt strict
+fill ~43 ~25 ~107 ~44 ~25 ~107 minecraft:packed_mud strict
+setblock ~45 ~25 ~107 minecraft:blackstone strict
+fill ~51 ~25 ~107 ~52 ~25 ~108 minecraft:smooth_basalt strict
+fill ~55 ~25 ~107 ~55 ~27 ~107 minecraft:blackstone strict
+fill ~56 ~25 ~107 ~56 ~29 ~108 minecraft:basalt[axis=y] strict
+setblock ~72 ~25 ~107 minecraft:smooth_basalt strict
+fill ~73 ~25 ~107 ~74 ~25 ~107 minecraft:magma_block strict
+setblock ~82 ~25 ~107 minecraft:polished_blackstone_bricks strict
+fill ~91 ~25 ~107 ~91 ~25 ~108 minecraft:polished_blackstone strict
+setblock ~92 ~25 ~107 minecraft:polished_blackstone_bricks strict
+fill ~93 ~25 ~107 ~94 ~25 ~114 minecraft:smooth_basalt strict
+fill ~96 ~25 ~107 ~96 ~25 ~110 minecraft:smooth_basalt strict
+setblock ~98 ~25 ~107 minecraft:smooth_basalt strict
+fill ~101 ~25 ~107 ~101 ~25 ~108 minecraft:smooth_basalt strict
+setblock ~104 ~25 ~107 minecraft:polished_blackstone strict
+setblock ~105 ~25 ~107 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~106 ~25 ~107 minecraft:polished_deepslate strict
+setblock ~107 ~25 ~107 minecraft:basalt[axis=y] strict
+setblock ~108 ~25 ~107 minecraft:polished_deepslate strict
+setblock ~109 ~25 ~107 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~110 ~25 ~107 minecraft:polished_blackstone_bricks strict
+fill ~114 ~25 ~107 ~114 ~25 ~108 minecraft:polished_blackstone strict
+fill ~116 ~25 ~107 ~116 ~25 ~108 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~117 ~25 ~107 minecraft:polished_blackstone strict
+setblock ~119 ~25 ~107 minecraft:polished_blackstone_bricks strict
+fill ~121 ~25 ~107 ~121 ~25 ~108 minecraft:polished_blackstone strict
+fill ~122 ~25 ~107 ~122 ~29 ~108 minecraft:calcite strict
+fill ~134 ~25 ~107 ~134 ~29 ~107 minecraft:quartz_bricks strict
+setblock ~135 ~25 ~107 minecraft:cobbled_deepslate strict
+fill ~136 ~25 ~107 ~137 ~25 ~107 minecraft:polished_blackstone_bricks strict
+setblock ~139 ~25 ~107 minecraft:polished_blackstone_bricks strict
+fill ~141 ~25 ~107 ~141 ~25 ~108 minecraft:polished_blackstone_bricks strict
+setblock ~143 ~25 ~107 minecraft:polished_blackstone strict
+setblock ~145 ~25 ~107 minecraft:polished_blackstone_bricks strict
+setblock ~147 ~25 ~107 minecraft:cobbled_deepslate strict
+setblock ~148 ~25 ~107 minecraft:polished_blackstone strict
+setblock ~149 ~25 ~107 minecraft:polished_deepslate strict
+setblock ~150 ~25 ~107 minecraft:calcite strict
+fill ~151 ~25 ~107 ~151 ~25 ~108 minecraft:polished_blackstone_bricks strict
+setblock ~152 ~25 ~107 minecraft:smooth_basalt strict
+setblock ~153 ~25 ~107 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~154 ~25 ~107 minecraft:polished_blackstone_bricks strict
+setblock ~155 ~25 ~107 minecraft:smooth_basalt strict
+fill ~156 ~25 ~107 ~157 ~25 ~107 minecraft:calcite strict
+fill ~160 ~25 ~107 ~160 ~25 ~110 minecraft:smooth_basalt strict
+fill ~162 ~25 ~107 ~162 ~25 ~109 minecraft:smooth_basalt strict
+fill ~164 ~25 ~107 ~165 ~25 ~107 minecraft:polished_blackstone strict
+fill ~173 ~25 ~107 ~174 ~25 ~107 minecraft:polished_blackstone_bricks strict
+fill ~183 ~25 ~107 ~183 ~27 ~107 minecraft:blackstone strict
+setblock ~184 ~25 ~107 minecraft:smooth_basalt strict
+fill ~197 ~25 ~107 ~197 ~25 ~108 minecraft:blackstone strict
+setblock ~205 ~25 ~107 minecraft:tuff strict
+fill ~217 ~25 ~107 ~217 ~27 ~108 minecraft:blackstone strict
+fill ~219 ~25 ~107 ~219 ~26 ~107 minecraft:stone_bricks strict
+fill ~220 ~25 ~107 ~222 ~25 ~149 minecraft:stone strict
+fill ~234 ~25 ~107 ~236 ~25 ~118 minecraft:stone strict
+setblock ~237 ~25 ~107 minecraft:mossy_stone_bricks strict
+setblock ~238 ~25 ~107 minecraft:cracked_stone_bricks strict
+fill ~239 ~25 ~107 ~239 ~26 ~108 minecraft:stone_bricks strict
+fill ~245 ~25 ~107 ~245 ~26 ~108 minecraft:stone strict
+fill ~12 ~25 ~108 ~13 ~27 ~108 minecraft:blackstone strict
+fill ~14 ~25 ~108 ~14 ~26 ~108 minecraft:stone_bricks strict
+setblock ~15 ~25 ~108 minecraft:cracked_stone_bricks strict
+setblock ~16 ~25 ~108 minecraft:stone_bricks strict
+fill ~18 ~25 ~108 ~19 ~25 ~136 minecraft:stone strict
+fill ~37 ~25 ~108 ~37 ~25 ~148 minecraft:stone strict
+fill ~39 ~25 ~108 ~39 ~27 ~108 minecraft:blackstone strict
+fill ~40 ~25 ~108 ~40 ~26 ~108 minecraft:stone strict
+setblock ~41 ~25 ~108 minecraft:blackstone strict
+setblock ~42 ~25 ~108 minecraft:crimson_nylium strict
+setblock ~43 ~25 ~108 minecraft:soul_soil strict
+fill ~55 ~25 ~108 ~55 ~28 ~108 minecraft:basalt[axis=y] strict
+setblock ~57 ~25 ~108 minecraft:basalt[axis=y] strict
+fill ~69 ~25 ~108 ~69 ~25 ~110 minecraft:blackstone strict
+fill ~72 ~25 ~108 ~74 ~25 ~109 minecraft:blackstone strict
+fill ~82 ~25 ~108 ~82 ~25 ~109 minecraft:polished_blackstone strict
+setblock ~90 ~25 ~108 minecraft:smooth_basalt strict
+fill ~92 ~25 ~108 ~92 ~25 ~115 minecraft:smooth_basalt strict
+setblock ~98 ~25 ~108 minecraft:polished_diorite strict
+setblock ~99 ~25 ~108 minecraft:calcite strict
+setblock ~100 ~25 ~108 minecraft:polished_blackstone strict
+setblock ~102 ~25 ~108 minecraft:smooth_basalt strict
+setblock ~103 ~25 ~108 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~104 ~25 ~108 minecraft:smooth_basalt strict
+fill ~105 ~25 ~108 ~106 ~25 ~108 minecraft:polished_blackstone_bricks strict
+setblock ~107 ~25 ~108 minecraft:polished_deepslate strict
+setblock ~108 ~25 ~108 minecraft:polished_diorite strict
+fill ~109 ~25 ~108 ~111 ~25 ~108 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~112 ~25 ~108 minecraft:polished_blackstone_bricks strict
+setblock ~115 ~25 ~108 minecraft:polished_blackstone strict
+setblock ~117 ~25 ~108 minecraft:polished_blackstone_bricks strict
+setblock ~119 ~25 ~108 minecraft:cobbled_deepslate strict
+setblock ~120 ~25 ~108 minecraft:polished_blackstone strict
+fill ~134 ~25 ~108 ~134 ~30 ~108 minecraft:calcite strict
+fill ~135 ~25 ~108 ~136 ~25 ~108 minecraft:polished_blackstone strict
+setblock ~137 ~25 ~108 minecraft:polished_blackstone_bricks strict
+setblock ~139 ~25 ~108 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~143 ~25 ~108 minecraft:cracked_polished_blackstone_bricks strict
+fill ~145 ~25 ~108 ~147 ~25 ~108 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~148 ~25 ~108 minecraft:polished_deepslate strict
+fill ~149 ~25 ~108 ~150 ~25 ~108 minecraft:polished_blackstone strict
+setblock ~152 ~25 ~108 minecraft:polished_blackstone strict
+setblock ~153 ~25 ~108 minecraft:smooth_basalt strict
+setblock ~154 ~25 ~108 minecraft:polished_blackstone strict
+setblock ~155 ~25 ~108 minecraft:crimson_nylium strict
+setblock ~156 ~25 ~108 minecraft:coarse_dirt strict
+fill ~157 ~25 ~108 ~158 ~25 ~108 minecraft:polished_diorite strict
+setblock ~159 ~25 ~108 minecraft:smooth_basalt strict
+fill ~164 ~25 ~108 ~164 ~25 ~109 minecraft:smooth_basalt strict
+fill ~165 ~25 ~108 ~165 ~25 ~109 minecraft:polished_blackstone strict
+setblock ~166 ~25 ~108 minecraft:smooth_basalt strict
+fill ~175 ~25 ~108 ~175 ~25 ~109 minecraft:blackstone strict
+fill ~180 ~25 ~108 ~180 ~25 ~112 minecraft:smooth_basalt strict
+fill ~184 ~25 ~108 ~184 ~27 ~109 minecraft:blackstone strict
+fill ~185 ~25 ~108 ~185 ~25 ~109 minecraft:smooth_basalt strict
+fill ~196 ~25 ~108 ~196 ~29 ~109 minecraft:blackstone strict
+fill ~198 ~25 ~108 ~198 ~27 ~108 minecraft:blackstone strict
+fill ~202 ~25 ~108 ~202 ~25 ~109 minecraft:tuff strict
+setblock ~206 ~25 ~108 minecraft:tuff strict
+fill ~219 ~25 ~108 ~219 ~25 ~148 minecraft:stone strict
+fill ~237 ~25 ~108 ~238 ~25 ~117 minecraft:stone strict
+fill ~242 ~25 ~108 ~242 ~26 ~108 minecraft:mossy_stone_bricks strict
+fill ~243 ~25 ~108 ~243 ~27 ~108 minecraft:blackstone strict
+fill ~12 ~25 ~109 ~12 ~27 ~109 minecraft:mossy_stone_bricks strict
+fill ~13 ~25 ~109 ~13 ~25 ~110 minecraft:stone_bricks strict
+fill ~14 ~25 ~109 ~14 ~27 ~109 minecraft:mossy_stone_bricks strict
+fill ~16 ~25 ~109 ~17 ~25 ~138 minecraft:stone strict
+fill ~39 ~25 ~109 ~39 ~25 ~147 minecraft:stone strict
+fill ~40 ~25 ~109 ~40 ~28 ~109 minecraft:blackstone strict
+setblock ~52 ~25 ~109 minecraft:smooth_basalt strict
+fill ~53 ~25 ~109 ~53 ~25 ~110 minecraft:magma_block strict
+fill ~58 ~25 ~109 ~63 ~25 ~109 minecraft:basalt[axis=y] strict
+fill ~90 ~25 ~109 ~91 ~25 ~109 minecraft:polished_blackstone_bricks strict
+fill ~97 ~25 ~109 ~98 ~25 ~110 minecraft:calcite strict
+fill ~99 ~25 ~109 ~100 ~25 ~109 minecraft:polished_blackstone_bricks strict
+setblock ~101 ~25 ~109 minecraft:cracked_polished_blackstone_bricks strict
+fill ~102 ~25 ~109 ~102 ~25 ~111 minecraft:polished_blackstone_bricks strict
+setblock ~103 ~25 ~109 minecraft:smooth_basalt strict
+setblock ~104 ~25 ~109 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~105 ~25 ~109 minecraft:polished_blackstone_bricks strict
+setblock ~106 ~25 ~109 minecraft:polished_blackstone strict
+setblock ~107 ~25 ~109 minecraft:polished_blackstone_bricks strict
+fill ~108 ~25 ~109 ~108 ~25 ~111 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~109 ~25 ~109 ~111 ~27 ~111 minecraft:quartz_bricks strict
+fill ~112 ~25 ~109 ~112 ~25 ~111 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~113 ~25 ~109 ~114 ~25 ~109 minecraft:cracked_polished_blackstone_bricks strict
+fill ~115 ~25 ~109 ~116 ~25 ~109 minecraft:polished_blackstone_bricks strict
+fill ~117 ~25 ~109 ~117 ~25 ~110 minecraft:cracked_polished_blackstone_bricks strict
+fill ~119 ~25 ~109 ~119 ~26 ~109 minecraft:polished_blackstone_bricks strict
+fill ~120 ~25 ~109 ~120 ~26 ~109 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~121 ~25 ~109 minecraft:polished_blackstone_bricks strict
+fill ~122 ~25 ~109 ~122 ~31 ~110 minecraft:quartz_bricks strict
+fill ~134 ~25 ~109 ~134 ~31 ~110 minecraft:quartz_bricks strict
+fill ~135 ~25 ~109 ~136 ~25 ~111 minecraft:polished_blackstone_bricks strict
+fill ~137 ~25 ~109 ~137 ~25 ~110 minecraft:cracked_polished_blackstone_bricks strict
+fill ~139 ~25 ~109 ~139 ~25 ~110 minecraft:polished_blackstone_bricks strict
+fill ~141 ~25 ~109 ~141 ~25 ~110 minecraft:cracked_polished_blackstone_bricks strict
+fill ~143 ~25 ~109 ~143 ~25 ~115 minecraft:polished_blackstone_bricks strict
+fill ~144 ~25 ~109 ~144 ~25 ~111 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~145 ~25 ~109 ~147 ~27 ~111 minecraft:quartz_bricks strict
+fill ~148 ~25 ~109 ~148 ~25 ~111 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~149 ~25 ~109 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~150 ~25 ~109 minecraft:polished_blackstone strict
+setblock ~151 ~25 ~109 minecraft:basalt[axis=y] strict
+setblock ~152 ~25 ~109 minecraft:polished_blackstone_bricks strict
+setblock ~153 ~25 ~109 minecraft:cobbled_deepslate strict
+setblock ~154 ~25 ~109 minecraft:smooth_basalt strict
+setblock ~155 ~25 ~109 minecraft:polished_blackstone_bricks strict
+setblock ~156 ~25 ~109 minecraft:smooth_basalt strict
+setblock ~157 ~25 ~109 minecraft:polished_blackstone_bricks strict
+fill ~158 ~25 ~109 ~158 ~25 ~110 minecraft:calcite strict
+fill ~159 ~25 ~109 ~159 ~25 ~110 minecraft:polished_diorite strict
+fill ~166 ~25 ~109 ~166 ~25 ~110 minecraft:polished_blackstone strict
+setblock ~174 ~25 ~109 minecraft:polished_blackstone strict
+fill ~176 ~25 ~109 ~176 ~25 ~111 minecraft:blackstone strict
+fill ~177 ~25 ~109 ~178 ~25 ~109 minecraft:smooth_basalt strict
+fill ~186 ~25 ~109 ~186 ~25 ~110 minecraft:smooth_basalt strict
+fill ~195 ~25 ~109 ~195 ~28 ~111 minecraft:blackstone strict
+setblock ~198 ~25 ~109 minecraft:basalt[axis=y] strict
+setblock ~201 ~25 ~109 minecraft:tuff strict
+fill ~216 ~25 ~109 ~216 ~28 ~109 minecraft:blackstone strict
+fill ~217 ~25 ~109 ~217 ~25 ~147 minecraft:stone strict
+fill ~239 ~25 ~109 ~240 ~25 ~117 minecraft:stone strict
+fill ~241 ~25 ~109 ~243 ~27 ~109 minecraft:stone_bricks strict
+setblock ~244 ~25 ~109 minecraft:mossy_stone_bricks strict
+fill ~245 ~25 ~109 ~245 ~27 ~109 minecraft:blackstone strict
+fill ~11 ~25 ~110 ~11 ~26 ~110 minecraft:stone_bricks strict
+setblock ~12 ~25 ~110 minecraft:cracked_stone_bricks strict
+fill ~14 ~25 ~110 ~14 ~28 ~110 minecraft:stone_bricks strict
+fill ~15 ~25 ~110 ~15 ~25 ~139 minecraft:stone strict
+fill ~40 ~25 ~110 ~40 ~25 ~146 minecraft:stone strict
+fill ~41 ~25 ~110 ~42 ~28 ~110 minecraft:blackstone strict
+fill ~45 ~25 ~110 ~46 ~28 ~112 minecraft:blackstone strict
+setblock ~57 ~25 ~110 minecraft:basalt[axis=y] strict
+fill ~58 ~25 ~110 ~58 ~27 ~110 minecraft:blackstone strict
+fill ~59 ~25 ~110 ~62 ~25 ~110 minecraft:basalt[axis=y] strict
+fill ~63 ~25 ~110 ~64 ~26 ~115 minecraft:blackstone strict
+fill ~72 ~25 ~110 ~73 ~25 ~111 minecraft:blackstone strict
+setblock ~81 ~25 ~110 minecraft:polished_blackstone strict
+setblock ~89 ~25 ~110 minecraft:tuff strict
+fill ~90 ~25 ~110 ~90 ~25 ~111 minecraft:polished_blackstone strict
+fill ~91 ~25 ~110 ~91 ~25 ~115 minecraft:smooth_basalt strict
+fill ~99 ~25 ~110 ~99 ~25 ~112 minecraft:polished_blackstone_bricks strict
+setblock ~100 ~25 ~110 minecraft:cobbled_deepslate strict
+setblock ~101 ~25 ~110 minecraft:basalt[axis=y] strict
+setblock ~103 ~25 ~110 minecraft:chiseled_polished_blackstone strict
+setblock ~104 ~25 ~110 minecraft:polished_blackstone_bricks strict
+fill ~105 ~25 ~110 ~105 ~25 ~111 minecraft:polished_blackstone strict
+setblock ~106 ~25 ~110 minecraft:polished_blackstone_bricks strict
+setblock ~107 ~25 ~110 minecraft:polished_blackstone strict
+fill ~113 ~25 ~110 ~115 ~25 ~111 minecraft:polished_blackstone_bricks strict
+setblock ~116 ~25 ~110 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~119 ~25 ~110 minecraft:cracked_polished_blackstone_bricks strict
+fill ~120 ~25 ~110 ~120 ~25 ~111 minecraft:polished_blackstone_bricks strict
+fill ~121 ~25 ~110 ~121 ~25 ~111 minecraft:cracked_polished_blackstone_bricks strict
+fill ~138 ~25 ~110 ~138 ~26 ~110 minecraft:cracked_polished_blackstone_bricks strict
+fill ~149 ~25 ~110 ~150 ~25 ~110 minecraft:polished_blackstone_bricks strict
+setblock ~151 ~25 ~110 minecraft:polished_blackstone strict
+setblock ~152 ~25 ~110 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~153 ~25 ~110 minecraft:chiseled_polished_blackstone strict
+setblock ~154 ~25 ~110 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~155 ~25 ~110 minecraft:basalt[axis=y] strict
+setblock ~156 ~25 ~110 minecraft:coarse_dirt strict
+setblock ~157 ~25 ~110 minecraft:polished_blackstone strict
+fill ~161 ~25 ~110 ~164 ~25 ~112 minecraft:tuff strict
+setblock ~165 ~25 ~110 minecraft:smooth_basalt strict
+setblock ~167 ~25 ~110 minecraft:smooth_basalt strict
+fill ~175 ~25 ~110 ~175 ~25 ~112 minecraft:polished_blackstone strict
+fill ~177 ~25 ~110 ~177 ~25 ~115 minecraft:blackstone strict
+fill ~178 ~25 ~110 ~178 ~25 ~111 minecraft:smooth_basalt strict
+fill ~181 ~25 ~110 ~181 ~25 ~114 minecraft:smooth_basalt strict
+fill ~185 ~25 ~110 ~185 ~27 ~111 minecraft:blackstone strict
+fill ~187 ~25 ~110 ~187 ~25 ~111 minecraft:smooth_basalt strict
+fill ~201 ~25 ~110 ~202 ~25 ~110 minecraft:smooth_basalt strict
+fill ~210 ~25 ~110 ~215 ~28 ~110 minecraft:blackstone strict
+fill ~216 ~25 ~110 ~216 ~25 ~146 minecraft:stone strict
+fill ~241 ~25 ~110 ~241 ~25 ~117 minecraft:stone strict
+fill ~242 ~25 ~110 ~244 ~25 ~110 minecraft:stone_bricks strict
+setblock ~245 ~25 ~110 minecraft:mossy_stone_bricks strict
+fill ~246 ~25 ~110 ~246 ~26 ~110 minecraft:stone strict
+setblock ~10 ~25 ~111 minecraft:cracked_stone_bricks strict
+fill ~13 ~25 ~111 ~14 ~25 ~139 minecraft:stone strict
+fill ~41 ~25 ~111 ~42 ~25 ~145 minecraft:stone strict
+fill ~43 ~25 ~111 ~44 ~28 ~111 minecraft:blackstone strict
+fill ~54 ~25 ~111 ~54 ~25 ~112 minecraft:netherrack strict
+fill ~58 ~25 ~111 ~58 ~28 ~111 minecraft:basalt[axis=y] strict
+fill ~59 ~25 ~111 ~62 ~27 ~112 minecraft:blackstone strict
+fill ~65 ~25 ~111 ~65 ~25 ~112 minecraft:basalt[axis=y] strict
+setblock ~81 ~25 ~111 minecraft:polished_blackstone_bricks strict
+setblock ~89 ~25 ~111 minecraft:polished_blackstone strict
+fill ~96 ~25 ~111 ~97 ~25 ~111 minecraft:polished_diorite strict
+setblock ~98 ~25 ~111 minecraft:polished_blackstone strict
+setblock ~100 ~25 ~111 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~101 ~25 ~111 minecraft:smooth_basalt strict
+setblock ~103 ~25 ~111 minecraft:polished_blackstone_bricks strict
+fill ~104 ~25 ~111 ~104 ~25 ~112 minecraft:polished_blackstone strict
+setblock ~106 ~25 ~111 minecraft:polished_blackstone strict
+setblock ~107 ~25 ~111 minecraft:cracked_polished_blackstone_bricks strict
+fill ~116 ~25 ~111 ~117 ~27 ~111 minecraft:polished_blackstone_bricks strict
+fill ~119 ~25 ~111 ~119 ~26 ~111 minecraft:polished_blackstone_bricks strict
+fill ~122 ~25 ~111 ~122 ~25 ~113 minecraft:cracked_polished_blackstone_bricks strict
+fill ~123 ~25 ~111 ~123 ~25 ~117 minecraft:polished_blackstone_bricks strict
+setblock ~124 ~25 ~111 minecraft:cracked_polished_blackstone_bricks strict
+fill ~126 ~25 ~111 ~127 ~25 ~111 minecraft:cracked_polished_blackstone_bricks strict
+fill ~128 ~25 ~111 ~128 ~25 ~113 minecraft:polished_blackstone_bricks strict
+fill ~129 ~25 ~111 ~129 ~26 ~111 minecraft:cracked_polished_blackstone_bricks strict
+fill ~130 ~25 ~111 ~130 ~25 ~112 minecraft:polished_blackstone_bricks strict
+fill ~131 ~25 ~111 ~133 ~26 ~111 minecraft:cracked_polished_blackstone_bricks strict
+fill ~134 ~25 ~111 ~134 ~27 ~111 minecraft:polished_blackstone_bricks strict
+fill ~137 ~25 ~111 ~138 ~25 ~112 minecraft:polished_blackstone_bricks strict
+fill ~139 ~25 ~111 ~139 ~26 ~111 minecraft:cracked_polished_blackstone_bricks strict
+fill ~141 ~25 ~111 ~141 ~25 ~112 minecraft:polished_blackstone_bricks strict
+setblock ~149 ~25 ~111 minecraft:polished_blackstone_bricks strict
+fill ~150 ~25 ~111 ~150 ~25 ~112 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~151 ~25 ~111 minecraft:polished_deepslate strict
+setblock ~152 ~25 ~111 minecraft:basalt[axis=y] strict
+fill ~153 ~25 ~111 ~153 ~25 ~112 minecraft:polished_blackstone strict
+setblock ~154 ~25 ~111 minecraft:basalt[axis=y] strict
+setblock ~155 ~25 ~111 minecraft:polished_blackstone_bricks strict
+fill ~156 ~25 ~111 ~157 ~25 ~111 minecraft:cracked_polished_blackstone_bricks strict
+setblock ~158 ~25 ~111 minecraft:polished_blackstone_bricks strict
+fill ~159 ~25 ~111 ~160 ~25 ~111 minecraft:calcite strict
+fill ~165 ~25 ~111 ~165 ~25 ~117 minecraft:tuff strict
+fill ~166 ~25 ~111 ~167 ~25 ~111 minecraft:polished_blackstone_bricks strict
+fill ~188 ~25 ~111 ~188 ~25 ~113 minecraft:smooth_basalt strict
+fill ~194 ~25 ~111 ~194 ~27 ~115 minecraft:blackstone strict
+fill ~200 ~25 ~111 ~201 ~25 ~111 minecraft:smooth_basalt strict
+fill ~210 ~25 ~111 ~213 ~28 ~111 minecraft:blackstone strict
+fill ~214 ~25 ~111 ~215 ~25 ~145 minecraft:stone strict
+fill ~242 ~25 ~111 ~243 ~25 ~117 minecraft:stone strict
+fill ~245 ~25 ~111 ~245 ~26 ~111 minecraft:cracked_stone_bricks strict
+fill ~246 ~25 ~111 ~246 ~25 ~113 minecraft:stone_bricks strict
+setblock ~9 ~25 ~112 minecraft:stone_bricks strict
+fill ~10 ~25 ~112 ~11 ~25 ~112 minecraft:mossy_stone_bricks strict
+fill ~12 ~25 ~112 ~12 ~25 ~140 minecraft:stone strict
