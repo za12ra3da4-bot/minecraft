@@ -1,0 +1,681 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  신화쟁탈전 — 직업 전용 전설 무기 14종 (a52 직업 표 · a50 상점 · 우클릭 스킬)
+#   전사(검)    월광의 카타나 · 용암의 플람베르주 · 수정 결정검 · 폭풍의 바스타드소드 · 성흔의 클레이모어 · 흡혈귀의 레이피어
+#   궁수(원거리) 태양신의 장궁 · 독사의 석궁 · 별빛 연발궁 · 그림자 표창
+#   수호자(도끼) 서리 거인의 도끼 · 투척 쌍도끼 · 천둥 망치 · 성채 방패도끼
+#   그림: 리소스팩 bg:weapon/<무기> · 바닥 효과 bg:tele/fx3_<무기> (arena/tools/rp/weapons_legend3.py · skillfx3.py)
+#   피해는 bgDmg (하트). 무기 그림 방향: 날끝 아래 +135 · 옆(+X) -135 · 위 -45
+# ═════════════════════════════════════════════════════════════════════════════
+
+on load:
+    bgWDef("moon", "월광의 카타나", 400, 9, "aqua", "우클릭 월광 발도: 번개처럼 앞으로 베고 지나간 뒤 초승달 참격이 한 번 더 터짐")
+    bgWDef("magma", "용암의 플람베르주", 400, 13, "red", "우클릭 용암 균열: 검을 꽂아 앞으로 세 갈래 용암 균열 — 끝에서 불기둥 (화상)")
+    bgWDef("crystal", "수정 결정검", 400, 14, "light_purple", "우클릭 결정 감옥: 주변 적을 수정에 가뒀다가 (구속) 결정째 터뜨림")
+    bgWDef("tempest", "폭풍의 바스타드소드", 400, 13, "blue", "우클릭 회오리 베기: 검을 휘두르며 회전 — 주변 적을 끌어당겨 세 번 벰")
+    bgWDef("holy", "성흔의 클레이모어", 400, 15, "yellow", "우클릭 성흔 십자: 대검을 내리찍어 빛의 십자가 — 적 발광 · 나는 흡수 II")
+    bgWDef("vampire", "흡혈귀의 레이피어", 400, 11, "dark_red", "우클릭 핏빛 찌르기: 다섯 번 빠르게 찌르기 — 맞힐 때마다 체력 회복 (시듦)")
+    bgWDef("sunbow", "태양신의 장궁", 400, 13, "gold", "우클릭 태양 화살: 빛을 모아 관통하는 태양 광선 — 길 위 모든 적 화상")
+    bgWDef("viper", "독사의 석궁", 400, 11, "dark_green", "우클릭 독사의 이빨: 독 화살 다섯 발 부채꼴 사격 (독 II)")
+    bgWDef("starbow", "별빛 연발궁", 400, 14, "light_purple", "우클릭 유성우: 바라보는 곳에 별빛 화살 열 발이 쏟아짐")
+    bgWDef("shuriken", "그림자 표창", 400, 9, "dark_purple", "우클릭 그림자 표창: 관통하는 표창 세 개를 연속으로 던지고 신속 II")
+    bgWDef("frostaxe", "서리 거인의 도끼", 400, 14, "aqua", "우클릭 빙하 내려찍기: 뛰어올라 내려찍어 주변 적을 얼림 (구속 IV)")
+    bgWDef("twinaxe", "투척 쌍도끼", 400, 11, "red", "우클릭 쌍도끼 투척: 도끼 두 자루가 X자로 날아갔다 돌아오며 두 번 벰")
+    bgWDef("mjolnir", "천둥 망치", 400, 15, "blue", "우클릭 묠니르: 망치를 던져 낙뢰 — 망치가 손으로 돌아오며 한 번 더 침")
+    bgWDef("bastion", "성채 방패도끼", 400, 16, "gold", "우클릭 성채 방벽: 앞에 방벽을 세워 적을 밀어내고 주변 아군 저항 II")
+    # 직업 (a52 와 같은 표)
+    loop "moon", "magma", "crystal", "tempest", "holy" and "vampire":
+        set {-bg::w::%loop-value%::cls} to 0
+    loop "sunbow", "viper", "starbow" and "shuriken":
+        set {-bg::w::%loop-value%::cls} to 1
+    loop "frostaxe", "twinaxe", "mjolnir" and "bastion":
+        set {-bg::w::%loop-value%::cls} to 2
+    # 보스에게 주는 스킬 피해 (기본 5)
+    set {-bg::w::moon::bossdmg} to 4
+    set {-bg::w::magma::bossdmg} to 5
+    set {-bg::w::crystal::bossdmg} to 5
+    set {-bg::w::tempest::bossdmg} to 3
+    set {-bg::w::holy::bossdmg} to 6
+    set {-bg::w::vampire::bossdmg} to 3
+    set {-bg::w::sunbow::bossdmg} to 6
+    set {-bg::w::viper::bossdmg} to 3
+    set {-bg::w::starbow::bossdmg} to 3
+    set {-bg::w::shuriken::bossdmg} to 3
+    set {-bg::w::frostaxe::bossdmg} to 6
+    set {-bg::w::twinaxe::bossdmg} to 4
+    set {-bg::w::mjolnir::bossdmg} to 7
+    set {-bg::w::bastion::bossdmg} to 4
+    # a50 이 상점 목록을 먼저 만든 뒤 — 빠진 것만 덧붙인다 (a50 만 다시 불러와도 a50 표에 이미 들어 있음)
+    loop "moon", "magma", "crystal", "tempest", "holy", "vampire", "sunbow", "viper", "starbow", "shuriken", "frostaxe", "twinaxe", "mjolnir" and "bastion":
+        if {-bg::w::list::*} does not contain loop-value:
+            add loop-value to {-bg::w::list::*}
+        if {-bg::w::all::*} does not contain loop-value:
+            add loop-value to {-bg::w::all::*}
+
+# a50 우클릭에서 넘어옴 (재사용 대기 · 직업 검사는 a50 이 이미 함)
+function bgSk3(p: player, w: text):
+    if {_w} is "moon":
+        bgSkMoon({_p})
+    else if {_w} is "magma":
+        bgSkMagma({_p})
+    else if {_w} is "crystal":
+        bgSkCrystal({_p})
+    else if {_w} is "tempest":
+        bgSkTempest({_p})
+    else if {_w} is "holy":
+        bgSkHoly({_p})
+    else if {_w} is "vampire":
+        bgSkVampire({_p})
+    else if {_w} is "sunbow":
+        bgSkSunbow({_p})
+    else if {_w} is "viper":
+        bgSkViper({_p})
+    else if {_w} is "starbow":
+        bgSkStarbow({_p})
+    else if {_w} is "shuriken":
+        bgSkShuriken({_p})
+    else if {_w} is "frostaxe":
+        bgSkFrostaxe({_p})
+    else if {_w} is "twinaxe":
+        bgSkTwinaxe({_p})
+    else if {_w} is "mjolnir":
+        bgSkMjolnir({_p})
+    else if {_w} is "bastion":
+        bgSkBastion({_p})
+
+# ─────────────────────────────────────────── 도우미
+# 스킬 한 번에 한 사람은 한 번만 (k = 스킬마다 새 태그 · 끝나면 bgOnceEnd)
+function bgOnce(k: text, v: player) :: boolean:
+    if {-bg::once::%{_k}%::%uuid of {_v}%} is set:
+        return false
+    set {-bg::once::%{_k}%::%uuid of {_v}%} to true
+    return true
+
+function bgOnceEnd(k: text):
+    wait 2 seconds
+    delete {-bg::once::%{_k}%::*}
+
+# 같은 팀 전투 참가자 (나 포함)
+function bgAllies(p: player, c: location, r: number) :: players:
+    loop all players:
+        if bgIsFighter(loop-player) is true:
+            if bgTeam(loop-player) is bgTeam({_p}):
+                if world of loop-player is world of {_c}:
+                    if distance between loop-player and {_c} <= {_r}:
+                        add loop-player to {_out::*}
+    return {_out::*}
+
+# 손에 들고 있으면 도는 기운 (a50 의 기본 불꽃 대신)
+every 5 ticks:
+    loop all players:
+        set {_w} to bgIsLegend(loop-player's tool)
+        if {-bg::w3fx::%{_w}%} is set:
+            set {_l} to location of loop-player
+            add 1.1 to y-coordinate of {_l}
+            bgParticle({_l}, {-bg::w3fx::%{_w}%}, 0.35, 0.45, 0.35, 0.02, 3)
+
+on load:
+    set {-bg::w3fx::moon} to "end_rod"
+    set {-bg::w3fx::magma} to "lava"
+    set {-bg::w3fx::crystal} to "dust{color:[0.8,0.5,1.0],scale:1.0}"
+    set {-bg::w3fx::tempest} to "cloud"
+    set {-bg::w3fx::holy} to "wax_on"
+    set {-bg::w3fx::vampire} to "dust{color:[0.7,0.05,0.1],scale:1.0}"
+    set {-bg::w3fx::sunbow} to "small_flame"
+    set {-bg::w3fx::viper} to "item_slime"
+    set {-bg::w3fx::starbow} to "firework"
+    set {-bg::w3fx::shuriken} to "smoke"
+    set {-bg::w3fx::frostaxe} to "snowflake"
+    set {-bg::w3fx::twinaxe} to "crit"
+    set {-bg::w3fx::mjolnir} to "electric_spark"
+    set {-bg::w3fx::bastion} to "wax_off"
+
+# ═════════════════════════════════════════════════════════════ 전사 — 검
+# ─────────────────────────────────────────── 월광의 카타나: 앞으로 질주하며 베기 → 0.5초 뒤 맞은 자리마다 초승달 참격
+function bgSkMoon(p: player):
+    set {_yaw} to yaw of {_p}
+    set {_o} to location of {_p}
+    set {_k} to bgVTag()
+    bgSoundAt({_o}, "item.trident.riptide_1", 1.4, 1.7)
+    bgSoundAt({_o}, "entity.player.attack.sweep", 1.5, 0.7)
+    bgFxFly(bgUp({_o}, 0.1), "fx3_moon", 4.4, {_yaw}, 1.7, 6, 0)
+    bgWfx(bgGround(bgFwd({_o}, {_yaw}, 4, 0, 0.5)), "fx3_moon", 7, 24, {_yaw})
+    bgVel({_p}, vector(-1 * sin({_yaw}) * 2.4, 0.15, cos({_yaw}) * 2.4))
+    loop 7 times:
+        set {_q} to location of {_p}
+        bgParticle(bgUp({_q}, 1), "end_rod", 0.3, 0.4, 0.3, 0.02, 4)
+        bgParticle(bgUp({_q}, 1), "dust{color:[0.6,0.8,1.0],scale:1.6}", 0.4, 0.5, 0.4, 0, 8)
+        loop bgNear({_p}, {_q}, 2.3):
+            set {_v} to loop-value-2
+            if bgOnce({_k}, {_v}) is true:
+                add {_v} to {_hl::*}
+                bgDmg({_v}, 2)
+                bgImpact(location of {_v}, 1.2, "frost", false)
+        wait 1 tick
+    if size of {_hl::*} > 0:
+        bgImpactFrame({_p}, "moon")
+    wait 9 ticks
+    bgSoundAt(location of {_p}, "block.amethyst_block.resonate", 1.5, 1.8)
+    bgSoundAt(location of {_p}, "entity.player.attack.crit", 1.3, 0.8)
+    loop {_hl::*}:
+        set {_v} to loop-value
+        if {_v} is online:
+            bgMoonSlash({_v}, {_yaw})
+    bgOnceEnd({_k})
+
+function bgMoonSlash(v: player, yaw: number):
+    set {_t} to bgVTag()
+    bgWModel(bgUp(location of {_v}, 1), "moon", 2.6, {_yaw} + 90, -135, 0, 0, 0, {_t}, 2)
+    bgFxGrow(location of {_v}, "fx3_moon", 1, 4.5, 5, 0.1)
+    bgDmg({_v}, 2.5)
+    bgCmd("effect give %bgPName({_v})% slowness 2 1 true")
+    bgParticle(bgUp(location of {_v}, 1), "sweep_attack", 0.5, 0.4, 0.5, 0, 3)
+    bgParticle(bgUp(location of {_v}, 1), "end_rod", 0.5, 0.6, 0.5, 0.08, 14)
+    wait 6 ticks
+    bgShrinkKill({_t}, 4)
+
+# ─────────────────────────────────────────── 용암의 플람베르주: 검을 꽂으면 세 갈래 용암 균열 → 끝에서 불기둥
+function bgSkMagma(p: player):
+    set {_yaw} to yaw of {_p}
+    set {_o} to location of {_p}
+    set {_k} to bgVTag()
+    set {_t} to bgVTag()
+    bgWModel(bgFwd({_o}, {_yaw}, 1.2, 0, 2.4), "magma", 2.4, {_yaw} + 90, 135, 0, 0, 0, {_t}, 3)
+    wait 1 tick
+    bgTpTag({_t}, bgFwd({_o}, {_yaw}, 1.2, 0, 1.2), {_yaw} + 90)
+    wait 3 ticks
+    bgSoundAt({_o}, "item.mace.smash_ground", 1.6, 0.6)
+    bgSoundAt({_o}, "block.lava.extinct", 1.5, 0.6)
+    bgImpact(bgFwd({_o}, {_yaw}, 1.2, 0, 0), 1.8, "fire", true)
+    bgWfx(bgGround(bgFwd({_o}, {_yaw}, 5.2, 0, 0.5)), "fx3_magma", 11, 60, {_yaw})
+    loop 7 times:
+        set {_d} to 1.4 + loop-number * 1.1
+        bgMagmaStep({_p}, {_o}, {_yaw} - 24, {_d}, {_k})
+        bgMagmaStep({_p}, {_o}, {_yaw}, {_d}, {_k})
+        bgMagmaStep({_p}, {_o}, {_yaw} + 24, {_d}, {_k})
+        bgSoundAt(bgFwd({_o}, {_yaw}, {_d}, 0, 0), "block.lava.pop", 1.2, 0.8)
+        wait 1 tick
+    bgImpactFrame({_p}, "magma")
+    bgMagmaPillar({_p}, bgGround(bgFwd({_o}, {_yaw} - 24, 9.5, 0, 0.8)))
+    bgMagmaPillar({_p}, bgGround(bgFwd({_o}, {_yaw}, 9.5, 0, 0.8)))
+    bgMagmaPillar({_p}, bgGround(bgFwd({_o}, {_yaw} + 24, 9.5, 0, 0.8)))
+    wait 6 ticks
+    bgShrinkKill({_t}, 4)
+    bgOnceEnd({_k})
+
+function bgMagmaStep(p: player, o: location, a: number, d: number, k: text):
+    set {_c} to bgGround(bgFwd({_o}, {_a}, {_d}, 0, 0.8))
+    bgParticle(bgUp({_c}, 0.2), "lava", 0.3, 0.1, 0.3, 0, 2)
+    bgParticle(bgUp({_c}, 0.4), "flame", 0.25, 0.5, 0.25, 0.03, 6)
+    bgParticle(bgUp({_c}, 0.2), "block{block_state:""minecraft:magma_block""}", 0.3, 0.1, 0.3, 0.1, 5)
+    loop bgNear({_p}, bgUp({_c}, 0.8), 1.5):
+        set {_v} to loop-value
+        if bgOnce({_k}, {_v}) is true:
+            bgDmg({_v}, 2)
+            bgIgnite({_v}, 3)
+            bgVel({_v}, vector(0, 0.55, 0))
+
+function bgMagmaPillar(p: player, c: location):
+    bgImpact({_c}, 2.4, "fire", true)
+    bgParticle(bgUp({_c}, 1.5), "flame", 0.3, 1.5, 0.3, 0.05, 40)
+    bgParticle(bgUp({_c}, 1), "lava", 0.6, 0.6, 0.6, 0, 10)
+    bgSoundAt({_c}, "item.firecharge.use", 1.4, 0.7)
+    loop bgNear({_p}, bgUp({_c}, 0.8), 2.4):
+        bgDmg(loop-value, 1.5)
+        bgIgnite(loop-value, 4)
+        bgVel(loop-value, vector(0, 0.8, 0))
+
+# ─────────────────────────────────────────── 수정 결정검: 주변 적을 수정 감옥에 가둠 → 1.5초 뒤 결정째 폭발
+function bgSkCrystal(p: player):
+    set {_o} to location of {_p}
+    bgSoundAt({_o}, "block.amethyst_block.chime", 2, 0.6)
+    bgSoundAt({_o}, "block.amethyst_cluster.place", 2, 0.8)
+    bgFxGrow({_o}, "fx3_crystal", 1, 9, 8, 0.05)
+    bgWfx(bgGround({_o}), "fx3_crystal", 9, 44, 0)
+    bgParticle(bgUp({_o}, 1), "dust{color:[0.8,0.5,1.0],scale:2}", 3, 0.6, 3, 0, 60)
+    set {_es::*} to bgNear({_p}, {_o}, 4.8)
+    if size of {_es::*} > 0:
+        bgImpactFrame({_p}, "crystal")
+    loop {_es::*}:
+        bgCrystalCage({_p}, loop-value)
+
+function bgCrystalCage(p: player, v: player):
+    set {_t} to bgVTag()
+    set {_l} to bgUp(location of {_v}, -0.1)
+    bgDmg({_v}, 1)
+    bgCmd("effect give %bgPName({_v})% slowness 2 5 true")
+    loop 6 times:
+        set {_a} to loop-number * 60
+        bgBD(bgFwd({_l}, {_a}, 0.75, 0, 0), "amethyst_block", 0.28, random number between 1.8 and 2.5, 0.28, {_a} + 20, {_t}, 2)
+    bgBD({_l}, "purple_stained_glass", 1.3, 2.3, 1.3, 0, {_t}, 2)
+    bgSoundAt({_l}, "block.amethyst_block.place", 1.5, 0.7)
+    wait 30 ticks
+    set {_e} to bgUp({_l}, 1)
+    if {_v} is online:
+        set {_e} to bgUp(location of {_v}, 1)
+        bgDmg({_v}, 3)
+        bgVel({_v}, vector(0, 0.7, 0))
+    bgCmd("kill @e[tag=%{_t}%]")
+    bgImpact(bgUp({_e}, -1), 2, "arcane", true)
+    bgParticle({_e}, "block{block_state:""minecraft:amethyst_block""}", 0.6, 0.9, 0.6, 0.3, 40)
+    bgParticle({_e}, "end_rod", 0.4, 0.6, 0.4, 0.15, 14)
+    bgSoundAt({_e}, "block.amethyst_block.break", 2, 0.8)
+    bgSoundAt({_e}, "block.glass.break", 1.4, 1.2)
+
+# ─────────────────────────────────────────── 폭풍의 바스타드소드: 누운 검이 몸 주위를 돌며 1.5초 회전베기 (끌어당김 → 마지막 밀쳐냄)
+function bgSkTempest(p: player):
+    set {_t} to bgVTag()
+    set {_yaw} to yaw of {_p}
+    bgWModelQ(bgUp(location of {_p}, 1.0), "tempest", 3.0, {_yaw}, "[0.6533f,0.2706f,-0.2706f,0.6533f]", 0, 0, 1.9, {_t}, 1)
+    bgSoundAt(location of {_p}, "item.trident.riptide_3", 1.4, 1.2)
+    bgCmd("effect give %name of {_p}% resistance 2 0 true")
+    loop 3 times:
+        bgFxGrow(location of {_p}, "fx3_tempest", 2, 8.5, 6, 0.1)
+        bgSoundAt(location of {_p}, "entity.player.attack.sweep", 1.5, 0.6 + loop-number * 0.2)
+        loop 8 times:
+            set {_l} to location of {_p}
+            bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run tp @s %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 1)% %bgC(z-coordinate of {_l})% ~45 0")
+            bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle cloud ^ ^ ^2.4 0.3 0.2 0.3 0.02 3 force")
+            bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run particle sweep_attack ^ ^ ^2 0 0 0 0 1 force")
+            wait 1 tick
+        set {_l} to location of {_p}
+        loop bgNear({_p}, {_l}, 4):
+            set {_v} to loop-value-2
+            bgDmg({_v}, 1.3)
+            set {_dx} to (x-coordinate of {_l}) - (x-coordinate of {_v})
+            set {_dz} to (z-coordinate of {_l}) - (z-coordinate of {_v})
+            set {_d} to max(0.5, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
+            bgVel({_v}, vector({_dx} / {_d} * 0.45, 0.15, {_dz} / {_d} * 0.45))
+    set {_l} to location of {_p}
+    bgImpact({_l}, 3.2, "gale", true)
+    bgImpactFrame({_p}, "tempest")
+    loop bgNear({_p}, {_l}, 4.5):
+        set {_v} to loop-value
+        set {_dx} to (x-coordinate of {_v}) - (x-coordinate of {_l})
+        set {_dz} to (z-coordinate of {_v}) - (z-coordinate of {_l})
+        set {_d} to max(0.5, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
+        bgVel({_v}, vector({_dx} / {_d} * 1.3, 0.55, {_dz} / {_d} * 1.3))
+    bgShrinkKill({_t}, 4)
+
+# ─────────────────────────────────────────── 성흔의 클레이모어: 대검을 내리찍어 빛의 십자가 → 십자 위 적 강타 · 발광, 나는 흡수 II
+function bgSkHoly(p: player):
+    set {_yaw} to yaw of {_p}
+    set {_o} to location of {_p}
+    set {_t} to bgVTag()
+    set {_k} to bgVTag()
+    set {_c} to bgGround(bgFwd({_o}, {_yaw}, 4.5, 0, 0.6))
+    bgWModel(bgUp({_c}, 6), "holy", 4, {_yaw} + 90, 135, 0, 0, 0, {_t}, 4)
+    bgWfx({_c}, "fx3_holy", 10, 34, {_yaw})
+    bgSoundAt({_o}, "block.beacon.activate", 1.6, 1.4)
+    wait 2 ticks
+    bgTpTag({_t}, bgUp({_c}, 1.6), {_yaw} + 90)
+    wait 4 ticks
+    bgSoundAt({_c}, "item.mace.smash_ground_heavy", 1.8, 0.9)
+    bgSoundAt({_c}, "entity.lightning_bolt.thunder", 0.7, 1.8)
+    bgImpact({_c}, 3, "holy", true)
+    bgImpactFrame({_p}, "holy")
+    bgFxGrow({_c}, "fx3_holy", 2, 10, 6, 0.08)
+    # 십자: 앞뒤 줄 (시전자 → 끝) + 가로 줄
+    loop 9 times:
+        set {_f} to loop-number - 0.5
+        bgHolyHit({_p}, bgFwd({_o}, {_yaw}, {_f}, 0, 1), {_k})
+    loop 7 times:
+        set {_s} to loop-number - 4
+        bgHolyHit({_p}, bgFwd({_c}, {_yaw}, 0, {_s}, 1), {_k})
+    bgCmd("effect give %name of {_p}% absorption 6 1 true")
+    bgParticle(bgUp({_o}, 1), "wax_on", 0.4, 0.6, 0.4, 0.05, 20)
+    wait 8 ticks
+    bgShrinkKill({_t}, 5)
+    bgOnceEnd({_k})
+
+function bgHolyHit(p: player, q: location, k: text):
+    bgParticle({_q}, "end_rod", 0.2, 0.6, 0.2, 0.02, 3)
+    bgParticle({_q}, "wax_on", 0.3, 0.4, 0.3, 0.02, 3)
+    loop bgNear({_p}, {_q}, 1.4):
+        set {_v} to loop-value
+        if bgOnce({_k}, {_v}) is true:
+            bgDmg({_v}, 3)
+            bgCmd("effect give %bgPName({_v})% glowing 5 0 true")
+            bgCmd("effect give %bgPName({_v})% weakness 3 0 true")
+            bgVel({_v}, vector(0, 0.5, 0))
+
+# ─────────────────────────────────────────── 흡혈귀의 레이피어: 앞으로 다섯 번 빠르게 찌르기 — 맞힐 때마다 회복 · 시듦
+function bgSkVampire(p: player):
+    set {_t} to bgVTag()
+    set {_yaw} to yaw of {_p}
+    bgWModel(bgFwd(location of {_p}, {_yaw}, 1.2, 0, 1.2), "vampire", 2.2, {_yaw} + 90, -135, 0, 0, 0, {_t}, 1)
+    bgSoundAt(location of {_p}, "entity.bat.takeoff", 1.4, 0.8)
+    bgVel({_p}, vector(-1 * sin({_yaw}) * 0.9, 0.1, cos({_yaw}) * 0.9))
+    set {_n} to 0
+    loop 5 times:
+        set {_a} to {_yaw} + random number between -12 and 12
+        set {_y} to yaw of {_p}
+        set {_tip} to bgFwd(location of {_p}, {_a}, 4.2, 0, 1.2)
+        bgTpTag({_t}, bgFwd(location of {_p}, {_a}, 2.6, 0, 1.2), {_a} + 90)
+        bgFxFly(bgUp(location of {_p}, 0.9), "fx3_vampire", 1.6, {_a}, 1.2, 3, 0)
+        bgLine(bgUp(location of {_p}, 1.2), {_tip}, "dust{color:[0.75,0.05,0.12],scale:1.2}", 10)
+        bgSoundAt({_tip}, "entity.player.attack.strong", 1, 1.4 + loop-number * 0.08)
+        loop bgNear({_p}, bgFwd(location of {_p}, {_a}, 2.6, 0, 1), 1.9):
+            set {_v} to loop-value-2
+            bgDmg({_v}, 1.1)
+            bgCmd("effect give %bgPName({_v})% wither 3 0 true")
+            bgParticle(bgUp(location of {_v}, 1), "dust{color:[0.6,0,0.05],scale:1.6}", 0.3, 0.4, 0.3, 0, 12)
+            bgHeartFlow(location of {_v}, {_p})
+            add 1 to {_n}
+        wait 3 ticks
+    if {_n} > 0:
+        heal {_p} by min(5, {_n} * 0.6)
+        bgImpactFrame({_p}, "vampire")
+        bgImpact(bgFwd(location of {_p}, {_yaw}, 2.5, 0, 0), 2, "blood", true)
+        bgSoundAt(location of {_p}, "entity.player.levelup", 0.5, 1.9)
+    bgShrinkKill({_t}, 3)
+
+# ═════════════════════════════════════════════════════════════ 궁수 — 활 · 원거리
+# ─────────────────────────────────────────── 태양신의 장궁: 0.5초 빛을 모아 관통하는 태양 광선 (길 위 모든 적 · 끝에서 폭발)
+function bgSkSunbow(p: player):
+    set {_k} to bgVTag()
+    set {_o} to bgUp(location of {_p}, 1.45)
+    bgSoundAt({_o}, "block.beacon.power_select", 1.6, 1.6)
+    bgCmd("effect give %name of {_p}% slowness 1 2 true")
+    loop 8 times:
+        set {_c} to bgAim(bgUp(location of {_p}, 1.45), yaw of {_p}, pitch of {_p}, 1.2)
+        bgParticle({_c}, "flame", 0.4, 0.4, 0.4, -0.08, 6)
+        bgParticle({_c}, "wax_on", 0.5, 0.5, 0.5, 0.02, 4)
+        wait 1 tick
+    set {_o} to bgUp(location of {_p}, 1.45)
+    set {_yaw} to yaw of {_p}
+    set {_pit} to pitch of {_p}
+    bgSoundAt({_o}, "entity.firework_rocket.blast", 1.6, 0.6)
+    bgSoundAt({_o}, "item.crossbow.shoot", 1.6, 0.6)
+    bgFxFly({_o}, "fx3_sunbow", 3, {_yaw}, 2.6, 9, 0)
+    set {_end} to {_o}
+    loop 26 times:
+        set {_q} to bgAim({_o}, {_yaw}, {_pit}, loop-number * 1)
+        if block at {_q} is not air:
+            exit loop
+        set {_end} to {_q}
+        bgParticle({_q}, "flame", 0.08, 0.08, 0.08, 0.01, 2)
+        bgParticle({_q}, "end_rod", 0, 0, 0, 0, 1)
+        loop bgNear({_p}, {_q}, 1.4):
+            set {_v} to loop-value-2
+            if bgOnce({_k}, {_v}) is true:
+                bgDmg({_v}, 3)
+                bgIgnite({_v}, 4)
+                bgImpact(location of {_v}, 1.3, "fire", false)
+    bgImpact(bgGround({_end}), 3, "holy", true)
+    bgImpactFrame({_p}, "sunbow")
+    bgWfx(bgGround({_end}), "fx3_sunbow", 6, 30, 0)
+    bgSoundAt({_end}, "entity.generic.explode", 1.2, 1.3)
+    loop bgNear({_p}, {_end}, 3):
+        set {_v} to loop-value
+        if bgOnce({_k}, {_v}) is true:
+            bgDmg({_v}, 2)
+            bgIgnite({_v}, 3)
+    bgOnceEnd({_k})
+
+# ─────────────────────────────────────────── 독사의 석궁: 독 화살 다섯 발 부채꼴
+function bgSkViper(p: player):
+    set {_yaw} to yaw of {_p}
+    set {_o} to bgUp(location of {_p}, 1.4)
+    bgSoundAt({_o}, "item.crossbow.shoot", 1.6, 1.1)
+    bgSoundAt({_o}, "entity.spider.ambient", 1.2, 1.6)
+    bgWfx(bgGround(bgFwd(location of {_p}, {_yaw}, 3.5, 0, 0.4)), "fx3_viper", 8, 30, {_yaw})
+    loop 5 times:
+        bgViperBolt({_p}, {_o}, {_yaw} + (loop-number - 3) * 11, pitch of {_p})
+
+function bgViperBolt(p: player, o: location, a: number, pit: number):
+    loop 15 times:
+        set {_q} to bgAim({_o}, {_a}, {_pit}, loop-number * 1)
+        bgParticle({_q}, "dust{color:[0.35,0.85,0.2],scale:1.1}", 0.03, 0.03, 0.03, 0, 2)
+        bgParticle({_q}, "crit", 0, 0, 0, 0, 1)
+        if block at {_q} is not air:
+            bgParticle({_q}, "item_slime", 0.2, 0.2, 0.2, 0.05, 6)
+            stop
+        set {_es::*} to bgNear({_p}, {_q}, 1.1)
+        if size of {_es::*} > 0:
+            loop {_es::*}:
+                bgDmg(loop-value-2, 1.5)
+                bgCmd("effect give %bgPName(loop-value-2)% poison 3 1 true")
+                bgParticle(bgUp(location of loop-value-2, 1), "item_slime", 0.3, 0.5, 0.3, 0.05, 10)
+                bgImpact(location of loop-value-2, 1, "venom", false)
+            bgSoundAt({_q}, "entity.slime.squish", 1.2, 1.4)
+            stop
+        if mod(loop-number, 2) is 0:
+            wait 1 tick
+
+# ─────────────────────────────────────────── 별빛 연발궁: 바라보는 곳에 별빛 화살 열 발이 쏟아짐
+function bgSkStarbow(p: player):
+    set {_b} to target block of {_p}
+    if {_b} is set:
+        set {_c} to location of {_b}
+        add 1 to y-coordinate of {_c}
+    else:
+        set {_c} to bgFwd(location of {_p}, yaw of {_p}, 10, 0, 0)
+    if distance between {_p} and {_c} > 26:
+        set {_c} to bgFwd(location of {_p}, yaw of {_p}, 10, 0, 0)
+    set {_c} to bgGround({_c})
+    bgSoundAt(location of {_p}, "item.crossbow.shoot", 1.5, 1.8)
+    bgSoundAt(location of {_p}, "entity.firework_rocket.launch", 1.5, 1.2)
+    bgParticle(bgUp(location of {_p}, 2), "firework", 0.2, 0.6, 0.2, 0.1, 20)
+    bgWfx({_c}, "fx3_starbow", 9, 46, 0)
+    bgFxGrow({_c}, "fx3_starbow", 1, 9, 10, 0.05)
+    wait 6 ticks
+    loop 10 times:
+        set {_q} to bgFwd({_c}, random number between 0 and 360, random number between 0 and 3.6, 0, 0)
+        bgStarFall({_p}, bgGround(bgUp({_q}, 1)))
+        wait 2 ticks
+    bgImpactFrame({_p}, "starbow")
+
+function bgStarFall(p: player, q: location):
+    loop 6 times:
+        set {_h} to (7 - loop-number) * 1.6
+        bgParticle(bgUp({_q}, {_h}), "end_rod", 0.05, 0.3, 0.05, 0, 3)
+        bgParticle(bgUp({_q}, {_h}), "dust{color:[0.75,0.6,1.0],scale:1.5}", 0.05, 0.3, 0.05, 0, 3)
+        if mod(loop-number, 2) is 0:
+            wait 1 tick
+    bgParticle(bgUp({_q}, 0.3), "firework", 0.3, 0.2, 0.3, 0.12, 12)
+    bgImpact({_q}, 1.6, "arcane", false)
+    bgSoundAt({_q}, "entity.firework_rocket.twinkle", 1, 1.4)
+    loop bgNear({_p}, bgUp({_q}, 0.8), 1.8):
+        bgDmg(loop-value, 1.1)
+        bgCmd("effect give %bgPName(loop-value)% glowing 2 0 true")
+
+# ─────────────────────────────────────────── 그림자 표창: 관통하는 표창 세 개 연속 투척 → 신속 II
+function bgSkShuriken(p: player):
+    bgSoundAt(location of {_p}, "entity.player.attack.sweep", 1.2, 1.9)
+    loop 3 times:
+        set {_a} to (yaw of {_p}) + (loop-number - 2) * 7
+        bgShurikenFly({_p}, bgUp(location of {_p}, 1.35), {_a}, pitch of {_p})
+        bgSoundAt(location of {_p}, "item.trident.throw", 1.2, 1.8)
+        wait 3 ticks
+    bgCmd("effect give %name of {_p}% speed 2 1 true")
+    bgParticle(bgUp(location of {_p}, 0.5), "large_smoke", 0.4, 0.3, 0.4, 0.02, 12)
+
+function bgShurikenFly(p: player, o: location, a: number, pit: number):
+    set {_t} to bgVTag()
+    set {_k} to bgVTag()
+    bgWModelQ({_o}, "shuriken", 1.4, 0, "[0.7071f,0f,0f,0.7071f]", 0, 0, 0, {_t}, 1)
+    loop 18 times:
+        set {_q} to bgAim({_o}, {_a}, {_pit}, loop-number * 1.1)
+        if block at {_q} is not air:
+            exit loop
+        bgTpTag({_t}, {_q}, loop-number * 60)
+        bgParticle({_q}, "smoke", 0.05, 0.05, 0.05, 0, 2)
+        bgParticle({_q}, "dust{color:[0.45,0.2,0.6],scale:1}", 0.05, 0.05, 0.05, 0, 2)
+        loop bgNear({_p}, {_q}, 1.2):
+            set {_v} to loop-value-2
+            if bgOnce({_k}, {_v}) is true:
+                bgDmg({_v}, 1.4)
+                bgCmd("effect give %bgPName({_v})% slowness 2 0 true")
+                bgParticle(bgUp(location of {_v}, 1), "dust{color:[0.6,0,0.05],scale:1.2}", 0.3, 0.4, 0.3, 0, 8)
+                bgFxGrow(location of {_v}, "fx3_shuriken", 0.6, 2.6, 4, 0.1)
+        wait 1 tick
+    bgCmd("kill @e[tag=%{_t}%]")
+    bgOnceEnd({_k})
+
+# ═════════════════════════════════════════════════════════════ 수호자 — 도끼 · 둔기
+# ─────────────────────────────────────────── 서리 거인의 도끼: 뛰어올라 내려찍기 → 반경 4.5 빙결 + 얼음 가시
+function bgSkFrostaxe(p: player):
+    set {_t} to bgVTag()
+    bgSoundAt(location of {_p}, "entity.player.hurt_freeze", 1.4, 0.7)
+    bgVel({_p}, vector(0, 0.85, 0))
+    bgWModel(bgUp(location of {_p}, 2.6), "frostaxe", 2.8, (yaw of {_p}) + 90, -45, 0, 0, 0, {_t}, 2)
+    loop 9 times:
+        bgTpTag({_t}, bgUp(location of {_p}, 2.4), (yaw of {_p}) + 90)
+        bgParticle(bgUp(location of {_p}, 1), "snowflake", 0.4, 0.5, 0.4, 0.02, 5)
+        wait 1 tick
+    bgVel({_p}, vector(0, -1.6, 0))
+    bgCmd("data merge entity @e[tag=%{_t}%,limit=1] {start_interpolation:0,interpolation_duration:3,transformation:{left_rotation:%bgQz(135)%}}")
+    wait 4 ticks
+    set {_c} to bgGround(location of {_p})
+    bgSoundAt({_c}, "item.mace.smash_ground_heavy", 2, 0.8)
+    bgSoundAt({_c}, "block.glass.break", 1.6, 0.6)
+    bgImpact({_c}, 4.5, "frost", true)
+    bgImpactFrame({_p}, "frostaxe")
+    bgFxGrow({_c}, "fx3_frostaxe", 2, 10, 6, 0.06)
+    bgWfx({_c}, "fx3_frostaxe", 10, 50, 0)
+    bgIceSpikes(bgFwd({_c}, yaw of {_p}, 2.6, 0, 0.5))
+    bgIceSpikes(bgFwd({_c}, (yaw of {_p}) + 120, 2.6, 0, 0.5))
+    bgIceSpikes(bgFwd({_c}, (yaw of {_p}) + 240, 2.6, 0, 0.5))
+    loop bgNear({_p}, bgUp({_c}, 0.8), 4.5):
+        set {_v} to loop-value
+        bgDmg({_v}, 2.5)
+        bgCmd("effect give %bgPName({_v})% slowness 2 3 true")
+        bgFreezeShell({_v}, 40)
+    wait 4 ticks
+    bgShrinkKill({_t}, 4)
+
+# ─────────────────────────────────────────── 투척 쌍도끼: 도끼 두 자루가 X자로 날아갔다 돌아옴 (갈 때 · 올 때 두 번)
+function bgSkTwinaxe(p: player):
+    set {_yaw} to yaw of {_p}
+    set {_o} to bgUp(location of {_p}, 1.2)
+    bgSoundAt({_o}, "item.trident.throw", 1.4, 0.8)
+    bgSoundAt({_o}, "entity.player.attack.sweep", 1.4, 0.8)
+    bgFxFly(bgUp({_o}, -1.1), "fx3_twinaxe", 3.6, {_yaw}, 1.1, 8, 0)
+    bgTwinAxeFly({_p}, {_o}, {_yaw}, 1)
+    bgTwinAxeFly({_p}, {_o}, {_yaw}, -1)
+
+function bgTwinAxeFly(p: player, o: location, yaw: number, side: number):
+    set {_t} to bgVTag()
+    set {_k} to bgVTag()
+    set {_k2} to bgVTag()
+    bgWModelQ({_o}, "twinaxe", 1.8, 0, "[0.7071f,0f,0f,0.7071f]", 0, 0, 0, {_t}, 1)
+    loop 9 times:
+        set {_u} to loop-number / 9
+        set {_q} to bgFwd({_o}, {_yaw}, 9 * {_u}, {_side} * 3 * sin(180 * {_u}), 0)
+        bgTpTag({_t}, {_q}, loop-number * 70 * {_side})
+        bgParticle({_q}, "crit", 0.2, 0.1, 0.2, 0.05, 4)
+        loop bgNear({_p}, {_q}, 1.7):
+            set {_v} to loop-value-2
+            if bgOnce({_k}, {_v}) is true:
+                bgDmg({_v}, 2)
+                bgImpact(location of {_v}, 1.2, "blood", false)
+        wait 1 tick
+    set {_far} to bgFwd({_o}, {_yaw}, 9, 0, 0)
+    loop 9 times:
+        set {_u} to loop-number / 9
+        set {_back} to bgUp(location of {_p}, 1.2)
+        set {_m} to location((x-coordinate of {_far}) + ((x-coordinate of {_back}) - (x-coordinate of {_far})) * {_u}, (y-coordinate of {_far}) + ((y-coordinate of {_back}) - (y-coordinate of {_far})) * {_u}, (z-coordinate of {_far}) + ((z-coordinate of {_back}) - (z-coordinate of {_far})) * {_u}, world of {_far})
+        set {_q} to bgFwd({_m}, {_yaw}, 0, -1 * {_side} * 2 * sin(180 * {_u}), 0)
+        bgTpTag({_t}, {_q}, 700 + loop-number * 70 * {_side})
+        bgParticle({_q}, "crit", 0.2, 0.1, 0.2, 0.05, 4)
+        loop bgNear({_p}, {_q}, 1.7):
+            set {_v} to loop-value-2
+            if bgOnce({_k2}, {_v}) is true:
+                bgDmg({_v}, 1.5)
+        wait 1 tick
+    bgSoundAt(location of {_p}, "item.armor.equip_iron", 1, 1.2)
+    bgCmd("kill @e[tag=%{_t}%]")
+    bgOnceEnd({_k})
+    bgOnceEnd({_k2})
+
+# ─────────────────────────────────────────── 천둥 망치: 던진 망치 자리에 낙뢰 → 망치가 손으로 돌아오며 길 위 적을 한 번 더 침
+function bgSkMjolnir(p: player):
+    set {_t} to bgVTag()
+    set {_k} to bgVTag()
+    set {_yaw} to yaw of {_p}
+    set {_pit} to pitch of {_p}
+    set {_o} to bgUp(location of {_p}, 1.3)
+    bgWModel({_o}, "mjolnir", 2.2, {_yaw} + 90, -45, 0, 0, 0, {_t}, 1)
+    bgSoundAt({_o}, "item.trident.throw", 1.5, 0.6)
+    set {_end} to {_o}
+    loop 12 times:
+        set {_q} to bgAim({_o}, {_yaw}, {_pit}, loop-number * 1.1)
+        if block at {_q} is not air:
+            exit loop
+        set {_end} to {_q}
+        bgCmd("execute in %bgDim()% run tp @e[tag=%{_t}%,limit=1] %bgC(x-coordinate of {_q})% %bgN(y-coordinate of {_q})% %bgC(z-coordinate of {_q})% %bgN({_yaw} + 90)% 0")
+        bgParticle({_q}, "electric_spark", 0.2, 0.2, 0.2, 0.1, 6)
+        set {_es::*} to bgNear({_p}, {_q}, 1.4)
+        if size of {_es::*} > 0:
+            exit loop
+        wait 1 tick
+    strike lightning effect at {_end}
+    set {_g} to bgGround({_end})
+    bgImpact({_g}, 3.2, "thunder", true)
+    bgImpactFrame({_p}, "mjolnir")
+    bgFxGrow({_g}, "fx3_mjolnir", 1, 8, 6, 0.05)
+    bgWfx({_g}, "fx3_mjolnir", 7, 30, 0)
+    bgParticle({_end}, "electric_spark", 1.4, 1, 1.4, 0.5, 50)
+    loop bgNear({_p}, {_end}, 3.2):
+        set {_v} to loop-value
+        bgDmg({_v}, 3)
+        bgCmd("effect give %bgPName({_v})% slowness 2 2 true")
+        bgStunStars({_v}, 20)
+    wait 14 ticks
+    bgSoundAt({_end}, "item.trident.return", 1.5, 0.8)
+    loop 10 times:
+        if {_p} is not online:
+            exit loop
+        set {_u} to loop-number / 10
+        set {_back} to bgUp(location of {_p}, 1.2)
+        set {_q} to location((x-coordinate of {_end}) + ((x-coordinate of {_back}) - (x-coordinate of {_end})) * {_u}, (y-coordinate of {_end}) + ((y-coordinate of {_back}) - (y-coordinate of {_end})) * {_u}, (z-coordinate of {_end}) + ((z-coordinate of {_back}) - (z-coordinate of {_end})) * {_u}, world of {_end})
+        bgCmd("execute as @e[tag=%{_t}%,limit=1] at @s run tp @s %bgC(x-coordinate of {_q})% %bgN(y-coordinate of {_q})% %bgC(z-coordinate of {_q})% ~40 0")
+        bgParticle({_q}, "electric_spark", 0.2, 0.2, 0.2, 0.1, 5)
+        loop bgNear({_p}, {_q}, 1.6):
+            set {_v} to loop-value-2
+            if bgOnce({_k}, {_v}) is true:
+                bgDmg({_v}, 1.5)
+                bgImpact(location of {_v}, 1.2, "thunder", false)
+        wait 1 tick
+    bgSoundAt(location of {_p}, "block.anvil.place", 0.6, 1.6)
+    bgCmd("kill @e[tag=%{_t}%]")
+    bgOnceEnd({_k})
+
+# ─────────────────────────────────────────── 성채 방패도끼: 앞에 방벽 (4초 동안 다가오는 적을 밀어냄) + 주변 아군 저항 II · 흡수
+function bgSkBastion(p: player):
+    set {_yaw} to yaw of {_p}
+    set {_o} to location of {_p}
+    set {_t} to bgVTag()
+    set {_c} to bgGround(bgFwd({_o}, {_yaw}, 2.4, 0, 0.6))
+    bgSoundAt({_o}, "item.shield.block", 1.6, 0.6)
+    bgSoundAt({_o}, "block.anvil.land", 1.2, 0.7)
+    bgWfx({_c}, "fx3_bastion", 7, 80, {_yaw})
+    set {_w} to bgUp({_c}, -2.4)
+    loop 5 times:
+        set {_s} to loop-number - 3
+        bgBD(bgFwd({_w}, {_yaw}, 0, {_s}, 0), "polished_deepslate", 1, 2.4, 0.5, {_yaw}, {_t}, 3)
+        bgBD(bgFwd({_w}, {_yaw}, 0, {_s}, 2.4), "gold_block", 1, 0.25, 0.6, {_yaw}, {_t}, 3)
+    wait 1 tick
+    bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~2.4 ~")
+    bgImpact({_c}, 2.8, "stone", true)
+    bgImpactFrame({_p}, "bastion")
+    loop bgAllies({_p}, {_o}, 5.5):
+        bgCmd("effect give %bgPName(loop-value)% resistance 5 1 true")
+        bgCmd("effect give %bgPName(loop-value)% absorption 5 0 true")
+        bgParticle(bgUp(location of loop-value, 1), "wax_off", 0.4, 0.6, 0.4, 0.02, 10)
+    # 4초 동안 방벽 앞 · 위 적을 앞으로 밀어냄
+    loop 20 times:
+        loop bgNear({_p}, bgUp({_c}, 1), 3):
+            set {_v} to loop-value-2
+            bgVel({_v}, vector(-1 * sin({_yaw}) * 1.0, 0.35, cos({_yaw}) * 1.0))
+            if bgOnce({_t}, {_v}) is true:
+                bgDmg({_v}, 1.5)
+                bgSoundAt(location of {_v}, "item.shield.block", 1, 1)
+        if mod(loop-number, 4) is 0:
+            bgParticle(bgUp({_c}, 1.2), "wax_off", 2.4, 1, 0.3, 0, 6)
+        wait 4 ticks
+    bgCmd("execute as @e[tag=%{_t}%] at @s run tp @s ~ ~-2.4 ~")
+    bgSoundAt({_c}, "block.stone.break", 1.4, 0.6)
+    wait 3 ticks
+    bgCmd("kill @e[tag=%{_t}%]")
+    bgOnceEnd({_t})

@@ -135,20 +135,28 @@ function bgPvpShop(p: player):
     set {_pane} to red stained glass pane named " "
     loop 54 times:
         set slot loop-number - 1 of {_gui} to {_pane}
+    # 내 직업 무기만 (a52) · 칸 → 무기 표는 사람마다
+    set {_u} to uuid of {_p}
+    set {_cl} to bgPCls({_p})
+    delete {-bg::psl::%{_u}%::*}
     set {_i} to 0
-    loop {-bg::w::list::*}:
+    loop bgClassWeapons({_cl}):
         add 1 to {_i}
-        set {_w} to loop-value
-        set {_info::*} to "&a클릭해서 받기 (무료)"
-        set {_it} to bgWShopItem({_w}, "&6&l%{-bg::w::%{_w}%::name}% &7(전설)", {_info::*})
-        set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
+        if {_i} <= 16:
+            set {_w} to loop-value
+            set {_info::*} to "&a클릭해서 받기 (무료)"
+            set {_it} to bgWShopItem({_w}, "&6&l%{-bg::w::%{_w}%::name}% &7(전설)", {_info::*})
+            set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
+            set {-bg::psl::%{_u}%::%{-bg::wslots::%{_i}%}%} to {_w}
     set {_i} to 0
-    loop {-bg::w::bosslist::*}:
+    loop bgClassBoss({_cl}):
         add 1 to {_i}
-        set {_w} to loop-value
-        set {_info::*} to "&a연습장에서는 무료"
-        set {_it} to bgWShopItem({_w}, "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)", {_info::*})
-        set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
+        if {_i} <= 4:
+            set {_w} to loop-value
+            set {_info::*} to "&a연습장에서는 무료"
+            set {_it} to bgWShopItem({_w}, "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)", {_info::*})
+            set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
+            set {-bg::psl::%{_u}%::%{-bg::bslots::%{_i}%}%} to {_w}
     set {_x} to barrier named "&c&l가방 비우고 기본 장비로"
     set slot 49 of {_gui} to {_x}
     open {_gui} to {_p}
@@ -176,9 +184,7 @@ on inventory click:
         bgPvpKit(player)
         send "&6[연습장] &f기본 장비로 바꿨습니다." to player
         stop
-    set {_w} to {-bg::wslot::%{_s}%}
-    if {_w} is not set:
-        set {_w} to {-bg::bslot::%{_s}%}
+    set {_w} to {-bg::psl::%uuid of player%::%{_s}%}
     {_w} is set
     bgGiveWeapon(player, {_w})
     send "&6[연습장] &f%{-bg::w::%{_w}%::name}% 받음 &7— 우클릭으로 스킬" to player

@@ -37,8 +37,8 @@ function bgWDef(id: text, name: text, price: number, cd: number, col: text, desc
     set {-bg::w::%{_id}%::skill} to last element of {_b::*}
 
 on load:
-    # 상점 전설 무기 16종 (특수무기답게 비싸게)
-    set {-bg::w::list::*} to "thunder", "dragon", "wind", "phoenix", "blackiron", "tiger", "staff", "peachwood", "frost", "storm", "scythe", "lance", "skull", "chakram", "chain" and "gauntlet"
+    # 상점 전설 무기 30종 (특수무기답게 비싸게 · 직업마다 10종 — 상점엔 내 직업 것만 보임 a52)
+    set {-bg::w::list::*} to "thunder", "dragon", "wind", "phoenix", "blackiron", "tiger", "staff", "peachwood", "frost", "storm", "scythe", "lance", "skull", "chakram", "chain", "gauntlet", "moon", "magma", "crystal", "tempest", "holy", "vampire", "sunbow", "viper", "starbow", "shuriken", "frostaxe", "twinaxe", "mjolnir" and "bastion"
     # 보스 전용 무기 4종 (상점에 없음 — 그 보스의 보상 상자에서만)
     set {-bg::w::bosslist::*} to "b_talos", "b_sphinx", "b_ladon" and "b_cyclops"
     set {-bg::w::all::*} to {-bg::w::list::*}
@@ -177,14 +177,7 @@ on load:
     # 1쪽: 전설 무기 2줄 x 8 · 보스 무기 4 (3줄 가운데) / 2쪽: 장비 · 물약 · 화살 · 광물 판매
     set {-bg::wslots::*} to 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24 and 25
     set {-bg::bslots::*} to 29, 30, 31 and 32
-    set {_k} to 0
-    loop {-bg::w::bosslist::*}:
-        add 1 to {_k}
-        set {-bg::bslot::%{-bg::bslots::%{_k}%}%} to loop-value
-    set {_i} to 0
-    loop {-bg::w::list::*}:
-        add 1 to {_i}
-        set {-bg::wslot::%{-bg::wslots::%{_i}%}%} to loop-value
+    # 칸 → 무기 표는 사람마다 (직업마다 진열이 달라서 — bgShopPage 가 {-bg::wsl::<uuid>::<칸>} 로 만든다)
 
 # 리소스팩 그림으로 보이게 (item_model = bg:<m>)
 function bgModelItem(i: item, m: text) :: item:
@@ -373,20 +366,29 @@ function bgShopPage(p: player, pg: number):
         set {_rf} to barrier named "&c&l전설 무기 반납"
         set lore of {_rf} to "&7마음에 안 드는 전설 무기를 돌려주고", "&7가격의 30%%(&e120 코인&7)를 돌려받습니다", "", "&f지금 가진 전설 무기: &e%bgLegendCount({_p})%&7/3", "&7(보스 · 신화 무기는 개수에 안 들어감)", "", "&c클릭해서 고르기"
         set slot 44 of {_gui} to {_rf}
+        # 내 직업 무기만 진열 (전사 = 검 · 궁수 = 활 · 원거리 · 수호자 = 도끼 · 둔기 — a52) · 칸 → 무기 표는 사람마다
+        set {_u} to uuid of {_p}
+        set {_cl} to bgPCls({_p})
+        delete {-bg::wsl::%{_u}%::*}
+        delete {-bg::bsl::%{_u}%::*}
         set {_i} to 0
-        loop {-bg::w::list::*}:
+        loop bgClassWeapons({_cl}):
             add 1 to {_i}
-            set {_w} to loop-value
-            set {_info::*} to "&7재사용 대기 &f%bgWCd({_p}, {_w})%초" and "&e%{-bg::w::%{_w}%::price}% 코인 &7· 클릭해서 구매"
-            set {_it} to bgWShopItem({_w}, "&6&l%{-bg::w::%{_w}%::name}% &7(전설)", {_info::*})
-            set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
+            if {_i} <= 16:
+                set {_w} to loop-value
+                set {_info::*} to "&7재사용 대기 &f%bgWCd({_p}, {_w})%초 &8· %bgWClsName({_w})% &8전용" and "&e%{-bg::w::%{_w}%::price}% 코인 &7· 클릭해서 구매"
+                set {_it} to bgWShopItem({_w}, "&6&l%{-bg::w::%{_w}%::name}% &7(전설)", {_info::*})
+                set slot {-bg::wslots::%{_i}%} of {_gui} to {_it}
+                set {-bg::wsl::%{_u}%::%{-bg::wslots::%{_i}%}%} to {_w}
         set {_i} to 0
-        loop {-bg::w::bosslist::*}:
+        loop bgClassBoss({_cl}):
             add 1 to {_i}
-            set {_w} to loop-value
-            set {_info::*} to "&c상점에서 못 삼" and "&7보스 보상 상자에서만"
-            set {_it} to bgWShopItem({_w}, "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)", {_info::*})
-            set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
+            if {_i} <= 4:
+                set {_w} to loop-value
+                set {_info::*} to "&c상점에서 못 삼" and "&7보스 보상 상자에서만"
+                set {_it} to bgWShopItem({_w}, "&c&l%{-bg::w::%{_w}%::name}% &7(보스 전용)", {_info::*})
+                set slot {-bg::bslots::%{_i}%} of {_gui} to {_it}
+                set {-bg::bsl::%{_u}%::%{-bg::bslots::%{_i}%}%} to {_w}
     else if {_pg} is 3:
         bgUpFill({_gui}, bgTeam({_p}))
     else:
@@ -585,12 +587,15 @@ on inventory click:
     if {_s} is 44:
         bgRefundOpen(player)
         stop
-    if {-bg::bslot::%{_s}%} is set:
+    if {-bg::bsl::%uuid of player%::%{_s}%} is set:
         send "&6[상점] &c보스 전용 무기는 보스를 쓰러뜨리고 보상 상자를 열어야 얻을 수 있습니다." to player
         stop
-    if {-bg::wslot::%{_s}%} is not set:
+    if {-bg::wsl::%uuid of player%::%{_s}%} is not set:
         stop
-    set {_w} to {-bg::wslot::%{_s}%}
+    set {_w} to {-bg::wsl::%uuid of player%::%{_s}%}
+    if bgWClsOk(player, {_w}) is false:
+        send "&6[상점] &c%bgWClsName({_w})% &c전용 무기입니다." to player
+        stop
     # 한 사람 전설 무기 최대 3개 (보스 · 신화 무기는 따로)
     if bgLegendCount(player) >= 3:
         send "&6[상점] &c전설 무기는 한 사람 최대 3개까지입니다. &7오른쪽 아래 &c반납&7 칸에서 하나를 돌려주고(30%% 환불) 사세요." to player
@@ -689,7 +694,7 @@ every 5 ticks:
                 bgParticle({_l}, "reverse_portal", 0.3, 0.4, 0.3, 0.02, 3)
             else if {_w} is "staff":
                 bgParticle({_l}, "enchant", 0.4, 0.6, 0.4, 0.3, 5)
-            else:
+            else if {-bg::w3fx::%{_w}%} is not set:
                 bgParticle({_l}, "small_flame", 0.3, 0.4, 0.3, 0.01, 3)
 
 # ─────────────────────────────────────────────────────────── 바닥 효과
@@ -729,6 +734,11 @@ on right click:
             set {_w} to loop-value
     {_w} is set
     cancel event
+    # 직업 전용 (a52): 전사 = 검 · 궁수 = 활 · 원거리 · 수호자 = 도끼 · 둔기
+    if bgWClsOk(player, {_w}) is false:
+        send action bar "%bgWClsName({_w})% &c전용 무기입니다 &7— &e/무기교환 &7으로 지금 직업 무기로 바꾸세요" to player
+        play sound "entity.villager.no" to player
+        stop
     set {_k} to "%uuid of player%::%{_w}%"
     if {-bg::wcd::%{_k}%} is set:
         set {_left} to bgWCd(player, {_w}) - (difference between {-bg::wcd::%{_k}%} and now) / 1 second
@@ -778,6 +788,9 @@ on right click:
         bgSkBLadon(player)
     else if {_w} is "b_cyclops":
         bgSkBCyclops(player)
+    else:
+        # 직업 전용 무기 14종 (a57)
+        bgSk3(player, {_w})
 
 function bgSkThunder(p: player):
     set {_b} to target block of {_p}
@@ -1090,7 +1103,11 @@ function bgWeaponOk(p: player) :: boolean:
     if bgIsFighter({_p}) is false:
         return true
     set {_tool} to tool of {_p}
-    if bgIsLegend({_tool}) is not "":
+    set {_lw} to bgIsLegend({_tool})
+    if {_lw} is not "":
+        if bgWClsOk({_p}, {_lw}) is false:
+            send action bar "%bgWClsName({_lw})% &c전용 무기입니다 &7— &e/무기교환" to {_p}
+            return false
         return true
     set {_k} to bgOreKey({_tool})
     set {_c} to {bg::cls::%uuid of {_p}%} ? 0

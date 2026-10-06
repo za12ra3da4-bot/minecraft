@@ -464,6 +464,10 @@ function bgClassSwitch(p: player, c: number):
     bgCmd("clear %{_n}% arrow")
     bgCmd("effect clear %{_n}% slowness")
     bgClassGear({_p}, {_c})
+    # 새 직업과 안 맞는 특수 무기가 있으면 교환 창 (a52) — 직업 이름 제목이 먼저 보이게 살짝 뒤에
+    wait 12 ticks
+    if {_p} is online:
+        bgWExCheck({_p})
 
 # 본진의 병과 발판 (base_<팀>_class_0..2) 위에 서면 병과 변경
 function bgClassPads():

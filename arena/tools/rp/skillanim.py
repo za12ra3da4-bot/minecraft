@@ -592,7 +592,13 @@ CHOREO = {"thunder": thunder, "dragon": dragon, "wind": wind, "phoenix": phoenix
           "staff": staff, "peachwood": peachwood, "frost": frost, "storm": storm, "scythe": scythe, "lance": lance,
           "skull": skull, "chakram": chakram, "chain": chain, "gauntlet": gauntlet, "b_talos": b_talos, "b_sphinx": b_sphinx,
           "b_ladon": b_ladon, "b_cyclops": b_cyclops}
+# 직업 전용 14종: 비슷한 동작을 하는 무기의 안무를 빌림 (그림 · 바닥 효과 · 타격 종류는 각자)
+_BORROW = {"moon": "wind", "magma": "b_talos", "crystal": "staff", "tempest": "dragon", "holy": "thunder", "vampire": "tiger",
+           "sunbow": "frost", "viper": "frost", "starbow": "peachwood", "shuriken": "chakram", "frostaxe": "phoenix",
+           "twinaxe": "chakram", "mjolnir": "storm", "bastion": "gauntlet"}
+CHOREO.update({k: CHOREO[v] for k, v in _BORROW.items()})
 # 카메라가 볼 곳 (시전자 기준 앞쪽 거리) — 멀리 던지는 스킬은 가운데를 봄
 FOCUS = {"thunder": 3.2, "storm": 3.2, "skull": 3.2, "frost": 3.2, "b_cyclops": 3.3, "chain": 3.0, "chakram": 3.0, "lance": 3.0,
          "wind": 2.6, "gauntlet": 3.0, "b_talos": 3.0, "blackiron": 2.6, "tiger": 2.2, "b_ladon": 2.0, "dragon": 1.2,
          "phoenix": 0.8, "staff": 0.6, "peachwood": 0.6, "scythe": 0.6, "b_sphinx": 0.6}
+FOCUS.update({k: FOCUS.get(v, 2.0) for k, v in _BORROW.items()})
