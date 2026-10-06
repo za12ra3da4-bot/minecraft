@@ -5,7 +5,7 @@
 #    · 20초 전에 예고 · 1등 팀 본진 성벽 바깥 땅 위(본진 중심에서 26~38칸)에 나온다 (성벽 위 · 공중 X)
 #    · 1등 팀만 노리고, 1등 팀만 때릴 수 있다 (다른 팀은 맞지도 않고 때리지도 못함)
 #    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 스킬도 본진 안은 안 맞음
-#    · 체력 500 + 1등 팀 1명당 180 (최대 2400) · 갑옷 · 한 대 하트 5 + 흡혈 · 넉백 안 먹음
+#    · 체력 200 + 1등 팀 두 번째 사람부터 1명당 40 (최대 600) · 갑옷 · 한 대 하트 4 + 흡혈 · 넉백 안 먹음
 #    · 체력 50% 아래 '격노': 그림자 4마리 소환 · 스킬 간격 짧아짐 · 심판의 검 3갈래
 #    · 120초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +50점 + 팀원 코인 +15
 #   그동안 1등 팀은 네메시스를 막느라 바쁘고, 다른 팀은 거점을 되찾을 기회
@@ -14,11 +14,11 @@
 #    히트박스 = 투명한 위더 스켈레톤 (2.6배) · 파츠는 매 틱 히트박스를 따라감
 #    애니메이션 rise(등장: 접은 날개를 활짝 · 3초 동안 안 움직임) / idle / glide / slash / death (a08-gen-nemesis.sk)
 #   보스바: 미니 보스와 같은 그림 보스바 (이름판 '네메시스' · 초상화 · 체력/잔상 · 시전 게이지 · 40% 아래 격노 배너) — 이름표에 남은 시간
-#   스킬 (5~7초마다 하나, 격노 때 3~5초 · 바닥 경고가 다 차면 판정 · 1등 팀만 맞음 · 자기 본진 안은 안전):
-#    · 심판의 검  — 가장 가까운 1등 팀원 쪽으로 폭 6 · 길이 22 직선 베기 (하트 6) · 격노 땐 3갈래
-#    · 응보의 저울 — 1등 팀원 최대 5명 발밑에 원 (반지름 3.5, 하트 5 + 구속 II)
-#    · 날개 폭풍  — 네메시스 둘레 반지름 10 (하트 4 + 하늘로 날려 버림)
-#    · 천벌       — 32칸 안 1등 팀원 전원 발밑에 따라다니는 원 → 2초 뒤 하늘에서 벼락 (하트 6)
+#   스킬 (6~8초마다 하나, 격노 때 4~6초 · 바닥 경고가 다 차면 판정 · 1등 팀만 맞음 · 자기 본진 안은 안전):
+#    · 심판의 검  — 가장 가까운 1등 팀원 쪽으로 폭 6 · 길이 22 직선 베기 (하트 5) · 격노 땐 3갈래
+#    · 응보의 저울 — 1등 팀원 최대 5명 발밑에 원 (반지름 3.5, 하트 4 + 구속 II)
+#    · 날개 폭풍  — 네메시스 둘레 반지름 10 (하트 3.5 + 하늘로 날려 버림)
+#    · 천벌       — 32칸 안 1등 팀원 전원 발밑에 따라다니는 원 → 2초 뒤 하늘에서 벼락 (하트 5)
 #    · 그림자 소환 — 격노할 때 한 번, 1등 팀만 노리는 '복수의 그림자'(벡스) 4마리
 #   시전하는 동안은 제자리에 멈춘다
 #  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
@@ -26,6 +26,7 @@
 # ═════════════════════════════════════════════════════════════════════════════
 import:
     org.bukkit.Bukkit
+    org.bukkit.attribute.Attribute
 
 on load:
     # 리로드로 상태 변수가 지워지면 남은 모델 · 히트박스가 떠다니지 않게 정리
@@ -163,20 +164,21 @@ function bgNemSpawn(t: text):
     # 이름표는 모델 머리 위 글자(text_display)로 — 투명 히트박스의 이름표는 모델 가슴께에 떠서 숨김
     {_e}.setCustomNameVisible(false)
     set tool of {_e} to air
-    # 체력: 1등 팀 인원에 맞춰 (500 + 1명당 180, 최대 2400) · 한 대 10 (하트 5) · 갑옷 · 넉백 안 먹음
+    # 체력: 200 + 1등 팀 두 번째 사람부터 1명당 40 (최대 600) · 한 대 8 (하트 4) · 갑옷 · 넉백 안 먹음
     set {_n} to bgTeamCount({_t})
-    set {_hp} to min(2400, 500 + 180 * {_n})
+    set {_hp} to min(600, 200 + 40 * max(0, {_n} - 1))
     set {-bg::nem::max} to {_hp}
     set {_u} to "%uuid of {_e}%"
     bgCmd("attribute %{_u}% minecraft:max_health base set %{_hp}%")
-    bgCmd("attribute %{_u}% minecraft:attack_damage base set 10")
-    bgCmd("attribute %{_u}% minecraft:armor base set 12")
-    bgCmd("attribute %{_u}% minecraft:armor_toughness base set 8")
+    bgCmd("attribute %{_u}% minecraft:attack_damage base set 8")
+    bgCmd("attribute %{_u}% minecraft:armor base set 8")
+    bgCmd("attribute %{_u}% minecraft:armor_toughness base set 4")
     bgCmd("attribute %{_u}% minecraft:scale base set 2.6")
     bgCmd("attribute %{_u}% minecraft:movement_speed base set 0.34")
     bgCmd("attribute %{_u}% minecraft:follow_range base set 48")
     bgCmd("attribute %{_u}% minecraft:knockback_resistance base set 1")
-    heal {_e}
+    {_e}.getAttribute(Attribute.MAX_HEALTH).setBaseValue({_hp})
+    {_e}.setHealth({_hp})
     bgCmd("effect give %{_u}% invisibility infinite 0 true")
     bgCmd("effect give %{_u}% fire_resistance infinite 0 true")
     set {-bg::nem::uuid} to {_u}
@@ -241,9 +243,9 @@ function bgNemTick():
     {-bg::nem::anim} is not "rise"
     remove 1 from {-bg::nem::cd}
     {-bg::nem::cd} <= 0
-    set {-bg::nem::cd} to random integer between 5 and 7
+    set {-bg::nem::cd} to random integer between 6 and 8
     if bgNemRage() is true:
-        set {-bg::nem::cd} to random integer between 3 and 5
+        set {-bg::nem::cd} to random integer between 4 and 6
     # 격노 첫 순간: 그림자 소환 (한 번)
     if bgNemRage() is true:
         if {-bg::nem::raged} is not true:
@@ -491,7 +493,7 @@ function bgNemVerdict(e: entity):
                         if abs((y-coordinate of loop-value-1) - (y-coordinate of {_pos})) < 5:
                             set {_hit} to true
         if {_hit} is true:
-            bgHit(loop-value-1, 6, {_pos}, 1.6, 0.6)
+            bgHit(loop-value-1, 5, {_pos}, 1.6, 0.6)
     loop {_yaws::*}:
         bgImpactLine({_pos}, loop-value, {_wd}, {_len}, "wax_on")
     bgSoundAt({_pos}, "item.trident.thunder", 1.5, 1.4)
@@ -523,7 +525,7 @@ function bgNemScales(e: entity):
         set {_l} to loop-value
         loop bgNemTargets({_l}, 3.5):
             if abs((y-coordinate of loop-value-2) - (y-coordinate of {_l})) < 5:
-                bgHit(loop-value-2, 5, {_l}, 0.6, 0.8)
+                bgHit(loop-value-2, 4, {_l}, 0.6, 0.8)
                 bgCmd("effect give %name of loop-value-2% slowness 3 1 true")
         bgImpactCircle({_l}, 3.5, "wax_on")
     bgSoundAt({_pos}, "block.anvil.land", 1.5, 0.6)
@@ -549,7 +551,7 @@ function bgNemWings(e: entity):
     bgNemAnimAt("rise", 2)
     loop bgNemTargets({_pos}, 10):
         if abs((y-coordinate of loop-value) - (y-coordinate of {_pos})) < 5:
-            bgHit(loop-value, 4, {_pos}, 2.6, 1.25)
+            bgHit(loop-value, 3.5, {_pos}, 2.4, 1.1)
     bgImpactCircle({_pos}, 10, "cloud")
     bgSoundAt({_pos}, "entity.ender_dragon.flap", 2, 0.6)
     bgNemCastEnd({_e})
@@ -597,7 +599,7 @@ function bgNemSmite(e: entity):
         bgSoundAt({_l}, "entity.lightning_bolt.impact", 2, 0.8)
         loop bgNemTargets({_l}, 3):
             if abs((y-coordinate of loop-value-2) - (y-coordinate of {_l})) < 6:
-                bgHit(loop-value-2, 6, {_l}, 0.4, 0.9)
+                bgHit(loop-value-2, 5, {_l}, 0.4, 0.9)
         bgImpactCircle({_l}, 3, "wax_on")
     bgNemCastEnd({_e})
 
