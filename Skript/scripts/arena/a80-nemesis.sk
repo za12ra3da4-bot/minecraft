@@ -1,24 +1,28 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  신화쟁탈전 — 복수의 신 네메시스 (역전 이벤트)
 #   후반(제한 시간 절반 이후)에 1등 팀 점수가 2등의 2배 이상이면 한 판에 한 번 나타난다
-#   불쾌하지 않게:
-#    · 20초 전에 예고 · 1등 팀 본진 앞(본진 중심에서 22칸, 바깥)에 나온다
+#   미니 보스보다 훨씬 강한 '최종 심판' — 하지만 억울하지 않게:
+#    · 20초 전에 예고 · 1등 팀 본진 성벽 바깥 땅 위(본진 중심에서 26~38칸)에 나온다 (성벽 위 · 공중 X)
 #    · 1등 팀만 노리고, 1등 팀만 때릴 수 있다 (다른 팀은 맞지도 않고 때리지도 못함)
-#    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 시듦 효과 없음
-#    · 90초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +150점 + 팀원 코인 +30 (막아 낸 보상 · 미니 보스와 같은 점수)
+#    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 스킬도 본진 안은 안 맞음
+#    · 체력 500 + 1등 팀 1명당 180 (최대 2400) · 갑옷 · 한 대 하트 5 + 흡혈 · 넉백 안 먹음
+#    · 체력 50% 아래 '격노': 그림자 4마리 소환 · 스킬 간격 짧아짐 · 심판의 검 3갈래
+#    · 120초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +300점 + 팀원 코인 +50
 #   그동안 1등 팀은 네메시스를 막느라 바쁘고, 다른 팀은 거점을 되찾을 기회
 #   모습: 키 9블록 · 날개폭 12블록 — 흑요석·은 갑옷과 금 장식, 가슴의 '심판의 눈', 날개 투구 · 가면 · 금관, 두 겹 후광과 빛살,
 #    날개 두 쌍(따로 움직이는 첫째깃), 8자락 옷자락, 룬 대검, 정의의 저울, 떠다니는 수정 4개 (arena/tools/rp/bosses/nemesis.py · 파츠 85개)
 #    히트박스 = 투명한 위더 스켈레톤 (2.6배) · 파츠는 매 틱 히트박스를 따라감
 #    애니메이션 rise(등장: 접은 날개를 활짝 · 3초 동안 안 움직임) / idle / glide / slash / death (a08-gen-nemesis.sk)
 #   보스바: 미니 보스와 같은 그림 보스바 (이름판 '네메시스' · 초상화 · 체력/잔상 · 시전 게이지 · 40% 아래 격노 배너) — 이름표에 남은 시간
-#   스킬 (7~9초마다 하나, 격노 때 5~7초 · 바닥 경고가 다 차면 판정 · 1등 팀만 맞음 · 자기 본진 안은 안전):
-#    · 심판의 검  — 가장 가까운 1등 팀원 쪽으로 폭 5 · 길이 18 직선 베기 (하트 3.5)
-#    · 응보의 저울 — 1등 팀원 최대 3명 발밑에 원 (반지름 3, 하트 3)
-#    · 날개 폭풍  — 네메시스 둘레 반지름 8 (하트 2.5 + 크게 밀쳐냄)
+#   스킬 (5~7초마다 하나, 격노 때 3~5초 · 바닥 경고가 다 차면 판정 · 1등 팀만 맞음 · 자기 본진 안은 안전):
+#    · 심판의 검  — 가장 가까운 1등 팀원 쪽으로 폭 6 · 길이 22 직선 베기 (하트 6) · 격노 땐 3갈래
+#    · 응보의 저울 — 1등 팀원 최대 5명 발밑에 원 (반지름 3.5, 하트 5 + 구속 II)
+#    · 날개 폭풍  — 네메시스 둘레 반지름 10 (하트 4 + 하늘로 날려 버림)
+#    · 천벌       — 32칸 안 1등 팀원 전원 발밑에 따라다니는 원 → 2초 뒤 하늘에서 벼락 (하트 6)
+#    · 그림자 소환 — 격노할 때 한 번, 1등 팀만 노리는 '복수의 그림자'(벡스) 4마리
 #   시전하는 동안은 제자리에 멈춘다
 #  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
-#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 150)
+#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 300)
 # ═════════════════════════════════════════════════════════════════════════════
 import:
     org.bukkit.Bukkit
@@ -29,6 +33,8 @@ on load:
     bgCmd("function bg:boss/nemesis/remove")
     bgCmd("kill @e[type=text_display,tag=bgn_nemesis]")
     bgCmd("kill @e[tag=bg_nemesis]")
+    bgCmd("kill @e[tag=bg_nemvex]")
+    delete {-bg::nem::vex}
     bgCmd("bossbar remove bg:nemesis")
     bgCmd("bossbar remove bg:nemhud")
     delete {-bg::nem::casting}
@@ -37,7 +43,9 @@ on load:
     if {bg::cfg::nem_min} is not set:
         set {bg::cfg::nem_min} to 200
     if {bg::cfg::nem_reward} is not set:
-        set {bg::cfg::nem_reward} to 150
+        set {bg::cfg::nem_reward} to 300
+    if {bg::cfg::nem_reward} is 150:
+        set {bg::cfg::nem_reward} to 300
 
 # 지금 1등 팀과 (그 팀을 뺀) 2등 점수
 function bgNemTop() :: text:
@@ -86,7 +94,7 @@ function bgNemStart(t: text):
     bgSay("&5&l[복수의 신] &f%{_tn}% 팀&f이 너무 앞서갑니다. &d20초 뒤&f 네메시스가 %{_tn}% 팀&f 본진 앞에 나타납니다!")
     loop all players:
         if bgTeam(loop-player) is {_t}:
-            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f90초 동안 우리 팀을 노립니다 — 쓰러뜨리면 &e+%{bg::cfg::nem_reward}%점 · 코인 +30" to loop-player for 4 seconds
+            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f120초 동안 우리 팀을 노립니다 — 쓰러뜨리면 &e+%{bg::cfg::nem_reward}%점 · 코인 +50" to loop-player for 4 seconds
         else if bgTeam(loop-player) is not "none":
             send title "&5&l복수의 신이 깨어납니다" with subtitle "&f%{_tn}% 팀&f을 노립니다 — 지금이 거점을 되찾을 기회!" to loop-player for 4 seconds
     bgSound("entity.wither.ambient", 1, 0.6)
@@ -95,7 +103,21 @@ function bgNemStart(t: text):
         stop
     bgNemSpawn({_t})
 
-# 1등 팀 본진 중심에서 대신전 쪽으로 22칸 (본진 바깥) 땅 위
+# 땅 찾기: (x, z) 에서 기준 높이 y0 의 -5 ~ +8 사이, 발밑이 단단하고 위로 4칸이 비어 있는 가장 낮은 자리
+function bgNemGround(x: number, z: number, w: world, y0: number) :: location:
+    loop 14 times:
+        set {_y} to floor({_y0}) - 6 + loop-number
+        set {_b} to block at location({_x}, {_y}, {_z}, {_w})
+        if {_b}.getType().isSolid() is true:
+            set {_ok} to true
+            loop 4 times:
+                set {_a} to block at location({_x}, {_y} + loop-number-2, {_z}, {_w})
+                if {_a}.isPassable() is not true:
+                    set {_ok} to false
+            if {_ok} is true:
+                return location({_x}, {_y} + 1, {_z}, {_w})
+
+# 1등 팀 본진 중심에서 대신전 쪽으로 26~38칸 (성벽 바깥) — 본진 바닥 높이 근처의 땅 위만 (성벽 위 · 지붕 위 X)
 function bgNemHome(t: text) :: location:
     set {_b} to bgMk("base_%{_t}%")
     set {_c} to bgMk("temple_core")
@@ -104,12 +126,22 @@ function bgNemHome(t: text) :: location:
     set {_d} to sqrt({_dx} * {_dx} + {_dz} * {_dz})
     if {_d} < 1:
         set {_d} to 1
-    set {_l} to location((x-coordinate of {_b}) + {_dx} / {_d} * 22, y-coordinate of {_b}, (z-coordinate of {_b}) + {_dz} / {_d} * 22, world of {_b})
-    set {_g} to highest block at {_l}
-    if {_g} is set:
-        set {_l} to location of {_g}
-        add 1 to y-coordinate of {_l}
-    return {_l}
+    set {_ux} to {_dx} / {_d}
+    set {_uz} to {_dz} / {_d}
+    set {_by} to y-coordinate of {_b}
+    set {_w} to world of {_b}
+    set {_dist::*} to 30, 34, 26, 38 and 42
+    set {_side::*} to 0, 6, -6, 12 and -12
+    loop {_dist::*}:
+        loop {_side::*}:
+            set {_x} to (x-coordinate of {_b}) + {_ux} * loop-value-1 - {_uz} * loop-value-2
+            set {_z} to (z-coordinate of {_b}) + {_uz} * loop-value-1 + {_ux} * loop-value-2
+            set {_l} to bgNemGround({_x}, {_z}, {_w}, {_by})
+            if {_l} is set:
+                if abs((y-coordinate of {_l}) - {_by}) <= 4:
+                    return {_l}
+    # 못 찾으면 대신전 쪽 30칸, 본진 바닥 높이
+    return location((x-coordinate of {_b}) + {_ux} * 30, {_by} + 1, (z-coordinate of {_b}) + {_uz} * 30, {_w})
 
 function bgNemSpawn(t: text):
     set {_l} to bgNemHome({_t})
@@ -118,7 +150,7 @@ function bgNemSpawn(t: text):
     set {_e} to last spawned entity
     set {-bg::nem::ent} to {_e}
     set {-bg::nem::alive} to true
-    set {-bg::nem::left} to 90
+    set {-bg::nem::left} to 120
     add "bg" to scoreboard tags of {_e}
     add "bg_nemesis" to scoreboard tags of {_e}
     set name of {_e} to "&5&l복수의 신 네메시스"
@@ -128,17 +160,19 @@ function bgNemSpawn(t: text):
     # 이름표는 모델 머리 위 글자(text_display)로 — 투명 히트박스의 이름표는 모델 가슴께에 떠서 숨김
     {_e}.setCustomNameVisible(false)
     set tool of {_e} to air
-    # 체력: 1등 팀 인원에 맞춰 (80 + 1명당 40, 최대 400) · 한 대 5 (하트 2.5칸)
+    # 체력: 1등 팀 인원에 맞춰 (500 + 1명당 180, 최대 2400) · 한 대 10 (하트 5) · 갑옷 · 넉백 안 먹음
     set {_n} to bgTeamCount({_t})
-    set {_hp} to min(400, 80 + 40 * {_n})
+    set {_hp} to min(2400, 500 + 180 * {_n})
     set {-bg::nem::max} to {_hp}
     set {_u} to "%uuid of {_e}%"
     bgCmd("attribute %{_u}% minecraft:max_health base set %{_hp}%")
-    bgCmd("attribute %{_u}% minecraft:attack_damage base set 5")
+    bgCmd("attribute %{_u}% minecraft:attack_damage base set 10")
+    bgCmd("attribute %{_u}% minecraft:armor base set 12")
+    bgCmd("attribute %{_u}% minecraft:armor_toughness base set 8")
     bgCmd("attribute %{_u}% minecraft:scale base set 2.6")
-    bgCmd("attribute %{_u}% minecraft:movement_speed base set 0.3")
+    bgCmd("attribute %{_u}% minecraft:movement_speed base set 0.34")
     bgCmd("attribute %{_u}% minecraft:follow_range base set 48")
-    bgCmd("attribute %{_u}% minecraft:knockback_resistance base set 0.6")
+    bgCmd("attribute %{_u}% minecraft:knockback_resistance base set 1")
     heal {_e}
     bgCmd("effect give %{_u}% invisibility infinite 0 true")
     bgCmd("effect give %{_u}% fire_resistance infinite 0 true")
@@ -156,13 +190,14 @@ function bgNemSpawn(t: text):
     bgNemWake({_e})
     set {-bg::nem::trail} to {_hp}
     set {-bg::nem::cd} to 4
+    delete {-bg::nem::raged}
     delete {-bg::nem::casting}
     delete {-bg::nem::hudlast}
     bgCmd("bossbar remove bg:nemhud")
     bgBarInit("bg:nemhud")
     bgCmd("bossbar set bg:nemhud players @a[tag=!bg_optout]")
     set {_tn} to "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}%"
-    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(90초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +%{bg::cfg::nem_reward}%점 · 코인 +30)")
+    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(120초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +%{bg::cfg::nem_reward}%점 · 코인 +50)")
     bgSound("entity.wither.spawn", 0.8, 0.8)
 
 function bgNemTick():
@@ -203,16 +238,24 @@ function bgNemTick():
     {-bg::nem::anim} is not "rise"
     remove 1 from {-bg::nem::cd}
     {-bg::nem::cd} <= 0
-    set {-bg::nem::cd} to random integer between 7 and 9
+    set {-bg::nem::cd} to random integer between 5 and 7
     if bgNemRage() is true:
-        set {-bg::nem::cd} to random integer between 5 and 7
-    set {_k} to random integer between 1 and 3
+        set {-bg::nem::cd} to random integer between 3 and 5
+    # 격노 첫 순간: 그림자 소환 (한 번)
+    if bgNemRage() is true:
+        if {-bg::nem::raged} is not true:
+            set {-bg::nem::raged} to true
+            bgNemEnrage({_e})
+            stop
+    set {_k} to random integer between 1 and 4
     if {_k} is 1:
         bgNemVerdict({_e})
     else if {_k} is 2:
         bgNemScales({_e})
-    else:
+    else if {_k} is 3:
         bgNemWings({_e})
+    else:
+        bgNemSmite({_e})
 
 function bgNemRemove(msg: text):
     set {_e} to {-bg::nem::ent}
@@ -222,6 +265,7 @@ function bgNemRemove(msg: text):
         bgParticle(location of {_e}, "reverse_portal", 1.5, 2.5, 1.5, 0.05, 160)
         kill {_e}
     bgCmd("kill @e[tag=bg_nemesis]")
+    bgCmd("kill @e[tag=bg_nemvex]")
     bgNemParts()
     bgCmd("bossbar remove bg:nemhud")
     delete {-bg::nem::casting}
@@ -406,21 +450,24 @@ function bgNemNearest(c: location) :: player:
             set {_p} to loop-value
     return {_p}
 
-# ─────────────────────────────────────────────────────────── 스킬 1 · 심판의 검 (직선 베기)
+# ─────────────────────────────────────────────────────────── 스킬 1 · 심판의 검 (직선 베기 · 격노 땐 3갈래)
 function bgNemVerdict(e: entity):
     set {_pos} to bgNemFloor(location of {_e})
     set {_p} to bgNemNearest({_pos})
     if {_p} is not set:
         stop
-    set {_yaw} to bgYawTo({_pos}, location of {_p})
-    set {_t} to 30
+    set {_yaw0} to bgYawTo({_pos}, location of {_p})
+    set {_t} to 28
+    set {_yaws::*} to {_yaw0}
     if bgNemRage() is true:
         set {_t} to 22
-    set {_wd} to 5
-    set {_len} to 18
+        set {_yaws::*} to {_yaw0}, {_yaw0} - 35 and {_yaw0} + 35
+    set {_wd} to 6
+    set {_len} to 22
     bgNemCast({_e}, "심판의 검", {_t})
-    bgNemFace({_e}, {_yaw})
-    bgCmd("execute in %bgDim()% run function bg:tele/rect {%bgNemXYZ({_pos})%,yaw:%bgN({_yaw})%,wd:%bgN({_wd})%,l:%bgN({_len})%,hl:%bgN({_len} / 2)%,hz:%bgN({_len} - {_wd} / 2)%,t:%{_t}%,id:nem%bgTid()%}")
+    bgNemFace({_e}, {_yaw0})
+    loop {_yaws::*}:
+        bgCmd("execute in %bgDim()% run function bg:tele/rect {%bgNemXYZ({_pos})%,yaw:%bgN(loop-value)%,wd:%bgN({_wd})%,l:%bgN({_len})%,hl:%bgN({_len} / 2)%,hz:%bgN({_len} - {_wd} / 2)%,t:%{_t}%,id:nem%bgTid()%}")
     wait bgTicks({_t} - 8)
     if {_e} is not alive:
         stop
@@ -429,16 +476,21 @@ function bgNemVerdict(e: entity):
     if {_e} is not alive:
         stop
     loop bgNemTargets({_pos}, {_len} + 2):
-        set {_dx} to (x-coordinate of loop-value) - (x-coordinate of {_pos})
-        set {_dz} to (z-coordinate of loop-value) - (z-coordinate of {_pos})
-        set {_along} to {_dx} * bgFwdX({_yaw}) + {_dz} * bgFwdZ({_yaw})
-        set {_perp} to abs({_dx} * bgFwdZ({_yaw}) - {_dz} * bgFwdX({_yaw}))
-        if {_along} >= -0.6:
-            if {_along} <= {_len}:
-                if {_perp} <= {_wd} / 2 + 0.3:
-                    if abs((y-coordinate of loop-value) - (y-coordinate of {_pos})) < 5:
-                        bgHit(loop-value, 3.5, {_pos}, 1.2, 0.5)
-    bgImpactLine({_pos}, {_yaw}, {_wd}, {_len}, "wax_on")
+        set {_hit} to false
+        loop {_yaws::*}:
+            set {_dx} to (x-coordinate of loop-value-1) - (x-coordinate of {_pos})
+            set {_dz} to (z-coordinate of loop-value-1) - (z-coordinate of {_pos})
+            set {_along} to {_dx} * bgFwdX(loop-value-2) + {_dz} * bgFwdZ(loop-value-2)
+            set {_perp} to abs({_dx} * bgFwdZ(loop-value-2) - {_dz} * bgFwdX(loop-value-2))
+            if {_along} >= -0.6:
+                if {_along} <= {_len}:
+                    if {_perp} <= {_wd} / 2 + 0.3:
+                        if abs((y-coordinate of loop-value-1) - (y-coordinate of {_pos})) < 5:
+                            set {_hit} to true
+        if {_hit} is true:
+            bgHit(loop-value-1, 6, {_pos}, 1.6, 0.6)
+    loop {_yaws::*}:
+        bgImpactLine({_pos}, loop-value, {_wd}, {_len}, "wax_on")
     bgSoundAt({_pos}, "item.trident.thunder", 1.5, 1.4)
     bgNemCastEnd({_e})
 
@@ -448,17 +500,17 @@ function bgNemScales(e: entity):
     set {_ps::*} to bgNemTargets({_pos}, 24)
     if size of {_ps::*} is 0:
         stop
-    set {_t} to 36
+    set {_t} to 32
     if bgNemRage() is true:
-        set {_t} to 28
+        set {_t} to 26
     bgNemCast({_e}, "응보의 저울", {_t})
     set {_n} to 0
     loop {_ps::*}:
         add 1 to {_n}
-        if {_n} <= 3:
+        if {_n} <= 5:
             set {_l} to bgNemFloor(location of loop-value)
             add {_l} to {_ls::*}
-            bgCmd("execute in %bgDim()% run function bg:tele/circle {%bgNemXYZ({_l})%,d:6,t:%{_t}%,id:nem%bgTid()%}")
+            bgCmd("execute in %bgDim()% run function bg:tele/circle {%bgNemXYZ({_l})%,d:7,t:%{_t}%,id:nem%bgTid()%}")
             send title "" with subtitle "&5응보의 저울이 당신을 잽니다 — 피하세요!" to loop-value for 2 seconds
     bgParticle(location of {_e}, "enchant", 2, 4, 2, 1, 120)
     wait bgTicks({_t})
@@ -466,23 +518,24 @@ function bgNemScales(e: entity):
         stop
     loop {_ls::*}:
         set {_l} to loop-value
-        loop bgNemTargets({_l}, 3):
+        loop bgNemTargets({_l}, 3.5):
             if abs((y-coordinate of loop-value-2) - (y-coordinate of {_l})) < 5:
-                bgHit(loop-value-2, 3, {_l}, 0.6, 0.8)
-        bgImpactCircle({_l}, 3, "wax_on")
+                bgHit(loop-value-2, 5, {_l}, 0.6, 0.8)
+                bgCmd("effect give %name of loop-value-2% slowness 3 1 true")
+        bgImpactCircle({_l}, 3.5, "wax_on")
     bgSoundAt({_pos}, "block.anvil.land", 1.5, 0.6)
     bgNemCastEnd({_e})
 
 # ─────────────────────────────────────────────────────────── 스킬 3 · 날개 폭풍 (주변 밀쳐내기)
 function bgNemWings(e: entity):
     set {_pos} to bgNemFloor(location of {_e})
-    if size of bgNemTargets({_pos}, 14) is 0:
+    if size of bgNemTargets({_pos}, 16) is 0:
         stop
-    set {_t} to 32
+    set {_t} to 30
     if bgNemRage() is true:
-        set {_t} to 24
+        set {_t} to 22
     bgNemCast({_e}, "날개 폭풍", {_t})
-    bgCmd("execute in %bgDim()% run function bg:tele/circle {%bgNemXYZ({_pos})%,d:16,t:%{_t}%,id:nem%bgTid()%}")
+    bgCmd("execute in %bgDim()% run function bg:tele/circle {%bgNemXYZ({_pos})%,d:20,t:%{_t}%,id:nem%bgTid()%}")
     # 날개를 접었다가 (등장 동작 1번 장면) …
     bgNemAnimAt("rise", 1)
     set {-bg::nem::ft} to {_t} + 2
@@ -491,12 +544,133 @@ function bgNemWings(e: entity):
         stop
     # … 활짝 (2번 장면부터 이어서 재생)
     bgNemAnimAt("rise", 2)
-    loop bgNemTargets({_pos}, 8):
+    loop bgNemTargets({_pos}, 10):
         if abs((y-coordinate of loop-value) - (y-coordinate of {_pos})) < 5:
-            bgHit(loop-value, 2.5, {_pos}, 2.0, 0.9)
-    bgImpactCircle({_pos}, 8, "cloud")
+            bgHit(loop-value, 4, {_pos}, 2.6, 1.25)
+    bgImpactCircle({_pos}, 10, "cloud")
     bgSoundAt({_pos}, "entity.ender_dragon.flap", 2, 0.6)
     bgNemCastEnd({_e})
+
+# ─────────────────────────────────────────────────────────── 스킬 4 · 천벌 (따라다니는 원 → 하늘에서 벼락)
+function bgNemSmite(e: entity):
+    set {_pos} to bgNemFloor(location of {_e})
+    set {_ps::*} to bgNemTargets({_pos}, 32)
+    if size of {_ps::*} is 0:
+        stop
+    set {_t} to 44
+    if bgNemRage() is true:
+        set {_t} to 36
+    bgNemCast({_e}, "천벌", {_t})
+    bgNemAnimAt("rise", 3)
+    set {-bg::nem::ft} to {_t} + 2
+    # 사람마다 원 하나 (id 기억) — 처음 28틱(격노 20틱)은 따라다니다가 마지막 16틱은 그 자리에 고정
+    set {_i} to 0
+    loop {_ps::*}:
+        add 1 to {_i}
+        set {_id::%{_i}%} to "nem%bgTid()%"
+        set {_who::%{_i}%} to loop-value
+        bgCmd("execute in %bgDim()% run function bg:tele/circle {%bgNemXYZ(bgNemFloor(location of loop-value))%,d:6,t:%{_t}%,id:%{_id::%{_i}%}%}")
+        send title "&5&l천벌" with subtitle "&f하늘이 당신을 겨눕니다 — 멈추면 맞습니다!" to loop-value for 2 seconds
+    bgSoundAt({_pos}, "entity.lightning_bolt.thunder", 1, 1.6)
+    set {_follow} to {_t} - 16
+    loop {_follow} / 4 times:
+        wait 4 ticks
+        if {_e} is not alive:
+            stop
+        loop {_i} times:
+            set {_q} to {_who::%loop-number-2%}
+            if {_q} is online:
+                bgCmd("execute in %bgDim()% run function bg:tele/move {id:%{_id::%loop-number-2%}%,x:%bgC(x-coordinate of {_q})%,y:%bgN(floor((y-coordinate of {_q}) + 0.05))%,z:%bgC(z-coordinate of {_q})%}")
+                set {_at::%loop-number-2%} to bgNemFloor(location of {_q})
+    wait 16 ticks
+    if {_e} is not alive:
+        stop
+    loop {_i} times:
+        set {_l} to {_at::%loop-number%}
+        if {_l} is not set:
+            set {_l} to bgNemFloor(location of {_who::%loop-number%})
+        bgParticle(location(x-coordinate of {_l}, (y-coordinate of {_l}) + 10, z-coordinate of {_l}, world of {_l}), "end_rod", 0.15, 10, 0.15, 0.02, 120)
+        bgParticle({_l}, "electric_spark", 1.5, 0.5, 1.5, 0.3, 80)
+        bgSoundAt({_l}, "entity.lightning_bolt.impact", 2, 0.8)
+        loop bgNemTargets({_l}, 3):
+            if abs((y-coordinate of loop-value-2) - (y-coordinate of {_l})) < 6:
+                bgHit(loop-value-2, 6, {_l}, 0.4, 0.9)
+        bgImpactCircle({_l}, 3, "wax_on")
+    bgNemCastEnd({_e})
+
+# ─────────────────────────────────────────────────────────── 격노 (체력 50% 아래 첫 순간 · 한 번)
+function bgNemEnrage(e: entity):
+    bgNemCast({_e}, "격노 — 복수의 그림자", 40)
+    bgNemAnimAt("rise", 2)
+    bgSay("&5&l[복수의 신] &c네메시스가 격노합니다! &f복수의 그림자가 %{-bg::tcol::%{-bg::nem::team}%}%%{-bg::tname::%{-bg::nem::team}%}% 팀&f을 덮칩니다.")
+    bgSoundAt(location of {_e}, "entity.wither.spawn", 2, 1.4)
+    bgParticle(location of {_e}, "sonic_boom", 0, 0, 0, 0, 1)
+    bgParticle(location of {_e}, "reverse_portal", 4, 4, 4, 0.2, 400)
+    loop 4 times:
+        set {_a} to loop-number * 90
+        set {_l} to location((x-coordinate of {_e}) + cos({_a}) * 3, (y-coordinate of {_e}) + 3, (z-coordinate of {_e}) + sin({_a}) * 3, world of {_e})
+        spawn a vex at {_l}
+        set {_v} to last spawned entity
+        add "bg" to scoreboard tags of {_v}
+        add "bg_nemvex" to scoreboard tags of {_v}
+        set name of {_v} to "&5복수의 그림자"
+        bgCmd("attribute %uuid of {_v}% minecraft:max_health base set 16")
+        bgCmd("attribute %uuid of {_v}% minecraft:attack_damage base set 5")
+        heal {_v}
+        {_v}.setGlowing(true)
+    set {-bg::nem::vex} to true
+    wait 40 ticks
+    bgNemCastEnd({_e})
+
+# 그림자: 1등 팀만 노리고 · 1등 팀만 때림 · 1등 팀만 그림자를 때릴 수 있음
+every 1 second:
+    {-bg::nem::vex} is true
+    set {_found} to 0
+    loop all entities:
+        if loop-entity has scoreboard tag "bg_nemvex":
+            add 1 to {_found}
+            if {-bg::nem::alive} is not true:
+                kill loop-entity
+            else:
+                set {_best} to 40
+                delete {_p}
+                loop all players:
+                    if bgNemCanHit(loop-player) is true:
+                        if world of loop-player is world of loop-entity:
+                            set {_d} to distance between loop-player and loop-entity
+                            if {_d} < {_best}:
+                                set {_best} to {_d}
+                                set {_p} to loop-player
+                if {_p} is set:
+                    set target of loop-entity to {_p}
+                else:
+                    delete target of loop-entity
+    if {_found} is 0:
+        delete {-bg::nem::vex}
+
+on target:
+    event-entity has scoreboard tag "bg_nemvex"
+    if target is not a player:
+        cancel event
+        stop
+    if bgTeam(target) is not {-bg::nem::team}:
+        cancel event
+
+on damage:
+    victim has scoreboard tag "bg_nemvex"
+    if attacker is a player:
+        if bgTeam(attacker) is not {-bg::nem::team}:
+            cancel event
+
+on damage of player:
+    attacker has scoreboard tag "bg_nemvex"
+    if bgTeam(victim) is not {-bg::nem::team}:
+        cancel event
+
+on death:
+    victim has scoreboard tag "bg_nemvex"
+    clear drops
+    set dropped exp to 0
 
 # 애니메이션을 특정 장면부터
 function bgNemAnimAt(a: text, f: number):
@@ -537,6 +711,9 @@ on damage of player:
     else if {-bg::nem::animdone} is true:
         bgNemAnim("slash")
     play sound "entity.player.attack.sweep" with volume 1.2 with pitch 0.7 at location of victim
+    # 흡혈: 한 대마다 최대 체력의 1%
+    if attacker is alive:
+        heal attacker by {-bg::nem::max} * 0.01 / 2
     wait 1 tick
     remove wither from victim
 
@@ -552,8 +729,8 @@ on death:
         bgCmd("bossbar remove bg:nemhud")
         bgNemDeath(location of victim)
         bgAddScore({_t}, {bg::cfg::nem_reward})
-        bgCoinTeam({_t}, 30, "네메시스 격퇴")
-        bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+%{bg::cfg::nem_reward}%점 · 팀원 코인 +30")
+        bgCoinTeam({_t}, 50, "네메시스 격퇴")
+        bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+%{bg::cfg::nem_reward}%점 · 팀원 코인 +50")
         bgSound("ui.toast.challenge_complete", 0.8, 1)
 
 command /네메시스 [<text>]:
