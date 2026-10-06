@@ -561,6 +561,9 @@ function bgBossSkill():
             bgSkLadonVenom({_g})
         else:
             bgSkLadonApple({_g})
+    else if bgIsBoss2({_id}) is true:
+        # 맵 전용 보스 (a42)
+        bgBossSkill2({_id}, {_s}, {_g})
     else:
         if {_s} is "quake":
             bgSkCyclopsQuake({_g})
@@ -636,6 +639,8 @@ function bgBossBuff(p: player, id: text):
         bgCmd("effect give %{_n}% regeneration 30 0 true")
         bgCmd("effect give %{_n}% absorption 60 1 true")
         send "&a  히드라의 생명력 &7— 재생 I 30초 · 흡수 II 60초" to {_p}
+    else if bgIsBoss2({_id}) is true:
+        bgBossBuff2({_p}, {_id})
     else:
         bgCmd("effect give %{_n}% strength 30 0 true")
         bgCmd("effect give %{_n}% jump_boost 45 1 true")
@@ -788,6 +793,8 @@ function bgBlessApply(t: text, b: text):
     else if {_b} is "ladon":
         if mod({-bg::sec}, 3) is 0:
             bgCmd("effect give %{_sel}% regeneration 3 0 true")
+    else if bgIsBoss2({_b}) is true:
+        bgBlessApply2({_t}, {_b})
     else:
         bgCmd("effect give %{_sel}% strength 3 0 true")
         bgCmd("effect give %{_sel}% jump_boost 3 0 true")

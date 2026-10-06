@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(HERE))
 from PIL import Image
 
 import hud as H
-from bossdata import BOSSES, EXTRA_BOSSES
+from bossdata import BOSSES, EXTRA_BOSSES, MAP_BOSSES
 
 PORTRAITS = os.path.join(os.path.dirname(HERE), ".cache", "portraits")
 
@@ -69,6 +69,12 @@ def build(pack):
             img = Image.open(p)
         else:
             img = Image.new("RGBA", (64, 64), (60, 30, 90, 255))
+        H.portrait(f, bid, img)
+    # 맵 전용 보스 — 네메시스 뒤에 덧붙임 (기존 번호 그대로)
+    for bid, b in MAP_BOSSES.items():
+        H.label(f, f"boss/name_{bid}", b["name"], "name")
+        p = os.path.join(PORTRAITS, f"{bid}.png")
+        img = Image.open(p) if os.path.exists(p) else Image.new("RGBA", (64, 64), (40, 60, 90, 255))
         H.portrait(f, bid, img)
     # 파일
     for name, img in f.files.items():

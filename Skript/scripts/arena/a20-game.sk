@@ -648,7 +648,7 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
         if arg-1 is not set:
             send "&6[전장] &f/전장 맵 [olympus|frost|volcano] (지금: %bgMapName()%) → /전장 건설"
             send "&6[전장] &f/전장 건설 (내 위치) | 건설 원점 | 장식 | 광석바위 | 맵패치 | 연습장건설 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
-            send "&6[전장] &f/전장 자동팀 | 팀초기화 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops] | 보스제거"
+            send "&6[전장] &f/전장 자동팀 | 팀초기화 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops|ymir|fenrir|surtr|cerberus] | 보스제거"
             send "&6[전장] &f/전장 코인 <플레이어|all> <n> | 점수 <팀> <n> | 목표 <n> | 시간 <분> | 이동 <마커>"
             stop
         if arg-1 is "맵":
@@ -788,7 +788,7 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             if {_b} is not set:
                 set {_b} to random element out of {-bg::bd::list::*}
             if {-bg::bd::%{_b}%::name} is not set:
-                send "&c보스: talos / sphinx / ladon / cyclops"
+                send "&c보스: talos / sphinx / ladon / cyclops / ymir / fenrir / surtr / cerberus"
                 stop
             bgBossSpawn({_b})
         else if arg-1 is "보스제거":

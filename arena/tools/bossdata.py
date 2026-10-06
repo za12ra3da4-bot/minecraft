@@ -63,3 +63,41 @@ EXTRA_BOSSES = {
         },
     },
 }
+
+
+# 맵 전용 보스 (빙하 왕국 · 화산 군도) — 미니 보스처럼 투기장에서 소환되지만, 맵마다 나오는 보스 목록은 a42 {-bg::mapboss::<맵>::*}
+#  보스바 글리프는 네메시스 뒤에 덧붙여 기존 글리프 번호가 바뀌지 않게
+MAP_BOSSES = {
+    "ymir": {
+        "name": "서리 거인 이미르",
+        "short": "이미르",
+        "lair": "quarry",
+        "style": "광역·빙결형",
+        "hp": 2400,
+        "skills": {"glacier": "빙하 붕괴", "avalanche": "눈사태", "zero": "절대 영도"},
+    },
+    "fenrir": {
+        "name": "서리 늑대 펜리르",
+        "short": "펜리르",
+        "lair": "garden",
+        "style": "기동·추적형",
+        "hp": 2000,
+        "skills": {"pounce": "서리 도약", "frostbreath": "빙결 포효", "fangs": "얼음 송곳니"},
+    },
+    "surtr": {
+        "name": "화염 거인 수르트",
+        "short": "수르트",
+        "lair": "forge",
+        "style": "광역·화염형",
+        "hp": 2600,
+        "skills": {"doom": "멸망의 검", "meteor": "화염 비", "ragnarok": "라그나로크"},
+    },
+    "cerberus": {
+        "name": "지옥견 케르베로스",
+        "short": "케르베로스",
+        "lair": "sands",
+        "style": "돌진·화염형",
+        "hp": 2200,
+        "skills": {"charge": "지옥 돌진", "triflame": "삼두 화염", "lavapool": "용암 웅덩이"},
+    },
+}
