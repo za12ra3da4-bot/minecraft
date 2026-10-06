@@ -7,7 +7,7 @@
 #    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 스킬도 본진 안은 안 맞음
 #    · 체력 500 + 1등 팀 1명당 180 (최대 2400) · 갑옷 · 한 대 하트 5 + 흡혈 · 넉백 안 먹음
 #    · 체력 50% 아래 '격노': 그림자 4마리 소환 · 스킬 간격 짧아짐 · 심판의 검 3갈래
-#    · 120초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +300점 + 팀원 코인 +50
+#    · 120초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +50점 + 팀원 코인 +15
 #   그동안 1등 팀은 네메시스를 막느라 바쁘고, 다른 팀은 거점을 되찾을 기회
 #   모습: 키 9블록 · 날개폭 12블록 — 흑요석·은 갑옷과 금 장식, 가슴의 '심판의 눈', 날개 투구 · 가면 · 금관, 두 겹 후광과 빛살,
 #    날개 두 쌍(따로 움직이는 첫째깃), 8자락 옷자락, 룬 대검, 정의의 저울, 떠다니는 수정 4개 (arena/tools/rp/bosses/nemesis.py · 파츠 85개)
@@ -22,7 +22,7 @@
 #    · 그림자 소환 — 격노할 때 한 번, 1등 팀만 노리는 '복수의 그림자'(벡스) 4마리
 #   시전하는 동안은 제자리에 멈춘다
 #  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
-#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 300)
+#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 50)
 # ═════════════════════════════════════════════════════════════════════════════
 import:
     org.bukkit.Bukkit
@@ -43,9 +43,10 @@ on load:
     if {bg::cfg::nem_min} is not set:
         set {bg::cfg::nem_min} to 200
     if {bg::cfg::nem_reward} is not set:
-        set {bg::cfg::nem_reward} to 300
-    if {bg::cfg::nem_reward} is 150:
-        set {bg::cfg::nem_reward} to 300
+        set {bg::cfg::nem_reward} to 50
+    # 예전 기본값(150 · 300)이 저장돼 있으면 새 기본값 50 으로
+    if {bg::cfg::nem_reward} is 150 or 300:
+        set {bg::cfg::nem_reward} to 50
 
 # 지금 1등 팀과 (그 팀을 뺀) 2등 점수
 function bgNemTop() :: text:
@@ -94,7 +95,7 @@ function bgNemStart(t: text):
     bgSay("&5&l[복수의 신] &f%{_tn}% 팀&f이 너무 앞서갑니다. &d20초 뒤&f 네메시스가 %{_tn}% 팀&f 본진 앞에 나타납니다!")
     loop all players:
         if bgTeam(loop-player) is {_t}:
-            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f120초 동안 우리 팀을 노립니다 — 쓰러뜨리면 &e+%{bg::cfg::nem_reward}%점 · 코인 +50" to loop-player for 4 seconds
+            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f120초 동안 우리 팀을 노립니다 — 쓰러뜨리면 &e+%{bg::cfg::nem_reward}%점 · 코인 +15" to loop-player for 4 seconds
         else if bgTeam(loop-player) is not "none":
             send title "&5&l복수의 신이 깨어납니다" with subtitle "&f%{_tn}% 팀&f을 노립니다 — 지금이 거점을 되찾을 기회!" to loop-player for 4 seconds
     bgSound("entity.wither.ambient", 1, 0.6)
@@ -197,7 +198,7 @@ function bgNemSpawn(t: text):
     bgBarInit("bg:nemhud")
     bgCmd("bossbar set bg:nemhud players @a[tag=!bg_optout]")
     set {_tn} to "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}%"
-    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(120초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +%{bg::cfg::nem_reward}%점 · 코인 +50)")
+    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(120초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +%{bg::cfg::nem_reward}%점 · 코인 +15)")
     bgSound("entity.wither.spawn", 0.8, 0.8)
 
 function bgNemTick():
@@ -729,8 +730,8 @@ on death:
         bgCmd("bossbar remove bg:nemhud")
         bgNemDeath(location of victim)
         bgAddScore({_t}, {bg::cfg::nem_reward})
-        bgCoinTeam({_t}, 50, "네메시스 격퇴")
-        bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+%{bg::cfg::nem_reward}%점 · 팀원 코인 +50")
+        bgCoinTeam({_t}, 15, "네메시스 격퇴")
+        bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+%{bg::cfg::nem_reward}%점 · 팀원 코인 +15")
         bgSound("ui.toast.challenge_complete", 0.8, 1)
 
 command /네메시스 [<text>]:
