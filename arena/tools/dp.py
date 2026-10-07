@@ -910,3 +910,29 @@ def pvp_functions(dp_root):
     for k in ("build", "fl", "fl_rm"):
         w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:pvp/{k}_run with storage bg:map origin"])
     print(f"[pvp] 연습장 명령 {len(cmds)}줄")
+
+
+def pvp2_functions(dp_root):
+    """PvP 연습장 2 (용암 투기장) 짓기: bg:pvp2/fl → 2초 → bg:pvp2/build → bg:pvp2/fl_rm"""
+    import pvparena2
+    F = os.path.join(dp_root, "data", NS, "function", "pvp2")
+    cmds = pvparena2.commands(greedy_boxes)
+    x0, z0, x1, z1 = pvparena2.forceload_range()
+    # 크기가 커서 조각으로 나눠 여러 틱에 짓는다
+    # 용암 · 불은 맨 마지막 조각에 (둘레 블록이 다 놓이기 전에 놓으면 흘러넘침)
+    late = [c for c in cmds if c.endswith(" minecraft:lava") or c.endswith(" minecraft:fire")]
+    early = [c for c in cmds if c not in set(late)]
+    per = 1500
+    parts = [early[i:i + per] for i in range(0, len(early), per)] + [late]
+    # bg:pvp2/build → 2초 뒤 p/0 → 3틱마다 다음 조각 → 마지막에 forceload 풀기 (Skript 는 build 만 부름)
+    for i, part in enumerate(parts):
+        w(os.path.join(F, "p", f"{i}_run.mcfunction"), part)
+        nxt = f"schedule function bg:pvp2/p/{i + 1} 3t" if i + 1 < len(parts) else "schedule function bg:pvp2/fl_rm 20t"
+        w(os.path.join(F, "p", f"{i}.mcfunction"), [f"function bg:pvp2/p/{i}_run with storage bg:map origin", nxt])
+    w(os.path.join(F, "build.mcfunction"), ["function bg:pvp2/fl", "schedule function bg:pvp2/p/0 40t"])
+    w(os.path.join(F, "fl_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}"])
+    w(os.path.join(F, "fl_rm_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
+    for k in ("fl", "fl_rm"):
+        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:pvp2/{k}_run with storage bg:map origin"])
+    print(f"[pvp2] 용암 투기장 명령 {len(cmds)}줄 ({len(parts)} 조각)")
+    return len(parts)

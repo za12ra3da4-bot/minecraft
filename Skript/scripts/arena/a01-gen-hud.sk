@@ -835,6 +835,7 @@ on load:
     set {-bg::gui::shop1} to ""
     set {-bg::gui::shop2} to ""
     set {-bg::gui::shop3} to ""
+    set {-bg::gui::arena} to ""
     set {-bg::hud::total_w} to 300
     set {-bg::hud::boss_x} to 30
     set {-bg::hud::fill_w} to 174

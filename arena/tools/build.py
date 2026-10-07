@@ -82,6 +82,7 @@ def main(args):
     ncmd, nparts = dp.map_functions(OUT_DP, world)
     ndeco = dp.decor_functions(OUT_DP, world, fixes)
     dp.pvp_functions(OUT_DP)
+    dp.pvp2_functions(OUT_DP)
     print(f"[dp] 맵 명령 {ncmd} ({nparts} 단계), 장식 {ndeco}")
     # 리소스팩
     pack = Pack("bg")

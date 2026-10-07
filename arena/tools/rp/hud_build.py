@@ -70,6 +70,11 @@ def build(pack):
         else:
             img = Image.new("RGBA", (64, 64), (60, 30, 90, 255))
         H.portrait(f, bid, img)
+    # 연습장 고르기 화면 (맨 뒤에 덧붙임 — 기존 글리프 번호 유지)
+    import arenagui
+    arenagui.export(f, H)
+    # 화면 칸용 투명 아이템 (이름 · 설명만 보이고 그림은 없음)
+    pack.put(f"assets/{H.NS}/items/gui/blank.json", {"model": {"type": "minecraft:empty"}})
     # 파일
     for name, img in f.files.items():
         pack.png(f"assets/{H.NS}/textures/{name}", img)

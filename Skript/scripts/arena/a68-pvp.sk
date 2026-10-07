@@ -1,7 +1,8 @@
 # ═════════════════════════════════════════════════════════════════════════════
-#  왕관 쟁탈전 — PvP 연습장 (전장 맵 북쪽 하늘에 떠 있는 석영 원형 투기장, 게임이 없을 때 자유 대전)
-#   관리자: /전장 연습장건설 (처음 한 번)
-#   /연습장 (/pvp장, /pvp) : 들어가기 · 나가기     /무기 : 무료 무기고 다시 열기
+#  왕관 쟁탈전 — PvP 연습장 2곳 (전장 맵 북쪽 하늘, 게임이 없을 때 자유 대전)
+#   1 석영 투기장 (원형, 지름 58)   2 용암 투기장 (팔각, 폭 112, 가운데 용암 해자 · 대장간 탑 4)
+#   관리자: /전장 연습장건설 (처음 한 번, 둘 다 지음 · 뒤에 1 또는 2 를 붙이면 하나만)
+#   /연습장 (/pvp장, /pvp) : 투기장 고르기 화면 (안에서 쓰면 옮기기 · 나가기)   /연습장 나가기   /무기 : 무료 무기고
 #   관리자: /연습장 전체나가기 (모두 대기실로) · /연습장 잠금 (잠그고 모두 내보냄) · /연습장 열기
 #   전설 무기 16종 + 보스 무기 4종을 공짜로 골라서 스킬 연습. 죽어도 가방 유지, 연습장에서 부활
 #   게임이 시작되면 모두 대기실로 돌아감
@@ -18,21 +19,58 @@ function bgPvpOn(p: player) :: boolean:
 function bgPvpCenter() :: location:
     return bgAt(128.5, 31, -69.5)
 
-function bgPvpSpawn() :: location:
+# 용암 투기장 가운데 바닥 = 전장 원점 기준 (128, 30, -178). 동서남북 입장문 안쪽(팔각 38)에서 부활 (팀 색 표시)
+function bgPvpCenterN(n: number) :: location:
+    if {_n} is 2:
+        return bgAt(128.5, 31, -177.5)
+    return bgPvpCenter()
+
+# 지금 있는 투기장 번호 (1 석영 · 2 용암)
+function bgPvpArena(p: player) :: number:
+    return {-bg::pvpa::%uuid of {_p}%} ? 1
+
+function bgPvpName(n: number) :: text:
+    if {_n} is 2:
+        return "&6용암 투기장"
+    return "&f석영 투기장"
+
+function bgPvpSpawnN(n: number) :: location:
     set {_a} to (random integer between 0 and 3) * 90
-    set {_l} to bgAt(128.5 + cos({_a}) * 17, 31, -69.5 + sin({_a}) * 17)
+    if {_n} is 2:
+        set {_l} to bgAt(128.5 + cos({_a}) * 38, 31, -177.5 + sin({_a}) * 38)
+    else:
+        set {_l} to bgAt(128.5 + cos({_a}) * 17, 31, -69.5 + sin({_a}) * 17)
     set yaw of {_l} to {_a} + 90
     return {_l}
 
-function bgPvpBuild(p: player):
+function bgPvpSpawn() :: location:
+    return bgPvpSpawnN(1)
+
+function bgPvpCount(n: number) :: number:
+    set {_c} to 0
+    loop all players:
+        if {-bg::pvp::%uuid of loop-player%} is true:
+            if bgPvpArena(loop-player) is {_n}:
+                add 1 to {_c}
+    return {_c}
+
+# 0 = 둘 다, 1 = 석영, 2 = 용암
+function bgPvpBuild(p: player, which: number = 0):
     bgSyncOrigin()
-    send "&6[연습장] &f석영 투기장을 짓는 중..." to {_p}
-    bgCmd("function bg:pvp/fl")
-    wait 40 ticks
-    bgCmd("function bg:pvp/build")
-    wait 5 ticks
-    bgCmd("function bg:pvp/fl_rm")
-    send "&6[연습장] &a완성! &f/연습장 으로 들어가 보세요." to {_p}
+    if {_which} is not 2:
+        send "&6[연습장] &f석영 투기장을 짓는 중..." to {_p}
+        bgCmd("function bg:pvp/fl")
+        wait 40 ticks
+        bgCmd("function bg:pvp/build")
+        wait 5 ticks
+        bgCmd("function bg:pvp/fl_rm")
+        send "&6[연습장] &a석영 투기장 완성!" to {_p}
+    if {_which} is not 1:
+        send "&6[연습장] &f용암 투기장을 짓는 중... &7(약 5초 · 큰 건물이라 잠깐 끊길 수 있음)" to {_p}
+        bgCmd("function bg:pvp2/build")
+        wait 120 ticks
+        send "&6[연습장] &a용암 투기장 완성!" to {_p}
+    send "&6[연습장] &f/연습장 으로 들어가 보세요." to {_p}
 
 function bgPvpKit(p: player):
     bgClassReset({_p})
@@ -49,7 +87,7 @@ function bgPvpKit(p: player):
     bgCmd("give %{_n}% golden_apple 4")
     bgCmd("give %{_n}% cooked_beef 16")
 
-function bgPvpEnter(p: player):
+function bgPvpEnter(p: player, n: number = 1):
     if {-bg::on} is true:
         send "&6[연습장] &c게임 중에는 연습장에 갈 수 없습니다." to {_p}
         stop
@@ -58,22 +96,31 @@ function bgPvpEnter(p: player):
             send "&6[연습장] &c지금은 연습장이 잠겨 있습니다. &7(관리자가 /연습장 열기 로 엶)" to {_p}
             stop
         send "&6[연습장] &7잠겨 있지만 관리자라 들어갑니다." to {_p}
-    if block at bgUp(bgPvpCenter(), -1) is air:
-        send "&6[연습장] &c연습장이 아직 없습니다. &7관리자가 &e/전장 연습장건설 &7을 한 번 실행해 주세요." to {_p}
+    if block at bgUp(bgPvpCenterN({_n}), -1) is air:
+        send "&6[연습장] &c%bgPvpName({_n})%&c이(가) 아직 없습니다. &7관리자가 &e/전장 연습장건설 &7을 한 번 실행해 주세요." to {_p}
+        stop
+    # 이미 연습장 안: 다른 투기장으로 옮기기만 (가방 그대로)
+    if {-bg::pvp::%uuid of {_p}%} is true:
+        set {-bg::pvpa::%uuid of {_p}%} to {_n}
+        teleport {_p} to bgPvpSpawnN({_n})
+        bgTitleP({_p}, "%bgPvpName({_n})%", "&f투기장을 옮겼습니다 · &e/연습장 &f다시 고르기 · 나가기")
+        play sound "entity.enderman.teleport" to {_p}
         stop
     set {-bg::pvp::%uuid of {_p}%} to true
-    teleport {_p} to bgPvpSpawn()
+    set {-bg::pvpa::%uuid of {_p}%} to {_n}
+    teleport {_p} to bgPvpSpawnN({_n})
     set gamemode of {_p} to adventure
     heal {_p}
     set food level of {_p} to 20
     bgPvpKit({_p})
-    bgTitleP({_p}, "&c&lPvP 연습장", "&f무기를 고르고 마음껏 싸우세요 · &e/무기 &f다시 고르기 · &e/연습장 &f나가기")
+    bgTitleP({_p}, "&c&lPvP 연습장 &8· %bgPvpName({_n})%", "&f무기를 고르고 마음껏 싸우세요 · &e/무기 &f다시 고르기 · &e/연습장 &f옮기기 · 나가기")
     play sound "item.goat_horn.sound.0" to {_p}
     wait 10 ticks
     bgPvpShop({_p})
 
 function bgPvpLeave(p: player):
     delete {-bg::pvp::%uuid of {_p}%}
+    delete {-bg::pvpa::%uuid of {_p}%}
     bgToLobby({_p})
     send "&6[연습장] &f대기실로 돌아왔습니다." to {_p}
 
@@ -117,10 +164,13 @@ command /연습장 [<text>]:
             else:
                 send "&6[연습장] &7연습장에 있지 않습니다."
             stop
-        if {-bg::pvp::%uuid of player%} is true:
-            bgPvpLeave(player)
+        if arg-1 is "1" or "석영":
+            bgPvpEnter(player, 1)
             stop
-        bgPvpEnter(player)
+        if arg-1 is "2" or "용암":
+            bgPvpEnter(player, 2)
+            stop
+        bgPvpSelect(player)
 
 command /무기:
     trigger:
@@ -198,13 +248,14 @@ on death of player:
 
 on respawn:
     bgPvpOn(player) is true
-    set respawn location to bgPvpSpawn()
+    set respawn location to bgPvpSpawnN(bgPvpArena(player))
     wait 1 tick
     set gamemode of player to adventure
     bgCmd("effect give %name of player% resistance 3 4 true")
 
 on quit:
     delete {-bg::pvp::%uuid of player%}
+    delete {-bg::pvpa::%uuid of player%}
 
 # 섬 밖으로 떨어지면 다시 연습장으로
 every 1 second:
@@ -212,5 +263,116 @@ every 1 second:
         if {-bg::pvp::%uuid of loop-player%} is true:
             if {-bg::on} is not true:
                 if (y-coordinate of loop-player) < (y-coordinate of bgPvpCenter()) - 14:
-                    teleport loop-player to bgPvpSpawn()
+                    teleport loop-player to bgPvpSpawnN(bgPvpArena(loop-player))
                     play sound "entity.enderman.teleport" to loop-player
+
+
+# ─────────────────────────────────────────────────────────── 투기장 고르기 화면 (/연습장)
+# 리소스팩 그림 배경 (제목 글리프가 창 전체를 덮음: 두 투기장 그림 카드 · 입장 단추) — 칸 배치는 arena/tools/rp/arenagui.py 와 같아야 함
+#   1~4줄 0~3열 + 45~48: 석영 투기장    1~4줄 5~8열 + 50~53: 용암 투기장    49: 닫기 (연습장 안이면 나가기)
+function bgPvpSelItem(p: player, n: number) :: item:
+    set {_cnt} to bgPvpCount({_n})
+    if {_n} is 2:
+        set {_it} to magma block
+        set {_nm} to "&6&l용암 투기장 &c&l NEW"
+        set {_lore::*} to "&7폭 112칸 팔각 흑요석 투기장", "&7현무암 기둥 엄폐 · 대장간 탑 4 (계단으로 올라감)", "&c가운데 용암 해자 &7— 밀려 떨어지면 불탑니다!", "&7동서남북 팀 색 문에서 부활"
+    else:
+        set {_it} to quartz block
+        set {_nm} to "&f&l석영 투기장 &7(기본)"
+        set {_lore::*} to "&7지름 58칸 원형 석영 투기장", "&7엄폐 기둥 4 · 낮은 벽 · 관중석", "&7가볍게 붙어 보기 좋은 크기", "&7입장문 4곳에서 부활"
+    add "" to {_lore::*}
+    add "&e지금 %{_cnt}%명 싸우는 중" to {_lore::*}
+    add "" to {_lore::*}
+    if {-bg::pvp::%uuid of {_p}%} is true:
+        if bgPvpArena({_p}) is {_n}:
+            add "&b● 지금 여기 있습니다" to {_lore::*}
+        else:
+            add "&a▶ 클릭해서 이 투기장으로 옮기기 &7(가방 그대로)" to {_lore::*}
+    else:
+        add "&a▶ 클릭해서 입장" to {_lore::*}
+    if {-bg::gui::arena} is set:
+        set {_it} to bgModelItem(paper, "gui/blank")
+    set name of {_it} to {_nm}
+    set lore of {_it} to {_lore::*}
+    return {_it}
+
+function bgPvpSelect(p: player):
+    if {-bg::on} is true:
+        send "&6[연습장] &c게임 중에는 연습장에 갈 수 없습니다." to {_p}
+        stop
+    set {_a} to bgPvpSelItem({_p}, 1)
+    set {_b} to bgPvpSelItem({_p}, 2)
+    if {-bg::pvp::%uuid of {_p}%} is true:
+        set {_x} to barrier named "&c&l대기실로 나가기"
+        set lore of {_x} to "&7연습장에서 나가 대기실로 돌아갑니다"
+    else:
+        set {_x} to barrier named "&7닫기"
+    if {-bg::gui::arena} is set:
+        set {_gui} to chest inventory with 6 rows named "&f%{-bg::gui::arena}%"
+        set {_x} to bgModelItem({_x}, "gui/blank")
+    else:
+        # 리소스팩이 없을 때: 색 유리판 카드
+        set {_gui} to chest inventory with 6 rows named "&c&lPvP 연습장 &8| &f투기장 고르기"
+        set {_pw} to white stained glass pane named " "
+        set {_pr} to orange stained glass pane named " "
+        set {_pg} to black stained glass pane named " "
+        loop 54 times:
+            set {_i} to loop-number - 1
+            set {_c} to mod({_i}, 9)
+            if {_c} < 4:
+                set slot {_i} of {_gui} to {_pw}
+            else if {_c} > 4:
+                set slot {_i} of {_gui} to {_pr}
+            else:
+                set slot {_i} of {_gui} to {_pg}
+    loop 45 times:
+        set {_i} to loop-number + 8
+        set {_c} to mod({_i}, 9)
+        if {_c} < 4:
+            set slot {_i} of {_gui} to {_a}
+        else if {_c} > 4:
+            set slot {_i} of {_gui} to {_b}
+    set slot 49 of {_gui} to {_x}
+    # 먼저 열고 나서 표시 (다시 열 때 이전 창의 '닫힘' 이 표시를 지우는 것 방지)
+    open {_gui} to {_p}
+    set {-bg::pvpsel::%uuid of {_p}%} to true
+    play sound "block.beacon.activate" to {_p}
+
+on inventory close:
+    delete {-bg::pvpsel::%uuid of player%}
+
+on inventory drag:
+    {-bg::pvpsel::%uuid of player%} is true
+    cancel event
+
+on inventory click:
+    {-bg::pvpsel::%uuid of player%} is true
+    cancel event
+    if {-bg::shopclk::%uuid of player%} is set:
+        if difference between {-bg::shopclk::%uuid of player%} and now < 0.3 seconds:
+            stop
+    set {-bg::shopclk::%uuid of player%} to now
+    set {_s} to raw index of event-slot
+    if {_s} >= 54:
+        stop
+    set {_c} to mod({_s}, 9)
+    if {_s} is 49:
+        close player's inventory
+        if {-bg::pvp::%uuid of player%} is true:
+            bgPvpLeave(player)
+        stop
+    if {_s} < 9:
+        stop
+    if {_c} is 4:
+        stop
+    set {_n} to 1
+    if {_c} > 4:
+        set {_n} to 2
+    if {-bg::pvp::%uuid of player%} is true:
+        if bgPvpArena(player) is {_n}:
+            send "&6[연습장] &7이미 %bgPvpName({_n})%&7에 있습니다." to player
+            play sound "block.note_block.bass" to player
+            stop
+    close player's inventory
+    play sound "ui.button.click" to player
+    bgPvpEnter(player, {_n})
