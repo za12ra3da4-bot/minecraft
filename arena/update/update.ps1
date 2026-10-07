@@ -101,7 +101,12 @@ try {
 
 # 업데이트 도구 자신도 최신으로
 try {
-    Copy-Item -LiteralPath (Join-Path $root.FullName "arena\update\update.bat") -Destination (Join-Path $server "update.bat") -Force
+    # update.bat 은 지금 실행 중이라 내용이 같으면 건드리지 않는다 (바뀌면 cmd 가 엉뚱한 줄을 읽음)
+    $nb = Join-Path $root.FullName "arena\update\update.bat"
+    $ob = Join-Path $server "update.bat"
+    if (-not (Test-Path -LiteralPath $ob) -or ((Get-FileHash -LiteralPath $nb).Hash -ne (Get-FileHash -LiteralPath $ob).Hash)) {
+        Copy-Item -LiteralPath $nb -Destination $ob -Force
+    }
     Copy-Item -LiteralPath (Join-Path $root.FullName "arena\update\update.ps1") -Destination (Join-Path $server "update.ps1.next") -Force
 } catch {}
 try { Remove-Item -LiteralPath $tmp -Recurse -Force } catch {}
