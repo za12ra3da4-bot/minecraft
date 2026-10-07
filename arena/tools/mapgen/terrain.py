@@ -37,9 +37,8 @@ def wiggle_path(a, b, seed, amp=6.0, n=24):
 
 
 class Terrain:
-    def __init__(self, seed=7, theme="olympus"):
+    def __init__(self, seed=7):
         self.seed = seed
-        self.theme = theme
         x = np.arange(S, dtype=float)
         self.X, self.Z = np.meshgrid(x, x, indexing="ij")
         self.dC = np.hypot(self.X - C[0], self.Z - C[1])
@@ -92,14 +91,12 @@ class Terrain:
         self.feature = feat
         free = 1 - feat
         hills = (np.clip(ridge(S, sd + 5, 40), 0, 1) ** 2.2) * 9 + np.clip(fbm(S, sd + 9, ((48, 1.0), (24, 0.5))) , 0, 1) * 6
-        import themes
-        th = themes.THEMES[self.theme]
-        self.H = G + base + hills * free * th["hill"]
+        self.H = G + base + hills * free
 
         # 경계 산맥
         m = np.maximum(np.abs(self.X - C[0]), np.abs(self.Z - C[1]))
         mnt = smoothstep(114, 126, m)
-        peaks = G + 22 + th["peak"] + fbm(S, sd + 11, ((24, 1.0), (12, 0.5), (6, 0.25))) * (9 + th["peak"] * 0.5)
+        peaks = G + 22 + fbm(S, sd + 11, ((24, 1.0), (12, 0.5), (6, 0.25))) * 9
         self.H = self.H * (1 - mnt) + peaks * mnt
 
         # 중앙 광장 + 수로
@@ -133,8 +130,6 @@ class Terrain:
         # 길
         self.make_paths()
         self.flatten_paths()
-        # 테마 지형 (강 · 화산 · 얼음 호수)
-        themes.terrain_post(self, self.theme)
 
         self.Hi = np.round(self.H).astype(np.int32)
         # 수로/물 칸은 정수 높이 강제

@@ -133,10 +133,6 @@ def tele_functions(fdir):
     w(os.path.join(T, "flash.mcfunction"), ['$data modify entity @s item.components."minecraft:item_model" set value "bg:tele/$(flash)"'])
 
 
-# 맵: id → (데이터팩 함수 폴더, 건설 진행 번호 #run bg_build)
-MAPS = {"olympus": ("map", 1), "frost": ("maps/frost", 2), "volcano": ("maps/volcano", 3)}
-
-
 def core_functions(dp_root):
     F = os.path.join(dp_root, "data", NS, "function")
     w(os.path.join(dp_root, "pack.mcmeta"), json.dumps({"pack": {"description": "신들의 전장 — 4팀 PvP + 미니보스", **PACK_FMT}}, ensure_ascii=False, indent=1))
@@ -167,7 +163,7 @@ def core_functions(dp_root):
         "execute as @e[type=interaction,tag=bg_rewardhit] if data entity @s attack on attacker run tag @s add bg_wantreward",
         "execute as @e[type=interaction,tag=bg_rewardhit] run data remove entity @s interaction",
         "execute as @e[type=interaction,tag=bg_rewardhit] run data remove entity @s attack",
-        *[f"execute if score #run bg_build matches {rid} run function bg:{fn}/build/step with storage bg:map origin" for fn, rid in MAPS.values()],
+        "execute if score #run bg_build matches 1 run function bg:map/build/step with storage bg:map origin",
     ])
     tele_functions(F)
     impact_functions(F)
@@ -301,8 +297,8 @@ def full_state(s):
     return "minecraft:" + s
 
 
-def map_functions(dp_root, world, per_part=350, prefix="map", run_id=1):
-    F = os.path.join(dp_root, "data", NS, "function", *prefix.split("/"))
+def map_functions(dp_root, world, per_part=350):
+    F = os.path.join(dp_root, "data", NS, "function", "map")
     boxes = greedy_boxes(world.vox)
     SX, SY, SZ = world.size
     cmds = []
@@ -314,10 +310,7 @@ def map_functions(dp_root, world, per_part=350, prefix="map", run_id=1):
                 cmds.append(f"fill ~{x0} ~{y0} ~{z0} ~{x0 + 31} ~{y0 + step - 1} ~{z0 + 31} minecraft:air strict")
     # 2) 블록 (아래에서 위로, 부착물은 나중에)
     def late(pid):
-        try:
-            d = B.describe(world.pal[pid])
-        except Exception:               # 렌더러가 모르는 블록 (직접 고친 맵의 표지판 등) → 나중에 놓기
-            return True
+        d = B.describe(world.pal[pid])
         return d.kind in (3,) or (d.kind == 1 and len(d.boxes) == 1 and d.boxes[0] != (0, 0, 0, 1, 1, 1) and d.boxes[0][4] - d.boxes[0][1] < 0.7)
     lates = {pid: late(pid) for pid in set(b[0] for b in boxes)}
     boxes.sort(key=lambda b: (lates[b[0]], b[2]))
@@ -339,9 +332,9 @@ def map_functions(dp_root, world, per_part=350, prefix="map", run_id=1):
     w(os.path.join(F, "build", "start.mcfunction"), [
         "# 맵 건설 시작: 원점은 storage bg:map origin (기본 -128 40 -128)",
         "#   바꾸려면: data merge storage bg:map {origin:{x:0,y:40,z:0}}",
-        f"function bg:{prefix}/build/forceload with storage bg:map origin",
+        "function bg:map/build/forceload with storage bg:map origin",
         "scoreboard players set #part bg_build 0",
-        f"scoreboard players set #run bg_build {run_id}",
+        "scoreboard players set #run bg_build 1",
         f'tellraw @a [{{"text":"[전장] ","color":"gold"}},{{"text":"맵 건설 시작 ({n}단계, 약 {n // 20 + 1}초)","color":"yellow"}}]',
     ])
     w(os.path.join(F, "build", "forceload.mcfunction"), [l.replace("~", "$(x)", 1) if False else l for l in
@@ -351,11 +344,11 @@ def map_functions(dp_root, world, per_part=350, prefix="map", run_id=1):
                                                       for qx in (0, SX // 2) for qz in (0, SZ // 2)])
     w(os.path.join(F, "build", "step.mcfunction"), [
         "execute store result storage bg:map origin.part int 1 run scoreboard players get #part bg_build",
-        f"function bg:{prefix}/build/run with storage bg:map origin",
+        "function bg:map/build/run with storage bg:map origin",
         "scoreboard players add #part bg_build 1",
-        f"execute if score #part bg_build matches {n}.. run function bg:{prefix}/build/done",
+        f"execute if score #part bg_build matches {n}.. run function bg:map/build/done",
     ])
-    w(os.path.join(F, "build", "run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run function bg:{prefix}/build/p/$(part)"])
+    w(os.path.join(F, "build", "run.mcfunction"), ["$execute positioned $(x) $(y) $(z) run function bg:map/build/p/$(part)"])
     # 맵 경계: 보이지 않는 벽(barrier) — 네 면, 높이 전체 (fill 한 번에 32768 칸 이하로 나눔)
     bl = []
     for (x0, z0, x1, z1) in ((-1, -1, -1, 127), (-1, 128, -1, SZ), (SX, -1, SX, 127), (SX, 128, SX, SZ),
@@ -364,9 +357,9 @@ def map_functions(dp_root, world, per_part=350, prefix="map", run_id=1):
     w(os.path.join(F, "border.mcfunction"), bl)
     w(os.path.join(F, "build", "done.mcfunction"), [
         "scoreboard players set #run bg_build 0",
-        f"function bg:{prefix}/border with storage bg:map origin",
-        f"function bg:{prefix}/decor",
-        f"function bg:{prefix}/build/unload with storage bg:map origin",
+        "function bg:map/border with storage bg:map origin",
+        "function bg:map/decor",
+        "function bg:map/build/unload with storage bg:map origin",
         'tellraw @a [{"text":"[전장] ","color":"gold"},{"text":"맵 건설 완료! /전장 자동팀 → /전장 시작","color":"green"}]',
     ])
     return len(cmds), n
@@ -564,16 +557,7 @@ def npc_and_class_lines(world, bdkit, bdmodels):
 
 
 NATURAL = ("grass_block", "dirt", "stone", "sand", "gravel", "andesite", "coarse_dirt", "podzol", "moss_block",
-           "terracotta", "tuff", "calcite", "diorite", "granite", "mud", "packed_mud", "rooted_dirt",
-           "snow_block", "blackstone", "smooth_basalt", "basalt", "netherrack", "red_sand", "crimson_nylium", "soul_soil", "deepslate")
-
-# 광석 바위의 돌 (맵 테마마다)
-ROCK = {"frost": ["minecraft:stone", "minecraft:andesite", "minecraft:packed_ice", "minecraft:calcite", "minecraft:cobblestone"],
-        "volcano": ["minecraft:blackstone", "minecraft:basalt", "minecraft:smooth_basalt", "minecraft:tuff", "minecraft:cobbled_deepslate"]}
-
-
-def _rock(world, default):
-    return ROCK.get(getattr(world, "theme", "olympus"), default)
+           "terracotta", "tuff", "calcite", "diorite", "granite", "mud", "packed_mud", "rooted_dirt")
 
 
 def ore_lines(world, n_spots=48, seed=77):
@@ -604,7 +588,7 @@ def ore_lines(world, n_spots=48, seed=77):
         top = None
         for y in range(min(Y - 2, 70), 1, -1):
             nm = world.pal[world.vox[x, y, z]]
-            if nm != "air" and nm != "barrier":          # 천장 배리어는 건너뜀
+            if nm != "air":
                 top = y
                 break
         if top is None:
@@ -616,7 +600,7 @@ def ore_lines(world, n_spots=48, seed=77):
             continue
         spots.append((x, z))
         # 땅 위로 솟은 작은 바위 더미 (5x5 안 둥글게, 가운데 3칸 높이) — 광석 반 · 바위 반
-        rock = _rock(world, ["minecraft:stone", "minecraft:andesite", "minecraft:cobblestone", "minecraft:tuff", "minecraft:mossy_cobblestone"])
+        rock = ["minecraft:stone", "minecraft:andesite", "minecraft:cobblestone", "minecraft:tuff", "minecraft:mossy_cobblestone"]
         pool = ["minecraft:iron_ore"] * 3 + ["minecraft:gold_ore"] * 4 + ["minecraft:emerald_ore"] * 2 + ["minecraft:diamond_ore"]
         for dx in range(-2, 3):
             for dz in range(-2, 3):
@@ -660,7 +644,7 @@ def base_ore_lines(world, seed=93):
     out = []
     # 본진 바위는 싼 광석 위주 (철 · 구리 · 가끔 금) — 비싼 광석은 맵 곳곳 광맥에서
     ores = ["minecraft:iron_ore"] * 4 + ["minecraft:copper_ore"] * 4 + ["minecraft:gold_ore"] * 2
-    rock = _rock(world, ["minecraft:stone", "minecraft:andesite", "minecraft:cobblestone", "minecraft:tuff"])
+    rock = ["minecraft:stone", "minecraft:andesite", "minecraft:cobblestone", "minecraft:tuff"]
     for t in ("red", "blue", "green", "yellow"):
         c1, c2 = mk.get(f"base_{t}_class_1"), mk.get(f"base_{t}_class_2")
         sp = mk.get(f"base_{t}_spawn_0")
@@ -821,12 +805,12 @@ def mine_restore_lines(world):
     return fl_add, body, fl_rm
 
 
-def decor_functions(dp_root, world, fixes=(), prefix="map"):
+def decor_functions(dp_root, world, fixes=()):
     """world.displays → 소환 함수 (원점 기준 상대 좌표)
        장식은 전부 블록 디스플레이 조립 (bdmodels) — 마법진만 리소스팩 판"""
     import bdkit
     import bdmodels
-    F = os.path.join(dp_root, "data", NS, "function", *prefix.split("/"))
+    F = os.path.join(dp_root, "data", NS, "function", "map")
     lines = ["kill @e[tag=bg_deco]"]
     nparts = 0
     for d in world.displays:
@@ -861,7 +845,7 @@ def decor_functions(dp_root, world, fixes=(), prefix="map"):
     print(f"[decor] 맵 곳곳 광맥 블록 {len(wild)}개")
     ore = ore + wild
     w(os.path.join(F, "ores_run.mcfunction"), ore)
-    w(os.path.join(F, "ores.mcfunction"), [f"function bg:{prefix}/ores_run with storage bg:map origin"])
+    w(os.path.join(F, "ores.mcfunction"), ["function bg:map/ores_run with storage bg:map origin"])
     # 맵 곳곳이라 멀리 있는 청크는 강제 로드한 뒤 놓는다 (Skript: ores_fl → 2초 → ores → ores_rm)
     import re as _re
     chs = sorted({(int(m.group(1)) // 16, int(m.group(2)) // 16) for m in (_re.search(r"setblock ~(-?\d+) ~-?\d+ ~(-?\d+)", l) for l in ore) if m})
@@ -875,26 +859,24 @@ def decor_functions(dp_root, world, fixes=(), prefix="map"):
         if 0 <= x < X_ and 0 <= y < Y_ and 0 <= z < Z_:
             clr.append(f"$execute positioned $(x) $(y) $(z) run setblock ~{x} ~{y} ~{z} {full_state(world.pal[world.vox[x, y, z]])}")
     w(os.path.join(F, "ores_clear_run.mcfunction"), clr)
-    w(os.path.join(F, "ores_clear.mcfunction"), [f"function bg:{prefix}/ores_clear_run with storage bg:map origin"])
+    w(os.path.join(F, "ores_clear.mcfunction"), ["function bg:map/ores_clear_run with storage bg:map origin"])
     w(os.path.join(F, "ores_fl_run.mcfunction"), fa)
     w(os.path.join(F, "ores_rm_run.mcfunction"), fr)
     for k in ("ores_fl", "ores_rm"):
-        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:{prefix}/{k}_run with storage bg:map origin"])
-    print(f"[decor] 본진 광석 바위 블록 {len(ore)}개 (bg:{prefix}/ores)")
+        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:map/{k}_run with storage bg:map origin"])
+    print(f"[decor] 본진 광석 바위 블록 {len(ore)}개 (bg:map/ores)")
     # ── 상점 상인 NPC (본진 4곳 + 대기실) · 병과 발판 표식
     extra = npc_and_class_lines(world, bdkit, bdmodels)
     lines += extra
     nparts += len(extra)
     print(f"[decor] 블록 디스플레이 {nparts}개")
     w(os.path.join(F, "decor_run.mcfunction"), lines)
-    w(os.path.join(F, "decor.mcfunction"), [f"function bg:{prefix}/decor_run with storage bg:map origin"])
+    w(os.path.join(F, "decor.mcfunction"), ["function bg:map/decor_run with storage bg:map origin"])
     w(os.path.join(F, "decor_clear.mcfunction"), ["kill @e[tag=bg_deco]"])
     # 맵 고치기 (이미 지어진 맵에 덮어쓰기): 예전 광산 자리 복구 + 갇히는 곳 사다리 · 메우기
     #  Skript: patch_fl (강제 로드) → 2초 → patch → patch_rm
     fa, body, fr = mine_restore_lines(world)
     at = "$execute positioned $(x) $(y) $(z) run"
-    # 길가 나무 치우기 (mapgen/midfield.clear_road_trees) — 이미 지은 맵에서도 나무가 사라지게
-    fixes = list(fixes) + list(getattr(world, "road_tree_fix", []))
     chunks = sorted({(x // 16, z // 16) for x, y, z, st in fixes})
     for cx_, cz_ in chunks:
         fa.append(f"$execute positioned $(x) $(y) $(z) run forceload add ~{cx_ * 16} ~{cz_ * 16}")
@@ -905,12 +887,12 @@ def decor_functions(dp_root, world, fixes=(), prefix="map"):
     w(os.path.join(F, "patch_run.mcfunction"), body)
     w(os.path.join(F, "patch_rm_run.mcfunction"), fr)
     for k in ("patch_fl", "patch", "patch_rm"):
-        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:{prefix}/{k}_run with storage bg:map origin"])
+        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:map/{k}_run with storage bg:map origin"])
     print(f"[decor] 맵 고치기: 예전 광산 복구 + 고친 칸 {len(fixes)}개, 명령 {len(body)}줄, 강제 로드 {len(fa)}")
     w(os.path.join(dp_root, "data", NS, "function", "diag.mcfunction"), ["scoreboard objectives add bg_diag dummy", "scoreboard players set #dp bg_diag 1"])
     # 보스 보상 상자 (팀별, 블록 디스플레이)  execute positioned <바닥> run function bg:reward/chest_<팀>
     R_ = os.path.join(dp_root, "data", NS, "function", "reward")
-    for t in (bdmodels.TEAM if prefix == "map" else ()):
+    for t in bdmodels.TEAM:
         out = bdkit.summon_lines(bdmodels.treasure_chest(t), "summon", 0, 0, 0, 0, 1.0, ['"bg"', '"bg_reward"'], spin_tag='"bg_spin_fast"', view=2.0)
         w(os.path.join(R_, f"chest_{t}.mcfunction"), out)
     return len(lines) - 1

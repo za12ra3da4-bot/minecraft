@@ -1,77 +1,3 @@
-fill ~66 ~15 ~172 ~68 ~16 ~174 minecraft:water[level=0] strict
-fill ~73 ~15 ~172 ~74 ~15 ~172 minecraft:stone strict
-fill ~63 ~15 ~173 ~64 ~15 ~173 minecraft:gravel strict
-setblock ~65 ~15 ~173 minecraft:andesite strict
-fill ~73 ~15 ~173 ~73 ~15 ~174 minecraft:andesite strict
-fill ~74 ~15 ~173 ~75 ~15 ~173 minecraft:stone strict
-setblock ~60 ~15 ~174 minecraft:gravel strict
-setblock ~61 ~15 ~174 minecraft:stone strict
-fill ~62 ~15 ~174 ~62 ~15 ~175 minecraft:gravel strict
-fill ~63 ~15 ~174 ~64 ~15 ~174 minecraft:stone strict
-setblock ~65 ~15 ~174 minecraft:gravel strict
-setblock ~74 ~15 ~174 minecraft:stone strict
-setblock ~75 ~15 ~174 minecraft:andesite strict
-setblock ~76 ~15 ~174 minecraft:gravel strict
-setblock ~77 ~15 ~174 minecraft:stone strict
-fill ~78 ~15 ~174 ~78 ~17 ~175 minecraft:andesite strict
-fill ~58 ~15 ~175 ~60 ~15 ~175 minecraft:stone strict
-fill ~61 ~15 ~175 ~61 ~15 ~177 minecraft:andesite strict
-fill ~63 ~15 ~175 ~64 ~15 ~176 minecraft:gravel strict
-setblock ~65 ~15 ~175 minecraft:andesite strict
-fill ~71 ~15 ~175 ~72 ~16 ~176 minecraft:water[level=0] strict
-fill ~73 ~15 ~175 ~75 ~15 ~176 minecraft:gravel strict
-setblock ~76 ~15 ~175 minecraft:stone strict
-setblock ~77 ~15 ~175 minecraft:andesite strict
-fill ~79 ~15 ~175 ~79 ~17 ~176 minecraft:andesite strict
-fill ~57 ~15 ~176 ~58 ~15 ~176 minecraft:andesite strict
-fill ~59 ~15 ~176 ~60 ~15 ~176 minecraft:stone strict
-setblock ~62 ~15 ~176 minecraft:stone strict
-fill ~65 ~15 ~176 ~65 ~16 ~179 minecraft:water[level=0] strict
-fill ~76 ~15 ~176 ~78 ~15 ~176 minecraft:gravel strict
-fill ~80 ~15 ~176 ~80 ~17 ~177 minecraft:andesite strict
-fill ~56 ~15 ~177 ~57 ~15 ~179 minecraft:gravel strict
-setblock ~58 ~15 ~177 minecraft:andesite strict
-fill ~59 ~15 ~177 ~59 ~15 ~178 minecraft:gravel strict
-fill ~60 ~15 ~177 ~60 ~15 ~178 minecraft:stone strict
-fill ~62 ~15 ~177 ~62 ~15 ~179 minecraft:andesite strict
-setblock ~63 ~15 ~177 minecraft:gravel strict
-setblock ~64 ~15 ~177 minecraft:andesite strict
-fill ~71 ~15 ~177 ~71 ~16 ~177 minecraft:water[level=0] strict
-fill ~72 ~15 ~177 ~72 ~15 ~178 minecraft:gravel strict
-setblock ~73 ~15 ~177 minecraft:stone strict
-fill ~74 ~15 ~177 ~75 ~15 ~178 minecraft:gravel strict
-fill ~76 ~15 ~177 ~77 ~15 ~177 minecraft:stone strict
-fill ~78 ~15 ~177 ~78 ~15 ~178 minecraft:gravel strict
-setblock ~79 ~15 ~177 minecraft:stone strict
-fill ~81 ~15 ~177 ~81 ~17 ~178 minecraft:andesite strict
-setblock ~54 ~15 ~178 minecraft:gravel strict
-setblock ~55 ~15 ~178 minecraft:stone strict
-fill ~58 ~15 ~178 ~58 ~15 ~180 minecraft:gravel strict
-setblock ~61 ~15 ~178 minecraft:gravel strict
-setblock ~63 ~15 ~178 minecraft:andesite strict
-fill ~64 ~15 ~178 ~64 ~16 ~179 minecraft:water[level=0] strict
-fill ~66 ~15 ~178 ~69 ~16 ~178 minecraft:water[level=0] strict
-setblock ~70 ~15 ~178 minecraft:andesite strict
-setblock ~71 ~15 ~178 minecraft:stone strict
-setblock ~73 ~15 ~178 minecraft:andesite strict
-fill ~76 ~15 ~178 ~77 ~15 ~178 minecraft:gravel strict
-fill ~79 ~15 ~178 ~80 ~15 ~178 minecraft:gravel strict
-fill ~82 ~15 ~178 ~82 ~15 ~180 minecraft:andesite strict
-fill ~53 ~15 ~179 ~54 ~15 ~179 minecraft:andesite strict
-setblock ~55 ~15 ~179 minecraft:gravel strict
-setblock ~59 ~15 ~179 minecraft:andesite strict
-setblock ~60 ~15 ~179 minecraft:gravel strict
-fill ~61 ~15 ~179 ~61 ~15 ~181 minecraft:andesite strict
-setblock ~63 ~15 ~179 minecraft:stone strict
-fill ~66 ~15 ~179 ~68 ~16 ~179 minecraft:water[level=0] strict
-fill ~69 ~15 ~179 ~70 ~15 ~179 minecraft:stone strict
-setblock ~71 ~15 ~179 minecraft:gravel strict
-fill ~72 ~15 ~179 ~72 ~15 ~180 minecraft:andesite strict
-setblock ~73 ~15 ~179 minecraft:stone strict
-setblock ~74 ~15 ~179 minecraft:gravel strict
-setblock ~75 ~15 ~179 minecraft:andesite strict
-fill ~76 ~15 ~179 ~76 ~15 ~183 minecraft:stone strict
-fill ~77 ~15 ~179 ~77 ~15 ~181 minecraft:andesite strict
 setblock ~78 ~15 ~179 minecraft:stone strict
 fill ~79 ~15 ~179 ~80 ~15 ~179 minecraft:andesite strict
 setblock ~81 ~15 ~179 minecraft:gravel strict
@@ -85,7 +11,7 @@ fill ~59 ~15 ~180 ~60 ~15 ~180 minecraft:stone strict
 fill ~62 ~15 ~180 ~63 ~15 ~181 minecraft:gravel strict
 setblock ~64 ~15 ~180 minecraft:andesite strict
 setblock ~65 ~15 ~180 minecraft:gravel strict
-fill ~66 ~15 ~180 ~66 ~16 ~180 minecraft:water[level=0] strict
+fill ~66 ~15 ~180 ~66 ~16 ~180 minecraft:water strict
 setblock ~67 ~15 ~180 minecraft:stone strict
 setblock ~69 ~15 ~180 minecraft:gravel strict
 setblock ~73 ~15 ~180 minecraft:gravel strict
@@ -103,7 +29,7 @@ setblock ~73 ~15 ~181 minecraft:andesite strict
 fill ~74 ~15 ~181 ~75 ~15 ~181 minecraft:stone strict
 setblock ~78 ~15 ~181 minecraft:stone strict
 fill ~79 ~15 ~181 ~80 ~15 ~181 minecraft:gravel strict
-fill ~81 ~15 ~181 ~82 ~16 ~185 minecraft:water[level=0] strict
+fill ~81 ~15 ~181 ~82 ~16 ~185 minecraft:water strict
 fill ~84 ~15 ~181 ~84 ~17 ~185 minecraft:andesite strict
 fill ~53 ~15 ~182 ~54 ~15 ~182 minecraft:gravel strict
 setblock ~56 ~15 ~182 minecraft:andesite strict
@@ -114,8 +40,8 @@ setblock ~74 ~15 ~182 minecraft:andesite strict
 fill ~75 ~15 ~182 ~75 ~15 ~183 minecraft:gravel strict
 fill ~77 ~15 ~182 ~78 ~15 ~182 minecraft:gravel strict
 fill ~79 ~15 ~182 ~79 ~15 ~183 minecraft:andesite strict
-fill ~80 ~15 ~182 ~80 ~16 ~185 minecraft:water[level=0] strict
-fill ~83 ~15 ~182 ~83 ~16 ~185 minecraft:water[level=0] strict
+fill ~80 ~15 ~182 ~80 ~16 ~185 minecraft:water strict
+fill ~83 ~15 ~182 ~83 ~16 ~185 minecraft:water strict
 fill ~53 ~15 ~183 ~53 ~15 ~184 minecraft:stone strict
 fill ~54 ~15 ~183 ~55 ~15 ~183 minecraft:gravel strict
 setblock ~56 ~15 ~183 minecraft:stone strict
@@ -130,7 +56,7 @@ fill ~56 ~15 ~184 ~56 ~15 ~185 minecraft:gravel strict
 setblock ~57 ~15 ~184 minecraft:stone strict
 setblock ~59 ~15 ~184 minecraft:andesite strict
 fill ~75 ~15 ~184 ~77 ~15 ~184 minecraft:andesite strict
-fill ~79 ~15 ~184 ~79 ~16 ~184 minecraft:water[level=0] strict
+fill ~79 ~15 ~184 ~79 ~16 ~184 minecraft:water strict
 setblock ~53 ~15 ~185 minecraft:gravel strict
 setblock ~55 ~15 ~185 minecraft:gravel strict
 fill ~57 ~15 ~185 ~57 ~15 ~186 minecraft:andesite strict
@@ -245,7 +171,7 @@ setblock ~76 ~15 ~195 minecraft:stone strict
 setblock ~77 ~15 ~195 minecraft:gravel strict
 setblock ~78 ~15 ~195 minecraft:stone strict
 setblock ~79 ~15 ~195 minecraft:gravel strict
-fill ~82 ~15 ~195 ~82 ~16 ~195 minecraft:water[level=0] strict
+fill ~82 ~15 ~195 ~82 ~16 ~195 minecraft:water strict
 fill ~54 ~15 ~196 ~54 ~15 ~197 minecraft:stone strict
 setblock ~55 ~15 ~196 minecraft:andesite strict
 setblock ~57 ~15 ~196 minecraft:stone strict
@@ -265,7 +191,7 @@ setblock ~77 ~15 ~196 minecraft:stone strict
 fill ~78 ~15 ~196 ~78 ~15 ~198 minecraft:gravel strict
 setblock ~79 ~15 ~196 minecraft:andesite strict
 setblock ~80 ~15 ~196 minecraft:gravel strict
-fill ~81 ~15 ~196 ~81 ~16 ~198 minecraft:water[level=0] strict
+fill ~81 ~15 ~196 ~81 ~16 ~198 minecraft:water strict
 fill ~82 ~15 ~196 ~82 ~17 ~199 minecraft:andesite strict
 fill ~55 ~15 ~197 ~55 ~15 ~198 minecraft:gravel strict
 setblock ~57 ~15 ~197 minecraft:gravel strict
@@ -299,7 +225,7 @@ setblock ~75 ~15 ~198 minecraft:stone strict
 setblock ~76 ~15 ~198 minecraft:gravel strict
 setblock ~77 ~15 ~198 minecraft:andesite strict
 setblock ~79 ~15 ~198 minecraft:stone strict
-fill ~80 ~15 ~198 ~80 ~16 ~199 minecraft:water[level=0] strict
+fill ~80 ~15 ~198 ~80 ~16 ~199 minecraft:water strict
 fill ~55 ~15 ~199 ~56 ~15 ~199 minecraft:stone strict
 fill ~57 ~15 ~199 ~58 ~15 ~199 minecraft:gravel strict
 setblock ~59 ~15 ~199 minecraft:andesite strict
@@ -348,3 +274,77 @@ fill ~79 ~15 ~201 ~79 ~17 ~202 minecraft:andesite strict
 setblock ~62 ~15 ~202 minecraft:gravel strict
 setblock ~63 ~15 ~202 minecraft:stone strict
 fill ~69 ~15 ~202 ~71 ~15 ~203 minecraft:gravel strict
+fill ~75 ~15 ~202 ~75 ~15 ~204 minecraft:andesite strict
+fill ~77 ~15 ~202 ~78 ~16 ~202 minecraft:andesite strict
+fill ~59 ~15 ~203 ~65 ~15 ~203 minecraft:andesite strict
+setblock ~67 ~15 ~203 minecraft:andesite strict
+fill ~68 ~15 ~203 ~68 ~15 ~204 minecraft:stone strict
+fill ~72 ~15 ~203 ~72 ~15 ~204 minecraft:stone strict
+fill ~73 ~15 ~203 ~73 ~15 ~205 minecraft:andesite strict
+fill ~76 ~15 ~203 ~77 ~17 ~203 minecraft:andesite strict
+fill ~63 ~15 ~204 ~65 ~17 ~204 minecraft:andesite strict
+setblock ~67 ~15 ~204 minecraft:gravel strict
+setblock ~69 ~15 ~204 minecraft:andesite strict
+setblock ~70 ~15 ~204 minecraft:gravel strict
+setblock ~71 ~15 ~204 minecraft:stone strict
+fill ~74 ~15 ~204 ~74 ~17 ~204 minecraft:andesite strict
+fill ~65 ~15 ~205 ~68 ~15 ~205 minecraft:andesite strict
+setblock ~69 ~15 ~205 minecraft:stone strict
+fill ~70 ~15 ~205 ~72 ~15 ~205 minecraft:andesite strict
+fill ~67 ~15 ~206 ~71 ~17 ~206 minecraft:andesite strict
+fill ~59 ~16 ~69 ~63 ~17 ~69 minecraft:stone strict
+fill ~59 ~16 ~70 ~63 ~16 ~75 minecraft:mossy_cobblestone strict
+fill ~68 ~16 ~170 ~69 ~16 ~170 minecraft:stone strict
+fill ~70 ~16 ~170 ~73 ~18 ~170 minecraft:andesite strict
+fill ~73 ~16 ~171 ~75 ~18 ~171 minecraft:andesite strict
+fill ~73 ~16 ~172 ~74 ~16 ~182 minecraft:water strict
+fill ~75 ~16 ~172 ~76 ~18 ~172 minecraft:andesite strict
+setblock ~63 ~16 ~173 minecraft:ladder[facing=east,waterlogged=true] strict
+fill ~64 ~16 ~173 ~65 ~16 ~175 minecraft:water strict
+fill ~75 ~16 ~173 ~75 ~16 ~184 minecraft:water strict
+fill ~76 ~16 ~173 ~77 ~18 ~173 minecraft:andesite strict
+fill ~60 ~16 ~174 ~63 ~16 ~181 minecraft:water strict
+fill ~76 ~16 ~174 ~76 ~16 ~184 minecraft:water strict
+fill ~77 ~16 ~174 ~77 ~18 ~174 minecraft:andesite strict
+fill ~58 ~16 ~175 ~59 ~16 ~201 minecraft:water strict
+fill ~77 ~16 ~175 ~77 ~16 ~187 minecraft:water strict
+fill ~57 ~16 ~176 ~57 ~16 ~201 minecraft:water strict
+fill ~64 ~16 ~176 ~64 ~16 ~177 minecraft:water strict
+fill ~78 ~16 ~176 ~78 ~16 ~201 minecraft:water strict
+fill ~56 ~16 ~177 ~56 ~16 ~199 minecraft:water strict
+fill ~72 ~16 ~177 ~72 ~16 ~180 minecraft:water strict
+fill ~79 ~16 ~177 ~79 ~16 ~183 minecraft:water strict
+setblock ~54 ~16 ~178 minecraft:ladder[facing=east,waterlogged=true] strict
+fill ~55 ~16 ~178 ~55 ~16 ~199 minecraft:water strict
+fill ~70 ~16 ~178 ~71 ~16 ~179 minecraft:water strict
+fill ~80 ~16 ~178 ~80 ~16 ~181 minecraft:water strict
+fill ~82 ~16 ~178 ~82 ~17 ~179 minecraft:andesite strict
+fill ~53 ~16 ~179 ~54 ~16 ~189 minecraft:water strict
+fill ~69 ~16 ~179 ~69 ~16 ~180 minecraft:water strict
+fill ~81 ~16 ~179 ~81 ~16 ~180 minecraft:water strict
+fill ~64 ~16 ~180 ~65 ~16 ~180 minecraft:water strict
+fill ~67 ~16 ~180 ~68 ~16 ~180 minecraft:water strict
+setblock ~70 ~16 ~180 minecraft:stone strict
+fill ~71 ~16 ~180 ~71 ~18 ~181 minecraft:andesite strict
+setblock ~82 ~16 ~180 minecraft:water strict
+setblock ~67 ~16 ~181 minecraft:water strict
+fill ~68 ~16 ~181 ~68 ~16 ~182 minecraft:stone strict
+fill ~70 ~16 ~181 ~70 ~18 ~181 minecraft:andesite strict
+fill ~72 ~16 ~181 ~72 ~18 ~183 minecraft:andesite strict
+setblock ~60 ~16 ~182 minecraft:water strict
+fill ~73 ~16 ~183 ~74 ~18 ~183 minecraft:andesite strict
+fill ~74 ~16 ~184 ~74 ~18 ~185 minecraft:andesite strict
+fill ~75 ~16 ~185 ~75 ~18 ~186 minecraft:andesite strict
+setblock ~76 ~16 ~185 minecraft:ladder[facing=east,waterlogged=true] strict
+setblock ~79 ~16 ~185 minecraft:water strict
+setblock ~76 ~16 ~186 minecraft:water strict
+fill ~82 ~16 ~186 ~84 ~16 ~192 minecraft:water strict
+fill ~60 ~16 ~187 ~60 ~16 ~188 minecraft:water strict
+fill ~85 ~16 ~189 ~85 ~16 ~190 minecraft:water strict
+setblock ~53 ~16 ~190 minecraft:ladder[facing=east,waterlogged=true] strict
+fill ~54 ~16 ~190 ~54 ~16 ~197 minecraft:water strict
+fill ~77 ~16 ~190 ~77 ~16 ~201 minecraft:water strict
+fill ~53 ~16 ~191 ~53 ~16 ~195 minecraft:water strict
+fill ~60 ~16 ~191 ~60 ~16 ~202 minecraft:water strict
+fill ~74 ~16 ~191 ~74 ~17 ~192 minecraft:andesite strict
+fill ~76 ~16 ~191 ~76 ~16 ~202 minecraft:water strict

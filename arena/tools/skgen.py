@@ -5,7 +5,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "rp"))
 import hud as H
-from bossdata import BOSSES, EXTRA_BOSSES, MAP_BOSSES
+from bossdata import BOSSES, EXTRA_BOSSES
 
 HEAD = "# 자동 생성 파일 — 직접 고치지 말 것 (arena/tools/build.py 가 다시 만든다)\n"
 
@@ -123,7 +123,7 @@ def write_hud(path, font):
         B.append(f"    set {{-bg::hud::status::{st}}} to {q(placed('boss/status_' + st))}")
     for st in ("idle", "lit"):
         B.append(f"    set {{-bg::hud::diamond::{st}}} to {q(placed('boss/diamond_' + st))}")
-    for bid in list(BOSSES) + list(EXTRA_BOSSES) + list(MAP_BOSSES):
+    for bid in list(BOSSES) + list(EXTRA_BOSSES):
         B.append(f"    set {{-bg::hud::name::{bid}}} to {q(placed('boss/name_' + bid))}")
         B.append(f"    set {{-bg::hud::portrait::{bid}}} to {q(placed('boss/portrait_' + bid))}")
     for t in H.TEAM_COL:
@@ -161,23 +161,21 @@ def write_hud(path, font):
     write_blocks(path, [HEAD, HUD_FUNCS], B + tail)
 
 
-def write_map(path, world, map_id="olympus"):
-    """맵 마커 → {-bg::mks::<맵>::<이름>::x|y|z|radius|yaw|boss} + 이름 목록 (a09-maps.sk 가 고른 맵 것을 {-bg::mk::*} 로 옮김)"""
-    M = f"-bg::mks::{map_id}"
-    L = [f"    delete {{{M}::*}}"]
+def write_map(path, world):
+    L = []
     for name, m in sorted(world.markers.items()):
         x, y, z = m["pos"]
-        L.append(f"    add {q(name)} to {{{M}::names::*}}")
-        L.append(f"    set {{{M}::{name}::x}} to {x}")
-        L.append(f"    set {{{M}::{name}::y}} to {y}")
-        L.append(f"    set {{{M}::{name}::z}} to {z}")
+        L.append(f"    set {{-bg::mk::{name}::x}} to {x}")
+        L.append(f"    set {{-bg::mk::{name}::y}} to {y}")
+        L.append(f"    set {{-bg::mk::{name}::z}} to {z}")
         for k in ("radius", "yaw"):
             if k in m:
-                L.append(f"    set {{{M}::{name}::{k}}} to {round(float(m[k]), 2)}")
+                L.append(f"    set {{-bg::mk::{name}::{k}}} to {round(float(m[k]), 2)}")
         if "boss" in m:
-            L.append(f"    set {{{M}::{name}::boss}} to {q(m['boss'])}")
-    L.append(f"    set {{{M}::size}} to {world.size[0]}")
-    write_blocks(path, [HEAD, f"# 맵 좌표 — {map_id} (맵 로컬, 원점 = 설정 {{bg::cfg::ox/oy/oz}}) · a09-maps.sk 가 고른 맵 것을 {{-bg::mk::*}} 로 옮김"], L)
+            L.append(f"    set {{-bg::mk::{name}::boss}} to {q(m['boss'])}")
+    L.append(f"    set {{-bg::mk::size}} to {world.size[0]}")
+    L.append(f"    set {{-bg::mk::ready}} to true")
+    write_blocks(path, [HEAD, "# 맵 좌표 (맵 로컬, 원점 = 설정 {bg::cfg::ox/oy/oz})"], L)
 
 
 def write_anims(path, meta):
@@ -195,7 +193,7 @@ def write_anims(path, meta):
 def write_boss(path, meta):
     L = []
     for bid, m in meta.items():
-        b = {**BOSSES, **MAP_BOSSES}[bid]
+        b = BOSSES[bid]
         L.append(f"    set {{-bg::bd::{bid}::name}} to {q(b['name'])}")
         L.append(f"    set {{-bg::bd::{bid}::short}} to {q(b['short'])}")
         L.append(f"    set {{-bg::bd::{bid}::lair}} to {q(b['lair'])}")

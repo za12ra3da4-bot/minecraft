@@ -274,15 +274,6 @@ def export(pack):
         img = Image.open(f).convert("RGBA") if os.path.exists(f) else weapons_legend2.paint(wid)
         ref = pack.texture(f"weapon/{wid}", img)
         pack.item_model(f"weapon/{wid}", {"parent": "minecraft:item/handheld", "textures": {"layer0": ref}})
-    # 직업 전용 14종 (전사 검 · 궁수 원거리 · 수호자 도끼) + 스킬 바닥 효과 tele/fx3_*
-    import skillfx3
-    skillfx3.export(pack)
-    import weapons_legend3
-    for wid in weapons_legend3.WEAPONS3:
-        f = os.path.join(ART, f"{wid}.png")
-        img = Image.open(f).convert("RGBA") if os.path.exists(f) else weapons_legend3.paint(wid)
-        ref = pack.texture(f"weapon/{wid}", img)
-        pack.item_model(f"weapon/{wid}", {"parent": "minecraft:item/handheld", "textures": {"layer0": ref}})
 
 
 def preview(path):

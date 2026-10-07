@@ -57,21 +57,6 @@ SPEC = {
     "b_sphinx": ("fx2_sphinx_vortex", "sand", "self", "ari"),
     "b_ladon": ("fx2_ladon_fan", "venom", "cone", "makena"),
     "b_cyclops": ("fx2_cyclops_crater", "stone", "far", "kai"),
-    # 직업 전용 14종 (안무는 비슷한 무기 것을 빌려 씀 — skillanim.CHOREO)
-    "moon": ("fx3_moon", "frost", "dash", "alex"),
-    "magma": ("fx3_magma", "fire", "dash", "kai"),
-    "crystal": ("fx3_crystal", "arcane", "self", "ari"),
-    "tempest": ("fx3_tempest", "gale", "self", "steve"),
-    "holy": ("fx3_holy", "holy", "far", "sunny"),
-    "vampire": ("fx3_vampire", "blood", "cone", "noor"),
-    "sunbow": ("fx3_sunbow", "fire", "shot", "makena"),
-    "viper": ("fx3_viper", "venom", "shot", "zuri"),
-    "starbow": ("fx3_starbow", "arcane", "far", "alex"),
-    "shuriken": ("fx3_shuriken", "arcane", "shot", "efe"),
-    "frostaxe": ("fx3_frostaxe", "frost", "self", "steve"),
-    "twinaxe": ("fx3_twinaxe", "blood", "shot", "kai"),
-    "mjolnir": ("fx3_mjolnir", "thunder", "shot", "efe"),
-    "bastion": ("fx3_bastion", "holy", "dash", "sunny"),
 }
 ACCENT = {"thunder": (120, 200, 255), "fire": (255, 140, 50), "gale": (140, 230, 200), "holy": (255, 215, 110), "blood": (230, 50, 60),
           "arcane": (190, 120, 255), "frost": (160, 220, 255), "soul": (90, 240, 230), "venom": (130, 230, 80), "stone": (210, 190, 150),
@@ -593,10 +578,7 @@ def frames(st, wid, tex, wtex, skins, skill=""):
 SKILL = {"thunder": "심판의 낙뢰", "dragon": "화염 선풍", "wind": "질풍 삼연격", "phoenix": "신성 강타", "blackiron": "피의 돌진",
          "tiger": "그림자 교차", "staff": "비전 폭발", "peachwood": "불창의 비", "frost": "빙결 사격", "storm": "폭풍 투척",
          "scythe": "영혼 수확", "lance": "성광 돌격", "skull": "저주의 해골", "chakram": "태양 원반", "chain": "사슬 끌어오기",
-         "gauntlet": "대지 분쇄", "b_talos": "청동 폭주", "b_sphinx": "시간의 모래폭풍", "b_ladon": "삼두 채찍질", "b_cyclops": "거암 투척",
-         "moon": "월광 발도", "magma": "용암 균열", "crystal": "결정 감옥", "tempest": "회오리 베기", "holy": "성흔 십자",
-         "vampire": "핏빛 찌르기", "sunbow": "태양 화살", "viper": "독사의 이빨", "starbow": "유성우", "shuriken": "그림자 표창",
-         "frostaxe": "빙하 내려찍기", "twinaxe": "쌍도끼 투척", "mjolnir": "묠니르", "bastion": "성채 방벽"}
+         "gauntlet": "대지 분쇄", "b_talos": "청동 폭주", "b_sphinx": "시간의 모래폭풍", "b_ladon": "삼두 채찍질", "b_cyclops": "거암 투척"}
 
 
 def _inputs(read):
@@ -615,8 +597,6 @@ def export(pack, read):
     for wid in SPEC:
         wtex = Image.open(io.BytesIO(read(f"assets/bg/textures/item/weapon/{wid}.png"))).convert("RGBA")
         strip = frames(st, wid, tex, wtex, skins, SKILL.get(wid, ""))
-        # 256 색으로 줄여 저장 (팩 크기: 한 장 2.4MB → 0.45MB · 깃허브 파일 100MB 제한)
-        strip = strip.quantize(256, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.NONE)
         base = f"assets/bg/textures/gui/sprites/tooltip/w_{wid}"
         pack.png(f"{base}_background.png", strip)
         pack.put(f"{base}_background.png.mcmeta", {"animation": {"frametime": FT, "interpolate": False, "width": TW * SC, "height": TH * SC},

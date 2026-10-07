@@ -1,350 +1,350 @@
-fill ~206 ~33 ~12 ~206 ~33 ~14 minecraft:deepslate[axis=y] strict
-fill ~17 ~33 ~13 ~17 ~39 ~14 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~19 ~33 ~13 ~21 ~37 ~14 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~28 ~33 ~13 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~30 ~33 ~13 ~38 ~33 ~14 minecraft:smooth_quartz strict
-fill ~77 ~33 ~13 ~78 ~35 ~13 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~108 ~33 ~13 ~108 ~34 ~16 minecraft:stone_bricks strict
-fill ~111 ~33 ~13 ~111 ~34 ~13 minecraft:stone_bricks strict
-fill ~145 ~33 ~13 ~145 ~34 ~13 minecraft:stone_bricks strict
-fill ~148 ~33 ~13 ~148 ~34 ~16 minecraft:stone_bricks strict
-fill ~205 ~33 ~13 ~205 ~34 ~15 minecraft:deepslate[axis=y] strict
-fill ~212 ~33 ~13 ~216 ~35 ~13 minecraft:deepslate[axis=y] strict
-fill ~228 ~33 ~13 ~229 ~34 ~13 minecraft:deepslate[axis=y] strict
-setblock ~237 ~33 ~13 minecraft:deepslate[axis=y] strict
-setblock ~12 ~33 ~14 minecraft:oak_log[axis=x] strict
-fill ~13 ~33 ~14 ~13 ~34 ~14 minecraft:oak_wood[axis=y] strict
-fill ~16 ~33 ~14 ~16 ~40 ~14 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~18 ~33 ~14 ~18 ~37 ~14 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~22 ~33 ~14 ~22 ~37 ~14 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~27 ~33 ~14 ~29 ~33 ~14 minecraft:smooth_quartz strict
-fill ~39 ~33 ~14 ~41 ~33 ~14 minecraft:smooth_quartz strict
-setblock ~43 ~33 ~14 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~74 ~33 ~14 ~75 ~33 ~14 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~81 ~33 ~14 ~81 ~37 ~15 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~110 ~33 ~14 ~110 ~34 ~16 minecraft:stone_bricks strict
-fill ~127 ~33 ~14 ~129 ~33 ~14 minecraft:red_terracotta strict
-fill ~146 ~33 ~14 ~147 ~34 ~16 minecraft:stone_bricks strict
-fill ~204 ~33 ~14 ~204 ~34 ~15 minecraft:deepslate[axis=y] strict
-fill ~212 ~33 ~14 ~213 ~35 ~14 minecraft:deepslate[axis=y] strict
-fill ~231 ~33 ~14 ~232 ~34 ~14 minecraft:deepslate[axis=y] strict
-setblock ~247 ~33 ~14 minecraft:stone strict
-fill ~13 ~33 ~15 ~13 ~33 ~16 minecraft:oak_log[axis=z] strict
-fill ~17 ~33 ~15 ~18 ~33 ~15 minecraft:oak_log[axis=x] strict
-fill ~19 ~33 ~15 ~20 ~33 ~15 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~25 ~33 ~15 ~27 ~33 ~15 minecraft:smooth_quartz strict
-fill ~41 ~33 ~15 ~43 ~33 ~15 minecraft:smooth_quartz strict
-setblock ~45 ~33 ~15 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~46 ~33 ~15 ~47 ~33 ~15 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~78 ~33 ~15 ~78 ~36 ~15 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~203 ~33 ~15 ~203 ~35 ~16 minecraft:deepslate[axis=y] strict
-fill ~249 ~33 ~15 ~249 ~35 ~16 minecraft:stone strict
-fill ~16 ~33 ~16 ~19 ~37 ~16 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~20 ~33 ~16 ~22 ~33 ~16 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~23 ~33 ~16 ~25 ~33 ~16 minecraft:smooth_quartz strict
-fill ~43 ~33 ~16 ~45 ~33 ~16 minecraft:smooth_quartz strict
-setblock ~46 ~33 ~16 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~47 ~33 ~16 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~80 ~33 ~16 ~80 ~34 ~17 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~202 ~33 ~16 ~202 ~35 ~18 minecraft:deepslate[axis=y] strict
-fill ~7 ~33 ~17 ~8 ~34 ~23 minecraft:stone strict
-fill ~17 ~33 ~17 ~18 ~37 ~17 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~19 ~33 ~17 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~20 ~33 ~17 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~21 ~33 ~17 ~21 ~37 ~17 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~22 ~33 ~17 ~23 ~33 ~17 minecraft:smooth_quartz strict
-fill ~45 ~33 ~17 ~46 ~33 ~17 minecraft:smooth_quartz strict
-fill ~48 ~33 ~17 ~49 ~33 ~17 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~78 ~33 ~17 ~79 ~34 ~17 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~108 ~33 ~17 minecraft:red_terracotta strict
-setblock ~110 ~33 ~17 minecraft:red_terracotta strict
-fill ~146 ~33 ~17 ~148 ~33 ~17 minecraft:red_terracotta strict
-fill ~201 ~33 ~17 ~201 ~34 ~19 minecraft:deepslate[axis=y] strict
-fill ~242 ~33 ~17 ~243 ~34 ~25 minecraft:basalt[axis=y] strict
-setblock ~18 ~33 ~18 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~20 ~33 ~18 ~22 ~33 ~18 minecraft:smooth_quartz strict
-fill ~46 ~33 ~18 ~48 ~33 ~18 minecraft:smooth_quartz strict
-setblock ~49 ~33 ~18 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~50 ~33 ~18 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~107 ~33 ~18 ~107 ~33 ~20 minecraft:red_terracotta strict
-fill ~111 ~33 ~18 ~111 ~33 ~20 minecraft:red_terracotta strict
-fill ~145 ~33 ~18 ~145 ~33 ~20 minecraft:red_terracotta strict
-fill ~149 ~33 ~18 ~149 ~33 ~20 minecraft:red_terracotta strict
-fill ~200 ~33 ~18 ~200 ~33 ~29 minecraft:deepslate[axis=y] strict
-fill ~241 ~33 ~18 ~241 ~35 ~23 minecraft:basalt[axis=y] strict
-fill ~244 ~33 ~18 ~244 ~33 ~40 minecraft:basalt[axis=y] strict
-setblock ~17 ~33 ~19 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~18 ~33 ~19 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~19 ~33 ~19 ~20 ~33 ~19 minecraft:smooth_quartz strict
-fill ~48 ~33 ~19 ~49 ~33 ~19 minecraft:smooth_quartz strict
-setblock ~50 ~33 ~19 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~51 ~33 ~19 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~239 ~33 ~19 ~240 ~35 ~20 minecraft:basalt[axis=y] strict
-setblock ~16 ~33 ~20 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~18 ~33 ~20 ~19 ~33 ~20 minecraft:smooth_quartz strict
-fill ~49 ~33 ~20 ~50 ~33 ~20 minecraft:smooth_quartz strict
-fill ~51 ~33 ~20 ~52 ~33 ~20 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~199 ~33 ~20 ~199 ~35 ~29 minecraft:deepslate[axis=y] strict
-fill ~245 ~33 ~20 ~245 ~35 ~30 minecraft:basalt[axis=y] strict
-fill ~15 ~33 ~21 ~15 ~33 ~22 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~18 ~33 ~21 ~18 ~33 ~22 minecraft:smooth_quartz strict
-fill ~50 ~33 ~21 ~50 ~33 ~22 minecraft:smooth_quartz strict
-setblock ~52 ~33 ~21 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~108 ~33 ~21 ~110 ~33 ~21 minecraft:red_terracotta strict
-setblock ~146 ~33 ~21 minecraft:red_terracotta strict
-fill ~147 ~33 ~21 ~147 ~33 ~23 minecraft:stone_bricks strict
-setblock ~148 ~33 ~21 minecraft:red_terracotta strict
-fill ~201 ~33 ~21 ~201 ~35 ~29 minecraft:deepslate[axis=y] strict
-fill ~240 ~33 ~21 ~240 ~35 ~22 minecraft:basalt[axis=y] strict
-fill ~246 ~33 ~21 ~246 ~33 ~24 minecraft:basalt[axis=y] strict
-setblock ~16 ~33 ~22 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~17 ~33 ~22 ~17 ~33 ~23 minecraft:smooth_quartz strict
-fill ~51 ~33 ~22 ~51 ~33 ~23 minecraft:smooth_quartz strict
-fill ~52 ~33 ~22 ~53 ~33 ~22 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~107 ~33 ~22 minecraft:mossy_stone_bricks strict
-fill ~108 ~33 ~22 ~110 ~33 ~23 minecraft:stone_bricks strict
-fill ~148 ~33 ~22 ~148 ~34 ~23 minecraft:stone_bricks strict
-setblock ~149 ~33 ~22 minecraft:mossy_stone_bricks strict
-fill ~198 ~33 ~22 ~198 ~35 ~29 minecraft:deepslate[axis=y] strict
-setblock ~247 ~33 ~22 minecraft:deepslate[axis=y] strict
-fill ~249 ~33 ~22 ~249 ~36 ~26 minecraft:stone strict
-setblock ~12 ~33 ~23 minecraft:grass_block[snowy=false] strict
-fill ~13 ~33 ~23 ~13 ~33 ~24 minecraft:moss_block strict
-fill ~14 ~33 ~23 ~15 ~33 ~23 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~16 ~33 ~23 ~16 ~33 ~25 minecraft:smooth_quartz strict
-fill ~52 ~33 ~23 ~52 ~33 ~25 minecraft:smooth_quartz strict
-setblock ~53 ~33 ~23 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~107 ~33 ~23 ~107 ~33 ~24 minecraft:stone_bricks strict
-fill ~149 ~33 ~23 ~149 ~33 ~24 minecraft:stone_bricks strict
-fill ~202 ~33 ~23 ~202 ~35 ~25 minecraft:deepslate[axis=y] strict
-fill ~7 ~33 ~24 ~7 ~36 ~26 minecraft:stone strict
-fill ~8 ~33 ~24 ~8 ~33 ~28 minecraft:andesite strict
-fill ~11 ~33 ~24 ~12 ~33 ~26 minecraft:moss_block strict
-fill ~54 ~33 ~24 ~54 ~33 ~25 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~108 ~33 ~24 ~109 ~33 ~24 minecraft:mossy_stone_bricks strict
-setblock ~110 ~33 ~24 minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~146 ~33 ~24 minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
-fill ~147 ~33 ~24 ~148 ~33 ~24 minecraft:mossy_stone_bricks strict
-fill ~197 ~33 ~24 ~197 ~34 ~29 minecraft:deepslate[axis=y] strict
-setblock ~13 ~33 ~25 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~15 ~33 ~25 ~15 ~33 ~27 minecraft:smooth_quartz strict
-fill ~53 ~33 ~25 ~53 ~33 ~27 minecraft:smooth_quartz strict
-setblock ~55 ~33 ~25 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~107 ~33 ~25 minecraft:cracked_stone_bricks strict
-fill ~108 ~33 ~25 ~109 ~34 ~25 minecraft:stone_bricks strict
-fill ~147 ~33 ~25 ~148 ~34 ~25 minecraft:stone_bricks strict
-setblock ~149 ~33 ~25 minecraft:cracked_stone_bricks strict
-fill ~186 ~33 ~25 ~188 ~35 ~26 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~213 ~33 ~25 ~215 ~33 ~27 minecraft:waxed_oxidized_cut_copper strict
-fill ~229 ~33 ~25 ~229 ~33 ~27 minecraft:waxed_oxidized_cut_copper strict
-fill ~106 ~33 ~26 ~108 ~33 ~27 minecraft:stone_bricks strict
-fill ~116 ~33 ~26 ~116 ~34 ~26 minecraft:copper_ore strict
-setblock ~117 ~33 ~26 minecraft:tuff strict
-fill ~118 ~33 ~26 ~118 ~33 ~27 minecraft:cobblestone strict
-fill ~148 ~33 ~26 ~150 ~33 ~27 minecraft:stone_bricks strict
-fill ~185 ~33 ~26 ~185 ~35 ~28 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~189 ~33 ~26 ~189 ~35 ~27 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~196 ~33 ~26 ~196 ~33 ~29 minecraft:deepslate[axis=y] strict
-fill ~243 ~33 ~26 ~243 ~35 ~28 minecraft:basalt[axis=y] strict
-fill ~246 ~33 ~26 ~246 ~33 ~34 minecraft:deepslate[axis=y] strict
-fill ~7 ~33 ~27 ~7 ~33 ~41 minecraft:andesite strict
-setblock ~9 ~33 ~27 minecraft:moss_block strict
-setblock ~12 ~33 ~27 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~14 ~33 ~27 ~14 ~33 ~41 minecraft:smooth_quartz strict
-setblock ~54 ~33 ~27 minecraft:smooth_quartz strict
-setblock ~56 ~33 ~27 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~116 ~33 ~27 minecraft:mossy_cobblestone strict
-setblock ~117 ~33 ~27 minecraft:gold_ore strict
-setblock ~137 ~33 ~27 minecraft:white_wool strict
-fill ~138 ~33 ~27 ~139 ~33 ~27 minecraft:red_wool strict
-setblock ~140 ~33 ~27 minecraft:white_wool strict
-fill ~141 ~33 ~27 ~142 ~33 ~27 minecraft:red_wool strict
-setblock ~143 ~33 ~27 minecraft:white_wool strict
-fill ~186 ~33 ~27 ~186 ~34 ~33 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~187 ~33 ~27 minecraft:dark_oak_log[axis=y] strict
-fill ~188 ~33 ~27 ~188 ~35 ~28 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~230 ~33 ~27 ~231 ~33 ~27 minecraft:waxed_oxidized_cut_copper strict
-fill ~247 ~33 ~27 ~247 ~33 ~30 minecraft:deepslate[axis=y] strict
-fill ~249 ~33 ~27 ~249 ~33 ~28 minecraft:deepslate[axis=y] strict
-fill ~106 ~33 ~28 ~108 ~33 ~28 minecraft:cracked_stone_bricks strict
-fill ~116 ~33 ~28 ~117 ~33 ~28 minecraft:iron_ore strict
-fill ~148 ~33 ~28 ~150 ~33 ~28 minecraft:cracked_stone_bricks strict
-fill ~187 ~33 ~28 ~187 ~35 ~29 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~190 ~33 ~28 ~190 ~33 ~29 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~6 ~33 ~29 ~6 ~38 ~31 minecraft:stone strict
-setblock ~8 ~33 ~29 minecraft:grass_block[snowy=false] strict
-setblock ~12 ~33 ~29 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~106 ~33 ~29 ~108 ~33 ~29 minecraft:stone_bricks strict
-setblock ~116 ~33 ~29 minecraft:mossy_cobblestone strict
-fill ~148 ~33 ~29 ~150 ~33 ~29 minecraft:stone_bricks strict
-fill ~188 ~33 ~29 ~188 ~33 ~30 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~191 ~33 ~29 ~192 ~33 ~29 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~202 ~33 ~29 ~203 ~35 ~29 minecraft:deepslate[axis=y] strict
-fill ~13 ~33 ~30 ~13 ~33 ~38 minecraft:smooth_quartz strict
-fill ~106 ~33 ~30 ~108 ~33 ~30 minecraft:mossy_stone_bricks strict
-setblock ~116 ~33 ~30 minecraft:gold_ore strict
-fill ~148 ~33 ~30 ~150 ~33 ~30 minecraft:mossy_stone_bricks strict
-fill ~174 ~33 ~30 ~179 ~34 ~30 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~189 ~33 ~30 ~189 ~35 ~30 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~192 ~33 ~30 ~193 ~33 ~30 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~107 ~33 ~31 ~109 ~34 ~31 minecraft:stone_bricks strict
-setblock ~116 ~33 ~31 minecraft:cobblestone strict
-fill ~147 ~33 ~31 ~149 ~34 ~31 minecraft:stone_bricks strict
-fill ~173 ~33 ~31 ~174 ~35 ~31 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~176 ~33 ~31 ~176 ~33 ~33 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~178 ~33 ~31 ~178 ~36 ~32 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~180 ~33 ~31 ~181 ~34 ~31 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~187 ~33 ~31 ~187 ~34 ~31 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~201 ~33 ~31 ~202 ~36 ~31 minecraft:polished_blackstone_bricks strict
-fill ~245 ~33 ~31 ~245 ~33 ~35 minecraft:deepslate[axis=y] strict
-setblock ~107 ~33 ~32 minecraft:cracked_stone_bricks strict
-fill ~108 ~33 ~32 ~109 ~33 ~33 minecraft:stone_bricks strict
-setblock ~116 ~33 ~32 minecraft:mossy_cobblestone strict
-fill ~147 ~33 ~32 ~148 ~33 ~33 minecraft:stone_bricks strict
-setblock ~149 ~33 ~32 minecraft:cracked_stone_bricks strict
-fill ~173 ~33 ~32 ~173 ~34 ~32 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~175 ~33 ~32 minecraft:oak_log[axis=x] strict
-setblock ~177 ~33 ~32 minecraft:oak_log[axis=z] strict
-fill ~185 ~33 ~32 ~185 ~35 ~32 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~193 ~33 ~32 ~193 ~33 ~34 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~12 ~33 ~33 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~107 ~33 ~33 ~107 ~33 ~34 minecraft:mossy_stone_bricks strict
-setblock ~149 ~33 ~33 minecraft:mossy_stone_bricks strict
-fill ~174 ~33 ~33 ~174 ~36 ~34 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~177 ~33 ~33 ~177 ~33 ~34 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~178 ~33 ~33 minecraft:oak_log[axis=z] strict
-fill ~108 ~33 ~34 ~109 ~33 ~34 minecraft:mossy_stone_bricks strict
-fill ~147 ~33 ~34 ~147 ~34 ~34 minecraft:stone_bricks strict
-setblock ~148 ~33 ~34 minecraft:mossy_stone_bricks strict
-setblock ~149 ~33 ~34 minecraft:stone_bricks strict
-fill ~175 ~33 ~34 ~175 ~36 ~34 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~176 ~33 ~34 ~176 ~33 ~35 minecraft:oak_log[axis=x] strict
-fill ~181 ~33 ~34 ~181 ~34 ~34 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~185 ~33 ~34 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~11 ~33 ~35 ~11 ~33 ~37 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~78 ~33 ~35 ~80 ~33 ~35 minecraft:quartz_stairs[facing=south,half=top,shape=straight,waterlogged=false] strict
-fill ~107 ~33 ~35 ~109 ~33 ~35 minecraft:red_terracotta strict
-fill ~147 ~33 ~35 ~149 ~33 ~35 minecraft:red_terracotta strict
-fill ~165 ~33 ~35 ~165 ~33 ~37 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~180 ~33 ~35 ~180 ~35 ~35 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~183 ~33 ~35 ~184 ~35 ~35 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~192 ~33 ~35 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~77 ~33 ~36 ~77 ~33 ~38 minecraft:quartz_stairs[facing=east,half=top,shape=straight,waterlogged=false] strict
-fill ~78 ~33 ~36 ~80 ~33 ~38 minecraft:smooth_quartz strict
-fill ~81 ~33 ~36 ~81 ~33 ~38 minecraft:quartz_stairs[facing=west,half=top,shape=straight,waterlogged=false] strict
-fill ~106 ~33 ~36 ~106 ~33 ~38 minecraft:red_terracotta strict
-fill ~110 ~33 ~36 ~110 ~33 ~38 minecraft:red_terracotta strict
-fill ~146 ~33 ~36 ~146 ~33 ~38 minecraft:red_terracotta strict
-fill ~150 ~33 ~36 ~150 ~33 ~38 minecraft:red_terracotta strict
-fill ~163 ~33 ~36 ~164 ~38 ~36 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~166 ~33 ~36 ~167 ~37 ~36 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~176 ~33 ~36 ~176 ~36 ~36 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~178 ~33 ~36 ~178 ~35 ~36 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~182 ~33 ~36 ~182 ~35 ~38 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~183 ~33 ~36 ~183 ~33 ~37 minecraft:oak_log[axis=z] strict
-fill ~184 ~33 ~36 ~185 ~35 ~36 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~164 ~33 ~37 ~164 ~38 ~37 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~167 ~33 ~37 ~167 ~37 ~38 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~184 ~33 ~37 ~184 ~33 ~38 minecraft:oak_log[axis=x] strict
-fill ~185 ~33 ~37 ~185 ~35 ~37 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~201 ~33 ~37 ~202 ~36 ~37 minecraft:polished_blackstone_bricks strict
-setblock ~12 ~33 ~38 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~166 ~33 ~38 ~166 ~33 ~39 minecraft:oak_log[axis=z] strict
-setblock ~181 ~33 ~38 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~183 ~33 ~38 ~183 ~33 ~43 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~245 ~33 ~38 ~245 ~33 ~41 minecraft:deepslate[axis=y] strict
-fill ~6 ~33 ~39 ~6 ~38 ~41 minecraft:stone strict
-setblock ~12 ~33 ~39 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~59 ~33 ~39 minecraft:stone strict
-fill ~78 ~33 ~39 ~80 ~33 ~39 minecraft:quartz_stairs[facing=north,half=top,shape=straight,waterlogged=false] strict
-fill ~107 ~33 ~39 ~109 ~33 ~39 minecraft:red_terracotta strict
-fill ~147 ~33 ~39 ~149 ~33 ~39 minecraft:red_terracotta strict
-fill ~168 ~33 ~39 ~168 ~36 ~41 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~170 ~33 ~39 ~171 ~33 ~39 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~180 ~33 ~39 ~181 ~34 ~39 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~184 ~33 ~39 ~184 ~35 ~39 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~249 ~33 ~39 ~249 ~34 ~41 minecraft:deepslate[axis=y] strict
-fill ~12 ~33 ~40 ~12 ~33 ~41 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~13 ~33 ~40 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~163 ~33 ~40 minecraft:oak_log[axis=z] strict
-fill ~169 ~33 ~40 ~170 ~35 ~41 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~180 ~33 ~40 ~180 ~34 ~41 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~182 ~33 ~40 ~182 ~34 ~41 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~191 ~33 ~40 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~196 ~33 ~40 ~201 ~34 ~41 minecraft:deepslate[axis=y] strict
-fill ~243 ~33 ~40 ~243 ~35 ~50 minecraft:basalt[axis=y] strict
-fill ~15 ~33 ~41 ~15 ~33 ~43 minecraft:smooth_quartz strict
-fill ~53 ~33 ~41 ~54 ~33 ~41 minecraft:smooth_quartz strict
-setblock ~56 ~33 ~41 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~181 ~33 ~41 ~181 ~36 ~41 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~213 ~33 ~41 ~215 ~33 ~43 minecraft:waxed_oxidized_cut_copper strict
-fill ~229 ~33 ~41 ~231 ~33 ~43 minecraft:waxed_oxidized_cut_copper strict
-setblock ~244 ~33 ~41 minecraft:deepslate[axis=y] strict
-fill ~7 ~33 ~42 ~7 ~36 ~42 minecraft:stone strict
-fill ~8 ~33 ~42 ~8 ~33 ~44 minecraft:andesite strict
-setblock ~13 ~33 ~42 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~53 ~33 ~42 ~53 ~33 ~43 minecraft:smooth_quartz strict
-setblock ~169 ~33 ~42 minecraft:oak_log[axis=x] strict
-fill ~172 ~33 ~42 ~172 ~33 ~44 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~181 ~33 ~42 ~182 ~33 ~42 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~186 ~33 ~42 ~186 ~33 ~44 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~197 ~33 ~42 ~201 ~34 ~43 minecraft:deepslate[axis=y] strict
-fill ~249 ~33 ~42 ~249 ~37 ~43 minecraft:stone strict
-setblock ~13 ~33 ~43 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~14 ~33 ~43 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~16 ~33 ~43 ~16 ~33 ~45 minecraft:smooth_quartz strict
-setblock ~52 ~33 ~43 minecraft:smooth_quartz strict
-setblock ~54 ~33 ~43 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~168 ~33 ~43 ~169 ~35 ~43 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~202 ~33 ~43 ~202 ~33 ~45 minecraft:deepslate[axis=y] strict
-fill ~242 ~33 ~43 ~242 ~33 ~52 minecraft:basalt[axis=y] strict
-setblock ~54 ~33 ~44 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~114 ~33 ~44 ~116 ~33 ~44 minecraft:red_terracotta strict
-fill ~140 ~33 ~44 ~142 ~33 ~44 minecraft:red_terracotta strict
-fill ~167 ~33 ~44 ~167 ~36 ~44 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~169 ~33 ~44 ~169 ~33 ~45 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~191 ~33 ~44 ~191 ~35 ~44 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~193 ~33 ~44 ~195 ~33 ~44 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~197 ~33 ~44 ~197 ~34 ~44 minecraft:deepslate[axis=y] strict
-fill ~199 ~33 ~44 ~201 ~33 ~46 minecraft:deepslate[axis=y] strict
-fill ~7 ~33 ~45 ~8 ~35 ~45 minecraft:stone strict
-setblock ~14 ~33 ~45 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~17 ~33 ~45 ~17 ~33 ~46 minecraft:smooth_quartz strict
-fill ~113 ~33 ~45 ~113 ~33 ~47 minecraft:red_terracotta strict
-fill ~117 ~33 ~45 ~117 ~33 ~47 minecraft:red_terracotta strict
-fill ~139 ~33 ~45 ~139 ~33 ~47 minecraft:red_terracotta strict
-fill ~143 ~33 ~45 ~143 ~33 ~47 minecraft:red_terracotta strict
-setblock ~166 ~33 ~45 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~170 ~33 ~45 ~171 ~34 ~45 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~187 ~33 ~45 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~194 ~33 ~45 ~194 ~34 ~45 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~241 ~33 ~45 ~241 ~33 ~53 minecraft:basalt[axis=y] strict
-fill ~8 ~33 ~46 ~8 ~35 ~46 minecraft:stone strict
-fill ~18 ~33 ~46 ~18 ~33 ~48 minecraft:smooth_quartz strict
-fill ~118 ~33 ~46 ~118 ~35 ~47 minecraft:stone_bricks strict
-fill ~138 ~33 ~46 ~138 ~35 ~46 minecraft:stone_bricks strict
-fill ~142 ~33 ~46 ~142 ~35 ~46 minecraft:stone strict
-fill ~189 ~33 ~46 ~189 ~34 ~47 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~193 ~33 ~46 ~193 ~34 ~46 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-setblock ~198 ~33 ~46 minecraft:deepslate[axis=y] strict
-fill ~240 ~33 ~46 ~240 ~33 ~54 minecraft:basalt[axis=y] strict
-fill ~246 ~33 ~46 ~246 ~33 ~47 minecraft:deepslate[axis=y] strict
-fill ~9 ~33 ~47 ~9 ~33 ~54 minecraft:stone strict
-setblock ~119 ~33 ~47 minecraft:cracked_stone_bricks strict
-fill ~121 ~33 ~47 ~123 ~33 ~47 minecraft:red_terracotta strict
-fill ~133 ~33 ~47 ~135 ~33 ~47 minecraft:red_terracotta strict
-fill ~137 ~33 ~47 ~137 ~35 ~48 minecraft:stone_bricks strict
-setblock ~138 ~33 ~47 minecraft:mossy_stone_bricks strict
-fill ~191 ~33 ~47 ~192 ~33 ~47 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~199 ~33 ~47 ~200 ~33 ~47 minecraft:deepslate[axis=y] strict
-fill ~244 ~33 ~47 ~245 ~33 ~47 minecraft:deepslate[axis=y] strict
-setblock ~17 ~33 ~48 minecraft:flowering_azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
-fill ~19 ~33 ~48 ~19 ~33 ~49 minecraft:smooth_quartz strict
-fill ~114 ~33 ~48 ~116 ~33 ~48 minecraft:red_terracotta strict
-setblock ~119 ~33 ~48 minecraft:mossy_stone_bricks strict
-fill ~120 ~33 ~48 ~120 ~33 ~50 minecraft:red_terracotta strict
-fill ~124 ~33 ~48 ~124 ~33 ~50 minecraft:red_terracotta strict
-setblock ~132 ~33 ~48 minecraft:red_terracotta strict
-fill ~136 ~33 ~48 ~136 ~33 ~50 minecraft:red_terracotta strict
-fill ~140 ~33 ~48 ~142 ~33 ~48 minecraft:red_terracotta strict
-fill ~239 ~33 ~48 ~239 ~34 ~54 minecraft:basalt[axis=y] strict
+fill ~153 ~33 ~58 ~153 ~33 ~60 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~181 ~33 ~58 ~181 ~33 ~63 minecraft:blackstone strict
+fill ~182 ~33 ~58 ~183 ~33 ~58 minecraft:magma_block strict
+fill ~186 ~33 ~58 ~187 ~33 ~61 minecraft:coarse_dirt strict
+fill ~215 ~33 ~58 ~216 ~34 ~58 minecraft:basalt[axis=y] strict
+fill ~7 ~33 ~59 ~7 ~35 ~72 minecraft:stone strict
+fill ~17 ~33 ~59 ~17 ~33 ~60 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~19 ~33 ~59 ~20 ~33 ~60 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~26 ~33 ~59 ~27 ~33 ~62 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~29 ~33 ~59 ~29 ~35 ~60 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~182 ~33 ~59 ~182 ~33 ~62 minecraft:blackstone strict
+setblock ~183 ~33 ~59 minecraft:magma_block strict
+fill ~185 ~33 ~59 ~185 ~33 ~62 minecraft:coarse_dirt strict
+fill ~188 ~33 ~59 ~188 ~33 ~61 minecraft:coarse_dirt strict
+setblock ~215 ~33 ~59 minecraft:deepslate[axis=y] strict
+fill ~216 ~33 ~59 ~216 ~35 ~59 minecraft:basalt[axis=y] strict
+fill ~15 ~33 ~60 ~16 ~33 ~60 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~18 ~33 ~60 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~28 ~33 ~60 minecraft:dark_oak_log[axis=y] strict
+fill ~30 ~33 ~60 ~30 ~36 ~62 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~151 ~33 ~60 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~183 ~33 ~60 minecraft:blackstone strict
+fill ~184 ~33 ~60 ~184 ~33 ~62 minecraft:coarse_dirt strict
+setblock ~216 ~33 ~60 minecraft:deepslate[axis=y] strict
+fill ~227 ~33 ~60 ~228 ~33 ~60 minecraft:basalt[axis=y] strict
+setblock ~19 ~33 ~61 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~28 ~33 ~61 ~28 ~36 ~64 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~29 ~33 ~61 minecraft:dark_oak_log[axis=y] strict
+fill ~66 ~33 ~61 ~66 ~34 ~61 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~105 ~33 ~61 minecraft:cracked_stone_bricks strict
+fill ~183 ~33 ~61 ~183 ~33 ~63 minecraft:coarse_dirt strict
+fill ~29 ~33 ~62 ~29 ~37 ~65 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~31 ~33 ~62 ~31 ~36 ~62 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~81 ~33 ~62 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~134 ~33 ~62 ~134 ~34 ~62 minecraft:cracked_stone_bricks strict
+setblock ~135 ~33 ~62 minecraft:mossy_stone_bricks strict
+fill ~179 ~33 ~62 ~179 ~33 ~65 minecraft:blackstone strict
+fill ~191 ~33 ~62 ~192 ~33 ~62 minecraft:coarse_dirt strict
+fill ~202 ~33 ~62 ~202 ~33 ~63 minecraft:brown_terracotta strict
+setblock ~15 ~33 ~63 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~32 ~33 ~63 ~32 ~37 ~63 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~82 ~33 ~63 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~133 ~33 ~63 ~133 ~34 ~63 minecraft:stone_bricks strict
+setblock ~134 ~33 ~63 minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~177 ~33 ~63 minecraft:dark_oak_fence[east=true,north=false,south=true,waterlogged=false,west=false] strict
+setblock ~178 ~33 ~63 minecraft:brown_terracotta strict
+fill ~182 ~33 ~63 ~182 ~33 ~65 minecraft:coarse_dirt strict
+setblock ~193 ~33 ~63 minecraft:gravel strict
+fill ~194 ~33 ~63 ~195 ~33 ~63 minecraft:brown_terracotta strict
+fill ~200 ~33 ~63 ~201 ~33 ~63 minecraft:brown_terracotta strict
+setblock ~224 ~33 ~63 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~226 ~33 ~63 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~18 ~33 ~64 ~18 ~33 ~65 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~32 ~33 ~64 minecraft:dark_oak_log[axis=y] strict
+fill ~33 ~33 ~64 ~33 ~37 ~64 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~81 ~33 ~64 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~177 ~33 ~64 ~177 ~33 ~65 minecraft:magma_block strict
+setblock ~178 ~33 ~64 minecraft:blackstone strict
+fill ~181 ~33 ~64 ~181 ~33 ~69 minecraft:coarse_dirt strict
+fill ~194 ~33 ~64 ~194 ~33 ~65 minecraft:gravel strict
+fill ~195 ~33 ~64 ~199 ~33 ~64 minecraft:brown_terracotta strict
+setblock ~200 ~33 ~64 minecraft:coarse_dirt strict
+fill ~201 ~33 ~64 ~202 ~33 ~67 minecraft:gravel strict
+fill ~225 ~33 ~64 ~225 ~34 ~66 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~15 ~33 ~65 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~17 ~33 ~65 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~30 ~33 ~65 ~31 ~33 ~66 minecraft:dark_oak_log[axis=y] strict
+fill ~32 ~33 ~65 ~32 ~36 ~66 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~33 ~33 ~65 ~33 ~34 ~65 minecraft:dark_oak_log[axis=y] strict
+fill ~77 ~33 ~65 ~77 ~33 ~71 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~173 ~33 ~65 ~173 ~33 ~67 minecraft:brown_terracotta strict
+fill ~174 ~33 ~65 ~174 ~33 ~67 minecraft:gravel strict
+fill ~175 ~33 ~65 ~176 ~33 ~65 minecraft:blackstone strict
+setblock ~178 ~33 ~65 minecraft:magma_block strict
+fill ~180 ~33 ~65 ~180 ~33 ~69 minecraft:coarse_dirt strict
+fill ~195 ~33 ~65 ~200 ~33 ~66 minecraft:gravel strict
+fill ~203 ~33 ~65 ~203 ~33 ~71 minecraft:brown_terracotta strict
+fill ~222 ~33 ~65 ~223 ~33 ~65 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~227 ~33 ~65 ~228 ~33 ~65 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~75 ~33 ~66 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~83 ~33 ~66 ~83 ~33 ~69 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~133 ~33 ~66 minecraft:mossy_stone_bricks strict
+fill ~134 ~33 ~66 ~135 ~33 ~66 minecraft:stone_bricks strict
+fill ~137 ~33 ~66 ~137 ~34 ~66 minecraft:mossy_stone_bricks strict
+fill ~175 ~33 ~66 ~175 ~33 ~74 minecraft:packed_mud strict
+fill ~176 ~33 ~66 ~177 ~33 ~66 minecraft:blackstone strict
+fill ~178 ~33 ~66 ~179 ~33 ~69 minecraft:coarse_dirt strict
+fill ~188 ~33 ~66 ~188 ~34 ~66 minecraft:polished_blackstone_bricks strict
+fill ~220 ~33 ~66 ~222 ~33 ~66 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~223 ~33 ~66 ~223 ~34 ~66 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~228 ~33 ~66 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~30 ~33 ~67 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~84 ~33 ~67 ~84 ~33 ~69 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~176 ~33 ~67 ~176 ~33 ~70 minecraft:packed_mud strict
+fill ~177 ~33 ~67 ~177 ~33 ~69 minecraft:coarse_dirt strict
+fill ~187 ~33 ~67 ~189 ~33 ~69 minecraft:iron_block strict
+fill ~190 ~33 ~67 ~190 ~34 ~69 minecraft:polished_blackstone_bricks strict
+fill ~195 ~33 ~67 ~197 ~33 ~76 minecraft:coarse_dirt strict
+fill ~198 ~33 ~67 ~200 ~33 ~67 minecraft:gravel strict
+fill ~218 ~33 ~67 ~218 ~33 ~72 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~219 ~33 ~67 ~219 ~33 ~69 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~223 ~33 ~67 ~223 ~33 ~69 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~22 ~33 ~68 minecraft:moss_block strict
+setblock ~36 ~33 ~68 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~74 ~33 ~68 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~173 ~33 ~68 minecraft:gravel strict
+fill ~174 ~33 ~68 ~174 ~33 ~72 minecraft:packed_mud strict
+fill ~198 ~33 ~68 ~202 ~33 ~72 minecraft:coarse_dirt strict
+fill ~215 ~33 ~68 ~217 ~35 ~68 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~224 ~33 ~68 ~224 ~34 ~68 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~9 ~33 ~69 minecraft:stone strict
+fill ~21 ~33 ~69 ~21 ~33 ~70 minecraft:grass_block strict
+setblock ~25 ~33 ~69 minecraft:moss_block strict
+setblock ~35 ~33 ~69 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~173 ~33 ~69 ~173 ~33 ~71 minecraft:brown_terracotta strict
+fill ~215 ~33 ~69 ~216 ~35 ~70 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~217 ~33 ~69 minecraft:oak_log[axis=x] strict
+fill ~9 ~33 ~70 ~9 ~33 ~72 minecraft:grass_block strict
+setblock ~26 ~33 ~70 minecraft:moss_block strict
+fill ~38 ~33 ~70 ~39 ~33 ~70 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~76 ~33 ~70 ~76 ~34 ~70 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~79 ~33 ~70 ~79 ~33 ~72 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~81 ~33 ~70 ~81 ~34 ~70 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~154 ~33 ~70 ~155 ~33 ~70 minecraft:grass_block strict
+fill ~177 ~33 ~70 ~181 ~33 ~72 minecraft:gravel strict
+fill ~187 ~33 ~70 ~188 ~34 ~70 minecraft:polished_blackstone_bricks strict
+fill ~217 ~33 ~70 ~217 ~36 ~71 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~219 ~33 ~70 ~219 ~36 ~72 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~220 ~33 ~70 ~222 ~33 ~70 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~223 ~33 ~70 ~223 ~36 ~73 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~242 ~33 ~70 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~244 ~33 ~70 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~20 ~33 ~71 minecraft:grass_block strict
+fill ~25 ~33 ~71 ~25 ~33 ~77 minecraft:moss_block strict
+setblock ~35 ~33 ~71 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~38 ~33 ~71 ~38 ~34 ~71 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~39 ~33 ~71 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~41 ~33 ~71 ~41 ~34 ~71 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~42 ~33 ~71 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~75 ~33 ~71 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~76 ~33 ~71 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~82 ~33 ~71 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~176 ~33 ~71 minecraft:gravel strict
+fill ~182 ~33 ~71 ~182 ~33 ~73 minecraft:gravel strict
+fill ~194 ~33 ~71 ~194 ~33 ~77 minecraft:coarse_dirt strict
+fill ~216 ~33 ~71 ~216 ~36 ~71 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~241 ~33 ~71 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~245 ~33 ~71 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~20 ~33 ~72 minecraft:moss_block strict
+fill ~36 ~33 ~72 ~36 ~35 ~72 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~43 ~33 ~72 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~78 ~33 ~72 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~81 ~33 ~72 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~176 ~33 ~72 ~176 ~33 ~74 minecraft:packed_mud strict
+fill ~222 ~33 ~72 ~222 ~36 ~72 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~235 ~33 ~72 ~235 ~35 ~73 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~19 ~33 ~73 minecraft:grass_block strict
+fill ~174 ~33 ~73 ~174 ~33 ~74 minecraft:brown_terracotta strict
+fill ~177 ~33 ~73 ~177 ~33 ~74 minecraft:coarse_dirt strict
+fill ~178 ~33 ~73 ~181 ~33 ~73 minecraft:gravel strict
+setblock ~183 ~33 ~73 minecraft:gravel strict
+fill ~193 ~33 ~73 ~193 ~33 ~76 minecraft:coarse_dirt strict
+fill ~198 ~33 ~73 ~201 ~33 ~74 minecraft:coarse_dirt strict
+fill ~202 ~33 ~73 ~202 ~33 ~74 minecraft:brown_terracotta strict
+setblock ~218 ~33 ~73 minecraft:oak_log[axis=z] strict
+setblock ~222 ~33 ~73 minecraft:oak_log[axis=z] strict
+setblock ~226 ~33 ~73 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~241 ~33 ~73 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~245 ~33 ~73 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~8 ~33 ~74 ~8 ~35 ~74 minecraft:stone strict
+fill ~19 ~33 ~74 ~19 ~33 ~75 minecraft:moss_block strict
+fill ~22 ~33 ~74 ~22 ~35 ~75 minecraft:dirt strict
+fill ~178 ~33 ~74 ~183 ~33 ~74 minecraft:coarse_dirt strict
+fill ~184 ~33 ~74 ~185 ~33 ~74 minecraft:gravel strict
+fill ~191 ~33 ~74 ~192 ~33 ~76 minecraft:coarse_dirt strict
+fill ~218 ~33 ~74 ~218 ~38 ~74 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~222 ~33 ~74 ~222 ~35 ~76 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~223 ~33 ~74 minecraft:oak_log[axis=z] strict
+fill ~231 ~33 ~74 ~234 ~35 ~74 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~242 ~33 ~74 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~244 ~33 ~74 minecraft:spruce_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~8 ~33 ~75 ~8 ~35 ~75 minecraft:dirt strict
+setblock ~12 ~33 ~75 minecraft:mossy_stone_bricks strict
+fill ~13 ~33 ~75 ~17 ~33 ~75 minecraft:stone_bricks strict
+fill ~18 ~33 ~75 ~18 ~33 ~76 minecraft:cracked_stone_bricks strict
+setblock ~27 ~33 ~75 minecraft:oak_log[axis=x] strict
+fill ~35 ~33 ~75 ~35 ~33 ~77 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~44 ~33 ~75 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~179 ~33 ~75 minecraft:brown_terracotta strict
+fill ~180 ~33 ~75 ~190 ~33 ~75 minecraft:coarse_dirt strict
+fill ~198 ~33 ~75 ~200 ~33 ~76 minecraft:coarse_dirt strict
+fill ~201 ~33 ~75 ~201 ~33 ~76 minecraft:brown_terracotta strict
+setblock ~217 ~33 ~75 minecraft:oak_log[axis=z] strict
+fill ~224 ~33 ~75 ~224 ~35 ~75 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~232 ~33 ~75 ~232 ~37 ~76 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~234 ~33 ~75 ~234 ~34 ~75 minecraft:oak_log[axis=x] strict
+fill ~235 ~33 ~75 ~235 ~34 ~78 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~8 ~33 ~76 ~8 ~35 ~80 minecraft:stone strict
+setblock ~17 ~33 ~76 minecraft:stone_bricks strict
+fill ~34 ~33 ~76 ~34 ~33 ~77 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~38 ~33 ~76 ~38 ~35 ~77 minecraft:birch_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~43 ~33 ~76 ~43 ~35 ~77 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~181 ~33 ~76 ~188 ~33 ~76 minecraft:coarse_dirt strict
+fill ~189 ~33 ~76 ~190 ~33 ~77 minecraft:gravel strict
+fill ~223 ~33 ~76 ~223 ~35 ~76 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~231 ~33 ~76 ~231 ~37 ~76 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~233 ~33 ~76 ~233 ~35 ~78 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~236 ~33 ~76 ~236 ~34 ~77 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~10 ~33 ~77 ~10 ~33 ~78 minecraft:grass_block strict
+setblock ~18 ~33 ~77 minecraft:stone_bricks strict
+fill ~21 ~33 ~77 ~21 ~35 ~82 minecraft:dirt strict
+setblock ~24 ~33 ~77 minecraft:moss_block strict
+setblock ~37 ~33 ~77 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~39 ~33 ~77 ~42 ~33 ~77 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~181 ~33 ~77 minecraft:brown_terracotta strict
+fill ~182 ~33 ~77 ~188 ~33 ~81 minecraft:coarse_dirt strict
+fill ~191 ~33 ~77 ~192 ~33 ~79 minecraft:gravel strict
+fill ~193 ~33 ~77 ~193 ~33 ~78 minecraft:magma_block strict
+setblock ~200 ~33 ~77 minecraft:brown_terracotta strict
+setblock ~206 ~33 ~77 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~234 ~33 ~77 ~234 ~35 ~78 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~248 ~33 ~77 ~248 ~34 ~86 minecraft:stone strict
+setblock ~16 ~33 ~78 minecraft:cracked_stone_bricks strict
+fill ~17 ~33 ~78 ~17 ~33 ~80 minecraft:moss_block strict
+setblock ~18 ~33 ~78 minecraft:cracked_stone_bricks strict
+fill ~24 ~33 ~78 ~24 ~33 ~81 minecraft:grass_block strict
+fill ~33 ~33 ~78 ~33 ~33 ~79 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~36 ~33 ~78 ~36 ~34 ~78 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~189 ~33 ~78 ~189 ~33 ~82 minecraft:coarse_dirt strict
+fill ~190 ~33 ~78 ~190 ~33 ~79 minecraft:gravel strict
+fill ~205 ~33 ~78 ~205 ~33 ~80 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~207 ~33 ~78 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~232 ~33 ~78 ~232 ~33 ~83 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~10 ~33 ~79 minecraft:moss_block strict
+fill ~18 ~33 ~79 ~18 ~34 ~79 minecraft:stone_bricks strict
+setblock ~204 ~33 ~79 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~230 ~33 ~79 ~231 ~35 ~80 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~233 ~33 ~79 ~234 ~33 ~79 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~18 ~33 ~80 minecraft:cobblestone strict
+fill ~20 ~33 ~80 ~20 ~35 ~87 minecraft:dirt strict
+setblock ~30 ~33 ~80 minecraft:cobblestone strict
+fill ~38 ~33 ~80 ~39 ~35 ~80 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~40 ~33 ~80 minecraft:oak_log[axis=x] strict
+fill ~41 ~33 ~80 ~43 ~33 ~81 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~190 ~33 ~80 ~190 ~33 ~82 minecraft:coarse_dirt strict
+setblock ~191 ~33 ~80 minecraft:gravel strict
+fill ~207 ~33 ~80 ~207 ~33 ~81 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~229 ~33 ~80 ~229 ~33 ~82 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~233 ~33 ~80 minecraft:dark_oak_log[axis=y] strict
+fill ~234 ~33 ~80 ~235 ~36 ~81 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~16 ~33 ~81 ~16 ~33 ~83 minecraft:moss_block strict
+setblock ~18 ~33 ~81 minecraft:dirt strict
+fill ~35 ~33 ~81 ~35 ~35 ~82 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~38 ~33 ~81 ~38 ~36 ~81 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~39 ~33 ~81 minecraft:oak_log[axis=x] strict
+fill ~40 ~33 ~81 ~40 ~36 ~81 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~191 ~33 ~81 minecraft:coarse_dirt strict
+fill ~230 ~33 ~81 ~230 ~34 ~81 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~231 ~33 ~81 ~231 ~33 ~82 minecraft:dark_oak_log[axis=y] strict
+fill ~233 ~33 ~81 ~233 ~37 ~81 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~11 ~33 ~82 minecraft:andesite strict
+fill ~24 ~33 ~82 ~24 ~33 ~87 minecraft:moss_block strict
+setblock ~32 ~33 ~82 minecraft:oak_log[axis=z] strict
+fill ~33 ~33 ~82 ~34 ~34 ~83 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~41 ~33 ~82 ~41 ~35 ~83 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~184 ~33 ~82 ~188 ~33 ~82 minecraft:coarse_dirt strict
+setblock ~191 ~33 ~82 minecraft:blackstone strict
+setblock ~205 ~33 ~82 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~219 ~33 ~82 ~219 ~34 ~83 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~230 ~33 ~82 minecraft:dark_oak_log[axis=y] strict
+setblock ~235 ~33 ~82 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~236 ~33 ~82 ~236 ~36 ~84 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~11 ~33 ~83 minecraft:moss_block strict
+fill ~15 ~33 ~83 ~15 ~33 ~86 minecraft:moss_block strict
+fill ~19 ~33 ~83 ~19 ~35 ~85 minecraft:dirt strict
+fill ~36 ~33 ~83 ~36 ~36 ~83 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~38 ~33 ~83 ~39 ~35 ~83 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~185 ~33 ~83 ~191 ~33 ~83 minecraft:brown_terracotta strict
+fill ~217 ~33 ~83 ~218 ~33 ~85 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~220 ~33 ~83 ~221 ~33 ~84 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~231 ~33 ~83 ~231 ~34 ~83 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~235 ~33 ~83 ~235 ~36 ~84 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~237 ~33 ~83 ~237 ~33 ~84 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~11 ~33 ~84 ~11 ~33 ~86 minecraft:andesite strict
+fill ~32 ~33 ~84 ~33 ~36 ~84 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~34 ~33 ~84 minecraft:oak_log[axis=x] strict
+fill ~35 ~33 ~84 ~35 ~36 ~84 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~36 ~33 ~84 minecraft:oak_log[axis=z] strict
+fill ~219 ~33 ~84 ~219 ~33 ~85 minecraft:oak_log[axis=x] strict
+fill ~227 ~33 ~84 ~227 ~38 ~84 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~228 ~33 ~84 minecraft:oak_log[axis=z] strict
+fill ~229 ~33 ~84 ~229 ~33 ~85 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~232 ~33 ~84 ~232 ~33 ~85 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~233 ~33 ~84 ~233 ~35 ~85 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~234 ~33 ~84 minecraft:dark_oak_log[axis=y] strict
+fill ~242 ~33 ~84 ~243 ~34 ~85 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~14 ~33 ~85 ~14 ~33 ~86 minecraft:moss_block strict
+fill ~34 ~33 ~85 ~34 ~36 ~85 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~35 ~33 ~85 minecraft:oak_log[axis=z] strict
+fill ~40 ~33 ~85 ~40 ~33 ~87 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~210 ~33 ~85 ~211 ~33 ~85 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~220 ~33 ~85 ~220 ~35 ~87 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~228 ~33 ~85 ~228 ~33 ~87 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~234 ~33 ~85 ~234 ~33 ~87 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~235 ~33 ~85 minecraft:oak_log[axis=x] strict
+setblock ~237 ~33 ~85 minecraft:oak_log[axis=x] strict
+fill ~238 ~33 ~85 ~239 ~33 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~241 ~33 ~85 ~241 ~34 ~91 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~244 ~33 ~85 ~244 ~34 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~12 ~33 ~86 minecraft:moss_block strict
+fill ~18 ~33 ~86 ~18 ~35 ~89 minecraft:dirt strict
+fill ~19 ~33 ~86 ~19 ~33 ~88 minecraft:stone strict
+fill ~30 ~33 ~86 ~31 ~33 ~86 minecraft:stone_bricks strict
+setblock ~34 ~33 ~86 minecraft:stone_bricks strict
+fill ~35 ~33 ~86 ~35 ~35 ~87 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~37 ~33 ~86 ~37 ~35 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~205 ~33 ~86 ~206 ~33 ~86 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~208 ~33 ~86 ~208 ~33 ~89 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~216 ~33 ~86 ~216 ~35 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~218 ~33 ~86 ~219 ~35 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~221 ~33 ~86 ~221 ~35 ~89 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~226 ~33 ~86 ~227 ~36 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~233 ~33 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~235 ~33 ~86 ~236 ~34 ~87 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~237 ~33 ~86 minecraft:oak_log[axis=z] strict
+setblock ~242 ~33 ~86 minecraft:oak_log[axis=z] strict
+fill ~243 ~33 ~86 ~243 ~38 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~245 ~33 ~86 ~246 ~33 ~86 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~9 ~33 ~87 ~9 ~33 ~94 minecraft:stone strict
+fill ~12 ~33 ~87 ~14 ~33 ~92 minecraft:grass_block strict
+fill ~23 ~33 ~87 ~23 ~33 ~88 minecraft:moss_block strict
+fill ~32 ~33 ~87 ~33 ~34 ~89 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~36 ~33 ~87 ~36 ~35 ~87 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~204 ~33 ~87 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~209 ~33 ~87 ~209 ~35 ~87 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~217 ~33 ~87 ~218 ~35 ~87 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~219 ~33 ~87 minecraft:oak_log[axis=x] strict
+fill ~222 ~33 ~87 ~222 ~35 ~89 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~225 ~33 ~87 ~225 ~36 ~88 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~226 ~33 ~87 minecraft:oak_log[axis=z] strict
+setblock ~227 ~33 ~87 minecraft:oak_log[axis=x] strict
+setblock ~237 ~33 ~87 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~239 ~33 ~87 ~240 ~34 ~88 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~242 ~33 ~87 ~242 ~38 ~87 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~20 ~33 ~88 ~21 ~33 ~90 minecraft:stone strict
+setblock ~34 ~33 ~88 minecraft:oak_log[axis=z] strict
+fill ~39 ~33 ~88 ~39 ~34 ~88 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~40 ~33 ~88 ~40 ~34 ~91 minecraft:dark_oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~77 ~33 ~88 ~77 ~35 ~89 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~80 ~33 ~88 ~81 ~34 ~88 minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false] strict

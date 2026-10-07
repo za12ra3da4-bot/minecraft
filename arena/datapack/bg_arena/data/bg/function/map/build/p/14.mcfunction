@@ -1,80 +1,3 @@
-fill ~12 ~20 ~238 ~13 ~21 ~238 minecraft:smooth_stone strict
-setblock ~14 ~20 ~238 minecraft:gravel strict
-fill ~15 ~20 ~238 ~15 ~20 ~240 minecraft:stone strict
-setblock ~18 ~20 ~238 minecraft:stone strict
-setblock ~19 ~20 ~238 minecraft:gravel strict
-fill ~21 ~20 ~238 ~21 ~20 ~239 minecraft:gravel strict
-fill ~23 ~20 ~238 ~23 ~20 ~239 minecraft:stone strict
-fill ~24 ~20 ~238 ~26 ~20 ~238 minecraft:gravel strict
-setblock ~27 ~20 ~238 minecraft:smooth_stone strict
-setblock ~28 ~20 ~238 minecraft:gravel strict
-setblock ~29 ~20 ~238 minecraft:andesite strict
-fill ~34 ~20 ~238 ~34 ~20 ~239 minecraft:stone strict
-fill ~35 ~20 ~238 ~35 ~20 ~239 minecraft:gravel strict
-fill ~39 ~20 ~238 ~40 ~20 ~239 minecraft:andesite strict
-setblock ~42 ~20 ~238 minecraft:gravel strict
-setblock ~43 ~20 ~238 minecraft:andesite strict
-setblock ~44 ~20 ~238 minecraft:gravel strict
-fill ~45 ~20 ~238 ~45 ~21 ~238 minecraft:stone strict
-fill ~46 ~20 ~238 ~47 ~23 ~238 minecraft:andesite strict
-fill ~48 ~20 ~238 ~49 ~21 ~239 minecraft:stone strict
-fill ~51 ~20 ~238 ~51 ~23 ~238 minecraft:stone strict
-fill ~53 ~20 ~238 ~53 ~21 ~238 minecraft:andesite strict
-fill ~54 ~20 ~238 ~54 ~21 ~238 minecraft:tuff strict
-fill ~55 ~20 ~238 ~55 ~21 ~238 minecraft:smooth_stone strict
-fill ~56 ~20 ~238 ~56 ~23 ~238 minecraft:tuff strict
-fill ~57 ~20 ~238 ~57 ~21 ~238 minecraft:stone strict
-setblock ~59 ~20 ~238 minecraft:stone strict
-setblock ~60 ~20 ~238 minecraft:smooth_stone strict
-fill ~61 ~20 ~238 ~61 ~21 ~238 minecraft:stone strict
-fill ~62 ~20 ~238 ~62 ~21 ~240 minecraft:andesite strict
-fill ~65 ~20 ~238 ~65 ~23 ~238 minecraft:stone strict
-fill ~103 ~20 ~238 ~103 ~20 ~240 minecraft:stone strict
-fill ~158 ~20 ~238 ~158 ~20 ~242 minecraft:stone strict
-setblock ~198 ~20 ~238 minecraft:stone strict
-fill ~210 ~20 ~238 ~210 ~22 ~242 minecraft:smooth_sandstone strict
-fill ~230 ~20 ~238 ~232 ~21 ~238 minecraft:sandstone strict
-fill ~233 ~20 ~238 ~234 ~20 ~242 minecraft:smooth_sandstone strict
-fill ~5 ~20 ~239 ~5 ~23 ~239 minecraft:stone strict
-fill ~6 ~20 ~239 ~6 ~21 ~240 minecraft:smooth_stone strict
-fill ~9 ~20 ~239 ~9 ~23 ~239 minecraft:andesite strict
-fill ~10 ~20 ~239 ~10 ~21 ~240 minecraft:stone strict
-fill ~11 ~20 ~239 ~11 ~21 ~239 minecraft:smooth_stone strict
-fill ~12 ~20 ~239 ~12 ~21 ~239 minecraft:andesite strict
-fill ~13 ~20 ~239 ~14 ~21 ~239 minecraft:stone strict
-fill ~17 ~20 ~239 ~18 ~20 ~240 minecraft:gravel strict
-fill ~19 ~20 ~239 ~19 ~20 ~240 minecraft:stone strict
-fill ~20 ~20 ~239 ~20 ~20 ~240 minecraft:gravel strict
-setblock ~22 ~20 ~239 minecraft:gravel strict
-setblock ~24 ~20 ~239 minecraft:gravel strict
-fill ~25 ~20 ~239 ~26 ~20 ~239 minecraft:smooth_stone strict
-setblock ~27 ~20 ~239 minecraft:gravel strict
-setblock ~28 ~20 ~239 minecraft:andesite strict
-setblock ~29 ~20 ~239 minecraft:gravel strict
-fill ~32 ~20 ~239 ~32 ~20 ~240 minecraft:stone strict
-setblock ~33 ~20 ~239 minecraft:gravel strict
-fill ~36 ~20 ~239 ~36 ~20 ~241 minecraft:gravel strict
-setblock ~37 ~20 ~239 minecraft:andesite strict
-fill ~38 ~20 ~239 ~38 ~20 ~240 minecraft:gravel strict
-setblock ~42 ~20 ~239 minecraft:andesite strict
-setblock ~43 ~20 ~239 minecraft:gravel strict
-fill ~44 ~20 ~239 ~45 ~23 ~239 minecraft:andesite strict
-fill ~46 ~20 ~239 ~47 ~21 ~240 minecraft:stone strict
-fill ~51 ~20 ~239 ~51 ~21 ~239 minecraft:andesite strict
-fill ~52 ~20 ~239 ~53 ~21 ~239 minecraft:tuff strict
-fill ~54 ~20 ~239 ~54 ~21 ~239 minecraft:smooth_stone strict
-fill ~55 ~20 ~239 ~55 ~23 ~239 minecraft:tuff strict
-fill ~56 ~20 ~239 ~56 ~21 ~239 minecraft:stone strict
-setblock ~58 ~20 ~239 minecraft:stone strict
-setblock ~59 ~20 ~239 minecraft:smooth_stone strict
-fill ~60 ~20 ~239 ~60 ~21 ~239 minecraft:stone strict
-fill ~61 ~20 ~239 ~61 ~21 ~241 minecraft:andesite strict
-fill ~64 ~20 ~239 ~64 ~23 ~239 minecraft:stone strict
-setblock ~98 ~20 ~239 minecraft:stone strict
-fill ~152 ~20 ~239 ~152 ~21 ~240 minecraft:stone strict
-fill ~153 ~20 ~239 ~153 ~22 ~242 minecraft:dirt strict
-fill ~157 ~20 ~239 ~157 ~20 ~243 minecraft:stone strict
-fill ~198 ~20 ~239 ~199 ~20 ~242 minecraft:andesite strict
 fill ~211 ~20 ~239 ~212 ~22 ~242 minecraft:smooth_sandstone strict
 fill ~230 ~20 ~239 ~231 ~21 ~239 minecraft:sandstone strict
 fill ~232 ~20 ~239 ~232 ~22 ~243 minecraft:smooth_sandstone strict
@@ -348,3 +271,80 @@ fill ~53 ~20 ~250 ~53 ~21 ~250 minecraft:smooth_stone strict
 fill ~17 ~20 ~251 ~17 ~21 ~251 minecraft:stone strict
 fill ~18 ~20 ~251 ~18 ~23 ~251 minecraft:andesite strict
 fill ~19 ~20 ~251 ~20 ~21 ~251 minecraft:stone strict
+fill ~23 ~20 ~251 ~23 ~21 ~251 minecraft:andesite strict
+fill ~24 ~20 ~251 ~24 ~21 ~251 minecraft:smooth_stone strict
+fill ~25 ~20 ~251 ~25 ~21 ~251 minecraft:stone strict
+fill ~26 ~20 ~251 ~26 ~21 ~252 minecraft:smooth_stone strict
+fill ~28 ~20 ~251 ~30 ~21 ~251 minecraft:stone strict
+fill ~31 ~20 ~251 ~32 ~21 ~251 minecraft:smooth_stone strict
+fill ~33 ~20 ~251 ~39 ~21 ~251 minecraft:stone strict
+fill ~42 ~20 ~251 ~48 ~21 ~251 minecraft:stone strict
+fill ~49 ~20 ~251 ~51 ~21 ~251 minecraft:smooth_stone strict
+fill ~52 ~20 ~251 ~52 ~21 ~252 minecraft:stone strict
+fill ~18 ~20 ~252 ~18 ~21 ~252 minecraft:stone strict
+fill ~19 ~20 ~252 ~19 ~23 ~252 minecraft:andesite strict
+fill ~20 ~20 ~252 ~21 ~21 ~252 minecraft:stone strict
+fill ~22 ~20 ~252 ~22 ~25 ~252 minecraft:andesite strict
+fill ~23 ~20 ~252 ~23 ~21 ~252 minecraft:smooth_stone strict
+fill ~25 ~20 ~252 ~25 ~21 ~252 minecraft:andesite strict
+fill ~27 ~20 ~252 ~28 ~21 ~252 minecraft:stone strict
+fill ~29 ~20 ~252 ~29 ~23 ~252 minecraft:smooth_stone strict
+fill ~30 ~20 ~252 ~30 ~21 ~253 minecraft:stone strict
+fill ~33 ~20 ~252 ~34 ~21 ~252 minecraft:stone strict
+fill ~35 ~20 ~252 ~47 ~21 ~252 minecraft:smooth_stone strict
+fill ~48 ~20 ~252 ~48 ~21 ~253 minecraft:stone strict
+fill ~19 ~20 ~253 ~19 ~21 ~253 minecraft:stone strict
+fill ~22 ~20 ~253 ~23 ~21 ~253 minecraft:stone strict
+fill ~24 ~20 ~253 ~24 ~25 ~253 minecraft:andesite strict
+fill ~25 ~20 ~253 ~25 ~21 ~253 minecraft:smooth_stone strict
+fill ~26 ~20 ~253 ~27 ~21 ~253 minecraft:andesite strict
+fill ~28 ~20 ~253 ~28 ~21 ~254 minecraft:smooth_stone strict
+fill ~29 ~20 ~253 ~29 ~21 ~253 minecraft:stone strict
+fill ~31 ~20 ~253 ~33 ~21 ~253 minecraft:smooth_stone strict
+fill ~34 ~20 ~253 ~47 ~21 ~253 minecraft:stone strict
+fill ~49 ~20 ~253 ~49 ~21 ~253 minecraft:stone strict
+fill ~50 ~20 ~253 ~50 ~23 ~253 minecraft:smooth_stone strict
+fill ~21 ~20 ~254 ~21 ~21 ~254 minecraft:stone strict
+fill ~22 ~20 ~254 ~22 ~23 ~254 minecraft:andesite strict
+fill ~23 ~20 ~254 ~25 ~21 ~254 minecraft:stone strict
+fill ~26 ~20 ~254 ~26 ~25 ~254 minecraft:andesite strict
+fill ~27 ~20 ~254 ~27 ~21 ~254 minecraft:smooth_stone strict
+fill ~29 ~20 ~254 ~29 ~23 ~255 minecraft:andesite strict
+fill ~30 ~20 ~254 ~32 ~21 ~254 minecraft:smooth_stone strict
+fill ~33 ~20 ~254 ~34 ~21 ~254 minecraft:stone strict
+fill ~35 ~20 ~254 ~36 ~21 ~255 minecraft:smooth_stone strict
+fill ~46 ~20 ~254 ~47 ~21 ~254 minecraft:smooth_stone strict
+fill ~24 ~20 ~255 ~24 ~23 ~255 minecraft:andesite strict
+fill ~25 ~20 ~255 ~27 ~21 ~255 minecraft:stone strict
+fill ~28 ~20 ~255 ~28 ~25 ~255 minecraft:andesite strict
+fill ~30 ~20 ~255 ~31 ~21 ~255 minecraft:smooth_stone strict
+fill ~32 ~20 ~255 ~33 ~21 ~255 minecraft:andesite strict
+fill ~34 ~20 ~255 ~34 ~21 ~255 minecraft:smooth_stone strict
+fill ~37 ~20 ~255 ~37 ~23 ~255 minecraft:smooth_stone strict
+fill ~38 ~20 ~255 ~45 ~21 ~255 minecraft:stone strict
+fill ~14 ~21 ~12 ~16 ~21 ~12 minecraft:stone strict
+fill ~52 ~21 ~12 ~57 ~21 ~12 minecraft:andesite strict
+setblock ~15 ~21 ~13 minecraft:stone strict
+fill ~53 ~21 ~13 ~54 ~22 ~13 minecraft:andesite strict
+fill ~55 ~21 ~13 ~58 ~23 ~13 minecraft:dirt strict
+fill ~59 ~21 ~13 ~62 ~21 ~13 minecraft:andesite strict
+fill ~102 ~21 ~13 ~103 ~21 ~13 minecraft:stone strict
+fill ~104 ~21 ~13 ~106 ~21 ~13 minecraft:andesite strict
+fill ~150 ~21 ~13 ~155 ~21 ~13 minecraft:stone strict
+fill ~200 ~21 ~13 ~202 ~21 ~13 minecraft:stone strict
+fill ~242 ~21 ~13 ~243 ~21 ~13 minecraft:stone strict
+fill ~12 ~21 ~14 ~12 ~21 ~16 minecraft:stone strict
+fill ~58 ~21 ~14 ~60 ~23 ~14 minecraft:dirt strict
+fill ~61 ~21 ~14 ~63 ~21 ~14 minecraft:andesite strict
+fill ~64 ~21 ~14 ~74 ~21 ~15 minecraft:stone strict
+fill ~100 ~21 ~14 ~102 ~21 ~14 minecraft:stone strict
+fill ~103 ~21 ~14 ~105 ~21 ~15 minecraft:andesite strict
+setblock ~150 ~21 ~14 minecraft:stone strict
+fill ~151 ~21 ~14 ~154 ~23 ~14 minecraft:dirt strict
+fill ~155 ~21 ~14 ~157 ~21 ~15 minecraft:stone strict
+fill ~198 ~21 ~14 ~200 ~21 ~15 minecraft:stone strict
+setblock ~243 ~21 ~14 minecraft:stone strict
+setblock ~13 ~21 ~15 minecraft:stone strict
+fill ~30 ~21 ~15 ~38 ~21 ~34 minecraft:stone strict
+fill ~59 ~21 ~15 ~61 ~23 ~16 minecraft:dirt strict
+fill ~62 ~21 ~15 ~63 ~21 ~16 minecraft:andesite strict

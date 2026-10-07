@@ -98,17 +98,11 @@ def add_to_mesh(mesh, R, parts_by_bone, atlas_img, pose, pos, yaw, sun, key, ext
                 mesh.quad(pts[0], pts[1], pts[2], pts[3], uv, tid, flags=1 if glow else 0, light=light)
 
 
-# 맵 전용 보스 (빙하 왕국 · 화산 군도) — 번호는 네메시스 뒤 (기존 보스 · 네메시스 UUID 그대로)
-MAP_IDS = ["ymir", "fenrir", "surtr", "cerberus"]
-
-
 def export(pack, dp_dir):
     """리소스팩 파츠 + 데이터팩 함수 전부 (미니 보스 — a03-gen-boss.sk 의 보스 목록에 들어감)"""
     meta = {}
     for bi, bid in enumerate(BOSS_IDS):
         meta[bid] = export_one(pack, dp_dir, bi, bid, "bgb")
-    for i, bid in enumerate(MAP_IDS):
-        meta[bid] = export_one(pack, dp_dir, len(BOSS_IDS) + len(EXTRA_IDS) + i, bid, "bgb")
     return meta
 
 

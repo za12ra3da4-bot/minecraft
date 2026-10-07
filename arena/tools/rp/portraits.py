@@ -15,9 +15,7 @@ import bossgen as BG
 OUT = os.path.join(os.path.dirname(HERE), ".cache", "portraits")
 BG_COL = {"talos": ((90, 40, 20), (20, 10, 8)), "sphinx": ((40, 70, 140), (10, 16, 36)),
           "ladon": ((30, 110, 90), (6, 26, 22)), "cyclops": ((110, 70, 40), (22, 14, 10)),
-          "nemesis": ((110, 50, 160), (20, 8, 34)),
-          "ymir": ((60, 120, 180), (8, 18, 34)), "fenrir": ((90, 130, 180), (10, 16, 30)),
-          "surtr": ((170, 60, 20), (30, 8, 4)), "cerberus": ((140, 30, 20), (24, 6, 4))}
+          "nemesis": ((110, 50, 160), (20, 8, 34))}
 
 
 def render_one(bid, size=256):
@@ -59,5 +57,5 @@ def render_one(bid, size=256):
 
 
 def render_all():
-    for b in BG.BOSS_IDS + BG.EXTRA_IDS + BG.MAP_IDS:
+    for b in BG.BOSS_IDS:
         render_one(b)

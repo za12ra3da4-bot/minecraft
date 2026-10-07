@@ -1,350 +1,350 @@
-setblock ~65 ~28 ~119 minecraft:mossy_stone_bricks strict
-fill ~66 ~28 ~119 ~66 ~28 ~123 minecraft:stone_bricks strict
-fill ~111 ~28 ~119 ~111 ~29 ~119 minecraft:calcite strict
-fill ~112 ~28 ~119 ~115 ~28 ~119 minecraft:quartz_bricks strict
-fill ~117 ~28 ~119 ~118 ~28 ~119 minecraft:quartz_bricks strict
-setblock ~119 ~28 ~119 minecraft:calcite strict
-fill ~120 ~28 ~119 ~121 ~28 ~119 minecraft:quartz_bricks strict
-setblock ~123 ~28 ~119 minecraft:calcite strict
-fill ~125 ~28 ~119 ~125 ~28 ~124 minecraft:quartz_bricks strict
-fill ~130 ~28 ~119 ~130 ~28 ~121 minecraft:quartz_bricks strict
-fill ~131 ~28 ~119 ~131 ~29 ~120 minecraft:calcite strict
-fill ~132 ~28 ~119 ~132 ~29 ~122 minecraft:quartz_bricks strict
-fill ~133 ~28 ~119 ~134 ~28 ~119 minecraft:calcite strict
-fill ~137 ~28 ~119 ~137 ~29 ~119 minecraft:quartz_bricks strict
-setblock ~139 ~28 ~119 minecraft:polished_diorite strict
-fill ~140 ~28 ~119 ~141 ~28 ~119 minecraft:calcite strict
-fill ~142 ~28 ~119 ~142 ~28 ~122 minecraft:quartz_bricks strict
-fill ~143 ~28 ~119 ~143 ~28 ~120 minecraft:calcite strict
-setblock ~146 ~28 ~119 minecraft:calcite strict
-fill ~191 ~28 ~119 ~191 ~28 ~120 minecraft:stone_bricks strict
-setblock ~193 ~28 ~119 minecraft:stone_bricks strict
-setblock ~194 ~28 ~119 minecraft:cracked_stone_bricks strict
-setblock ~206 ~28 ~119 minecraft:mossy_stone_bricks strict
-setblock ~207 ~28 ~119 minecraft:stone_bricks strict
-setblock ~250 ~28 ~119 minecraft:stone_bricks strict
-setblock ~251 ~28 ~119 minecraft:mossy_stone_bricks strict
-fill ~4 ~28 ~120 ~4 ~28 ~121 minecraft:tuff strict
-setblock ~5 ~28 ~120 minecraft:stone_bricks strict
-setblock ~6 ~28 ~120 minecraft:mossy_stone_bricks strict
-setblock ~51 ~28 ~120 minecraft:cracked_stone_bricks strict
-fill ~62 ~28 ~120 ~62 ~29 ~120 minecraft:mossy_stone_bricks strict
-fill ~110 ~28 ~120 ~110 ~28 ~121 minecraft:calcite strict
-fill ~111 ~28 ~120 ~114 ~28 ~121 minecraft:quartz_bricks strict
-setblock ~115 ~28 ~120 minecraft:polished_diorite strict
-fill ~117 ~28 ~120 ~117 ~29 ~121 minecraft:calcite strict
-fill ~118 ~28 ~120 ~119 ~28 ~121 minecraft:quartz_bricks strict
-fill ~120 ~28 ~120 ~120 ~28 ~121 minecraft:calcite strict
-fill ~121 ~28 ~120 ~121 ~29 ~120 minecraft:quartz_bricks strict
-fill ~123 ~28 ~120 ~123 ~28 ~125 minecraft:quartz_bricks strict
-setblock ~124 ~28 ~120 minecraft:polished_diorite strict
-setblock ~126 ~28 ~120 minecraft:quartz_bricks strict
-fill ~133 ~28 ~120 ~134 ~29 ~121 minecraft:quartz_bricks strict
-fill ~135 ~28 ~120 ~137 ~28 ~120 minecraft:calcite strict
-fill ~139 ~28 ~120 ~140 ~28 ~120 minecraft:calcite strict
-fill ~141 ~28 ~120 ~141 ~28 ~121 minecraft:quartz_bricks strict
-fill ~145 ~28 ~120 ~145 ~28 ~121 minecraft:calcite strict
-fill ~146 ~28 ~120 ~146 ~29 ~120 minecraft:quartz_bricks strict
-fill ~190 ~28 ~120 ~190 ~28 ~122 minecraft:stone_bricks strict
-setblock ~194 ~28 ~120 minecraft:stone_bricks strict
-setblock ~206 ~28 ~120 minecraft:cracked_stone_bricks strict
-setblock ~251 ~28 ~120 minecraft:stone_bricks strict
-fill ~252 ~28 ~120 ~252 ~28 ~121 minecraft:stone strict
-setblock ~5 ~28 ~121 minecraft:cracked_stone_bricks strict
-fill ~62 ~28 ~121 ~62 ~29 ~121 minecraft:stone_bricks strict
-fill ~115 ~28 ~121 ~115 ~28 ~123 minecraft:calcite strict
-fill ~121 ~28 ~121 ~122 ~28 ~121 minecraft:calcite strict
-fill ~124 ~28 ~121 ~124 ~28 ~126 minecraft:quartz_bricks strict
-fill ~126 ~28 ~121 ~127 ~28 ~121 minecraft:calcite strict
-fill ~131 ~28 ~121 ~131 ~28 ~122 minecraft:quartz_bricks strict
-fill ~135 ~28 ~121 ~137 ~28 ~121 minecraft:quartz_bricks strict
-setblock ~138 ~28 ~121 minecraft:calcite strict
-fill ~139 ~28 ~121 ~140 ~28 ~121 minecraft:quartz_bricks strict
-fill ~143 ~28 ~121 ~143 ~28 ~122 minecraft:quartz_bricks strict
-setblock ~144 ~28 ~121 minecraft:calcite strict
-setblock ~146 ~28 ~121 minecraft:calcite strict
-setblock ~192 ~28 ~121 minecraft:stone_bricks strict
-fill ~194 ~28 ~121 ~194 ~28 ~123 minecraft:mossy_stone_bricks strict
-fill ~205 ~28 ~121 ~205 ~30 ~121 minecraft:stone_bricks strict
-setblock ~4 ~28 ~122 minecraft:mossy_stone_bricks strict
-setblock ~5 ~28 ~122 minecraft:stone_bricks strict
-setblock ~52 ~28 ~122 minecraft:tuff strict
-setblock ~94 ~28 ~122 minecraft:magma_block strict
-setblock ~104 ~28 ~122 minecraft:gold_block strict
-fill ~106 ~28 ~122 ~107 ~28 ~122 minecraft:quartz_bricks strict
-fill ~111 ~28 ~122 ~111 ~28 ~132 minecraft:calcite strict
-fill ~112 ~28 ~122 ~114 ~29 ~122 minecraft:quartz_bricks strict
-setblock ~116 ~28 ~122 minecraft:polished_diorite strict
-fill ~117 ~28 ~122 ~118 ~28 ~125 minecraft:quartz_bricks strict
-fill ~119 ~28 ~122 ~119 ~28 ~123 minecraft:calcite strict
-setblock ~120 ~28 ~122 minecraft:quartz_bricks strict
-setblock ~121 ~28 ~122 minecraft:calcite strict
-fill ~122 ~28 ~122 ~122 ~28 ~125 minecraft:quartz_bricks strict
-setblock ~126 ~28 ~122 minecraft:polished_diorite strict
-setblock ~127 ~28 ~122 minecraft:calcite strict
-setblock ~128 ~28 ~122 minecraft:polished_diorite strict
-setblock ~130 ~28 ~122 minecraft:calcite strict
-fill ~133 ~28 ~122 ~133 ~29 ~122 minecraft:calcite strict
-fill ~134 ~28 ~122 ~134 ~29 ~122 minecraft:quartz_bricks strict
-fill ~135 ~28 ~122 ~135 ~28 ~123 minecraft:calcite strict
-fill ~136 ~28 ~122 ~137 ~28 ~123 minecraft:quartz_bricks strict
-setblock ~138 ~28 ~122 minecraft:polished_diorite strict
-fill ~139 ~28 ~122 ~141 ~28 ~122 minecraft:calcite strict
-fill ~144 ~28 ~122 ~150 ~28 ~122 minecraft:quartz_bricks strict
-setblock ~152 ~28 ~122 minecraft:gold_block strict
-setblock ~162 ~28 ~122 minecraft:magma_block strict
-fill ~204 ~28 ~122 ~204 ~28 ~123 minecraft:moss_block strict
-fill ~3 ~28 ~123 ~3 ~28 ~132 minecraft:tuff strict
-setblock ~4 ~28 ~123 minecraft:cracked_stone_bricks strict
-setblock ~52 ~28 ~123 minecraft:grass_block[snowy=false] strict
-fill ~62 ~28 ~123 ~63 ~28 ~123 minecraft:stone_bricks strict
-fill ~78 ~28 ~123 ~86 ~28 ~123 minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false] strict
-fill ~107 ~28 ~123 ~107 ~28 ~133 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~108 ~28 ~123 ~110 ~28 ~133 minecraft:stone_bricks strict
-fill ~112 ~28 ~123 ~112 ~28 ~124 minecraft:quartz_bricks strict
-fill ~113 ~28 ~123 ~113 ~29 ~123 minecraft:calcite strict
-fill ~114 ~28 ~123 ~114 ~28 ~126 minecraft:quartz_bricks strict
-fill ~116 ~28 ~123 ~116 ~29 ~123 minecraft:quartz_bricks strict
-setblock ~120 ~28 ~123 minecraft:calcite strict
-fill ~121 ~28 ~123 ~121 ~29 ~124 minecraft:quartz_bricks strict
-fill ~126 ~28 ~123 ~128 ~29 ~123 minecraft:quartz_bricks strict
-setblock ~130 ~28 ~123 minecraft:polished_diorite strict
-fill ~131 ~28 ~123 ~132 ~28 ~123 minecraft:calcite strict
-fill ~133 ~28 ~123 ~133 ~29 ~124 minecraft:quartz_bricks strict
-setblock ~134 ~28 ~123 minecraft:polished_diorite strict
-fill ~138 ~28 ~123 ~138 ~29 ~123 minecraft:calcite strict
-fill ~139 ~28 ~123 ~140 ~28 ~123 minecraft:quartz_bricks strict
-fill ~141 ~28 ~123 ~144 ~28 ~123 minecraft:calcite strict
-fill ~145 ~28 ~123 ~145 ~28 ~126 minecraft:quartz_bricks strict
-fill ~146 ~28 ~123 ~148 ~28 ~133 minecraft:stone_bricks strict
-fill ~149 ~28 ~123 ~149 ~28 ~133 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-fill ~170 ~28 ~123 ~178 ~28 ~123 minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false] strict
-fill ~190 ~28 ~123 ~190 ~30 ~123 minecraft:mossy_stone_bricks strict
-fill ~191 ~28 ~123 ~193 ~28 ~123 minecraft:stone_bricks strict
-fill ~4 ~28 ~124 ~4 ~28 ~125 minecraft:stone_bricks strict
-fill ~50 ~28 ~124 ~51 ~29 ~124 minecraft:stone_bricks strict
-setblock ~52 ~28 ~124 minecraft:polished_blackstone_brick_wall[east=none,north=tall,south=none,up=true,waterlogged=false,west=tall] strict
-setblock ~60 ~28 ~124 minecraft:chiseled_stone_bricks strict
-setblock ~76 ~28 ~124 minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,waterlogged=false,west=none] strict
-fill ~77 ~28 ~124 ~85 ~28 ~124 minecraft:stone_bricks strict
-setblock ~87 ~28 ~124 minecraft:polished_andesite strict
-setblock ~88 ~28 ~124 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=low] strict
-fill ~113 ~28 ~124 ~113 ~28 ~125 minecraft:quartz_bricks strict
-fill ~115 ~28 ~124 ~116 ~28 ~124 minecraft:polished_diorite strict
-setblock ~119 ~28 ~124 minecraft:polished_diorite strict
-setblock ~120 ~28 ~124 minecraft:quartz_bricks strict
-fill ~126 ~28 ~124 ~127 ~29 ~125 minecraft:quartz_bricks strict
-setblock ~128 ~28 ~124 minecraft:calcite strict
-fill ~130 ~28 ~124 ~130 ~29 ~124 minecraft:quartz_bricks strict
-setblock ~131 ~28 ~124 minecraft:calcite strict
-fill ~132 ~28 ~124 ~132 ~28 ~125 minecraft:quartz_bricks strict
-fill ~134 ~28 ~124 ~135 ~28 ~124 minecraft:quartz_bricks strict
-setblock ~136 ~28 ~124 minecraft:polished_diorite strict
-fill ~137 ~28 ~124 ~137 ~28 ~125 minecraft:calcite strict
-fill ~138 ~28 ~124 ~139 ~28 ~124 minecraft:quartz_bricks strict
-setblock ~140 ~28 ~124 minecraft:calcite strict
-fill ~141 ~28 ~124 ~141 ~29 ~124 minecraft:quartz_bricks strict
-fill ~142 ~28 ~124 ~142 ~29 ~124 minecraft:calcite strict
-fill ~143 ~28 ~124 ~144 ~28 ~124 minecraft:quartz_bricks strict
-setblock ~168 ~28 ~124 minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,waterlogged=false,west=none] strict
-fill ~169 ~28 ~124 ~178 ~28 ~124 minecraft:stone_bricks strict
-setblock ~179 ~28 ~124 minecraft:polished_andesite strict
-setblock ~180 ~28 ~124 minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=low] strict
-setblock ~196 ~28 ~124 minecraft:chiseled_stone_bricks strict
-setblock ~204 ~28 ~124 minecraft:polished_blackstone_brick_wall[east=tall,north=tall,south=none,up=true,waterlogged=false,west=none] strict
-fill ~206 ~28 ~124 ~206 ~31 ~124 minecraft:stone_bricks strict
-fill ~251 ~28 ~124 ~251 ~28 ~125 minecraft:mossy_stone_bricks strict
-fill ~252 ~28 ~124 ~252 ~28 ~125 minecraft:stone_bricks strict
-fill ~253 ~28 ~124 ~253 ~28 ~132 minecraft:stone strict
-setblock ~50 ~28 ~125 minecraft:grass_block[snowy=false] strict
-fill ~77 ~28 ~125 ~77 ~28 ~131 minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~79 ~28 ~125 ~79 ~28 ~126 minecraft:stone_bricks strict
-fill ~80 ~28 ~125 ~81 ~28 ~125 minecraft:mossy_stone_bricks strict
-fill ~82 ~28 ~125 ~84 ~28 ~126 minecraft:stone_bricks strict
-setblock ~85 ~28 ~125 minecraft:cracked_stone_bricks strict
-fill ~87 ~28 ~125 ~87 ~28 ~131 minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~112 ~28 ~125 minecraft:calcite strict
-fill ~115 ~28 ~125 ~116 ~28 ~125 minecraft:calcite strict
-fill ~119 ~28 ~125 ~121 ~28 ~125 minecraft:calcite strict
-setblock ~125 ~28 ~125 minecraft:polished_diorite strict
-fill ~128 ~28 ~125 ~128 ~28 ~128 minecraft:quartz_bricks strict
-setblock ~130 ~28 ~125 minecraft:calcite strict
-fill ~131 ~28 ~125 ~131 ~29 ~130 minecraft:quartz_bricks strict
-setblock ~133 ~28 ~125 minecraft:calcite strict
-fill ~134 ~28 ~125 ~135 ~28 ~125 minecraft:polished_diorite strict
-fill ~136 ~28 ~125 ~136 ~28 ~128 minecraft:quartz_bricks strict
-fill ~138 ~28 ~125 ~138 ~29 ~125 minecraft:calcite strict
-fill ~139 ~28 ~125 ~140 ~28 ~127 minecraft:quartz_bricks strict
-fill ~141 ~28 ~125 ~141 ~28 ~127 minecraft:calcite strict
-fill ~142 ~28 ~125 ~142 ~29 ~125 minecraft:quartz_bricks strict
-fill ~143 ~28 ~125 ~143 ~28 ~126 minecraft:calcite strict
-fill ~144 ~28 ~125 ~144 ~29 ~125 minecraft:quartz_bricks strict
-fill ~169 ~28 ~125 ~169 ~28 ~131 minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
-fill ~170 ~28 ~125 ~172 ~28 ~125 minecraft:stone_bricks strict
-setblock ~173 ~28 ~125 minecraft:mossy_stone_bricks strict
-fill ~174 ~28 ~125 ~174 ~28 ~126 minecraft:stone_bricks strict
-setblock ~175 ~28 ~125 minecraft:cracked_stone_bricks strict
-fill ~176 ~28 ~125 ~176 ~28 ~126 minecraft:stone_bricks strict
-setblock ~177 ~28 ~125 minecraft:cracked_stone_bricks strict
-fill ~178 ~28 ~125 ~178 ~28 ~126 minecraft:stone_bricks strict
-fill ~179 ~28 ~125 ~179 ~28 ~131 minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
-setblock ~206 ~28 ~125 minecraft:grass_block[snowy=false] strict
-setblock ~4 ~28 ~126 minecraft:cracked_stone_bricks strict
-fill ~5 ~28 ~126 ~5 ~32 ~126 minecraft:stone_bricks strict
-fill ~49 ~28 ~126 ~49 ~28 ~130 minecraft:grass_block[snowy=false] strict
-setblock ~78 ~28 ~126 minecraft:stone_bricks strict
-setblock ~80 ~28 ~126 minecraft:stone_bricks strict
-setblock ~81 ~28 ~126 minecraft:mossy_stone_bricks strict
-setblock ~85 ~28 ~126 minecraft:stone_bricks strict
-fill ~112 ~28 ~126 ~112 ~29 ~126 minecraft:quartz_bricks strict
-setblock ~113 ~28 ~126 minecraft:calcite strict
-setblock ~115 ~28 ~126 minecraft:polished_diorite strict
-fill ~116 ~28 ~126 ~117 ~28 ~128 minecraft:quartz_bricks strict
-fill ~118 ~28 ~126 ~119 ~28 ~126 minecraft:polished_diorite strict
-fill ~120 ~28 ~126 ~121 ~29 ~126 minecraft:quartz_bricks strict
-fill ~122 ~28 ~126 ~123 ~28 ~126 minecraft:calcite strict
-fill ~125 ~28 ~126 ~126 ~28 ~126 minecraft:calcite strict
-fill ~127 ~28 ~126 ~127 ~28 ~129 minecraft:quartz_bricks strict
-setblock ~129 ~28 ~126 minecraft:calcite strict
-fill ~130 ~28 ~126 ~130 ~28 ~128 minecraft:quartz_bricks strict
-fill ~132 ~28 ~126 ~132 ~28 ~127 minecraft:calcite strict
-fill ~133 ~28 ~126 ~135 ~28 ~126 minecraft:quartz_bricks strict
-fill ~137 ~28 ~126 ~138 ~29 ~127 minecraft:quartz_bricks strict
-fill ~142 ~28 ~126 ~142 ~29 ~126 minecraft:calcite strict
-fill ~144 ~28 ~126 ~144 ~28 ~127 minecraft:calcite strict
-setblock ~170 ~28 ~126 minecraft:mossy_stone_bricks strict
-fill ~171 ~28 ~126 ~173 ~28 ~126 minecraft:stone_bricks strict
-setblock ~175 ~28 ~126 minecraft:stone_bricks strict
-setblock ~177 ~28 ~126 minecraft:stone_bricks strict
-fill ~207 ~28 ~126 ~207 ~28 ~130 minecraft:grass_block[snowy=false] strict
-fill ~251 ~28 ~126 ~251 ~29 ~126 minecraft:stone_bricks strict
-fill ~4 ~28 ~127 ~4 ~32 ~129 minecraft:stone_bricks strict
-setblock ~5 ~28 ~127 minecraft:mossy_stone_bricks strict
-fill ~78 ~28 ~127 ~86 ~28 ~129 minecraft:polished_andesite strict
-setblock ~112 ~28 ~127 minecraft:polished_diorite strict
-fill ~113 ~28 ~127 ~113 ~31 ~127 minecraft:quartz_bricks strict
-fill ~114 ~28 ~127 ~114 ~28 ~128 minecraft:calcite strict
-fill ~115 ~28 ~127 ~115 ~28 ~136 minecraft:quartz_bricks strict
-fill ~118 ~28 ~127 ~120 ~28 ~127 minecraft:quartz_bricks strict
-fill ~121 ~28 ~127 ~121 ~28 ~129 minecraft:calcite strict
-fill ~122 ~28 ~127 ~122 ~29 ~127 minecraft:polished_diorite strict
-setblock ~123 ~28 ~127 minecraft:calcite strict
-setblock ~124 ~28 ~127 minecraft:polished_diorite strict
-setblock ~125 ~28 ~127 minecraft:calcite strict
-fill ~126 ~28 ~127 ~126 ~29 ~127 minecraft:polished_diorite strict
-fill ~129 ~28 ~127 ~129 ~28 ~128 minecraft:polished_diorite strict
-setblock ~133 ~28 ~127 minecraft:calcite strict
-fill ~134 ~28 ~127 ~135 ~28 ~128 minecraft:quartz_bricks strict
-fill ~142 ~28 ~127 ~143 ~28 ~127 minecraft:quartz_bricks strict
-fill ~145 ~28 ~127 ~145 ~29 ~127 minecraft:calcite strict
-fill ~170 ~28 ~127 ~178 ~28 ~129 minecraft:polished_andesite strict
-setblock ~251 ~28 ~127 minecraft:mossy_stone_bricks strict
-setblock ~252 ~28 ~127 minecraft:cracked_stone_bricks strict
-setblock ~5 ~28 ~128 minecraft:cracked_stone_bricks strict
-fill ~112 ~28 ~128 ~112 ~29 ~128 minecraft:calcite strict
-setblock ~113 ~28 ~128 minecraft:polished_diorite strict
-fill ~118 ~28 ~128 ~118 ~29 ~128 minecraft:quartz_bricks strict
-fill ~119 ~28 ~128 ~120 ~28 ~128 minecraft:calcite strict
-fill ~122 ~28 ~128 ~125 ~28 ~128 minecraft:quartz_bricks strict
-setblock ~126 ~28 ~128 minecraft:calcite strict
-fill ~132 ~28 ~128 ~133 ~28 ~128 minecraft:quartz_bricks strict
-fill ~137 ~28 ~128 ~137 ~28 ~129 minecraft:quartz_bricks strict
-setblock ~138 ~28 ~128 minecraft:polished_diorite strict
-fill ~139 ~28 ~128 ~139 ~29 ~128 minecraft:quartz_bricks strict
-setblock ~140 ~28 ~128 minecraft:calcite strict
-setblock ~141 ~28 ~128 minecraft:polished_diorite strict
-fill ~142 ~28 ~128 ~142 ~29 ~129 minecraft:quartz_bricks strict
-fill ~143 ~28 ~128 ~143 ~28 ~129 minecraft:polished_diorite strict
-fill ~144 ~28 ~128 ~145 ~28 ~129 minecraft:quartz_bricks strict
-fill ~251 ~28 ~128 ~251 ~30 ~128 minecraft:stone_bricks strict
-setblock ~5 ~28 ~129 minecraft:mossy_stone_bricks strict
-setblock ~112 ~28 ~129 minecraft:polished_diorite strict
-fill ~113 ~28 ~129 ~114 ~29 ~129 minecraft:quartz_bricks strict
-fill ~116 ~28 ~129 ~116 ~29 ~129 minecraft:polished_diorite strict
-fill ~117 ~28 ~129 ~118 ~28 ~129 minecraft:calcite strict
-fill ~119 ~28 ~129 ~119 ~28 ~133 minecraft:quartz_bricks strict
-setblock ~120 ~28 ~129 minecraft:polished_diorite strict
-fill ~122 ~28 ~129 ~125 ~28 ~129 minecraft:calcite strict
-fill ~126 ~28 ~129 ~126 ~30 ~130 minecraft:quartz_bricks strict
-fill ~128 ~28 ~129 ~130 ~28 ~129 minecraft:calcite strict
-fill ~132 ~28 ~129 ~132 ~28 ~132 minecraft:quartz_bricks strict
-setblock ~133 ~28 ~129 minecraft:calcite strict
-fill ~134 ~28 ~129 ~134 ~28 ~130 minecraft:quartz_bricks strict
-setblock ~135 ~28 ~129 minecraft:calcite strict
-setblock ~136 ~28 ~129 minecraft:polished_diorite strict
-fill ~138 ~28 ~129 ~138 ~29 ~131 minecraft:quartz_bricks strict
-setblock ~139 ~28 ~129 minecraft:calcite strict
-fill ~140 ~28 ~129 ~141 ~29 ~130 minecraft:quartz_bricks strict
-setblock ~251 ~28 ~129 minecraft:mossy_stone_bricks strict
-fill ~252 ~28 ~129 ~252 ~29 ~130 minecraft:stone_bricks strict
-setblock ~4 ~28 ~130 minecraft:mossy_stone_bricks strict
-fill ~5 ~28 ~130 ~5 ~29 ~130 minecraft:stone_bricks strict
-fill ~78 ~28 ~130 ~78 ~28 ~131 minecraft:mossy_stone_bricks strict
-fill ~79 ~28 ~130 ~80 ~28 ~130 minecraft:stone_bricks strict
-fill ~81 ~28 ~130 ~81 ~28 ~131 minecraft:mossy_stone_bricks strict
-fill ~82 ~28 ~130 ~85 ~28 ~130 minecraft:stone_bricks strict
-setblock ~86 ~28 ~130 minecraft:cracked_stone_bricks strict
-fill ~112 ~28 ~130 ~113 ~29 ~130 minecraft:quartz_bricks strict
-setblock ~114 ~28 ~130 minecraft:polished_diorite strict
-fill ~116 ~28 ~130 ~118 ~29 ~130 minecraft:quartz_bricks strict
-setblock ~120 ~28 ~130 minecraft:quartz_bricks strict
-setblock ~121 ~28 ~130 minecraft:polished_diorite strict
-fill ~122 ~28 ~130 ~122 ~29 ~131 minecraft:quartz_bricks strict
-setblock ~123 ~28 ~130 minecraft:polished_diorite strict
-fill ~124 ~28 ~130 ~125 ~29 ~130 minecraft:quartz_bricks strict
-setblock ~127 ~28 ~130 minecraft:polished_diorite strict
-fill ~128 ~28 ~130 ~130 ~28 ~130 minecraft:quartz_bricks strict
-fill ~133 ~28 ~130 ~133 ~28 ~132 minecraft:quartz_bricks strict
-fill ~135 ~28 ~130 ~136 ~28 ~130 minecraft:quartz_bricks strict
-setblock ~137 ~28 ~130 minecraft:polished_diorite strict
-fill ~139 ~28 ~130 ~139 ~28 ~131 minecraft:quartz_bricks strict
-setblock ~142 ~28 ~130 minecraft:polished_diorite strict
-fill ~143 ~28 ~130 ~143 ~29 ~130 minecraft:calcite strict
-setblock ~144 ~28 ~130 minecraft:polished_diorite strict
-fill ~145 ~28 ~130 ~145 ~29 ~130 minecraft:quartz_bricks strict
-fill ~171 ~28 ~130 ~171 ~28 ~132 minecraft:stone_bricks strict
-setblock ~172 ~28 ~130 minecraft:mossy_stone_bricks strict
-fill ~173 ~28 ~130 ~174 ~28 ~130 minecraft:stone_bricks strict
-fill ~175 ~28 ~130 ~176 ~28 ~130 minecraft:mossy_stone_bricks strict
-fill ~177 ~28 ~130 ~178 ~28 ~130 minecraft:stone_bricks strict
-fill ~251 ~28 ~130 ~251 ~28 ~131 minecraft:stone_bricks strict
-setblock ~4 ~28 ~131 minecraft:stone_bricks strict
-setblock ~50 ~28 ~131 minecraft:grass_block[snowy=false] strict
-fill ~79 ~28 ~131 ~79 ~28 ~132 minecraft:stone_bricks strict
-setblock ~80 ~28 ~131 minecraft:mossy_stone_bricks strict
-setblock ~82 ~28 ~131 minecraft:mossy_stone_bricks strict
-fill ~83 ~28 ~131 ~85 ~28 ~132 minecraft:stone_bricks strict
-setblock ~86 ~28 ~131 minecraft:mossy_stone_bricks strict
-fill ~112 ~28 ~131 ~112 ~29 ~131 minecraft:quartz_bricks strict
-fill ~113 ~28 ~131 ~113 ~28 ~134 minecraft:calcite strict
-fill ~114 ~28 ~131 ~114 ~29 ~133 minecraft:quartz_bricks strict
-fill ~116 ~28 ~131 ~116 ~29 ~131 minecraft:calcite strict
-fill ~117 ~28 ~131 ~117 ~29 ~132 minecraft:quartz_bricks strict
-setblock ~118 ~28 ~131 minecraft:calcite strict
-setblock ~120 ~28 ~131 minecraft:calcite strict
-fill ~121 ~28 ~131 ~121 ~28 ~133 minecraft:quartz_bricks strict
-setblock ~123 ~28 ~131 minecraft:calcite strict
-fill ~124 ~28 ~131 ~124 ~28 ~134 minecraft:quartz_bricks strict
-setblock ~125 ~28 ~131 minecraft:calcite strict
-setblock ~126 ~28 ~131 minecraft:polished_diorite strict
-fill ~127 ~28 ~131 ~128 ~29 ~131 minecraft:quartz_bricks strict
-fill ~129 ~28 ~131 ~129 ~28 ~132 minecraft:calcite strict
-fill ~130 ~28 ~131 ~130 ~29 ~134 minecraft:quartz_bricks strict
-fill ~131 ~28 ~131 ~131 ~28 ~132 minecraft:calcite strict
-fill ~134 ~28 ~131 ~136 ~28 ~131 minecraft:calcite strict
-fill ~137 ~28 ~131 ~137 ~28 ~132 minecraft:quartz_bricks strict
-fill ~140 ~28 ~131 ~140 ~29 ~131 minecraft:calcite strict
-fill ~141 ~28 ~131 ~143 ~28 ~133 minecraft:quartz_bricks strict
-fill ~144 ~28 ~131 ~144 ~28 ~132 minecraft:calcite strict
-fill ~145 ~28 ~131 ~145 ~28 ~133 minecraft:polished_diorite strict
-fill ~170 ~28 ~131 ~170 ~28 ~132 minecraft:stone_bricks strict
-setblock ~172 ~28 ~131 minecraft:cracked_stone_bricks strict
-fill ~173 ~28 ~131 ~173 ~28 ~132 minecraft:stone_bricks strict
-setblock ~174 ~28 ~131 minecraft:cracked_stone_bricks strict
-fill ~175 ~28 ~131 ~177 ~28 ~131 minecraft:stone_bricks strict
-setblock ~206 ~28 ~131 minecraft:grass_block[snowy=false] strict
-setblock ~252 ~28 ~131 minecraft:mossy_stone_bricks strict
-fill ~50 ~28 ~132 ~51 ~29 ~132 minecraft:stone_bricks strict
-setblock ~52 ~28 ~132 minecraft:polished_blackstone_brick_wall[east=none,north=none,south=tall,up=true,waterlogged=false,west=tall] strict
-setblock ~60 ~28 ~132 minecraft:chiseled_stone_bricks strict
-setblock ~76 ~28 ~132 minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,waterlogged=false,west=none] strict
+setblock ~212 ~28 ~174 minecraft:moss_block strict
+fill ~216 ~28 ~174 ~216 ~30 ~175 minecraft:dirt strict
+fill ~218 ~28 ~174 ~218 ~28 ~176 minecraft:tuff strict
+fill ~23 ~28 ~175 ~24 ~28 ~178 minecraft:grass_block strict
+fill ~35 ~28 ~175 ~35 ~33 ~175 minecraft:oak_log[axis=y] strict
+fill ~46 ~28 ~175 ~46 ~28 ~178 minecraft:grass_block strict
+fill ~93 ~28 ~175 ~93 ~28 ~182 minecraft:stone strict
+fill ~125 ~28 ~175 ~126 ~28 ~175 minecraft:cracked_stone_bricks strict
+fill ~130 ~28 ~175 ~131 ~28 ~176 minecraft:stone_bricks strict
+fill ~201 ~28 ~175 ~202 ~30 ~176 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~203 ~28 ~175 ~204 ~28 ~175 minecraft:dark_oak_log[axis=z] strict
+fill ~213 ~28 ~175 ~213 ~28 ~176 minecraft:moss_block strict
+setblock ~217 ~28 ~175 minecraft:calcite strict
+fill ~13 ~28 ~176 ~13 ~30 ~185 minecraft:dirt strict
+fill ~85 ~28 ~176 ~85 ~28 ~178 minecraft:grass_block strict
+fill ~92 ~28 ~176 ~92 ~28 ~179 minecraft:grass_block strict
+fill ~125 ~28 ~176 ~125 ~28 ~178 minecraft:stone_bricks strict
+setblock ~126 ~28 ~176 minecraft:cracked_stone_bricks strict
+fill ~203 ~28 ~176 ~204 ~30 ~176 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~217 ~28 ~176 ~217 ~30 ~177 minecraft:dirt strict
+fill ~219 ~28 ~176 ~219 ~28 ~178 minecraft:tuff strict
+fill ~22 ~28 ~177 ~22 ~28 ~188 minecraft:grass_block strict
+fill ~45 ~28 ~177 ~45 ~28 ~181 minecraft:grass_block strict
+setblock ~86 ~28 ~177 minecraft:grass_block strict
+setblock ~87 ~28 ~177 minecraft:andesite strict
+fill ~91 ~28 ~177 ~91 ~28 ~179 minecraft:grass_block strict
+setblock ~124 ~28 ~177 minecraft:stone_bricks strict
+setblock ~126 ~28 ~177 minecraft:mossy_stone_bricks strict
+setblock ~130 ~28 ~177 minecraft:stone_bricks strict
+setblock ~131 ~28 ~177 minecraft:mossy_stone_bricks strict
+setblock ~132 ~28 ~177 minecraft:stone_bricks strict
+fill ~203 ~28 ~177 ~203 ~30 ~177 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~213 ~28 ~177 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~214 ~28 ~177 minecraft:moss_block strict
+fill ~218 ~28 ~177 ~218 ~30 ~179 minecraft:dirt strict
+fill ~220 ~28 ~177 ~220 ~28 ~180 minecraft:tuff strict
+setblock ~86 ~28 ~178 minecraft:andesite strict
+setblock ~87 ~28 ~178 minecraft:cobblestone strict
+fill ~88 ~28 ~178 ~89 ~28 ~178 minecraft:andesite strict
+setblock ~90 ~28 ~178 minecraft:gravel strict
+setblock ~126 ~28 ~178 minecraft:stone_bricks strict
+setblock ~130 ~28 ~178 minecraft:mossy_stone_bricks strict
+setblock ~131 ~28 ~178 minecraft:stone_bricks strict
+fill ~169 ~28 ~178 ~171 ~29 ~178 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~187 ~28 ~178 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~188 ~28 ~178 ~188 ~28 ~180 minecraft:quartz_pillar[axis=y] strict
+setblock ~189 ~28 ~178 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~212 ~28 ~178 ~214 ~28 ~180 minecraft:smooth_quartz strict
+fill ~221 ~28 ~178 ~221 ~28 ~182 minecraft:tuff strict
+fill ~21 ~28 ~179 ~21 ~28 ~189 minecraft:grass_block strict
+fill ~23 ~28 ~179 ~23 ~28 ~181 minecraft:grass_block strict
+fill ~28 ~28 ~179 ~28 ~28 ~182 minecraft:stone_bricks strict
+fill ~44 ~28 ~179 ~44 ~28 ~194 minecraft:grass_block strict
+setblock ~86 ~28 ~179 minecraft:grass_block strict
+fill ~87 ~28 ~179 ~89 ~28 ~179 minecraft:gravel strict
+setblock ~90 ~28 ~179 minecraft:cobblestone strict
+setblock ~124 ~28 ~179 minecraft:stone_bricks strict
+fill ~125 ~28 ~179 ~131 ~28 ~179 minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~132 ~28 ~179 minecraft:polished_andesite strict
+fill ~169 ~28 ~179 ~169 ~30 ~182 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~171 ~28 ~179 minecraft:dark_oak_log[axis=x] strict
+fill ~173 ~28 ~179 ~173 ~32 ~179 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~187 ~28 ~179 ~187 ~29 ~179 minecraft:quartz_pillar[axis=y] strict
+fill ~189 ~28 ~179 ~189 ~29 ~179 minecraft:quartz_pillar[axis=y] strict
+setblock ~211 ~28 ~179 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~215 ~28 ~179 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~219 ~28 ~179 ~219 ~30 ~182 minecraft:dirt strict
+fill ~222 ~28 ~179 ~222 ~28 ~182 minecraft:stone strict
+fill ~66 ~28 ~180 ~70 ~28 ~182 minecraft:stone_bricks strict
+fill ~86 ~28 ~180 ~86 ~28 ~185 minecraft:dirt strict
+setblock ~87 ~28 ~180 minecraft:gravel strict
+fill ~88 ~28 ~180 ~89 ~28 ~180 minecraft:dirt_path strict
+setblock ~90 ~28 ~180 minecraft:gravel strict
+setblock ~124 ~28 ~180 minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,waterlogged=false,west=none] strict
+setblock ~132 ~28 ~180 minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,waterlogged=false,west=none] strict
+fill ~165 ~28 ~180 ~166 ~28 ~182 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~170 ~28 ~180 ~171 ~31 ~180 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~187 ~28 ~180 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~189 ~28 ~180 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~215 ~28 ~180 ~215 ~28 ~181 minecraft:moss_block strict
+fill ~65 ~28 ~181 ~65 ~29 ~181 minecraft:stone strict
+fill ~87 ~28 ~181 ~90 ~28 ~185 minecraft:dirt strict
+setblock ~164 ~28 ~181 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~167 ~28 ~181 ~168 ~28 ~181 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~170 ~28 ~181 minecraft:dark_oak_log[axis=z] strict
+fill ~171 ~28 ~181 ~173 ~31 ~181 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~213 ~28 ~181 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+fill ~216 ~28 ~181 ~216 ~28 ~185 minecraft:moss_block strict
+fill ~220 ~28 ~181 ~220 ~30 ~181 minecraft:dirt strict
+fill ~223 ~28 ~181 ~223 ~28 ~183 minecraft:stone strict
+fill ~20 ~28 ~182 ~20 ~28 ~190 minecraft:grass_block strict
+fill ~43 ~28 ~182 ~43 ~28 ~193 minecraft:grass_block strict
+setblock ~71 ~28 ~182 minecraft:dirt strict
+setblock ~171 ~28 ~182 minecraft:dark_oak_log[axis=z] strict
+fill ~173 ~28 ~182 ~173 ~30 ~183 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~220 ~28 ~182 ~220 ~29 ~183 minecraft:tuff strict
+fill ~28 ~28 ~183 ~28 ~29 ~183 minecraft:cracked_stone_bricks strict
+fill ~167 ~28 ~183 ~167 ~29 ~184 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~170 ~28 ~183 ~172 ~29 ~184 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~179 ~28 ~183 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~180 ~28 ~183 ~180 ~34 ~185 minecraft:quartz_pillar[axis=y] strict
+setblock ~181 ~28 ~183 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~183 ~28 ~183 minecraft:chiseled_polished_blackstone strict
+setblock ~193 ~28 ~183 minecraft:chiseled_polished_blackstone strict
+setblock ~195 ~28 ~183 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~196 ~28 ~183 ~196 ~34 ~185 minecraft:quartz_pillar[axis=y] strict
+setblock ~197 ~28 ~183 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~210 ~28 ~183 minecraft:quartz_pillar[axis=y] strict
+fill ~219 ~28 ~183 ~219 ~28 ~184 minecraft:calcite strict
+setblock ~226 ~28 ~183 minecraft:stone strict
+setblock ~28 ~28 ~184 minecraft:mossy_stone_bricks strict
+fill ~29 ~28 ~184 ~30 ~28 ~184 minecraft:stone_bricks strict
+setblock ~31 ~28 ~184 minecraft:cracked_stone_bricks strict
+fill ~33 ~28 ~184 ~35 ~28 ~184 minecraft:mossy_stone_bricks strict
+setblock ~36 ~28 ~184 minecraft:cobblestone strict
+fill ~37 ~28 ~184 ~37 ~29 ~184 minecraft:mossy_stone_bricks strict
+setblock ~95 ~28 ~184 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~96 ~28 ~184 ~96 ~34 ~186 minecraft:quartz_pillar[axis=y] strict
+setblock ~97 ~28 ~184 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~164 ~28 ~184 ~164 ~29 ~184 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~179 ~28 ~184 ~179 ~34 ~184 minecraft:quartz_pillar[axis=y] strict
+fill ~181 ~28 ~184 ~181 ~34 ~184 minecraft:quartz_pillar[axis=y] strict
+fill ~195 ~28 ~184 ~195 ~34 ~184 minecraft:quartz_pillar[axis=y] strict
+fill ~197 ~28 ~184 ~197 ~34 ~184 minecraft:quartz_pillar[axis=y] strict
+fill ~218 ~28 ~184 ~218 ~28 ~185 minecraft:calcite strict
+fill ~75 ~28 ~185 ~75 ~29 ~185 minecraft:stone strict
+fill ~85 ~28 ~185 ~85 ~29 ~185 minecraft:stone strict
+fill ~95 ~28 ~185 ~95 ~34 ~185 minecraft:quartz_pillar[axis=y] strict
+fill ~97 ~28 ~185 ~97 ~34 ~185 minecraft:quartz_pillar[axis=y] strict
+setblock ~162 ~28 ~185 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~168 ~28 ~185 ~169 ~28 ~185 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~179 ~28 ~185 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~181 ~28 ~185 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~195 ~28 ~185 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~197 ~28 ~185 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+fill ~217 ~28 ~185 ~217 ~28 ~187 minecraft:moss_block strict
+fill ~13 ~28 ~186 ~13 ~28 ~197 minecraft:tuff strict
+fill ~53 ~28 ~186 ~58 ~28 ~186 minecraft:spruce_log[axis=x] strict
+fill ~74 ~28 ~186 ~76 ~28 ~190 minecraft:stone_bricks strict
+fill ~84 ~28 ~186 ~88 ~28 ~190 minecraft:stone_bricks strict
+fill ~89 ~28 ~186 ~90 ~28 ~198 minecraft:dirt strict
+setblock ~95 ~28 ~186 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~97 ~28 ~186 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~168 ~28 ~186 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~226 ~28 ~186 minecraft:stone strict
+fill ~228 ~28 ~186 ~228 ~28 ~187 minecraft:stone strict
+setblock ~51 ~28 ~187 minecraft:coarse_dirt strict
+setblock ~54 ~28 ~187 minecraft:stripped_spruce_log[axis=z] strict
+fill ~55 ~28 ~187 ~55 ~28 ~189 minecraft:spruce_planks strict
+setblock ~56 ~28 ~187 minecraft:stripped_spruce_log[axis=z] strict
+fill ~57 ~28 ~187 ~57 ~28 ~189 minecraft:spruce_planks strict
+fill ~93 ~28 ~187 ~93 ~28 ~190 minecraft:grass_block strict
+fill ~157 ~28 ~187 ~157 ~31 ~187 minecraft:dark_oak_log[axis=y] strict
+setblock ~188 ~28 ~187 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~229 ~28 ~187 ~230 ~28 ~187 minecraft:stone strict
+fill ~15 ~28 ~188 ~15 ~30 ~191 minecraft:dirt strict
+fill ~49 ~28 ~188 ~49 ~28 ~189 minecraft:dirt_path strict
+setblock ~50 ~28 ~188 minecraft:rooted_dirt strict
+fill ~51 ~28 ~188 ~52 ~28 ~188 minecraft:dirt_path strict
+setblock ~54 ~28 ~188 minecraft:spruce_planks strict
+setblock ~56 ~28 ~188 minecraft:spruce_planks strict
+fill ~101 ~28 ~188 ~105 ~28 ~189 minecraft:rooted_dirt strict
+fill ~163 ~28 ~188 ~164 ~28 ~188 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~187 ~28 ~188 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~188 ~28 ~188 minecraft:beacon strict
+setblock ~189 ~28 ~188 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~217 ~28 ~188 ~217 ~28 ~189 minecraft:calcite strict
+fill ~229 ~28 ~188 ~230 ~30 ~188 minecraft:dirt strict
+fill ~231 ~28 ~188 ~232 ~28 ~188 minecraft:stone strict
+fill ~23 ~28 ~189 ~23 ~31 ~189 minecraft:stone strict
+setblock ~48 ~28 ~189 minecraft:dirt_path strict
+setblock ~54 ~28 ~189 minecraft:stripped_spruce_log[axis=z] strict
+setblock ~56 ~28 ~189 minecraft:stripped_spruce_log[axis=z] strict
+fill ~100 ~28 ~189 ~100 ~28 ~190 minecraft:grass_block strict
+fill ~106 ~28 ~189 ~111 ~28 ~190 minecraft:rooted_dirt strict
+setblock ~163 ~28 ~189 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~188 ~28 ~189 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+fill ~232 ~28 ~189 ~232 ~30 ~189 minecraft:dirt strict
+fill ~233 ~28 ~189 ~234 ~28 ~189 minecraft:stone strict
+fill ~19 ~28 ~190 ~19 ~28 ~191 minecraft:grass_block strict
+fill ~21 ~28 ~190 ~23 ~29 ~191 minecraft:andesite strict
+setblock ~48 ~28 ~190 minecraft:grass_block strict
+fill ~53 ~28 ~190 ~58 ~28 ~190 minecraft:spruce_log[axis=x] strict
+fill ~99 ~28 ~190 ~99 ~28 ~191 minecraft:grass_block strict
+fill ~112 ~28 ~190 ~114 ~28 ~191 minecraft:rooted_dirt strict
+fill ~119 ~28 ~190 ~123 ~28 ~190 minecraft:stone_bricks strict
+setblock ~135 ~28 ~190 minecraft:cracked_stone_bricks strict
+setblock ~136 ~28 ~190 minecraft:stone_bricks strict
+fill ~229 ~28 ~190 ~230 ~28 ~190 minecraft:grass_block strict
+setblock ~232 ~28 ~190 minecraft:stone strict
+setblock ~235 ~28 ~190 minecraft:stone strict
+fill ~20 ~28 ~191 ~20 ~29 ~191 minecraft:andesite strict
+fill ~47 ~28 ~191 ~48 ~28 ~191 minecraft:stone strict
+fill ~49 ~28 ~191 ~49 ~31 ~192 minecraft:andesite strict
+fill ~86 ~28 ~191 ~88 ~28 ~198 minecraft:dirt strict
+fill ~94 ~28 ~191 ~95 ~28 ~191 minecraft:grass_block strict
+fill ~98 ~28 ~191 ~98 ~28 ~192 minecraft:grass_block strict
+setblock ~119 ~28 ~191 minecraft:mossy_stone_bricks strict
+fill ~137 ~28 ~191 ~137 ~29 ~191 minecraft:stone_bricks strict
+fill ~155 ~28 ~191 ~155 ~37 ~191 minecraft:spruce_log[axis=y] strict
+setblock ~179 ~28 ~191 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+fill ~180 ~28 ~191 ~180 ~34 ~193 minecraft:quartz_pillar[axis=y] strict
+setblock ~181 ~28 ~191 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~195 ~28 ~191 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~196 ~28 ~191 ~196 ~34 ~193 minecraft:quartz_pillar[axis=y] strict
+setblock ~197 ~28 ~191 minecraft:quartz_stairs[facing=south,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~232 ~28 ~191 minecraft:grass_block strict
+setblock ~237 ~28 ~191 minecraft:stone strict
+fill ~16 ~28 ~192 ~17 ~28 ~192 minecraft:tuff strict
+setblock ~18 ~28 ~192 minecraft:stone strict
+fill ~19 ~28 ~192 ~23 ~29 ~192 minecraft:smooth_stone strict
+fill ~24 ~28 ~192 ~24 ~29 ~192 minecraft:andesite strict
+fill ~47 ~28 ~192 ~47 ~29 ~192 minecraft:stone strict
+fill ~48 ~28 ~192 ~48 ~29 ~192 minecraft:andesite strict
+fill ~95 ~28 ~192 ~97 ~28 ~192 minecraft:grass_block strict
+fill ~110 ~28 ~192 ~110 ~28 ~194 minecraft:dirt strict
+setblock ~114 ~28 ~192 minecraft:cobblestone strict
+setblock ~115 ~28 ~192 minecraft:stone_bricks strict
+fill ~117 ~28 ~192 ~118 ~28 ~192 minecraft:stone_bricks strict
+setblock ~138 ~28 ~192 minecraft:mossy_stone_bricks strict
+fill ~179 ~28 ~192 ~179 ~34 ~192 minecraft:quartz_pillar[axis=y] strict
+fill ~181 ~28 ~192 ~181 ~34 ~192 minecraft:quartz_pillar[axis=y] strict
+fill ~195 ~28 ~192 ~195 ~34 ~192 minecraft:quartz_pillar[axis=y] strict
+fill ~197 ~28 ~192 ~197 ~34 ~192 minecraft:quartz_pillar[axis=y] strict
+setblock ~234 ~28 ~192 minecraft:grass_block strict
+fill ~235 ~28 ~192 ~238 ~28 ~192 minecraft:tuff strict
+fill ~14 ~28 ~193 ~16 ~28 ~193 minecraft:tuff strict
+setblock ~17 ~28 ~193 minecraft:stone strict
+fill ~18 ~28 ~193 ~19 ~29 ~194 minecraft:andesite strict
+fill ~20 ~28 ~193 ~24 ~29 ~193 minecraft:smooth_stone strict
+setblock ~95 ~28 ~193 minecraft:grass_block strict
+fill ~108 ~28 ~193 ~109 ~29 ~194 minecraft:dirt strict
+fill ~111 ~28 ~193 ~112 ~28 ~194 minecraft:dirt strict
+fill ~113 ~28 ~193 ~115 ~28 ~194 minecraft:moss_block strict
+fill ~119 ~28 ~193 ~119 ~30 ~194 minecraft:stone_bricks strict
+setblock ~122 ~28 ~193 minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~123 ~28 ~193 ~123 ~28 ~194 minecraft:stone_bricks strict
+fill ~165 ~28 ~193 ~165 ~28 ~198 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~167 ~28 ~193 ~167 ~30 ~195 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~179 ~28 ~193 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~181 ~28 ~193 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~183 ~28 ~193 minecraft:chiseled_polished_blackstone strict
+setblock ~193 ~28 ~193 minecraft:chiseled_polished_blackstone strict
+setblock ~195 ~28 ~193 minecraft:quartz_stairs[facing=north,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~197 ~28 ~193 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~236 ~28 ~193 minecraft:grass_block strict
+fill ~237 ~28 ~193 ~241 ~29 ~193 minecraft:tuff strict
+fill ~14 ~28 ~194 ~15 ~28 ~194 minecraft:tuff strict
+setblock ~16 ~28 ~194 minecraft:stone strict
+fill ~17 ~28 ~194 ~17 ~29 ~194 minecraft:andesite strict
+fill ~20 ~28 ~194 ~23 ~29 ~195 minecraft:andesite strict
+fill ~24 ~28 ~194 ~24 ~29 ~194 minecraft:smooth_stone strict
+setblock ~95 ~28 ~194 minecraft:coarse_dirt strict
+fill ~100 ~28 ~194 ~107 ~30 ~194 minecraft:dirt strict
+fill ~120 ~28 ~194 ~120 ~29 ~194 minecraft:mossy_stone_bricks strict
+setblock ~121 ~28 ~194 minecraft:stone_bricks strict
+setblock ~133 ~28 ~194 minecraft:mossy_stone_bricks strict
+fill ~164 ~28 ~194 ~164 ~30 ~196 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~166 ~28 ~194 ~166 ~30 ~194 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~168 ~28 ~194 ~169 ~28 ~195 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~171 ~28 ~194 ~172 ~29 ~195 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~238 ~28 ~194 ~243 ~28 ~194 minecraft:tuff strict
+fill ~12 ~28 ~195 ~12 ~28 ~199 minecraft:tuff strict
+setblock ~14 ~28 ~195 minecraft:tuff strict
+setblock ~15 ~28 ~195 minecraft:grass_block strict
+fill ~16 ~28 ~195 ~19 ~29 ~196 minecraft:smooth_stone strict
+fill ~24 ~28 ~195 ~25 ~29 ~196 minecraft:andesite strict
+fill ~26 ~28 ~195 ~26 ~29 ~195 minecraft:smooth_stone strict
+fill ~27 ~28 ~195 ~29 ~28 ~196 minecraft:tuff strict
+fill ~39 ~28 ~195 ~41 ~29 ~196 minecraft:tuff strict
+fill ~42 ~28 ~195 ~43 ~29 ~197 minecraft:stone strict
+setblock ~45 ~28 ~195 minecraft:grass_block strict
+setblock ~95 ~28 ~195 minecraft:gravel strict
+fill ~96 ~28 ~195 ~96 ~28 ~198 minecraft:dirt_path strict
+setblock ~97 ~28 ~195 minecraft:coarse_dirt strict
+fill ~101 ~28 ~195 ~105 ~28 ~195 minecraft:tuff strict
+fill ~106 ~28 ~195 ~108 ~30 ~195 minecraft:dirt strict
+fill ~113 ~28 ~195 ~114 ~28 ~195 minecraft:moss_block strict
+setblock ~166 ~28 ~195 minecraft:dark_oak_log[axis=z] strict
+fill ~170 ~28 ~195 ~170 ~30 ~195 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~215 ~28 ~195 ~217 ~28 ~196 minecraft:sandstone strict
+fill ~227 ~28 ~195 ~229 ~28 ~196 minecraft:sandstone strict
+fill ~240 ~28 ~195 ~243 ~29 ~195 minecraft:tuff strict
+setblock ~11 ~28 ~196 minecraft:stone strict
+setblock ~14 ~28 ~196 minecraft:grass_block strict
+fill ~15 ~28 ~196 ~15 ~29 ~196 minecraft:smooth_stone strict
+fill ~20 ~28 ~196 ~22 ~29 ~197 minecraft:smooth_stone strict
+fill ~23 ~28 ~196 ~23 ~29 ~196 minecraft:andesite strict
+fill ~26 ~28 ~196 ~26 ~29 ~197 minecraft:andesite strict
+fill ~44 ~28 ~196 ~44 ~28 ~200 minecraft:stone strict
+fill ~45 ~28 ~196 ~45 ~29 ~197 minecraft:tuff strict
+fill ~48 ~28 ~196 ~48 ~29 ~197 minecraft:stone strict
+fill ~95 ~28 ~196 ~95 ~28 ~197 minecraft:dirt_path strict
+fill ~97 ~28 ~196 ~97 ~28 ~198 minecraft:dirt_path strict
+fill ~100 ~28 ~196 ~102 ~29 ~196 minecraft:tuff strict
+fill ~104 ~28 ~196 ~106 ~28 ~196 minecraft:tuff strict
+fill ~107 ~28 ~196 ~108 ~30 ~196 minecraft:dirt strict
+fill ~112 ~28 ~196 ~113 ~28 ~196 minecraft:moss_block strict
+setblock ~124 ~28 ~196 minecraft:chiseled_stone_bricks strict
+setblock ~132 ~28 ~196 minecraft:chiseled_stone_bricks strict
+fill ~170 ~28 ~196 ~171 ~28 ~196 minecraft:dark_oak_log[axis=x] strict
+fill ~172 ~28 ~196 ~173 ~28 ~197 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~187 ~28 ~196 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+fill ~188 ~28 ~196 ~188 ~28 ~198 minecraft:quartz_pillar[axis=y] strict
+setblock ~189 ~28 ~196 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict
+fill ~212 ~28 ~196 ~214 ~28 ~196 minecraft:sandstone strict
+fill ~230 ~28 ~196 ~232 ~28 ~196 minecraft:sandstone strict
+setblock ~241 ~28 ~196 minecraft:stone strict
+fill ~242 ~28 ~196 ~244 ~28 ~196 minecraft:tuff strict
+fill ~10 ~28 ~197 ~10 ~35 ~197 minecraft:stone strict
+fill ~11 ~28 ~197 ~11 ~28 ~205 minecraft:tuff strict
+fill ~14 ~28 ~197 ~18 ~29 ~197 minecraft:stone strict
+fill ~19 ~28 ~197 ~19 ~29 ~197 minecraft:smooth_stone strict
+fill ~23 ~28 ~197 ~25 ~29 ~198 minecraft:smooth_stone strict
+fill ~29 ~28 ~197 ~29 ~30 ~200 minecraft:tuff strict
+fill ~39 ~28 ~197 ~39 ~28 ~202 minecraft:tuff strict
+fill ~46 ~28 ~197 ~46 ~29 ~198 minecraft:tuff strict
+fill ~47 ~28 ~197 ~47 ~29 ~197 minecraft:smooth_stone strict
+setblock ~94 ~28 ~197 minecraft:rooted_dirt strict
+fill ~101 ~28 ~197 ~101 ~29 ~197 minecraft:tuff strict
+fill ~102 ~28 ~197 ~106 ~30 ~197 minecraft:dirt strict
+setblock ~112 ~28 ~197 minecraft:moss_block strict
+fill ~168 ~28 ~197 ~171 ~29 ~197 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+fill ~187 ~28 ~197 ~187 ~29 ~197 minecraft:quartz_pillar[axis=y] strict
+setblock ~189 ~28 ~197 minecraft:quartz_pillar[axis=y] strict
+fill ~217 ~28 ~197 ~217 ~31 ~200 minecraft:sandstone strict
+fill ~227 ~28 ~197 ~227 ~31 ~203 minecraft:sandstone strict
+fill ~231 ~28 ~197 ~234 ~28 ~197 minecraft:sandstone strict
+setblock ~242 ~28 ~197 minecraft:stone strict
+fill ~243 ~28 ~197 ~244 ~28 ~198 minecraft:tuff strict
+fill ~9 ~28 ~198 ~10 ~28 ~199 minecraft:andesite strict
+fill ~13 ~28 ~198 ~13 ~35 ~198 minecraft:stone strict
+fill ~15 ~28 ~198 ~15 ~35 ~198 minecraft:stone strict
+fill ~19 ~28 ~198 ~22 ~29 ~198 minecraft:stone strict
+setblock ~26 ~28 ~198 minecraft:gravel strict
+setblock ~27 ~28 ~198 minecraft:stone strict
+fill ~41 ~28 ~198 ~42 ~28 ~198 minecraft:gravel strict
+fill ~43 ~28 ~198 ~43 ~29 ~198 minecraft:stone strict
+fill ~45 ~28 ~198 ~45 ~28 ~200 minecraft:stone strict
+fill ~47 ~28 ~198 ~48 ~29 ~198 minecraft:tuff strict
+fill ~66 ~28 ~198 ~66 ~28 ~203 minecraft:spruce_log[axis=z] strict
+fill ~70 ~28 ~198 ~70 ~28 ~203 minecraft:spruce_log[axis=z] strict
+setblock ~93 ~28 ~198 minecraft:dirt_path strict
+setblock ~94 ~28 ~198 minecraft:coarse_dirt strict
+setblock ~95 ~28 ~198 minecraft:rooted_dirt strict
+fill ~109 ~28 ~198 ~110 ~28 ~198 minecraft:moss_block strict
+fill ~170 ~28 ~198 ~170 ~28 ~199 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~172 ~28 ~198 minecraft:azalea_leaves[distance=7,persistent=true,waterlogged=false] strict
+setblock ~187 ~28 ~198 minecraft:quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false] strict
+setblock ~189 ~28 ~198 minecraft:quartz_stairs[facing=west,half=bottom,shape=straight,waterlogged=false] strict

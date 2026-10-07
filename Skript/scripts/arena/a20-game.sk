@@ -464,10 +464,6 @@ function bgClassSwitch(p: player, c: number):
     bgCmd("clear %{_n}% arrow")
     bgCmd("effect clear %{_n}% slowness")
     bgClassGear({_p}, {_c})
-    # 새 직업과 안 맞는 특수 무기가 있으면 교환 창 (a52) — 직업 이름 제목이 먼저 보이게 살짝 뒤에
-    wait 12 ticks
-    if {_p} is online:
-        bgWExCheck({_p})
 
 # 본진의 병과 발판 (base_<팀>_class_0..2) 위에 서면 병과 변경
 function bgClassPads():
@@ -646,26 +642,9 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
     permission: op
     trigger:
         if arg-1 is not set:
-            send "&6[전장] &f/전장 맵 [olympus|frost|volcano] (지금: %bgMapName()%) → /전장 건설"
             send "&6[전장] &f/전장 건설 (내 위치) | 건설 원점 | 장식 | 광석바위 | 맵패치 | 연습장건설 | 원점 x y z | 월드 이름 | 팀 <플레이어> <red|blue|green|yellow|none>"
-            send "&6[전장] &f/전장 자동팀 | 팀초기화 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops|ymir|fenrir|surtr|cerberus] | 보스제거"
+            send "&6[전장] &f/전장 자동팀 | 팀초기화 | 시작 | 종료 | 보스 [talos|sphinx|ladon|cyclops] | 보스제거"
             send "&6[전장] &f/전장 코인 <플레이어|all> <n> | 점수 <팀> <n> | 목표 <n> | 시간 <분> | 이동 <마커>"
-            stop
-        if arg-1 is "맵":
-            # 맵 고르기 (a09) — 고른 뒤 /전장 건설 로 그 맵을 짓는다
-            if arg-2 is not set:
-                send bgMapLines()
-                stop
-            if {-bg::on} is true:
-                send "&c[전장] 게임 중에는 맵을 바꿀 수 없습니다. /전장 종료 먼저."
-                stop
-            if {-bg::mapname::%arg-2%} is not set:
-                send "&c[전장] 없는 맵: %arg-2%"
-                send bgMapLines()
-                stop
-            bgMapSelect(arg-2)
-            send "&6[전장] &f맵 = &e&l%{-bg::mapname::%arg-2%}% &7(%arg-2%) &f— 이제 맵 한가운데로 갈 자리에서 &e/전장 건설"
-            send "&7  (건설하면 그 자리 256×256 블록을 새 맵으로 덮어씁니다. 직접 고친 블록도 사라짐)"
             stop
         if arg-1 is "건설":
             # 기본: 명령을 친 사람이 서 있는 곳이 맵 한가운데(대전 앞 광장) 지면이 된다.  '/전장 건설 원점' = 저장된 원점 그대로
@@ -678,13 +657,13 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
                     set {bg::cfg::oy} to floor(y-coordinate of {_l}) - 25
                     send "&6[전장] &f지금 서 있는 곳을 맵 중심으로 짓습니다 (256×256, 원점 %{bg::cfg::ox}% %{bg::cfg::oy}% %{bg::cfg::oz}%)"
             bgSyncOrigin()
-            bgCmd("function bg:%bgMapFn()%/build/start")
-            bgSay("맵 &e%bgMapName()%&f 건설을 시작합니다 (수십 초 걸립니다).")
+            bgCmd("function bg:map/build/start")
+            bgSay("맵 건설을 시작합니다 (수십 초 걸립니다).")
         else if arg-1 is "로비":
             bgToLobby(player)
         else if arg-1 is "경계":
             bgSyncOrigin()
-            bgCmd("function bg:%bgMapFn()%/border with storage bg:map origin")
+            bgCmd("function bg:map/border with storage bg:map origin")
             send "&6[전장] &f맵 경계 벽(보이지 않는 벽)을 세웠습니다."
         else if arg-1 is "진단":
             bgDiag(player)
@@ -693,17 +672,17 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
         else if arg-1 is "장식":
             bgSyncOrigin()
             # 장식 = 디스플레이 · NPC · 코어 표시 같은 '엔티티'만 다시 소환 (블록은 건드리지 않음 → 직접 고친 맵 안전)
-            bgCmd("function bg:%bgMapFn()%/decor")
+            bgCmd("function bg:map/decor")
             send "&6[전장] &f장식(디스플레이 · 상인 · 코어)을 다시 배치했습니다. &7블록은 건드리지 않습니다."
         else if arg-1 is "광석바위":
             # 본진 광석 바위 (블록을 덮어씀 — 그 자리 5x5 만)
             bgSyncOrigin()
             send "&6[전장] &e광석 놓는 중... &7(본진 바위 + 맵 곳곳 광맥 40곳)"
-            bgCmd("function bg:%bgMapFn()%/ores_fl")
+            bgCmd("function bg:map/ores_fl")
             wait 40 ticks
-            bgCmd("function bg:%bgMapFn()%/ores")
+            bgCmd("function bg:map/ores")
             wait 5 ticks
-            bgCmd("function bg:%bgMapFn()%/ores_rm")
+            bgCmd("function bg:map/ores_rm")
             send "&6[전장] &f본진 광석 바위 + 맵 곳곳 광맥을 놓았습니다. &7(그 자리 블록을 덮어씀)"
         else if arg-1 is "광석삭제":
             # 막대로 놓은 광석 바위 + 데이터팩으로 놓은 광석(본진 바위 · 맵 광맥) 전부 지우고 원래 지형으로
@@ -714,21 +693,21 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
                 add 1 to {_n}
             bgSyncOrigin()
             send "&6[전장] &e광석 지우는 중... &7(막대 바위 %{_n}%개 + 본진 바위 · 맵 광맥)"
-            bgCmd("function bg:%bgMapFn()%/ores_fl")
+            bgCmd("function bg:map/ores_fl")
             wait 40 ticks
-            bgCmd("function bg:%bgMapFn()%/ores_clear")
+            bgCmd("function bg:map/ores_clear")
             wait 5 ticks
-            bgCmd("function bg:%bgMapFn()%/ores_rm")
+            bgCmd("function bg:map/ores_rm")
             send "&6[전장] &f광석을 전부 지웠습니다. &7(원래 지형으로 되돌림)"
         else if arg-1 is "맵패치":
             # 예전 광산 자리 원래 지형으로 + 갇히는 곳 사다리 (블록을 덮어씀 — 한 번만)
             bgSyncOrigin()
             send "&6[전장] &e맵 패치 중... &7(예전 광산 자리 8곳 원래 지형으로 · 갇히는 곳 사다리 · 메우기)"
-            bgCmd("function bg:%bgMapFn()%/patch_fl")
+            bgCmd("function bg:map/patch_fl")
             wait 40 ticks
-            bgCmd("function bg:%bgMapFn()%/patch")
+            bgCmd("function bg:map/patch")
             wait 5 ticks
-            bgCmd("function bg:%bgMapFn()%/patch_rm")
+            bgCmd("function bg:map/patch_rm")
             send "&6[전장] &f맵 패치 완료."
         else if arg-1 is "원점":
             set {bg::cfg::ox} to arg-2 parsed as integer
@@ -788,7 +767,7 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
             if {_b} is not set:
                 set {_b} to random element out of {-bg::bd::list::*}
             if {-bg::bd::%{_b}%::name} is not set:
-                send "&c보스: talos / sphinx / ladon / cyclops / ymir / fenrir / surtr / cerberus"
+                send "&c보스: talos / sphinx / ladon / cyclops"
                 stop
             bgBossSpawn({_b})
         else if arg-1 is "보스제거":
