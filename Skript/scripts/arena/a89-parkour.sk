@@ -6,6 +6,7 @@
 #     (다른 사람에게는 안 보이고 밟을 수도 없음 · 다리 위에서는 떨어져도 다치지 않음 · 60초 또는 다리에서 벗어나면 사라짐)
 #   고리 안으로 들어가면 → 포털 파쿠르 (허브 남쪽 하늘 · 우주 배경): 빛나는 행성 둘레를 돌며 올라가는 50단 · 꼭대기 트로피
 #     체크포인트 없음 — 떨어지면 처음부터 (기록도 다시) · 기록 타이머 · 최고 기록 · /파쿠르 랭킹 · 9번 칸 나가기 버튼 (허브로)
+#     다른 사람은 안 보이고 안 밀림: 팀 0hubpk (충돌 없음 · 이름표 숨김 · 같은 팀 투명 안 보임) + 파티클 없는 투명 효과
 #   파쿠르 원점 = 허브 원점 + (0, 10, 200)  (storage bg:pk origin, arena/tools/pkgen.py)
 # ═════════════════════════════════════════════════════════════════════════════
 
@@ -202,6 +203,9 @@ every 1 second:
     bgParticle({_c}, "reverse_portal", 3, 3, 0.3, 0.05, 14)
 
 on quit:
+    if {-bg::pkinv::%uuid of player%} is set:
+        delete {-bg::pkinv::%uuid of player%}
+        bgCmd("effect clear %name of player% invisibility")
     loop {-bg::bridge::ents::%uuid of player%::*}:
         set {_e} to loop-value
         {_e}.remove()
@@ -260,6 +264,10 @@ function bgPkEnter(p: player):
     bgPkRestart({_p})
     clear {_p}'s inventory
     bgExitItem({_p})
+    bgCmd("effect give %name of {_p}% invisibility infinite 0 true")
+    set {-bg::pkinv::%uuid of {_p}%} to true
+    bgCmd("team join 0hubpk %name of {_p}%")
+    set {-bg::tabteam::%uuid of {_p}%} to "0hubpk"
     play sound "block.portal.travel" with volume 0.4 and pitch 1.6 to {_p}
     bgTitleP({_p}, "&d&l포털 파쿠르", "&f행성 둘레를 돌아 꼭대기 트로피까지! &7· 떨어지면 처음부터")
 
@@ -292,30 +300,56 @@ every 5 ticks:
             bgPkRestart({_p})
             send title " " with subtitle "&c✖ 떨어졌다! &7처음부터" to {_p} for 25 ticks with fade in 0 ticks and fade out 8 ticks
             play sound "entity.enderman.teleport" with volume 0.6 and pitch 1.4 to {_p}
-        # 결승
+
+# ─────────────────────────────────────────────────────────── 결승 (매 틱 확인 → 기록이 늦게 찍히지 않게)
+#  금 결승 발판(7×7) 위 어디든 닿는 순간 완주 — 결승 표지는 발판 가운데에서 남쪽 2칸 (pkgen.py) 이라 가운데 = 표지 z - 2
+every tick:
+    loop all players:
+        bgPkOn(loop-player) is true
         set {_f} to bgPkMk("finish")
-        if bgDist2(location of {_p}, {_f}) < 3.5:
-            if abs((y-coordinate of {_p}) - (y-coordinate of {_f})) < 2:
-                set {_ms} to bgPkElapsed({_p})
-                set {_best} to {bg::pk::best::%{_u}%}
-                set {_tt} to bgPkTime({_ms})
-                if {_best} is not set:
-                    set {bg::pk::best::%{_u}%} to {_ms}
-                    set {_msg} to "&6첫 완주!"
-                else if {_ms} < {_best}:
-                    set {bg::pk::best::%{_u}%} to {_ms}
-                    set {_msg} to "&6&l최고 기록 경신!"
-                else:
-                    set {_msg} to "&7최고 기록 %bgPkTime({_best})%"
-                add 1 to {bg::pk::clears::%{_u}%}
-                bgTitleP({_p}, "&e&l완주! &f%{_tt}%", "%{_msg}%")
-                play sound "ui.toast.challenge_complete" to {_p}
-                bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 80)
-                broadcast "&d[파쿠르] &e%name of {_p}%&f 님이 포털 파쿠르 완주! &6%{_tt}%"
-                delete {-bg::pk::in::%{_u}%}
-                delete {-bg::pk::top::%{_u}%}
-                wait 3 seconds
+        set {_dy} to (y-coordinate of loop-player) - (y-coordinate of {_f})
+        if {_dy} > -0.3:
+            if {_dy} < 1.6:
+                if abs((x-coordinate of loop-player) - (x-coordinate of {_f})) <= 3.6:
+                    if abs((z-coordinate of loop-player) - ((z-coordinate of {_f}) - 2)) <= 3.6:
+                        bgPkFinish(loop-player)
+
+function bgPkFinish(p: player):
+    set {_u} to "%uuid of {_p}%"
+    {-bg::pk::in::%{_u}%} is true
+    set {_ms} to bgPkElapsed({_p})
+    delete {-bg::pk::in::%{_u}%}
+    delete {-bg::pk::top::%{_u}%}
+    set {_best} to {bg::pk::best::%{_u}%}
+    set {_tt} to bgPkTime({_ms})
+    if {_best} is not set:
+        set {bg::pk::best::%{_u}%} to {_ms}
+        set {_msg} to "&6첫 완주!"
+    else if {_ms} < {_best}:
+        set {bg::pk::best::%{_u}%} to {_ms}
+        set {_msg} to "&6&l최고 기록 경신!"
+    else:
+        set {_msg} to "&7최고 기록 %bgPkTime({_best})%"
+    add 1 to {bg::pk::clears::%{_u}%}
+    bgTitleP({_p}, "&e&l완주! &f%{_tt}%", "%{_msg}%")
+    play sound "ui.toast.challenge_complete" to {_p}
+    bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 80)
+    broadcast "&d[파쿠르] &e%name of {_p}%&f 님이 포털 파쿠르 완주! &6%{_tt}%"
+    wait 3 seconds
+    if {_p} is online:
+        if bgPkOn({_p}) is false:
+            if bgArea({_p}) is "myth":
                 bgToHub({_p})
+
+# 파쿠르 안 = 투명 (파티클 없음) · 나가면 바로 풀림 (어디로 나가든: 변수로 기억)
+every 1 second:
+    loop all players:
+        if bgPkOn(loop-player) is true:
+            bgCmd("effect give %name of loop-player% invisibility infinite 0 true")
+            set {-bg::pkinv::%uuid of loop-player%} to true
+        else if {-bg::pkinv::%uuid of loop-player%} is set:
+            delete {-bg::pkinv::%uuid of loop-player%}
+            bgCmd("effect clear %name of loop-player% invisibility")
 
 every 2 ticks:
     loop all players:

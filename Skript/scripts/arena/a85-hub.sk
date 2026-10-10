@@ -627,7 +627,7 @@ command /컨텐츠 [<text>] [<text>]:
         bgHubMenu(player)
 
 # ─────────────────────────────────────────────────────────── 탭 목록 (Tab): 있는 곳끼리 묶기
-#  마크 탭 목록은 팀 이름 순서로 정렬됨 → 0hub(허브) · 1myth(신화쟁탈전 대기) · bg_*(신화쟁탈전 팀) · kd_*(경도) · os(온리소드)
+#  마크 탭 목록은 팀 이름 순서로 정렬됨 → 0hub(허브) · 0hubpk(파쿠르: 서로 안 보이고 안 밀림) · 1myth(신화쟁탈전 대기) · bg_*(신화쟁탈전 팀) · kd_*(경도) · os(온리소드)
 #  위(머리말)에 제목, 아래(꼬리말)에 곳마다 인원
 on load:
     bgCmd("team add 0hub")
@@ -637,6 +637,13 @@ on load:
     bgCmd("team modify 1myth color gold")
     bgCmd("team modify os_play color red")
     bgCmd("team modify 0hub prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
+    # 파쿠르: 같은 팀끼리도 투명한 사람이 안 보이게 · 이름표 숨김 · 몸끼리 안 밀림
+    bgCmd("team add 0hubpk")
+    bgCmd("team modify 0hubpk color aqua")
+    bgCmd("team modify 0hubpk collisionRule never")
+    bgCmd("team modify 0hubpk nametagVisibility never")
+    bgCmd("team modify 0hubpk seeFriendlyInvisibles false")
+    bgCmd("team modify 0hubpk prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
     bgCmd("team modify 1myth prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
     bgCmd("team modify os_play prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
 
@@ -660,7 +667,7 @@ every 1 second:
             add 1 to {_nk}
         else if {_ar} is "pk":
             add 1 to {_np}
-            set {_want} to "0hub"
+            set {_want} to "0hubpk"
         else:
             add 1 to {_nm}
             if bgTeam({_pp}) is "none":
