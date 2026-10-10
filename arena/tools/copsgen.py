@@ -106,11 +106,13 @@ LOTS = lot_ranges()
 
 
 STATS = {}
+DISPS = []         # 블록 디스플레이로 놓을 것: (모델, x, y(격자), z, yaw) — 도시 좌표
 HELI_AT = {}       # 옥상 헬기 자리 (도시 좌표, y 는 바닥 기준) · 방향
 BLDG = []          # 검사용: 지은 건물 (b, 층수, 문 방향들) — build() 때마다 새로
 
 def build():
     BLDG.clear()
+    DISPS.clear()
     DOORS = []
     OBST = []                   # 건물은 아니지만 문 앞을 막는 큰 것 (주차장 · 공사장)
     v = np.zeros((N, H, N), np.uint16)
@@ -185,6 +187,11 @@ def build():
         w = fwidth(side, *b)
         tw = len(text) * 4 - 1
         t0 = (w - tw) // 2
+        if back:                       # 글자 뒤 판 (테두리 1칸 더 · 위아래 테두리는 회색 줄)
+            for t in range(t0 - 2, t0 + tw + 2):
+                for y in range(y_top - 6, y_top + 2):
+                    edge = t in (t0 - 2, t0 + tw + 1) or y in (y_top - 6, y_top + 1)
+                    fput(side, b, t, y, "gray_concrete" if edge else back, out - 1)
         for i, ch in enumerate(text):
             g = FONT.get(ch, FONT[" "])
             for r in range(5):
@@ -254,15 +261,9 @@ def build():
 
     @prop
     def traffic_light(x, z, face):
-        for y in range(FL + 1, FL + 5):
-            put(x, y, z, post("stone_brick"))
-        dx, dz = OUT[face]
-        for y in (FL + 5, FL + 6, FL + 7):
-            put(x, y, z, "black_concrete")
-        put(x + dx, FL + 7, z + dz, "red_stained_glass")
-        put(x + dx, FL + 6, z + dz, "yellow_stained_glass")
-        put(x + dx, FL + 5, z + dz, "lime_stained_glass")
-        put(x, FL + 8, z, slab("blackstone"))
+        """블록 디스플레이 신호등 (streetbd.py) — 도로 위로 팔이 뻗고 신호 상자가 매달림 · 남북 = 초록 · 동서 = 빨강"""
+        yaw = {"s": 0.0, "n": 180.0, "e": -90.0, "w": 90.0}[face]
+        DISPS.append(("tl_green" if face in "ns" else "tl_red", x + 0.5, FL + 1, z + 0.5, yaw))
 
     @prop
     def hydrant(x, z):
@@ -670,7 +671,7 @@ def build():
         put(x, FL, z1 - 1, "smooth_quartz")
         put(x, FL + 1, z1, slab("smooth_quartz"))
     neon_strip("s", bb, top - 1, "yellow_stained_glass", "ochre_froglight")
-    sign("s", (x0, z0, x1, z1 - 2), "BANK", FL + 18, "ochre_froglight", out=1)
+    sign("s", (x0, z0, x1, z1 - 2), "BANK", FL + 18, "ochre_froglight", back="black_concrete", out=1)
 
     # ── (3,1) 카지노: 검정 · 보라 · 네온 · 전구 테두리 · CASINO
     b = lot(3, 1)
@@ -700,7 +701,7 @@ def build():
     shell(parts[0], 2, "white_concrete", "light_blue_concrete", win="glass", pattern="grid", doors=("n", "w"), ground="shop")
     vault((x0 + x1) // 2, (z0 + z1) // 2, "보석상", "gem", "n")
     awning("n", parts[0], ("light_blue_wool", "white_wool"))
-    sign("w", parts[0], "GEMS", FL + 9, "sea_lantern", out=1)
+    sign("w", parts[0], "GEMS", FL + 9, "sea_lantern", back="black_concrete", out=1)
     for k, pb in enumerate(parts[1:]):
         st = [("bricks", "stone_bricks"), ("orange_terracotta", "brown_terracotta"), ("cyan_terracotta", "white_terracotta")][k]
         fl = [3, 4, 2][k]
@@ -756,7 +757,7 @@ def build():
                     rib = dx == 0 or dz == 0 or abs(dx) == abs(dz)
                     put(cx + dx, top + 1 + dy, cz + dz, "oxidized_copper" if rib else "light_blue_stained_glass")
     put(cx, top + R + 2, cz, "lightning_rod[facing=up,powered=false,waterlogged=false]")
-    sign("n", mb, "MUSEUM", FL + 19, "sea_lantern", out=4)
+    sign("n", mb, "MUSEUM", FL + 19, "sea_lantern", back="black_concrete", out=4)
 
     # ── (2,4) 편의점 (24/7) + 아파트 + 유리 빌딩
     b = lot(2, 4)
@@ -907,8 +908,8 @@ def build():
     for k, col in enumerate(("orange_wool", "white_wool", "orange_wool")):
         put(wx_ - 1 - k, top + 5, wz_, col)
     # 간판 HELI (남 · 서)
-    sign("s", hb, "HELI", top - 2, "ochre_froglight", out=1)
-    sign("w", hb, "HELI", top - 2, "ochre_froglight", out=1)
+    sign("s", hb, "HELI", top - 2, "ochre_froglight", back="black_concrete", out=1)
+    sign("w", hb, "HELI", top - 2, "ochre_froglight", back="black_concrete", out=1)
     # 입구 안내 표지 (남쪽 문 앞) · 헬기 자리
     mark("heli_gate", bx0 + fwidth("s", *hb) // 2 - 1, 1, bz1 + 3)
     HELI_AT.update(x=hx + 0.5, y=top + 1 - FL, z=hz + 0.5, yaw=90.0)
@@ -1271,12 +1272,17 @@ def commands(greedy_boxes):
 def display_commands():
     """블록 디스플레이 (헬기) 소환 — 데이터팩 마지막 조각에서 (예전 것은 지우고)"""
     import heli
+    import bdkit
     if not HELI_AT:
         build()
+    import streetbd
     at = "$execute positioned $(x) $(y) $(z) run summon"
     h = HELI_AT
-    out = ["kill @e[type=block_display,tag=kd_heli]"]
+    out = ["kill @e[type=block_display,tag=kd_heli]", "kill @e[type=block_display,tag=kd_bd]"]
     out += heli.summon_all(at, h["x"], h["y"], h["z"], h["yaw"], ['"kd_heli"'])
+    models = {"tl_green": streetbd.traffic_light("green"), "tl_red": streetbd.traffic_light("red")}
+    for name, x, y, z, yaw in DISPS:
+        out += bdkit.summon_lines(models[name], at, x, y - FL, z, yaw, 1.0, ['"kd_bd"'], view=1.2)
     return out
 
 
@@ -1286,19 +1292,19 @@ def forceload_range():
 
 SHOTS = [
     ((92, 125, 92), (0, 0, 0), 60, "경찰과 도둑 — 밤 대도시 전체 (4차선 도로 · 구역 25 · 바깥 스카이라인)"),
-    ((57, 4, -50), (80, 26, -80), 78, "헬기장 타워 (북동) — 7층 35칸 · HELI 간판 · 남쪽 · 서쪽 입구"),
+    ((57, 4, -50), (80, 26, -80), 78, "헬기장 타워 (북동) — 7층 35칸 · HELI 간판 · 남쪽 · 서쪽 입구 · 안쪽 계단"),
     ((93, 50, -62), (83, 36, -84), 66, "타워 옥상 — 헬기장 (흰 H · 빛 테두리) · 탈출 헬기 · 계단 집 · 관제실 · 투광등 · 풍향 자루"),
     ((77, 39.5, -89.5), (85.5, 38, -81.5), 70, "탈출 헬기 가까이 (블록 디스플레이 · 로터는 실제로 돎)"),
-    ((0.5, 3, 42), (0.5, 16, -20), 85, "거리에서 — 중앙 광장 · 랜드마크 타워 (꼭대기 전망대 = 대기실)"),
-    ((-18, 7, -17), (-40, 12, -40), 75, "은행 (기둥 현관 · BANK) — 문 앞 기둥 비움"),
-    ((18, 7, -17), (40, 14, -40), 75, "카지노 (네온 · 전구 · CASINO)"),
-    ((-58, 9, 58), (-76, 10, 78), 75, "경찰서 (POLICE) · 경찰차 · 감옥"),
-    ((-40, 6, 18), (-40, 12, 40), 75, "박물관 (기둥 현관 · 유리 돔 · MUSEUM)"),
-    ((18, 6, 18), (34, 8, 34), 75, "보석상 (GEMS) · 상가 · 줄무늬 차양"),
-    ((-62, 6, -38), (-84, 8, -44), 75, "창고 (하역장 · 컨테이너)"),
-    ((-7, 6, 58), (-7, 8, 72), 75, "편의점 (24/7) · 아파트 · 유리 빌딩"),
-    ((62, 8, 18), (80, 10, 2), 75, "입체 주차장 (PARK) · 공원"),
-    ((-60, 8, 2), (-80, 12, 18), 75, "공사장 · 크레인"),
+    ((0.5, 3, 42), (0.5, 16, -20), 85, "거리에서 — 중앙 광장 · 랜드마크 타워 (꼭대기 전망대 = 대기실) · 새 신호등"),
+    ((-12, 16, -19), (-40, 9, -36), 70, "은행 (기둥 현관 · BANK) — 정면"),
+    ((12, 16, -19), (40, 10, -36), 70, "카지노 (네온 · 전구 · CASINO) — 정면"),
+    ((-59, 16, 50), (-75, 9, 78), 70, "경찰서 (POLICE) — 동쪽 정면 · 경찰차"),
+    ((-12, 16, 21), (-40, 10, 36), 70, "박물관 (기둥 현관 · 유리 돔 · MUSEUM) — 정면"),
+    ((20, 14, 0), (33, 6, 32), 70, "보석상 (GEMS) · 상가 · 줄무늬 차양"),
+    ((-62, 14, -19), (-86, 7, -36), 70, "창고 — 남쪽 정면 (컨테이너 마당은 동쪽)"),
+    ((18, 14, 60), (-7, 7, 72), 70, "편의점 (24/7) · 아파트 — 정면"),
+    ((60, 16, 30), (80, 9, 0), 70, "입체 주차장 (PARK) — 서쪽 정면"),
+    ((-60, 20, 15), (-82, 10, 40), 70, "공사장 · 크레인"),
 ]
 
 
@@ -1319,6 +1325,11 @@ def _shot(args):
     bdkit.add_to_mesh(mesh, heli.body(), o, h["yaw"], 1.0, sun)
     mx, my, mz = bdkit._ry(-h["yaw"]) @ (np.array(heli.MAST) / 16)
     bdkit.add_to_mesh(mesh, heli.main_rotor(), o + np.array([mx, my, mz]), h["yaw"] + 20, 1.0, sun)
+    import streetbd
+    tlm = {"tl_green": streetbd.traffic_light("green"), "tl_red": streetbd.traffic_light("red")}
+    for name, x, y, z, yaw in DISPS:
+        if abs(x - cam[0]) + abs(z - cam[2]) < 90:
+            bdkit.add_to_mesh(mesh, tlm[name], np.array([C + x, y, C + z]), yaw, 1.0, sun)
     W, Hh = 1000, 560
     c = (C + cam[0], FL + cam[1], C + cam[2]); t = (C + tgt[0], FL + tgt[1], C + tgt[2])
     im = R.render(v2, pal, W, Hh, c, t, fov=fov, ss=2, fog_dist=900, mesh=mesh, **hubgen.NIGHT)

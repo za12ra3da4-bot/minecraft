@@ -1,389 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-12 ~22 ~-92 ~-12 ~23 ~-91 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~3 ~22 ~-92 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~11 ~22 ~-92 ~11 ~23 ~-92 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-92 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-91 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-75 ~22 ~-91 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-91 ~-69 ~24 ~-91 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-68 ~22 ~-91 ~-68 ~23 ~-91 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-49 ~22 ~-91 ~-49 ~25 ~-91 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-36 ~22 ~-91 ~-36 ~25 ~-91 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~11 ~22 ~-91 ~11 ~24 ~-91 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~12 ~22 ~-91 ~12 ~23 ~-91 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~31 ~22 ~-91 ~31 ~25 ~-91 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-90 ~-80 ~24 ~-90 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-90 ~-69 ~23 ~-89 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-13 ~22 ~-90 ~-13 ~23 ~-90 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-12 ~22 ~-90 ~-12 ~24 ~-90 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~11 ~22 ~-90 ~11 ~23 ~-89 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~22 ~-89 ~-99 ~22 ~-88 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-89 ~-80 ~23 ~-88 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~-34 ~22 ~-89 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-12 ~22 ~-89 ~-12 ~23 ~-88 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~45 ~22 ~-89 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-88 ~-69 ~24 ~-88 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-68 ~22 ~-88 ~-68 ~23 ~-88 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~11 ~22 ~-88 ~11 ~24 ~-88 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~12 ~22 ~-88 ~12 ~23 ~-88 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-81 ~22 ~-87 ~-81 ~23 ~-87 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-87 ~-80 ~24 ~-87 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-87 ~-69 ~23 ~-86 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~-34 ~22 ~-87 minecraft:oak_leaves[persistent=true,distance=1,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-13 ~22 ~-87 ~-13 ~23 ~-87 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-12 ~22 ~-87 ~-12 ~24 ~-87 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~11 ~22 ~-87 ~11 ~23 ~-86 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~46 ~22 ~-87 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-86 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-86 ~-80 ~23 ~-86 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-12 ~22 ~-86 ~-12 ~23 ~-86 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~32 ~22 ~-86 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~35 ~22 ~-86 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~80 ~22 ~-86 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-85 ~-80 ~24 ~-85 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-85 ~-69 ~24 ~-85 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-12 ~22 ~-85 ~-12 ~24 ~-85 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~11 ~22 ~-85 ~11 ~24 ~-85 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-85 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-79 ~22 ~-84 ~-79 ~24 ~-84 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-78 ~22 ~-84 ~-77 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~22 ~-84 ~-76 ~24 ~-84 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-75 ~22 ~-84 ~-74 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-73 ~22 ~-84 ~-73 ~24 ~-84 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-72 ~22 ~-84 ~-71 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-70 ~22 ~-84 ~-70 ~24 ~-84 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-11 ~22 ~-84 ~-11 ~24 ~-84 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-10 ~22 ~-84 ~-9 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-8 ~22 ~-84 ~-8 ~24 ~-84 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~22 ~-84 ~-6 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~22 ~-84 ~-5 ~24 ~-84 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~22 ~-84 ~-3 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~22 ~-84 ~-2 ~24 ~-84 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~22 ~-84 ~0 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~1 ~22 ~-84 ~1 ~24 ~-84 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~2 ~22 ~-84 ~3 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~4 ~22 ~-84 ~4 ~24 ~-84 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~5 ~22 ~-84 ~6 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~7 ~22 ~-84 ~7 ~24 ~-84 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~8 ~22 ~-84 ~9 ~23 ~-84 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~10 ~22 ~-84 ~10 ~24 ~-84 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run setblock ~76 ~22 ~-84 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-84 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-79 ~22 ~-83 ~-79 ~23 ~-83 minecraft:birch_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~22 ~-83 ~-76 ~23 ~-83 minecraft:birch_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-34 ~22 ~-83 minecraft:dandelion
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~22 ~-83 ~-5 ~23 ~-83 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~22 ~-83 ~-2 ~23 ~-83 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~1 ~22 ~-83 ~1 ~23 ~-83 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~4 ~22 ~-83 ~4 ~23 ~-83 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~7 ~22 ~-83 ~7 ~23 ~-83 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-48 ~22 ~-82 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-88 ~22 ~-81 ~-88 ~23 ~-81 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-85 ~22 ~-81 ~-85 ~23 ~-81 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~30 ~22 ~-81 ~30 ~23 ~-81 minecraft:birch_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~33 ~22 ~-81 ~33 ~23 ~-81 minecraft:birch_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~36 ~22 ~-81 ~36 ~23 ~-81 minecraft:birch_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~48 ~22 ~-81 ~48 ~23 ~-81 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~50 ~22 ~-81 ~50 ~23 ~-81 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-81 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-93 ~22 ~-80 ~-93 ~24 ~-80 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-92 ~22 ~-80 ~-92 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-91 ~22 ~-80 ~-91 ~24 ~-80 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-90 ~22 ~-80 ~-89 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-88 ~22 ~-80 ~-88 ~24 ~-80 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-87 ~22 ~-80 ~-86 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-85 ~22 ~-80 ~-85 ~24 ~-80 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run setblock ~-34 ~22 ~-80 minecraft:short_grass
-$execute positioned $(x) $(y) $(z) run fill ~29 ~22 ~-80 ~30 ~24 ~-80 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~31 ~22 ~-80 ~32 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~33 ~22 ~-80 ~33 ~24 ~-80 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~34 ~22 ~-80 ~35 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~36 ~22 ~-80 ~36 ~24 ~-80 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~42 ~22 ~-80 ~42 ~24 ~-80 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~43 ~22 ~-80 ~43 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~44 ~22 ~-80 ~44 ~24 ~-80 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~45 ~22 ~-80 ~45 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~46 ~22 ~-80 ~46 ~24 ~-80 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~47 ~22 ~-80 ~47 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~48 ~22 ~-80 ~48 ~24 ~-80 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~49 ~22 ~-80 ~49 ~23 ~-80 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~50 ~22 ~-80 ~50 ~24 ~-80 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-79 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-95 ~22 ~-79 ~-95 ~23 ~-79 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~22 ~-79 ~-94 ~24 ~-79 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~22 ~-79 ~-84 ~24 ~-79 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-83 ~22 ~-79 ~-83 ~23 ~-79 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~-79 ~28 ~24 ~-79 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~37 ~22 ~-79 ~37 ~24 ~-79 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~38 ~22 ~-79 ~38 ~23 ~-79 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-79 ~41 ~24 ~-79 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-79 ~51 ~24 ~-78 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~99 ~22 ~-79 ~99 ~22 ~-78 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-78 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~22 ~-78 ~-94 ~23 ~-77 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~22 ~-78 ~-84 ~23 ~-77 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~-34 ~22 ~-78 minecraft:short_grass
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~-78 ~28 ~23 ~-77 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~37 ~22 ~-78 ~37 ~23 ~-77 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-78 ~41 ~23 ~-78 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-9 ~22 ~-77 ~-9 ~25 ~-77 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-77 ~41 ~24 ~-77 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-77 ~51 ~23 ~-77 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-95 ~22 ~-76 ~-95 ~23 ~-76 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~22 ~-76 ~-94 ~24 ~-76 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~22 ~-76 ~-84 ~24 ~-76 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run setblock ~-34 ~22 ~-76 minecraft:poppy
-$execute positioned $(x) $(y) $(z) run fill ~27 ~22 ~-76 ~27 ~23 ~-76 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~-76 ~28 ~24 ~-76 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~37 ~22 ~-76 ~37 ~24 ~-76 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~38 ~22 ~-76 ~38 ~23 ~-76 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-76 ~41 ~23 ~-76 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-76 ~51 ~24 ~-76 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~52 ~22 ~-76 ~52 ~23 ~-76 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-76 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~22 ~-75 ~-94 ~23 ~-74 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~22 ~-75 ~-84 ~23 ~-74 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~-1 ~22 ~-75 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~-75 ~28 ~23 ~-74 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~37 ~22 ~-75 ~37 ~23 ~-74 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-75 ~41 ~24 ~-75 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-75 ~51 ~23 ~-75 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~73 ~22 ~-75 ~73 ~22 ~-74 minecraft:polished_andesite_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~74 ~22 ~-75 ~76 ~22 ~-74 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-75 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-74 ~41 ~23 ~-74 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-74 ~51 ~24 ~-74 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~52 ~22 ~-74 ~52 ~23 ~-74 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-73 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-95 ~22 ~-73 ~-95 ~23 ~-73 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~22 ~-73 ~-94 ~24 ~-73 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~22 ~-73 ~-84 ~24 ~-73 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-83 ~22 ~-73 ~-83 ~23 ~-73 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~27 ~22 ~-73 ~27 ~23 ~-73 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~-73 ~28 ~24 ~-73 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~37 ~22 ~-73 ~37 ~24 ~-73 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~38 ~22 ~-73 ~38 ~23 ~-73 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-73 ~41 ~24 ~-73 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-73 ~51 ~23 ~-73 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~22 ~-72 ~-94 ~23 ~-71 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~22 ~-72 ~-84 ~23 ~-71 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~-72 ~28 ~23 ~-71 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~37 ~22 ~-72 ~37 ~23 ~-71 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-72 ~41 ~23 ~-72 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-72 ~51 ~24 ~-72 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~52 ~22 ~-72 ~52 ~23 ~-72 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~83 ~22 ~-72 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-72 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-92 ~22 ~-71 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-48 ~22 ~-71 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-45 ~22 ~-71 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-35 ~22 ~-71 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-32 ~22 ~-71 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~22 ~-71 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~22 ~-71 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-2 ~22 ~-71 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~-71 ~41 ~24 ~-70 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-71 ~51 ~23 ~-71 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-71 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-70 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~22 ~-70 ~-94 ~24 ~-70 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~22 ~-70 ~-84 ~24 ~-70 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-83 ~22 ~-70 ~-83 ~23 ~-70 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~-70 ~28 ~24 ~-70 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~37 ~22 ~-70 ~37 ~24 ~-70 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~38 ~22 ~-70 ~38 ~23 ~-70 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~-70 ~51 ~24 ~-70 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-69 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-93 ~22 ~-69 ~-93 ~24 ~-69 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-92 ~22 ~-69 ~-91 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-90 ~22 ~-69 ~-90 ~24 ~-69 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-89 ~22 ~-69 ~-88 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-87 ~22 ~-69 ~-87 ~24 ~-69 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-86 ~22 ~-69 ~-86 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-85 ~22 ~-69 ~-85 ~24 ~-69 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~29 ~22 ~-69 ~29 ~24 ~-69 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~30 ~22 ~-69 ~31 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~32 ~22 ~-69 ~32 ~24 ~-69 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~33 ~22 ~-69 ~34 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~35 ~22 ~-69 ~36 ~24 ~-69 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~42 ~22 ~-69 ~42 ~24 ~-69 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~43 ~22 ~-69 ~43 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~44 ~22 ~-69 ~44 ~24 ~-69 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~45 ~22 ~-69 ~45 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~46 ~22 ~-69 ~46 ~24 ~-69 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~47 ~22 ~-69 ~47 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~48 ~22 ~-69 ~48 ~24 ~-69 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~49 ~22 ~-69 ~49 ~23 ~-69 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~50 ~22 ~-69 ~50 ~24 ~-69 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~99 ~22 ~-69 ~99 ~22 ~-68 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-90 ~22 ~-68 ~-90 ~23 ~-68 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-87 ~22 ~-68 ~-87 ~23 ~-68 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~42 ~22 ~-68 ~42 ~23 ~-68 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~44 ~22 ~-68 ~44 ~23 ~-68 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~48 ~22 ~-68 ~48 ~23 ~-68 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~99 ~22 ~-66 ~99 ~22 ~-65 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-59 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-57 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-57 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-56 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-56 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-54 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-54 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-53 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-53 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-48 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~47 ~22 ~-48 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~90 ~22 ~-48 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-47 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-47 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-46 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-42 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-41 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-41 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-40 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~22 ~-39 ~-99 ~22 ~-38 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-32 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-32 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-31 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-29 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~29 ~22 ~-28 ~30 ~22 ~-28 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~33 ~22 ~-28 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~37 ~22 ~-28 ~38 ~22 ~-28 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~40 ~22 ~-28 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~42 ~22 ~-28 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~49 ~22 ~-28 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-28 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-23 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-23 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-22 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-20 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-19 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-13 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~22 ~-13 ~-76 ~23 ~-13 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-73 ~22 ~-13 ~-73 ~23 ~-13 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-70 ~22 ~-13 ~-70 ~23 ~-13 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-47 ~22 ~-13 ~-47 ~23 ~-13 minecraft:birch_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-44 ~22 ~-13 ~-44 ~23 ~-13 minecraft:birch_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-93 ~22 ~-12 ~-85 ~23 ~-12 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-79 ~22 ~-12 ~-79 ~24 ~-12 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-78 ~22 ~-12 ~-77 ~23 ~-12 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~22 ~-12 ~-76 ~24 ~-12 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-75 ~22 ~-12 ~-74 ~23 ~-12 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-73 ~22 ~-12 ~-73 ~24 ~-12 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-72 ~22 ~-12 ~-71 ~23 ~-12 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-70 ~22 ~-12 ~-70 ~24 ~-12 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-51 ~22 ~-12 ~-50 ~24 ~-12 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-49 ~22 ~-12 ~-48 ~23 ~-12 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-47 ~22 ~-12 ~-47 ~24 ~-12 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-46 ~22 ~-12 ~-45 ~23 ~-12 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-44 ~22 ~-12 ~-44 ~24 ~-12 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~22 ~-11 ~-94 ~23 ~-4 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~22 ~-11 ~-84 ~23 ~-4 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-81 ~22 ~-11 ~-81 ~23 ~-11 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-11 ~-80 ~24 ~-11 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-11 ~-69 ~24 ~-10 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~22 ~-11 ~-53 ~23 ~-11 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~-11 ~-52 ~24 ~-11 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~-11 ~-43 ~24 ~-11 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-42 ~22 ~-11 ~-42 ~23 ~-11 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-10 ~-80 ~23 ~-9 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-68 ~22 ~-10 ~-68 ~23 ~-10 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~-10 ~-52 ~23 ~-9 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~-10 ~-43 ~23 ~-9 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-9 ~-69 ~23 ~-8 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-81 ~22 ~-8 ~-81 ~23 ~-8 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-8 ~-80 ~24 ~-8 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~22 ~-8 ~-53 ~23 ~-8 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~-8 ~-52 ~24 ~-8 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~-8 ~-43 ~24 ~-8 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-42 ~22 ~-8 ~-42 ~23 ~-8 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-7 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-7 ~-80 ~23 ~-6 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-7 ~-69 ~24 ~-7 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~-7 ~-52 ~23 ~-6 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~-7 ~-43 ~23 ~-6 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-6 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-6 ~-69 ~23 ~-5 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-6 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-90 ~22 ~-5 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-88 ~22 ~-5 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~-5 ~-80 ~24 ~-4 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~-5 ~-52 ~24 ~-5 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~-5 ~-43 ~24 ~-5 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-42 ~22 ~-5 ~-42 ~23 ~-5 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-4 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~22 ~-4 ~-69 ~24 ~-4 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-68 ~22 ~-4 ~-68 ~23 ~-4 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~-4 ~-52 ~23 ~-3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~-4 ~-43 ~23 ~-3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~-3 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-93 ~22 ~-3 ~-85 ~23 ~-3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-79 ~22 ~-3 ~-79 ~24 ~-3 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-78 ~22 ~-3 ~-77 ~23 ~-3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~22 ~-3 ~-76 ~24 ~-3 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-75 ~22 ~-3 ~-74 ~23 ~-3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-73 ~22 ~-3 ~-73 ~24 ~-3 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-72 ~22 ~-3 ~-71 ~23 ~-3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-70 ~22 ~-3 ~-70 ~24 ~-3 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-3 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~-79 ~22 ~-2 ~-79 ~23 ~-2 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~22 ~-2 ~-76 ~23 ~-2 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-73 ~22 ~-2 ~-73 ~23 ~-2 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-70 ~22 ~-2 ~-70 ~23 ~-2 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~22 ~-2 ~-53 ~23 ~-2 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~-2 ~-52 ~24 ~-2 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~-2 ~-43 ~24 ~-2 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-42 ~22 ~-2 ~-42 ~23 ~-2 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~-2 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~-1 ~-52 ~23 ~0 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~-1 ~-43 ~23 ~0 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~0 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~2 ~22 ~0 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~29 ~22 ~0 ~29 ~23 ~0 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~32 ~22 ~0 ~32 ~23 ~0 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~35 ~22 ~0 ~35 ~23 ~0 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~0 ~41 ~23 ~0 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~44 ~22 ~0 ~44 ~23 ~0 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~1 ~-52 ~24 ~1 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run setblock ~-45 ~22 ~1 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~1 ~-43 ~24 ~1 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-42 ~22 ~1 ~-42 ~23 ~1 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~29 ~22 ~1 ~29 ~24 ~1 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~30 ~22 ~1 ~31 ~23 ~1 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~32 ~22 ~1 ~32 ~24 ~1 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~33 ~22 ~1 ~34 ~23 ~1 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~35 ~22 ~1 ~35 ~24 ~1 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~36 ~22 ~1 ~37 ~23 ~1 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~38 ~22 ~1 ~38 ~24 ~1 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~39 ~22 ~1 ~40 ~23 ~1 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~41 ~22 ~1 ~41 ~24 ~1 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~42 ~22 ~1 ~43 ~23 ~1 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~44 ~22 ~1 ~44 ~24 ~1 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~45 ~22 ~1 ~46 ~23 ~1 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~47 ~22 ~1 ~47 ~24 ~1 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~48 ~22 ~1 ~49 ~23 ~1 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~50 ~22 ~1 ~50 ~24 ~1 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~2 ~-52 ~23 ~3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~2 ~-43 ~23 ~3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~-37 ~22 ~2 minecraft:spruce_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~27 ~22 ~2 ~27 ~23 ~2 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~2 ~28 ~24 ~2 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~2 ~51 ~24 ~2 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run setblock ~-45 ~22 ~3 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~3 ~28 ~23 ~4 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~3 ~51 ~23 ~3 minecraft:glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~3 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-77 ~22 ~4 ~-77 ~25 ~4 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~22 ~4 ~-53 ~23 ~4 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~4 ~-52 ~24 ~4 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~4 ~-43 ~24 ~4 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-42 ~22 ~4 ~-42 ~23 ~4 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~4 ~51 ~24 ~4 minecraft:mud_bricks
-$execute positioned $(x) $(y) $(z) run fill ~52 ~22 ~4 ~52 ~23 ~4 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~4 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~22 ~5 ~-52 ~23 ~6 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~22 ~5 ~-43 ~23 ~6 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~27 ~22 ~5 ~27 ~23 ~5 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~5 ~28 ~24 ~5 minecraft:mud_bricks
 $execute positioned $(x) $(y) $(z) run setblock ~46 ~22 ~5 minecraft:barrel[facing=up,open=false]
 $execute positioned $(x) $(y) $(z) run fill ~51 ~22 ~5 ~51 ~23 ~6 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~28 ~22 ~6 ~28 ~23 ~7 minecraft:glass
@@ -1498,3 +1112,389 @@ $execute positioned $(x) $(y) $(z) run fill ~94 ~25 ~71 ~94 ~25 ~72 minecraft:gr
 $execute positioned $(x) $(y) $(z) run fill ~-52 ~25 ~72 ~-52 ~25 ~73 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~1 ~25 ~72 ~1 ~25 ~73 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~28 ~25 ~72 ~28 ~25 ~73 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~83 ~25 ~72 ~83 ~25 ~73 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~72 ~99 ~26 ~72 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~25 ~73 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~73 ~99 ~26 ~73 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~74 ~-99 ~26 ~74 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-43 ~25 ~74 ~-43 ~25 ~75 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~11 ~25 ~74 ~11 ~25 ~75 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~51 ~25 ~74 ~51 ~25 ~75 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~94 ~25 ~74 ~94 ~25 ~75 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~25 ~75 ~-52 ~25 ~76 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~1 ~25 ~75 ~1 ~25 ~76 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~28 ~25 ~75 ~28 ~25 ~76 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~83 ~25 ~75 ~83 ~25 ~76 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~76 ~-99 ~26 ~77 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-43 ~25 ~77 ~-43 ~25 ~78 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~11 ~25 ~77 ~11 ~25 ~78 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~51 ~25 ~77 ~51 ~25 ~78 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~94 ~25 ~77 ~94 ~25 ~78 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~77 ~99 ~26 ~77 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-52 ~25 ~78 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~1 ~25 ~78 ~1 ~25 ~79 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~28 ~25 ~78 ~28 ~25 ~79 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~83 ~25 ~78 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~25 ~78 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~25 ~79 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~25 ~79 ~-50 ~25 ~79 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-48 ~25 ~79 ~-47 ~25 ~79 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-45 ~25 ~79 ~-44 ~25 ~79 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-37 ~25 ~79 ~-30 ~25 ~79 minecraft:smooth_quartz
+$execute positioned $(x) $(y) $(z) run fill ~84 ~25 ~79 ~85 ~25 ~79 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~87 ~25 ~79 ~88 ~25 ~79 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~90 ~25 ~79 ~91 ~25 ~79 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~93 ~25 ~79 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-39 ~25 ~80 ~-29 ~25 ~80 minecraft:smooth_quartz_stairs[facing=north,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~11 ~25 ~80 ~11 ~25 ~81 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~51 ~25 ~80 ~51 ~25 ~81 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~25 ~80 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~1 ~25 ~81 ~1 ~25 ~82 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~28 ~25 ~81 ~28 ~25 ~82 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~25 ~81 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~25 ~83 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-37 ~25 ~83 ~-36 ~25 ~83 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-34 ~25 ~83 ~-33 ~25 ~83 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-31 ~25 ~83 ~-30 ~25 ~83 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~11 ~25 ~83 ~11 ~25 ~84 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~51 ~25 ~83 ~51 ~25 ~84 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~83 ~99 ~25 ~84 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~84 ~-99 ~26 ~84 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-39 ~25 ~84 ~-39 ~25 ~85 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-37 ~25 ~84 ~-30 ~25 ~93 minecraft:polished_andesite
+$execute positioned $(x) $(y) $(z) run setblock ~-29 ~25 ~84 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~1 ~25 ~84 ~1 ~25 ~85 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~28 ~25 ~84 ~28 ~25 ~85 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-38 ~25 ~85 ~-38 ~25 ~93 minecraft:polished_andesite
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~86 ~-99 ~26 ~86 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-29 ~25 ~86 ~-29 ~25 ~87 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~11 ~25 ~86 ~11 ~25 ~87 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~51 ~25 ~86 ~51 ~25 ~87 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~86 ~99 ~25 ~87 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~87 ~-99 ~26 ~87 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-39 ~25 ~87 ~-39 ~25 ~88 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~1 ~25 ~87 ~1 ~25 ~88 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~28 ~25 ~87 ~28 ~25 ~88 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~73 ~25 ~88 minecraft:spruce_planks
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~25 ~89 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-29 ~25 ~89 ~-29 ~25 ~90 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~11 ~25 ~89 ~11 ~25 ~90 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~51 ~25 ~89 ~51 ~25 ~90 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-39 ~25 ~90 ~-39 ~25 ~91 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~1 ~25 ~90 ~1 ~25 ~91 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~28 ~25 ~90 ~28 ~25 ~91 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~91 ~99 ~25 ~92 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-29 ~25 ~92 ~-29 ~25 ~93 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~11 ~25 ~92 ~11 ~25 ~93 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~51 ~25 ~92 ~51 ~25 ~93 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~93 ~-99 ~25 ~94 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-39 ~25 ~93 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~1 ~25 ~93 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~25 ~93 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-38 ~25 ~94 ~-37 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-35 ~25 ~94 ~-34 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-32 ~25 ~94 ~-31 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~2 ~25 ~94 ~3 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~5 ~25 ~94 ~6 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~8 ~25 ~94 ~9 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~32 ~25 ~94 ~32 ~26 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~35 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~38 ~25 ~94 ~38 ~26 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~44 ~25 ~94 ~44 ~26 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~47 ~25 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~50 ~25 ~94 ~50 ~26 ~94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~25 ~94 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~28 ~25 ~95 ~51 ~25 ~95 minecraft:polished_blackstone_stairs[facing=north,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~95 ~99 ~26 ~95 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~96 ~-99 ~25 ~97 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~25 ~97 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-109 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-108 ~25 ~99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-98 ~25 ~99 ~-98 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-96 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-95 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-93 ~25 ~99 ~-92 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-90 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-89 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-76 ~25 ~99 ~-75 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-73 ~25 ~99 ~-73 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-72 ~25 ~99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-70 ~25 ~99 ~-69 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-67 ~25 ~99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-66 ~25 ~99 ~-66 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-60 ~25 ~99 ~-59 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-57 ~25 ~99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-56 ~25 ~99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-54 ~25 ~99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~25 ~99 ~-53 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-51 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-46 ~25 ~99 ~-45 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-43 ~25 ~99 ~-42 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-37 ~25 ~99 ~-36 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-34 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-33 ~25 ~99 ~-33 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-31 ~25 ~99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-30 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-26 ~25 ~99 ~-26 ~26 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-25 ~25 ~99 ~-25 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-23 ~25 ~99 ~-23 ~26 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-22 ~25 ~99 ~-22 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-20 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-19 ~25 ~99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-17 ~25 ~99 ~-17 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-13 ~25 ~99 ~-12 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-10 ~25 ~99 ~-9 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-7 ~25 ~99 ~-7 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-6 ~25 ~99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-1 ~25 ~99 ~0 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~2 ~25 ~99 ~3 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~5 ~25 ~99 ~5 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~6 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~8 ~25 ~99 ~8 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~9 ~25 ~99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~14 ~25 ~99 ~15 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~17 ~25 ~99 ~18 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~39 ~25 ~99 ~40 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~42 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~43 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~45 ~25 ~99 ~46 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~48 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~53 ~25 ~99 ~53 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~55 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~56 ~25 ~99 ~56 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~62 ~25 ~99 ~63 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~65 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~66 ~25 ~99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~70 ~25 ~99 ~71 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~73 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~74 ~25 ~99 ~74 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~79 ~25 ~99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~80 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~82 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~83 ~25 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~85 ~25 ~99 ~85 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~86 ~25 ~99 ~86 ~26 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~92 ~25 ~99 ~93 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~95 ~25 ~99 ~96 ~25 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~98 ~25 ~99 ~99 ~26 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~25 ~100 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~102 ~99 ~25 ~103 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~105 ~-99 ~25 ~106 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~25 ~105 ~99 ~26 ~106 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~25 ~108 ~-99 ~25 ~109 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~25 ~108 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~26 ~-106 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~26 ~-103 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~26 ~-102 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~26 ~-100 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-97 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-96 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-94 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-93 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-90 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-84 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-83 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-81 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-80 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-75 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-69 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-67 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-66 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-63 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-61 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-60 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-54 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-48 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-47 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-45 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-41 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-39 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-38 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-32 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-30 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-29 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-27 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-26 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-23 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-19 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-18 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-16 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-15 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-7 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-6 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-4 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~0 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~5 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~6 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~8 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~9 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~13 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~16 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~17 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~19 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~20 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~25 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~26 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~28 ~26 ~-99 ~29 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~40 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~46 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~55 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~57 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~62 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~63 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~65 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~66 ~26 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~71 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~73 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~74 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~79 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~80 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~82 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~83 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~85 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~86 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~89 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~94 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~95 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~100 ~26 ~-99 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~101 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~103 ~26 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~104 ~26 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~26 ~-95 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-78 ~26 ~-95 ~-77 ~26 ~-95 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-75 ~26 ~-95 ~-74 ~26 ~-95 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-72 ~26 ~-95 ~-71 ~26 ~-95 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~26 ~-94 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-79 ~26 ~-94 ~-70 ~26 ~-94 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~-11 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-10 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-9 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-7 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-6 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-5 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-4 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-2 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-1 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~0 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~1 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~2 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~3 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~4 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~5 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~6 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~7 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~8 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~9 ~26 ~-94 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~10 ~26 ~-94 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~42 ~26 ~-94 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~43 ~26 ~-94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~44 ~26 ~-94 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~46 ~26 ~-94 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~47 ~26 ~-94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~48 ~26 ~-94 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~49 ~26 ~-94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~50 ~26 ~-94 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-94 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-80 ~26 ~-93 ~-80 ~26 ~-85 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-69 ~26 ~-93 ~-69 ~26 ~-85 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-93 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-93 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-93 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-93 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~70 ~26 ~-93 ~71 ~29 ~-93 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~73 ~26 ~-93 ~74 ~29 ~-93 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~76 ~26 ~-93 ~77 ~29 ~-93 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~79 ~26 ~-93 ~80 ~29 ~-93 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~82 ~26 ~-93 ~83 ~29 ~-93 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~85 ~26 ~-93 ~86 ~29 ~-93 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~88 ~26 ~-93 ~89 ~29 ~-93 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~91 ~26 ~-93 ~92 ~29 ~-93 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-81 ~26 ~-92 ~-81 ~26 ~-91 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-77 ~26 ~-92 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-68 ~26 ~-92 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-34 ~26 ~-92 ~-32 ~26 ~-88 minecraft:spruce_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-92 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-92 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-92 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-92 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~69 ~26 ~-92 ~69 ~26 ~-91 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~93 ~26 ~-92 ~93 ~29 ~-92 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~26 ~-91 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-49 ~26 ~-91 minecraft:redstone_lamp[lit=true]
+$execute positioned $(x) $(y) $(z) run setblock ~-36 ~26 ~-91 minecraft:redstone_lamp[lit=true]
+$execute positioned $(x) $(y) $(z) run fill ~-35 ~26 ~-91 ~-35 ~26 ~-89 minecraft:spruce_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-31 ~26 ~-91 ~-31 ~26 ~-89 minecraft:spruce_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-91 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-9 ~26 ~-91 minecraft:iron_block
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-91 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~31 ~26 ~-91 minecraft:redstone_lamp[lit=true]
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-91 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~44 ~26 ~-91 minecraft:iron_block
+$execute positioned $(x) $(y) $(z) run fill ~46 ~26 ~-91 ~46 ~27 ~-91 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~48 ~26 ~-91 ~48 ~27 ~-91 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-91 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~82 ~26 ~-91 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-68 ~26 ~-90 minecraft:iron_bars[east=true,west=true,north=false,south=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-90 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-90 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-90 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~93 ~26 ~-90 ~93 ~29 ~-89 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-81 ~26 ~-89 ~-81 ~26 ~-88 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-77 ~26 ~-89 minecraft:spruce_planks
+$execute positioned $(x) $(y) $(z) run setblock ~-68 ~26 ~-89 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-67 ~26 ~-89 ~-67 ~26 ~-87 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-89 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-11 ~26 ~-89 ~-9 ~28 ~-87 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-8 ~26 ~-89 ~7 ~26 ~-88 minecraft:spruce_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-89 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-89 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~46 ~26 ~-89 ~46 ~27 ~-89 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~48 ~26 ~-89 ~48 ~27 ~-89 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-89 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~69 ~26 ~-89 ~69 ~26 ~-88 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~76 ~26 ~-89 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~26 ~-88 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-88 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-88 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~46 ~26 ~-88 minecraft:daylight_detector[inverted=false,power=0]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-88 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-77 ~26 ~-87 ~-77 ~27 ~-87 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-68 ~26 ~-87 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-87 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-87 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-87 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-87 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~71 ~26 ~-87 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run fill ~73 ~26 ~-87 ~73 ~27 ~-87 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run fill ~93 ~26 ~-87 ~93 ~29 ~-86 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-81 ~26 ~-86 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-68 ~26 ~-86 minecraft:iron_bars[east=true,west=true,north=false,south=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-86 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~26 ~-86 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-5 ~26 ~-86 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-2 ~26 ~-86 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-86 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-86 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~45 ~26 ~-86 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~48 ~26 ~-86 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-86 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~69 ~26 ~-86 ~69 ~26 ~-85 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~26 ~-85 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~26 ~-85 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~41 ~26 ~-85 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~26 ~-85 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~87 ~26 ~-85 ~87 ~27 ~-85 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~26 ~-85 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-79 ~26 ~-84 ~-70 ~26 ~-84 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~-11 ~26 ~-84 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-10 ~26 ~-84 minecraft:bricks

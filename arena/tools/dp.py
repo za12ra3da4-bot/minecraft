@@ -955,7 +955,8 @@ def struct_functions(dp_root, key, mod, label):
     per = 1500
     parts = [clear] + [cmds[i:i + per] for i in range(0, len(cmds), per)]
     if hasattr(mod, "display_commands"):          # 블록 디스플레이 (헬기 등) — 블록을 다 놓은 뒤
-        parts.append(mod.display_commands())
+        dc = mod.display_commands()
+        parts += [dc[i:i + 600] for i in range(0, len(dc), 600)]
     for i, part in enumerate(parts):
         w(os.path.join(F, "p", f"{i}_run.mcfunction"), part)
         nxt = f"schedule function bg:{key}/p/{i + 1} 3t" if i + 1 < len(parts) else f"schedule function bg:{key}/fl_rm 20t"
