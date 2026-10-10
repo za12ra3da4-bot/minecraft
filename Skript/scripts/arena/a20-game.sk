@@ -176,12 +176,13 @@ function bgCheckEnd():
     if {-bg::sec} >= {bg::cfg::minutes} * 60:
         bgStop("시간 종료")
 
-function bgAddScore(t: text, n: number):
+function bgAddScore(t: text, n: number, force: boolean = false):
     if {_t} is "none":
         stop
-    # 코어가 부서진 팀은 복구될 때까지 점수가 오르지 않는다 (a65)
+    # 코어가 부서진 팀은 복구될 때까지 점수가 오르지 않는다 (a65) — 보스 처치 보상(force)은 예외
     if {-bg::core::%{_t}%::down} is true:
-        stop
+        if {_force} is not true:
+            stop
     # 소수점(따라잡기 1.5배)은 모아 두었다가 정수만 점수에
     add {_n} to {-bg::sfrac::%{_t}%}
     set {_w} to floor({-bg::sfrac::%{_t}%})

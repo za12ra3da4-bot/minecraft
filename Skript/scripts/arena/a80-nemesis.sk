@@ -22,7 +22,7 @@
 #    · 그림자 소환 — 격노할 때 한 번, 1등 팀만 노리는 '복수의 그림자'(벡스) 4마리
 #   시전하는 동안은 제자리에 멈춘다
 #  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
-#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 50)
+#  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 150)
 # ═════════════════════════════════════════════════════════════════════════════
 import:
     org.bukkit.Bukkit
@@ -44,10 +44,11 @@ on load:
     if {bg::cfg::nem_min} is not set:
         set {bg::cfg::nem_min} to 200
     if {bg::cfg::nem_reward} is not set:
-        set {bg::cfg::nem_reward} to 50
-    # 예전 기본값(150 · 300)이 저장돼 있으면 새 기본값 50 으로
-    if {bg::cfg::nem_reward} is 150 or 300:
-        set {bg::cfg::nem_reward} to 50
+        set {bg::cfg::nem_reward} to 150
+    # 예전 기본값(50 · 300)이 저장돼 있으면 새 기본값 150 으로 (한 번만)
+    if {bg::cfg::nem_reward_v2} is not set:
+        set {bg::cfg::nem_reward} to 150
+        set {bg::cfg::nem_reward_v2} to true
 
 # 지금 1등 팀과 (그 팀을 뺀) 2등 점수
 function bgNemTop() :: text:
@@ -734,7 +735,7 @@ on death:
         delete {-bg::nem::casting}
         bgCmd("bossbar remove bg:nemhud")
         bgNemDeath(location of victim)
-        bgAddScore({_t}, {bg::cfg::nem_reward})
+        bgAddScore({_t}, {bg::cfg::nem_reward}, true)
         bgCoinTeam({_t}, 15, "네메시스 격퇴")
         bgSay("&5&l[복수의 신] %{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}% 팀&f이 네메시스를 막아 냈습니다! &e+%{bg::cfg::nem_reward}%점 · 팀원 코인 +15")
         bgSound("ui.toast.challenge_complete", 0.8, 1)

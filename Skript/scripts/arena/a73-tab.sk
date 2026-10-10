@@ -1,0 +1,77 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  왕관 쟁탈전 — 명령어 자동 완성 (채팅창에 명령어를 치면 다음에 올 말이 목록으로 뜸 · Tab 으로 채우기)
+#   SkBee 의 tab complete 이벤트 사용. 관리자 전용 말은 OP 에게만 보인다
+# ═════════════════════════════════════════════════════════════════════════════
+
+on tab complete of "/전장" or "/bg":
+    if player is not op:
+        stop
+    set tab completions for position 1 to "시작", "종료", "자동팀", "팀", "팀초기화", "보스", "보스제거", "코인", "점수", "목표", "시간", "리스폰", "무기", "이동", "로비", "연습장건설", "연습장비우기", "건설", "장식", "맵패치", "광석바위", "광석삭제", "경계", "원점", "월드", "팩", "진단", "보스바시험"
+    set {_a} to tab arg-1
+    if {_a} is "팀":
+        set tab completions for position 2 to all players
+        set tab completions for position 3 to "red", "blue", "green", "yellow" and "none"
+    else if {_a} is "보스":
+        set tab completions for position 2 to "talos", "sphinx", "ladon" and "cyclops"
+    else if {_a} is "코인":
+        set tab completions for position 2 to "all" and all players
+        set tab completions for position 3 to "10", "50", "100" and "500"
+    else if {_a} is "점수":
+        set tab completions for position 2 to "red", "blue", "green" and "yellow"
+        set tab completions for position 3 to "0", "100", "500" and "1000"
+    else if {_a} is "목표":
+        set tab completions for position 2 to "500", "1000", "1500" and "2000"
+    else if {_a} is "시간":
+        set tab completions for position 2 to "10", "20", "30" and "45"
+    else if {_a} is "리스폰":
+        set tab completions for position 2 to "3", "5", "8" and "10"
+    else if {_a} is "무기":
+        set tab completions for position 2 to "all", "boss" and {-bg::w::all::*}
+        set tab completions for position 3 to all players
+    else if {_a} is "이동":
+        set tab completions for position 2 to "temple_statue_0", "altar_ares", "altar_athena", "altar_demeter", "altar_hermes", "lair_forge", "lair_garden", "lair_quarry", "lair_sands", "base_red", "base_blue", "base_green", "base_yellow", "outpost_red", "outpost_blue", "outpost_green", "outpost_yellow" and "lobby_spawn"
+    else if {_a} is "연습장건설":
+        set tab completions for position 2 to "1" and "2"
+    else if {_a} is "건설":
+        set tab completions for position 2 to "원점"
+    else if {_a} is "팩":
+        set tab completions for position 2 to "켬", "끔" and "자동"
+    else if {_a} is "월드":
+        set tab completions for position 2 to "world"
+    else if {_a} is "원점":
+        set {_l} to location of player
+        set tab completions for position 2 to "%floor(x-coordinate of {_l})%"
+        set tab completions for position 3 to "%floor(y-coordinate of {_l})%"
+        set tab completions for position 4 to "%floor(z-coordinate of {_l})%"
+
+on tab complete of "/연습장" or "/pvp장" or "/pvp":
+    if player is op:
+        set tab completions for position 1 to "1", "2", "석영", "용암", "나가기", "잠금", "열기" and "전체나가기"
+    else:
+        set tab completions for position 1 to "1", "2", "석영", "용암" and "나가기"
+
+on tab complete of "/리팩" or "/rp":
+    if player is op:
+        set tab completions for position 1 to "확인", "강제" and "전체"
+    else:
+        set tab completions for position 1 to "확인" and "강제"
+
+on tab complete of "/팀잠금" or "/teamlock":
+    set tab completions for position 1 to "레드", "블루", "그린", "옐로" and "해제"
+
+on tab complete of "/네메시스" or "/nemesis":
+    set tab completions for position 1 to "제거", "레드", "블루", "그린" and "옐로"
+
+on tab complete of "/중참" or "/midjoin":
+    player is op
+    set tab completions for position 1 to "켬", "끔" and all players
+
+on tab complete of "/tnt함정":
+    set tab completions for position 1 to "켬" and "끔"
+
+on tab complete of "/코인주기" or "/givecoin" or "/코인설정":
+    set tab completions for position 1 to all players
+    set tab completions for position 2 to "10", "50", "100" and "500"
+
+on tab complete of "/관전자" or "/nogame":
+    set tab completions for position 1 to all players

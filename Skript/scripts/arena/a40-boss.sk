@@ -764,7 +764,7 @@ function bgBossDie():
     bgRewardSpawn({_win}, {_id}, {_rc})
     bgBossContrib({_id})
     if {_win} is not "none":
-        bgAddScore({_win}, 300)
+        bgAddScore({_win}, 300, true)
         bgCoinTeam({_win}, 120, "보스 처치")
         set {-bg::bless::%{_win}%::until} to {-bg::sec} + 180
         set {-bg::bless::%{_win}%::boss} to {_id}
