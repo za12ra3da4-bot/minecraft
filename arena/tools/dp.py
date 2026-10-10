@@ -975,4 +975,6 @@ def hub_functions(dp_root):
     n = struct_functions(dp_root, "hub", hubgen, "아케이드 허브")
     struct_functions(dp_root, "os", osarena, "온리소드 경기장")
     struct_functions(dp_root, "kd", copsgen, "경도 도시")
+    import pkgen
+    struct_functions(dp_root, "pk", pkgen, "포털 파쿠르")
     return n

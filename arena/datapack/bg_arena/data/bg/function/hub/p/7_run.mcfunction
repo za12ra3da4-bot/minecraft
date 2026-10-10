@@ -841,7 +841,7 @@ $execute positioned $(x) $(y) $(z) run setblock ~-8 ~-1 ~-8 minecraft:sea_lanter
 $execute positioned $(x) $(y) $(z) run fill ~-7 ~-1 ~-8 ~-5 ~-1 ~-7 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~-1 ~-8 ~-3 ~-1 ~-8 minecraft:shroomlight
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~-1 ~-8 ~-2 ~-1 ~-3 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~1 ~-1 ~-8 ~1 ~-1 ~-3 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~1 ~-1 ~-8 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~2 ~-1 ~-8 ~3 ~-1 ~-8 minecraft:shroomlight
 $execute positioned $(x) $(y) $(z) run fill ~4 ~-1 ~-8 ~6 ~-1 ~-7 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~7 ~-1 ~-8 minecraft:sea_lantern
@@ -859,7 +859,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-20 ~-1 ~-7 ~-10 ~-1 ~-7 minecraft:
 $execute positioned $(x) $(y) $(z) run setblock ~-9 ~-1 ~-7 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~-8 ~-1 ~-7 ~-8 ~-1 ~-4 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~-1 ~-7 ~-3 ~-1 ~7 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~-1 ~-7 ~0 ~-1 ~-3 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-1 ~-1 ~-7 ~1 ~-1 ~-5 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~2 ~-1 ~-7 ~3 ~-1 ~7 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~7 ~-1 ~-7 ~7 ~-1 ~-4 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~8 ~-1 ~-7 minecraft:sea_lantern
@@ -905,6 +905,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-58 ~-1 ~-4 ~-57 ~0 ~-4 minecraft:b
 $execute positioned $(x) $(y) $(z) run fill ~-20 ~-1 ~-4 ~-12 ~-1 ~28 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-11 ~-1 ~-4 ~-11 ~-1 ~3 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~-10 ~-1 ~-4 ~-10 ~-1 ~3 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-1 ~-1 ~-4 ~1 ~-1 ~-3 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~9 ~-1 ~-4 ~9 ~-1 ~3 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~10 ~-1 ~-4 ~10 ~-1 ~3 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~11 ~-1 ~-4 ~20 ~-1 ~27 minecraft:light_gray_concrete
@@ -1497,4 +1498,3 @@ $execute positioned $(x) $(y) $(z) run fill ~42 ~-1 ~42 ~44 ~-1 ~42 minecraft:bl
 $execute positioned $(x) $(y) $(z) run fill ~52 ~-1 ~42 ~53 ~0 ~42 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~54 ~-1 ~42 ~54 ~-1 ~44 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~62 ~-1 ~42 ~63 ~-1 ~48 minecraft:dark_prismarine
-$execute positioned $(x) $(y) $(z) run fill ~68 ~-1 ~42 ~68 ~-1 ~44 minecraft:dark_prismarine

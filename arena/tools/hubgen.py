@@ -173,6 +173,11 @@ def build():
     glow_floor((r >= 7.5) & (r < 9.0) & dash, "orange_stained_glass", "shroomlight")
     ring(FL, 9.0, 10.5, "white_concrete")
     glow_floor((r >= 10.5) & (r < 11.3), "light_blue_stained_glass")
+    # 포털 다리 발판 (스폰 앞 · 로봇 쪽): 밟으면 그 사람에게만 고리까지 빛 다리 (Skript)
+    for dx in range(-1, 2):
+        for dz in range(-7, -4):
+            v[C + dx, FL, C + dz] = P["cyan_stained_glass"]
+            v[C + dx, FL - 1, C + dz] = P["sea_lantern"]
     # 둥근 흰 단 (한 칸, 동서남북 계단 길)
     gap = (np.abs(xx) < 3) | (np.abs(zz) < 3)
     ring(FL + 1, 13, 17, "smooth_quartz", ~gap)
@@ -384,11 +389,7 @@ def build():
             a = math.degrees(math.atan2(y - gcy, fx))
             for fz in (gz, gz + 1, gz + 2):
                 if d <= 5.0:
-                    glow = 2.9 < d <= 3.7
-                    if fz == gz + 1:
-                        at(fx, fz, y, "cyan_stained_glass" if glow else "black_stained_glass")
-                    elif fz == gz:
-                        at(fx, fz, y, "sea_lantern" if glow else "black_concrete")
+                    pass                                         # 고리 안은 뚫림 (포털 — Skript 가 빛 입자 · 다리로 들어감)
                 elif d <= 6.2:
                     at(fx, fz, y, "sea_lantern" if fz >= gz + 1 else "light_blue_concrete")
                 elif d <= GR:
@@ -561,7 +562,9 @@ def build():
 
 def markers():
     """허브 원점 기준 (칸 가운데 좌표): 시작 자리 · 오락기 발판 가운데 / 이름표 자리 (+ 오락기가 보는 방향)"""
-    out = {"spawn": (0.5, 1, 0.5, 180.0)}
+    out = {"spawn": (0.5, 1, 0.5, 180.0), "bridge_pad": (0.5, 1, -5.5, 180.0)}
+    # 포털 (로봇이 든 고리 가운데) — 고리 면 z, 가운데 높이 (원점 기준)
+    out["portal"] = (0.5, 4 + 10, RZ + 10 + 1.5, 180.0)
     for key, b in BOOTHS.items():
         cx, cz = b["pos"]
         yaw = FACE_YAW[b["face"]]

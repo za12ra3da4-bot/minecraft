@@ -1,3 +1,4 @@
+$execute positioned $(x) $(y) $(z) run fill ~75 ~1 ~-31 ~75 ~19 ~-29 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-12 ~1 ~-30 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~12 ~1 ~-30 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-77 ~1 ~-29 ~-77 ~19 ~-26 minecraft:barrier
@@ -1497,4 +1498,3 @@ $execute positioned $(x) $(y) $(z) run setblock ~-14 ~5 ~-68 minecraft:sea_lante
 $execute positioned $(x) $(y) $(z) run fill ~-14 ~5 ~-67 ~-14 ~11 ~-67 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-46 ~5 ~-61 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~-46 ~5 ~-60 ~-46 ~9 ~-60 minecraft:horn_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~5 ~-53 ~-3 ~5 ~-45 minecraft:gray_concrete

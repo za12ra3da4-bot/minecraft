@@ -125,6 +125,7 @@ function bgToHub(p: player):
         stop
     bgOsDrop({_p})
     bgKdDrop({_p})
+    delete {-bg::pk::in::%uuid of {_p}%}
     if {-bg::pvp::%uuid of {_p}%} is true:
         delete {-bg::pvp::%uuid of {_p}%}
         delete {-bg::pvpa::%uuid of {_p}%}
@@ -216,7 +217,7 @@ function bgHubBuild(p: player, here: boolean = false):
     bgHubTexts()
     send "&b[허브] &a허브 완성! &f이제 접속하는 사람은 모두 여기로 옵니다." to {_p}
     # 이어서 온리소드 경기장 (허브 동쪽) · 경도 도시 (허브 북쪽)
-    send "&b[허브] &f온리소드 경기장 · 경도 도시도 짓는 중... &7(약 15초)" to {_p}
+    send "&b[허브] &f온리소드 경기장 · 경도 도시 · 포털 파쿠르도 짓는 중... &7(약 35초)" to {_p}
     bgCmd("data merge storage bg:os {origin:{x:%{bg::hub::x} + 230%,y:%{bg::hub::y}%,z:%{bg::hub::z}%}}")
     bgCmd("function bg:os/build")
     wait 100 ticks
@@ -226,7 +227,12 @@ function bgHubBuild(p: player, here: boolean = false):
     wait 380 ticks
     set {bg::kd::built} to true
     set {-bg::kd::state} to "wait"
-    send "&b[허브] &a온리소드 · 경도도 완성! &7(경도 안내 글자는 처음 들어갈 때 /경도 글자)" to {_p}
+    # 포털 파쿠르 (허브 남쪽 하늘)
+    bgCmd("data merge storage bg:pk {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y} + 10%,z:%{bg::hub::z} + 200%}}")
+    bgCmd("function bg:pk/build")
+    wait 200 ticks
+    set {bg::pk::built} to true
+    send "&b[허브] &a온리소드 · 경도 · 포털 파쿠르도 완성! &7(경도 안내 글자는 처음 들어갈 때 /경도 글자)" to {_p}
     send "&b[허브] &7오락기 이름표가 안 보이면 &e/허브 글자 &7· 위치 확인 &e/허브 위치" to {_p}
 
 # 오락기 발판 위 떠 있는 이름표 (이름 · 지금 상태 · 안내)
@@ -445,6 +451,8 @@ on inventory click:
 #  신화쟁탈전 안에서는 온리소드 입장 명령 (/연습장 · /무기) 을 못 씀 → /허브 의 PvP 오락기로 (/연습장 랭킹 · 전적은 됨)
 #  어디서나: /허브 · /신화쟁탈전 · /컨텐츠 · /리팩 · /힐 · /업데이트테스트
 function bgArea(p: player) :: text:
+    if {-bg::pk::in::%uuid of {_p}%} is true:
+        return "pk"
     if {-bg::kd::in::%uuid of {_p}%} is true:
         return "kd"
     if {-bg::os::in::%uuid of {_p}%} is true:
@@ -477,6 +485,8 @@ on command:
         send "&b[허브] &7여기는 허브입니다. 신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/신화쟁탈전 &7으로 이동"
     else if {_area} is "os":
         send "&c[온리소드] &7신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/온리소드 나가기 &7또는 &e/허브"
+    else if {_area} is "pk":
+        send "&d[파쿠르] &7신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/파쿠르 나가기 &7또는 &e/허브"
     else:
         send "&9[경도] &7신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/경도 나가기 &7또는 &e/허브"
     play sound "block.note_block.bass" to player
@@ -634,6 +644,7 @@ every 1 second:
     set {_nm} to 0
     set {_no} to 0
     set {_nk} to 0
+    set {_np} to 0
     loop all players:
         set {_pp} to loop-player
         set {_ar} to bgArea({_pp})
@@ -646,6 +657,9 @@ every 1 second:
             set {_want} to "os_play"
         else if {_ar} is "kd":
             add 1 to {_nk}
+        else if {_ar} is "pk":
+            add 1 to {_np}
+            set {_want} to "0hub"
         else:
             add 1 to {_nm}
             if bgTeam({_pp}) is "none":
@@ -656,8 +670,9 @@ every 1 second:
         else if {-bg::tabteam::%{_u}%} is not {_want}:
             set {-bg::tabteam::%{_u}%} to {_want}
             bgCmd("team join %{_want}% %name of {_pp}%")
-    set {_head} to colored "&b&l신화 아케이드&r%nl%&7오락기 앞 발판으로 컨텐츠 이동 · /허브"
-    set {_foot} to colored "&b허브 &f%{_nh}%명  &6신화쟁탈전 &f%{_nm}%명  &c온리소드 &f%{_no}%명  &9경도 &f%{_nk}%명"
+    set {_head} to "§b§l신화 아케이드§r%nl%§7오락기 앞 발판으로 컨텐츠 이동 · /허브"
+    # 문자열 (String, String) 짝으로 넘겨야 맞는 메서드가 잡힘 — colored 는 Adventure 컴포넌트라 안 맞음
+    set {_foot} to "§b허브 §f%{_nh}%명  §6신화쟁탈전 §f%{_nm}%명  §c온리소드 §f%{_no}%명  §9경도 §f%{_nk}%명  §d파쿠르 §f%{_np}%명"
     loop all players:
         set {_pp} to loop-player
         {_pp}.setPlayerListHeaderFooter({_head}, {_foot})
@@ -677,6 +692,8 @@ on right click:
     set {_ar} to bgArea(player)
     if {_ar} is "kd":
         bgKdLeave(player)
+    else if {_ar} is "pk":
+        bgPkLeave(player)
     else if {_ar} is "os":
         bgOsLeave(player)
     else if {_ar} is "myth":

@@ -227,7 +227,8 @@ def write_hub(path):
     # 온리소드 경기장 · 경도 도시 표지 (각자 가운데 바닥 칸 기준)
     import osarena
     import copsgen
-    for pre, mk in (("osmk", osarena.markers()), ("kdmk", copsgen.markers())):
+    import pkgen
+    for pre, mk in (("osmk", osarena.markers()), ("kdmk", copsgen.markers()), ("pkmk", pkgen.markers())):
         for name, pos in sorted(mk.items()):
             if isinstance(pos, str):
                 continue

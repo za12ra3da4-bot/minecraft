@@ -1,38 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-61 ~50 ~-60 ~-61 ~50 ~-59 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-60 ~50 ~-60 minecraft:light_blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-54 ~50 ~-60 ~-54 ~52 ~-59 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~50 ~-60 ~-53 ~55 ~-60 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-47 ~50 ~-60 ~-47 ~54 ~-60 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-46 ~50 ~-60 ~-46 ~50 ~-59 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~52 ~50 ~-60 minecraft:glowstone
-$execute positioned $(x) $(y) $(z) run fill ~53 ~50 ~-60 ~53 ~50 ~-59 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~54 ~50 ~-60 minecraft:glowstone
-$execute positioned $(x) $(y) $(z) run setblock ~59 ~50 ~-60 minecraft:glowstone
-$execute positioned $(x) $(y) $(z) run setblock ~-62 ~50 ~-59 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-60 ~50 ~-59 ~-60 ~50 ~-58 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~-59 ~50 ~-59 ~-59 ~50 ~-58 minecraft:light_blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-55 ~50 ~-59 ~-55 ~52 ~-59 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~50 ~-59 ~-53 ~52 ~-58 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-50 ~50 ~-59 ~-50 ~54 ~-59 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-49 ~50 ~-59 ~-47 ~50 ~-59 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~54 ~50 ~-59 ~55 ~50 ~-59 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~56 ~50 ~-59 minecraft:glowstone
-$execute positioned $(x) $(y) $(z) run setblock ~58 ~50 ~-59 minecraft:glowstone
-$execute positioned $(x) $(y) $(z) run fill ~-61 ~50 ~-58 ~-61 ~50 ~-57 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-60 ~50 ~-57 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~58 ~50 ~53 ~61 ~52 ~55 minecraft:red_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~57 ~50 ~54 ~57 ~52 ~59 minecraft:red_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~62 ~50 ~54 ~62 ~50 ~57 minecraft:red_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~51 ~50 ~55 ~51 ~50 ~58 minecraft:orange_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~56 ~50 ~55 ~56 ~52 ~60 minecraft:red_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~52 ~50 ~56 ~52 ~50 ~59 minecraft:shroomlight
-$execute positioned $(x) $(y) $(z) run fill ~53 ~50 ~56 ~53 ~50 ~60 minecraft:orange_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~55 ~50 ~56 ~55 ~52 ~59 minecraft:red_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~58 ~50 ~56 ~59 ~50 ~56 minecraft:red_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~60 ~50 ~56 ~60 ~54 ~60 minecraft:shroomlight
-$execute positioned $(x) $(y) $(z) run setblock ~61 ~50 ~56 minecraft:red_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~64 ~50 ~56 ~64 ~51 ~59 minecraft:red_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~58 ~50 ~57 minecraft:red_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~59 ~50 ~57 ~59 ~55 ~59 minecraft:shroomlight
 $execute positioned $(x) $(y) $(z) run fill ~61 ~50 ~57 ~61 ~54 ~59 minecraft:shroomlight
 $execute positioned $(x) $(y) $(z) run fill ~58 ~50 ~58 ~58 ~55 ~58 minecraft:shroomlight

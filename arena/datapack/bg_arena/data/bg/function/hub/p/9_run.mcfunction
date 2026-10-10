@@ -1,3 +1,4 @@
+$execute positioned $(x) $(y) $(z) run fill ~7 ~0 ~-2 ~8 ~0 ~-1 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~53 ~0 ~-2 ~53 ~0 ~1 minecraft:cyan_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~64 ~0 ~-2 ~64 ~0 ~1 minecraft:cyan_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~70 ~0 ~-2 ~70 ~0 ~1 minecraft:blue_terracotta
@@ -1497,4 +1498,3 @@ $execute positioned $(x) $(y) $(z) run setblock ~-18 ~1 ~-33 minecraft:smooth_qu
 $execute positioned $(x) $(y) $(z) run setblock ~18 ~1 ~-33 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~28 ~1 ~-33 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-76 ~1 ~-31 ~-76 ~19 ~-29 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~75 ~1 ~-31 ~75 ~19 ~-29 minecraft:barrier

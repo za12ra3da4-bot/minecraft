@@ -7,7 +7,10 @@
 #    · 1등 팀 본진(18칸) 안으로는 못 들어간다 → 스폰킬 없음 · 스킬도 본진 안은 안 맞음
 #    · 체력 200 + 1등 팀 두 번째 사람부터 1명당 40 (최대 600) · 갑옷 · 한 대 하트 4 + 흡혈 · 넉백 안 먹음
 #    · 체력 50% 아래 '격노': 그림자 4마리 소환 · 스킬 간격 짧아짐 · 심판의 검 3갈래
-#    · 120초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +50점 + 팀원 코인 +15
+#    · 120초가 지나면 떠난다 · 1등 팀이 쓰러뜨리면 +150점 + 팀원 코인 +15
+#   도망치면 손해 (본진에 숨어서 120초 버티기 방지):
+#    · 외면 — 1등 팀이 10초 넘게 한 대도 안 때리면 그동안 초당 -{bg::cfg::nem_tax}점 (기본 2)
+#    · 최후의 심판 — 120초 안에 못 쓰러뜨리고 떠나면 1등 팀 점수 {bg::cfg::nem_fine}% 몰수 (기본 30)
 #   그동안 1등 팀은 네메시스를 막느라 바쁘고, 다른 팀은 거점을 되찾을 기회
 #   모습: 키 9블록 · 날개폭 12블록 — 흑요석·은 갑옷과 금 장식, 가슴의 '심판의 눈', 날개 투구 · 가면 · 금관, 두 겹 후광과 빛살,
 #    날개 두 쌍(따로 움직이는 첫째깃), 8자락 옷자락, 룬 대검, 정의의 저울, 떠다니는 수정 4개 (arena/tools/rp/bosses/nemesis.py · 파츠 85개)
@@ -23,6 +26,7 @@
 #   시전하는 동안은 제자리에 멈춘다
 #  관리자: /네메시스 [팀] (시험용 즉시 소환) · /네메시스 제거
 #  설정: {bg::cfg::nem_ratio} (기본 2 = 2배) · {bg::cfg::nem_min} (1등 최소 점수, 기본 200) · {bg::cfg::nem_reward} (보상 점수, 기본 150)
+#        {bg::cfg::nem_tax} (외면 초당 감점, 기본 2) · {bg::cfg::nem_fine} (못 잡으면 몰수 %, 기본 30)
 # ═════════════════════════════════════════════════════════════════════════════
 import:
     org.bukkit.Bukkit
@@ -46,6 +50,10 @@ on load:
     if {bg::cfg::nem_reward} is not set:
         set {bg::cfg::nem_reward} to 150
     # 예전 기본값(50 · 300)이 저장돼 있으면 새 기본값 150 으로 (한 번만)
+    if {bg::cfg::nem_tax} is not set:
+        set {bg::cfg::nem_tax} to 2
+    if {bg::cfg::nem_fine} is not set:
+        set {bg::cfg::nem_fine} to 30
     if {bg::cfg::nem_reward_v2} is not set:
         set {bg::cfg::nem_reward} to 150
         set {bg::cfg::nem_reward_v2} to true
@@ -97,7 +105,8 @@ function bgNemStart(t: text):
     bgSay("&5&l[복수의 신] &f%{_tn}% 팀&f이 너무 앞서갑니다. &d20초 뒤&f 네메시스가 %{_tn}% 팀&f 본진 앞에 나타납니다!")
     loop all players:
         if bgTeam(loop-player) is {_t}:
-            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f120초 동안 우리 팀을 노립니다 — 쓰러뜨리면 &e+%{bg::cfg::nem_reward}%점 · 코인 +15" to loop-player for 4 seconds
+            send title "&5&l복수의 신이 깨어납니다" with subtitle "&f쓰러뜨리면 &e+%{bg::cfg::nem_reward}%점 &7· &c도망치면 점수 %{bg::cfg::nem_fine}%%% 몰수" to loop-player for 4 seconds
+            send "&5&l[복수의 신] &f120초 안에 쓰러뜨리세요! &c숨어서 버티면 손해: &f10초 넘게 안 때리면 &c초당 -%{bg::cfg::nem_tax}%점&f, 못 잡고 떠나면 &c점수 %{bg::cfg::nem_fine}%%% 몰수" to loop-player
         else if bgTeam(loop-player) is not "none":
             send title "&5&l복수의 신이 깨어납니다" with subtitle "&f%{_tn}% 팀&f을 노립니다 — 지금이 거점을 되찾을 기회!" to loop-player for 4 seconds
     bgSound("entity.wither.ambient", 1, 0.6)
@@ -195,6 +204,9 @@ function bgNemSpawn(t: text):
     bgSound("item.trident.thunder", 1, 0.7)
     bgNemWake({_e})
     set {-bg::nem::trail} to {_hp}
+    # 마지막으로 1등 팀에게 맞은 때 (등장 연출 3초 + 10초 여유)
+    set {-bg::nem::lasthit} to now
+    set {-bg::nem::taxed} to 0
     set {-bg::nem::cd} to 4
     delete {-bg::nem::raged}
     delete {-bg::nem::casting}
@@ -203,7 +215,7 @@ function bgNemSpawn(t: text):
     bgBarInit("bg:nemhud")
     bgCmd("bossbar set bg:nemhud players @a[tag=!bg_optout]")
     set {_tn} to "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}%"
-    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(120초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +%{bg::cfg::nem_reward}%점 · 코인 +15)")
+    bgSay("&5&l[복수의 신] &f네메시스가 %{_tn}% 팀&f 본진 앞에 나타났습니다! &7(120초 · %{_tn}% 팀&7만 공격 · 쓰러뜨리면 +%{bg::cfg::nem_reward}%점 · 코인 +15 · &c못 잡으면 %{_tn}% 팀&c 점수 %{bg::cfg::nem_fine}%%% 몰수&7)")
     bgSound("entity.wither.spawn", 0.8, 0.8)
 
 function bgNemTick():
@@ -214,8 +226,24 @@ function bgNemTick():
     set {_t} to {-bg::nem::team}
     remove 1 from {-bg::nem::left}
     if {-bg::nem::left} <= 0:
-        bgNemRemove("&5&l[복수의 신] &f네메시스가 할 일을 마치고 떠났습니다.")
+        # 최후의 심판: 못 쓰러뜨렸으면 점수 몰수
+        set {_sc} to {-bg::score::%{_t}%} ? 0
+        set {_fine} to floor({_sc} * {bg::cfg::nem_fine} / 100)
+        bgNemFine({_t}, {_fine})
+        set {_tn} to "%{-bg::tcol::%{_t}%}%%{-bg::tname::%{_t}%}%"
+        bgNemRemove("&5&l[복수의 신] &f%{_tn}% 팀&f이 심판을 피했습니다 — &c&l최후의 심판! &f%{_tn}% 팀&c 점수 -%{_fine}% &7(%{bg::cfg::nem_fine}%%% 몰수 · 외면 감점 합계 -%{-bg::nem::taxed}%)")
+        loop all players:
+            if bgTeam(loop-player) is {_t}:
+                send title "&4&l최후의 심판" with subtitle "&c점수 -%{_fine}% &7— 네메시스를 쓰러뜨리지 못했습니다" to loop-player for 3 seconds
+        bgSound("entity.lightning_bolt.thunder", 1, 0.6)
         stop
+    # 외면: 1등 팀이 10초 넘게 한 대도 안 때리면 초당 감점
+    if difference between {-bg::nem::lasthit} and now > 13 seconds:
+        bgNemFine({_t}, {bg::cfg::nem_tax})
+        add {bg::cfg::nem_tax} to {-bg::nem::taxed}
+        loop all players:
+            if bgTeam(loop-player) is {_t}:
+                send action bar "&c&l네메시스를 외면하는 중! &f초당 &c-%{bg::cfg::nem_tax}%점 &7(지금까지 -%{-bg::nem::taxed}%) &f— 때려야 멈춥니다" to loop-player
     # 1등 팀 본진 안으로는 못 들어감 (스폰킬 방지) → 나올 자리로 되돌림
     set {_b} to bgMk("base_%{_t}%")
     if world of {_e} is world of {_b}:
@@ -277,6 +305,12 @@ function bgNemRemove(msg: text):
     delete {-bg::nem::casting}
     if {_msg} is not "":
         bgSay({_msg})
+
+# 1등 팀 점수 깎기 (0 아래로는 안 내려감)
+function bgNemFine(t: text, n: number):
+    {_n} > 0
+    set {_sc} to {-bg::score::%{_t}%} ? 0
+    set {-bg::score::%{_t}%} to max(0, {_sc} - {_n})
 
 # ─────────────────────────────────────────────────────────── 모델 (파츠 동기화 · 애니메이션)
 function bgNemParts():
@@ -703,7 +737,9 @@ on target:
 on damage:
     victim has scoreboard tag "bg_nemesis"
     if attacker is a player:
-        if bgTeam(attacker) is not {-bg::nem::team}:
+        if bgTeam(attacker) is {-bg::nem::team}:
+            set {-bg::nem::lasthit} to now
+        else:
             cancel event
             send action bar "&5네메시스는 %{-bg::tname::%{-bg::nem::team}%}% 팀만 노립니다 — 지금은 거점을 노리세요" to attacker
     else:

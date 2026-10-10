@@ -1,0 +1,297 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  포털 다리 · 포털 파쿠르
+#   허브 가운데 스폰 바로 앞 하늘색 발판을 밟으면 → 그 사람 화면에만 로봇의 고리(포털)까지 빛나는 유리 다리가 생김
+#     (다른 사람에게는 안 보이고 밟을 수도 없음 · 다리 위에서는 떨어져도 다치지 않음 · 60초 또는 다리에서 벗어나면 사라짐)
+#   고리 안으로 들어가면 → 포털 파쿠르 (허브 남쪽 하늘 · 우주 배경): 빛나는 행성 둘레를 돌며 올라가는 50단 · 꼭대기 트로피
+#     체크포인트 없음 — 떨어지면 처음부터 (기록도 다시) · 기록 타이머 · 최고 기록 · /파쿠르 랭킹 · 9번 칸 나가기 버튼 (허브로)
+#   파쿠르 원점 = 허브 원점 + (0, 10, 200)  (storage bg:pk origin, arena/tools/pkgen.py)
+# ═════════════════════════════════════════════════════════════════════════════
+
+import:
+    org.bukkit.Bukkit
+
+# ─────────────────────────────────────────────────────────── 포털 다리 (플레이어마다 따로 — 가짜 블록)
+#  발판 앞(z -7)에서 고리 면(z -38)까지 31칸, 바닥 + 1 에서 고리 구멍 바닥 높이(+9)까지 반 칸씩 올라감 · 폭 3
+function bgBridgeCells() :: texts:
+    set {_k} to 0
+    while {_k} < 31:
+        set {_h} to floor(({_k} + 1) * 16 / 31)
+        set {_y} to floor({_h} / 2)
+        set {_half} to mod({_h}, 2)
+        set {_z} to -7 - {_k}
+        set {_x} to -1
+        while {_x} <= 1:
+            add "%{_x}%:%{_y}%:%{_z}%:%{_half}%" to {_out::*}
+            add 1 to {_x}
+        add 1 to {_k}
+    return {_out::*}
+
+function bgBridge(p: player, on: boolean):
+    set {_glass} to Bukkit.createBlockData("minecraft:light_blue_stained_glass")
+    set {_edge} to Bukkit.createBlockData("minecraft:sea_lantern")
+    set {_slab} to Bukkit.createBlockData("minecraft:smooth_quartz_slab[type=bottom]")
+    loop bgBridgeCells():
+        set {_c::*} to loop-value split at ":"
+        set {_x} to {_c::1} parsed as integer
+        set {_y} to {_c::2} parsed as integer
+        set {_z} to {_c::3} parsed as integer
+        set {_hf} to {_c::4} parsed as integer
+        set {_l} to bgHubAt({_x}, {_y}, {_z})
+        set {_l2} to bgHubAt({_x}, {_y} + 1, {_z})
+        if {_on} is true:
+            if {_x} is 0:
+                {_p}.sendBlockChange({_l}, {_glass})
+            else:
+                {_p}.sendBlockChange({_l}, {_edge})
+            if {_hf} is 1:
+                {_p}.sendBlockChange({_l2}, {_slab})
+        else:
+            {_p}.sendBlockChange({_l}, (block at {_l}).getBlockData())
+            {_p}.sendBlockChange({_l2}, (block at {_l2}).getBlockData())
+
+function bgBridgeOn(p: player):
+    set {-bg::bridge::%uuid of {_p}%} to now
+    bgBridge({_p}, true)
+    # 가짜 블록 위에 서 있으면 서버는 '떠 있다' 고 봄 → 날기 허용 (날기 시작은 막음)
+    {_p}.setAllowFlight(true)
+    play sound "block.beacon.activate" with volume 1 and pitch 1.6 to {_p}
+    send action bar "&b✦ 포털 다리가 열렸습니다 &7— 로봇의 고리로 들어가세요" to {_p}
+
+function bgBridgeOff(p: player):
+    {-bg::bridge::%uuid of {_p}%} is set
+    delete {-bg::bridge::%uuid of {_p}%}
+    bgBridge({_p}, false)
+    if gamemode of {_p} is not creative or spectator:
+        {_p}.setAllowFlight(false)
+
+on toggle flight:
+    {-bg::bridge::%uuid of player%} is set
+    gamemode of player is not creative
+    cancel event
+
+# 고리 안에 들어왔는지 (원점 기준 고리 가운데 · 반지름 4 · 고리 면 앞뒤 2칸)
+function bgInPortal(p: player) :: boolean:
+    bgHubReady() is true
+    set {_c} to bgHubAt({-bg::hubmk::portal::x}, {-bg::hubmk::portal::y}, {-bg::hubmk::portal::z})
+    if world of {_p} is not world of {_c}:
+        return false
+    set {_dx} to (x-coordinate of {_p}) - (x-coordinate of {_c})
+    set {_dy} to (y-coordinate of {_p}) + 1 - (y-coordinate of {_c})
+    set {_dz} to (z-coordinate of {_p}) - (z-coordinate of {_c})
+    if abs({_dz}) > 2.2:
+        return false
+    if sqrt({_dx} * {_dx} + {_dy} * {_dy}) > 4.6:
+        return false
+    return true
+
+every 5 ticks:
+    bgHubReady() is true
+    loop all players:
+        set {_p} to loop-player
+        if bgArea({_p}) is "hub":
+            # 발판 밟으면 다리
+            if bgDist2(location of {_p}, bgHubMk("bridge_pad")) < 1.9:
+                if abs((y-coordinate of {_p}) - (y-coordinate of bgHubMk("bridge_pad"))) < 1.5:
+                    if {-bg::bridge::%uuid of {_p}%} is not set:
+                        bgBridgeOn({_p})
+                    else:
+                        set {-bg::bridge::%uuid of {_p}%} to now
+            if {-bg::bridge::%uuid of {_p}%} is set:
+                # 고리 통과 → 파쿠르
+                if bgInPortal({_p}) is true:
+                    bgBridgeOff({_p})
+                    bgPkEnter({_p})
+                else:
+                    # 다리 근처에서 벗어나거나 60초 지나면 다리 닫기
+                    set {_hx} to (x-coordinate of {_p}) - {bg::hub::x}
+                    set {_hz} to (z-coordinate of {_p}) - {bg::hub::z}
+                    if abs({_hx}) > 4:
+                        bgBridgeOff({_p})
+                    else if {_hz} > 2:
+                        bgBridgeOff({_p})
+                    else if difference between {-bg::bridge::%uuid of {_p}%} and now > 60 seconds:
+                        bgBridgeOff({_p})
+                    else:
+                        bgParticle(bgUp(bgHubMk("portal"), 0), "portal", 2.5, 2.5, 0.4, 0.3, 20)
+        else if {-bg::bridge::%uuid of {_p}%} is set:
+            bgBridgeOff({_p})
+
+# 포털 빛 (허브에 누가 있으면 늘)
+every 1 second:
+    bgHubReady() is true
+    bgHubCount("hub") > 0
+    set {_c} to bgHubMk("portal")
+    bgParticle({_c}, "end_rod", 2.2, 2.2, 0.2, 0.01, 6)
+    bgParticle({_c}, "reverse_portal", 3, 3, 0.3, 0.05, 14)
+
+on quit:
+    delete {-bg::bridge::%uuid of player%}
+    delete {-bg::pk::in::%uuid of player%}
+    delete {-bg::pk::top::%uuid of player%}
+
+# ─────────────────────────────────────────────────────────── 포털 파쿠르
+function bgPkOn(p: player) :: boolean:
+    if {-bg::pk::in::%uuid of {_p}%} is true:
+        return true
+    return false
+
+function bgPkAt(dx: number, dy: number, dz: number) :: location:
+    return location({bg::hub::x} + {_dx}, {bg::hub::y} + 10 + {_dy}, {bg::hub::z} + 200 + {_dz}, bgWorld())
+
+function bgPkMk(n: text) :: location:
+    set {_l} to bgPkAt({-bg::pkmk::%{_n}%::x}, {-bg::pkmk::%{_n}%::y}, {-bg::pkmk::%{_n}%::z})
+    set yaw of {_l} to {-bg::pkmk::%{_n}%::yaw} ? 0
+    return {_l}
+
+function bgPkTime(ms: number) :: text:
+    set {_s} to floor({_ms} / 1000)
+    set {_m} to floor({_s} / 60)
+    set {_r} to mod({_s}, 60)
+    set {_d} to floor(mod({_ms}, 1000) / 100)
+    if {_r} < 10:
+        return "%{_m}%:0%{_r}%.%{_d}%"
+    return "%{_m}%:%{_r}%.%{_d}%"
+
+function bgPkElapsed(p: player) :: number:
+    set {_t0} to {-bg::pk::t0::%uuid of {_p}%}
+    {_t0} is set
+    return (difference between {_t0} and now) / (1 tick) * 50
+
+# 처음부터 (떨어졌을 때 · /파쿠르 처음)
+function bgPkRestart(p: player):
+    set {-bg::pk::t0::%uuid of {_p}%} to now
+    set {-bg::pk::top::%uuid of {_p}%} to y-coordinate of bgPkMk("start")
+    teleport {_p} to bgPkMk("start")
+
+function bgPkEnter(p: player):
+    if {bg::pk::built} is not true:
+        if {_p} is op:
+            send "&d[파쿠르] &f코스가 없어서 지금 짓습니다..." to {_p}
+            bgPkBuild({_p})
+            stop
+        send "&d[파쿠르] &f아직 코스가 없습니다. &7관리자가 &e/파쿠르 건설" to {_p}
+        stop
+    set {-bg::pk::in::%uuid of {_p}%} to true
+    set {-bg::where::%uuid of {_p}%} to "pk"
+    set {bg::pk::name::%uuid of {_p}%} to name of {_p}
+    bgParticle(location of {_p}, "reverse_portal", 0.6, 1, 0.6, 0.2, 60)
+    bgPkRestart({_p})
+    clear {_p}'s inventory
+    bgExitItem({_p})
+    play sound "block.portal.travel" with volume 0.4 and pitch 1.6 to {_p}
+    bgTitleP({_p}, "&d&l포털 파쿠르", "&f행성 둘레를 돌아 꼭대기 트로피까지! &7· 떨어지면 처음부터")
+
+function bgPkLeave(p: player):
+    delete {-bg::pk::in::%uuid of {_p}%}
+    delete {-bg::pk::top::%uuid of {_p}%}
+    bgToHub({_p})
+
+function bgPkBuild(p: player):
+    {bg::hub::x} is set
+    bgCmd("data merge storage bg:pk {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y} + 10%,z:%{bg::hub::z} + 200%}}")
+    bgCmd("function bg:pk/build")
+    wait 240 ticks
+    set {bg::pk::built} to true
+    send "&d[파쿠르] &a코스 완성!" to {_p}
+
+every 5 ticks:
+    loop all players:
+        set {_p} to loop-player
+        bgPkOn({_p}) is true
+        set {_u} to "%uuid of {_p}%"
+        set food level of {_p} to 20
+        # 가장 높이 올라간 자리보다 6칸 넘게 떨어지면 → 처음부터 (코스는 계속 올라가기만 함)
+        set {_y} to y-coordinate of {_p}
+        set {_top} to {-bg::pk::top::%{_u}%} ? (y-coordinate of bgPkMk("start"))
+        if {_y} > {_top}:
+            if {_p} is on ground:
+                set {-bg::pk::top::%{_u}%} to {_y}
+        else if {_y} < {_top} - 6:
+            bgPkRestart({_p})
+            send title " " with subtitle "&c✖ 떨어졌다! &7처음부터" to {_p} for 25 ticks with fade in 0 ticks and fade out 8 ticks
+            play sound "entity.enderman.teleport" with volume 0.6 and pitch 1.4 to {_p}
+        # 결승
+        set {_f} to bgPkMk("finish")
+        if bgDist2(location of {_p}, {_f}) < 3.5:
+            if abs((y-coordinate of {_p}) - (y-coordinate of {_f})) < 2:
+                set {_ms} to bgPkElapsed({_p})
+                set {_best} to {bg::pk::best::%{_u}%}
+                set {_tt} to bgPkTime({_ms})
+                if {_best} is not set:
+                    set {bg::pk::best::%{_u}%} to {_ms}
+                    set {_msg} to "&6첫 완주!"
+                else if {_ms} < {_best}:
+                    set {bg::pk::best::%{_u}%} to {_ms}
+                    set {_msg} to "&6&l최고 기록 경신!"
+                else:
+                    set {_msg} to "&7최고 기록 %bgPkTime({_best})%"
+                add 1 to {bg::pk::clears::%{_u}%}
+                bgTitleP({_p}, "&e&l완주! &f%{_tt}%", "%{_msg}%")
+                play sound "ui.toast.challenge_complete" to {_p}
+                bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 80)
+                broadcast "&d[파쿠르] &e%name of {_p}%&f 님이 포털 파쿠르 완주! &6%{_tt}%"
+                delete {-bg::pk::in::%{_u}%}
+                delete {-bg::pk::top::%{_u}%}
+                wait 3 seconds
+                bgToHub({_p})
+
+every 2 ticks:
+    loop all players:
+        bgPkOn(loop-player) is true
+        set {_u} to "%uuid of loop-player%"
+        set {_ms} to bgPkElapsed(loop-player)
+        set {_h} to floor((y-coordinate of loop-player) - (y-coordinate of bgPkMk("start")))
+        set {_hm} to floor({-bg::pkmk::finish::y} - 1)
+        set {_best} to {bg::pk::best::%{_u}%}
+        if {_best} is set:
+            send action bar "&d&l포털 파쿠르 &8| &f%bgPkTime({_ms})% &8| &b높이 %{_h}%/%{_hm}% &8| &7최고 &6%bgPkTime({_best})%" to loop-player
+        else:
+            send action bar "&d&l포털 파쿠르 &8| &f%bgPkTime({_ms})% &8| &b높이 %{_h}%/%{_hm}% &8| &7첫 완주에 도전!" to loop-player
+
+on damage of player:
+    bgPkOn(victim) is true
+    cancel event
+
+on break:
+    bgPkOn(player) is true
+    gamemode of player is not creative
+    cancel event
+
+on place:
+    bgPkOn(player) is true
+    gamemode of player is not creative
+    cancel event
+
+command /파쿠르 [<text>]:
+    aliases: /parkour, /pk
+    trigger:
+        if arg-1 is "건설":
+            if sender is a player:
+                if player is op:
+                    bgPkBuild(player)
+                    send "&d[파쿠르] &f코스를 짓는 중... (12초)"
+            stop
+        if arg-1 is "랭킹" or "순위":
+            set {_ids::*} to sorted indices of {bg::pk::best::*} in ascending order
+            send "&d&l[포털 파쿠르 랭킹] &7가장 빠른 기록 10위"
+            set {_i} to 0
+            loop {_ids::*}:
+                add 1 to {_i}
+                if {_i} <= 10:
+                    set {_u} to loop-value
+                    set {_nm} to {bg::pk::name::%{_u}%} ? "?"
+                    send "&e  %{_i}%위 &f%{_nm}% &7— &6%bgPkTime({bg::pk::best::%{_u}%})%"
+            if {_i} is 0:
+                send "&7  아직 기록이 없습니다."
+            stop
+        if sender is not a player:
+            stop
+        if arg-1 is "나가기":
+            if bgPkOn(player) is true:
+                bgPkLeave(player)
+            stop
+        if arg-1 is "처음":
+            if bgPkOn(player) is true:
+                bgPkRestart(player)
+            stop
+        send "&d[파쿠르] &f허브 가운데 앞 하늘색 발판을 밟고 다리를 건너 로봇의 고리로 들어가세요. &7(/파쿠르 랭킹 · 처음 · 나가기)"

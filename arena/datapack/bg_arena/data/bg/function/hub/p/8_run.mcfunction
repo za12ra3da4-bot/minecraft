@@ -1,3 +1,4 @@
+$execute positioned $(x) $(y) $(z) run fill ~68 ~-1 ~42 ~68 ~-1 ~44 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-68 ~-1 ~43 ~-68 ~-1 ~47 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-59 ~-1 ~43 ~-59 ~-1 ~58 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-56 ~-1 ~43 ~-56 ~-1 ~49 minecraft:dark_prismarine
@@ -1370,7 +1371,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-7 ~0 ~-8 ~-6 ~0 ~-8 minecraft:whit
 $execute positioned $(x) $(y) $(z) run fill ~-5 ~0 ~-8 ~-5 ~0 ~5 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~0 ~-8 ~-3 ~0 ~-8 minecraft:orange_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~0 ~-8 ~-2 ~0 ~-5 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run fill ~1 ~0 ~-8 ~1 ~0 ~-5 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~1 ~0 ~-8 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~2 ~0 ~-8 ~3 ~0 ~-8 minecraft:orange_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~4 ~0 ~-8 ~4 ~0 ~5 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~5 ~0 ~-8 ~6 ~0 ~-8 minecraft:white_concrete
@@ -1388,7 +1389,7 @@ $execute positioned $(x) $(y) $(z) run setblock ~-9 ~0 ~-7 minecraft:light_blue_
 $execute positioned $(x) $(y) $(z) run fill ~-8 ~0 ~-7 ~-7 ~0 ~-7 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-6 ~0 ~-7 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~0 ~-7 ~-3 ~0 ~-4 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~0 ~-7 ~0 ~0 ~-5 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-1 ~0 ~-7 ~1 ~0 ~-5 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~2 ~0 ~-7 ~3 ~0 ~-4 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~5 ~0 ~-7 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~6 ~0 ~-7 ~7 ~0 ~-7 minecraft:white_concrete
@@ -1497,4 +1498,3 @@ $execute positioned $(x) $(y) $(z) run fill ~-3 ~0 ~-2 ~-3 ~0 ~1 minecraft:black
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~0 ~-2 ~1 ~0 ~1 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~2 ~0 ~-2 ~2 ~0 ~1 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~3 ~0 ~-2 ~3 ~0 ~1 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~7 ~0 ~-2 ~8 ~0 ~-1 minecraft:black_concrete

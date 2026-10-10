@@ -1,5 +1,9 @@
 # 자동 생성 — 신화 아케이드 허브 표지 좌표 · 화면 로고 (arena/tools/hubgen.py · rp/hubscreen.py)
 on load:
+    set {-bg::hubmk::bridge_pad::x} to 0.5
+    set {-bg::hubmk::bridge_pad::y} to 1
+    set {-bg::hubmk::bridge_pad::z} to -5.5
+    set {-bg::hubmk::bridge_pad::yaw} to 180.0
     set {-bg::hubmk::cops_label::x} to -30.5
     set {-bg::hubmk::cops_label::y} to 4.2
     set {-bg::hubmk::cops_label::z} to -17.5
@@ -24,6 +28,10 @@ on load:
     set {-bg::hubmk::myth_screen::y} to 18.5
     set {-bg::hubmk::myth_screen::z} to -41.94
     set {-bg::hubmk::myth_screen::yaw} to 0.0
+    set {-bg::hubmk::portal::x} to 0.5
+    set {-bg::hubmk::portal::y} to 14
+    set {-bg::hubmk::portal::z} to -38.5
+    set {-bg::hubmk::portal::yaw} to 180.0
     set {-bg::hubmk::pvp_label::x} to 23.5
     set {-bg::hubmk::pvp_label::y} to 4.2
     set {-bg::hubmk::pvp_label::z} to -32.5
@@ -164,6 +172,14 @@ on load:
     set {-bg::kdmk::wait::y} to 63
     set {-bg::kdmk::wait::z} to 3.5
     set {-bg::kdmk::wait::yaw} to 180.0
+    set {-bg::pkmk::finish::x} to 8.5
+    set {-bg::pkmk::finish::y} to 30
+    set {-bg::pkmk::finish::z} to -13.5
+    set {-bg::pkmk::finish::yaw} to 0.0
+    set {-bg::pkmk::start::x} to 0.5
+    set {-bg::pkmk::start::y} to 1
+    set {-bg::pkmk::start::z} to 0.5
+    set {-bg::pkmk::start::yaw} to 0.0
     set {-bg::kd::heistname::0} to "은행 금고"
     set {-bg::kd::heistname::1} to "카지노 금고"
     set {-bg::kd::heistname::2} to "보석상"
