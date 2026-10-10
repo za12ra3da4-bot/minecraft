@@ -108,6 +108,7 @@ function bgPvpEnter(p: player, n: number = 1):
         stop
     set {-bg::pvp::%uuid of {_p}%} to true
     set {-bg::pvpa::%uuid of {_p}%} to {_n}
+    set {-bg::where::%uuid of {_p}%} to "pvp"
     teleport {_p} to bgPvpSpawnN({_n})
     set gamemode of {_p} to adventure
     heal {_p}
@@ -118,13 +119,18 @@ function bgPvpEnter(p: player, n: number = 1):
     wait 10 ticks
     bgPvpShop({_p})
 
+# 나가면 허브로 (허브가 아직 없으면 신화쟁탈전 대기실로)
 function bgPvpLeave(p: player):
     delete {-bg::pvp::%uuid of {_p}%}
     delete {-bg::pvpa::%uuid of {_p}%}
+    if bgHubReady() is true:
+        bgToHub({_p})
+        send "&6[연습장] &f허브로 돌아왔습니다." to {_p}
+        stop
     bgToLobby({_p})
     send "&6[연습장] &f대기실로 돌아왔습니다." to {_p}
 
-# 연습장에 있는 사람 모두 대기실로 (몇 명인지 돌려줌)
+# 연습장에 있는 사람 모두 허브(없으면 대기실)로 (몇 명인지 돌려줌)
 function bgPvpKickAll() :: number:
     set {_n} to 0
     loop all players:
@@ -303,8 +309,8 @@ function bgPvpSelect(p: player):
     set {_a} to bgPvpSelItem({_p}, 1)
     set {_b} to bgPvpSelItem({_p}, 2)
     if {-bg::pvp::%uuid of {_p}%} is true:
-        set {_x} to barrier named "&c&l대기실로 나가기"
-        set lore of {_x} to "&7연습장에서 나가 대기실로 돌아갑니다"
+        set {_x} to barrier named "&c&l연습장 나가기"
+        set lore of {_x} to "&7연습장에서 나가 허브로 돌아갑니다"
     else:
         set {_x} to barrier named "&7닫기"
     if {-bg::gui::arena} is set:

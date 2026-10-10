@@ -27,6 +27,7 @@ function bgInLobby(p: player) :: boolean:
 function bgToLobby(p: player):
     if {-bg::mk::lobby_spawn::x} is not set:
         stop
+    set {-bg::where::%uuid of {_p}%} to "myth"
     teleport {_p} to bgLobbyLoc()
     bgClassReset({_p})
     set gamemode of {_p} to adventure
@@ -44,6 +45,11 @@ command /로비:
         if bgIsFighter(player) is true:
             send "&6[전장] &f게임 중에는 대기실로 갈 수 없습니다."
             stop
+        # 허브에서 신화쟁탈전을 잠가 두었으면 관리자만 (a85-hub)
+        if bgHubLocked("myth") is true:
+            if player is not op:
+                send "&6[전장] &c신화쟁탈전은 지금 관리자가 막아 두었습니다."
+                stop
         bgToLobby(player)
 
 # 최신 리소스팩을 sha1 과 함께 직접 보낸다 (server.properties 에 sha1 이 없으면 클라이언트가 옛 팩을 계속 쓰기 때문)
@@ -108,12 +114,32 @@ on join:
     wait 20 ticks
     bgSendPack(player)
 
-# 들어올 때: 게임 전이면 모험 모드로 대기실 가운데 · 게임 중이면 관전 (중앙 성소 위에서 내려다봄)
+# 게임 중 관전 (중앙 성소 위에서 내려다봄) — 접속 · 허브의 신화쟁탈전 오락기에서 씀
+function bgMythSpectate(p: player):
+    set {-bg::where::%uuid of {_p}%} to "myth"
+    bgSetTeam({_p}, "none")
+    clear {_p}'s inventory
+    set gamemode of {_p} to spectator
+    if {-bg::mk::temple_core::x} is set:
+        set {_l} to bgUp(bgMk("temple_core"), 18)
+        set pitch of {_l} to 60
+        teleport {_p} to {_l}
+    bgTitleP({_p}, "&7&l관전 중", "&f게임 진행 중 — &e/중참&f 으로 지금 참가할 수 있습니다")
+    send "&6[전장] &f게임이 진행 중입니다. &e/중참&f 을 입력하면 인원이 가장 적은 팀으로 바로 참가합니다. &7(/허브 로 돌아가기)" to {_p}
+
+# 들어올 때: 허브가 있으면 허브로 (게임 중 참가자만 전장으로 — a20 on join 이 팀 · 본진 · 장비를 되돌림)
+#  허브가 없으면 예전처럼: 게임 전이면 모험 모드로 대기실 가운데 · 게임 중이면 관전
 on join:
     wait 3 ticks
     # 관전자 모드(/관전자): 접속해도 아무 일 없음
     if bgOptOut(player) is true:
         bgCmd("tag %name of player% add bg_optout")
+        stop
+    if bgHubReady() is true:
+        if bgInGame(player) is true:
+            stop
+        bgToHub(player)
+        bgTitleP(player, "&b&l신화 아케이드", "&f오락기 앞 빛나는 발판을 밟아 컨텐츠를 고르세요")
         stop
     if {-bg::on} is not true:
         bgToLobby(player)
@@ -123,15 +149,7 @@ on join:
     # 게임 중에 나갔다 다시 들어온 참가자는 원래 팀 그대로 (a20 on join 이 팀 · 본진 · 장비를 되돌림)
     if bgTeam(player) is not "none":
         stop
-    bgSetTeam(player, "none")
-    clear player's inventory
-    set gamemode of player to spectator
-    if {-bg::mk::temple_core::x} is set:
-        set {_l} to bgUp(bgMk("temple_core"), 18)
-        set pitch of {_l} to 60
-        teleport player to {_l}
-    bgTitleP(player, "&7&l관전 중", "&f게임 진행 중 — &e/중참&f 으로 지금 참가할 수 있습니다")
-    send "&6[전장] &f게임이 진행 중입니다. &e/중참&f 을 입력하면 인원이 가장 적은 팀으로 바로 참가합니다."
+    bgMythSpectate(player)
 
 # 팀 발판 · 대기실 회복
 every 10 ticks:

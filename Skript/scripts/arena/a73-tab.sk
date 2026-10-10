@@ -79,3 +79,21 @@ on tab complete of "/관전자" or "/nogame":
 on tab complete of "/힐" or "/heal":
     player is op
     set tab completions for position 1 to "전체" and all players
+
+on tab complete of "/허브" or "/hub" or "/스폰":
+    player is op
+    set tab completions for position 1 to "건설", "전체", "글자" and "위치"
+    set {_a} to tab arg-1
+    if {_a} is "건설":
+        set tab completions for position 2 to "여기"
+
+on tab complete of "/신화쟁탈전" or "/myth":
+    player is op
+    set tab completions for position 1 to "@a" and all players
+
+on tab complete of "/컨텐츠" or "/content":
+    if player is op:
+        set tab completions for position 1 to "잠금", "열기" and "목록"
+        set tab completions for position 2 to "신화쟁탈전", "연습장", "준비1" and "준비2"
+    else:
+        set tab completions for position 1 to "목록"

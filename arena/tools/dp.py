@@ -936,3 +936,25 @@ def pvp2_functions(dp_root):
         w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:pvp2/{k}_run with storage bg:map origin"])
     print(f"[pvp2] 용암 투기장 명령 {len(cmds)}줄 ({len(parts)} 조각)")
     return len(parts)
+
+
+def hub_functions(dp_root):
+    """신화 아케이드 허브 짓기: bg:hub/build → 2초 뒤 조각들 (원점 = storage bg:hub origin = 허브 가운데 바닥)"""
+    import hubgen
+    F = os.path.join(dp_root, "data", NS, "function", "hub")
+    cmds = hubgen.commands(greedy_boxes)
+    x0, z0, x1, z1 = hubgen.forceload_range()
+    per = 1500
+    parts = [cmds[i:i + per] for i in range(0, len(cmds), per)]
+    for i, part in enumerate(parts):
+        w(os.path.join(F, "p", f"{i}_run.mcfunction"), part)
+        nxt = f"schedule function bg:hub/p/{i + 1} 3t" if i + 1 < len(parts) else "schedule function bg:hub/fl_rm 20t"
+        w(os.path.join(F, "p", f"{i}.mcfunction"), [f"function bg:hub/p/{i}_run with storage bg:hub origin", nxt])
+    w(os.path.join(F, "build.mcfunction"), ["function bg:hub/fl", "schedule function bg:hub/p/0 40t"])
+    w(os.path.join(F, "fl_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}"])
+    w(os.path.join(F, "fl_rm_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
+    for k in ("fl", "fl_rm"):
+        w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:hub/{k}_run with storage bg:hub origin"])
+    print(f"[hub] 아케이드 허브 명령 {len(cmds)}줄 ({len(parts)} 조각)")
+    return len(parts)
+

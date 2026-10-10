@@ -746,13 +746,20 @@ command /전장 [<text>] [<text>] [<text>] [<text>]:
                 send "&c[전장] 모든 팀이 잠겨 있습니다. &7(/팀잠금 해제)"
                 stop
             set {_i} to 0
+            # 허브에 있는 사람은 빼고 (신화쟁탈전 대기실 · 연습장에 있는 사람만 — /신화쟁탈전 @a 로 먼저 모두 데려오기)
+            set {_hub} to 0
             loop {_ps::*}:
                 if gamemode of loop-value is not spectator:
                     if bgOptOut(loop-value) is false:
-                        set {_t} to {_tl::%mod({_i}, size of {_tl::*}) + 1%}
-                        bgSetTeam(loop-value, {_t})
-                        add 1 to {_i}
+                        if {-bg::where::%uuid of loop-value%} is "hub":
+                            add 1 to {_hub}
+                        else:
+                            set {_t} to {_tl::%mod({_i}, size of {_tl::*}) + 1%}
+                            bgSetTeam(loop-value, {_t})
+                            add 1 to {_i}
             bgSay("%{_i}%명을 %size of {_tl::*}%팀으로 나눴습니다.")
+            if {_hub} > 0:
+                send "&7  허브에 있는 %{_hub}%명은 뺐습니다. 모두 넣으려면 &e/신화쟁탈전 @a &7후 다시 &e/전장 자동팀"
         else if arg-1 is "팀초기화":
             if {-bg::on} is true:
                 send "&c[전장] 게임 중에는 팀을 초기화할 수 없습니다. 먼저 /전장 종료"

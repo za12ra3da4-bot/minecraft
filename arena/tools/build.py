@@ -83,6 +83,8 @@ def main(args):
     ndeco = dp.decor_functions(OUT_DP, world, fixes)
     dp.pvp_functions(OUT_DP)
     dp.pvp2_functions(OUT_DP)
+    dp.hub_functions(OUT_DP)
+    skgen.write_hub(os.path.join(OUT_SK, "a09-gen-hub.sk"))
     print(f"[dp] 맵 명령 {ncmd} ({nparts} 단계), 장식 {ndeco}")
     # 리소스팩
     pack = Pack("bg")

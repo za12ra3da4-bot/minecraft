@@ -212,3 +212,18 @@ def write_boss(path, meta):
     ids = [q(b) for b in meta]
     L.append(f"    set {{-bg::bd::list::*}} to {', '.join(ids[:-1])} and {ids[-1]}")
     write_blocks(path, [HEAD], L)
+
+
+def write_hub(path):
+    """허브 표지 좌표 (허브 가운데 바닥 칸 기준) → {-bg::hubmk::<이름>::x/y/z}"""
+    import hubgen
+    L = []
+    for name, pos in sorted(hubgen.markers().items()):
+        L.append(f"    set {{-bg::hubmk::{name}::x}} to {pos[0]}")
+        L.append(f"    set {{-bg::hubmk::{name}::y}} to {pos[1]}")
+        L.append(f"    set {{-bg::hubmk::{name}::z}} to {pos[2]}")
+        if len(pos) > 3:
+            L.append(f"    set {{-bg::hubmk::{name}::yaw}} to {pos[3]}")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("# 자동 생성 — 신화 아케이드 허브 표지 좌표 (arena/tools/hubgen.py)\non load:\n" + "\n".join(L) + "\n")
+
