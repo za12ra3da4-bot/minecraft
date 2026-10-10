@@ -320,6 +320,13 @@ def build():
             if (s // 12) % 3 == 1:
                 hydrant(c - RW - 2, s + 3)
                 hydrant(s + 3, c + RW + 1)
+    for c in ROADS:
+        for s2 in range(-E + 11, E - 8, 24):
+            if near_cross(s2, SW + 5):
+                continue
+            for off in (c - RW - 2, c + RW + 1):
+                if chance(0.7):
+                    put(off, FL + 1, s2 + 5, "cauldron") if chance(0.5) else None
     for cx in ROADS:
         for cz in ROADS:
             traffic_light(cx - RW - 1, cz - RW - 1, "n")
@@ -405,6 +412,7 @@ def build():
                 fput(side, b, t, top + 1, slab(PARAPET.get(trim, "smooth_stone")) if t % 2 else trim)
         for y in range(FL + 1, top + 1):
             put(x0 + 1, y, z0 + 1, ladder("south"))
+        facade_details(b, floors, top, trim, pattern, sill)
         for d in doors:
             w = fwidth(d, *b)
             m = w // 2 - 1
@@ -418,6 +426,47 @@ def build():
         if roof == "items":
             roof_items(b, top)
         return top
+
+    CORN = {"stone_bricks": "stone_brick", "smooth_quartz": "smooth_quartz", "quartz_block": "quartz", "bricks": "brick",
+            "polished_blackstone": "polished_blackstone", "cut_sandstone": "smooth_sandstone", "purpur_block": "purpur",
+            "brown_terracotta": "brick", "white_terracotta": "smooth_quartz", "dark_prismarine": "dark_prismarine",
+            "deepslate_bricks": "deepslate_brick", "mud_bricks": "mud_brick", "white_concrete": "smooth_quartz",
+            "gray_concrete": "stone_brick", "light_gray_concrete": "stone_brick", "black_concrete": "blackstone",
+            "blue_concrete": "stone_brick", "lime_concrete": "smooth_quartz", "light_blue_concrete": "smooth_quartz"}
+
+    def facade_details(b, floors, top, trim, pattern, sill):
+        cm = CORN.get(trim, "stone_brick")
+        for side in "snew":
+            w = fwidth(side, *b)
+            # 지붕 아래 처마 (뒤집힌 계단이 한 칸 튀어나옴) · 바닥 받침 띠
+            for t in range(-1, w + 1):
+                fput(side, b, t, top, stairs(cm, OPP[side], "top"), 1)
+                fput(side, b, t, FL + 1, trim if pattern == "curtain" else "polished_andesite", 0) if t in (0, w - 1) else None
+            # 튀어나온 기둥 줄 (유리벽 빌딩 · 넓은 벽만)
+            if pattern in ("curtain", "band") and w >= 12:
+                for t in range(3, w - 3, 6):
+                    for y in range(FL + 5, top):
+                        fput(side, b, t, y, trim, 1)
+            # 창문 덧문 · 벽 에어컨 (창이 있는 집)
+            if pattern in ("grid", "small"):
+                for f in range(1, floors):
+                    y0 = FL + 5 * f
+                    for t in range(2, w - 2):
+                        win_here = (pattern == "grid" and (t - 2) % 3 != 2) or (pattern == "small" and t % 2 == 0)
+                        if not win_here:
+                            continue
+                        left_edge = (pattern == "grid" and (t - 2) % 3 == 0) or pattern == "small"
+                        right_edge = (pattern == "grid" and (t - 2) % 3 == 1) or pattern == "small"
+                        if sill and chance(0.5):
+                            sh = trapdoor("spruce" if trim != "smooth_quartz" else "birch", FACING[side], "bottom", True)
+                            if left_edge and fget(side, b, t - 1, y0 + 2, 1) == "air":
+                                fput(side, b, t - 1, y0 + 2, sh, 1); fput(side, b, t - 1, y0 + 3, sh, 1)
+                            if right_edge and fget(side, b, t + 1, y0 + 2, 1) == "air":
+                                fput(side, b, t + 1, y0 + 2, sh, 1); fput(side, b, t + 1, y0 + 3, sh, 1)
+                        elif chance(0.08) and fget(side, b, t, y0 + 1, 1) == "air":
+                            fput(side, b, t, y0 + 1, "light_gray_concrete", 1)
+                            fput(side, b, t, y0 + 1, "light_gray_concrete", 1)
+                            fput(side, b, t, y0, trapdoor("iron", OPP[side], "top"), 1)
 
     def roof_items(b, top):
         x0, z0, x1, z1 = b
@@ -441,6 +490,26 @@ def build():
         for y in range(top + 1, top + 6):
             put(x0 + 3, y, z0 + 3, CHAIN if y > top + 1 else "iron_block")
         put(x0 + 3, top + 6, z0 + 3, LAMP_ON)
+        kind = rng.random()
+        if w >= 9 and d >= 9:
+            if kind < 0.35:                                   # 옥상 정원
+                box(x0 + 5, top + 1, z0 + 6, x1 - 5, top + 1, z1 - 5, "grass_block[snowy=false]")
+                for _ in range(max(2, (w * d) // 40)):
+                    gx = int(rng.integers(x0 + 5, max(x0 + 6, x1 - 4))); gz = int(rng.integers(z0 + 6, max(z0 + 7, z1 - 4)))
+                    put(gx, top + 2, gz, pick(["poppy", "dandelion", "cornflower", "azure_bluet", "short_grass", "oak_leaves[persistent=true,distance=1,waterlogged=false]"]))
+                for x in range(x0 + 4, x1 - 3):
+                    put(x, top + 1, z0 + 5, slab("spruce")); put(x, top + 1, z1 - 4, slab("spruce"))
+            elif kind < 0.65:                                 # 태양광 패널 줄
+                for z in range(z0 + 6, z1 - 3, 3):
+                    for x in range(x0 + 5, x1 - 4):
+                        put(x, top + 1, z, "daylight_detector[inverted=false,power=0]")
+            else:                                             # 위성 안테나
+                dx, dz = x0 + w // 2, z0 + d // 2
+                put(dx, top + 1, dz, "iron_block"); put(dx, top + 2, dz, post("andesite"))
+                for ox in (-1, 0, 1):
+                    for oy in (0, 1):
+                        put(dx + ox, top + 3 + oy, dz, "white_concrete" if oy == 0 or ox == 0 else "light_gray_concrete")
+                put(dx, top + 4, dz + 1, LAMP_ON)
         if chance(0.5) and d >= 9:
             box(x0 + 1, top + 1, z0 + 5, x0 + 3, top + 3, z0 + 7, "light_gray_concrete")
             put(x0 + 2, top + 4, z0 + 6, slab("smooth_stone"))

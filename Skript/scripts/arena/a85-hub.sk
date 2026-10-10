@@ -664,3 +664,24 @@ every 1 second:
 
 on quit:
     delete {-bg::tabteam::%uuid of player%}
+
+# ─────────────────────────────────────────────────────────── 나가기 버튼 (게임 로비 · 대기실 9번 칸, 우클릭 → 허브)
+function bgExitItem(p: player):
+    bgCmd("item replace entity %name of {_p}% hotbar.8 with paper[item_model=""bg:kd/exit"",custom_name={text:""나가기"",color:""red"",bold:true,italic:false},lore=[{text:""우클릭: 허브로 돌아가기"",color:""gray"",italic:false}]]")
+
+on right click:
+    player's tool is paper
+    set {_nm} to uncolored name of player's tool
+    {_nm} contains "나가기"
+    cancel event
+    set {_ar} to bgArea(player)
+    if {_ar} is "kd":
+        bgKdLeave(player)
+    else if {_ar} is "os":
+        bgOsLeave(player)
+    else if {_ar} is "myth":
+        if bgInGame(player) is true:
+            send action bar "&c게임 중에는 나갈 수 없습니다" to player
+            stop
+        bgToHub(player)
+    play sound "entity.enderman.teleport" to player

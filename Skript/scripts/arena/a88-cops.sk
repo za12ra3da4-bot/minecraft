@@ -5,7 +5,7 @@
 #         목표 돈가방을 채우면 북동쪽 탈출 헬기장 열림 → 들어온 도둑은 '탈출 성공' (전망대로) · 판은 계속
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 한 명이라도 탈출하면 도둑 승리
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
-#   경찰: 20초 뒤 출동 (경찰서) · 빠름 · 경찰봉으로 도둑을 때리면 체포 · 60초마다 레이더 (도둑 3초 빛남)
+#   경찰: 20초 뒤 출동 (경찰서) · 빠름 · 경찰봉으로 4초 안에 두 번 때리면 체포 (들고 있던 돈가방 압수) · 무전기 · 60초마다 레이더 (도둑 3초 빛남)
 #         도둑 전원 체포 또는 시간 종료 → 경찰 승리
 #   허브 · 신화쟁탈전과 별개 서버처럼: 피해 없음 (체포만) · 블록 못 부숨 · 밤 · 이름표는 같은 편만
 #   /경도 (/kd) 들어가기 · /경도 나가기 · /경도 전적 [플레이어] · /경도 랭킹
@@ -135,7 +135,8 @@ function bgKdCopKit(p: player):
     bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=2052283,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=1381706,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=1381706,unbreakable={}]")
-    bgCmd("item replace entity %{_n}% hotbar.0 with blaze_rod[item_name={text:""경찰봉"",color:""blue"",bold:true},lore=[{text:""도둑을 때리면 체포"",color:""gray"",italic:false}],enchantment_glint_override=true]")
+    bgCmd("item replace entity %{_n}% hotbar.0 with blaze_rod[item_model=""bg:kd/baton"",item_name={text:""경찰봉"",color:""blue"",bold:true},lore=[{text:""도둑을 때리면 체포 · 들고 있던 돈가방 압수"",color:""gray"",italic:false}]]")
+    bgCmd("item replace entity %{_n}% hotbar.1 with echo_shard[item_model=""bg:kd/radio"",item_name={text:""무전기"",color:""aqua"",bold:true},lore=[{text:""우클릭: 가장 가까운 도둑 방향 · 거리 (25초마다)"",color:""gray"",italic:false}]]")
     bgCmd("effect give %{_n}% speed infinite 0 true")
     bgCmd("team join kd_cop %{_n}%")
 
@@ -144,7 +145,9 @@ function bgKdThiefKit(p: player):
     set {_n} to name of {_p}
     bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=1315860,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=10040115,unbreakable={}]")
-    bgCmd("item replace entity %{_n}% hotbar.0 with snowball[item_name={text:""연막탄"",color:""gray"",bold:true},lore=[{text:""던지면 주변 경찰이 3초 동안 앞이 안 보이고 느려짐"",color:""gray"",italic:false}]] 2")
+    bgCmd("item replace entity %{_n}% hotbar.0 with snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true},lore=[{text:""던지면 주변 경찰이 3초 동안 앞이 안 보이고 느려짐"",color:""gray"",italic:false}]] 2")
+    bgCmd("item replace entity %{_n}% hotbar.1 with feather[item_model=""bg:kd/shoes"",item_name={text:""운동화"",color:""red"",bold:true},lore=[{text:""우클릭: 4초 질주 (20초마다)"",color:""gray"",italic:false}]]")
+    set {-bg::kd::carry::%uuid of {_p}%} to 0
     bgCmd("team join kd_thief %{_n}%")
 
 # ─────────────────────────────────────────────────────────── 들어가기 · 나가기
@@ -184,6 +187,7 @@ function bgKdJoin(p: player):
     else:
         bgCmd("team join kd_wait %name of {_p}%")
         teleport {_p} to bgKdMk("wait")
+        bgExitItem({_p})
         bgTitleP({_p}, "&9&l경찰&f과 &c&l도둑", "&f대기실 — 관리자가 시작하면 역할이 정해집니다")
         set {_n} to bgKdCount("all")
         bgKdSay("&e%name of {_p}%&f 입장 &7(대기 %{_n}%명)")
@@ -317,6 +321,7 @@ function bgKdEnd(win: text, why: text):
             bgKdClear(loop-player)
             bgCmd("team join kd_wait %name of loop-player%")
             teleport loop-player to bgKdMk("wait")
+            bgExitItem(loop-player)
     bgKdTexts()
     bgKdSay("&f대기실로 돌아왔습니다. 다음 판은 관리자가 &e/경도 시작")
 
@@ -338,6 +343,14 @@ function bgKdCheck():
 # ─────────────────────────────────────────────────────────── 체포 · 구출 · 털이 · 탈출
 function bgKdArrest(t: player, c: player):
     set {-bg::kd::jail::%uuid of {_t}%} to true
+    set {_lost} to {-bg::kd::carry::%uuid of {_t}%} ? 0
+    if {_lost} > 0:
+        set {-bg::kd::bags} to max(0, {-bg::kd::bags} - {_lost})
+        set {-bg::kd::carry::%uuid of {_t}%} to 0
+        bgCmd("clear %name of {_t}% rabbit_hide")
+        bgKdSay("&9%name of {_c}%&f 이(가) 돈가방 &6%{_lost}%개&f 압수! &7(돈가방 %{-bg::kd::bags}%/%{-bg::kd::goal}%)")
+    bgParticle(location of {_t}, "flash", 0, 0, 0, 0, 1)
+    bgParticle(location of {_t}, "crit", 0.5, 1, 0.5, 0.3, 40)
     delete {-bg::kd::prog::%uuid of {_t}%}
     bgCmd("effect clear %name of {_t}%")
     teleport {_t} to bgKdMk("jail")
@@ -370,6 +383,8 @@ function bgKdRescue(r: player):
 
 function bgKdSteal(p: player, i: number):
     add 1 to {-bg::kd::bags}
+    add 1 to {-bg::kd::carry::%uuid of {_p}%}
+    bgCmd("give %name of {_p}% rabbit_hide[item_model=""bg:kd/bag"",item_name={text:""돈가방"",color:""gold"",bold:true},lore=[{text:""잡히면 압수됩니다! 헬기장으로 탈출하세요"",color:""gray"",italic:false}]]")
     set {-bg::kd::hcd::%{_i}%} to 40
     add 1 to {bg::kd::steals::%uuid of {_p}%}
     set {bg::kd::name::%uuid of {_p}%} to name of {_p}
@@ -416,7 +431,19 @@ on damage of player:
             stop
     set {_hold} to {-bg::kd::hold} ? 0
     {_hold} <= 0
-    bgKdArrest({_t}, {_c})
+    # 4초 안에 두 번 맞아야 체포 (첫 대: 경고 · 잠깐 빛남 → 도망칠 기회)
+    set {_u} to "%uuid of {_t}%"
+    if {-bg::kd::hit::%{_u}%} is set:
+        if difference between {-bg::kd::hit::%{_u}%} and now < 4 seconds:
+            delete {-bg::kd::hit::%{_u}%}
+            bgKdArrest({_t}, {_c})
+            stop
+    set {-bg::kd::hit::%{_u}%} to now
+    bgCmd("effect give %name of {_t}% glowing 2 0 true")
+    send title " " with subtitle "&c⚠ 한 대 맞음! 4초 안에 또 맞으면 체포" to {_t} for 30 ticks with fade in 0 ticks and fade out 6 ticks
+    send action bar "&9한 대! &f4초 안에 한 번 더 때리면 체포" to {_c}
+    play sound "entity.player.hurt" with volume 1 and pitch 1.4 to {_t}
+    play sound "block.anvil.place" with volume 0.4 and pitch 2 to {_c}
 
 # 연막탄: 맞은 자리 주변 경찰 실명 · 느려짐
 on projectile hit:
@@ -738,3 +765,57 @@ command /경도 [<text>] [<text>]:
             send "&9[경도] &f/경도 나가기 · 전적 · 랭킹 &7(관리자: 시작 · 종료 · 시간 · 목표)"
             stop
         bgHubGo(player, "cops")
+
+# ─────────────────────────────────────────────────────────── 능력 아이템 (우클릭)
+#  경찰 무전기: 가장 가까운 도둑 방향 화살표 · 거리 (25초) / 도둑 운동화: 4초 질주 (20초)
+function bgKdArrow(p: player, l: location) :: text:
+    set {_dx} to (x-coordinate of {_l}) - (x-coordinate of {_p})
+    set {_dz} to (z-coordinate of {_l}) - (z-coordinate of {_p})
+    set {_ty} to atan2({_dz}, -1 * {_dx})
+    set {_py} to {_p}.getLocation().getYaw()
+    set {_d} to mod({_ty} - 90 - {_py} + 540, 360) - 180
+    set {_i} to mod(round({_d} / 45) + 8, 8)
+    set {_ar::*} to "⬆", "⬈", "➡", "⬊", "⬇", "⬋", "⬅" and "⬉"
+    return {_ar::%{_i} + 1%}
+
+on right click:
+    bgKdOn(player) is true
+    bgKdState() is "play"
+    if player's tool is echo shard:
+        cancel event
+        bgKdRole(player) is "cop"
+        if {-bg::kd::cdr::%uuid of player%} is set:
+            if difference between {-bg::kd::cdr::%uuid of player%} and now < 25 seconds:
+                send action bar "&7무전기 재충전 중..." to player
+                stop
+        set {_best} to 9999
+        loop all players:
+            if bgKdOn(loop-player) is true:
+                if bgKdRole(loop-player) is "thief":
+                    if bgKdJailed(loop-player) is false:
+                        if bgKdEsc(loop-player) is false:
+                            set {_dd} to distance between player and loop-player
+                            if {_dd} < {_best}:
+                                set {_best} to {_dd}
+                                set {_tg} to loop-player
+        if {_tg} is not set:
+            send action bar "&7잡을 도둑이 없습니다" to player
+            stop
+        set {-bg::kd::cdr::%uuid of player%} to now
+        set {_a} to bgKdArrow(player, location of {_tg})
+        send title "&b%{_a}%" with subtitle "&b📡 가장 가까운 도둑 &f%round({_best})%m" to player for 40 ticks with fade in 0 ticks and fade out 10 ticks
+        play sound "block.note_block.bit" with volume 1 and pitch 1.6 to player
+        play sound "block.note_block.bit" with volume 0.4 and pitch 0.8 to {_tg}
+        send action bar "&c삐빅… 경찰 무전기에 위치가 잡혔다!" to {_tg}
+    else if player's tool is feather:
+        cancel event
+        bgKdRole(player) is "thief"
+        if {-bg::kd::cds::%uuid of player%} is set:
+            if difference between {-bg::kd::cds::%uuid of player%} and now < 20 seconds:
+                send action bar "&7운동화 끈 다시 묶는 중..." to player
+                stop
+        set {-bg::kd::cds::%uuid of player%} to now
+        bgCmd("effect give %name of player% speed 4 2 true")
+        bgParticle(location of player, "cloud", 0.4, 0.1, 0.4, 0.05, 20)
+        play sound "entity.breeze.wind_burst" with volume 0.8 and pitch 1.3 to player
+        send action bar "&c&l질주!" to player

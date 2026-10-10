@@ -38,6 +38,7 @@ function bgToLobby(p: player):
         clear {_p}'s inventory
         bgCmd("effect clear %name of {_p}%")
         extinguish {_p}
+        bgExitItem({_p})
 
 command /로비:
     aliases: /lobby

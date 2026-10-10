@@ -56,6 +56,7 @@ function bgOsKit(p: player):
     bgCmd("item replace entity %{_n}% armor.feet with diamond_boots[unbreakable={}]")
     bgCmd("item replace entity %{_n}% hotbar.0 with diamond_sword[unbreakable={}]")
     set food level of {_p} to 20
+    bgExitItem({_p})
 
 function bgOsKD(u: text) :: text:
     set {_k} to {bg::os::kills::%{_u}%} ? 0
