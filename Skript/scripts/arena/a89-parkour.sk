@@ -1,7 +1,8 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  포털 다리 · 포털 파쿠르
 #   허브 가운데 스폰 바로 앞 하늘색 발판을 밟으면 → 그 사람 화면에만 로봇의 고리(포털)에서 빛나는 유리 조각(디스플레이)이
-#     한 줄씩 사사사삭 날아 내려와 발판 앞까지 다리를 깖 (고리 쪽부터 · 약 2초) → 그 다리를 타고 고리로 올라감
+#     한 줄씩 사사사삭 날아 내려와 발판 앞까지 무지개 색유리 다리를 깖 (고리 쪽부터 · 약 2초) → 그 다리를 타고 고리로 올라감
+#     (발판 쪽부터 빨 · 주 · 노 · 초 · 하늘 · 파 · 보라 · 4칸마다 한 칸씩 올라감)
 #     (다른 사람에게는 안 보이고 밟을 수도 없음 · 다리 위에서는 떨어져도 다치지 않음 · 60초 또는 다리에서 벗어나면 사라짐)
 #   고리 안으로 들어가면 → 포털 파쿠르 (허브 남쪽 하늘 · 우주 배경): 빛나는 행성 둘레를 돌며 올라가는 50단 · 꼭대기 트로피
 #     체크포인트 없음 — 떨어지면 처음부터 (기록도 다시) · 기록 타이머 · 최고 기록 · /파쿠르 랭킹 · 9번 칸 나가기 버튼 (허브로)
@@ -14,13 +15,13 @@ import:
     org.bukkit.entity.BlockDisplay
 
 # ─────────────────────────────────────────────────────────── 포털 다리 (플레이어마다 따로 — 가짜 블록)
-#  발판 앞(z -7)에서 고리 면(z -38)까지 31칸, 바닥 + 1 에서 고리 구멍 바닥 높이(+9)까지 반 칸씩 올라감 · 폭 3
+#  발판 앞(z -7)에서 고리 면(z -38)까지 31칸, 바닥 + 1 에서 고리 구멍 바닥 높이(+8)까지 한 칸씩 올라감 · 폭 3
+#  칸 = "x:y:z:색번호" (색번호 0~6 = 무지개, 줄마다)
 function bgBridgeCells() :: texts:
     set {_k} to 0
     while {_k} < 31:
-        set {_h} to floor(({_k} + 1) * 16 / 31)
-        set {_y} to floor({_h} / 2)
-        set {_half} to mod({_h}, 2)
+        set {_y} to floor(({_k} + 1) * 9 / 32)
+        set {_half} to floor({_k} * 7 / 31)
         set {_z} to -7 - {_k}
         set {_x} to -1
         while {_x} <= 1:
@@ -29,10 +30,17 @@ function bgBridgeCells() :: texts:
         add 1 to {_k}
     return {_out::*}
 
+function bgRainbow(i: number) :: text:
+    set {_c::*} to "red", "orange", "yellow", "lime", "light_blue", "blue" and "purple"
+    set {_n} to mod({_i}, 7) + 1
+    return "minecraft:%{_c::%{_n}%}%_stained_glass"
+
+function bgRainbowRGB(i: number) :: number:
+    set {_c::*} to 16726072, 16747520, 16771584, 7995136, 5294079, 3359999 and 11817215
+    set {_n} to mod({_i}, 7) + 1
+    return {_c::%{_n}%}
+
 function bgBridge(p: player, on: boolean):
-    set {_glass} to Bukkit.createBlockData("minecraft:light_blue_stained_glass")
-    set {_edge} to Bukkit.createBlockData("minecraft:sea_lantern")
-    set {_slab} to Bukkit.createBlockData("minecraft:smooth_quartz_slab[type=bottom]")
     loop bgBridgeCells():
         set {_c::*} to loop-value split at ":"
         set {_x} to {_c::1} parsed as integer
@@ -42,12 +50,7 @@ function bgBridge(p: player, on: boolean):
         set {_l} to bgHubAt({_x}, {_y}, {_z})
         set {_l2} to bgHubAt({_x}, {_y} + 1, {_z})
         if {_on} is true:
-            if {_x} is 0:
-                {_p}.sendBlockChange({_l}, {_glass})
-            else:
-                {_p}.sendBlockChange({_l}, {_edge})
-            if {_hf} is 1:
-                {_p}.sendBlockChange({_l2}, {_slab})
+            {_p}.sendBlockChange({_l}, Bukkit.createBlockData(bgRainbow({_hf})))
         else:
             {_p}.sendBlockChange({_l}, (block at {_l}).getBlockData())
             {_p}.sendBlockChange({_l2}, (block at {_l2}).getBlockData())
@@ -73,10 +76,6 @@ function bgBridgeAnim(p: player, tok: number):
     set {_w} to bgWorld()
     set {_src} to bgHubAt(-0.5, 13, -39)
     set {_cells::*} to bgBridgeCells()
-    set {_glass} to Bukkit.createBlockData("minecraft:light_blue_stained_glass")
-    set {_edge} to Bukkit.createBlockData("minecraft:sea_lantern")
-    set {_slab} to Bukkit.createBlockData("minecraft:smooth_quartz_slab[type=bottom]")
-    set {_glow} to Color.fromRGB(110, 220, 255)
     set {_t} to 0
     while {_t} <= 42:
         if {-bg::bridge::tok::%{_u}%} is not {_tok}:
@@ -91,9 +90,8 @@ function bgBridgeAnim(p: player, tok: number):
                 set {_x} to {_c::1} parsed as integer
                 set {_y} to {_c::2} parsed as integer
                 set {_z} to {_c::3} parsed as integer
-                set {_d} to {_edge}
-                if {_x} is 0:
-                    set {_d} to {_glass}
+                set {_d} to Bukkit.createBlockData(bgRainbow({_c::4} parsed as integer))
+                set {_glow} to Color.fromRGB(bgRainbowRGB({_c::4} parsed as integer))
                 set {_n} to loop-number
                 set {_e} to {_w}.spawn({_src}, BlockDisplay)
                 {_e}.setPersistent(false)
@@ -106,16 +104,6 @@ function bgBridgeAnim(p: player, tok: number):
                 add {_e} to {-bg::bridge::ents::%{_u}%::*}
                 set {_row::%{_k}%::%{_n}%} to {_e}
                 set {_dst::%{_k}%::%{_n}%} to bgHubAt({_x}, {_y}, {_z})
-                if {_c::4} is "1":
-                    set {_e} to {_w}.spawn({_src}, BlockDisplay)
-                    {_e}.setPersistent(false)
-                    {_e}.setVisibleByDefault(false)
-                    {_p}.showEntity({_pl}, {_e})
-                    {_e}.setBlock({_slab})
-                    {_e}.setTeleportDuration(8)
-                    add {_e} to {-bg::bridge::ents::%{_u}%::*}
-                    set {_row::%{_k}%::%{_n} + 3%} to {_e}
-                    set {_dst::%{_k}%::%{_n} + 3%} to bgHubAt({_x}, {_y} + 1, {_z})
             play sound "block.amethyst_block.chime" with volume 0.9 and pitch (0.7 + {_t} * 0.04) to {_p}
             if mod({_t}, 3) is 0:
                 bgParticle(bgUp({_src}, 0.5), "end_rod", 0.6, 0.6, 0.6, 0.06, 6)
