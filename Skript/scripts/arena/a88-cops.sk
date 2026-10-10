@@ -299,11 +299,13 @@ function bgKdEnd(win: text, why: text):
     else:
         bgKdSay("&7판 종료 — %{_why}%")
     if size of {_ok::*} > 0:
-        bgKdSay("&a&l탈출 성공 %size of {_ok::*}%명 &f%join {_ok::*} with ""&7, &f""%")
+        set {_sep} to "&7, &f"
+        bgKdSay("&a&l탈출 성공 %size of {_ok::*}%명 &f%join {_ok::*} with {_sep}%")
     else:
         bgKdSay("&a&l탈출 성공 &70명")
     if size of {_no::*} > 0:
-        bgKdSay("&c&l탈출 실패 %size of {_no::*}%명 &f%join {_no::*} with ""&7, &f""%")
+        set {_sep} to "&7, &f"
+        bgKdSay("&c&l탈출 실패 %size of {_no::*}%명 &f%join {_no::*} with {_sep}%")
     bgKdTexts()
     wait 10 seconds
     set {-bg::kd::state} to "wait"
@@ -513,9 +515,9 @@ function bgKdBar():
 every 1 second:
     loop all players:
         if bgKdOn(loop-player) is true:
-            add "bgkd" to scoreboard tags of loop-player
-        else if scoreboard tags of loop-player contain "bgkd":
-            remove "bgkd" from scoreboard tags of loop-player
+            bgCmd("tag %name of loop-player% add bgkd")
+        else:
+            bgCmd("tag %name of loop-player% remove bgkd")
     bgKdBar()
     loop 6 times:
         if ({-bg::kd::hcd::%loop-number - 1%} ? 0) > 0:

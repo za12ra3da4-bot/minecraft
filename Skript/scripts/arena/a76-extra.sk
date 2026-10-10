@@ -1,3 +1,6 @@
+import:
+    org.bukkit.potion.PotionEffectType
+
 # ═════════════════════════════════════════════════════════════════════════════
 #  왕관 쟁탈전 — 관전자 모드 · TNT 함정
 #   /관전자 [플레이어] : 켜면 게임이 시작 · 끝나도 아무 일 없음 (팀 · 이동 · 인벤 초기화 · 제목 없음). 다시 치면 꺼짐
@@ -253,12 +256,15 @@ command /힐 [<text>]:
 #   (병과 점프 값(base)은 건드리지 않고 덧붙이는 효과(modifier)만 넣고 뺌 · 구속이 풀리면 바로 원래대로)
 every 5 ticks:
     loop all players:
-        if loop-player has potion effect slowness:
-            if scoreboard tags of loop-player do not contain "bg_nojump":
-                add "bg_nojump" to scoreboard tags of loop-player
+        set {_pp} to loop-player
+        set {_slow} to {_pp}.hasPotionEffect(PotionEffectType.SLOWNESS)
+        set {_tagged} to {_pp}.getScoreboardTags().contains("bg_nojump")
+        if {_slow} is true:
+            if {_tagged} is false:
+                bgCmd("tag %name of loop-player% add bg_nojump")
                 bgCmd("attribute %name of loop-player% minecraft:jump_strength modifier add bg:nojump -1 add_multiplied_total")
-        else if scoreboard tags of loop-player contain "bg_nojump":
-            remove "bg_nojump" from scoreboard tags of loop-player
+        else if {_tagged} is true:
+            bgCmd("tag %name of loop-player% remove bg_nojump")
             bgCmd("attribute %name of loop-player% minecraft:jump_strength modifier remove bg:nojump")
 
 # 나갔다 들어오면 남아 있을 수 있는 점프 금지 풀기
