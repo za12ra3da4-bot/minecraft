@@ -247,3 +247,22 @@ command /힐 [<text>]:
         send "&a[힐] &f%name of {_t}%의 체력을 채웠습니다."
         send "&a[힐] &f관리자가 체력을 채워 주었습니다." to {_t}
 
+
+# ─────────────────────────────────────────────────────────── 구속 중에는 점프 금지
+#   구속(slowness)이 걸려도 달리면서 점프하면 빨리 움직일 수 있었음 → 구속이 걸려 있는 동안 점프 힘을 0 으로
+#   (병과 점프 값(base)은 건드리지 않고 덧붙이는 효과(modifier)만 넣고 뺌 · 구속이 풀리면 바로 원래대로)
+every 5 ticks:
+    loop all players:
+        if loop-player has potion effect slowness:
+            if scoreboard tags of loop-player do not contain "bg_nojump":
+                add "bg_nojump" to scoreboard tags of loop-player
+                bgCmd("attribute %name of loop-player% minecraft:jump_strength modifier add bg:nojump -1 add_multiplied_total")
+        else if scoreboard tags of loop-player contain "bg_nojump":
+            remove "bg_nojump" from scoreboard tags of loop-player
+            bgCmd("attribute %name of loop-player% minecraft:jump_strength modifier remove bg:nojump")
+
+# 나갔다 들어오면 남아 있을 수 있는 점프 금지 풀기
+on join:
+    remove "bg_nojump" from scoreboard tags of player
+    bgCmd("attribute %name of player% minecraft:jump_strength modifier remove bg:nojump")
+
