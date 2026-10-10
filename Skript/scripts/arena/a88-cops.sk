@@ -2,7 +2,7 @@
 #  경찰과 도둑 (경도) — 허브 보라 오락기로 들어가는 시참 컨텐츠 (밤 네온 대도시, arena/tools/copsgen.py)
 #   대기실 = 랜드마크 타워 꼭대기 전망대. 관리자가 /경도 시작 [경찰 수] → 역할 배정
 #   도둑: 도시 곳곳으로 흩어짐 · 털이 장소 6곳 (은행 · 카지노 · 보석상 · 창고 · 박물관 · 편의점) 앞에 6초 서 있으면 돈가방 +1 (경찰 출동 전엔 못 텀)
-#         목표 돈가방을 채우면 북동쪽 탈출 헬기장 열림 → 들어온 도둑은 '탈출 성공' (전망대로) · 판은 계속
+#         목표 돈가방을 채우면 북동쪽 헬기장 타워 옥상(35칸 · 계단)의 탈출 헬기가 열림 → 들어온 도둑은 '탈출 성공' (전망대로) · 판은 계속
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 한 명이라도 탈출하면 도둑 승리
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
 #   경찰: 20초 뒤 출동 (경찰서) · 빠름 · 경찰봉으로 4초 안에 두 번 때리면 체포 (들고 있던 돈가방 압수) · 무전기 · 60초마다 레이더 (도둑 3초 빛남)
@@ -394,7 +394,7 @@ function bgKdSteal(p: player, i: number):
     if {-bg::kd::bags} >= {-bg::kd::goal}:
         if {-bg::kd::open} is not true:
             set {-bg::kd::open} to true
-            bgKdTitle("&6&l탈출구 열림!", "&f도둑은 북동쪽 헬기장으로! · 경찰은 막으세요")
+            bgKdTitle("&6&l탈출 헬기 시동!", "&f도둑은 북동쪽 헬기장 타워 옥상으로! · 경찰은 막으세요")
             bgKdSound("entity.wither.spawn", 1.6)
             bgKdTexts()
 
@@ -512,8 +512,10 @@ every 5 ticks:
                 bgKdRescue({_p})
         # 탈출
         if {-bg::kd::open} is true:
+            # 옥상 헬기 타는 문 앞 (아래층에서 겹치지 않게 높이도 확인)
             if bgDist2(location of {_p}, bgKdMk("escape")) < 4:
-                bgKdEscape({_p})
+                if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("escape"))) < 3:
+                    bgKdEscape({_p})
 
 # 위쪽 보스바: 남은 시간 · 돈가방 · 남은 도둑 (경도에 있는 사람만 = 태그 bgkd)
 function bgKdBar():
@@ -542,8 +544,10 @@ function bgKdBar():
 
 # 매초: 시간 · 출동 대기 · 레이더 · 화면 표시 · 떨어짐 · 배고픔
 every 1 second:
+    set {-bg::kd::n} to 0
     loop all players:
         if bgKdOn(loop-player) is true:
+            add 1 to {-bg::kd::n}
             bgCmd("tag %name of loop-player% add bgkd")
         else:
             bgCmd("tag %name of loop-player% remove bgkd")
@@ -646,9 +650,10 @@ function bgKdTexts():
         bgKdText("h%{_i}%", bgKdMk("heist_%{_i}%"), "[{text:""💰 %{-bg::kd::heistname::%{_i}%}%"",color:""gold"",bold:true},{text:""\n6초 서 있으면 털기"",color:""white"",bold:false}]")
     bgKdText("rescue", bgKdMk("rescue"), "[{text:""🔓 구출 발판"",color:""green"",bold:true},{text:""\n밟으면 감옥 전원 탈옥"",color:""white"",bold:false}]")
     if {-bg::kd::open} is true:
-        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기장"",color:""gold"",bold:true},{text:""\n열림! 들어오면 탈출 성공"",color:""green"",bold:true}]")
+        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n시동 걸림! 타면 탈출 성공"",color:""green"",bold:true}]")
     else:
-        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기장"",color:""gold"",bold:true},{text:""\n잠김 · 돈가방을 다 모으면 열림"",color:""gray"",bold:false}]")
+        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n잠김 · 돈가방을 다 모으면 시동"",color:""gray"",bold:false}]")
+    bgKdText("gate", bgKdMk("heli_gate"), "[{text:""🚁 헬기장 타워"",color:""gold"",bold:true},{text:""\n안쪽 계단으로 옥상까지 (7층)"",color:""white"",bold:false}]")
     bgKdText("jail", bgKdMk("jail"), "{text:""감옥"",color:""red"",bold:true}")
 
 function bgKdBuild(p: player):
@@ -821,3 +826,14 @@ on right click:
         bgParticle(location of player, "cloud", 0.4, 0.1, 0.4, 0.05, 20)
         play sound "entity.breeze.wind_burst" with volume 0.8 and pitch 1.3 to player
         send action bar "&c&l질주!" to player
+
+# 옥상 헬기 로터 (블록 디스플레이) — 메인 로터는 엔티티 방향을 돌리고 (teleport_duration 2 = 부드럽게)
+#  꼬리 로터는 x 축 둘레 회전(left_rotation)을 바꿔 보간 · 경도에 사람이 있을 때만 · 탈출 시동이 걸리면 빨라짐
+every 2 ticks:
+    ({-bg::kd::n} ? 0) > 0
+    set {_sp} to 17
+    if {-bg::kd::open} is true:
+        set {_sp} to 37
+    bgCmd("execute as @e[type=block_display,tag=kd_rotor] at @s run tp @s ~ ~ ~ ~%{_sp}% ~")
+    set {-bg::kd::tra} to mod(({-bg::kd::tra} ? 0) + 1.1, 6.2832)
+    bgCmd("execute as @e[type=block_display,tag=kd_trot] run data merge entity @s {start_interpolation:0,interpolation_duration:2,transformation:{left_rotation:{angle:%bgN({-bg::kd::tra})%f,axis:[1f,0f,0f]}}}")

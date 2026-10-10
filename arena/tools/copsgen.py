@@ -68,6 +68,7 @@ LAMP_ON = "redstone_lamp[lit=true]"
 OUT = {"s": (0, 1), "n": (0, -1), "e": (1, 0), "w": (-1, 0)}
 FACING = {"s": "south", "n": "north", "e": "east", "w": "west"}
 OPP = {"s": "north", "n": "south", "e": "west", "w": "east"}
+OPPS = {"s": "n", "n": "s", "e": "w", "w": "e"}
 
 # 3×5 글자 (간판)
 FONT = {
@@ -104,16 +105,38 @@ def lot_ranges():
 LOTS = lot_ranges()
 
 
+STATS = {}
+HELI_AT = {}       # 옥상 헬기 자리 (도시 좌표, y 는 바닥 기준) · 방향
+BLDG = []          # 검사용: 지은 건물 (b, 층수, 문 방향들) — build() 때마다 새로
+
 def build():
+    BLDG.clear()
+    DOORS = []
+    OBST = []                   # 건물은 아니지만 문 앞을 막는 큰 것 (주차장 · 공사장)
     v = np.zeros((N, H, N), np.uint16)
     xx, zz = np.meshgrid(np.arange(N) - C + 0.5, np.arange(N) - C + 0.5, indexing="ij")
     rng = np.random.default_rng(21)
     marks = {}
 
+    PROPS = []                  # 거리 시설 하나 = 놓은 칸 목록 (문 앞을 막으면 통째로 치움)
+    cur_prop = [None]
+
     def put(x, y, z, blk):
         gx, gz, y = C + int(math.floor(x)), C + int(math.floor(z)), int(y)
         if 0 <= gx < N and 0 <= y < H and 0 <= gz < N:
             v[gx, y, gz] = pid(blk)
+            if cur_prop[0] is not None:
+                cur_prop[0].append((gx, y, gz, v[gx, y, gz]))
+
+    def prop(fn):
+        def wrapped(*a, **k):
+            outer = cur_prop[0]
+            cur_prop[0] = []
+            r = fn(*a, **k)
+            PROPS.append(cur_prop[0])
+            cur_prop[0] = outer
+            return r
+        return wrapped
 
     def get(x, y, z):
         gx, gz, y = C + int(math.floor(x)), C + int(math.floor(z)), int(y)
@@ -222,12 +245,14 @@ def build():
             put(x, FL, z, blk)
 
     # ── 거리 시설
+    @prop
     def street_lamp(x, z):
         for y in range(FL + 1, FL + 6):
             put(x, y, z, post())
         put(x, FL + 6, z, "shroomlight")
         put(x, FL + 7, z, slab("smooth_stone"))
 
+    @prop
     def traffic_light(x, z, face):
         for y in range(FL + 1, FL + 5):
             put(x, y, z, post("stone_brick"))
@@ -239,14 +264,17 @@ def build():
         put(x + dx, FL + 5, z + dz, "lime_stained_glass")
         put(x, FL + 8, z, slab("blackstone"))
 
+    @prop
     def hydrant(x, z):
         put(x, FL + 1, z, "red_concrete")
         put(x, FL + 2, z, post("red_sandstone"))
 
+    @prop
     def bench(x, z, face, axis):
         for t in range(2):
             put(x + (t if axis == "x" else 0), FL + 1, z + (t if axis == "z" else 0), stairs("dark_oak", face))
 
+    @prop
     def planter_tree(x, z, h=None):
         h = h or int(rng.integers(4, 7))
         for dx in (-1, 0, 1):
@@ -264,6 +292,7 @@ def build():
                         put(x + dx, FL + h + dy, z + dz, LEAVES)
         put(x, FL + h + 2, z, LEAVES)
 
+    @prop
     def bus_stop(x, z, axis):
         L = 5
         for t in range(L):
@@ -280,6 +309,7 @@ def build():
             px, pz = (x + t, z) if axis == "x" else (x, z + t)
             put(px, FL + 1, pz, stairs("smooth_quartz", "south" if axis == "x" else "east"))
 
+    @prop
     def car(x, z, col, axis="x", police=False):
         L, Wd = (5, 3) if axis == "x" else (3, 5)
         for dx in range(L):
@@ -354,6 +384,17 @@ def build():
               floor_mat="polished_andesite", sill=None, roof="items"):
         x0, z0, x1, z1 = b
         top = FL + 5 * floors
+        # 도시 둘레 담을 보는 문은 안쪽 면으로 옮김 (문 앞이 담 · 보이지 않는 벽이면 못 들어감)
+        faces_wall = {"e": x1 >= E - 5, "w": x0 <= -E + 5, "s": z1 >= E - 5, "n": z0 <= -E + 5}
+        ok = [d for d in doors if not faces_wall[d]]
+        for d in doors:
+            if faces_wall[d]:
+                for alt in (OPPS[d], "s", "n", "e", "w"):
+                    if not faces_wall[alt] and alt not in ok:
+                        ok.append(alt)
+                        break
+        doors = tuple(ok)
+        BLDG.append([tuple(b), floors, doors])
         for f in range(floors):
             y0 = FL + 5 * f
             if f > 0:
@@ -413,16 +454,7 @@ def build():
         for y in range(FL + 1, top + 1):
             put(x0 + 1, y, z0 + 1, ladder("south"))
         facade_details(b, floors, top, trim, pattern, sill)
-        for d in doors:
-            w = fwidth(d, *b)
-            m = w // 2 - 1
-            for dy in range(1, 4):
-                for t in (m, m + 1):
-                    fput(d, b, t, FL + dy, "air")
-            for t in range(m - 1, m + 3):
-                fput(d, b, t, FL + 4, slab("smooth_stone", "top"), 1)
-            fput(d, b, m - 1, FL + 3, LANTERN_H, 1)
-            fput(d, b, m + 2, FL + 3, LANTERN_H, 1)
+        # 문은 모든 건물을 다 지은 뒤에 뚫음 (다른 건물 벽을 보고 있으면 거리 쪽 면으로 옮김 — 맨 끝 '문 정하기')
         if roof == "items":
             roof_items(b, top)
         return top
@@ -599,6 +631,7 @@ def build():
                 out.append((bx0, bz0, bx1, bz1))
         return out
 
+    @prop
     def dumpsters(b):
         x0, z0, x1, z1 = b
         for _ in range(2):
@@ -618,7 +651,10 @@ def build():
     vault((x0 + x1) // 2, z0 + 5, "은행 금고", "gold", "s")
     for x in range(x0 + 3, x1 - 2):
         put(x, FL + 1, z0 + 10, "polished_andesite"); put(x, FL + 2, z0 + 10, "glass")
+    bdx = x0 + fwidth("s", *bb) // 2 - 1                 # 문 왼쪽 칸
     for x in range(x0 + 2, x1 - 1, 3):
+        if bdx - 1 <= x <= bdx + 2:
+            continue
         for y in range(FL + 1, FL + 10):
             put(x, y, z1 - 3, "quartz_pillar[axis=y]")
     box(x0 + 1, FL + 10, z1 - 4, x1 - 1, FL + 10, z1 - 2, "smooth_quartz")
@@ -642,7 +678,7 @@ def build():
     top = shell(b, 3, "polished_blackstone", "purpur_block", win="magenta_stained_glass", pattern="band", doors=("s", "w"),
                 floor_mat="red_concrete")
     vault((x0 + x1) // 2, z0 + 6, "카지노 금고", "emerald", "s")
-    for f in range(3):
+    for f in range(1, 3):
         neon_strip("s", b, FL + 5 * f + 1, "magenta_stained_glass", "pearlescent_froglight")
     for t in range(0, fwidth("s", *b), 2):
         fput("s", b, t, top + 1, LAMP_ON, 1)
@@ -677,7 +713,7 @@ def build():
     b = lot(0, 1)
     x0, z0, x1, z1 = b
     wb = (x0, z0, x1 - 8, z1)
-    top = shell(wb, 2, "light_gray_concrete", "gray_concrete", win="black_stained_glass", pattern="small", doors=("e", "s"),
+    top = shell(wb, 2, "light_gray_concrete", "gray_concrete", win="black_stained_glass", pattern="small", doors=("n", "s"),
                 floor_mat="smooth_stone")
     vault(x0 + 7, z0 + 7, "창고", "gold", "e")
     for side in "snew":
@@ -686,7 +722,7 @@ def build():
                 for y in range(FL + 1, top):
                     if fget(side, wb, t, y) not in ("air", "black_stained_glass"):
                         fput(side, wb, t, y, "iron_block")
-    box(x1 - 7, FL + 1, z0, x1 - 6, FL + 1, z1, "smooth_stone")
+    box(x1 - 7, FL + 1, z0, x1 - 6, FL + 1, z1, slab("smooth_stone"))
     for k, col in enumerate(("red_concrete", "blue_concrete", "lime_concrete", "orange_concrete")):
         cz = z0 + 1 + k * 6
         if cz + 4 > z1:
@@ -703,7 +739,10 @@ def build():
     mb = (x0, z0 + 4, x1, z1)
     top = shell(mb, 3, "sandstone", "cut_sandstone", win="glass", pattern="grid", doors=("n",), roof=None, floor_mat="smooth_sandstone")
     vault((x0 + x1) // 2, (z0 + z1) // 2 + 2, "박물관", "gem", "n")
+    mdx = x1 - (fwidth("n", *mb) // 2 - 1)               # 문 칸 (북쪽 면은 오른쪽부터 셈)
     for x in range(x0 + 2, x1 - 1, 3):
+        if mdx - 2 <= x <= mdx + 1:
+            continue
         for y in range(FL + 1, FL + 13):
             put(x, y, z0 + 2, "quartz_pillar[axis=y]")
     box(x0 + 1, FL + 13, z0 + 1, x1 - 1, FL + 13, z0 + 3, "cut_sandstone")
@@ -778,28 +817,104 @@ def build():
         put(x1 - 2, y, z1 - 2, CHAIN if y > FL + 1 else "iron_block")
     box(x1 - 2, FL + 11, z1 - 1, x1 - 2, FL + 13, z1 + 1, "blue_wool")
 
-    # ── (4,0) 탈출 헬기장 + 헬기 + 관제탑 (북동)
+    # ── (4,0) 탈출 헬기장 타워 (북동) — 7층 (35칸) 꼭대기 옥상 헬기장 · 안쪽 계단실 (층마다 꺾이는 계단 2칸 폭) · 구석 사다리
+    #   옥상: 검정 원판 + 흰 H + 노란 빛 테두리 · 가장자리 빛 기둥 · 유리 난간 · 계단 집 · 관제실 · 투광등 · 풍향 자루 · 안테나
+    #   헬기 = 블록 디스플레이 (heli.py, 데이터팩이 따로 소환) — 타는 문 앞이 탈출 표지
     b = lot(4, 0)
     x0, z0, x1, z1 = b
-    hx, hz = (x0 + x1) // 2 + 3, (z0 + z1) // 2 + 4
-    for dx in range(-8, 9):
-        for dz in range(-8, 9):
+    hb = (x0 + 1, z0 + 1, x1 - 1, z1 - 1)
+    HF = 7
+    top = shell(hb, HF, "black_concrete", "gray_concrete", win="cyan_stained_glass", pattern="curtain", doors=("s", "w"),
+                roof=None, floor_mat="smooth_stone")
+    bx0, bz0, bx1, bz1 = hb
+    xa = bx0 + 2
+    lanes = ((bz1 - 5, bz1 - 4), (bz1 - 3, bz1 - 2))
+    for f in range(HF):
+        y0 = FL + 5 * f
+        box(xa, y0 + 1, lanes[0][0], xa + 6, y0 + 4, lanes[1][1], "air")
+        lane = lanes[f % 2]
+        east = f % 2 == 0
+        for i in range(5):
+            x = xa + 1 + i if east else xa + 5 - i
+            for z in lane:
+                for yy in range(y0 + 1, y0 + 1 + i):
+                    put(x, yy, z, "light_gray_concrete")
+                put(x, y0 + 1 + i, z, stairs("polished_andesite", "east" if east else "west"))
+                if i <= 3:
+                    put(x, y0 + 5, z, "air")
+        # 계단실 표시등 (층마다)
+        put(xa + 3, y0 + 4, lanes[1][1] + 1 if lanes[1][1] + 1 < bz1 else lanes[0][0] - 1, "sea_lantern")
+    # 옥상 계단 집 (계단 구멍 둘레) — 동쪽으로 문
+    hx0, hx1, hz0, hz1 = xa - 1, xa + 7, lanes[0][0] - 1, lanes[1][1] + 1
+    for x in range(hx0, hx1 + 1):
+        for z in range(hz0, hz1 + 1):
+            edge = x in (hx0, hx1) or z in (hz0, hz1)
+            for y in range(top + 1, top + 5):
+                if edge:
+                    put(x, y, z, "gray_concrete" if (x in (hx0, hx1) and z in (hz0, hz1)) else "cyan_stained_glass")
+            put(x, top + 5, z, "gray_concrete" if edge else "sea_lantern")
+    for z in lanes[0]:
+        for y in range(top + 1, top + 4):
+            put(hx1, y, z, "air")
+    for z in (lanes[0][0] - 1, lanes[0][1] + 1):
+        put(hx1 + 1, top + 4, z, LANTERN_H)
+    for x in range(hx0, hx1 + 1):
+        put(x, top + 6, hz0, slab("smooth_stone")); put(x, top + 6, hz1, slab("smooth_stone"))
+    # 헬기장 원판
+    hx, hz = bx1 - 9, bz0 + 10
+    for dx in range(-9, 10):
+        for dz in range(-9, 10):
             d = math.hypot(dx, dz)
-            if d <= 8.3:
-                put(hx + dx, FL, hz + dz, "black_concrete")
-                if 7.2 < d:
-                    put(hx + dx, FL, hz + dz, "yellow_stained_glass"); put(hx + dx, FL - 1, hz + dz, "ochre_froglight")
-    for dz in range(-3, 4):
-        put(hx - 2, FL, hz + dz, "white_concrete"); put(hx + 2, FL, hz + dz, "white_concrete")
+            if d <= 8.4:
+                put(hx + dx, top, hz + dz, "black_concrete")
+                if d > 7.3:
+                    put(hx + dx, top, hz + dz, "yellow_stained_glass"); put(hx + dx, top - 1, hz + dz, "ochre_froglight")
+                    if int(math.degrees(math.atan2(dz, dx)) + 360) % 45 < 12:
+                        put(hx + dx, top, hz + dz, "lime_stained_glass"); put(hx + dx, top - 1, hz + dz, "verdant_froglight")
+            elif d <= 9.4 and (int(math.degrees(math.atan2(dz, dx)) + 360) % 30) < 8:
+                put(hx + dx, top + 1, hz + dz, "end_rod[facing=up]")
+    for dz in range(-4, 5):
+        put(hx - 3, top, hz + dz, "white_concrete"); put(hx - 2, top, hz + dz, "white_concrete")
+        put(hx + 2, top, hz + dz, "white_concrete"); put(hx + 3, top, hz + dz, "white_concrete")
     for dx in range(-1, 2):
-        put(hx + dx, FL, hz, "white_concrete")
-    mark("escape", hx, 1, hz)
-    box(hx - 2, FL + 1, hz - 12, hx + 2, FL + 3, hz - 10, "red_concrete")
-    box(hx - 1, FL + 2, hz - 13, hx + 1, FL + 3, hz - 13, "light_blue_stained_glass")
-    box(hx, FL + 2, hz - 9, hx, FL + 2, hz - 5, "red_concrete")
-    box(hx - 6, FL + 4, hz - 11, hx + 6, FL + 4, hz - 11, "gray_concrete")
-    box(hx, FL + 4, hz - 17, hx, FL + 4, hz - 5, "gray_concrete")
-    shell((x0, z0, x0 + 9, z0 + 9), 6, "black_concrete", "gray_concrete", win="cyan_stained_glass", pattern="curtain", doors=("s", "e"))
+        put(hx + dx, top, hz, "white_concrete")
+    # 옥상 유리 난간 (난간 위 한 칸 더) · 모서리 빨간 경고등
+    for side in "snew":
+        for t in range(fwidth(side, *hb)):
+            fput(side, hb, t, top + 2, "light_blue_stained_glass")
+    for cx_, cz_ in ((bx0, bz0), (bx1, bz0), (bx0, bz1), (bx1, bz1)):
+        put(cx_, top + 2, cz_, "gray_concrete"); put(cx_, top + 3, cz_, LAMP_ON)
+    # 관제실 (북동 구석 유리 상자)
+    for x in range(bx1 - 4, bx1):
+        for z in range(bz0 + 1, bz0 + 4):
+            edge = x in (bx1 - 4, bx1 - 1) or z in (bz0 + 1, bz0 + 3)
+            for y in range(top + 1, top + 4):
+                put(x, y, z, ("light_blue_stained_glass" if y > top + 1 else "gray_concrete") if edge else "air")
+            put(x, top + 4, z, "gray_concrete")
+    put(bx1 - 2, top + 1, bz0 + 2, "smooth_stone_slab[type=top,waterlogged=false]")
+    put(bx1 - 4, top + 2, bz0 + 2, "air"); put(bx1 - 4, top + 1, bz0 + 2, "air")
+    for y in range(top + 5, top + 13):
+        put(bx1 - 2, y, bz0 + 2, "iron_bars[east=false,west=false,north=false,south=false,waterlogged=false]" if y < top + 12 else LAMP_ON)
+    # 투광등 (남동 · 남서 구석)
+    for fx_, fz_ in ((bx1 - 1, bz1 - 1), (bx0 + 9, bz1 - 1)):
+        for y in range(top + 1, top + 6):
+            put(fx_, y, fz_, post("andesite"))
+        put(fx_, top + 6, fz_, "sea_lantern"); put(fx_, top + 7, fz_, slab("smooth_stone"))
+    # 풍향 자루
+    wx_, wz_ = bx1 - 1, bz0 + 6
+    for y in range(top + 1, top + 6):
+        put(wx_, y, wz_, CHAIN if y > top + 1 else "iron_block")
+    for k, col in enumerate(("orange_wool", "white_wool", "orange_wool")):
+        put(wx_ - 1 - k, top + 5, wz_, col)
+    # 간판 HELI (남 · 서)
+    sign("s", hb, "HELI", top - 2, "ochre_froglight", out=1)
+    sign("w", hb, "HELI", top - 2, "ochre_froglight", out=1)
+    # 입구 안내 표지 (남쪽 문 앞) · 헬기 자리
+    mark("heli_gate", bx0 + fwidth("s", *hb) // 2 - 1, 1, bz1 + 3)
+    HELI_AT.update(x=hx + 0.5, y=top + 1 - FL, z=hz + 0.5, yaw=90.0)
+    import heli as _heli
+    ox, oy, oz = _heli.door_offset(90.0)
+    marks["escape"] = (round(float(hx + 0.5 + ox * 1.15), 2), top + 1 - FL, round(float(hz + 0.5 + oz * 1.15), 2))
 
     # ── (2,2) 중앙 광장 + 랜드마크 타워 (꼭대기 전망대 = 대기실)
     b = lot(2, 2)
@@ -884,6 +999,7 @@ def build():
 
     b = lot(4, 2)
     x0, z0, x1, z1 = b
+    OBST.append(b)
     for f in range(4):
         y0 = FL + 5 * f
         if f > 0:
@@ -911,6 +1027,7 @@ def build():
 
     b = lot(0, 3)
     x0, z0, x1, z1 = b
+    OBST.append(b)
     box(x0, FL, z0, x1, FL, z1, "coarse_dirt")
     for x in range(x0 + 2, x1 - 1, 5):
         for z in range(z0 + 2, z1 - 1, 5):
@@ -934,6 +1051,34 @@ def build():
     for t in range(0, x1 - x0, 2):
         put(x0 + t, FL + 1, z1, "orange_concrete" if t % 4 == 0 else "white_concrete")
 
+    def pocket_park(b):
+        """작은 쌈지 공원: 잔디 · 돌길 · 나무 2 · 벤치 · 가로등"""
+        x0, z0, x1, z1 = b
+        box(x0, FL, z0, x1, FL, z1, "grass_block[snowy=false]")
+        mx, mz = (x0 + x1) // 2, (z0 + z1) // 2
+        for x in range(x0, x1 + 1):
+            put(x, FL, mz, "polished_andesite")
+        for z in range(z0, z1 + 1):
+            put(mx, FL, z, "polished_andesite")
+        for tx, tz in ((x0 + 2, z0 + 2), (x1 - 2, z1 - 2)):
+            th = 5
+            for y in range(FL + 1, FL + 1 + th):
+                put(tx, y, tz, "oak_log[axis=y]")
+            for dx in range(-2, 3):
+                for dz in range(-2, 3):
+                    for dy in range(-1, 3):
+                        if abs(dx) + abs(dz) + abs(dy) <= 3 and get(tx + dx, FL + th + dy, tz + dz) == "air":
+                            put(tx + dx, FL + th + dy, tz + dz, LEAVES)
+        put(mx + 2, FL + 1, mz + 2, stairs("oak", "north")); put(mx + 3, FL + 1, mz + 2, stairs("oak", "north"))
+        put(mx - 2, FL + 1, mz - 2, stairs("oak", "south")); put(mx - 3, FL + 1, mz - 2, stairs("oak", "south"))
+        for y in range(FL + 1, FL + 4):
+            put(x1 - 1, y, z0 + 1, post("polished_blackstone"))
+        put(x1 - 1, FL + 4, z0 + 1, LANTERN)
+        for _ in range(8):
+            fx = int(rng.integers(x0, x1 + 1)); fz = int(rng.integers(z0, z1 + 1))
+            if get(fx, FL + 1, fz) == "air" and get(fx, FL, fz).startswith("grass"):
+                put(fx, FL + 1, fz, pick(["poppy", "dandelion", "cornflower", "short_grass"]))
+
     # ── 나머지 구역: 사무실 · 아파트 · 상가 (모양 섞기)
     styles = [
         dict(wall="light_gray_concrete", trim="gray_concrete", win="light_blue_stained_glass", pattern="curtain"),
@@ -951,13 +1096,19 @@ def build():
     for k, (i, j) in enumerate(rest):
         b = lot(i, j)
         layout = [(2, 2), (2, 1), (1, 2), (2, 2), (1, 1)][k % 5]
+        road_edges = {"w": i > 0, "e": i < len(LOTS) - 1, "n": j > 0, "s": j < len(LOTS) - 1}
         for n, pb in enumerate(split(b, *layout)):
+            touch = {"w": pb[0] == b[0], "e": pb[2] == b[2], "n": pb[1] == b[1], "s": pb[3] == b[3]}
+            street = [d for d in "snew" if touch[d] and road_edges[d]]
+            if not street:
+                pocket_park(pb)                  # 길에 안 닿는 안쪽 조각 = 쌈지 공원 (문이 골목 벽만 보는 건물 X)
+                continue
             stl = styles[(k * 3 + n) % len(styles)]
             fl = int(rng.integers(2, 7)) if stl["pattern"] != "curtain" else int(rng.integers(4, 9))
             if pb[2] - pb[0] < 8 or pb[3] - pb[1] < 8:
                 dumpsters(pb)
                 continue
-            ds = (("s", "e"), ("n", "w"), ("s", "w"), ("n", "e"))[n % 4]
+            ds = tuple(street[:2]) if len(street) >= 2 else (street[0],)
             shop = stl.get("shop") or (n % 3 == 0 and stl["pattern"] != "curtain")
             shell(pb, fl, stl["wall"], stl["trim"], win=stl["win"], pattern=stl["pattern"], doors=ds,
                   ground="shop" if shop else None, sill=stl.get("sill"))
@@ -1007,6 +1158,86 @@ def build():
                 put(x, FL + hgt + 6, z, LAMP_ON)
             t += w + int(rng.integers(0, 3))
 
+    # ── 문 정하기: 문 앞 (문 폭 + 양옆 1칸 · 바깥 6칸) 에 다른 건물 · 주차장 · 공사장이 있으면 트인 면으로 옮기고 뚫음
+    blocks_ = [tuple(e[0]) for e in BLDG] + OBST
+
+    def door_lane(b, d):
+        w = fwidth(d, *b)
+        m = w // 2 - 1
+        return m, [fxz(d, *b, t, out) for t in range(m - 1, m + 3) for out in range(1, 7)]
+
+    def lane_blocked(b, d):
+        _, cells = door_lane(b, d)
+        for ob in blocks_:
+            if ob == tuple(b):
+                continue
+            if any(ob[0] <= x <= ob[2] and ob[1] <= z <= ob[3] for x, z in cells):
+                return True
+        return any(abs(x) >= E - 1 or abs(z) >= E - 1 for x, z in cells[:4])
+
+    for e in BLDG:
+        b, floors, doors = e
+        final = []
+        for d in doors:
+            if not lane_blocked(b, d):
+                final.append(d)
+                continue
+            for alt in ("s", "n", "e", "w"):
+                if alt not in final and alt not in doors and not lane_blocked(b, alt):
+                    final.append(alt)
+                    break
+            else:
+                final.append(d)
+        e[2] = tuple(dict.fromkeys(final))
+        for d in e[2]:
+            m, _ = door_lane(b, d)
+            DOORS.append((d, tuple(b), m))
+            for dy in range(1, 4):
+                for t in (m, m + 1):
+                    fput(d, b, t, FL + dy, "air")
+            for t in range(m - 1, m + 3):
+                if fget(d, b, t, FL + 4, 1) == "air":
+                    fput(d, b, t, FL + 4, slab("smooth_stone", "top"), 1)
+            for t in (m - 1, m + 2):
+                if fget(d, b, t, FL + 3, 1) == "air":
+                    fput(d, b, t, FL + 3, LANTERN_H, 1)
+
+    # ── 문 앞길 (문 폭 + 양옆 1칸 · 바깥 7칸) 에 걸친 거리 시설은 통째로 치움 (버스 정류장 · 가로등 · 나무 · 차 · 쓰레기통 …)
+    lane_cells = set()
+    for d, b, m in DOORS:
+        for t in range(m - 1, m + 3):
+            for out in range(1, 8):
+                x, z = fxz(d, *b, t, out)
+                lane_cells.add((C + x, C + z))
+    removed = 0
+    for cells in PROPS:
+        if any((gx, gz) in lane_cells and FL < y <= FL + 5 for gx, y, gz, _ in cells):
+            removed += 1
+            for gx, y, gz, p_ in cells:
+                if y > FL and v[gx, y, gz] == p_:
+                    v[gx, y, gz] = 0
+    STATS["props_removed"] = removed
+
+    # ── 문 앞뒤 비우기 (모든 건물을 다 지은 뒤 — 나중에 놓인 가로등 · 소화전 · 쓰레기통 · 차 · 기둥 · 가구가 문을 막지 않게)
+    #   문 두 칸 줄: 바깥 1~3칸 (인도) 발 · 머리 · 그 위 1칸, 안쪽 1~3칸 발 · 머리 · 그 위 1칸
+    #   바깥 2~3칸은 머리 위 높은 곳(가로등 갓 · 나무 잎)도 같이 (떠 있는 조각이 남지 않게)
+    for d, b, m in DOORS:
+        for t in (m, m + 1):
+            for out in (1, 2, 3, -1, -2, -3):
+                x, z = fxz(d, *b, t, out)
+                for y in range(FL + 1, FL + 4):
+                    nm = get(x, y, z)
+                    if nm != "air" and "ladder" not in nm:
+                        put(x, y, z, "air")
+                if out >= 2:
+                    for y in range(FL + 4, FL + 10):
+                        nm = get(x, y, z)
+                        if any(k in nm for k in ("wall[", "lantern", "chain", "lamp", "leaves", "_log", "_bars")):
+                            put(x, y, z, "air")
+                # 발밑: 땅이 비었거나 낮으면 메움 (계단 · 반 블록은 그대로)
+                if get(x, FL, z) == "air":
+                    put(x, FL, z, "polished_andesite")
+
     # ── 도둑 시작 자리 12 (도로 위 · 흩어지게)
     starts = [(-80, -57), (-40, -57), (0, -57), (40, -57), (80, -57), (-57, -80), (-57, 40), (57, -40),
               (-17, 80), (17, 40), (-80, 17), (80, 17)]
@@ -1037,33 +1268,77 @@ def commands(greedy_boxes):
     return cmds
 
 
+def display_commands():
+    """블록 디스플레이 (헬기) 소환 — 데이터팩 마지막 조각에서 (예전 것은 지우고)"""
+    import heli
+    if not HELI_AT:
+        build()
+    at = "$execute positioned $(x) $(y) $(z) run summon"
+    h = HELI_AT
+    out = ["kill @e[type=block_display,tag=kd_heli]"]
+    out += heli.summon_all(at, h["x"], h["y"], h["z"], h["yaw"], ['"kd_heli"'])
+    return out
+
+
 def forceload_range():
     return (-C, -C, N - 1 - C, N - 1 - C)
 
 
-def preview(path):
+SHOTS = [
+    ((92, 125, 92), (0, 0, 0), 60, "경찰과 도둑 — 밤 대도시 전체 (4차선 도로 · 구역 25 · 바깥 스카이라인)"),
+    ((57, 4, -50), (80, 26, -80), 78, "헬기장 타워 (북동) — 7층 35칸 · HELI 간판 · 남쪽 · 서쪽 입구"),
+    ((93, 50, -62), (83, 36, -84), 66, "타워 옥상 — 헬기장 (흰 H · 빛 테두리) · 탈출 헬기 · 계단 집 · 관제실 · 투광등 · 풍향 자루"),
+    ((77, 39.5, -89.5), (85.5, 38, -81.5), 70, "탈출 헬기 가까이 (블록 디스플레이 · 로터는 실제로 돎)"),
+    ((0.5, 3, 42), (0.5, 16, -20), 85, "거리에서 — 중앙 광장 · 랜드마크 타워 (꼭대기 전망대 = 대기실)"),
+    ((-18, 7, -17), (-40, 12, -40), 75, "은행 (기둥 현관 · BANK) — 문 앞 기둥 비움"),
+    ((18, 7, -17), (40, 14, -40), 75, "카지노 (네온 · 전구 · CASINO)"),
+    ((-58, 9, 58), (-76, 10, 78), 75, "경찰서 (POLICE) · 경찰차 · 감옥"),
+    ((-40, 6, 18), (-40, 12, 40), 75, "박물관 (기둥 현관 · 유리 돔 · MUSEUM)"),
+    ((18, 6, 18), (34, 8, 34), 75, "보석상 (GEMS) · 상가 · 줄무늬 차양"),
+    ((-62, 6, -38), (-84, 8, -44), 75, "창고 (하역장 · 컨테이너)"),
+    ((-7, 6, 58), (-7, 8, 72), 75, "편의점 (24/7) · 아파트 · 유리 빌딩"),
+    ((62, 8, 18), (80, 10, 2), 75, "입체 주차장 (PARK) · 공원"),
+    ((-60, 8, 2), (-80, 12, 18), 75, "공사장 · 크레인"),
+]
+
+
+def _shot(args):
+    i, cam, tgt, fov, lab = args
     import render as R
     import hubgen
-    from PIL import Image, ImageDraw, ImageFont
+    import bdkit
+    import heli
+    from PIL import ImageDraw, ImageFont
     v, marks = build()
     v2 = np.where(v == P.get("barrier", -1), 0, v)
     pal = R.Palette(PAL)
+    sun = np.array(hubgen.NIGHT["sun"], float); sun /= np.linalg.norm(sun)
+    mesh = R.Mesh()
+    h = HELI_AT
+    o = np.array([C + h["x"], FL + h["y"], C + h["z"]])
+    bdkit.add_to_mesh(mesh, heli.body(), o, h["yaw"], 1.0, sun)
+    mx, my, mz = bdkit._ry(-h["yaw"]) @ (np.array(heli.MAST) / 16)
+    bdkit.add_to_mesh(mesh, heli.main_rotor(), o + np.array([mx, my, mz]), h["yaw"] + 20, 1.0, sun)
     W, Hh = 1000, 560
-    shots = [
-        ((C + 92, FL + 125, C + 92), (C, FL, C), 60, "경찰과 도둑 — 밤 대도시 전체 (4차선 도로 · 구역 25 · 바깥 스카이라인)"),
-        ((C + 0.5, FL + 3, C + 42), (C + 0.5, FL + 16, C - 20), 85, "거리에서 — 중앙 광장 · 랜드마크 타워 (꼭대기 전망대 = 대기실)"),
-        ((C - 18, FL + 7, C - 17), (C - 40, FL + 12, C - 40), 75, "은행 (기둥 현관 · BANK) · 신호등 · 가로등"),
-        ((C - 58, FL + 9, C + 58), (C - 76, FL + 10, C + 78), 75, "경찰서 (POLICE) · 경찰차"),
-        ((C + 18, FL + 7, C - 17), (C + 40, FL + 14, C - 40), 75, "카지노 (네온 · 전구 · CASINO)"),
-    ]
+    c = (C + cam[0], FL + cam[1], C + cam[2]); t = (C + tgt[0], FL + tgt[1], C + tgt[2])
+    im = R.render(v2, pal, W, Hh, c, t, fov=fov, ss=2, fog_dist=900, mesh=mesh, **hubgen.NIGHT)
+    d = ImageDraw.Draw(im)
     font = ImageFont.truetype("/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc", 24)
-    out = Image.new("RGB", (W, Hh * len(shots)))
-    for i, (cam, tgt, fov, lab) in enumerate(shots):
-        im = R.render(v2, pal, W, Hh, cam, tgt, fov=fov, ss=2, fog_dist=900, **hubgen.NIGHT)
-        d = ImageDraw.Draw(im)
-        d.rectangle((0, 0, W, 40), fill=(4, 12, 28))
-        d.text((14, 6), lab, font=font, fill=(140, 220, 255))
-        out.paste(im, (0, Hh * i))
+    d.rectangle((0, 0, W, 40), fill=(4, 12, 28))
+    d.text((14, 6), lab, font=font, fill=(140, 220, 255))
+    return i, im
+
+
+def preview(path, only=None):
+    from multiprocessing import Pool
+    from PIL import Image
+    jobs = [(i,) + s for i, s in enumerate(SHOTS) if only is None or i in only]
+    with Pool(4) as pool:
+        res = dict(pool.map(_shot, jobs))
+    W, Hh = 1000, 560
+    out = Image.new("RGB", (W, Hh * len(res)))
+    for k, i in enumerate(sorted(res)):
+        out.paste(res[i], (0, Hh * k))
     out.save(path)
 
 

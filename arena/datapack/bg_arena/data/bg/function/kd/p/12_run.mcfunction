@@ -362,7 +362,7 @@ $execute positioned $(x) $(y) $(z) run fill ~70 ~-2 ~21 ~70 ~-1 ~21 minecraft:bl
 $execute positioned $(x) $(y) $(z) run fill ~71 ~-2 ~21 ~74 ~-2 ~24 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run setblock ~75 ~-2 ~21 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~80 ~-2 ~21 ~80 ~-2 ~24 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~105 ~-2 ~21 ~105 ~41 ~21 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~105 ~-2 ~21 ~105 ~0 ~21 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~106 ~-2 ~21 ~107 ~-2 ~42 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-105 ~-2 ~22 ~-104 ~-2 ~42 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-100 ~-2 ~22 ~-99 ~-1 ~27 minecraft:dark_prismarine
@@ -386,7 +386,7 @@ $execute positioned $(x) $(y) $(z) run fill ~69 ~-2 ~22 ~70 ~-2 ~26 minecraft:da
 $execute positioned $(x) $(y) $(z) run fill ~75 ~-2 ~22 ~76 ~-1 ~27 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run setblock ~77 ~-2 ~22 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~81 ~-2 ~22 ~81 ~-2 ~25 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~103 ~-2 ~22 ~103 ~41 ~22 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~103 ~-2 ~22 ~103 ~0 ~22 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~104 ~-2 ~22 ~105 ~-2 ~41 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-108 ~-2 ~23 ~-108 ~0 ~23 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-107 ~-2 ~23 ~-106 ~-2 ~40 minecraft:dark_prismarine
@@ -1232,7 +1232,7 @@ $execute positioned $(x) $(y) $(z) run fill ~66 ~-2 ~70 ~66 ~-1 ~75 minecraft:bl
 $execute positioned $(x) $(y) $(z) run fill ~76 ~-2 ~70 ~76 ~-2 ~71 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~79 ~-2 ~70 ~79 ~-2 ~83 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~93 ~-2 ~70 ~94 ~-1 ~70 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~101 ~-2 ~70 ~101 ~31 ~75 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~101 ~-2 ~70 ~101 ~0 ~75 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-108 ~-2 ~71 ~-107 ~0 ~82 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~-2 ~71 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-97 ~-2 ~71 ~-97 ~-2 ~82 minecraft:blue_terracotta

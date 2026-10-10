@@ -100,9 +100,9 @@ on load:
     set {-bg::kdmk::cop_spawn::y} to 1
     set {-bg::kdmk::cop_spawn::z} to 77.5
     set {-bg::kdmk::cop_spawn::yaw} to 180.0
-    set {-bg::kdmk::escape::x} to 84.5
-    set {-bg::kdmk::escape::y} to 1
-    set {-bg::kdmk::escape::z} to -77.5
+    set {-bg::kdmk::escape::x} to 84.07
+    set {-bg::kdmk::escape::y} to 36
+    set {-bg::kdmk::escape::z} to -80.34
     set {-bg::kdmk::heist_0::x} to -40.5
     set {-bg::kdmk::heist_0::y} to 1
     set {-bg::kdmk::heist_0::z} to -44.5
@@ -121,6 +121,9 @@ on load:
     set {-bg::kdmk::heist_5::x} to -7.5
     set {-bg::kdmk::heist_5::y} to 1
     set {-bg::kdmk::heist_5::z} to 72.5
+    set {-bg::kdmk::heli_gate::x} to 80.5
+    set {-bg::kdmk::heli_gate::y} to 1
+    set {-bg::kdmk::heli_gate::z} to -66.5
     set {-bg::kdmk::jail::x} to -87.5
     set {-bg::kdmk::jail::y} to 1
     set {-bg::kdmk::jail::z} to 76.5
