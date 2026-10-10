@@ -257,6 +257,9 @@ function bgKdStart(s: command sender, cops: number = 0):
     set {-bg::kd::radar} to 60
     delete {-bg::kd::hcd::*}
     delete {-bg::kd::loot::*}
+    delete {-bg::kd::merit::*}
+    delete {-bg::kd::rank::*}
+    delete {-bg::kd::by::*}
     delete {-bg::kd::prog::*}
     set {-bg::kd::state} to "play"
     bgKdTexts()
@@ -360,6 +363,7 @@ function bgKdCheck():
 # ─────────────────────────────────────────────────────────── 체포 · 구출 · 털이 · 탈출
 function bgKdArrest(t: player, c: player):
     set {-bg::kd::jail::%uuid of {_t}%} to true
+    set {-bg::kd::by::%uuid of {_t}%} to "%uuid of {_c}%"
     set {_lost} to {-bg::kd::carry::%uuid of {_t}%} ? 0
     if {_lost} > 0:
         set {-bg::kd::bags} to max(0, {-bg::kd::bags} - {_lost})
@@ -567,6 +571,10 @@ every 5 ticks:
         # 탈출
         if {-bg::kd::open} is true:
             # 옥상 헬기 타는 문 앞 (아래층에서 겹치지 않게 높이도 확인)
+            loop "thief_8" and "thief_10":
+                if bgDist2(location of {_p}, bgKdMk(loop-value-2)) < 2.5:
+                    if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk(loop-value-2))) < 3:
+                        bgKdEscape({_p})
             if bgDist2(location of {_p}, bgKdMk("escape")) < 4:
                 if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("escape"))) < 3:
                     bgKdEscape({_p})
@@ -717,6 +725,10 @@ function bgKdTexts():
     bgKdPillar(bgKdMk("rescue"), "lime_stained_glass", 5635925, 30)
     if {-bg::kd::open} is true:
         bgKdPillar(bgKdMk("escape"), "yellow_stained_glass", 16776960, 40)
+        bgKdPillar(bgKdMk("thief_8"), "cyan_stained_glass", 65535, 30)
+        bgKdPillar(bgKdMk("thief_10"), "cyan_stained_glass", 65535, 30)
+        bgKdText("x1", bgKdMk("thief_8"), "[{text:""🕳 하수구 탈출구"",color:""aqua"",bold:true},{text:""\n열림! 들어오면 탈출"",color:""green""}]")
+        bgKdText("x2", bgKdMk("thief_10"), "[{text:""🚇 지하철 탈출구"",color:""aqua"",bold:true},{text:""\n열림! 들어오면 탈출"",color:""green""}]")
     else:
         bgKdPillar(bgKdMk("escape"), "light_gray_stained_glass", 10066329, 40)
     loop 6 times:
@@ -958,3 +970,48 @@ on right click on barrel:
         send action bar "&a8초 점프 강화" to player
     else:
         send action bar "&8꽝… 빈 통이에요" to player
+
+# ─────────────────────────────────────────────────────────── 경찰 실적 · 직급
+#  내가 잡은 도둑이 감옥에 있는 동안 5초마다 실적 +1 (도둑 한 명당)
+#  직급 기준 = 도둑 수에 비례: 한 단계마다 max(3, 도둑 수 × 2) 실적
+#  순경(0) → 경장(1): 상시 신속 I → 경사(2): 엔더 진주 2개 (추격) → 경위(3): 망원경 + 상시 신속 II
+function bgKdRankName(r: number) :: text:
+    if {_r} >= 3:
+        return "&6경위"
+    if {_r} is 2:
+        return "&e경사"
+    if {_r} is 1:
+        return "&b경장"
+    return "&7순경"
+
+every 5 seconds:
+    bgKdState() is "play"
+    set {_step} to max(3, bgKdCount("thief") * 2)
+    loop all players:
+        bgKdOn(loop-player) is true
+        bgKdRole(loop-player) is "thief"
+        bgKdJailed(loop-player) is true
+        set {_c} to {-bg::kd::by::%uuid of loop-player%}
+        {_c} is set
+        add 1 to {-bg::kd::merit::%{_c}%}
+        add 1 to {bg::kd::meritall::%{_c}%}
+    loop all players:
+        bgKdOn(loop-player) is true
+        bgKdRole(loop-player) is "cop"
+        set {_u} to "%uuid of loop-player%"
+        set {_m} to {-bg::kd::merit::%{_u}%} ? 0
+        set {_r} to min(3, floor({_m} / {_step}))
+        set {_old} to {-bg::kd::rank::%{_u}%} ? 0
+        if {_r} >= 3:
+            bgCmd("effect give %name of loop-player% speed 7 1 true")
+        else if {_r} >= 1:
+            bgCmd("effect give %name of loop-player% speed 7 0 true")
+        if {_r} > {_old}:
+            set {-bg::kd::rank::%{_u}%} to {_r}
+            bgTitleP(loop-player, "&9&l진급! %bgKdRankName({_r})%", "&f실적 %{_m}% · 잡은 도둑이 감옥에 있을수록 실적이 오름")
+            play sound "ui.toast.challenge_complete" to loop-player
+            if {_r} is 2:
+                bgCmd("give %name of loop-player% ender_pearl[item_name={text:""추격 진주"",color:""dark_aqua"",bold:true}] 2")
+            if {_r} is 3:
+                bgCmd("give %name of loop-player% spyglass[item_name={text:""경위 망원경"",color:""gold"",bold:true}] 1")
+            bgKdSay("&9%name of loop-player%&f 경찰이 %bgKdRankName({_r})%&f(으)로 진급!")
