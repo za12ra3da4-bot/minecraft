@@ -1,6 +1,7 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  포털 다리 · 포털 파쿠르
-#   허브 가운데 스폰 바로 앞 하늘색 발판을 밟으면 → 그 사람 화면에만 로봇의 고리(포털)까지 빛나는 유리 다리가 생김
+#   허브 가운데 스폰 바로 앞 하늘색 발판을 밟으면 → 그 사람 화면에만 로봇의 고리(포털)에서 빛나는 유리 조각(디스플레이)이
+#     한 줄씩 사사사삭 날아 내려와 발판 앞까지 다리를 깖 (고리 쪽부터 · 약 2초) → 그 다리를 타고 고리로 올라감
 #     (다른 사람에게는 안 보이고 밟을 수도 없음 · 다리 위에서는 떨어져도 다치지 않음 · 60초 또는 다리에서 벗어나면 사라짐)
 #   고리 안으로 들어가면 → 포털 파쿠르 (허브 남쪽 하늘 · 우주 배경): 빛나는 행성 둘레를 돌며 올라가는 50단 · 꼭대기 트로피
 #     체크포인트 없음 — 떨어지면 처음부터 (기록도 다시) · 기록 타이머 · 최고 기록 · /파쿠르 랭킹 · 9번 칸 나가기 버튼 (허브로)
@@ -9,6 +10,8 @@
 
 import:
     org.bukkit.Bukkit
+    org.bukkit.Color
+    org.bukkit.entity.BlockDisplay
 
 # ─────────────────────────────────────────────────────────── 포털 다리 (플레이어마다 따로 — 가짜 블록)
 #  발판 앞(z -7)에서 고리 면(z -38)까지 31칸, 바닥 + 1 에서 고리 구멍 바닥 높이(+9)까지 반 칸씩 올라감 · 폭 3
@@ -50,16 +53,103 @@ function bgBridge(p: player, on: boolean):
             {_p}.sendBlockChange({_l2}, (block at {_l2}).getBlockData())
 
 function bgBridgeOn(p: player):
-    set {-bg::bridge::%uuid of {_p}%} to now
-    bgBridge({_p}, true)
+    set {_u} to "%uuid of {_p}%"
+    set {-bg::bridge::%{_u}%} to now
+    set {_tok} to random number between 0 and 1000000
+    set {-bg::bridge::tok::%{_u}%} to {_tok}
     # 가짜 블록 위에 서 있으면 서버는 '떠 있다' 고 봄 → 날기 허용 (날기 시작은 막음)
     {_p}.setAllowFlight(true)
     play sound "block.beacon.activate" with volume 1 and pitch 1.6 to {_p}
-    send action bar "&b✦ 포털 다리가 열렸습니다 &7— 로봇의 고리로 들어가세요" to {_p}
+    send action bar "&b✦ 포털이 응답합니다 &7— 고리에서 다리가 내려옵니다" to {_p}
+    bgBridgeAnim({_p}, {_tok})
+
+# 고리 가운데에서 유리 조각을 한 줄(3칸 + 반 칸 디딤)씩 쏘아 제자리로 날림 (고리 쪽 줄부터 발판 쪽으로)
+#  t 틱: 줄 30 - t 를 고리 가운데에 만듦 → 2틱 뒤 제자리로 순간이동 (teleport_duration 8틱 = 부드럽게 날아감)
+#        → 11틱 뒤 그 줄을 밟을 수 있는 가짜 블록으로 바꾸고 조각은 지움
+#  조각은 그 사람에게만 보임 (setVisibleByDefault false + showEntity)
+function bgBridgeAnim(p: player, tok: number):
+    set {_u} to "%uuid of {_p}%"
+    set {_pl} to Bukkit.getPluginManager().getPlugin("Skript")
+    set {_w} to bgWorld()
+    set {_src} to bgHubAt(-0.5, 13, -39)
+    set {_cells::*} to bgBridgeCells()
+    set {_glass} to Bukkit.createBlockData("minecraft:light_blue_stained_glass")
+    set {_edge} to Bukkit.createBlockData("minecraft:sea_lantern")
+    set {_slab} to Bukkit.createBlockData("minecraft:smooth_quartz_slab[type=bottom]")
+    set {_glow} to Color.fromRGB(110, 220, 255)
+    set {_t} to 0
+    while {_t} <= 42:
+        if {-bg::bridge::tok::%{_u}%} is not {_tok}:
+            stop
+        if {_p} is not online:
+            stop
+        # 쏘기
+        set {_k} to 30 - {_t}
+        if {_k} >= 0:
+            loop 3 times:
+                set {_c::*} to {_cells::%{_k} * 3 + loop-number%} split at ":"
+                set {_x} to {_c::1} parsed as integer
+                set {_y} to {_c::2} parsed as integer
+                set {_z} to {_c::3} parsed as integer
+                set {_d} to {_edge}
+                if {_x} is 0:
+                    set {_d} to {_glass}
+                set {_n} to loop-number
+                set {_e} to {_w}.spawn({_src}, BlockDisplay)
+                {_e}.setPersistent(false)
+                {_e}.setVisibleByDefault(false)
+                {_p}.showEntity({_pl}, {_e})
+                {_e}.setBlock({_d})
+                {_e}.setTeleportDuration(8)
+                {_e}.setGlowing(true)
+                {_e}.setGlowColorOverride({_glow})
+                add {_e} to {-bg::bridge::ents::%{_u}%::*}
+                set {_row::%{_k}%::%{_n}%} to {_e}
+                set {_dst::%{_k}%::%{_n}%} to bgHubAt({_x}, {_y}, {_z})
+                if {_c::4} is "1":
+                    set {_e} to {_w}.spawn({_src}, BlockDisplay)
+                    {_e}.setPersistent(false)
+                    {_e}.setVisibleByDefault(false)
+                    {_p}.showEntity({_pl}, {_e})
+                    {_e}.setBlock({_slab})
+                    {_e}.setTeleportDuration(8)
+                    add {_e} to {-bg::bridge::ents::%{_u}%::*}
+                    set {_row::%{_k}%::%{_n} + 3%} to {_e}
+                    set {_dst::%{_k}%::%{_n} + 3%} to bgHubAt({_x}, {_y} + 1, {_z})
+            play sound "block.amethyst_block.chime" with volume 0.9 and pitch (0.7 + {_t} * 0.04) to {_p}
+            if mod({_t}, 3) is 0:
+                bgParticle(bgUp({_src}, 0.5), "end_rod", 0.6, 0.6, 0.6, 0.06, 6)
+        # 날리기
+        set {_k} to 32 - {_t}
+        if {_k} >= 0:
+            if {_k} <= 30:
+                loop {_row::%{_k}%::*}:
+                    set {_e} to loop-value
+                    {_e}.teleport({_dst::%{_k}%::%loop-index%})
+        # 내려앉기 → 밟을 수 있게
+        set {_k} to 41 - {_t}
+        if {_k} >= 0:
+            if {_k} <= 30:
+                loop {_row::%{_k}%::*}:
+                    set {_e} to loop-value
+                    {_p}.sendBlockChange({_dst::%{_k}%::%loop-index%}, {_e}.getBlock())
+                    remove {_e} from {-bg::bridge::ents::%{_u}%::*}
+                    {_e}.remove()
+                play sound "block.glass.place" with volume 0.35 and pitch 1.7 to {_p}
+                bgParticle(bgUp({_dst::%{_k}%::2}, 1.1), "end_rod", 1, 0.1, 0.3, 0.01, 3)
+        add 1 to {_t}
+        wait 1 tick
+    send action bar "&b✦ 포털 다리가 열렸습니다 &7— 다리를 타고 로봇의 고리로 들어가세요" to {_p}
 
 function bgBridgeOff(p: player):
     {-bg::bridge::%uuid of {_p}%} is set
-    delete {-bg::bridge::%uuid of {_p}%}
+    set {_u} to "%uuid of {_p}%"
+    delete {-bg::bridge::%{_u}%}
+    delete {-bg::bridge::tok::%{_u}%}
+    loop {-bg::bridge::ents::%{_u}%::*}:
+        set {_e} to loop-value
+        {_e}.remove()
+    delete {-bg::bridge::ents::%{_u}%::*}
     bgBridge({_p}, false)
     if gamemode of {_p} is not creative or spectator:
         {_p}.setAllowFlight(false)
@@ -125,6 +215,11 @@ every 1 second:
     bgParticle({_c}, "reverse_portal", 3, 3, 0.3, 0.05, 14)
 
 on quit:
+    loop {-bg::bridge::ents::%uuid of player%::*}:
+        set {_e} to loop-value
+        {_e}.remove()
+    delete {-bg::bridge::ents::%uuid of player%::*}
+    delete {-bg::bridge::tok::%uuid of player%}
     delete {-bg::bridge::%uuid of player%}
     delete {-bg::pk::in::%uuid of player%}
     delete {-bg::pk::top::%uuid of player%}
