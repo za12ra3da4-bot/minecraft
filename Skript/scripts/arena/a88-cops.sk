@@ -2,7 +2,8 @@
 #  경찰과 도둑 (경도) — 허브 보라 오락기로 들어가는 시참 컨텐츠 (밤 네온 대도시, arena/tools/copsgen.py)
 #   대기실 = 랜드마크 타워 꼭대기 전망대. 관리자가 /경도 시작 [경찰 수] → 역할 배정
 #   도둑: 도시 곳곳으로 흩어짐 · 털이 장소 6곳 (은행 · 카지노 · 보석상 · 창고 · 박물관 · 편의점) 앞에 4초 서 있으면 돈가방 +1
-#         목표 돈가방을 채우면 북동쪽 탈출 헬기장 열림 → 한 명이라도 탈출하면 도둑 승리
+#         목표 돈가방을 채우면 북동쪽 탈출 헬기장 열림 → 들어온 도둑은 '탈출 성공' (전망대로) · 판은 계속
+#         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 한 명이라도 탈출하면 도둑 승리
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
 #   경찰: 20초 뒤 출동 (경찰서) · 빠름 · 경찰봉으로 도둑을 때리면 체포 · 60초마다 레이더 (도둑 3초 빛남)
 #         도둑 전원 체포 또는 시간 종료 → 경찰 승리
@@ -37,6 +38,11 @@ function bgKdRole(p: player) :: text:
 
 function bgKdJailed(p: player) :: boolean:
     if {-bg::kd::jail::%uuid of {_p}%} is true:
+        return true
+    return false
+
+function bgKdEsc(p: player) :: boolean:
+    if {-bg::kd::esc::%uuid of {_p}%} is true:
         return true
     return false
 
@@ -76,7 +82,11 @@ function bgKdCount(r: text) :: number:
             else if {_r} is "free":
                 if {_ro} is "thief":
                     if bgKdJailed(loop-player) is false:
-                        add 1 to {_n}
+                        if bgKdEsc(loop-player) is false:
+                            add 1 to {_n}
+            else if {_r} is "esc":
+                if bgKdEsc(loop-player) is true:
+                    add 1 to {_n}
             else if {_ro} is {_r}:
                 add 1 to {_n}
     return {_n}
@@ -140,7 +150,11 @@ function bgKdThiefKit(p: player):
 # ─────────────────────────────────────────────────────────── 들어가기 · 나가기
 function bgKdJoin(p: player):
     if bgKdReady() is false:
-        send "&9[경도] &f도시가 아직 없습니다. &7관리자가 &e/허브 건설 &7또는 &e/경도 건설" to {_p}
+        if {_p} is op:
+            send "&9[경도] &f도시가 아직 없어서 지금 짓습니다..." to {_p}
+            bgKdBuild({_p})
+            stop
+        send "&9[경도] &f도시가 아직 없습니다. &7관리자가 &e/경도 건설 &7을 한 번 해 주세요" to {_p}
         stop
     if bgInGame({_p}) is true:
         send "&9[경도] &7신화쟁탈전 게임 중에는 갈 수 없습니다." to {_p}
@@ -158,6 +172,7 @@ function bgKdJoin(p: player):
     set {-bg::where::%uuid of {_p}%} to "kd"
     delete {-bg::kd::role::%uuid of {_p}%}
     delete {-bg::kd::jail::%uuid of {_p}%}
+    delete {-bg::kd::esc::%uuid of {_p}%}
     bgKdClear({_p})
     if bgKdState() is "play":
         # 판 중간에 오면 도둑으로 바로 참가
@@ -181,6 +196,7 @@ function bgKdDrop(p: player):
     delete {-bg::kd::in::%uuid of {_p}%}
     delete {-bg::kd::role::%uuid of {_p}%}
     delete {-bg::kd::jail::%uuid of {_p}%}
+    delete {-bg::kd::esc::%uuid of {_p}%}
     delete {-bg::kd::prog::%uuid of {_p}%}
     bgCmd("team leave %name of {_p}%")
     bgCmd("effect clear %name of {_p}%")
@@ -216,6 +232,7 @@ function bgKdStart(s: command sender, cops: number = 0):
     loop {_ps::*}:
         add 1 to {_i}
         delete {-bg::kd::jail::%uuid of loop-value%}
+        delete {-bg::kd::esc::%uuid of loop-value%}
         if {_i} <= {_c}:
             set {-bg::kd::role::%uuid of loop-value%} to "cop"
         else:
@@ -250,28 +267,51 @@ function bgKdEnd(win: text, why: text):
     set {-bg::kd::state} to "end"
     loop all players:
         if bgKdOn(loop-player) is true:
+            if bgKdRole(loop-player) is "thief":
+                if bgKdEsc(loop-player) is true:
+                    add name of loop-player to {_ok::*}
+                else if bgKdJailed(loop-player) is true:
+                    add "%name of loop-player% &8(체포)" to {_no::*}
+                else:
+                    add "%name of loop-player% &8(못 빠져나감)" to {_no::*}
+    loop all players:
+        if bgKdOn(loop-player) is true:
             set {_r} to bgKdRole(loop-player)
             if {_win} is "none":
                 bgTitleP(loop-player, "&7&l판 종료", "&f%{_why}%")
-            else if {_r} is {_win}:
-                bgTitleP(loop-player, "&6&l승리!", "&f%{_why}%")
+            else if {_r} is "thief":
+                if bgKdEsc(loop-player) is true:
+                    bgTitleP(loop-player, "&c&l도둑 승리!", "&a탈출 성공 &7· &f%{_why}%")
+                    add 1 to {bg::kd::wins::%uuid of loop-player%}
+                    play sound "ui.toast.challenge_complete" to loop-player
+                else:
+                    bgTitleP(loop-player, "&7&l탈출 실패", "&f%{_why}%")
+            else if {_win} is "cop":
+                bgTitleP(loop-player, "&9&l경찰 승리!", "&f%{_why}%")
                 add 1 to {bg::kd::wins::%uuid of loop-player%}
                 play sound "ui.toast.challenge_complete" to loop-player
             else:
-                bgTitleP(loop-player, "&c&l패배", "&f%{_why}%")
+                bgTitleP(loop-player, "&c&l경찰 패배", "&f%{_why}%")
     if {_win} is "cop":
         bgKdSay("&9&l경찰 승리! &f%{_why}%")
     else if {_win} is "thief":
         bgKdSay("&c&l도둑 승리! &f%{_why}%")
     else:
         bgKdSay("&7판 종료 — %{_why}%")
+    if size of {_ok::*} > 0:
+        bgKdSay("&a&l탈출 성공 %size of {_ok::*}%명 &f%join {_ok::*} with ""&7, &f""%")
+    else:
+        bgKdSay("&a&l탈출 성공 &70명")
+    if size of {_no::*} > 0:
+        bgKdSay("&c&l탈출 실패 %size of {_no::*}%명 &f%join {_no::*} with ""&7, &f""%")
     bgKdTexts()
-    wait 8 seconds
+    wait 10 seconds
     set {-bg::kd::state} to "wait"
     loop all players:
         if bgKdOn(loop-player) is true:
             delete {-bg::kd::role::%uuid of loop-player%}
             delete {-bg::kd::jail::%uuid of loop-player%}
+            delete {-bg::kd::esc::%uuid of loop-player%}
             bgKdClear(loop-player)
             bgCmd("team join kd_wait %name of loop-player%")
             teleport loop-player to bgKdMk("wait")
@@ -287,7 +327,11 @@ function bgKdCheck():
         bgKdEnd("cop", "도둑이 모두 나갔습니다")
         stop
     if bgKdCount("free") is 0:
-        bgKdEnd("cop", "도둑 전원 체포!")
+        set {_e} to bgKdCount("esc")
+        if {_e} > 0:
+            bgKdEnd("thief", "도둑 %{_e}%명 탈출 · 남은 도둑 없음")
+        else:
+            bgKdEnd("cop", "도둑 전원 체포!")
 
 # ─────────────────────────────────────────────────────────── 체포 · 구출 · 털이 · 탈출
 function bgKdArrest(t: player, c: player):
@@ -338,9 +382,19 @@ function bgKdSteal(p: player, i: number):
             bgKdTexts()
 
 function bgKdEscape(p: player):
+    set {-bg::kd::esc::%uuid of {_p}%} to true
+    delete {-bg::kd::prog::%uuid of {_p}%}
     add 1 to {bg::kd::escapes::%uuid of {_p}%}
     set {bg::kd::name::%uuid of {_p}%} to name of {_p}
-    bgKdEnd("thief", "%name of {_p}% 이(가) 헬기로 탈출!")
+    bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 60)
+    bgCmd("effect clear %name of {_p}%")
+    teleport {_p} to bgKdMk("wait")
+    bgTitleP({_p}, "&c&l도둑 승리!", "&a헬기로 탈출 성공 &7· 전망대에서 판이 끝날 때까지 구경")
+    play sound "ui.toast.challenge_complete" to {_p}
+    set {_e} to bgKdCount("esc")
+    set {_f} to bgKdCount("free")
+    bgKdSay("&a🚁 %name of {_p}% 탈출 성공! &7(탈출 %{_e}%명 · 아직 도시에 %{_f}%명)")
+    bgKdCheck()
 
 on damage of player:
     bgKdOn(victim) is true
@@ -352,6 +406,7 @@ on damage of player:
     bgKdRole({_c}) is "cop"
     bgKdRole({_t}) is "thief"
     bgKdJailed({_t}) is false
+    bgKdEsc({_t}) is false
     bgKdJailed({_c}) is false
     if {-bg::kd::imm::%uuid of {_t}%} is set:
         if difference between {-bg::kd::imm::%uuid of {_t}%} and now < 5 seconds:
@@ -386,6 +441,7 @@ every 5 ticks:
         bgKdOn(loop-player) is true
         bgKdRole(loop-player) is "thief"
         bgKdJailed(loop-player) is false
+        bgKdEsc(loop-player) is false
         set {_p} to loop-player
         set {_u} to "%uuid of {_p}%"
         # 털이 장소
@@ -445,9 +501,10 @@ function bgKdBar():
     set {_f} to bgKdCount("free")
     set {_t} to bgKdCount("thief")
     set {_tm} to bgKdTime(max(0, {-bg::kd::left}))
+    set {_e} to bgKdCount("esc")
     if {-bg::kd::open} is true:
         bgCmd("bossbar set bg:kd color yellow")
-        bgCmd("bossbar set bg:kd name [{text:""🚁 탈출구 열림! "",color:""gold"",bold:true},{text:""%{_tm}% · 남은 도둑 %{_f}%/%{_t}%"",color:""white""}]")
+        bgCmd("bossbar set bg:kd name [{text:""🚁 탈출구 열림! "",color:""gold"",bold:true},{text:""%{_tm}% · 남은 도둑 %{_f}% · 탈출 %{_e}%명"",color:""white""}]")
     else:
         bgCmd("bossbar set bg:kd color red")
         bgCmd("bossbar set bg:kd name [{text:""%{_tm}% "",color:""yellow"",bold:true},{text:""· 돈가방 %{-bg::kd::bags}%/%{-bg::kd::goal}% · 남은 도둑 %{_f}%/%{_t}%"",color:""white""}]")
@@ -490,7 +547,11 @@ every 1 second:
         if {-bg::kd::left} is 60 or 30 or 10:
             bgKdSay("&e남은 시간 %{-bg::kd::left}%초!")
         if {-bg::kd::left} <= 0:
-            bgKdEnd("cop", "시간 종료 — 도둑이 탈출하지 못했습니다")
+            set {_e} to bgKdCount("esc")
+            if {_e} > 0:
+                bgKdEnd("thief", "시간 종료 — 도둑 %{_e}%명 탈출")
+            else:
+                bgKdEnd("cop", "시간 종료 — 아무도 탈출하지 못했습니다")
     loop all players:
         bgKdOn(loop-player) is true
         set food level of loop-player to 20
@@ -511,6 +572,8 @@ every 1 second:
             if ({-bg::kd::hold} ? 0) > 0:
                 set {_hold} to " &8| &e출동까지 %{-bg::kd::hold}%초"
             send action bar "&9&l경찰 &8| &f남은 도둑 &c%{_nf}%/%{_nt}% &8| %{_bags}% &8| &f%{_tm}% &8| &b레이더 %{-bg::kd::radar}%초%{_hold}%" to loop-player
+        else if bgKdEsc(loop-player) is true:
+            send action bar "&a&l탈출 성공 &8| &f판이 끝나길 기다리는 중 &8| &f%{_tm}%" to loop-player
         else if bgKdJailed(loop-player) is true:
             send action bar "&7&l감옥 &8| &f동료가 초록 구출 발판을 밟으면 탈옥 &8| %{_bags}% &8| &f%{_tm}%" to loop-player
         else if {-bg::kd::prog::%uuid of loop-player%} is not set:
@@ -518,6 +581,8 @@ every 1 second:
         # 도시 밖으로 떨어지면 제자리로
         if (y-coordinate of loop-player) < {bg::hub::y} - 8:
             if {_st} is not "play":
+                teleport loop-player to bgKdMk("wait")
+            else if bgKdEsc(loop-player) is true:
                 teleport loop-player to bgKdMk("wait")
             else if bgKdJailed(loop-player) is true:
                 teleport loop-player to bgKdMk("jail")
@@ -550,7 +615,7 @@ function bgKdTexts():
         bgKdText("h%{_i}%", bgKdMk("heist_%{_i}%"), "[{text:""💰 %{-bg::kd::heistname::%{_i}%}%"",color:""gold"",bold:true},{text:""\n4초 서 있으면 털기"",color:""white"",bold:false}]")
     bgKdText("rescue", bgKdMk("rescue"), "[{text:""🔓 구출 발판"",color:""green"",bold:true},{text:""\n밟으면 감옥 전원 탈옥"",color:""white"",bold:false}]")
     if {-bg::kd::open} is true:
-        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기장"",color:""gold"",bold:true},{text:""\n열림! 들어오면 도둑 승리"",color:""green"",bold:true}]")
+        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기장"",color:""gold"",bold:true},{text:""\n열림! 들어오면 탈출 성공"",color:""green"",bold:true}]")
     else:
         bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기장"",color:""gold"",bold:true},{text:""\n잠김 · 돈가방을 다 모으면 열림"",color:""gray"",bold:false}]")
     bgKdText("jail", bgKdMk("jail"), "{text:""감옥"",color:""red"",bold:true}")
