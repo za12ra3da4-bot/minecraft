@@ -256,6 +256,7 @@ function bgKdStart(s: command sender, cops: number = 0):
     set {-bg::kd::hold} to 0
     set {-bg::kd::radar} to 60
     delete {-bg::kd::hcd::*}
+    delete {-bg::kd::loot::*}
     delete {-bg::kd::prog::*}
     set {-bg::kd::state} to "play"
     bgKdTexts()
@@ -269,7 +270,7 @@ function bgKdStart(s: command sender, cops: number = 0):
             teleport loop-value to bgKdMk("cop_spawn")
             bgTitleP(loop-value, "&9&l당신은 경찰!", "&f바로 출동! · 경찰봉으로 도둑을 3대 때리면 체포")
     bgKdSay("&f판 시작! &9경찰 %{_c}%명 &7vs &c도둑 %{_t}%명 &7· 팀 목표 돈가방 &6%{-bg::kd::goal}%개 &7· 도둑 승리 = &a%{-bg::kd::need}%명 탈출 &7· 제한 %bgKdTime({-bg::kd::left})%")
-    bgKdSay("&7감옥 · 구출 발판 · 털이 장소 · 탈출 헬기는 빛 기둥으로 어디서나 보여요 · 털 때마다 보상 아이템")
+    bgKdSay("&7감옥 · 구출 발판 · 탈출 헬기는 빛 기둥으로 보여요 · &e털이 장소는 직접 찾기 &7· 털려면 &b해킹 칩&7 (건물 안 통을 뒤지면 나옴)")
     bgKdSound("entity.ender_dragon.growl", 1.4)
 
 function bgKdEnd(win: text, why: text):
@@ -411,8 +412,8 @@ function bgKdSteal(p: player, i: number):
         bgCmd("effect give %name of {_p}% speed 10 1 true")
         send action bar "&6보상: &b10초 신속 II" to {_p}
     else if {_rw} is 3:
-        bgCmd("effect give %name of {_p}% invisibility 6 0 true")
-        send action bar "&6보상: &f6초 투명" to {_p}
+        bgCmd("effect give %name of {_p}% invisibility 3 0 true")
+        send action bar "&6보상: &f3초 투명" to {_p}
     else:
         delete {-bg::kd::cds::%uuid of {_p}%}
         bgCmd("effect give %name of {_p}% jump_boost 10 1 true")
@@ -536,6 +537,8 @@ every 5 ticks:
                 send action bar "&7경찰 출동 전에는 털 수 없습니다 &8(%{-bg::kd::hold}%초) &7— 지금은 숨을 곳을 찾으세요" to {_p}
             else if ({-bg::kd::hcd::%{_at}%} ? 0) > 0:
                 send action bar "&7%{-bg::kd::heistname::%{_at}%}% — 다시 털 수 있을 때까지 &c%{-bg::kd::hcd::%{_at}%}%초" to {_p}
+            else if {_p} does not have tripwire hook:
+                send action bar "&b해킹 칩&f이 있어야 털 수 있어요 &7— 건물 안 통(배럴)을 우클릭해서 찾아보세요" to {_p}
             else:
                 add 5 to {-bg::kd::prog::%{_u}%}
                 set {_pr} to {-bg::kd::prog::%{_u}%}
@@ -551,6 +554,7 @@ every 5 ticks:
                 play sound "block.note_block.hat" with volume 0.5 and pitch (0.8 + {_pr} / 120) to {_p}
                 if {_pr} >= 120:
                     delete {-bg::kd::prog::%{_u}%}
+                    bgCmd("clear %name of {_p}% tripwire_hook 1")
                     bgKdSteal({_p}, {_at})
         else:
             delete {-bg::kd::prog::%{_u}%}
@@ -695,6 +699,10 @@ every 1 second:
 
 # 떠 있는 안내 글자 (털이 장소 · 구출 발판 · 헬기장 · 감옥)
 function bgKdText(id: text, l: location, txt: text):
+    # 털이 장소(h0~h5) 글자는 가까이 가야 보임 (벽 너머 X) — 직접 찾아다니게
+    if first character of {_id} is "h":
+        bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 2.6)% %bgC(z-coordinate of {_l})% {Tags:[""bgkd"",""bgkd_%{_id}%""],billboard:""center"",shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:0.5f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.4f,1.4f,1.4f]},text:%{_txt}%}")
+        stop
     bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 2.6)% %bgC(z-coordinate of {_l})% {Tags:[""bgkd"",""bgkd_%{_id}%""],billboard:""center"",shadow:1b,see_through:1b,background:1073741824,brightness:{sky:15,block:15},view_range:4f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.4f,1.4f,1.4f]},text:%{_txt}%}")
 
 # 위치 빛 기둥: 가늘고 긴 발광 블록 디스플레이 (발광 테두리는 건물 너머로도 보임)
@@ -707,8 +715,6 @@ function bgKdTexts():
     bgCmd("kill @e[type=block_display,tag=bgkd_pillar]")
     bgKdPillar(bgKdMk("jail"), "red_stained_glass", 16724016, 30)
     bgKdPillar(bgKdMk("rescue"), "lime_stained_glass", 5635925, 30)
-    loop 6 times:
-        bgKdPillar(bgKdMk("heist_%loop-number - 1%"), "orange_stained_glass", 16753920, 24)
     if {-bg::kd::open} is true:
         bgKdPillar(bgKdMk("escape"), "yellow_stained_glass", 16776960, 40)
     else:
@@ -919,3 +925,36 @@ every 2 ticks:
     bgCmd("execute as @e[type=block_display,tag=kd_rotor] at @s run tp @s ~ ~ ~ ~%{_sp}% ~")
     set {-bg::kd::tra} to mod(({-bg::kd::tra} ? 0) + 1.1, 6.2832)
     bgCmd("execute as @e[type=block_display,tag=kd_trot] run data merge entity @s {start_interpolation:0,interpolation_duration:2,transformation:{left_rotation:{angle:%bgN({-bg::kd::tra})%f,axis:[1f,0f,0f]}}}")
+
+# ─────────────────────────────────────────────────────────── 파밍: 건물 안 통(배럴) 뒤지기 (도둑 · 판 중)
+#  통마다 45초에 한 번 · 해킹 칩(털이에 필요 · 1개 씀) 45% · 연막탄 · 신속 · 점프 · 꽝
+on right click on barrel:
+    bgKdOn(player) is true
+    cancel event
+    bgKdState() is "play"
+    bgKdRole(player) is "thief"
+    bgKdJailed(player) is false
+    set {_k} to "%x-coordinate of event-block%_%y-coordinate of event-block%_%z-coordinate of event-block%"
+    if {-bg::kd::loot::%{_k}%} is set:
+        if difference between {-bg::kd::loot::%{_k}%} and now < 45 seconds:
+            send action bar "&7이미 뒤진 통이에요 — 다른 건물로!" to player
+            stop
+    set {-bg::kd::loot::%{_k}%} to now
+    play sound "block.barrel.open" to player
+    bgParticle(location of event-block, "happy_villager", 0.4, 0.4, 0.4, 0, 8)
+    set {_r} to random integer between 1 and 100
+    if {_r} <= 45:
+        bgCmd("give %name of player% tripwire_hook[item_name={text:""해킹 칩"",color:""aqua"",bold:true},lore=[{text:""털이 장소에서 금고를 열 때 1개 씀"",color:""gray"",italic:false}]] 1")
+        send action bar "&b✦ 해킹 칩 발견! &7— 털이 장소를 찾아가세요" to player
+        play sound "entity.experience_orb.pickup" with volume 1 and pitch 1.4 to player
+    else if {_r} <= 60:
+        bgCmd("give %name of player% snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true}] 1")
+        send action bar "&6연막탄 +1" to player
+    else if {_r} <= 72:
+        bgCmd("effect give %name of player% speed 6 1 true")
+        send action bar "&b6초 신속 II" to player
+    else if {_r} <= 82:
+        bgCmd("effect give %name of player% jump_boost 8 1 true")
+        send action bar "&a8초 점프 강화" to player
+    else:
+        send action bar "&8꽝… 빈 통이에요" to player
