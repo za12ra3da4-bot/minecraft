@@ -1,7 +1,7 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  포털 다리 · 포털 파쿠르
-#   허브 가운데 스폰 바로 앞 하늘색 발판을 밟으면 → 그 사람 화면에만 로봇의 고리(포털)에서 빛나는 유리 조각(디스플레이)이
-#     한 줄씩 사사사삭 날아 내려와 발판 앞까지 무지개 색유리 다리를 깖 (고리 쪽부터 · 약 2초) → 그 다리를 타고 고리로 올라감
+#   허브 가운데 스폰 바로 앞 하늘색 발판을 밟으면 → 그 사람 화면에만 빛나는 무지개 색유리 조각(디스플레이)이
+#     발판 앞에서부터 한 줄씩 사사사삭 아래에서 솟아올라 고리까지 다리를 이어 감 (약 2초) → 그 다리를 타고 고리로 올라감
 #     (발판 쪽부터 빨 · 주 · 노 · 초 · 하늘 · 파 · 보라 · 4칸마다 한 칸씩 올라감)
 #     (다른 사람에게는 안 보이고 밟을 수도 없음 · 다리 위에서는 떨어져도 다치지 않음 · 60초 또는 다리에서 벗어나면 사라짐)
 #   고리 안으로 들어가면 → 포털 파쿠르 (허브 남쪽 하늘 · 우주 배경): 빛나는 행성 둘레를 돌며 올라가는 50단 · 꼭대기 트로피
@@ -66,25 +66,24 @@ function bgBridgeOn(p: player):
     send action bar "&b✦ 포털이 응답합니다 &7— 고리에서 다리가 내려옵니다" to {_p}
     bgBridgeAnim({_p}, {_tok})
 
-# 고리 가운데에서 유리 조각을 한 줄(3칸 + 반 칸 디딤)씩 쏘아 제자리로 날림 (고리 쪽 줄부터 발판 쪽으로)
-#  t 틱: 줄 30 - t 를 고리 가운데에 만듦 → 2틱 뒤 제자리로 순간이동 (teleport_duration 8틱 = 부드럽게 날아감)
-#        → 11틱 뒤 그 줄을 밟을 수 있는 가짜 블록으로 바꾸고 조각은 지움
+# 유리 조각을 한 줄(3칸)씩 제자리 2.5칸 아래에 만들어 위로 솟게 함 (발판 쪽 줄부터 고리 쪽으로)
+#  t 틱: 줄 t 를 제자리 아래에 만듦 → 2틱 뒤 제자리로 순간이동 (teleport_duration 6틱 = 부드럽게 솟음)
+#        → 9틱 뒤 그 줄을 밟을 수 있는 가짜 블록으로 바꾸고 조각은 지움
 #  조각은 그 사람에게만 보임 (setVisibleByDefault false + showEntity)
 function bgBridgeAnim(p: player, tok: number):
     set {_u} to "%uuid of {_p}%"
     set {_pl} to Bukkit.getPluginManager().getPlugin("Skript")
     set {_w} to bgWorld()
-    set {_src} to bgHubAt(-0.5, 13, -39)
     set {_cells::*} to bgBridgeCells()
     set {_t} to 0
-    while {_t} <= 42:
+    while {_t} <= 40:
         if {-bg::bridge::tok::%{_u}%} is not {_tok}:
             stop
         if {_p} is not online:
             stop
         # 쏘기
-        set {_k} to 30 - {_t}
-        if {_k} >= 0:
+        set {_k} to {_t}
+        if {_k} <= 30:
             loop 3 times:
                 set {_c::*} to {_cells::%{_k} * 3 + loop-number%} split at ":"
                 set {_x} to {_c::1} parsed as integer
@@ -93,12 +92,12 @@ function bgBridgeAnim(p: player, tok: number):
                 set {_d} to Bukkit.createBlockData(bgRainbow({_c::4} parsed as integer))
                 set {_glow} to Color.fromRGB(bgRainbowRGB({_c::4} parsed as integer))
                 set {_n} to loop-number
-                set {_e} to {_w}.spawn({_src}, BlockDisplay)
+                set {_e} to {_w}.spawn(bgHubAt({_x}, {_y} - 2.5, {_z}), BlockDisplay)
                 {_e}.setPersistent(false)
                 {_e}.setVisibleByDefault(false)
                 {_p}.showEntity({_pl}, {_e})
                 {_e}.setBlock({_d})
-                {_e}.setTeleportDuration(8)
+                {_e}.setTeleportDuration(6)
                 {_e}.setGlowing(true)
                 {_e}.setGlowColorOverride({_glow})
                 add {_e} to {-bg::bridge::ents::%{_u}%::*}
@@ -106,16 +105,16 @@ function bgBridgeAnim(p: player, tok: number):
                 set {_dst::%{_k}%::%{_n}%} to bgHubAt({_x}, {_y}, {_z})
             play sound "block.amethyst_block.chime" with volume 0.9 and pitch (0.7 + {_t} * 0.04) to {_p}
             if mod({_t}, 3) is 0:
-                bgParticle(bgUp({_src}, 0.5), "end_rod", 0.6, 0.6, 0.6, 0.06, 6)
+                bgParticle(bgHubAt(0.5, {_y} - 1, {_z} + 0.5), "end_rod", 1, 0.4, 0.3, 0.04, 6)
         # 날리기
-        set {_k} to 32 - {_t}
+        set {_k} to {_t} - 2
         if {_k} >= 0:
             if {_k} <= 30:
                 loop {_row::%{_k}%::*}:
                     set {_e} to loop-value
                     {_e}.teleport({_dst::%{_k}%::%loop-index%})
         # 내려앉기 → 밟을 수 있게
-        set {_k} to 41 - {_t}
+        set {_k} to {_t} - 9
         if {_k} >= 0:
             if {_k} <= 30:
                 loop {_row::%{_k}%::*}:
