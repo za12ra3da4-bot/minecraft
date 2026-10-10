@@ -75,3 +75,7 @@ on tab complete of "/코인주기" or "/givecoin" or "/코인설정":
 
 on tab complete of "/관전자" or "/nogame":
     set tab completions for position 1 to all players
+
+on tab complete of "/힐" or "/heal":
+    player is op
+    set tab completions for position 1 to "전체" and all players

@@ -205,3 +205,45 @@ command /중참 [<text>]:
             send "&6[중참] &c지금은 관리자가 중간 참가를 막아 두었습니다."
             stop
         bgMidJoin(player)
+
+
+# ─────────────────────────────────────────────────────────── 힐 (관리자)
+#   /힐 : 나   /힐 <플레이어>   /힐 전체 : 접속한 모두
+#   체력 · 배고픔 가득 + 불 끄기 + 독 · 시듦 · 허기 · 실명 · 멀미 · 어둠 제거 (코어 파괴 벌칙 같은 게임 효과는 그대로)
+function bgHeal(p: player):
+    heal {_p}
+    set food level of {_p} to 20
+    set saturation of {_p} to 20
+    extinguish {_p}
+    set {_n} to name of {_p}
+    loop "poison", "wither", "hunger", "blindness", "nausea" and "darkness":
+        bgCmd("effect clear %{_n}% %loop-value%")
+    play sound "entity.player.levelup" with volume 0.6 with pitch 1.6 to {_p}
+    bgParticle(location of {_p}, "heart", 0.5, 1, 0.5, 0, 8)
+
+command /힐 [<text>]:
+    aliases: /heal
+    permission: op
+    trigger:
+        if arg-1 is not set:
+            if sender is not a player:
+                send "&c콘솔에서는 /힐 <플레이어|전체>"
+                stop
+            bgHeal(player)
+            send "&a[힐] &f체력을 채웠습니다."
+            stop
+        if arg-1 is "전체" or "all" or "@a" or "모두":
+            set {_k} to 0
+            loop all players:
+                bgHeal(loop-player)
+                add 1 to {_k}
+            bgSay("&a[힐] &f관리자가 모두의 체력을 채웠습니다 &7(%{_k}%명)")
+            stop
+        set {_t} to arg-1 parsed as player
+        if {_t} is not set:
+            send "&c[힐] 플레이어를 찾을 수 없습니다. &7(/힐 · /힐 <플레이어> · /힐 전체)"
+            stop
+        bgHeal({_t})
+        send "&a[힐] &f%name of {_t}%의 체력을 채웠습니다."
+        send "&a[힐] &f관리자가 체력을 채워 주었습니다." to {_t}
+
