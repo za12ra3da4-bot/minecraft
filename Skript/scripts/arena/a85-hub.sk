@@ -149,6 +149,7 @@ function bgToHub(p: player):
 function bgMythJoin(p: player):
     if bgInGame({_p}) is true:
         stop
+    delete {-bg::pk::in::%uuid of {_p}%}
     if {-bg::pvp::%uuid of {_p}%} is true:
         delete {-bg::pvp::%uuid of {_p}%}
         delete {-bg::pvpa::%uuid of {_p}%}
@@ -535,7 +536,7 @@ command /허브 [<text>] [<text>]:
                 broadcast "&b[허브] &f관리자가 &e%{_n}%명&f을 허브로 불렀습니다."
                 stop
         if sender is not a player:
-            send "&c사용법: /허브 전체 · /허브 위치"
+            send "&c사용법: /허브 전체 · /허브 위치 &7(컨텐츠별 전체 이동: /신화쟁탈전 전체 · /경도 전체 · /파쿠르 전체)"
             stop
         if bgHubReady() is false:
             send "&b[허브] &c허브가 아직 없습니다. &7관리자가 &e/허브 건설 &7을 한 번 실행해 주세요."

@@ -97,6 +97,7 @@ function bgOsEnter(p: player):
     if bgInGame({_p}) is true:
         send "&c[온리소드] &7신화쟁탈전 게임 중에는 갈 수 없습니다." to {_p}
         stop
+    delete {-bg::pk::in::%uuid of {_p}%}
     if bgOsOn({_p}) is true:
         stop
     bgKdDrop({_p})

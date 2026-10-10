@@ -353,6 +353,26 @@ command /파쿠르 [<text>]:
                     bgPkBuild(player)
                     send "&d[파쿠르] &f코스를 짓는 중... (12초)"
             stop
+        # 전체 이동 (관리자): 서버의 모든 사람 (신화쟁탈전 게임 중 · 관전 끔 제외) → 파쿠르 시작 발판
+        if arg-1 is "전체" or "@a" or "all":
+            if sender is a player:
+                if player is not op:
+                    send "&c다른 사람을 보내는 건 관리자만 할 수 있습니다."
+                    stop
+            if {bg::pk::built} is not true:
+                send "&d[파쿠르] &c코스가 아직 없습니다. &e/파쿠르 건설 &7을 먼저 해 주세요"
+                stop
+            set {_n} to 0
+            loop all players:
+                if bgPkOn(loop-player) is false:
+                    if bgInGame(loop-player) is false:
+                        if bgOptOut(loop-player) is false:
+                            bgToHub(loop-player)
+                            bgBridgeOff(loop-player)
+                            bgPkEnter(loop-player)
+                            add 1 to {_n}
+            broadcast "&d[파쿠르] &f관리자가 &e%{_n}%명&f을 포털 파쿠르로 보냈습니다."
+            stop
         if arg-1 is "랭킹" or "순위":
             set {_ids::*} to sorted indices of {bg::pk::best::*} in ascending order
             send "&d&l[포털 파쿠르 랭킹] &7가장 빠른 기록 10위"

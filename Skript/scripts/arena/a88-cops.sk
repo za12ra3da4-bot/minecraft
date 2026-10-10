@@ -164,6 +164,7 @@ function bgKdJoin(p: player):
         stop
     if bgKdOn({_p}) is true:
         stop
+    delete {-bg::pk::in::%uuid of {_p}%}
     bgOsDrop({_p})
     delete {-bg::pvp::%uuid of {_p}%}
     delete {-bg::pvpa::%uuid of {_p}%}
@@ -725,6 +726,20 @@ command /경도 [<text>] [<text>]:
             if arg-1 is "건설":
                 if sender is a player:
                     bgKdBuild(player)
+                stop
+            # 전체 이동: 서버의 모든 사람 (신화쟁탈전 게임 중 · 관전 끔 제외) → 경도 대기실
+            if arg-1 is "전체" or "@a" or "all":
+                if bgKdReady() is false:
+                    send "&9[경도] &c도시가 아직 없습니다. &e/경도 건설 &7을 먼저 해 주세요"
+                    stop
+                set {_n} to 0
+                loop all players:
+                    if bgKdOn(loop-player) is false:
+                        if bgInGame(loop-player) is false:
+                            if bgOptOut(loop-player) is false:
+                                bgKdJoin(loop-player)
+                                add 1 to {_n}
+                broadcast "&9[경도] &f관리자가 &e%{_n}%명&f을 경찰과 도둑으로 보냈습니다."
                 stop
             if arg-1 is "글자":
                 bgKdTexts()
