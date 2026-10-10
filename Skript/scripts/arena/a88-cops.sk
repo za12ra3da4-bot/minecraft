@@ -629,7 +629,7 @@ function bgKdBuild(p: player):
     bgCmd("data merge storage bg:kd {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
     send "&9[경도] &f도시를 짓는 중... &7(큰 도시라 10초쯤 · 잠깐 끊길 수 있음)" to {_p}
     bgCmd("function bg:kd/build")
-    wait 240 ticks
+    wait 360 ticks
     set {bg::kd::built} to true
     set {-bg::kd::state} to "wait"
     teleport {_p} to bgKdMk("wait")

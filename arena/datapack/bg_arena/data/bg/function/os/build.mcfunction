@@ -1,2 +1,2 @@
 function bg:os/fl
-schedule function bg:os/p/0 40t
+schedule function bg:os/p/0 160t

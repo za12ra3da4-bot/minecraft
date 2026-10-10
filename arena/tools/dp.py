@@ -958,7 +958,7 @@ def struct_functions(dp_root, key, mod, label):
         w(os.path.join(F, "p", f"{i}_run.mcfunction"), part)
         nxt = f"schedule function bg:{key}/p/{i + 1} 3t" if i + 1 < len(parts) else f"schedule function bg:{key}/fl_rm 20t"
         w(os.path.join(F, "p", f"{i}.mcfunction"), [f"function bg:{key}/p/{i}_run with storage bg:{key} origin", nxt])
-    w(os.path.join(F, "build.mcfunction"), [f"function bg:{key}/fl", f"schedule function bg:{key}/p/0 40t"])
+    w(os.path.join(F, "build.mcfunction"), [f"function bg:{key}/fl", f"schedule function bg:{key}/p/0 160t"])
     w(os.path.join(F, "fl_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}"])
     w(os.path.join(F, "fl_rm_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
     for k in ("fl", "fl_rm"):

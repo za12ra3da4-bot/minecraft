@@ -209,7 +209,7 @@ function bgHubBuild(p: player, here: boolean = false):
     bgCmd("data merge storage bg:hub {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z}%}}")
     send "&b[허브] &f신화 아케이드 허브를 짓는 중... &7(약 6초 · 큰 건물이라 잠깐 끊길 수 있음) &8위치 %{bg::hub::x}% %{bg::hub::y}% %{bg::hub::z}%" to {_p}
     bgCmd("function bg:hub/build")
-    wait 130 ticks
+    wait 250 ticks
     set {bg::hub::built} to true
     teleport {_p} to bgHubMk("spawn")
     wait 40 ticks
@@ -223,7 +223,7 @@ function bgHubBuild(p: player, here: boolean = false):
     set {bg::os::built} to true
     bgCmd("data merge storage bg:kd {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
     bgCmd("function bg:kd/build")
-    wait 260 ticks
+    wait 380 ticks
     set {bg::kd::built} to true
     set {-bg::kd::state} to "wait"
     send "&b[허브] &a온리소드 · 경도도 완성! &7(경도 안내 글자는 처음 들어갈 때 /경도 글자)" to {_p}
