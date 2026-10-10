@@ -1,7 +1,7 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  경찰과 도둑 (경도) — 허브 보라 오락기로 들어가는 시참 컨텐츠 (밤 네온 대도시, arena/tools/copsgen.py)
 #   대기실 = 랜드마크 타워 꼭대기 전망대. 관리자가 /경도 시작 [경찰 수] → 역할 배정
-#   도둑: 도시 곳곳으로 흩어짐 · 털이 장소 6곳 (은행 · 카지노 · 보석상 · 창고 · 박물관 · 편의점) 앞에 4초 서 있으면 돈가방 +1
+#   도둑: 도시 곳곳으로 흩어짐 · 털이 장소 6곳 (은행 · 카지노 · 보석상 · 창고 · 박물관 · 편의점) 앞에 6초 서 있으면 돈가방 +1 (경찰 출동 전엔 못 텀)
 #         목표 돈가방을 채우면 북동쪽 탈출 헬기장 열림 → 들어온 도둑은 '탈출 성공' (전망대로) · 판은 계속
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 한 명이라도 탈출하면 도둑 승리
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
@@ -482,7 +482,9 @@ every 5 ticks:
                 if abs((y-coordinate of {_p}) - (y-coordinate of {_h})) < 2:
                     set {_at} to {_i}
         if {_at} >= 0:
-            if ({-bg::kd::hcd::%{_at}%} ? 0) > 0:
+            if ({-bg::kd::hold} ? 0) > 0:
+                send action bar "&7경찰 출동 전에는 털 수 없습니다 &8(%{-bg::kd::hold}%초) &7— 지금은 숨을 곳을 찾으세요" to {_p}
+            else if ({-bg::kd::hcd::%{_at}%} ? 0) > 0:
                 send action bar "&7%{-bg::kd::heistname::%{_at}%}% — 다시 털 수 있을 때까지 &c%{-bg::kd::hcd::%{_at}%}%초" to {_p}
             else:
                 add 5 to {-bg::kd::prog::%{_u}%}
@@ -491,13 +493,13 @@ every 5 ticks:
                 set {_k} to 0
                 while {_k} < 16:
                     add 1 to {_k}
-                    if {_k} * 5 <= {_pr}:
+                    if {_k} * 7.5 <= {_pr}:
                         set {_bar} to "%{_bar}%&6■"
                     else:
                         set {_bar} to "%{_bar}%&8■"
                 send action bar "&6%{-bg::kd::heistname::%{_at}%}% 털이 중 %{_bar}%" to {_p}
-                play sound "block.note_block.hat" with volume 0.5 and pitch (0.8 + {_pr} / 80) to {_p}
-                if {_pr} >= 80:
+                play sound "block.note_block.hat" with volume 0.5 and pitch (0.8 + {_pr} / 120) to {_p}
+                if {_pr} >= 120:
                     delete {-bg::kd::prog::%{_u}%}
                     bgKdSteal({_p}, {_at})
         else:
@@ -641,7 +643,7 @@ function bgKdTexts():
     bgCmd("kill @e[type=text_display,tag=bgkd]")
     loop 6 times:
         set {_i} to loop-number - 1
-        bgKdText("h%{_i}%", bgKdMk("heist_%{_i}%"), "[{text:""💰 %{-bg::kd::heistname::%{_i}%}%"",color:""gold"",bold:true},{text:""\n4초 서 있으면 털기"",color:""white"",bold:false}]")
+        bgKdText("h%{_i}%", bgKdMk("heist_%{_i}%"), "[{text:""💰 %{-bg::kd::heistname::%{_i}%}%"",color:""gold"",bold:true},{text:""\n6초 서 있으면 털기"",color:""white"",bold:false}]")
     bgKdText("rescue", bgKdMk("rescue"), "[{text:""🔓 구출 발판"",color:""green"",bold:true},{text:""\n밟으면 감옥 전원 탈옥"",color:""white"",bold:false}]")
     if {-bg::kd::open} is true:
         bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기장"",color:""gold"",bold:true},{text:""\n열림! 들어오면 탈출 성공"",color:""green"",bold:true}]")
