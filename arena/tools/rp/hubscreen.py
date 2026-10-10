@@ -162,22 +162,24 @@ def _icon(d, kind, x, y, s):
 
 
 def badge(text, kind, light, base, dark):
-    """픽셀 튜브 배지: 12픽셀 높이 도트 그림 (계단식 둥근 끝 · 줄마다 원통 음영 · 위 반사 줄) → 4배 확대 (칸 그대로)"""
+    """픽셀 튜브 배지: 16픽셀 높이 도트 그림 (글꼴 높이 8 = 이름 글자와 같은 높이 · 그림 1칸 = 글꼴 반 칸)
+    계단식 둥근 끝 · 줄마다 원통 음영 · 위 반사 줄 · 갈무리9 원래 크기 글씨 (줄이지 않음 → 또렷함)"""
     f = ImageFont.truetype(FONT9, 10)
     l, t, r, b = f.getbbox(text)
     tw = r - l
-    h = BH // 4                               # 12
+    h = 16
     w = tw + 10
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     px = im.load()
 
     def mix(a, c, k):
         return tuple(int(a[i] + (c[i] - a[i]) * k) for i in range(3))
-    # 줄마다 색 (위 → 아래): 테두리 · 반사 · 밝음 · 몸통 · 그늘 · 테두리
-    rows = [dark, mix(light, (255, 255, 255), 0.55), light, mix(light, base, 0.5), base, base, base, base,
-            mix(base, dark, 0.3), mix(base, dark, 0.5), mix(base, dark, 0.7), dark, None]
-    cut = {0: 3, 1: 1, 2: 1, 9: 1, 10: 3, 11: 99}        # 줄마다 양끝을 깎는 칸 수 (둥근 끝)
-    cut = {0: 3, 1: 2, 2: 1, 9: 1, 10: 2, 11: 3, 12: 99}
+    rows = [dark, mix(light, (255, 255, 255), 0.55), light, mix(light, base, 0.5)] + [base] * 7 + \
+           [mix(base, dark, 0.3), mix(base, dark, 0.5), mix(base, dark, 0.7), dark, None]
+    cut = {0: 3, 1: 2, 2: 1, 13: 1, 14: 2, 15: 99}
+    cut[0], cut[14] = 3, 3
+    cut[1], cut[13] = 1, 1
+    cut[2] = 0
     for y in range(h):
         c = rows[y]
         if c is None:
@@ -185,25 +187,21 @@ def badge(text, kind, light, base, dark):
         k = cut.get(y, 0)
         for x in range(k, w - k):
             col = c
-            # 양끝 테두리 (진한 색) · 바로 안쪽은 살짝 어둡게 (원통 둘레)
             if x == k or x == w - 1 - k:
                 col = dark
-            elif x in (k + 1, w - 2 - k) and 0 < y < 11:
+            elif x in (k + 1, w - 2 - k) and 0 < y < 14:
                 col = mix(c, dark, 0.35)
             px[x, y] = col + (255,)
-    # 위 반사 줄 (흰 점선 느낌)
     for x in range(4, w - 4):
-        if x % 7 not in (0,):
+        if x % 7:
             px[x, 1] = mix(light, (255, 255, 255), 0.8) + (255,)
-    px[3, 2] = (255, 255, 255, 255)
-    # 아래 그림자 한 줄
+    px[2, 2] = (255, 255, 255, 255)
     for x in range(3, w - 3):
-        px[x, 12] = (0, 0, 0, 110)
-    # 글씨: 진한 그림자 + 흰 글씨 (갈무리9 도트)
+        px[x, 15] = (0, 0, 0, 110)
     tm = Image.new("L", (w, h), 0)
     td = ImageDraw.Draw(tm)
     td.fontmode = "1"
-    ty = 2 - t + max(0, (9 - (b - t)) // 2)
+    ty = (15 - (b - t)) // 2 - t
     td.text((5 - l + 1, ty + 1), text, font=f, fill=255)
     shadow = tm.copy()
     tm = Image.new("L", (w, h), 0)
@@ -212,7 +210,7 @@ def badge(text, kind, light, base, dark):
     td.text((5 - l, ty), text, font=f, fill=255)
     im.paste(Image.new("RGBA", (w, h), dark + (255,)), (0, 0), shadow)
     im.paste(Image.new("RGBA", (w, h), (255, 255, 255, 255)), (0, 0), tm)
-    return im.resize((w * 4, h * 4), Image.NEAREST)
+    return im
 
 
 def export(pack):
@@ -220,11 +218,12 @@ def export(pack):
     for key, ch, text, kind, light, base, dark in BADGES:
         im = badge(text, kind, light, base, dark)
         pack.png(f"assets/{NS}/textures/font/badge_{key}.png", im)
-        provs.append({"type": "bitmap", "file": f"{NS}:font/badge_{key}.png", "height": 13, "ascent": 10, "chars": [ch]})
+        provs.append({"type": "bitmap", "file": f"{NS}:font/badge_{key}.png", "height": 8, "ascent": 7, "chars": [ch]})
     for key, (ch, im) in build().items():
         pack.png(f"assets/{NS}/textures/font/hubscr_{key}.png", im)
         h = im.size[1] // 2
         provs.append({"type": "bitmap", "file": f"{NS}:font/hubscr_{key}.png", "height": h, "ascent": h, "chars": [ch]})
+    provs.append({"type": "space", "advances": {" ": 4}})          # 이어지는 공백이 이 글꼴을 물려받아도 □ 가 안 뜨게
     pack.put(f"assets/{NS}/font/hubscr.json", {"providers": provs})
 
 

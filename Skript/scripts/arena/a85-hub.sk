@@ -635,9 +635,9 @@ on load:
     bgCmd("team modify 0hub color aqua")
     bgCmd("team modify 1myth color gold")
     bgCmd("team modify os_play color red")
-    bgCmd("team modify 0hub prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" ""}]")
-    bgCmd("team modify 1myth prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" ""}]")
-    bgCmd("team modify os_play prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" ""}]")
+    bgCmd("team modify 0hub prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
+    bgCmd("team modify 1myth prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
+    bgCmd("team modify os_play prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
 
 every 1 second:
     set {_nh} to 0
