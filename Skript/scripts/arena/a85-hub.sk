@@ -412,6 +412,54 @@ on inventory click:
     wait 1 tick
     bgHubGo(player, {_k})
 
+# ─────────────────────────────────────────────────────────── 컨텐츠마다 다른 서버처럼 (명령어 나누기)
+#  허브 · 온리소드 연습장에서는 신화쟁탈전 명령어를 못 씀 (신화쟁탈전 안에서만)
+#   참가자 명령 (/상점 · /코인 · /로비 · /중참 · /팀 · /팀채팅) = 모두 막음
+#   관리자 명령 (/전장 · /팀잠금 · /네메시스 · /코인주기 …) = 관리자(OP)는 어디서든 씀 (운영용), 아닌 사람은 막음
+#  신화쟁탈전 안에서는 온리소드 입장 명령 (/연습장 · /무기) 을 못 씀 → /허브 의 PvP 오락기로 (/연습장 랭킹 · 전적은 됨)
+#  어디서나: /허브 · /신화쟁탈전 · /컨텐츠 · /리팩 · /힐 · /업데이트테스트
+function bgArea(p: player) :: text:
+    if {-bg::pvp::%uuid of {_p}%} is true:
+        return "pvp"
+    if bgInHub({_p}) is true:
+        return "hub"
+    return "myth"
+
+on load:
+    set {-bg::cmdzone::myth_player::*} to "상점", "shop", "코인", "로비", "lobby", "중참", "midjoin", "팀", "tc" and "팀채팅"
+    set {-bg::cmdzone::myth_admin::*} to "전장", "bg", "코인주기", "givecoin", "코인설정", "자유팀선택", "팀초기화", "광석막대", "관전자", "nogame", "관전자목록", "tnt함정", "팀잠금", "teamlock", "네메시스" and "nemesis"
+    set {-bg::cmdzone::pvp::*} to "연습장", "pvp장", "pvp" and "무기"
+
+on command:
+    sender is a player
+    bgHubReady() is true
+    set {_c} to "%command%"
+    if {_c} contains ":":
+        set {_c} to last element of ({_c} split at ":")
+    set {_area} to bgArea(player)
+    if {_area} is "myth":
+        {-bg::cmdzone::pvp::*} contains {_c}
+        set {_a} to "%arguments%"
+        if {_a} starts with "랭킹" or "순위" or "전적" or "잠금" or "열기" or "전체나가기":
+            stop
+        cancel event
+        send "&6[신화쟁탈전] &7여기는 신화쟁탈전입니다. PvP 온리소드는 &e/허브 &7에서 PvP 오락기로 들어가세요."
+        play sound "block.note_block.bass" to player
+        stop
+    set {_block} to false
+    if {-bg::cmdzone::myth_player::*} contains {_c}:
+        set {_block} to true
+    else if {-bg::cmdzone::myth_admin::*} contains {_c}:
+        if player is not op:
+            set {_block} to true
+    {_block} is true
+    cancel event
+    if {_area} is "hub":
+        send "&b[허브] &7여기는 허브입니다. 신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/신화쟁탈전 &7으로 이동"
+    else:
+        send "&c[온리소드] &7신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/연습장 나가기 &7또는 &e/허브"
+    play sound "block.note_block.bass" to player
+
 # ─────────────────────────────────────────────────────────── 명령
 command /허브 [<text>] [<text>]:
     aliases: /hub, /스폰
