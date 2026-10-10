@@ -199,7 +199,7 @@ function bgHubBuild(p: player, here: boolean = false):
     bgCmd("data merge storage bg:hub {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z}%}}")
     send "&b[허브] &f신화 아케이드 허브를 짓는 중... &7(약 6초 · 큰 건물이라 잠깐 끊길 수 있음) &8위치 %{bg::hub::x}% %{bg::hub::y}% %{bg::hub::z}%" to {_p}
     bgCmd("function bg:hub/build")
-    wait 110 ticks
+    wait 130 ticks
     set {bg::hub::built} to true
     teleport {_p} to bgHubMk("spawn")
     wait 40 ticks

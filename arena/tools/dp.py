@@ -944,8 +944,16 @@ def hub_functions(dp_root):
     F = os.path.join(dp_root, "data", NS, "function", "hub")
     cmds = hubgen.commands(greedy_boxes)
     x0, z0, x1, z1 = hubgen.forceload_range()
+    # 맨 앞 조각: 허브 자리를 먼저 비움 (다시 지을 때 예전 모양 · 옮긴 행성이 남지 않게) — fill 한 번에 32×32×32 이하
+    N, H, FL, C = hubgen.N, hubgen.H, hubgen.FL, hubgen.C
+    clear = []
+    for bx in range(0, N, 32):
+        for by in range(0, H, 32):
+            for bz in range(0, N, 32):
+                ex, ey, ez = min(bx + 31, N - 1), min(by + 31, H - 1), min(bz + 31, N - 1)
+                clear.append(f"$execute positioned $(x) $(y) $(z) run fill ~{bx - C} ~{by - FL} ~{bz - C} ~{ex - C} ~{ey - FL} ~{ez - C} minecraft:air")
     per = 1500
-    parts = [cmds[i:i + per] for i in range(0, len(cmds), per)]
+    parts = [clear] + [cmds[i:i + per] for i in range(0, len(cmds), per)]
     for i, part in enumerate(parts):
         w(os.path.join(F, "p", f"{i}_run.mcfunction"), part)
         nxt = f"schedule function bg:hub/p/{i + 1} 3t" if i + 1 < len(parts) else "schedule function bg:hub/fl_rm 20t"
