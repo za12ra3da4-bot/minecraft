@@ -2,8 +2,10 @@
 #  경찰과 도둑 (경도) — 허브 보라 오락기로 들어가는 시참 컨텐츠 (밤 네온 대도시, arena/tools/copsgen.py)
 #   대기실 = 랜드마크 타워 꼭대기 전망대. 관리자가 /경도 시작 [경찰 수] → 역할 배정
 #   도둑: 도시 곳곳으로 흩어짐 · 털이 장소 6곳 (은행 · 카지노 · 보석상 · 창고 · 박물관 · 편의점) 앞에 6초 서 있으면 돈가방 +1 (경찰 출동 전엔 못 텀)
-#         목표 돈가방을 채우면 북동쪽 헬기장 타워 옥상(35칸 · 계단)의 탈출 헬기가 열림 → 들어온 도둑은 '탈출 성공' (전망대로) · 판은 계속
-#         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 한 명이라도 탈출하면 도둑 승리
+#         팀 목표 돈가방(도둑 수에 맞게 늘어남)을 채우면 북동쪽 헬기장 타워 옥상(35칸 · 계단)의 탈출 헬기가 열림
+#         헬기는 돈가방을 1개 이상 들고 있는 도둑만 탈 수 있음 (가방 1개가 탑승권) → '탈출 성공' (전망대로) · 판은 계속
+#         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 도둑 3명 중 1명꼴 (올림) 이상 탈출해야 도둑 승리
+#         사람이 많을수록 털이 장소 다시 털 수 있는 시간이 짧아짐 (40초 → 최소 20초)
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
 #   경찰: 20초 뒤 출동 (경찰서) · 빠름 · 경찰봉으로 3대 때리면 체포 (대마다 5초 안 · 맞으면 뒤로 밀려남) (들고 있던 돈가방 압수) · 무전기 · 60초마다 레이더 (도둑 3초 빛남)
 #         도둑 전원 체포 또는 시간 종료 → 경찰 승리
@@ -243,7 +245,10 @@ function bgKdStart(s: command sender, cops: number = 0):
         else:
             set {-bg::kd::role::%uuid of loop-value%} to "thief"
     set {_t} to {_n} - {_c}
-    set {-bg::kd::goal} to {bg::cfg::kd_goal} ? max(3, min(8, {_t} + 1))
+    # 목표 돈가방: 도둑 수에 맞게 (4명 5개 · 10명 9개 · 20명 17개) · 탈출해야 할 도둑 수: 3명 중 1명꼴 (올림)
+    set {-bg::kd::goal} to {bg::cfg::kd_goal} ? max(3, ceil({_t} * 0.8) + 1)
+    set {-bg::kd::need} to max(1, ceil({_t} / 3))
+    set {-bg::kd::hcdmax} to max(20, min(40, 46 - {_t} * 2))
     set {-bg::kd::bags} to 0
     set {-bg::kd::open} to false
     set {-bg::kd::left} to ({bg::cfg::kd_min} ? 8) * 60
@@ -257,13 +262,14 @@ function bgKdStart(s: command sender, cops: number = 0):
         if bgKdRole(loop-value) is "thief":
             bgKdThiefKit(loop-value)
             teleport loop-value to bgKdThiefSpot()
-            bgTitleP(loop-value, "&c&l당신은 도둑!", "&f20초 안에 숨으세요 · 돈가방 %{-bg::kd::goal}%개 훔쳐 헬기장으로 탈출")
+            bgTitleP(loop-value, "&c&l당신은 도둑!", "&f20초 안에 숨으세요 · 팀 돈가방 %{-bg::kd::goal}%개 → 가방 들고 헬기 탑승 · %{-bg::kd::need}%명 탈출하면 승리")
         else:
             bgKdCopKit(loop-value)
             teleport loop-value to bgKdMk("wait")
             bgCmd("effect give %name of loop-value% blindness 21 0 true")
             bgTitleP(loop-value, "&9&l당신은 경찰!", "&f20초 뒤 출동 · 경찰봉으로 도둑을 때리면 체포")
-    bgKdSay("&f판 시작! &9경찰 %{_c}%명 &7vs &c도둑 %{_t}%명 &7· 목표 돈가방 &6%{-bg::kd::goal}%개 &7· 제한 %bgKdTime({-bg::kd::left})%")
+    bgKdSay("&f판 시작! &9경찰 %{_c}%명 &7vs &c도둑 %{_t}%명 &7· 팀 목표 돈가방 &6%{-bg::kd::goal}%개 &7· 도둑 승리 = &a%{-bg::kd::need}%명 탈출 &7· 제한 %bgKdTime({-bg::kd::left})%")
+    bgKdSay("&7헬기는 돈가방을 들고 있는 도둑만 탈 수 있어요 (가방 1개 = 탑승권)")
     bgKdSound("entity.ender_dragon.growl", 1.4)
 
 function bgKdEnd(win: text, why: text):
@@ -334,10 +340,14 @@ function bgKdCheck():
     if bgKdCount("thief") is 0:
         bgKdEnd("cop", "도둑이 모두 나갔습니다")
         stop
+    set {_e} to bgKdCount("esc")
+    set {_need} to {-bg::kd::need} ? 1
+    if {_e} >= {_need}:
+        bgKdEnd("thief", "도둑 %{_e}%명 탈출 성공! (필요 %{_need}%명)")
+        stop
     if bgKdCount("free") is 0:
-        set {_e} to bgKdCount("esc")
         if {_e} > 0:
-            bgKdEnd("thief", "도둑 %{_e}%명 탈출 · 남은 도둑 없음")
+            bgKdEnd("cop", "남은 도둑 전원 체포 · 탈출 %{_e}%/%{_need}%명으로 부족")
         else:
             bgKdEnd("cop", "도둑 전원 체포!")
 
@@ -386,7 +396,7 @@ function bgKdSteal(p: player, i: number):
     add 1 to {-bg::kd::bags}
     add 1 to {-bg::kd::carry::%uuid of {_p}%}
     bgCmd("give %name of {_p}% rabbit_hide[item_model=""bg:kd/bag"",item_name={text:""돈가방"",color:""gold"",bold:true},lore=[{text:""잡히면 압수됩니다! 헬기장으로 탈출하세요"",color:""gray"",italic:false}]]")
-    set {-bg::kd::hcd::%{_i}%} to 40
+    set {-bg::kd::hcd::%{_i}%} to {-bg::kd::hcdmax} ? 40
     add 1 to {bg::kd::steals::%uuid of {_p}%}
     set {bg::kd::name::%uuid of {_p}%} to name of {_p}
     bgParticle(location of {_p}, "wax_on", 0.6, 1, 0.6, 0, 30)
@@ -400,6 +410,9 @@ function bgKdSteal(p: player, i: number):
             bgKdTexts()
 
 function bgKdEscape(p: player):
+    # 돈가방 1개 = 탑승권 (내고 탐)
+    bgCmd("clear %name of {_p}% rabbit_hide 1")
+    remove 1 from {-bg::kd::carry::%uuid of {_p}%}
     set {-bg::kd::esc::%uuid of {_p}%} to true
     delete {-bg::kd::prog::%uuid of {_p}%}
     add 1 to {bg::kd::escapes::%uuid of {_p}%}
@@ -407,11 +420,11 @@ function bgKdEscape(p: player):
     bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 60)
     bgCmd("effect clear %name of {_p}%")
     teleport {_p} to bgKdMk("wait")
-    bgTitleP({_p}, "&c&l도둑 승리!", "&a헬기로 탈출 성공 &7· 전망대에서 판이 끝날 때까지 구경")
+    bgTitleP({_p}, "&a&l탈출 성공!", "&f헬기로 빠져나왔습니다 &7· 도둑 %{-bg::kd::need} ? 1%명이 탈출하면 승리 · 전망대에서 구경")
     play sound "ui.toast.challenge_complete" to {_p}
     set {_e} to bgKdCount("esc")
     set {_f} to bgKdCount("free")
-    bgKdSay("&a🚁 %name of {_p}% 탈출 성공! &7(탈출 %{_e}%명 · 아직 도시에 %{_f}%명)")
+    bgKdSay("&a🚁 %name of {_p}% 탈출 성공! &7(탈출 &a%{_e}%/%{-bg::kd::need} ? 1%명 &7· 아직 도시에 %{_f}%명)")
     bgKdCheck()
 
 on damage of player:
@@ -535,7 +548,10 @@ every 5 ticks:
             # 옥상 헬기 타는 문 앞 (아래층에서 겹치지 않게 높이도 확인)
             if bgDist2(location of {_p}, bgKdMk("escape")) < 4:
                 if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("escape"))) < 3:
-                    bgKdEscape({_p})
+                    if ({-bg::kd::carry::%{_u}%} ? 0) >= 1:
+                        bgKdEscape({_p})
+                    else:
+                        send action bar "&c돈가방이 있어야 헬기에 탈 수 있어요! &7(털이 장소에서 하나 훔쳐 오세요)" to {_p}
 
 # 위쪽 보스바: 남은 시간 · 돈가방 · 남은 도둑 (경도에 있는 사람만 = 태그 bgkd)
 function bgKdBar():
@@ -557,10 +573,10 @@ function bgKdBar():
     set {_e} to bgKdCount("esc")
     if {-bg::kd::open} is true:
         bgCmd("bossbar set bg:kd color yellow")
-        bgCmd("bossbar set bg:kd name [{text:""🚁 탈출구 열림! "",color:""gold"",bold:true},{text:""%{_tm}% · 남은 도둑 %{_f}% · 탈출 %{_e}%명"",color:""white""}]")
+        bgCmd("bossbar set bg:kd name [{text:""🚁 헬기 시동! "",color:""gold"",bold:true},{text:""%{_tm}% · 남은 도둑 %{_f}% · 탈출 %{_e}%/%{-bg::kd::need} ? 1%명 (가방 들고 탑승)"",color:""white""}]")
     else:
         bgCmd("bossbar set bg:kd color red")
-        bgCmd("bossbar set bg:kd name [{text:""%{_tm}% "",color:""yellow"",bold:true},{text:""· 돈가방 %{-bg::kd::bags}%/%{-bg::kd::goal}% · 남은 도둑 %{_f}%/%{_t}%"",color:""white""}]")
+        bgCmd("bossbar set bg:kd name [{text:""%{_tm}% "",color:""yellow"",bold:true},{text:""· 돈가방 %{-bg::kd::bags}%/%{-bg::kd::goal}% · 남은 도둑 %{_f}%/%{_t}% · 탈출 필요 %{-bg::kd::need} ? 1%명"",color:""white""}]")
 
 # 매초: 시간 · 출동 대기 · 레이더 · 화면 표시 · 떨어짐 · 배고픔
 every 1 second:
@@ -604,7 +620,7 @@ every 1 second:
         if {-bg::kd::left} <= 0:
             set {_e} to bgKdCount("esc")
             if {_e} > 0:
-                bgKdEnd("thief", "시간 종료 — 도둑 %{_e}%명 탈출")
+                bgKdEnd("cop", "시간 종료 — 탈출 %{_e}%/%{-bg::kd::need} ? 1%명으로 부족")
             else:
                 bgKdEnd("cop", "시간 종료 — 아무도 탈출하지 못했습니다")
     loop all players:
