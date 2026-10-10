@@ -656,7 +656,7 @@ every 1 second:
         else if {-bg::tabteam::%{_u}%} is not {_want}:
             set {-bg::tabteam::%{_u}%} to {_want}
             bgCmd("team join %{_want}% %name of {_pp}%")
-    set {_head} to colored "&b&l신화 아케이드&r\n&7오락기 앞 발판으로 컨텐츠 이동 · /허브"
+    set {_head} to colored "&b&l신화 아케이드&r%nl%&7오락기 앞 발판으로 컨텐츠 이동 · /허브"
     set {_foot} to colored "&b허브 &f%{_nh}%명  &6신화쟁탈전 &f%{_nm}%명  &c온리소드 &f%{_no}%명  &9경도 &f%{_nk}%명"
     loop all players:
         set {_pp} to loop-player
