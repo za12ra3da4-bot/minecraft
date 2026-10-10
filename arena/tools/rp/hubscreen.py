@@ -123,7 +123,7 @@ BADGES = [
     ("thief", "\ue014", "도둑", "mask", (255, 90, 90), (150, 10, 30), (50, 4, 10)),
     ("kdwait", "\ue015", "경도", "siren", (190, 140, 255), (100, 50, 210), (40, 14, 90)),
 ]
-BH = 48                          # 배지 그림 높이 (글꼴 높이 12 × 4)
+BH = 52                          # 배지 그림 높이 (글꼴 높이 13 × 4)
 FONT9 = os.path.join(HERE, "fonts", "galmuri", "Galmuri9.ttf")
 
 
@@ -162,59 +162,57 @@ def _icon(d, kind, x, y, s):
 
 
 def badge(text, kind, light, base, dark):
-    """이스포츠 태그 모양: 비스듬한 평행사변형 · 네온 테두리 · 위→아래 그라데이션 · 사선 광택 · 왼쪽 밝은 띠 · 흰 픽셀 글씨 (갈무리9, 4배 크게)"""
-    S = 4
+    """픽셀 튜브 배지: 12픽셀 높이 도트 그림 (계단식 둥근 끝 · 줄마다 원통 음영 · 위 반사 줄) → 4배 확대 (칸 그대로)"""
     f = ImageFont.truetype(FONT9, 10)
     l, t, r, b = f.getbbox(text)
-    tm = Image.new("L", (r - l + 2, b - t + 2), 0)
+    tw = r - l
+    h = BH // 4                               # 12
+    w = tw + 10
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    px = im.load()
+
+    def mix(a, c, k):
+        return tuple(int(a[i] + (c[i] - a[i]) * k) for i in range(3))
+    # 줄마다 색 (위 → 아래): 테두리 · 반사 · 밝음 · 몸통 · 그늘 · 테두리
+    rows = [dark, mix(light, (255, 255, 255), 0.55), light, mix(light, base, 0.5), base, base, base, base,
+            mix(base, dark, 0.3), mix(base, dark, 0.5), mix(base, dark, 0.7), dark, None]
+    cut = {0: 3, 1: 1, 2: 1, 9: 1, 10: 3, 11: 99}        # 줄마다 양끝을 깎는 칸 수 (둥근 끝)
+    cut = {0: 3, 1: 2, 2: 1, 9: 1, 10: 2, 11: 3, 12: 99}
+    for y in range(h):
+        c = rows[y]
+        if c is None:
+            continue
+        k = cut.get(y, 0)
+        for x in range(k, w - k):
+            col = c
+            # 양끝 테두리 (진한 색) · 바로 안쪽은 살짝 어둡게 (원통 둘레)
+            if x == k or x == w - 1 - k:
+                col = dark
+            elif x in (k + 1, w - 2 - k) and 0 < y < 11:
+                col = mix(c, dark, 0.35)
+            px[x, y] = col + (255,)
+    # 위 반사 줄 (흰 점선 느낌)
+    for x in range(4, w - 4):
+        if x % 7 not in (0,):
+            px[x, 1] = mix(light, (255, 255, 255), 0.8) + (255,)
+    px[3, 2] = (255, 255, 255, 255)
+    # 아래 그림자 한 줄
+    for x in range(3, w - 3):
+        px[x, 12] = (0, 0, 0, 110)
+    # 글씨: 진한 그림자 + 흰 글씨 (갈무리9 도트)
+    tm = Image.new("L", (w, h), 0)
     td = ImageDraw.Draw(tm)
     td.fontmode = "1"
-    td.text((1 - l, 1 - t), text, font=f, fill=255)
-    tm = tm.resize((tm.size[0] * S, tm.size[1] * S), Image.NEAREST)
-    h = BH
-    sl = 10                                   # 비스듬한 정도
-    w = sl * 2 + 14 + tm.size[0] + 10
-    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-
-    def para(m, x0, y0, x1, y1, fill, k=sl):
-        ImageDraw.Draw(m).polygon([(x0 + k, y0), (x1, y0), (x1 - k, y1), (x0, y1)], fill=fill)
-    # 바깥 빛 번짐 (색) → 진한 테두리 → 안쪽 그라데이션
-    glow = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    para(glow, 0, 0, w - 1, h - 1, light + (110,), sl + 1)
-    im.alpha_composite(glow)
-    para(im, 2, 2, w - 3, h - 3, dark + (255,))
-    mask = Image.new("L", (w, h), 0)
-    para(mask, 5, 5, w - 6, h - 6, 255, sl - 1)
-    grad = Image.new("RGBA", (w, h))
-    gp = grad.load()
-    for yy in range(h):
-        tt = max(0, min(1, (yy - 5) / (h - 11)))
-        c = tuple(int(base[i] * (1 - tt * 0.55) + light[i] * (1 - tt) * 0.25) for i in range(3))
-        for xx in range(w):
-            gp[xx, yy] = tuple(min(255, v) for v in c) + (255,)
-    im.paste(grad, (0, 0), mask)
-    # 네온 테두리 (밝은 색 1겹)
-    edge = Image.new("L", (w, h), 0)
-    para(edge, 3, 3, w - 4, h - 4, 255)
-    para(edge, 5, 5, w - 6, h - 6, 0, sl - 1)
-    im.paste(Image.new("RGBA", (w, h), light + (255,)), (0, 0), edge)
-    # 사선 광택 (위쪽 절반)
-    shine = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    sd = ImageDraw.Draw(shine)
-    sd.polygon([(sl + 4, 6), (w - 7, 6), (w - 7 - 6, h // 2 - 2), (sl - 2, h // 2 - 2)], fill=(255, 255, 255, 46))
-    for k in range(3):
-        x = w * (0.55 + k * 0.08)
-        sd.polygon([(x, 6), (x + 6, 6), (x - 8, h - 7), (x - 14, h - 7)], fill=(255, 255, 255, 26))
-    sh = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    sh.paste(shine, (0, 0), mask)
-    im.alpha_composite(sh)
-    # 왼쪽 밝은 띠
-    para(im, 6, 6, 6 + sl + 6, h - 7, light + (255,), sl - 1)
-    # 글씨: 그림자 (1픽셀 아래) + 흰 글씨
-    tx, ty = sl + 14 + 4, (h - tm.size[1]) // 2 + 1
-    im.paste(Image.new("RGBA", tm.size, dark + (255,)), (tx + S // 2, ty + S), tm)
-    im.paste(Image.new("RGBA", tm.size, (255, 255, 255, 255)), (tx, ty), tm)
-    return im
+    ty = 2 - t + max(0, (9 - (b - t)) // 2)
+    td.text((5 - l + 1, ty + 1), text, font=f, fill=255)
+    shadow = tm.copy()
+    tm = Image.new("L", (w, h), 0)
+    td = ImageDraw.Draw(tm)
+    td.fontmode = "1"
+    td.text((5 - l, ty), text, font=f, fill=255)
+    im.paste(Image.new("RGBA", (w, h), dark + (255,)), (0, 0), shadow)
+    im.paste(Image.new("RGBA", (w, h), (255, 255, 255, 255)), (0, 0), tm)
+    return im.resize((w * 4, h * 4), Image.NEAREST)
 
 
 def export(pack):
@@ -222,7 +220,7 @@ def export(pack):
     for key, ch, text, kind, light, base, dark in BADGES:
         im = badge(text, kind, light, base, dark)
         pack.png(f"assets/{NS}/textures/font/badge_{key}.png", im)
-        provs.append({"type": "bitmap", "file": f"{NS}:font/badge_{key}.png", "height": 12, "ascent": 9, "chars": [ch]})
+        provs.append({"type": "bitmap", "file": f"{NS}:font/badge_{key}.png", "height": 13, "ascent": 10, "chars": [ch]})
     for key, (ch, im) in build().items():
         pack.png(f"assets/{NS}/textures/font/hubscr_{key}.png", im)
         h = im.size[1] // 2
