@@ -46,12 +46,9 @@ on tab complete of "/전장" or "/bg":
 
 on tab complete of "/연습장" or "/pvp장" or "/pvp":
     if player is op:
-        set tab completions for position 1 to "1", "2", "석영", "용암", "나가기", "랭킹", "전적", "잠금", "열기", "전체나가기" and "전적초기화"
+        set tab completions for position 1 to "1", "2", "석영", "용암", "나가기", "잠금", "열기" and "전체나가기"
     else:
-        set tab completions for position 1 to "1", "2", "석영", "용암", "나가기", "랭킹" and "전적"
-    set {_a} to tab arg-1
-    if {_a} is "전적":
-        set tab completions for position 2 to all players
+        set tab completions for position 1 to "1", "2", "석영", "용암" and "나가기"
 
 on tab complete of "/리팩" or "/rp":
     if player is op:
@@ -97,6 +94,27 @@ on tab complete of "/신화쟁탈전" or "/myth":
 on tab complete of "/컨텐츠" or "/content":
     if player is op:
         set tab completions for position 1 to "잠금", "열기" and "목록"
-        set tab completions for position 2 to "신화쟁탈전", "연습장", "준비1" and "준비2"
+        set tab completions for position 2 to "신화쟁탈전", "온리소드", "경도" and "준비2"
     else:
         set tab completions for position 1 to "목록"
+
+on tab complete of "/온리소드" or "/os" or "/onlysword":
+    if player is op:
+        set tab completions for position 1 to "나가기", "랭킹", "전적", "건설" and "전적초기화"
+    else:
+        set tab completions for position 1 to "나가기", "랭킹" and "전적"
+
+on tab complete of "/경도" or "/kd":
+    if player is op:
+        set tab completions for position 1 to "시작", "종료", "시간", "목표", "나가기", "전적", "랭킹", "건설", "글자" and "전적초기화"
+    else:
+        set tab completions for position 1 to "나가기", "전적" and "랭킹"
+    set {_a} to tab arg-1
+    if {_a} is "시작":
+        set tab completions for position 2 to "1", "2", "3" and "4"
+    else if {_a} is "시간":
+        set tab completions for position 2 to "5", "8", "10" and "15"
+    else if {_a} is "목표":
+        set tab completions for position 2 to "자동", "3", "5" and "8"
+    else if {_a} is "전적":
+        set tab completions for position 2 to all players

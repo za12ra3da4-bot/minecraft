@@ -224,6 +224,20 @@ def write_hub(path):
         L.append(f"    set {{-bg::hubmk::{name}::z}} to {pos[2]}")
         if len(pos) > 3:
             L.append(f"    set {{-bg::hubmk::{name}::yaw}} to {pos[3]}")
+    # 온리소드 경기장 · 경도 도시 표지 (각자 가운데 바닥 칸 기준)
+    import osarena
+    import copsgen
+    for pre, mk in (("osmk", osarena.markers()), ("kdmk", copsgen.markers())):
+        for name, pos in sorted(mk.items()):
+            if isinstance(pos, str):
+                continue
+            L.append(f"    set {{-bg::{pre}::{name}::x}} to {pos[0]}")
+            L.append(f"    set {{-bg::{pre}::{name}::y}} to {pos[1]}")
+            L.append(f"    set {{-bg::{pre}::{name}::z}} to {pos[2]}")
+            if len(pos) > 3:
+                L.append(f"    set {{-bg::{pre}::{name}::yaw}} to {pos[3]}")
+    for i, nm in enumerate(copsgen.heist_names()):
+        L.append(f"    set {{-bg::kd::heistname::{i}}} to {q(nm)}")
     # 오락기 화면 로고 (리소스팩 글꼴 bg:hubscr 의 글자 하나 = 로고 하나) · 글꼴 픽셀 크기
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "rp"))
     import hubscreen

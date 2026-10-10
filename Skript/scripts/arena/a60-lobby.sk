@@ -179,6 +179,13 @@ every 10 ticks:
 
 # 대기실 안 피해 없음 · 게임 밖에서는 사람끼리 못 때림
 on damage of player:
+    # 온리소드 · 경도는 다른 서버처럼 따로 (a87 · a88 이 정함)
+    if bgArea(victim) is not "myth":
+        stop
+    if attacker is a player:
+        if bgArea(attacker) is not "myth":
+            cancel event
+            stop
     if bgInLobby(victim) is true:
         if {-bg::on} is not true:
             cancel event

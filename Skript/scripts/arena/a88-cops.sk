@@ -1,0 +1,673 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  경찰과 도둑 (경도) — 허브 보라 오락기로 들어가는 시참 컨텐츠 (밤 네온 대도시, arena/tools/copsgen.py)
+#   대기실 = 랜드마크 타워 꼭대기 전망대. 관리자가 /경도 시작 [경찰 수] → 역할 배정
+#   도둑: 도시 곳곳으로 흩어짐 · 털이 장소 6곳 (은행 · 카지노 · 보석상 · 창고 · 박물관 · 편의점) 앞에 4초 서 있으면 돈가방 +1
+#         목표 돈가방을 채우면 북동쪽 탈출 헬기장 열림 → 한 명이라도 탈출하면 도둑 승리
+#         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
+#   경찰: 20초 뒤 출동 (경찰서) · 빠름 · 경찰봉으로 도둑을 때리면 체포 · 60초마다 레이더 (도둑 3초 빛남)
+#         도둑 전원 체포 또는 시간 종료 → 경찰 승리
+#   허브 · 신화쟁탈전과 별개 서버처럼: 피해 없음 (체포만) · 블록 못 부숨 · 밤 · 이름표는 같은 편만
+#   /경도 (/kd) 들어가기 · /경도 나가기 · /경도 전적 [플레이어] · /경도 랭킹
+#   관리자: /경도 시작 [경찰수] · /경도 종료 · /경도 시간 <분> · /경도 목표 <개|자동> · /경도 건설 · /경도 글자
+#   도시 원점 = 허브 원점 + (0, 0, -260)  (storage bg:kd origin)
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgKdOn(p: player) :: boolean:
+    if {-bg::kd::in::%uuid of {_p}%} is true:
+        return true
+    return false
+
+function bgKdReady() :: boolean:
+    if {bg::kd::built} is true:
+        if {bg::hub::x} is set:
+            return true
+    return false
+
+function bgKdAt(dx: number, dy: number, dz: number) :: location:
+    return location({bg::hub::x} + {_dx}, {bg::hub::y} + {_dy}, {bg::hub::z} - 260 + {_dz}, bgWorld())
+
+function bgKdMk(n: text) :: location:
+    set {_l} to bgKdAt({-bg::kdmk::%{_n}%::x}, {-bg::kdmk::%{_n}%::y}, {-bg::kdmk::%{_n}%::z})
+    if {-bg::kdmk::%{_n}%::yaw} is set:
+        set yaw of {_l} to {-bg::kdmk::%{_n}%::yaw}
+    return {_l}
+
+function bgKdRole(p: player) :: text:
+    return {-bg::kd::role::%uuid of {_p}%} ? ""
+
+function bgKdJailed(p: player) :: boolean:
+    if {-bg::kd::jail::%uuid of {_p}%} is true:
+        return true
+    return false
+
+function bgKdState() :: text:
+    return {-bg::kd::state} ? "wait"
+
+function bgKdSay(m: text):
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            send "&9[경도] &f%{_m}%" to loop-player
+
+function bgKdTitle(t: text, s: text):
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            bgTitleP(loop-player, {_t}, {_s})
+
+function bgKdSound(s: text, pitch: number):
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            play sound {_s} with volume 1 and pitch {_pitch} to loop-player
+
+function bgKdTime(s: number) :: text:
+    set {_m} to floor({_s} / 60)
+    set {_r} to mod(floor({_s}), 60)
+    if {_r} < 10:
+        return "%{_m}%:0%{_r}%"
+    return "%{_m}%:%{_r}%"
+
+# 숫자 세기: role = cop · thief · free (안 잡힌 도둑) · all
+function bgKdCount(r: text) :: number:
+    set {_n} to 0
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            set {_ro} to bgKdRole(loop-player)
+            if {_r} is "all":
+                add 1 to {_n}
+            else if {_r} is "free":
+                if {_ro} is "thief":
+                    if bgKdJailed(loop-player) is false:
+                        add 1 to {_n}
+            else if {_ro} is {_r}:
+                add 1 to {_n}
+    return {_n}
+
+# 막힌 칸이면 위로 (차 · 물건 위에 떨어지지 않게)
+function bgKdSafe(l: location) :: location:
+    loop 6 times:
+        if block at {_l} is air:
+            if block at bgUp({_l}, 1) is air:
+                return {_l}
+        set {_l} to bgUp({_l}, 1)
+    return {_l}
+
+function bgKdThiefSpot() :: location:
+    return bgKdSafe(bgKdMk("thief_%random integer between 0 and 11%"))
+
+# 이름표 색 · 같은 편만 이름 보임 (도둑은 숨기 쉽게)
+function bgKdTeams():
+    bgCmd("team add kd_cop")
+    bgCmd("team add kd_thief")
+    bgCmd("team add kd_wait")
+    bgCmd("team modify kd_cop color blue")
+    bgCmd("team modify kd_thief color red")
+    bgCmd("team modify kd_wait color aqua")
+    bgCmd("team modify kd_cop prefix {text:""[경찰] "",color:""blue"",bold:true}")
+    bgCmd("team modify kd_thief prefix {text:""[도둑] "",color:""red"",bold:true}")
+    bgCmd("team modify kd_wait prefix {text:""[경도] "",color:""aqua""}")
+    bgCmd("team modify kd_thief nametagVisibility hideForOtherTeams")
+    bgCmd("team modify kd_cop nametagVisibility hideForOtherTeams")
+    bgCmd("team modify kd_cop friendlyFire false")
+    bgCmd("team modify kd_thief friendlyFire false")
+
+function bgKdClear(p: player):
+    bgClassReset({_p})
+    clear {_p}'s inventory
+    bgCmd("effect clear %name of {_p}%")
+    extinguish {_p}
+    heal {_p}
+    set food level of {_p} to 20
+    set gamemode of {_p} to adventure
+
+function bgKdCopKit(p: player):
+    bgKdClear({_p})
+    set {_n} to name of {_p}
+    bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=1381706,unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=2052283,unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=1381706,unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=1381706,unbreakable={}]")
+    bgCmd("item replace entity %{_n}% hotbar.0 with blaze_rod[item_name={text:""경찰봉"",color:""blue"",bold:true},lore=[{text:""도둑을 때리면 체포"",color:""gray"",italic:false}],enchantment_glint_override=true]")
+    bgCmd("effect give %{_n}% speed infinite 0 true")
+    bgCmd("team join kd_cop %{_n}%")
+
+function bgKdThiefKit(p: player):
+    bgKdClear({_p})
+    set {_n} to name of {_p}
+    bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=1315860,unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=10040115,unbreakable={}]")
+    bgCmd("item replace entity %{_n}% hotbar.0 with snowball[item_name={text:""연막탄"",color:""gray"",bold:true},lore=[{text:""던지면 주변 경찰이 3초 동안 앞이 안 보이고 느려짐"",color:""gray"",italic:false}]] 2")
+    bgCmd("team join kd_thief %{_n}%")
+
+# ─────────────────────────────────────────────────────────── 들어가기 · 나가기
+function bgKdJoin(p: player):
+    if bgKdReady() is false:
+        send "&9[경도] &f도시가 아직 없습니다. &7관리자가 &e/허브 건설 &7또는 &e/경도 건설" to {_p}
+        stop
+    if bgInGame({_p}) is true:
+        send "&9[경도] &7신화쟁탈전 게임 중에는 갈 수 없습니다." to {_p}
+        stop
+    if bgKdOn({_p}) is true:
+        stop
+    bgOsDrop({_p})
+    delete {-bg::pvp::%uuid of {_p}%}
+    delete {-bg::pvpa::%uuid of {_p}%}
+    if {-bg::on} is not true:
+        if bgTeam({_p}) is not "none":
+            bgSetTeam({_p}, "none")
+    bgKdTeams()
+    set {-bg::kd::in::%uuid of {_p}%} to true
+    set {-bg::where::%uuid of {_p}%} to "kd"
+    delete {-bg::kd::role::%uuid of {_p}%}
+    delete {-bg::kd::jail::%uuid of {_p}%}
+    bgKdClear({_p})
+    if bgKdState() is "play":
+        # 판 중간에 오면 도둑으로 바로 참가
+        set {-bg::kd::role::%uuid of {_p}%} to "thief"
+        bgKdThiefKit({_p})
+        teleport {_p} to bgKdThiefSpot()
+        bgTitleP({_p}, "&c&l도둑으로 참가!", "&f털이 장소에서 돈가방을 훔쳐 헬기장으로 탈출하세요")
+        bgKdSay("&e%name of {_p}%&f 도둑으로 중간 참가")
+    else:
+        bgCmd("team join kd_wait %name of {_p}%")
+        teleport {_p} to bgKdMk("wait")
+        bgTitleP({_p}, "&9&l경찰&f과 &c&l도둑", "&f대기실 — 관리자가 시작하면 역할이 정해집니다")
+        set {_n} to bgKdCount("all")
+        bgKdSay("&e%name of {_p}%&f 입장 &7(대기 %{_n}%명)")
+    play sound "block.note_block.pling" to {_p}
+
+# 경도에서 빼기만 (순간이동 없음) · 판 중이면 승부 확인
+function bgKdDrop(p: player):
+    if bgKdOn({_p}) is false:
+        stop
+    delete {-bg::kd::in::%uuid of {_p}%}
+    delete {-bg::kd::role::%uuid of {_p}%}
+    delete {-bg::kd::jail::%uuid of {_p}%}
+    delete {-bg::kd::prog::%uuid of {_p}%}
+    bgCmd("team leave %name of {_p}%")
+    bgCmd("effect clear %name of {_p}%")
+    if bgKdState() is "play":
+        bgKdCheck()
+
+function bgKdLeave(p: player):
+    bgKdDrop({_p})
+    bgToHub({_p})
+
+# ─────────────────────────────────────────────────────────── 판 시작 · 끝
+function bgKdStart(s: command sender, cops: number = 0):
+    if bgKdReady() is false:
+        send "&9[경도] &c도시가 없습니다. /경도 건설" to {_s}
+        stop
+    if bgKdState() is "play":
+        send "&9[경도] &c이미 진행 중입니다. (/경도 종료)" to {_s}
+        stop
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            add loop-player to {_ps::*}
+    set {_n} to size of {_ps::*}
+    if {_n} < 2:
+        send "&9[경도] &c2명 이상 있어야 합니다. (지금 %{_n}%명)" to {_s}
+        stop
+    set {_c} to {_cops}
+    if {_c} < 1:
+        set {_c} to max(1, round({_n} / 4))
+    set {_c} to min({_c}, {_n} - 1)
+    bgKdTeams()
+    set {_ps::*} to shuffled {_ps::*}
+    set {_i} to 0
+    loop {_ps::*}:
+        add 1 to {_i}
+        delete {-bg::kd::jail::%uuid of loop-value%}
+        if {_i} <= {_c}:
+            set {-bg::kd::role::%uuid of loop-value%} to "cop"
+        else:
+            set {-bg::kd::role::%uuid of loop-value%} to "thief"
+    set {_t} to {_n} - {_c}
+    set {-bg::kd::goal} to {bg::cfg::kd_goal} ? max(3, min(8, {_t} + 1))
+    set {-bg::kd::bags} to 0
+    set {-bg::kd::open} to false
+    set {-bg::kd::left} to ({bg::cfg::kd_min} ? 8) * 60
+    set {-bg::kd::hold} to 20
+    set {-bg::kd::radar} to 60
+    delete {-bg::kd::hcd::*}
+    delete {-bg::kd::prog::*}
+    set {-bg::kd::state} to "play"
+    bgKdTexts()
+    loop {_ps::*}:
+        if bgKdRole(loop-value) is "thief":
+            bgKdThiefKit(loop-value)
+            teleport loop-value to bgKdThiefSpot()
+            bgTitleP(loop-value, "&c&l당신은 도둑!", "&f20초 안에 숨으세요 · 돈가방 %{-bg::kd::goal}%개 훔쳐 헬기장으로 탈출")
+        else:
+            bgKdCopKit(loop-value)
+            teleport loop-value to bgKdMk("wait")
+            bgCmd("effect give %name of loop-value% blindness 21 0 true")
+            bgTitleP(loop-value, "&9&l당신은 경찰!", "&f20초 뒤 출동 · 경찰봉으로 도둑을 때리면 체포")
+    bgKdSay("&f판 시작! &9경찰 %{_c}%명 &7vs &c도둑 %{_t}%명 &7· 목표 돈가방 &6%{-bg::kd::goal}%개 &7· 제한 %bgKdTime({-bg::kd::left})%")
+    bgKdSound("entity.ender_dragon.growl", 1.4)
+
+function bgKdEnd(win: text, why: text):
+    if bgKdState() is not "play":
+        stop
+    set {-bg::kd::state} to "end"
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            set {_r} to bgKdRole(loop-player)
+            if {_win} is "none":
+                bgTitleP(loop-player, "&7&l판 종료", "&f%{_why}%")
+            else if {_r} is {_win}:
+                bgTitleP(loop-player, "&6&l승리!", "&f%{_why}%")
+                add 1 to {bg::kd::wins::%uuid of loop-player%}
+                play sound "ui.toast.challenge_complete" to loop-player
+            else:
+                bgTitleP(loop-player, "&c&l패배", "&f%{_why}%")
+    if {_win} is "cop":
+        bgKdSay("&9&l경찰 승리! &f%{_why}%")
+    else if {_win} is "thief":
+        bgKdSay("&c&l도둑 승리! &f%{_why}%")
+    else:
+        bgKdSay("&7판 종료 — %{_why}%")
+    bgKdTexts()
+    wait 8 seconds
+    set {-bg::kd::state} to "wait"
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            delete {-bg::kd::role::%uuid of loop-player%}
+            delete {-bg::kd::jail::%uuid of loop-player%}
+            bgKdClear(loop-player)
+            bgCmd("team join kd_wait %name of loop-player%")
+            teleport loop-player to bgKdMk("wait")
+    bgKdTexts()
+    bgKdSay("&f대기실로 돌아왔습니다. 다음 판은 관리자가 &e/경도 시작")
+
+function bgKdCheck():
+    bgKdState() is "play"
+    if bgKdCount("cop") is 0:
+        bgKdEnd("thief", "경찰이 모두 나갔습니다")
+        stop
+    if bgKdCount("thief") is 0:
+        bgKdEnd("cop", "도둑이 모두 나갔습니다")
+        stop
+    if bgKdCount("free") is 0:
+        bgKdEnd("cop", "도둑 전원 체포!")
+
+# ─────────────────────────────────────────────────────────── 체포 · 구출 · 털이 · 탈출
+function bgKdArrest(t: player, c: player):
+    set {-bg::kd::jail::%uuid of {_t}%} to true
+    delete {-bg::kd::prog::%uuid of {_t}%}
+    bgCmd("effect clear %name of {_t}%")
+    teleport {_t} to bgKdMk("jail")
+    bgTitleP({_t}, "&c&l체포!", "&f동료가 감옥 앞 초록 발판을 밟으면 풀려납니다")
+    play sound "block.iron_door.close" to {_t}
+    play sound "entity.experience_orb.pickup" with volume 1 and pitch 0.8 to {_c}
+    add 1 to {bg::kd::arrests::%uuid of {_c}%}
+    set {bg::kd::name::%uuid of {_c}%} to name of {_c}
+    set {_f} to bgKdCount("free")
+    set {_a} to bgKdCount("thief")
+    bgKdSay("&9%name of {_c}%&f 이(가) &c%name of {_t}%&f 체포! &7(남은 도둑 %{_f}%/%{_a}%)")
+    bgKdCheck()
+
+function bgKdRescue(r: player):
+    set {_n} to 0
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            if bgKdJailed(loop-player) is true:
+                delete {-bg::kd::jail::%uuid of loop-player%}
+                set {-bg::kd::imm::%uuid of loop-player%} to now
+                teleport loop-player to bgKdMk("jail_out")
+                bgCmd("effect give %name of loop-player% speed 5 1 true")
+                bgTitleP(loop-player, "&a&l탈옥!", "&f%name of {_r}% 이(가) 구해 줬습니다 · 5초 보호")
+                add 1 to {_n}
+    {_n} > 0
+    set {-bg::kd::rescd} to now
+    add {_n} to {bg::kd::rescues::%uuid of {_r}%}
+    bgKdSay("&a%name of {_r}%&f 이(가) 감옥을 부쉈다! &a%{_n}%명 탈옥")
+    bgKdSound("block.iron_door.open", 1.2)
+
+function bgKdSteal(p: player, i: number):
+    add 1 to {-bg::kd::bags}
+    set {-bg::kd::hcd::%{_i}%} to 40
+    add 1 to {bg::kd::steals::%uuid of {_p}%}
+    set {bg::kd::name::%uuid of {_p}%} to name of {_p}
+    bgParticle(location of {_p}, "wax_on", 0.6, 1, 0.6, 0, 30)
+    play sound "entity.player.levelup" to {_p}
+    bgKdSay("&6%name of {_p}%&f 이(가) &6%{-bg::kd::heistname::%{_i}%}%&f 털이 성공! &7(돈가방 &6%{-bg::kd::bags}%/%{-bg::kd::goal}%&7)")
+    if {-bg::kd::bags} >= {-bg::kd::goal}:
+        if {-bg::kd::open} is not true:
+            set {-bg::kd::open} to true
+            bgKdTitle("&6&l탈출구 열림!", "&f도둑은 북동쪽 헬기장으로! · 경찰은 막으세요")
+            bgKdSound("entity.wither.spawn", 1.6)
+            bgKdTexts()
+
+function bgKdEscape(p: player):
+    add 1 to {bg::kd::escapes::%uuid of {_p}%}
+    set {bg::kd::name::%uuid of {_p}%} to name of {_p}
+    bgKdEnd("thief", "%name of {_p}% 이(가) 헬기로 탈출!")
+
+on damage of player:
+    bgKdOn(victim) is true
+    cancel event
+    attacker is a player
+    bgKdState() is "play"
+    set {_c} to attacker
+    set {_t} to victim
+    bgKdRole({_c}) is "cop"
+    bgKdRole({_t}) is "thief"
+    bgKdJailed({_t}) is false
+    bgKdJailed({_c}) is false
+    if {-bg::kd::imm::%uuid of {_t}%} is set:
+        if difference between {-bg::kd::imm::%uuid of {_t}%} and now < 5 seconds:
+            send action bar "&7탈옥 직후 5초 보호 중" to {_c}
+            stop
+    set {_hold} to {-bg::kd::hold} ? 0
+    {_hold} <= 0
+    bgKdArrest({_t}, {_c})
+
+# 연막탄: 맞은 자리 주변 경찰 실명 · 느려짐
+on projectile hit:
+    event-projectile is a snowball
+    set {_s} to shooter of event-projectile
+    {_s} is a player
+    bgKdOn({_s}) is true
+    set {_l} to location of event-projectile
+    bgParticle({_l}, "campfire_cosy_smoke", 1.6, 1.2, 1.6, 0.01, 60)
+    bgParticle({_l}, "large_smoke", 2, 1, 2, 0.02, 40)
+    play sound "entity.generic.extinguish_fire" at {_l}
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            if bgKdRole(loop-player) is "cop":
+                if distance between loop-player and {_l} < 5:
+                    bgCmd("effect give %name of loop-player% blindness 3 0 true")
+                    bgCmd("effect give %name of loop-player% slowness 3 2 true")
+                    send action bar "&7연막탄! 앞이 안 보입니다" to loop-player
+
+# 매 5틱: 털이 진행 · 구출 발판 · 탈출
+every 5 ticks:
+    bgKdState() is "play"
+    loop all players:
+        bgKdOn(loop-player) is true
+        bgKdRole(loop-player) is "thief"
+        bgKdJailed(loop-player) is false
+        set {_p} to loop-player
+        set {_u} to "%uuid of {_p}%"
+        # 털이 장소
+        set {_at} to -1
+        loop 6 times:
+            set {_i} to loop-number - 1
+            set {_h} to bgKdMk("heist_%{_i}%")
+            if bgDist2(location of {_p}, {_h}) < 2.4:
+                if abs((y-coordinate of {_p}) - (y-coordinate of {_h})) < 2:
+                    set {_at} to {_i}
+        if {_at} >= 0:
+            if ({-bg::kd::hcd::%{_at}%} ? 0) > 0:
+                send action bar "&7%{-bg::kd::heistname::%{_at}%}% — 다시 털 수 있을 때까지 &c%{-bg::kd::hcd::%{_at}%}%초" to {_p}
+            else:
+                add 5 to {-bg::kd::prog::%{_u}%}
+                set {_pr} to {-bg::kd::prog::%{_u}%}
+                set {_bar} to ""
+                set {_k} to 0
+                while {_k} < 16:
+                    add 1 to {_k}
+                    if {_k} * 5 <= {_pr}:
+                        set {_bar} to "%{_bar}%&6■"
+                    else:
+                        set {_bar} to "%{_bar}%&8■"
+                send action bar "&6%{-bg::kd::heistname::%{_at}%}% 털이 중 %{_bar}%" to {_p}
+                play sound "block.note_block.hat" with volume 0.5 and pitch (0.8 + {_pr} / 80) to {_p}
+                if {_pr} >= 80:
+                    delete {-bg::kd::prog::%{_u}%}
+                    bgKdSteal({_p}, {_at})
+        else:
+            delete {-bg::kd::prog::%{_u}%}
+        # 구출 발판
+        if bgDist2(location of {_p}, bgKdMk("rescue")) < 1.9:
+            if {-bg::kd::rescd} is not set:
+                bgKdRescue({_p})
+            else if difference between {-bg::kd::rescd} and now > 12 seconds:
+                bgKdRescue({_p})
+        # 탈출
+        if {-bg::kd::open} is true:
+            if bgDist2(location of {_p}, bgKdMk("escape")) < 4:
+                bgKdEscape({_p})
+
+# 위쪽 보스바: 남은 시간 · 돈가방 · 남은 도둑 (경도에 있는 사람만 = 태그 bgkd)
+function bgKdBar():
+    bgCmd("bossbar add bg:kd {text:""경찰과 도둑""}")
+    bgCmd("bossbar set bg:kd players @a[tag=bgkd]")
+    if bgKdState() is not "play":
+        bgCmd("bossbar set bg:kd color blue")
+        bgCmd("bossbar set bg:kd max 1")
+        bgCmd("bossbar set bg:kd value 1")
+        set {_n} to bgKdCount("all")
+        bgCmd("bossbar set bg:kd name [{text:""경찰과 도둑 "",color:""aqua"",bold:true},{text:""· 대기 %{_n}%명 · 관리자가 시작하면 역할이 정해집니다"",color:""white""}]")
+        stop
+    set {_max} to max(60, ({bg::cfg::kd_min} ? 8) * 60)
+    bgCmd("bossbar set bg:kd max %{_max}%")
+    bgCmd("bossbar set bg:kd value %max(0, {-bg::kd::left})%")
+    set {_f} to bgKdCount("free")
+    set {_t} to bgKdCount("thief")
+    set {_tm} to bgKdTime(max(0, {-bg::kd::left}))
+    if {-bg::kd::open} is true:
+        bgCmd("bossbar set bg:kd color yellow")
+        bgCmd("bossbar set bg:kd name [{text:""🚁 탈출구 열림! "",color:""gold"",bold:true},{text:""%{_tm}% · 남은 도둑 %{_f}%/%{_t}%"",color:""white""}]")
+    else:
+        bgCmd("bossbar set bg:kd color red")
+        bgCmd("bossbar set bg:kd name [{text:""%{_tm}% "",color:""yellow"",bold:true},{text:""· 돈가방 %{-bg::kd::bags}%/%{-bg::kd::goal}% · 남은 도둑 %{_f}%/%{_t}%"",color:""white""}]")
+
+# 매초: 시간 · 출동 대기 · 레이더 · 화면 표시 · 떨어짐 · 배고픔
+every 1 second:
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            add "bgkd" to scoreboard tags of loop-player
+        else if scoreboard tags of loop-player contain "bgkd":
+            remove "bgkd" from scoreboard tags of loop-player
+    bgKdBar()
+    loop 6 times:
+        if ({-bg::kd::hcd::%loop-number - 1%} ? 0) > 0:
+            remove 1 from {-bg::kd::hcd::%loop-number - 1%}
+    if bgKdState() is "play":
+        remove 1 from {-bg::kd::left}
+        if ({-bg::kd::hold} ? 0) > 0:
+            remove 1 from {-bg::kd::hold}
+            if {-bg::kd::hold} is 0:
+                loop all players:
+                    if bgKdOn(loop-player) is true:
+                        if bgKdRole(loop-player) is "cop":
+                            teleport loop-player to bgKdMk("cop_spawn")
+                            bgCmd("effect clear %name of loop-player% blindness")
+                            bgTitleP(loop-player, "&9&l출동!", "&f도둑을 찾아 체포하세요")
+                bgKdTitle("", "&9경찰 출동! 🚨")
+                bgKdSound("item.goat_horn.sound.1", 1)
+        else:
+            remove 1 from {-bg::kd::radar}
+            if {-bg::kd::radar} <= 0:
+                set {-bg::kd::radar} to 60
+                loop all players:
+                    if bgKdOn(loop-player) is true:
+                        if bgKdRole(loop-player) is "thief":
+                            if bgKdJailed(loop-player) is false:
+                                bgCmd("effect give %name of loop-player% glowing 3 0 true")
+                bgKdSay("&b📡 경찰 레이더! &f도둑 위치가 3초 동안 보입니다")
+                bgKdSound("block.beacon.power_select", 1.8)
+        if {-bg::kd::left} is 60 or 30 or 10:
+            bgKdSay("&e남은 시간 %{-bg::kd::left}%초!")
+        if {-bg::kd::left} <= 0:
+            bgKdEnd("cop", "시간 종료 — 도둑이 탈출하지 못했습니다")
+    loop all players:
+        bgKdOn(loop-player) is true
+        set food level of loop-player to 20
+        set {_r} to bgKdRole(loop-player)
+        set {_st} to bgKdState()
+        set {_tm} to bgKdTime({-bg::kd::left} ? 0)
+        set {_bags} to "&6돈가방 %{-bg::kd::bags} ? 0%/%{-bg::kd::goal} ? 0%"
+        if {-bg::kd::open} is true:
+            set {_bags} to "&a&l탈출구 열림!"
+        set {_na} to bgKdCount("all")
+        set {_nf} to bgKdCount("free")
+        set {_nt} to bgKdCount("thief")
+        set {_nc} to bgKdCount("cop")
+        if {_st} is not "play":
+            send action bar "&9경찰&f과 &c도둑 &8| &f대기 %{_na}%명 &8| &7관리자가 /경도 시작" to loop-player
+        else if {_r} is "cop":
+            set {_hold} to ""
+            if ({-bg::kd::hold} ? 0) > 0:
+                set {_hold} to " &8| &e출동까지 %{-bg::kd::hold}%초"
+            send action bar "&9&l경찰 &8| &f남은 도둑 &c%{_nf}%/%{_nt}% &8| %{_bags}% &8| &f%{_tm}% &8| &b레이더 %{-bg::kd::radar}%초%{_hold}%" to loop-player
+        else if bgKdJailed(loop-player) is true:
+            send action bar "&7&l감옥 &8| &f동료가 초록 구출 발판을 밟으면 탈옥 &8| %{_bags}% &8| &f%{_tm}%" to loop-player
+        else if {-bg::kd::prog::%uuid of loop-player%} is not set:
+            send action bar "&c&l도둑 &8| %{_bags}% &8| &f남은 시간 %{_tm}% &8| &9경찰 %{_nc}%명 &8| &7레이더 %{-bg::kd::radar}%초" to loop-player
+        # 도시 밖으로 떨어지면 제자리로
+        if (y-coordinate of loop-player) < {bg::hub::y} - 8:
+            if {_st} is not "play":
+                teleport loop-player to bgKdMk("wait")
+            else if bgKdJailed(loop-player) is true:
+                teleport loop-player to bgKdMk("jail")
+            else if {_r} is "cop":
+                teleport loop-player to bgKdMk("cop_spawn")
+            else:
+                teleport loop-player to bgKdThiefSpot()
+    # 털이 장소 · 헬기장 반짝이
+    bgKdReady() is true
+    bgKdState() is "play"
+    loop 6 times:
+        set {_h} to bgKdMk("heist_%loop-number - 1%")
+        if ({-bg::kd::hcd::%loop-number - 1%} ? 0) > 0:
+            bgParticle(bgUp({_h}, 1), "smoke", 0.5, 0.5, 0.5, 0, 5)
+        else:
+            bgParticle(bgUp({_h}, 1), "wax_on", 0.6, 0.6, 0.6, 0, 6)
+    if {-bg::kd::open} is true:
+        bgParticle(bgUp(bgKdMk("escape"), 1), "end_rod", 2, 4, 2, 0.02, 30)
+    bgParticle(bgUp(bgKdMk("rescue"), 1), "happy_villager", 0.8, 0.3, 0.8, 0, 6)
+
+# 떠 있는 안내 글자 (털이 장소 · 구출 발판 · 헬기장 · 감옥)
+function bgKdText(id: text, l: location, txt: text):
+    bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 2.6)% %bgC(z-coordinate of {_l})% {Tags:[""bgkd"",""bgkd_%{_id}%""],billboard:""center"",shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:2f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.4f,1.4f,1.4f]},text:%{_txt}%}")
+
+function bgKdTexts():
+    bgKdReady() is true
+    bgCmd("kill @e[type=text_display,tag=bgkd]")
+    loop 6 times:
+        set {_i} to loop-number - 1
+        bgKdText("h%{_i}%", bgKdMk("heist_%{_i}%"), "[{text:""💰 %{-bg::kd::heistname::%{_i}%}%"",color:""gold"",bold:true},{text:""\n4초 서 있으면 털기"",color:""white"",bold:false}]")
+    bgKdText("rescue", bgKdMk("rescue"), "[{text:""🔓 구출 발판"",color:""green"",bold:true},{text:""\n밟으면 감옥 전원 탈옥"",color:""white"",bold:false}]")
+    if {-bg::kd::open} is true:
+        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기장"",color:""gold"",bold:true},{text:""\n열림! 들어오면 도둑 승리"",color:""green"",bold:true}]")
+    else:
+        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기장"",color:""gold"",bold:true},{text:""\n잠김 · 돈가방을 다 모으면 열림"",color:""gray"",bold:false}]")
+    bgKdText("jail", bgKdMk("jail"), "{text:""감옥"",color:""red"",bold:true}")
+
+function bgKdBuild(p: player):
+    if {bg::hub::x} is not set:
+        send "&9[경도] &f허브 위치가 먼저 필요합니다. &e/허브 건설" to {_p}
+        stop
+    bgCmd("data merge storage bg:kd {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
+    send "&9[경도] &f도시를 짓는 중... &7(큰 도시라 10초쯤 · 잠깐 끊길 수 있음)" to {_p}
+    bgCmd("function bg:kd/build")
+    wait 240 ticks
+    set {bg::kd::built} to true
+    set {-bg::kd::state} to "wait"
+    teleport {_p} to bgKdMk("wait")
+    wait 40 ticks
+    bgKdTexts()
+    send "&9[경도] &a도시 완성! &7(/경도 글자 · /경도 시작)" to {_p}
+
+on break:
+    bgKdOn(player) is true
+    gamemode of player is not creative
+    cancel event
+
+on place:
+    bgKdOn(player) is true
+    gamemode of player is not creative
+    cancel event
+
+on drop:
+    bgKdOn(player) is true
+    gamemode of player is not creative
+    cancel event
+
+on quit:
+    bgKdDrop(player)
+
+# ─────────────────────────────────────────────────────────── 명령
+command /경도 [<text>] [<text>]:
+    aliases: /kd
+    trigger:
+        set {_op} to true
+        if sender is a player:
+            if player is not op:
+                set {_op} to false
+        if {_op} is true:
+            if arg-1 is "시작":
+                set {_c} to (arg-2 parsed as integer) ? 0
+                bgKdStart(sender, {_c})
+                stop
+            if arg-1 is "종료":
+                bgKdEnd("none", "관리자가 끝냈습니다")
+                stop
+            if arg-1 is "시간":
+                set {_m} to arg-2 parsed as integer
+                if {_m} is set:
+                    set {bg::cfg::kd_min} to max(2, min(30, {_m}))
+                send "&9[경도] &f제한 시간 &e%{bg::cfg::kd_min} ? 8%분"
+                stop
+            if arg-1 is "목표":
+                set {_m} to arg-2 parsed as integer
+                if {_m} is set:
+                    set {bg::cfg::kd_goal} to max(1, min(30, {_m}))
+                else:
+                    delete {bg::cfg::kd_goal}
+                set {_g} to "자동 (도둑 수 + 1, 3~8)"
+                if {bg::cfg::kd_goal} is set:
+                    set {_g} to "%{bg::cfg::kd_goal}%개"
+                send "&9[경도] &f목표 돈가방: &e%{_g}%"
+                stop
+            if arg-1 is "건설":
+                if sender is a player:
+                    bgKdBuild(player)
+                stop
+            if arg-1 is "글자":
+                bgKdTexts()
+                send "&9[경도] &f안내 글자를 다시 만들었습니다."
+                stop
+            if arg-1 is "전적초기화":
+                delete {bg::kd::wins::*}
+                delete {bg::kd::arrests::*}
+                delete {bg::kd::steals::*}
+                delete {bg::kd::escapes::*}
+                delete {bg::kd::rescues::*}
+                broadcast "&9[경도] &f전적을 초기화했습니다."
+                stop
+        if arg-1 is "랭킹" or "순위":
+            set {_ids::*} to sorted indices of {bg::kd::wins::*} in descending order
+            send "&9&l[경도 랭킹] &7승리 순위 10위"
+            set {_i} to 0
+            loop {_ids::*}:
+                add 1 to {_i}
+                if {_i} <= 10:
+                    set {_u} to loop-value
+                    set {_nm} to {bg::kd::name::%{_u}%} ? "?"
+                    send "&e  %{_i}%위 &f%{_nm}% &7— &6%{bg::kd::wins::%{_u}%}%승 &9체포 %{bg::kd::arrests::%{_u}%} ? 0% &6털이 %{bg::kd::steals::%{_u}%} ? 0% &a구출 %{bg::kd::rescues::%{_u}%} ? 0% &d탈출 %{bg::kd::escapes::%{_u}%} ? 0%"
+            if {_i} is 0:
+                send "&7  아직 기록이 없습니다."
+            stop
+        if sender is not a player:
+            send "&c사용법: /경도 시작 [경찰수] · 종료 · 시간 <분> · 목표 <개> · 랭킹"
+            stop
+        if arg-1 is "나가기":
+            if bgKdOn(player) is true:
+                bgKdLeave(player)
+            else:
+                send "&9[경도] &7경도에 있지 않습니다."
+            stop
+        if arg-1 is "전적":
+            set {_t} to player
+            if arg-2 is set:
+                set {_t} to arg-2 parsed as offline player
+            set {_u} to "%uuid of {_t}%"
+            set {_nm} to {bg::kd::name::%{_u}%} ? name of {_t}
+            send "&9[경도] &f%{_nm}% &7— &6%{bg::kd::wins::%{_u}%} ? 0%승 &9체포 %{bg::kd::arrests::%{_u}%} ? 0% &6털이 %{bg::kd::steals::%{_u}%} ? 0% &a구출 %{bg::kd::rescues::%{_u}%} ? 0% &d탈출 %{bg::kd::escapes::%{_u}%} ? 0%"
+            stop
+        if bgKdOn(player) is true:
+            send "&9[경도] &f/경도 나가기 · 전적 · 랭킹 &7(관리자: 시작 · 종료 · 시간 · 목표)"
+            stop
+        bgHubGo(player, "cops")

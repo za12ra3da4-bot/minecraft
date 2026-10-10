@@ -1,11 +1,11 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  신화 아케이드 — 서버 첫 화면 허브 (여러 컨텐츠를 고르는 오락실 광장)
 #   접속하면 허브로 → 오락기 앞 빛나는 발판을 밟거나 /컨텐츠 로 고르기 (오락기 화면에 컨텐츠 이름이 크게 뜸)
-#     신화쟁탈전 (대기실) · PvP 연습장 (투기장 고르기) · 준비 중 2
+#     신화쟁탈전 (대기실) · PvP 온리소드 (전용 네온 경기장) · 경찰과 도둑 (밤 대도시) · 준비 중 1
 #   허브에 있는 동안은 그 사람 화면만 밤 · 맑음 (월드 시간은 그대로 → 다른 맵은 아침)
 #   /허브 (/hub, /스폰) : 허브로 돌아가기
 #   관리자: /허브 건설 [여기] (처음 한 번 · 약 6초) · /허브 전체 (모두 허브로) · /허브 글자 · /허브 위치
-#           /컨텐츠 잠금|열기 <신화쟁탈전|연습장|준비1|준비2> (잠그면 관리자 말고는 못 들어감)
+#           /컨텐츠 잠금|열기 <신화쟁탈전|온리소드|경도|준비2> (잠그면 관리자 말고는 못 들어감)
 #           /신화쟁탈전 [@a|플레이어] : 신화쟁탈전 대기실로 (@a = 접속한 모두, 게임 중인 사람 · 관전자 모드 제외)
 #   허브 모양: arena/tools/hubgen.py (데이터팩 bg:hub/build · 표지 좌표 a09-gen-hub.sk)
 #   허브 원점 = 광장 가운데 바닥 칸 {bg::hub::x/y/z} (기본: 전장 원점 기준 128, 40, -340 · 연습장 북쪽 하늘)
@@ -54,10 +54,10 @@ function bgInGame(p: player) :: boolean:
 function bgHubKey(t: text) :: text:
     if {_t} is "신화쟁탈전" or "신화" or "myth":
         return "myth"
-    if {_t} is "연습장" or "pvp" or "PvP연습장":
+    if {_t} is "온리소드" or "pvp" or "os":
         return "pvp"
-    if {_t} is "준비1" or "soon1":
-        return "soon1"
+    if {_t} is "경도" or "cops" or "kd":
+        return "cops"
     if {_t} is "준비2" or "soon2":
         return "soon2"
     return ""
@@ -67,23 +67,23 @@ function bgHubName(k: text) :: text:
         return "&6&l신화쟁탈전"
     if {_k} is "pvp":
         return "&c&lPvP 온리소드"
-    if {_k} is "soon1":
-        return "&d&l준비 중 &7(1)"
+    if {_k} is "cops":
+        return "&9&l경찰&f&l과 &c&l도둑"
     return "&e&l준비 중 &7(2)"
 
 function bgHubLocked(k: text) :: boolean:
     if {bg::cfg::clock::%{_k}%} is true:
         return true
-    if {_k} is "pvp":
-        if {bg::cfg::pvplock} is true:
-            return true
     return false
 
 function bgHubCount(k: text) :: number:
     set {_n} to 0
     loop all players:
         if {_k} is "pvp":
-            if {-bg::pvp::%uuid of loop-player%} is true:
+            if bgOsOn(loop-player) is true:
+                add 1 to {_n}
+        else if {_k} is "cops":
+            if bgKdOn(loop-player) is true:
                 add 1 to {_n}
         else if {_k} is "myth":
             if {-bg::on} is true:
@@ -98,7 +98,7 @@ function bgHubCount(k: text) :: number:
 
 # 지금 상태 한 줄 (색 코드 없음 — 홀로그램 · 화면 둘 다 씀)
 function bgHubStatus(k: text) :: text:
-    if {_k} is "soon1" or "soon2":
+    if {_k} is "soon2":
         return "곧 새로운 컨텐츠가 열립니다"
     if bgHubLocked({_k}) is true:
         return "잠김 · 관리자가 막아 두었습니다"
@@ -107,6 +107,12 @@ function bgHubStatus(k: text) :: text:
         if {-bg::on} is true:
             return "게임 진행 중 · 참가자 %{_n}%명 · 관전 / 중참"
         return "대기실 %{_n}%명 · 팀을 골라 4팀 점령전"
+    if {_k} is "cops":
+        if {-bg::kd::state} is "play":
+            set {_f} to bgKdCount("free")
+            set {_t} to bgKdCount("thief")
+            return "진행 중 · %{_n}%명 · 남은 도둑 %{_f}%/%{_t}%"
+        return "대기 %{_n}%명 · 시참 컨텐츠 · 경찰 vs 도둑"
     set {_top} to bgOsTop()
     if {_top} is not "":
         return "%{_n}%명 싸우는 중 · 킬 1위 %{_top}%"
@@ -117,6 +123,8 @@ function bgToHub(p: player):
     if bgHubReady() is false:
         bgToLobby({_p})
         stop
+    bgOsDrop({_p})
+    bgKdDrop({_p})
     if {-bg::pvp::%uuid of {_p}%} is true:
         delete {-bg::pvp::%uuid of {_p}%}
         delete {-bg::pvpa::%uuid of {_p}%}
@@ -166,7 +174,7 @@ function bgHubSoon(p: player):
     play sound "block.note_block.bass" to {_p}
 
 function bgHubGo(p: player, k: text):
-    if {_k} is "soon1" or "soon2":
+    if {_k} is "soon2":
         bgHubSoon({_p})
         stop
     if bgHubLocked({_k}) is true:
@@ -179,7 +187,9 @@ function bgHubGo(p: player, k: text):
         play sound "entity.enderman.teleport" to {_p}
         bgMythJoin({_p})
     else if {_k} is "pvp":
-        bgPvpSelect({_p})
+        bgOsEnter({_p})
+    else if {_k} is "cops":
+        bgKdJoin({_p})
 
 # ─────────────────────────────────────────────────────────── 짓기 · 이름표
 function bgHubBuild(p: player, here: boolean = false):
@@ -205,6 +215,18 @@ function bgHubBuild(p: player, here: boolean = false):
     wait 40 ticks
     bgHubTexts()
     send "&b[허브] &a허브 완성! &f이제 접속하는 사람은 모두 여기로 옵니다." to {_p}
+    # 이어서 온리소드 경기장 (허브 동쪽) · 경도 도시 (허브 북쪽)
+    send "&b[허브] &f온리소드 경기장 · 경도 도시도 짓는 중... &7(약 15초)" to {_p}
+    bgCmd("data merge storage bg:os {origin:{x:%{bg::hub::x} + 230%,y:%{bg::hub::y}%,z:%{bg::hub::z}%}}")
+    bgCmd("function bg:os/build")
+    wait 100 ticks
+    set {bg::os::built} to true
+    bgCmd("data merge storage bg:kd {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
+    bgCmd("function bg:kd/build")
+    wait 260 ticks
+    set {bg::kd::built} to true
+    set {-bg::kd::state} to "wait"
+    send "&b[허브] &a온리소드 · 경도도 완성! &7(경도 안내 글자는 처음 들어갈 때 /경도 글자)" to {_p}
     send "&b[허브] &7오락기 이름표가 안 보이면 &e/허브 글자 &7· 위치 확인 &e/허브 위치" to {_p}
 
 # 오락기 발판 위 떠 있는 이름표 (이름 · 지금 상태 · 안내)
@@ -214,9 +236,9 @@ function bgHubTextSet(k: text):
     if {_k} is "pvp":
         set {_c} to "red"
         set {_nm} to "PvP 온리소드"
-    else if {_k} is "soon1":
-        set {_c} to "light_purple"
-        set {_nm} to "준비 중"
+    else if {_k} is "cops":
+        set {_c} to "blue"
+        set {_nm} to "경찰과 도둑"
     else if {_k} is "soon2":
         set {_c} to "yellow"
         set {_nm} to "준비 중"
@@ -226,13 +248,13 @@ function bgHubTextSet(k: text):
     if bgHubLocked({_k}) is true:
         set {_sc} to "red"
         set {_hint} to "관리자만 들어갈 수 있습니다"
-    if {_k} is "soon1" or "soon2":
+    if {_k} is "soon2":
         set {_sc} to "gray"
         set {_hint} to "조금만 기다려 주세요"
     bgCmd("execute as @e[type=text_display,tag=bghub_%{_k}%] run data modify entity @s text set value [{text:""%{_nm}%"",color:""%{_c}%"",bold:true},{text:""\n%{_st}%"",color:""%{_sc}%"",bold:false},{text:""\n%{_hint}%"",color:""gray"",bold:false}]")
 
 function bgHubTextAll():
-    loop "myth", "pvp", "soon1" and "soon2":
+    loop "myth", "pvp", "cops" and "soon2":
         bgHubTextSet(loop-value)
 
 # 오락기 빛나는 화면에 크게 뜨는 오락실 로고 (리소스팩 글꼴 bg:hubscr 의 글자 하나 = 로고 그림 하나, rp/hubscreen.py)
@@ -240,7 +262,7 @@ function bgHubTextAll():
 #  글꼴 1픽셀 = 크기/40 칸. 로고 아래끝은 text_display 자리보다 2.5픽셀 위 → 로고 가운데를 화면 가운데(바닥 + 18.5)에
 function bgHubScreen(k: text):
     set {_g} to {_k}
-    if {_k} is "soon1" or "soon2":
+    if {_k} is "soon2":
         set {_g} to "soon"
     set {_l} to bgHubMk("%{_k}%_screen")
     set {_yaw} to {-bg::hubmk::%{_k}%_screen::yaw} ? 0
@@ -255,6 +277,8 @@ function bgHubScreen(k: text):
         set {_nm} to "신화쟁탈전"
         if {_g} is "pvp":
             set {_nm} to "PvP 온리소드"
+        else if {_g} is "cops":
+            set {_nm} to "경찰과 도둑"
         else if {_g} is "soon":
             set {_nm} to "준비 중"
         set {_s} to 6
@@ -265,7 +289,7 @@ function bgHubScreen(k: text):
 
 function bgHubTexts():
     bgCmd("kill @e[type=text_display,tag=bghub]")
-    loop "myth", "pvp", "soon1" and "soon2":
+    loop "myth", "pvp", "cops" and "soon2":
         bgHubScreen(loop-value)
         set {_l} to bgHubMk("%loop-value%_label")
         bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% {Tags:[""bghub"",""bghub_%loop-value%""],billboard:""center"",shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:3f,line_width:300,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.5f,1.5f,1.5f]},text:{text:""""}}")
@@ -282,18 +306,20 @@ every 5 ticks:
     bgHubReady() is true
     loop all players:
         set {_pp} to loop-player
-        if bgInHub({_pp}) is false:
+        set {_ar} to bgArea({_pp})
+        # 허브 · 온리소드 · 경도 = 밤 (그 사람 화면만), 신화쟁탈전 = 원래 시간
+        if {_ar} is "myth":
             if {-bg::hubnight::%uuid of {_pp}%} is set:
                 bgHubNight({_pp}, false)
-        else:
-            if {-bg::hubnight::%uuid of {_pp}%} is not set:
-                bgHubNight({_pp}, true)
+        else if {-bg::hubnight::%uuid of {_pp}%} is not set:
+            bgHubNight({_pp}, true)
+        if {_ar} is "hub":
             set food level of loop-player to 20
             if (y-coordinate of loop-player) < {bg::hub::y} - 6:
                 teleport loop-player to bgHubMk("spawn")
                 play sound "entity.enderman.teleport" to loop-player
             set {_on} to ""
-            loop "myth", "pvp", "soon1" and "soon2":
+            loop "myth", "pvp", "cops" and "soon2":
                 set {_pl} to bgHubMk("%loop-value-2%_pad")
                 if bgDist2(location of loop-player, {_pl}) < 2.6:
                     if abs((y-coordinate of loop-player) - (y-coordinate of {_pl})) < 1.6:
@@ -343,15 +369,15 @@ function bgHubMenuItem(p: player, k: text) :: item:
         set {_lore::*} to "&74팀이 대신전과 제단을 두고 싸우는 점령전", "&7보스 · 전설 무기 · 팀 강화"
     else if {_k} is "pvp":
         set {_it} to iron sword
-        set {_lore::*} to "&7다이아 갑옷 + 다이아 검 하나로 싸우는 개인전", "&7처치하면 체력 회복 · 킬 랭킹 (석영 · 용암 투기장)"
-    else if {_k} is "soon1":
-        set {_it} to purple dye
-        set {_lore::*} to "&7새로운 컨텐츠를 만드는 중입니다"
+        set {_lore::*} to "&7다이아 갑옷 + 다이아 검 하나로 싸우는 개인전", "&7처치하면 체력 회복 · 킬 랭킹 · 네온 경기장"
+    else if {_k} is "cops":
+        set {_it} to iron bars
+        set {_lore::*} to "&7밤 대도시에서 경찰 vs 도둑 (시참 컨텐츠)", "&7도둑: 털이 · 탈출 / 경찰: 체포 · 감옥"
     else:
         set {_it} to orange dye
         set {_lore::*} to "&7새로운 컨텐츠를 만드는 중입니다"
     add "" to {_lore::*}
-    if {_k} is "soon1" or "soon2":
+    if {_k} is "soon2":
         add "&8곧 열립니다" to {_lore::*}
     else if bgHubLocked({_k}) is true:
         add "&c잠김 &7(관리자만 입장)" to {_lore::*}
@@ -370,7 +396,7 @@ function bgHubMenu(p: player):
         set slot loop-number - 1 of {_gui} to {_pane}
     set slot 10 of {_gui} to bgHubMenuItem({_p}, "myth")
     set slot 12 of {_gui} to bgHubMenuItem({_p}, "pvp")
-    set slot 14 of {_gui} to bgHubMenuItem({_p}, "soon1")
+    set slot 14 of {_gui} to bgHubMenuItem({_p}, "cops")
     set slot 16 of {_gui} to bgHubMenuItem({_p}, "soon2")
     set {_h} to nether star named "&b&l허브로"
     set lore of {_h} to "&7오락실 광장으로 돌아갑니다"
@@ -396,7 +422,7 @@ on inventory click:
     else if {_s} is 12:
         set {_k} to "pvp"
     else if {_s} is 14:
-        set {_k} to "soon1"
+        set {_k} to "cops"
     else if {_s} is 16:
         set {_k} to "soon2"
     else if {_s} is 22:
@@ -419,16 +445,17 @@ on inventory click:
 #  신화쟁탈전 안에서는 온리소드 입장 명령 (/연습장 · /무기) 을 못 씀 → /허브 의 PvP 오락기로 (/연습장 랭킹 · 전적은 됨)
 #  어디서나: /허브 · /신화쟁탈전 · /컨텐츠 · /리팩 · /힐 · /업데이트테스트
 function bgArea(p: player) :: text:
-    if {-bg::pvp::%uuid of {_p}%} is true:
-        return "pvp"
+    if {-bg::kd::in::%uuid of {_p}%} is true:
+        return "kd"
+    if {-bg::os::in::%uuid of {_p}%} is true:
+        return "os"
     if bgInHub({_p}) is true:
         return "hub"
     return "myth"
 
 on load:
-    set {-bg::cmdzone::myth_player::*} to "상점", "shop", "코인", "로비", "lobby", "중참", "midjoin", "팀", "tc" and "팀채팅"
+    set {-bg::cmdzone::myth_player::*} to "상점", "shop", "코인", "로비", "lobby", "중참", "midjoin", "팀", "tc", "팀채팅", "연습장", "pvp장", "pvp" and "무기"
     set {-bg::cmdzone::myth_admin::*} to "전장", "bg", "코인주기", "givecoin", "코인설정", "자유팀선택", "팀초기화", "광석막대", "관전자", "nogame", "관전자목록", "tnt함정", "팀잠금", "teamlock", "네메시스" and "nemesis"
-    set {-bg::cmdzone::pvp::*} to "연습장", "pvp장", "pvp" and "무기"
 
 on command:
     sender is a player
@@ -437,15 +464,7 @@ on command:
     if {_c} contains ":":
         set {_c} to last element of ({_c} split at ":")
     set {_area} to bgArea(player)
-    if {_area} is "myth":
-        {-bg::cmdzone::pvp::*} contains {_c}
-        set {_a} to "%arguments%"
-        if {_a} starts with "랭킹" or "순위" or "전적" or "잠금" or "열기" or "전체나가기":
-            stop
-        cancel event
-        send "&6[신화쟁탈전] &7여기는 신화쟁탈전입니다. PvP 온리소드는 &e/허브 &7에서 PvP 오락기로 들어가세요."
-        play sound "block.note_block.bass" to player
-        stop
+    {_area} is not "myth"
     set {_block} to false
     if {-bg::cmdzone::myth_player::*} contains {_c}:
         set {_block} to true
@@ -456,8 +475,10 @@ on command:
     cancel event
     if {_area} is "hub":
         send "&b[허브] &7여기는 허브입니다. 신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/신화쟁탈전 &7으로 이동"
+    else if {_area} is "os":
+        send "&c[온리소드] &7신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/온리소드 나가기 &7또는 &e/허브"
     else:
-        send "&c[온리소드] &7신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/연습장 나가기 &7또는 &e/허브"
+        send "&9[경도] &7신화쟁탈전 명령어는 신화쟁탈전 안에서만 쓸 수 있어요. &e/경도 나가기 &7또는 &e/허브"
     play sound "block.note_block.bass" to player
 
 # ─────────────────────────────────────────────────────────── 명령
@@ -561,29 +582,33 @@ command /컨텐츠 [<text>] [<text>]:
             set {_a2} to arg-2 ? ""
             set {_k} to bgHubKey({_a2})
             if {_k} is "":
-                send "&b[허브] &f/컨텐츠 %arg-1% <신화쟁탈전|연습장|준비1|준비2>"
+                send "&b[허브] &f/컨텐츠 %arg-1% <신화쟁탈전|온리소드|경도|준비2>"
                 stop
             if arg-1 is "잠금":
                 set {bg::cfg::clock::%{_k}%} to true
                 set {_m} to ""
                 if {_k} is "pvp":
-                    set {bg::cfg::pvplock} to true
-                    set {_m} to " &7(연습장에 있던 %bgPvpKickAll()%명 허브로)"
+                    set {_m} to " &7(온리소드에 있던 %bgOsKickAll()%명 허브로)"
+                else if {_k} is "cops":
+                    set {_n} to 0
+                    loop all players:
+                        if bgKdOn(loop-player) is true:
+                            bgKdLeave(loop-player)
+                            add 1 to {_n}
+                    set {_m} to " &7(경도에 있던 %{_n}%명 허브로)"
                 broadcast "&b[허브] %bgHubName({_k})% &f이(가) &c잠겼습니다%{_m}%"
             else:
                 delete {bg::cfg::clock::%{_k}%}
-                if {_k} is "pvp":
-                    delete {bg::cfg::pvplock}
                 broadcast "&b[허브] %bgHubName({_k})% &f이(가) &a열렸습니다 &7— 허브 오락기에서 입장"
             if bgHubReady() is true:
                 bgHubTextAll()
             stop
         if arg-1 is "목록" or "상태":
-            loop "myth", "pvp", "soon1" and "soon2":
+            loop "myth", "pvp", "cops" and "soon2":
                 send "&b[허브] %bgHubName(loop-value)% &7— &f%bgHubStatus(loop-value)%"
             stop
         if sender is not a player:
-            send "&c사용법: /컨텐츠 잠금|열기 <신화쟁탈전|연습장|준비1|준비2> · /컨텐츠 목록"
+            send "&c사용법: /컨텐츠 잠금|열기 <신화쟁탈전|온리소드|경도|준비2> · /컨텐츠 목록"
             stop
         if bgInGame(player) is true:
             send "&b[허브] &c게임 중에는 다른 컨텐츠로 갈 수 없습니다."

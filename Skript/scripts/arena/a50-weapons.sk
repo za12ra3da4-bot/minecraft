@@ -1112,6 +1112,7 @@ on damage of player:
     {-bg::on} is true
     attacker is a player
     set {_a} to attacker
+    bgArea({_a}) is "myth"
     if bgWeaponOk({_a}) is false:
         cancel event
 

@@ -1,5 +1,17 @@
 # 자동 생성 — 신화 아케이드 허브 표지 좌표 · 화면 로고 (arena/tools/hubgen.py · rp/hubscreen.py)
 on load:
+    set {-bg::hubmk::cops_label::x} to -30.5
+    set {-bg::hubmk::cops_label::y} to 4.2
+    set {-bg::hubmk::cops_label::z} to -17.5
+    set {-bg::hubmk::cops_label::yaw} to -90.0
+    set {-bg::hubmk::cops_pad::x} to -30.5
+    set {-bg::hubmk::cops_pad::y} to 1
+    set {-bg::hubmk::cops_pad::z} to -17.5
+    set {-bg::hubmk::cops_pad::yaw} to -90.0
+    set {-bg::hubmk::cops_screen::x} to -39.94
+    set {-bg::hubmk::cops_screen::y} to 18.5
+    set {-bg::hubmk::cops_screen::z} to -17.5
+    set {-bg::hubmk::cops_screen::yaw} to -90.0
     set {-bg::hubmk::myth_label::x} to -22.5
     set {-bg::hubmk::myth_label::y} to 4.2
     set {-bg::hubmk::myth_label::z} to -32.5
@@ -24,18 +36,6 @@ on load:
     set {-bg::hubmk::pvp_screen::y} to 18.5
     set {-bg::hubmk::pvp_screen::z} to -41.94
     set {-bg::hubmk::pvp_screen::yaw} to 0.0
-    set {-bg::hubmk::soon1_label::x} to -30.5
-    set {-bg::hubmk::soon1_label::y} to 4.2
-    set {-bg::hubmk::soon1_label::z} to -17.5
-    set {-bg::hubmk::soon1_label::yaw} to -90.0
-    set {-bg::hubmk::soon1_pad::x} to -30.5
-    set {-bg::hubmk::soon1_pad::y} to 1
-    set {-bg::hubmk::soon1_pad::z} to -17.5
-    set {-bg::hubmk::soon1_pad::yaw} to -90.0
-    set {-bg::hubmk::soon1_screen::x} to -39.94
-    set {-bg::hubmk::soon1_screen::y} to 18.5
-    set {-bg::hubmk::soon1_screen::z} to -17.5
-    set {-bg::hubmk::soon1_screen::yaw} to -90.0
     set {-bg::hubmk::soon2_label::x} to 31.5
     set {-bg::hubmk::soon2_label::y} to 4.2
     set {-bg::hubmk::soon2_label::z} to -17.5
@@ -52,12 +52,133 @@ on load:
     set {-bg::hubmk::spawn::y} to 1
     set {-bg::hubmk::spawn::z} to 0.5
     set {-bg::hubmk::spawn::yaw} to 180.0
+    set {-bg::osmk::center::x} to 0.5
+    set {-bg::osmk::center::y} to 2
+    set {-bg::osmk::center::z} to 0.5
+    set {-bg::osmk::center::yaw} to 0.0
+    set {-bg::osmk::spawn_0::x} to 22.67
+    set {-bg::osmk::spawn_0::y} to 1
+    set {-bg::osmk::spawn_0::z} to 9.68
+    set {-bg::osmk::spawn_0::yaw} to -67.5
+    set {-bg::osmk::spawn_1::x} to 9.68
+    set {-bg::osmk::spawn_1::y} to 1
+    set {-bg::osmk::spawn_1::z} to 22.67
+    set {-bg::osmk::spawn_1::yaw} to -22.5
+    set {-bg::osmk::spawn_2::x} to -8.68
+    set {-bg::osmk::spawn_2::y} to 1
+    set {-bg::osmk::spawn_2::z} to 22.67
+    set {-bg::osmk::spawn_2::yaw} to 22.5
+    set {-bg::osmk::spawn_3::x} to -21.67
+    set {-bg::osmk::spawn_3::y} to 1
+    set {-bg::osmk::spawn_3::z} to 9.68
+    set {-bg::osmk::spawn_3::yaw} to 67.5
+    set {-bg::osmk::spawn_4::x} to -21.67
+    set {-bg::osmk::spawn_4::y} to 1
+    set {-bg::osmk::spawn_4::z} to -8.68
+    set {-bg::osmk::spawn_4::yaw} to 112.5
+    set {-bg::osmk::spawn_5::x} to -8.68
+    set {-bg::osmk::spawn_5::y} to 1
+    set {-bg::osmk::spawn_5::z} to -21.67
+    set {-bg::osmk::spawn_5::yaw} to 157.5
+    set {-bg::osmk::spawn_6::x} to 9.68
+    set {-bg::osmk::spawn_6::y} to 1
+    set {-bg::osmk::spawn_6::z} to -21.67
+    set {-bg::osmk::spawn_6::yaw} to -157.5
+    set {-bg::osmk::spawn_7::x} to 22.67
+    set {-bg::osmk::spawn_7::y} to 1
+    set {-bg::osmk::spawn_7::z} to -8.68
+    set {-bg::osmk::spawn_7::yaw} to -112.5
+    set {-bg::kdmk::cop_spawn::x} to -74.5
+    set {-bg::kdmk::cop_spawn::y} to 1
+    set {-bg::kdmk::cop_spawn::z} to 77.5
+    set {-bg::kdmk::cop_spawn::yaw} to 180.0
+    set {-bg::kdmk::escape::x} to 84.5
+    set {-bg::kdmk::escape::y} to 1
+    set {-bg::kdmk::escape::z} to -77.5
+    set {-bg::kdmk::heist_0::x} to -40.5
+    set {-bg::kdmk::heist_0::y} to 1
+    set {-bg::kdmk::heist_0::z} to -44.5
+    set {-bg::kdmk::heist_1::x} to 39.5
+    set {-bg::kdmk::heist_1::y} to 1
+    set {-bg::kdmk::heist_1::z} to -43.5
+    set {-bg::kdmk::heist_2::x} to 32.5
+    set {-bg::kdmk::heist_2::y} to 1
+    set {-bg::kdmk::heist_2::z} to 30.5
+    set {-bg::kdmk::heist_3::x} to -84.5
+    set {-bg::kdmk::heist_3::y} to 1
+    set {-bg::kdmk::heist_3::z} to -44.5
+    set {-bg::kdmk::heist_4::x} to -40.5
+    set {-bg::kdmk::heist_4::y} to 1
+    set {-bg::kdmk::heist_4::z} to 39.5
+    set {-bg::kdmk::heist_5::x} to -7.5
+    set {-bg::kdmk::heist_5::y} to 1
+    set {-bg::kdmk::heist_5::z} to 72.5
+    set {-bg::kdmk::jail::x} to -87.5
+    set {-bg::kdmk::jail::y} to 1
+    set {-bg::kdmk::jail::z} to 76.5
+    set {-bg::kdmk::jail::yaw} to 180.0
+    set {-bg::kdmk::jail_out::x} to -87.5
+    set {-bg::kdmk::jail_out::y} to 1
+    set {-bg::kdmk::jail_out::z} to 84.5
+    set {-bg::kdmk::jail_out::yaw} to 0.0
+    set {-bg::kdmk::rescue::x} to -87.5
+    set {-bg::kdmk::rescue::y} to 1
+    set {-bg::kdmk::rescue::z} to 91.5
+    set {-bg::kdmk::thief_0::x} to -79.5
+    set {-bg::kdmk::thief_0::y} to 1
+    set {-bg::kdmk::thief_0::z} to -56.5
+    set {-bg::kdmk::thief_1::x} to -39.5
+    set {-bg::kdmk::thief_1::y} to 1
+    set {-bg::kdmk::thief_1::z} to -56.5
+    set {-bg::kdmk::thief_10::x} to -79.5
+    set {-bg::kdmk::thief_10::y} to 1
+    set {-bg::kdmk::thief_10::z} to 17.5
+    set {-bg::kdmk::thief_11::x} to 80.5
+    set {-bg::kdmk::thief_11::y} to 1
+    set {-bg::kdmk::thief_11::z} to 17.5
+    set {-bg::kdmk::thief_2::x} to 0.5
+    set {-bg::kdmk::thief_2::y} to 1
+    set {-bg::kdmk::thief_2::z} to -56.5
+    set {-bg::kdmk::thief_3::x} to 40.5
+    set {-bg::kdmk::thief_3::y} to 1
+    set {-bg::kdmk::thief_3::z} to -56.5
+    set {-bg::kdmk::thief_4::x} to 80.5
+    set {-bg::kdmk::thief_4::y} to 1
+    set {-bg::kdmk::thief_4::z} to -56.5
+    set {-bg::kdmk::thief_5::x} to -56.5
+    set {-bg::kdmk::thief_5::y} to 1
+    set {-bg::kdmk::thief_5::z} to -79.5
+    set {-bg::kdmk::thief_6::x} to -56.5
+    set {-bg::kdmk::thief_6::y} to 1
+    set {-bg::kdmk::thief_6::z} to 40.5
+    set {-bg::kdmk::thief_7::x} to 57.5
+    set {-bg::kdmk::thief_7::y} to 1
+    set {-bg::kdmk::thief_7::z} to -39.5
+    set {-bg::kdmk::thief_8::x} to -16.5
+    set {-bg::kdmk::thief_8::y} to 1
+    set {-bg::kdmk::thief_8::z} to 80.5
+    set {-bg::kdmk::thief_9::x} to 17.5
+    set {-bg::kdmk::thief_9::y} to 1
+    set {-bg::kdmk::thief_9::z} to 40.5
+    set {-bg::kdmk::wait::x} to 0.5
+    set {-bg::kdmk::wait::y} to 63
+    set {-bg::kdmk::wait::z} to 3.5
+    set {-bg::kdmk::wait::yaw} to 180.0
+    set {-bg::kd::heistname::0} to "은행 금고"
+    set {-bg::kd::heistname::1} to "카지노 금고"
+    set {-bg::kd::heistname::2} to "보석상"
+    set {-bg::kd::heistname::3} to "창고"
+    set {-bg::kd::heistname::4} to "박물관"
+    set {-bg::kd::heistname::5} to "편의점"
     set {-bg::hubscr::myth::ch} to ""
     set {-bg::hubscr::myth::w} to 53.0
     set {-bg::hubscr::myth::h} to 42.0
     set {-bg::hubscr::pvp::ch} to ""
     set {-bg::hubscr::pvp::w} to 52.0
     set {-bg::hubscr::pvp::h} to 41.0
+    set {-bg::hubscr::cops::ch} to ""
+    set {-bg::hubscr::cops::w} to 49.0
+    set {-bg::hubscr::cops::h} to 41.0
     set {-bg::hubscr::soon::ch} to ""
     set {-bg::hubscr::soon::w} to 46.0
     set {-bg::hubscr::soon::h} to 26.5

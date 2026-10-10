@@ -49,8 +49,8 @@ BOOTHS = {
                  glass="light_blue_stained_glass", lamp="sea_lantern", name="신화쟁탈전"),
     "pvp": dict(pos=(23, -44), face="S", body="blue_concrete", art="light_blue_concrete", star="yellow_concrete",
                 glass="blue_stained_glass", lamp="ochre_froglight", name="PvP 연습장"),
-    "soon1": dict(pos=(-42, -18), face="E", body="purple_concrete", art="magenta_concrete", star="pink_concrete",
-                  glass="magenta_stained_glass", lamp="pearlescent_froglight", name="준비 중"),
+    "cops": dict(pos=(-42, -18), face="E", body="purple_concrete", art="magenta_concrete", star="pink_concrete",
+                 glass="magenta_stained_glass", lamp="pearlescent_froglight", name="경찰과 도둑"),
     "soon2": dict(pos=(42, -18), face="W", body="orange_concrete", art="yellow_concrete", star="white_concrete",
                   glass="orange_stained_glass", lamp="shroomlight", name="준비 중"),
 }

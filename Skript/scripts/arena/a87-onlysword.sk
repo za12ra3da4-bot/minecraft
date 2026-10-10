@@ -1,0 +1,298 @@
+# ═════════════════════════════════════════════════════════════════════════════
+#  온리소드 — 허브 PvP 오락기로 들어가는 전용 네온 경기장 (신화쟁탈전 석영 · 용암 연습장과 별개)
+#   다이아 갑옷 + 다이아 검 하나 · 개인전 난투 · 처치하면 체력 전부 회복 · 연속 처치 알림 · 처치 소리
+#   킬 · 데스 · K/D · 최고 연속 저장 → /온리소드 전적 [플레이어] · /온리소드 랭킹 (킬 10위)
+#   /온리소드 (/os) : 들어가기 · /온리소드 나가기 (허브로)
+#   관리자: /온리소드 건설 (/허브 건설 이 같이 지음) · /온리소드 전적초기화
+#   경기장 원점 = 허브 원점 + (230, 0, 0)  (데이터팩 storage bg:os origin, arena/tools/osarena.py)
+# ═════════════════════════════════════════════════════════════════════════════
+
+function bgOsOn(p: player) :: boolean:
+    if {-bg::os::in::%uuid of {_p}%} is true:
+        return true
+    return false
+
+function bgOsReady() :: boolean:
+    if {bg::os::built} is true:
+        if {bg::hub::x} is set:
+            return true
+    return false
+
+function bgOsAt(dx: number, dy: number, dz: number) :: location:
+    return location({bg::hub::x} + 230 + {_dx}, {bg::hub::y} + {_dy}, {bg::hub::z} + {_dz}, bgWorld())
+
+function bgOsMk(n: text) :: location:
+    set {_l} to bgOsAt({-bg::osmk::%{_n}%::x}, {-bg::osmk::%{_n}%::y}, {-bg::osmk::%{_n}%::z})
+    if {-bg::osmk::%{_n}%::yaw} is set:
+        set yaw of {_l} to {-bg::osmk::%{_n}%::yaw}
+    return {_l}
+
+# 부활 자리 8곳 중 다른 사람과 가장 먼 곳
+function bgOsSpawn(p: player) :: location:
+    set {_best} to -1
+    loop 8 times:
+        set {_l} to bgOsMk("spawn_%loop-number - 1%")
+        set {_near} to 999
+        loop all players:
+            if bgOsOn(loop-player) is true:
+                if loop-player is not {_p}:
+                    set {_d} to bgDist2(location of loop-player, {_l})
+                    if {_d} < {_near}:
+                        set {_near} to {_d}
+        set {_near} to {_near} + random number between 0 and 4
+        if {_near} > {_best}:
+            set {_best} to {_near}
+            set {_pick} to {_l}
+    return {_pick}
+
+function bgOsKit(p: player):
+    bgClassReset({_p})
+    set {_n} to name of {_p}
+    bgCmd("clear %{_n}%")
+    bgCmd("effect clear %{_n}%")
+    bgCmd("item replace entity %{_n}% armor.head with diamond_helmet[unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.chest with diamond_chestplate[unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.legs with diamond_leggings[unbreakable={}]")
+    bgCmd("item replace entity %{_n}% armor.feet with diamond_boots[unbreakable={}]")
+    bgCmd("item replace entity %{_n}% hotbar.0 with diamond_sword[unbreakable={}]")
+    set food level of {_p} to 20
+
+function bgOsKD(u: text) :: text:
+    set {_k} to {bg::os::kills::%{_u}%} ? 0
+    set {_d} to {bg::os::deaths::%{_u}%} ? 0
+    return "%round(({_k} / max(1, {_d})) * 100) / 100%"
+
+function bgOsTop() :: text:
+    set {_ids::*} to sorted indices of {bg::os::kills::*} in descending order
+    if size of {_ids::*} is 0:
+        return ""
+    set {_u} to {_ids::1}
+    set {_nm} to {bg::os::name::%{_u}%} ? "?"
+    return "%{_nm}% (%{bg::os::kills::%{_u}%}%킬)"
+
+function bgOsLine(u: text, fallback: text) :: text:
+    set {_nm} to {bg::os::name::%{_u}%} ? {_fallback}
+    set {_k} to {bg::os::kills::%{_u}%} ? 0
+    set {_d} to {bg::os::deaths::%{_u}%} ? 0
+    set {_b} to {bg::os::best::%{_u}%} ? 0
+    return "&f%{_nm}% &7— &a%{_k}%킬 &c%{_d}%데스 &7K/D &e%bgOsKD({_u})% &7최고 연속 &6%{_b}%"
+
+function bgOsCount() :: number:
+    set {_n} to 0
+    loop all players:
+        if bgOsOn(loop-player) is true:
+            add 1 to {_n}
+    return {_n}
+
+function bgOsSay(m: text):
+    loop all players:
+        if bgOsOn(loop-player) is true:
+            send "&c[온리소드] &f%{_m}%" to loop-player
+
+function bgOsEnter(p: player):
+    if bgOsReady() is false:
+        send "&c[온리소드] &f경기장이 아직 없습니다. &7관리자가 &e/허브 건설 &7또는 &e/온리소드 건설" to {_p}
+        stop
+    if bgInGame({_p}) is true:
+        send "&c[온리소드] &7신화쟁탈전 게임 중에는 갈 수 없습니다." to {_p}
+        stop
+    if bgOsOn({_p}) is true:
+        stop
+    bgKdDrop({_p})
+    delete {-bg::pvp::%uuid of {_p}%}
+    delete {-bg::pvpa::%uuid of {_p}%}
+    if {-bg::on} is not true:
+        if bgTeam({_p}) is not "none":
+            bgSetTeam({_p}, "none")
+    set {-bg::os::in::%uuid of {_p}%} to true
+    set {-bg::where::%uuid of {_p}%} to "os"
+    set {-bg::os::streak::%uuid of {_p}%} to 0
+    set {bg::os::name::%uuid of {_p}%} to name of {_p}
+    teleport {_p} to bgOsSpawn({_p})
+    set gamemode of {_p} to adventure
+    heal {_p}
+    bgOsKit({_p})
+    bgCmd("effect give %name of {_p}% resistance 3 4 true")
+    bgTitleP({_p}, "&c&lPvP 온리소드", "&f검 하나로 승부 · &a처치하면 체력 회복 &7· /온리소드 나가기")
+    play sound "item.goat_horn.sound.0" to {_p}
+    send "&c[온리소드] &f다이아 갑옷 + 다이아 검 개인전. 처치하면 체력이 다 찹니다. &7(/온리소드 전적 · 랭킹 · 나가기)" to {_p}
+    bgOsSay("&e%name of {_p}%&f 입장 &7(%bgOsCount()%명)")
+
+# 온리소드에서 빼기만 (순간이동 없음)
+function bgOsDrop(p: player):
+    delete {-bg::os::in::%uuid of {_p}%}
+    delete {-bg::os::streak::%uuid of {_p}%}
+
+function bgOsLeave(p: player):
+    bgOsDrop({_p})
+    bgToHub({_p})
+
+function bgOsKickAll() :: number:
+    set {_n} to 0
+    loop all players:
+        if bgOsOn(loop-player) is true:
+            bgOsLeave(loop-player)
+            add 1 to {_n}
+    return {_n}
+
+function bgOsBuild(p: player):
+    if {bg::hub::x} is not set:
+        send "&c[온리소드] &f허브 위치가 먼저 필요합니다. &e/허브 건설" to {_p}
+        stop
+    bgCmd("data merge storage bg:os {origin:{x:%{bg::hub::x} + 230%,y:%{bg::hub::y}%,z:%{bg::hub::z}%}}")
+    send "&c[온리소드] &f경기장을 짓는 중... &7(약 4초)" to {_p}
+    bgCmd("function bg:os/build")
+    wait 90 ticks
+    set {bg::os::built} to true
+    send "&c[온리소드] &a경기장 완성!" to {_p}
+
+# ─────────────────────────────────────────────────────────── 처치 · 부활
+on death of player:
+    bgOsOn(victim) is true
+    keep the inventory and experience
+    clear drops
+    delete death message
+    set {_v} to victim
+    set {_vu} to "%uuid of {_v}%"
+    set {bg::os::name::%{_vu}%} to name of {_v}
+    add 1 to {bg::os::deaths::%{_vu}%}
+    set {_vs} to {-bg::os::streak::%{_vu}%} ? 0
+    set {-bg::os::streak::%{_vu}%} to 0
+    set {_k} to {_v}.getKiller()
+    if {_k} is set:
+        if {_k} is not {_v}:
+            if bgOsOn({_k}) is true:
+                set {_ku} to "%uuid of {_k}%"
+                set {bg::os::name::%{_ku}%} to name of {_k}
+                add 1 to {bg::os::kills::%{_ku}%}
+                add 1 to {-bg::os::streak::%{_ku}%}
+                set {_ks} to {-bg::os::streak::%{_ku}%}
+                if {_ks} > ({bg::os::best::%{_ku}%} ? 0):
+                    set {bg::os::best::%{_ku}%} to {_ks}
+                heal {_k}
+                set food level of {_k} to 20
+                send title " " with subtitle "&c⚔ &f%name of {_v}% 처치 &7· &a체력 회복 &7· &6연속 %{_ks}%킬" to {_k} for 25 ticks with fade in 0 ticks and fade out 8 ticks
+                play sound "entity.experience_orb.pickup" with volume 1 and pitch 1.4 to {_k}
+                bgParticle(location of {_v}, "crit", 0.4, 0.8, 0.4, 0.3, 30)
+                bgOsSay("&e%name of {_k}% &7⚔ &f%name of {_v}% &8(연속 %{_ks}%)")
+                if {_ks} is 3 or 5 or 7 or 10 or 15 or 20 or 25 or 30:
+                    bgOsSay("&6&l%name of {_k}% 연속 %{_ks}%킬!")
+                    loop all players:
+                        if bgOsOn(loop-player) is true:
+                            play sound "entity.blaze.shoot" with volume 0.6 and pitch 1.6 to loop-player
+                if {_vs} >= 3:
+                    bgOsSay("&e%name of {_k}%&f 이(가) &e%name of {_v}%&f 의 연속 &c%{_vs}%킬&f을 끊었습니다!")
+                stop
+    bgOsSay("&7%name of {_v}% 쓰러짐")
+
+on respawn:
+    bgOsOn(player) is true
+    set respawn location to bgOsSpawn(player)
+    wait 1 tick
+    set gamemode of player to adventure
+    bgOsKit(player)
+    bgCmd("effect give %name of player% resistance 3 4 true")
+
+# 온리소드끼리만 때림
+on damage of player:
+    bgOsOn(victim) is true
+    attacker is a player
+    set {_a} to attacker
+    if bgOsOn({_a}) is false:
+        cancel event
+
+on break:
+    bgOsOn(player) is true
+    gamemode of player is not creative
+    cancel event
+
+on place:
+    bgOsOn(player) is true
+    gamemode of player is not creative
+    cancel event
+
+on drop:
+    bgOsOn(player) is true
+    gamemode of player is not creative
+    cancel event
+
+on quit:
+    bgOsDrop(player)
+
+every 1 second:
+    loop all players:
+        if bgOsOn(loop-player) is true:
+            set food level of loop-player to 20
+            set {_u} to "%uuid of loop-player%"
+            set {_k} to {bg::os::kills::%{_u}%} ? 0
+            set {_d} to {bg::os::deaths::%{_u}%} ? 0
+            set {_s} to {-bg::os::streak::%{_u}%} ? 0
+            send action bar "&c&l온리소드 &8| &f킬 &a%{_k}% &8· &f데스 &c%{_d}% &8· &fK/D &e%bgOsKD({_u})% &8· &f연속 &6%{_s}% &8| &7%bgOsCount()%명" to loop-player
+            if (y-coordinate of loop-player) < {bg::hub::y} - 10:
+                teleport loop-player to bgOsSpawn(loop-player)
+
+# ─────────────────────────────────────────────────────────── 명령
+command /온리소드 [<text>]:
+    aliases: /os, /onlysword
+    trigger:
+        if arg-1 is "건설":
+            if sender is a player:
+                if player is op:
+                    bgOsBuild(player)
+                    stop
+            send "&c관리자가 게임 안에서 실행해 주세요."
+            stop
+        if arg-1 is "전적초기화":
+            if sender is a player:
+                if player is not op:
+                    send "&c관리자만 쓸 수 있습니다."
+                    stop
+            delete {bg::os::kills::*}
+            delete {bg::os::deaths::*}
+            delete {bg::os::best::*}
+            broadcast "&c[온리소드] &f전적 · 랭킹을 초기화했습니다."
+            stop
+        if arg-1 is "랭킹" or "순위":
+            set {_ids::*} to sorted indices of {bg::os::kills::*} in descending order
+            send "&c&l[온리소드 랭킹] &7킬 순위 10위"
+            if size of {_ids::*} is 0:
+                send "&7  아직 기록이 없습니다."
+                stop
+            set {_i} to 0
+            loop {_ids::*}:
+                add 1 to {_i}
+                if {_i} <= 10:
+                    set {_line} to bgOsLine(loop-value, "?")
+                    send "&e  %{_i}%위 %{_line}%"
+            stop
+        if sender is not a player:
+            send "&c사용법: /온리소드 랭킹 · 전적초기화"
+            stop
+        if arg-1 is "나가기":
+            if bgOsOn(player) is true:
+                bgOsLeave(player)
+            else:
+                send "&c[온리소드] &7온리소드에 있지 않습니다."
+            stop
+        if arg-1 is "전적":
+            set {_u} to "%uuid of player%"
+            set {_line} to bgOsLine({_u}, name of player)
+            send "&c[온리소드] %{_line}%"
+            stop
+        if arg-1 is set:
+            if arg-1 starts with "전적 ":
+                set {_who} to subtext of arg-1 from characters 4 to length of arg-1
+                set {_t} to {_who} parsed as offline player
+                if {_t} is not set:
+                    send "&c플레이어를 찾을 수 없습니다: %{_who}%"
+                    stop
+                set {_u} to "%uuid of {_t}%"
+                set {_line} to bgOsLine({_u}, {_who})
+                send "&c[온리소드] %{_line}%"
+                stop
+        if bgOsOn(player) is true:
+            set {_u} to "%uuid of player%"
+            set {_line} to bgOsLine({_u}, name of player)
+            send "&c[온리소드] %{_line}% &7(/온리소드 나가기 · 랭킹)"
+            stop
+        bgHubGo(player, "pvp")
