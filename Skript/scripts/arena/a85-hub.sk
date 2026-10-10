@@ -625,9 +625,9 @@ on load:
     bgCmd("team modify 0hub color aqua")
     bgCmd("team modify 1myth color gold")
     bgCmd("team modify os_play color red")
-    bgCmd("team modify 0hub prefix {text:""[허브] "",color:""aqua"",bold:true}")
-    bgCmd("team modify 1myth prefix {text:""[신화쟁탈전] "",color:""gold"",bold:true}")
-    bgCmd("team modify os_play prefix {text:""[온리소드] "",color:""red"",bold:true}")
+    bgCmd("team modify 0hub prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" ""}]")
+    bgCmd("team modify 1myth prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" ""}]")
+    bgCmd("team modify os_play prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" ""}]")
 
 every 1 second:
     set {_nh} to 0
