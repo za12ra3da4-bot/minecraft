@@ -73,6 +73,9 @@ def build(pack):
     # 연습장 고르기 화면 (맨 뒤에 덧붙임 — 기존 글리프 번호 유지)
     import arenagui
     arenagui.export(f, H)
+    # 허브 오락기 화면 로고 (따로 글꼴 bg:hubscr — hud 글리프 번호와 무관)
+    import hubscreen
+    hubscreen.export(pack)
     # 화면 칸용 투명 아이템 (이름 · 설명만 보이고 그림은 없음)
     pack.put(f"assets/{H.NS}/items/gui/blank.json", {"model": {"type": "minecraft:empty"}})
     # 파일

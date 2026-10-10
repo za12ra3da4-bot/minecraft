@@ -38,7 +38,7 @@ PAL = ["air", "white_concrete", "light_gray_concrete", "smooth_quartz", "quartz_
        "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block",
        "diorite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]",
        "orange_carpet", "red_carpet", "yellow_carpet", "lime_carpet", "light_blue_carpet",
-       "light_gray_stained_glass", "cyan_stained_glass"]
+       "light_gray_stained_glass", "cyan_stained_glass", "red_stained_glass", "lime_stained_glass", "pink_stained_glass"]
 P = {}
 for _i, _s in enumerate(PAL):
     P.setdefault(_s.split("[")[0] + ("_down" if "facing=down" in _s else ""), _i)
@@ -483,17 +483,45 @@ def build():
                     d = math.sqrt((x + 0.5 - cx) ** 2 + (y + 0.5 - cy) ** 2 + (z + 0.5 - cz) ** 2)
                     if d <= rad:
                         put(x, y, z, pick(x - cx, y - cy, z - cz))
-    # 고리 행성 (북서쪽 하늘) + 작은 달 (북동쪽 하늘)
-    pcx, pcy, pcz = -52, FL + 52, -70
-    sphere(pcx, pcy, pcz, 7.5, lambda x, y, z: "purple_concrete" if math.sin(y * 0.9 + x * 0.15) > 0.2 else "magenta_concrete")
-    for t in range(0, 360, 2):
-        for rr in (10.5, 11.5, 12.5):
-            x = math.cos(math.radians(t)) * rr
-            z = math.sin(math.radians(t)) * rr
-            y = x * 0.3 + z * 0.25
-            if math.sqrt(x * x + y * y + z * z) > 8:
-                put(pcx + x, pcy + y, pcz + z, "light_blue_concrete" if rr != 11.5 else "white_concrete")
-    sphere(58, FL + 48, -64, 4.5, lambda x, y, z: "light_gray_concrete" if (x * 3 + z * 2 + y * 5) % 7 > 2 else "white_concrete")
+    # 빛나는 행성들 (밤하늘 둘레): 겉은 빛나는 띠 + 색유리 (안쪽 빛 블록이 비쳐 색깔 빛), 일부는 고리
+    def planet(cx, cy, cz, rad, light, glass, band, f=0.9, ring=None, tilt=(0.3, 0.25)):
+        def pick(x, y, z):
+            if math.sqrt(x * x + y * y + z * z) < rad - 2.1:
+                return light
+            return band if math.sin(y * f + x * 0.15 + z * 0.1) > 0.15 else glass
+        sphere(cx, FL + cy, cz, rad, pick)
+        if ring:
+            r0, blks = ring
+            for t in range(0, 360, 2):
+                for i, blk in enumerate(blks):
+                    rr = r0 + i
+                    x = math.cos(math.radians(t)) * rr
+                    z = math.sin(math.radians(t)) * rr
+                    y = x * tilt[0] + z * tilt[1]
+                    if math.sqrt(x * x + y * y + z * z) > rad + 0.5:
+                        put(cx + x, FL + cy + y, cz + z, blk)
+
+    def moon(cx, cy, cz, rad):
+        sphere(cx, FL + cy, cz, rad, lambda x, y, z: "glowstone" if (int(x * 3 + z * 2 + y * 5) % 7) > 4 else "ochre_froglight")
+    # 북쪽 하늘 (처음 화면에 보임)
+    planet(-50, 52, -64, 7.5, "pearlescent_froglight", "purple_stained_glass", "pearlescent_froglight",
+           ring=(10.5, ("light_blue_stained_glass", "sea_lantern", "cyan_stained_glass")))
+    moon(56, 50, -62, 4.5)
+    planet(-24, 61, -78, 3.2, "verdant_froglight", "lime_stained_glass", "verdant_froglight", f=1.4)
+    planet(24, 60, -80, 3.6, "pearlescent_froglight", "pink_stained_glass", "pearlescent_froglight", f=1.3)
+    planet(2, 63, -70, 2.4, "ochre_froglight", "yellow_stained_glass", "glowstone", f=1.6)
+    # 동서 하늘
+    planet(-76, 40, -20, 5.0, "sea_lantern", "cyan_stained_glass", "sea_lantern", f=1.1)
+    planet(74, 42, -22, 5.5, "shroomlight", "orange_stained_glass", "shroomlight", f=1.0,
+           ring=(7.5, ("yellow_stained_glass", "ochre_froglight")), tilt=(-0.35, 0.2))
+    planet(-72, 56, 18, 3.0, "pearlescent_froglight", "magenta_stained_glass", "pearlescent_froglight", f=1.4)
+    planet(70, 58, 14, 2.8, "sea_lantern", "light_blue_stained_glass", "sea_lantern", f=1.5)
+    # 남쪽 하늘 (뒤돌아보면)
+    planet(-58, 46, 54, 4.2, "sea_lantern", "blue_stained_glass", "sea_lantern", f=1.2)
+    planet(60, 52, 58, 5.0, "shroomlight", "red_stained_glass", "shroomlight", f=1.0,
+           ring=(7.0, ("orange_stained_glass", "shroomlight", "orange_stained_glass")), tilt=(0.2, -0.3))
+    planet(8, 58, 76, 3.0, "pearlescent_froglight", "purple_stained_glass", "pearlescent_froglight", f=1.4)
+    moon(-20, 62, 66, 2.5)
 
     # ── 산호 (광장 밖, 돔 둘레 비움)
     near = plaza.copy()
@@ -526,20 +554,24 @@ def build():
 
     # ── 둘레 보이지 않는 벽
     edge = (r >= R_ISLAND - 1.5) & (r < R_ISLAND - 0.2)
-    for y in range(FL + 1, H):
+    for y in range(FL + 1, FL + 20):
         v[:, y, :][edge] = P["barrier"]
     return v
 
 
 def markers():
     """허브 원점 기준 (칸 가운데 좌표): 시작 자리 · 오락기 발판 가운데 / 이름표 자리 (+ 오락기가 보는 방향)"""
-    out = {"spawn": (0.5, 1, 26.5, 180.0)}
+    out = {"spawn": (0.5, 1, 0.5, 180.0)}
     for key, b in BOOTHS.items():
         cx, cz = b["pos"]
         yaw = FACE_YAW[b["face"]]
         for name, fz, y in (("pad", 11, 1), ("label", 11, 4.2)):
             hx, hz = frame_xz(cx, cz, b["face"], 0, fz)
             out[f"{key}_{name}"] = (hx + 0.5, y, hz + 0.5, yaw)
+        # 빛나는 화면 앞면 가운데 (화면 칸 fz=1 의 앞면 + 0.06) — 화면 글자 (text_display, 이 방향을 봄)
+        hx, hz = frame_xz(cx, cz, b["face"], 0, 1)
+        dx, dz = {"S": (0, 1), "E": (1, 0), "W": (-1, 0)}[b["face"]]
+        out[f"{key}_screen"] = (round(hx + 0.5 + dx * 0.56, 2), 18.5, round(hz + 0.5 + dz * 0.56, 2), yaw)
     return out
 
 
@@ -572,13 +604,13 @@ def preview(path):
     pal = R.Palette(PAL)
     W, Hh = 1000, 560
     shots = [
-        ((C + 0.5, FL + 3.6, C + 30), (C + 0.5, FL + 20, C - 50), 100),
+        ((C + 0.5, FL + 2.6, C + 0.5), (C + 0.5, FL + 22, C - 50), 100),
         ((C - 23 + 0.5, FL + 9, C - 44 + 40), (C - 23 + 0.5, FL + 15, C - 44), 55),
         ((C + 0.5, FL + 10, C + 4), (C + 0.5, FL + 28, C + RZ), 62),
-        ((C + 66, FL + 62, C + 72), (C, FL + 6, C - 16), 55),
+        ((C + 84, FL + 46, C + 36), (C, FL + 6, C - 16), 60),
     ]
     ims = [R.render(v2, pal, W, Hh, cam, tgt, fov=fov, ss=2, fog_dist=900, **NIGHT) for cam, tgt, fov in shots]
-    labels = ["처음 들어오면 서는 자리에서 (광장 남쪽 → 로봇 쪽)",
+    labels = ["처음 들어오면 서는 자리 (가운데 원) — 화면 글자 · 빛나는 행성",
               "오락기 앞 (신화쟁탈전) — 빛나는 간판 · 둥근 화면 · 조작판 · 입장 발판",
               "거대 우주인 로봇 — 포털 고리를 든 모습",
               "하늘에서 — 흰 광장 · 오락기 4대 · 산호 섬 · 유리 돔"]

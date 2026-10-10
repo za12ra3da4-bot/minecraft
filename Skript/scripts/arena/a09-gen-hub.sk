@@ -1,4 +1,4 @@
-# 자동 생성 — 신화 아케이드 허브 표지 좌표 (arena/tools/hubgen.py)
+# 자동 생성 — 신화 아케이드 허브 표지 좌표 · 화면 로고 (arena/tools/hubgen.py · rp/hubscreen.py)
 on load:
     set {-bg::hubmk::myth_label::x} to -22.5
     set {-bg::hubmk::myth_label::y} to 4.2
@@ -8,6 +8,10 @@ on load:
     set {-bg::hubmk::myth_pad::y} to 1
     set {-bg::hubmk::myth_pad::z} to -32.5
     set {-bg::hubmk::myth_pad::yaw} to 0.0
+    set {-bg::hubmk::myth_screen::x} to -22.5
+    set {-bg::hubmk::myth_screen::y} to 18.5
+    set {-bg::hubmk::myth_screen::z} to -41.94
+    set {-bg::hubmk::myth_screen::yaw} to 0.0
     set {-bg::hubmk::pvp_label::x} to 23.5
     set {-bg::hubmk::pvp_label::y} to 4.2
     set {-bg::hubmk::pvp_label::z} to -32.5
@@ -16,6 +20,10 @@ on load:
     set {-bg::hubmk::pvp_pad::y} to 1
     set {-bg::hubmk::pvp_pad::z} to -32.5
     set {-bg::hubmk::pvp_pad::yaw} to 0.0
+    set {-bg::hubmk::pvp_screen::x} to 23.5
+    set {-bg::hubmk::pvp_screen::y} to 18.5
+    set {-bg::hubmk::pvp_screen::z} to -41.94
+    set {-bg::hubmk::pvp_screen::yaw} to 0.0
     set {-bg::hubmk::soon1_label::x} to -30.5
     set {-bg::hubmk::soon1_label::y} to 4.2
     set {-bg::hubmk::soon1_label::z} to -17.5
@@ -24,6 +32,10 @@ on load:
     set {-bg::hubmk::soon1_pad::y} to 1
     set {-bg::hubmk::soon1_pad::z} to -17.5
     set {-bg::hubmk::soon1_pad::yaw} to -90.0
+    set {-bg::hubmk::soon1_screen::x} to -39.94
+    set {-bg::hubmk::soon1_screen::y} to 18.5
+    set {-bg::hubmk::soon1_screen::z} to -17.5
+    set {-bg::hubmk::soon1_screen::yaw} to -90.0
     set {-bg::hubmk::soon2_label::x} to 31.5
     set {-bg::hubmk::soon2_label::y} to 4.2
     set {-bg::hubmk::soon2_label::z} to -17.5
@@ -32,7 +44,20 @@ on load:
     set {-bg::hubmk::soon2_pad::y} to 1
     set {-bg::hubmk::soon2_pad::z} to -17.5
     set {-bg::hubmk::soon2_pad::yaw} to 90.0
+    set {-bg::hubmk::soon2_screen::x} to 40.94
+    set {-bg::hubmk::soon2_screen::y} to 18.5
+    set {-bg::hubmk::soon2_screen::z} to -17.5
+    set {-bg::hubmk::soon2_screen::yaw} to 90.0
     set {-bg::hubmk::spawn::x} to 0.5
     set {-bg::hubmk::spawn::y} to 1
-    set {-bg::hubmk::spawn::z} to 26.5
+    set {-bg::hubmk::spawn::z} to 0.5
     set {-bg::hubmk::spawn::yaw} to 180.0
+    set {-bg::hubscr::myth::ch} to ""
+    set {-bg::hubscr::myth::w} to 53.0
+    set {-bg::hubscr::myth::h} to 42.0
+    set {-bg::hubscr::pvp::ch} to ""
+    set {-bg::hubscr::pvp::w} to 52.0
+    set {-bg::hubscr::pvp::h} to 41.0
+    set {-bg::hubscr::soon::ch} to ""
+    set {-bg::hubscr::soon::w} to 46.0
+    set {-bg::hubscr::soon::h} to 26.5

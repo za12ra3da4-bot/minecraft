@@ -224,6 +224,13 @@ def write_hub(path):
         L.append(f"    set {{-bg::hubmk::{name}::z}} to {pos[2]}")
         if len(pos) > 3:
             L.append(f"    set {{-bg::hubmk::{name}::yaw}} to {pos[3]}")
+    # 오락기 화면 로고 (리소스팩 글꼴 bg:hubscr 의 글자 하나 = 로고 하나) · 글꼴 픽셀 크기
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "rp"))
+    import hubscreen
+    for key, (ch, im) in hubscreen.build().items():
+        L.append(f"    set {{-bg::hubscr::{key}::ch}} to {q(ch)}")
+        L.append(f"    set {{-bg::hubscr::{key}::w}} to {im.size[0] / 2}")
+        L.append(f"    set {{-bg::hubscr::{key}::h}} to {im.size[1] / 2}")
     with open(path, "w", encoding="utf-8") as f:
-        f.write("# 자동 생성 — 신화 아케이드 허브 표지 좌표 (arena/tools/hubgen.py)\non load:\n" + "\n".join(L) + "\n")
+        f.write("# 자동 생성 — 신화 아케이드 허브 표지 좌표 · 화면 로고 (arena/tools/hubgen.py · rp/hubscreen.py)\non load:\n" + "\n".join(L) + "\n")
 

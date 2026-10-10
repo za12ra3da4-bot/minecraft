@@ -1,18 +1,18 @@
 $execute positioned $(x) $(y) $(z) run setblock ~-12 ~1 ~-30 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~12 ~1 ~-30 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-77 ~1 ~-29 ~-77 ~67 ~-26 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~76 ~1 ~-29 ~76 ~67 ~-26 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-78 ~1 ~-26 ~-78 ~67 ~-23 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-77 ~1 ~-29 ~-77 ~19 ~-26 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~76 ~1 ~-29 ~76 ~19 ~-26 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-78 ~1 ~-26 ~-78 ~19 ~-23 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~1 ~-26 ~-68 ~1 ~-26 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-48 ~1 ~-26 ~-40 ~1 ~-10 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~40 ~1 ~-26 ~48 ~1 ~-10 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run fill ~77 ~1 ~-26 ~77 ~67 ~-23 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~77 ~1 ~-26 ~77 ~19 ~-23 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-69 ~1 ~-25 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-72 ~1 ~-24 ~-72 ~11 ~-24 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-79 ~1 ~-23 ~-79 ~67 ~-19 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-79 ~1 ~-23 ~-79 ~19 ~-19 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-31 ~1 ~-23 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~31 ~1 ~-23 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~78 ~1 ~-23 ~78 ~67 ~-19 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~78 ~1 ~-23 ~78 ~19 ~-19 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-70 ~1 ~-22 ~-70 ~8 ~-22 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-68 ~1 ~-22 ~-68 ~3 ~-22 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-67 ~1 ~-22 ~-66 ~1 ~-22 minecraft:fire_coral_block
@@ -22,12 +22,12 @@ $execute positioned $(x) $(y) $(z) run setblock ~-59 ~1 ~-21 minecraft:bubble_co
 $execute positioned $(x) $(y) $(z) run fill ~-73 ~1 ~-20 ~-72 ~1 ~-20 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~1 ~-20 ~-68 ~1 ~-20 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-58 ~1 ~-20 ~-57 ~1 ~-19 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~1 ~-19 ~-80 ~67 ~-14 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-80 ~1 ~-19 ~-80 ~19 ~-14 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-73 ~1 ~-19 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-69 ~1 ~-19 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-60 ~1 ~-19 ~-60 ~10 ~-19 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~62 ~1 ~-19 ~63 ~11 ~-19 minecraft:horn_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~79 ~1 ~-19 ~79 ~67 ~-14 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~79 ~1 ~-19 ~79 ~19 ~-14 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-4 ~1 ~-18 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~3 ~1 ~-18 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~64 ~1 ~-18 ~64 ~1 ~-16 minecraft:horn_coral_block
@@ -46,7 +46,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-9 ~1 ~-16 ~-8 ~1 ~-16 minecraft:sm
 $execute positioned $(x) $(y) $(z) run fill ~-7 ~1 ~-16 ~-5 ~1 ~-15 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~4 ~1 ~-16 ~6 ~1 ~-15 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~7 ~1 ~-16 ~8 ~1 ~-16 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-81 ~1 ~-15 ~-81 ~67 ~14 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-81 ~1 ~-15 ~-81 ~19 ~14 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-64 ~1 ~-15 ~-64 ~1 ~-13 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-63 ~1 ~-15 ~-63 ~4 ~-15 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-60 ~1 ~-15 ~-60 ~9 ~-15 minecraft:fire_coral_block
@@ -62,7 +62,7 @@ $execute positioned $(x) $(y) $(z) run fill ~60 ~1 ~-15 ~61 ~1 ~-15 minecraft:ho
 $execute positioned $(x) $(y) $(z) run fill ~63 ~1 ~-15 ~63 ~9 ~-15 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~64 ~1 ~-15 ~64 ~11 ~-15 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~66 ~1 ~-15 ~67 ~1 ~-14 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~80 ~1 ~-15 ~80 ~67 ~14 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~80 ~1 ~-15 ~80 ~19 ~14 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-63 ~1 ~-14 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-60 ~1 ~-14 ~-59 ~1 ~-14 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~-14 ~-11 ~1 ~-14 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
@@ -135,7 +135,7 @@ $execute positioned $(x) $(y) $(z) run setblock ~-13 ~1 ~-8 minecraft:light_blue
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~-8 ~-12 ~1 ~-7 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~11 ~1 ~-8 ~11 ~1 ~-7 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~12 ~1 ~-8 minecraft:light_blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-82 ~1 ~-7 ~-82 ~67 ~6 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-82 ~1 ~-7 ~-82 ~19 ~6 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-17 ~1 ~-7 ~-17 ~1 ~-5 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-16 ~1 ~-7 ~-16 ~1 ~-4 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-14 ~1 ~-7 ~-14 ~1 ~-5 minecraft:light_blue_stained_glass
@@ -144,7 +144,7 @@ $execute positioned $(x) $(y) $(z) run fill ~12 ~1 ~-7 ~12 ~1 ~-5 minecraft:smoo
 $execute positioned $(x) $(y) $(z) run fill ~13 ~1 ~-7 ~13 ~1 ~-5 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~15 ~1 ~-7 ~15 ~1 ~-4 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~16 ~1 ~-7 ~16 ~1 ~-5 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~81 ~1 ~-7 ~81 ~67 ~6 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~81 ~1 ~-7 ~81 ~19 ~6 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-76 ~1 ~-6 ~-76 ~7 ~-6 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-74 ~1 ~-6 ~-73 ~1 ~-6 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-74 ~1 ~-5 minecraft:horn_coral_block
@@ -251,7 +251,7 @@ $execute positioned $(x) $(y) $(z) run setblock ~7 ~1 ~12 minecraft:light_blue_s
 $execute positioned $(x) $(y) $(z) run fill ~8 ~1 ~12 ~9 ~1 ~13 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~12 ~1 ~12 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~47 ~1 ~12 ~47 ~1 ~13 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~1 ~13 ~-80 ~67 ~18 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-80 ~1 ~13 ~-80 ~19 ~18 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~13 ~-11 ~1 ~13 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-8 ~1 ~13 ~-8 ~1 ~14 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-7 ~1 ~13 ~-5 ~1 ~13 minecraft:light_blue_stained_glass
@@ -261,7 +261,7 @@ $execute positioned $(x) $(y) $(z) run fill ~4 ~1 ~13 ~6 ~1 ~13 minecraft:light_
 $execute positioned $(x) $(y) $(z) run fill ~7 ~1 ~13 ~7 ~1 ~14 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~10 ~1 ~13 ~11 ~1 ~13 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~58 ~1 ~13 ~59 ~1 ~13 minecraft:brain_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~79 ~1 ~13 ~79 ~67 ~18 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~79 ~1 ~13 ~79 ~19 ~18 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-74 ~1 ~14 ~-73 ~1 ~14 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-53 ~1 ~14 ~-52 ~1 ~14 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-47 ~1 ~14 ~-47 ~1 ~15 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
@@ -295,11 +295,11 @@ $execute positioned $(x) $(y) $(z) run fill ~-45 ~1 ~17 ~-45 ~1 ~18 minecraft:sm
 $execute positioned $(x) $(y) $(z) run setblock ~-4 ~1 ~17 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~3 ~1 ~17 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~44 ~1 ~17 ~44 ~1 ~18 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-79 ~1 ~18 ~-79 ~67 ~22 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-79 ~1 ~18 ~-79 ~19 ~22 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-52 ~1 ~18 ~-52 ~10 ~18 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~49 ~1 ~18 ~50 ~1 ~18 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~62 ~1 ~18 ~63 ~1 ~19 minecraft:brain_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~78 ~1 ~18 ~78 ~67 ~22 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~78 ~1 ~18 ~78 ~19 ~22 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-44 ~1 ~19 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~43 ~1 ~19 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~49 ~1 ~19 minecraft:horn_coral_block
@@ -308,14 +308,14 @@ $execute positioned $(x) $(y) $(z) run fill ~-43 ~1 ~20 ~-42 ~1 ~20 minecraft:sm
 $execute positioned $(x) $(y) $(z) run fill ~41 ~1 ~20 ~42 ~1 ~20 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-41 ~1 ~21 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~40 ~1 ~21 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-78 ~1 ~22 ~-78 ~67 ~25 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-78 ~1 ~22 ~-78 ~19 ~25 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-40 ~1 ~22 ~-39 ~1 ~22 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-25 ~1 ~22 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~24 ~1 ~22 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~38 ~1 ~22 ~39 ~1 ~22 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~47 ~1 ~22 ~48 ~1 ~22 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~49 ~1 ~22 ~50 ~1 ~22 minecraft:horn_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~77 ~1 ~22 ~77 ~67 ~25 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~77 ~1 ~22 ~77 ~19 ~25 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-38 ~1 ~23 ~-37 ~1 ~23 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~36 ~1 ~23 ~37 ~1 ~23 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~45 ~1 ~23 ~46 ~1 ~23 minecraft:horn_coral_block
@@ -327,7 +327,7 @@ $execute positioned $(x) $(y) $(z) run fill ~44 ~1 ~24 ~45 ~1 ~24 minecraft:horn
 $execute positioned $(x) $(y) $(z) run fill ~52 ~1 ~24 ~53 ~1 ~24 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~65 ~1 ~24 ~66 ~1 ~24 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~67 ~1 ~24 ~68 ~1 ~24 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-77 ~1 ~25 ~-77 ~67 ~28 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-77 ~1 ~25 ~-77 ~19 ~28 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-33 ~1 ~25 ~-28 ~1 ~25 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~27 ~1 ~25 ~32 ~1 ~25 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~46 ~1 ~25 ~47 ~1 ~26 minecraft:horn_coral_block
@@ -336,7 +336,7 @@ $execute positioned $(x) $(y) $(z) run fill ~64 ~1 ~25 ~65 ~1 ~25 minecraft:tube
 $execute positioned $(x) $(y) $(z) run fill ~66 ~1 ~25 ~67 ~1 ~25 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~69 ~1 ~25 ~69 ~8 ~25 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~71 ~1 ~25 ~71 ~3 ~25 minecraft:brain_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~76 ~1 ~25 ~76 ~67 ~28 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~76 ~1 ~25 ~76 ~19 ~28 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-27 ~1 ~26 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~26 ~1 ~26 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~44 ~1 ~26 ~44 ~5 ~26 minecraft:horn_coral_block
@@ -351,7 +351,7 @@ $execute positioned $(x) $(y) $(z) run setblock ~49 ~1 ~27 minecraft:brain_coral
 $execute positioned $(x) $(y) $(z) run fill ~50 ~1 ~27 ~51 ~1 ~27 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~65 ~1 ~27 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~70 ~1 ~27 ~71 ~1 ~27 minecraft:brain_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~1 ~28 ~-76 ~67 ~30 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-76 ~1 ~28 ~-76 ~19 ~30 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-60 ~1 ~28 ~-56 ~1 ~40 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~-25 ~1 ~28 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~24 ~1 ~28 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
@@ -361,7 +361,7 @@ $execute positioned $(x) $(y) $(z) run fill ~56 ~1 ~28 ~60 ~1 ~40 minecraft:smoo
 $execute positioned $(x) $(y) $(z) run fill ~63 ~1 ~28 ~63 ~5 ~28 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~65 ~1 ~28 ~67 ~1 ~28 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~70 ~1 ~28 minecraft:brain_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~75 ~1 ~28 ~75 ~67 ~30 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~75 ~1 ~28 ~75 ~19 ~30 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-62 ~1 ~29 ~-61 ~1 ~39 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-55 ~1 ~29 ~-54 ~1 ~39 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-49 ~1 ~29 ~-49 ~11 ~29 minecraft:bubble_coral_block
@@ -373,7 +373,7 @@ $execute positioned $(x) $(y) $(z) run setblock ~43 ~1 ~29 minecraft:tube_coral_
 $execute positioned $(x) $(y) $(z) run fill ~54 ~1 ~29 ~55 ~1 ~39 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~61 ~1 ~29 ~62 ~1 ~39 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~66 ~1 ~29 minecraft:fire_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-75 ~1 ~30 ~-75 ~67 ~33 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-75 ~1 ~30 ~-75 ~19 ~33 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-63 ~1 ~30 ~-63 ~1 ~38 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-53 ~1 ~30 ~-53 ~1 ~38 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-23 ~1 ~30 ~-22 ~1 ~30 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
@@ -383,7 +383,7 @@ $execute positioned $(x) $(y) $(z) run fill ~21 ~1 ~30 ~22 ~1 ~30 minecraft:smoo
 $execute positioned $(x) $(y) $(z) run fill ~42 ~1 ~30 ~42 ~8 ~30 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~53 ~1 ~30 ~53 ~1 ~38 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~63 ~1 ~30 ~63 ~1 ~38 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~74 ~1 ~30 ~74 ~67 ~33 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~74 ~1 ~30 ~74 ~19 ~33 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-48 ~1 ~31 ~-48 ~9 ~31 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~1 ~31 ~-25 ~1 ~35 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-21 ~1 ~31 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
@@ -395,52 +395,52 @@ $execute positioned $(x) $(y) $(z) run fill ~-20 ~1 ~32 ~-19 ~1 ~32 minecraft:sm
 $execute positioned $(x) $(y) $(z) run fill ~18 ~1 ~32 ~19 ~1 ~32 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~52 ~1 ~32 ~52 ~1 ~36 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~64 ~1 ~32 ~64 ~1 ~36 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-74 ~1 ~33 ~-74 ~67 ~35 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-74 ~1 ~33 ~-74 ~19 ~35 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-40 ~1 ~33 ~-36 ~1 ~33 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-18 ~1 ~33 ~-17 ~1 ~33 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~0 ~1 ~33 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~16 ~1 ~33 ~17 ~1 ~33 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~73 ~1 ~33 ~73 ~67 ~35 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~73 ~1 ~33 ~73 ~19 ~35 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-47 ~1 ~34 ~-47 ~11 ~34 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-46 ~1 ~34 ~-46 ~1 ~35 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-40 ~1 ~34 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-38 ~1 ~34 ~-37 ~1 ~34 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-16 ~1 ~34 ~-15 ~1 ~34 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~14 ~1 ~34 ~15 ~1 ~34 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-73 ~1 ~35 ~-73 ~67 ~37 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-73 ~1 ~35 ~-73 ~19 ~37 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-47 ~1 ~35 ~-47 ~1 ~36 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-37 ~1 ~35 ~-37 ~8 ~35 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-14 ~1 ~35 ~-12 ~1 ~35 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~11 ~1 ~35 ~13 ~1 ~35 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~72 ~1 ~35 ~72 ~67 ~37 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~72 ~1 ~35 ~72 ~19 ~37 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-48 ~1 ~36 ~-48 ~5 ~36 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-46 ~1 ~36 ~-45 ~1 ~36 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-11 ~1 ~36 ~-7 ~1 ~36 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~6 ~1 ~36 ~10 ~1 ~36 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-72 ~1 ~37 ~-72 ~67 ~39 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-72 ~1 ~37 ~-72 ~19 ~39 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-46 ~1 ~37 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-44 ~1 ~37 ~-43 ~1 ~37 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-40 ~1 ~37 ~-39 ~1 ~37 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-6 ~1 ~37 ~5 ~1 ~37 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~71 ~1 ~37 ~71 ~67 ~39 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~71 ~1 ~37 ~71 ~19 ~39 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-48 ~1 ~38 ~-47 ~1 ~38 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-46 ~1 ~38 ~-46 ~1 ~39 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-44 ~1 ~38 ~-44 ~1 ~39 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-40 ~1 ~38 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~26 ~1 ~38 ~28 ~1 ~38 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-71 ~1 ~39 ~-71 ~67 ~40 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-71 ~1 ~39 ~-71 ~19 ~40 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-48 ~1 ~39 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-47 ~1 ~39 ~-47 ~1 ~40 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-45 ~1 ~39 ~-45 ~1 ~40 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-38 ~1 ~39 ~-37 ~1 ~39 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~26 ~1 ~39 ~27 ~1 ~40 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~70 ~1 ~39 ~70 ~67 ~40 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~70 ~1 ~39 ~70 ~19 ~40 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-40 ~1 ~40 ~-40 ~4 ~40 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-38 ~1 ~40 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~25 ~1 ~40 ~25 ~11 ~40 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~40 ~28 ~7 ~40 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~30 ~1 ~40 ~31 ~1 ~40 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-70 ~1 ~41 ~-70 ~67 ~42 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-70 ~1 ~41 ~-70 ~19 ~42 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-65 ~1 ~41 ~-64 ~1 ~41 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-15 ~1 ~41 ~-15 ~11 ~41 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-13 ~1 ~41 ~-13 ~5 ~43 minecraft:bubble_coral_block
@@ -450,15 +450,15 @@ $execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~41 ~29 ~1 ~41 minecraft:tube
 $execute positioned $(x) $(y) $(z) run setblock ~30 ~1 ~41 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~44 ~1 ~41 ~44 ~10 ~41 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~46 ~1 ~41 ~48 ~5 ~41 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~69 ~1 ~41 ~69 ~67 ~42 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~1 ~42 ~-69 ~67 ~44 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~69 ~1 ~41 ~69 ~19 ~42 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-69 ~1 ~42 ~-69 ~19 ~44 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-65 ~1 ~42 ~-65 ~1 ~43 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-54 ~1 ~42 ~-53 ~3 ~42 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~25 ~1 ~42 ~25 ~4 ~42 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~26 ~1 ~42 ~27 ~1 ~42 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~42 ~28 ~1 ~43 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~46 ~1 ~42 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~68 ~1 ~42 ~68 ~67 ~44 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~68 ~1 ~42 ~68 ~19 ~44 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-66 ~1 ~43 ~-66 ~1 ~44 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-63 ~1 ~43 ~-62 ~1 ~43 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-36 ~1 ~43 ~-36 ~11 ~43 minecraft:fire_coral_block
@@ -466,7 +466,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-14 ~1 ~43 ~-14 ~1 ~44 minecraft:bu
 $execute positioned $(x) $(y) $(z) run fill ~7 ~1 ~43 ~8 ~1 ~43 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~26 ~1 ~43 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~49 ~1 ~43 ~50 ~1 ~43 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-68 ~1 ~44 ~-68 ~67 ~45 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-68 ~1 ~44 ~-68 ~19 ~45 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-63 ~1 ~44 ~-63 ~3 ~44 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-62 ~1 ~44 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-38 ~1 ~44 ~-38 ~11 ~44 minecraft:bubble_coral_block
@@ -477,8 +477,8 @@ $execute positioned $(x) $(y) $(z) run fill ~11 ~1 ~44 ~11 ~6 ~44 minecraft:bubb
 $execute positioned $(x) $(y) $(z) run fill ~25 ~1 ~44 ~26 ~1 ~44 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~49 ~1 ~44 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~54 ~1 ~44 ~55 ~1 ~44 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~67 ~1 ~44 ~67 ~67 ~45 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-67 ~1 ~45 ~-67 ~67 ~47 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~67 ~1 ~44 ~67 ~19 ~45 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-67 ~1 ~45 ~-67 ~19 ~47 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-63 ~1 ~45 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-37 ~1 ~45 ~-37 ~4 ~45 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-34 ~1 ~45 minecraft:fire_coral_block
@@ -489,7 +489,7 @@ $execute positioned $(x) $(y) $(z) run fill ~51 ~1 ~45 ~52 ~1 ~45 minecraft:bubb
 $execute positioned $(x) $(y) $(z) run setblock ~54 ~1 ~45 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~58 ~1 ~45 ~60 ~1 ~45 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~63 ~1 ~45 ~63 ~10 ~45 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~66 ~1 ~45 ~66 ~67 ~47 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~66 ~1 ~45 ~66 ~19 ~47 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-60 ~1 ~46 ~-59 ~1 ~46 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-36 ~1 ~46 ~-35 ~1 ~46 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-32 ~1 ~46 ~-30 ~1 ~46 minecraft:fire_coral_block
@@ -502,7 +502,7 @@ $execute positioned $(x) $(y) $(z) run fill ~50 ~1 ~46 ~50 ~11 ~46 minecraft:bra
 $execute positioned $(x) $(y) $(z) run setblock ~51 ~1 ~46 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~58 ~1 ~46 ~59 ~1 ~46 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~62 ~1 ~46 ~62 ~3 ~46 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-66 ~1 ~47 ~-66 ~67 ~48 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-66 ~1 ~47 ~-66 ~19 ~48 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-60 ~1 ~47 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-36 ~1 ~47 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-31 ~1 ~47 minecraft:fire_coral_block
@@ -511,8 +511,8 @@ $execute positioned $(x) $(y) $(z) run fill ~-3 ~1 ~47 ~-3 ~6 ~47 minecraft:brai
 $execute positioned $(x) $(y) $(z) run fill ~10 ~1 ~47 ~11 ~1 ~47 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~15 ~1 ~47 ~15 ~1 ~49 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~24 ~1 ~47 ~25 ~1 ~47 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~65 ~1 ~47 ~65 ~67 ~48 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-65 ~1 ~48 ~-65 ~67 ~49 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~65 ~1 ~47 ~65 ~19 ~48 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-65 ~1 ~48 ~-65 ~19 ~49 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-42 ~1 ~48 ~-42 ~5 ~48 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-34 ~1 ~48 ~-33 ~1 ~48 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-27 ~1 ~48 ~-27 ~7 ~48 minecraft:horn_coral_block
@@ -521,8 +521,8 @@ $execute positioned $(x) $(y) $(z) run setblock ~10 ~1 ~48 minecraft:bubble_cora
 $execute positioned $(x) $(y) $(z) run setblock ~16 ~1 ~48 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~18 ~1 ~48 ~18 ~11 ~48 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~23 ~1 ~48 ~24 ~1 ~48 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~64 ~1 ~48 ~64 ~67 ~49 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-64 ~1 ~49 ~-64 ~67 ~51 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~64 ~1 ~48 ~64 ~19 ~49 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-64 ~1 ~49 ~-64 ~19 ~51 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-50 ~1 ~49 ~-49 ~1 ~50 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-34 ~1 ~49 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-26 ~1 ~49 ~-26 ~4 ~49 minecraft:horn_coral_block
@@ -530,84 +530,84 @@ $execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~49 ~-11 ~1 ~49 minecraft:fi
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~1 ~49 ~-2 ~10 ~49 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~23 ~1 ~49 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~59 ~1 ~49 ~59 ~4 ~49 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~63 ~1 ~49 ~63 ~67 ~51 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~63 ~1 ~49 ~63 ~19 ~51 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-48 ~1 ~50 ~-48 ~8 ~50 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-35 ~1 ~50 ~-35 ~5 ~50 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-25 ~1 ~50 ~-24 ~1 ~50 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-12 ~1 ~50 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-5 ~1 ~50 ~-4 ~1 ~50 minecraft:brain_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~-63 ~1 ~51 ~-63 ~67 ~52 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-63 ~1 ~51 ~-63 ~19 ~52 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-25 ~1 ~51 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-23 ~1 ~51 ~-23 ~6 ~51 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-5 ~1 ~51 minecraft:brain_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~62 ~1 ~51 ~62 ~67 ~52 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-62 ~1 ~52 ~-62 ~67 ~53 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~62 ~1 ~51 ~62 ~19 ~52 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-62 ~1 ~52 ~-62 ~19 ~53 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~8 ~1 ~52 ~10 ~1 ~52 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~61 ~1 ~52 ~61 ~67 ~53 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-61 ~1 ~53 ~-61 ~67 ~54 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~61 ~1 ~52 ~61 ~19 ~53 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-61 ~1 ~53 ~-61 ~19 ~54 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-27 ~1 ~53 ~-26 ~6 ~53 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~7 ~1 ~53 ~7 ~1 ~55 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~9 ~1 ~53 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~60 ~1 ~53 ~60 ~67 ~54 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-60 ~1 ~54 ~-60 ~67 ~55 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~60 ~1 ~53 ~60 ~19 ~54 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-60 ~1 ~54 ~-60 ~19 ~55 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-41 ~1 ~54 ~-40 ~6 ~54 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~4 ~1 ~54 ~4 ~4 ~54 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~6 ~1 ~54 ~6 ~1 ~56 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~59 ~1 ~54 ~59 ~67 ~55 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-59 ~1 ~55 ~-59 ~67 ~56 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~59 ~1 ~54 ~59 ~19 ~55 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-59 ~1 ~55 ~-59 ~19 ~56 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~8 ~1 ~55 ~9 ~3 ~55 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~58 ~1 ~55 ~58 ~67 ~56 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-58 ~1 ~56 ~-58 ~67 ~57 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~58 ~1 ~55 ~58 ~19 ~56 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-58 ~1 ~56 ~-58 ~19 ~57 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~1 ~56 ~-29 ~7 ~56 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-26 ~1 ~56 ~-25 ~1 ~56 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~19 ~1 ~56 ~20 ~1 ~57 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~57 ~1 ~56 ~57 ~67 ~57 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-57 ~1 ~57 ~-57 ~67 ~58 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~57 ~1 ~56 ~57 ~19 ~57 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-57 ~1 ~57 ~-57 ~19 ~58 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-26 ~1 ~57 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~27 ~1 ~57 ~27 ~5 ~57 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~56 ~1 ~57 ~56 ~67 ~58 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-56 ~1 ~58 ~-56 ~67 ~59 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~56 ~1 ~57 ~56 ~19 ~58 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~1 ~58 ~-56 ~19 ~59 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~18 ~1 ~58 ~18 ~8 ~58 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~23 ~1 ~58 ~24 ~1 ~58 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~55 ~1 ~58 ~55 ~67 ~59 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-55 ~1 ~59 ~-55 ~67 ~60 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~55 ~1 ~58 ~55 ~19 ~59 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~1 ~59 ~-55 ~19 ~60 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-42 ~1 ~59 ~-41 ~8 ~59 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~23 ~1 ~59 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~24 ~1 ~59 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~54 ~1 ~59 ~54 ~67 ~60 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-54 ~1 ~60 ~-54 ~67 ~61 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~54 ~1 ~59 ~54 ~19 ~60 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~1 ~60 ~-54 ~19 ~61 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~60 ~23 ~1 ~60 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~60 ~28 ~11 ~60 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~53 ~1 ~60 ~53 ~67 ~61 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~1 ~61 ~-53 ~67 ~62 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~53 ~1 ~60 ~53 ~19 ~61 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~1 ~61 ~-53 ~19 ~62 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-43 ~1 ~61 ~-42 ~3 ~61 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~61 ~22 ~3 ~61 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~52 ~1 ~61 ~52 ~67 ~62 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~1 ~62 ~-52 ~67 ~63 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~52 ~1 ~61 ~52 ~19 ~62 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~1 ~62 ~-52 ~19 ~63 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-43 ~1 ~62 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-40 ~1 ~62 ~-39 ~1 ~62 minecraft:horn_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~51 ~1 ~62 ~51 ~67 ~63 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-51 ~1 ~63 ~-50 ~67 ~63 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~51 ~1 ~62 ~51 ~19 ~63 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~1 ~63 ~-50 ~19 ~63 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-40 ~1 ~63 minecraft:horn_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~49 ~1 ~63 ~50 ~67 ~63 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-50 ~1 ~64 ~-49 ~67 ~64 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~49 ~1 ~63 ~50 ~19 ~63 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-50 ~1 ~64 ~-49 ~19 ~64 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-6 ~1 ~64 ~-4 ~1 ~64 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~48 ~1 ~64 ~49 ~67 ~64 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-49 ~1 ~65 ~-48 ~67 ~65 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~48 ~1 ~64 ~49 ~19 ~64 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-49 ~1 ~65 ~-48 ~19 ~65 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-21 ~1 ~65 ~-20 ~8 ~65 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-13 ~1 ~65 ~-12 ~1 ~65 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-5 ~1 ~65 ~-5 ~6 ~65 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~6 ~1 ~65 ~6 ~7 ~65 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~9 ~1 ~65 ~10 ~1 ~65 minecraft:horn_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~47 ~1 ~65 ~48 ~67 ~65 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-48 ~1 ~66 ~-46 ~67 ~66 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~47 ~1 ~65 ~48 ~19 ~65 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-48 ~1 ~66 ~-46 ~19 ~66 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-13 ~1 ~66 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~1 ~66 ~-4 ~8 ~66 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-3 ~1 ~66 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~9 ~1 ~66 ~9 ~1 ~67 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~66 ~30 ~1 ~66 minecraft:horn_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~45 ~1 ~66 ~47 ~67 ~66 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-46 ~1 ~67 ~-45 ~67 ~67 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~45 ~1 ~66 ~47 ~19 ~66 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-46 ~1 ~67 ~-45 ~19 ~67 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-38 ~1 ~67 ~-37 ~1 ~68 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-16 ~1 ~67 ~-15 ~7 ~67 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-14 ~1 ~67 ~-14 ~5 ~67 minecraft:bubble_coral_block
@@ -619,22 +619,22 @@ $execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~67 ~23 ~1 ~68 minecraft:fire
 $execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~67 ~29 ~1 ~67 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~35 ~1 ~67 ~35 ~3 ~67 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~37 ~1 ~67 ~37 ~5 ~67 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~44 ~1 ~67 ~45 ~67 ~67 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-45 ~1 ~68 ~-43 ~67 ~68 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~44 ~1 ~67 ~45 ~19 ~67 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-45 ~1 ~68 ~-43 ~19 ~68 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-21 ~1 ~68 ~-21 ~1 ~69 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-15 ~1 ~68 ~-14 ~1 ~69 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~68 ~-11 ~1 ~68 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-6 ~1 ~68 minecraft:fire_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~42 ~1 ~68 ~44 ~67 ~68 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~1 ~69 ~-42 ~67 ~69 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~42 ~1 ~68 ~44 ~19 ~68 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-43 ~1 ~69 ~-42 ~19 ~69 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-38 ~1 ~69 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-22 ~1 ~69 ~-22 ~1 ~70 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-12 ~1 ~69 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~1 ~69 ~-3 ~1 ~69 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~25 ~1 ~69 ~25 ~5 ~69 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~34 ~1 ~69 ~35 ~1 ~69 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~41 ~1 ~69 ~42 ~67 ~69 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-41 ~1 ~70 ~-40 ~67 ~70 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~41 ~1 ~69 ~42 ~19 ~69 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-41 ~1 ~70 ~-40 ~19 ~70 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-35 ~1 ~70 ~-34 ~1 ~70 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-27 ~1 ~70 ~-27 ~4 ~70 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-15 ~1 ~70 minecraft:brain_coral_block
@@ -645,49 +645,49 @@ $execute positioned $(x) $(y) $(z) run fill ~9 ~1 ~70 ~10 ~1 ~70 minecraft:horn_
 $execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~70 ~23 ~1 ~70 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~25 ~1 ~70 ~27 ~1 ~70 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~34 ~1 ~70 minecraft:bubble_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~39 ~1 ~70 ~40 ~67 ~70 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-40 ~1 ~71 ~-38 ~67 ~71 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~39 ~1 ~70 ~40 ~19 ~70 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-40 ~1 ~71 ~-38 ~19 ~71 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-35 ~1 ~71 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-15 ~1 ~71 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~9 ~1 ~71 minecraft:horn_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~71 ~22 ~5 ~71 minecraft:fire_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~24 ~1 ~71 ~25 ~1 ~71 minecraft:fire_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~37 ~1 ~71 ~39 ~67 ~71 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-38 ~1 ~72 ~-36 ~67 ~72 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~37 ~1 ~71 ~39 ~19 ~71 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-38 ~1 ~72 ~-36 ~19 ~72 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~1 ~72 ~-27 ~1 ~72 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~72 ~22 ~7 ~72 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~24 ~1 ~72 minecraft:fire_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~35 ~1 ~72 ~37 ~67 ~72 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-36 ~1 ~73 ~-34 ~67 ~73 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~35 ~1 ~72 ~37 ~19 ~72 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-36 ~1 ~73 ~-34 ~19 ~73 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~-29 ~1 ~73 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-27 ~1 ~73 ~-26 ~1 ~74 minecraft:bubble_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~19 ~1 ~73 ~20 ~1 ~74 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~26 ~1 ~73 ~26 ~8 ~73 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~33 ~1 ~73 ~35 ~67 ~73 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-34 ~1 ~74 ~-31 ~67 ~74 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~33 ~1 ~73 ~35 ~19 ~73 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-34 ~1 ~74 ~-31 ~19 ~74 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-15 ~1 ~74 ~-15 ~1 ~76 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~9 ~1 ~74 ~9 ~7 ~74 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~21 ~1 ~74 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~30 ~1 ~74 ~33 ~67 ~74 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-31 ~1 ~75 ~-29 ~67 ~75 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~30 ~1 ~74 ~33 ~19 ~74 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-31 ~1 ~75 ~-29 ~19 ~75 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-14 ~1 ~75 ~-14 ~3 ~75 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~12 ~1 ~75 ~13 ~1 ~75 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~20 ~1 ~75 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~75 ~30 ~67 ~75 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-29 ~1 ~76 ~-26 ~67 ~76 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~75 ~30 ~19 ~75 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-29 ~1 ~76 ~-26 ~19 ~76 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~8 ~1 ~76 ~9 ~1 ~76 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~12 ~1 ~76 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~19 ~1 ~76 ~19 ~9 ~76 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~25 ~1 ~76 ~28 ~67 ~76 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-26 ~1 ~77 ~-23 ~67 ~77 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~25 ~1 ~76 ~28 ~19 ~76 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-26 ~1 ~77 ~-23 ~19 ~77 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run setblock ~8 ~1 ~77 minecraft:tube_coral_block
-$execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~77 ~25 ~67 ~77 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-23 ~1 ~78 ~-19 ~67 ~78 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~18 ~1 ~78 ~22 ~67 ~78 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-19 ~1 ~79 ~-14 ~67 ~79 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~13 ~1 ~79 ~18 ~67 ~79 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-15 ~1 ~80 ~14 ~67 ~80 minecraft:barrier
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~1 ~81 ~6 ~67 ~81 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~77 ~25 ~19 ~77 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-23 ~1 ~78 ~-19 ~19 ~78 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~18 ~1 ~78 ~22 ~19 ~78 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-19 ~1 ~79 ~-14 ~19 ~79 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~13 ~1 ~79 ~18 ~19 ~79 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-15 ~1 ~80 ~14 ~19 ~80 minecraft:barrier
+$execute positioned $(x) $(y) $(z) run fill ~-7 ~1 ~81 ~6 ~19 ~81 minecraft:barrier
 $execute positioned $(x) $(y) $(z) run fill ~-5 ~2 ~-77 ~-5 ~8 ~-77 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~2 ~-75 ~-4 ~5 ~-75 minecraft:tube_coral_block
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~2 ~-74 ~-2 ~6 ~-74 minecraft:brain_coral_block

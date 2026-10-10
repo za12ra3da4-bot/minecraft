@@ -1,7 +1,8 @@
 # ═════════════════════════════════════════════════════════════════════════════
 #  신화 아케이드 — 서버 첫 화면 허브 (여러 컨텐츠를 고르는 오락실 광장)
-#   접속하면 허브로 → 오락기 앞 빛나는 발판을 밟거나, 나침반 우클릭 · /컨텐츠 로 고르기
+#   접속하면 허브로 → 오락기 앞 빛나는 발판을 밟거나 /컨텐츠 로 고르기 (오락기 화면에 컨텐츠 이름이 크게 뜸)
 #     신화쟁탈전 (대기실) · PvP 연습장 (투기장 고르기) · 준비 중 2
+#   허브에 있는 동안은 그 사람 화면만 밤 · 맑음 (월드 시간은 그대로 → 다른 맵은 아침)
 #   /허브 (/hub, /스폰) : 허브로 돌아가기
 #   관리자: /허브 건설 [여기] (처음 한 번 · 약 6초) · /허브 전체 (모두 허브로) · /허브 글자 · /허브 위치
 #           /컨텐츠 잠금|열기 <신화쟁탈전|연습장|준비1|준비2> (잠그면 관리자 말고는 못 들어감)
@@ -9,6 +10,9 @@
 #   허브 모양: arena/tools/hubgen.py (데이터팩 bg:hub/build · 표지 좌표 a09-gen-hub.sk)
 #   허브 원점 = 광장 가운데 바닥 칸 {bg::hub::x/y/z} (기본: 전장 원점 기준 128, 40, -340 · 연습장 북쪽 하늘)
 # ═════════════════════════════════════════════════════════════════════════════
+
+import:
+    org.bukkit.WeatherType
 
 function bgHubReady() :: boolean:
     if {bg::hub::built} is true:
@@ -62,7 +66,7 @@ function bgHubName(k: text) :: text:
     if {_k} is "myth":
         return "&6&l신화쟁탈전"
     if {_k} is "pvp":
-        return "&c&lPvP 연습장"
+        return "&c&lPvP 온리소드"
     if {_k} is "soon1":
         return "&d&l준비 중 &7(1)"
     return "&e&l준비 중 &7(2)"
@@ -103,14 +107,12 @@ function bgHubStatus(k: text) :: text:
         if {-bg::on} is true:
             return "게임 진행 중 · 참가자 %{_n}%명 · 관전 / 중참"
         return "대기실 %{_n}%명 · 팀을 골라 4팀 점령전"
-    return "%{_n}%명 싸우는 중 · 전설 무기 무료"
+    set {_top} to bgOsTop()
+    if {_top} is not "":
+        return "%{_n}%명 싸우는 중 · 킬 1위 %{_top}%"
+    return "%{_n}%명 싸우는 중 · 다이아 검 하나로 승부"
 
 # ─────────────────────────────────────────────────────────── 허브로 · 컨텐츠로
-function bgHubCompass() :: item:
-    set {_i} to compass named "&b&l컨텐츠 고르기 &7(우클릭)"
-    set lore of {_i} to "&7신화 아케이드의 컨텐츠를 고릅니다", "&7오락기 앞 빛나는 발판을 밟아도 됩니다"
-    return {_i}
-
 function bgToHub(p: player):
     if bgHubReady() is false:
         bgToLobby({_p})
@@ -132,7 +134,7 @@ function bgToHub(p: player):
     if {-bg::on} is not true:
         if bgTeam({_p}) is not "none":
             bgSetTeam({_p}, "none")
-    set slot 4 of {_p}'s inventory to bgHubCompass()
+    bgHubNight({_p}, true)
 
 # 신화쟁탈전으로: 게임 전이면 대기실 · 게임 중이면 관전 (/중참 으로 참가)
 function bgMythJoin(p: player):
@@ -147,6 +149,17 @@ function bgMythJoin(p: player):
         bgTitleP({_p}, {_logo}, "&f팀 발판을 밟아 팀을 고르세요 &7· /허브 로 돌아가기")
         stop
     bgMythSpectate({_p})
+
+# 허브 안에서만 그 사람 화면을 한밤중 · 맑음으로 (월드 시간은 안 바뀜 → 다른 맵은 아침 그대로)
+function bgHubNight(p: player, on: boolean):
+    if {_on} is true:
+        set {-bg::hubnight::%uuid of {_p}%} to true
+        {_p}.setPlayerTime(18000, false)
+        {_p}.setPlayerWeather(WeatherType.CLEAR)
+        stop
+    delete {-bg::hubnight::%uuid of {_p}%}
+    {_p}.resetPlayerTime()
+    {_p}.resetPlayerWeather()
 
 function bgHubSoon(p: player):
     bgTitleP({_p}, "&7&l준비 중", "&f곧 새로운 컨텐츠가 열립니다!")
@@ -200,7 +213,7 @@ function bgHubTextSet(k: text):
     set {_nm} to "신화쟁탈전"
     if {_k} is "pvp":
         set {_c} to "red"
-        set {_nm} to "PvP 연습장"
+        set {_nm} to "PvP 온리소드"
     else if {_k} is "soon1":
         set {_c} to "light_purple"
         set {_nm} to "준비 중"
@@ -222,9 +235,38 @@ function bgHubTextAll():
     loop "myth", "pvp", "soon1" and "soon2":
         bgHubTextSet(loop-value)
 
+# 오락기 빛나는 화면에 크게 뜨는 오락실 로고 (리소스팩 글꼴 bg:hubscr 의 글자 하나 = 로고 그림 하나, rp/hubscreen.py)
+#  화면 앞면에 붙은 text_display (오락기가 보는 방향) · 화면(가로 13 × 세로 9칸) 안 12 × 8.4칸에 맞춰 크기를 정함
+#  글꼴 1픽셀 = 크기/40 칸. 로고 아래끝은 text_display 자리보다 2.5픽셀 위 → 로고 가운데를 화면 가운데(바닥 + 18.5)에
+function bgHubScreen(k: text):
+    set {_g} to {_k}
+    if {_k} is "soon1" or "soon2":
+        set {_g} to "soon"
+    set {_l} to bgHubMk("%{_k}%_screen")
+    set {_yaw} to {-bg::hubmk::%{_k}%_screen::yaw} ? 0
+    if {-bg::hubscr::%{_g}%::ch} is set:
+        set {_w} to {-bg::hubscr::%{_g}%::w}
+        set {_h} to {-bg::hubscr::%{_g}%::h}
+        set {_s} to min(12 * 40 / {_w}, 8.4 * 40 / {_h})
+        set {_y} to (y-coordinate of {_l}) - (2.5 + {_h} / 2) * {_s} / 40
+        set {_txt} to "{text:""%{-bg::hubscr::%{_g}%::ch}%"",font:""bg:hubscr"",color:""white""}"
+    else:
+        # 리소스팩 글꼴이 없을 때: 그냥 글자
+        set {_nm} to "신화쟁탈전"
+        if {_g} is "pvp":
+            set {_nm} to "PvP 온리소드"
+        else if {_g} is "soon":
+            set {_nm} to "준비 중"
+        set {_s} to 6
+        set {_y} to (y-coordinate of {_l}) - 1
+        set {_txt} to "{text:""%{_nm}%"",color:""dark_blue"",bold:true}"
+    set {_pos} to "%bgC(x-coordinate of {_l})% %bgN({_y})% %bgC(z-coordinate of {_l})%"
+    bgCmd("execute in %bgDim()% run summon text_display %{_pos}% {Tags:[""bghub"",""bghubscr""],Rotation:[%bgN({_yaw})%f,0f],billboard:""fixed"",shadow:0b,background:0,line_width:600,brightness:{sky:15,block:15},view_range:4f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[%bgN({_s})%f,%bgN({_s})%f,%bgN({_s})%f]},text:%{_txt}%}")
+
 function bgHubTexts():
     bgCmd("kill @e[type=text_display,tag=bghub]")
     loop "myth", "pvp", "soon1" and "soon2":
+        bgHubScreen(loop-value)
         set {_l} to bgHubMk("%loop-value%_label")
         bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% {Tags:[""bghub"",""bghub_%loop-value%""],billboard:""center"",shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:3f,line_width:300,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.5f,1.5f,1.5f]},text:{text:""""}}")
     bgHubTextAll()
@@ -239,7 +281,13 @@ every 2 seconds:
 every 5 ticks:
     bgHubReady() is true
     loop all players:
-        if bgInHub(loop-player) is true:
+        set {_pp} to loop-player
+        if bgInHub({_pp}) is false:
+            if {-bg::hubnight::%uuid of {_pp}%} is set:
+                bgHubNight({_pp}, false)
+        else:
+            if {-bg::hubnight::%uuid of {_pp}%} is not set:
+                bgHubNight({_pp}, true)
             set food level of loop-player to 20
             if (y-coordinate of loop-player) < {bg::hub::y} - 6:
                 teleport loop-player to bgHubMk("spawn")
@@ -275,12 +323,6 @@ on drop:
     gamemode of player is not creative
     cancel event
 
-on right click:
-    player's tool is compass
-    bgInHub(player) is true
-    cancel event
-    bgHubMenu(player)
-
 on respawn:
     {-bg::pvp::%uuid of player%} is not true
     bgInGame(player) is false
@@ -289,18 +331,19 @@ on respawn:
     set respawn location to bgHubMk("spawn")
 
 on quit:
+    delete {-bg::hubnight::%uuid of player%}
     delete {-bg::where::%uuid of player%}
     delete {-bg::hubpad::%uuid of player%}
     delete {-bg::hubgui::%uuid of player%}
 
-# ─────────────────────────────────────────────────────────── 컨텐츠 고르기 화면 (/컨텐츠 · 나침반)
+# ─────────────────────────────────────────────────────────── 컨텐츠 고르기 화면 (/컨텐츠)
 function bgHubMenuItem(p: player, k: text) :: item:
     if {_k} is "myth":
         set {_it} to golden helmet
         set {_lore::*} to "&74팀이 대신전과 제단을 두고 싸우는 점령전", "&7보스 · 전설 무기 · 팀 강화"
     else if {_k} is "pvp":
         set {_it} to iron sword
-        set {_lore::*} to "&7석영 투기장 · 용암 투기장", "&7전설 무기를 공짜로 골라 자유 대전"
+        set {_lore::*} to "&7다이아 갑옷 + 다이아 검 하나로 싸우는 개인전", "&7처치하면 체력 회복 · 킬 랭킹 (석영 · 용암 투기장)"
     else if {_k} is "soon1":
         set {_it} to purple dye
         set {_lore::*} to "&7새로운 컨텐츠를 만드는 중입니다"
@@ -329,7 +372,7 @@ function bgHubMenu(p: player):
     set slot 12 of {_gui} to bgHubMenuItem({_p}, "pvp")
     set slot 14 of {_gui} to bgHubMenuItem({_p}, "soon1")
     set slot 16 of {_gui} to bgHubMenuItem({_p}, "soon2")
-    set {_h} to compass named "&b&l허브로"
+    set {_h} to nether star named "&b&l허브로"
     set lore of {_h} to "&7오락실 광장으로 돌아갑니다"
     set slot 22 of {_gui} to {_h}
     open {_gui} to {_p}

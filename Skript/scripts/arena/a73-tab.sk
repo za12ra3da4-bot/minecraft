@@ -46,9 +46,12 @@ on tab complete of "/전장" or "/bg":
 
 on tab complete of "/연습장" or "/pvp장" or "/pvp":
     if player is op:
-        set tab completions for position 1 to "1", "2", "석영", "용암", "나가기", "잠금", "열기" and "전체나가기"
+        set tab completions for position 1 to "1", "2", "석영", "용암", "나가기", "랭킹", "전적", "잠금", "열기", "전체나가기" and "전적초기화"
     else:
-        set tab completions for position 1 to "1", "2", "석영", "용암" and "나가기"
+        set tab completions for position 1 to "1", "2", "석영", "용암", "나가기", "랭킹" and "전적"
+    set {_a} to tab arg-1
+    if {_a} is "전적":
+        set tab completions for position 2 to all players
 
 on tab complete of "/리팩" or "/rp":
     if player is op:
