@@ -87,7 +87,7 @@ FONT = {
 PARAPET = {"stone_bricks": "stone_brick", "smooth_quartz": "smooth_quartz", "quartz_block": "quartz",
            "cut_sandstone": "cut_sandstone", "gray_concrete": "smooth_stone", "white_concrete": "smooth_quartz",
            "blue_concrete": "smooth_stone", "black_concrete": "blackstone", "polished_blackstone": "polished_blackstone",
-           "brick": "brick", "light_gray_concrete": "smooth_stone", "white_terracotta": "smooth_quartz",
+           "bricks": "brick", "light_gray_concrete": "smooth_stone", "white_terracotta": "smooth_quartz",
            "dark_prismarine": "dark_prismarine", "terracotta": "brick", "purpur_block": "purpur",
            "deepslate_bricks": "deepslate_brick", "mud_bricks": "mud_brick", "brown_terracotta": "brick",
            "smooth_stone": "smooth_stone"}
@@ -597,7 +597,7 @@ def build():
     awning("n", parts[0], ("light_blue_wool", "white_wool"))
     sign("w", parts[0], "GEMS", FL + 9, "sea_lantern", out=1)
     for k, pb in enumerate(parts[1:]):
-        st = [("brick", "stone_bricks"), ("orange_terracotta", "brown_terracotta"), ("cyan_terracotta", "white_terracotta")][k]
+        st = [("bricks", "stone_bricks"), ("orange_terracotta", "brown_terracotta"), ("cyan_terracotta", "white_terracotta")][k]
         fl = [3, 4, 2][k]
         shell(pb, fl, st[0], st[1], win="glass", pattern="grid", doors=("n", "e"), ground="shop", sill="stone_brick")
         awning("n", pb, [("red_wool", "white_wool"), ("lime_wool", "white_wool"), ("orange_wool", "yellow_wool")][k])
@@ -663,7 +663,7 @@ def build():
             fput("n", cb, t, y, "white_concrete")
     sign("n", cb, "24/7", FL + 10, "verdant_froglight", out=1)
     ab = (x0, z0 + 14, x1, z1)
-    shell(ab, 4, "brick", "stone_bricks", win="glass", pattern="grid", doors=("w",), sill="stone_brick")
+    shell(ab, 4, "bricks", "stone_bricks", win="glass", pattern="grid", doors=("w",), sill="stone_brick")
     fire_escape("e", ab, 4)
     shell(parts[1], 6, "deepslate_bricks", "polished_blackstone", win="cyan_stained_glass", pattern="curtain", doors=("n", "e"))
 
@@ -868,12 +868,12 @@ def build():
     # ── 나머지 구역: 사무실 · 아파트 · 상가 (모양 섞기)
     styles = [
         dict(wall="light_gray_concrete", trim="gray_concrete", win="light_blue_stained_glass", pattern="curtain"),
-        dict(wall="brick", trim="stone_bricks", win="glass", pattern="grid", sill="stone_brick", balc=True, fire=True),
+        dict(wall="bricks", trim="stone_bricks", win="glass", pattern="grid", sill="stone_brick", balc=True, fire=True),
         dict(wall="white_terracotta", trim="smooth_quartz", win="glass", pattern="grid", sill="smooth_quartz", balc=True),
         dict(wall="dark_prismarine", trim="polished_blackstone", win="cyan_stained_glass", pattern="curtain"),
-        dict(wall="terracotta", trim="brick", win="glass", pattern="small", sill="brick", fire=True),
+        dict(wall="terracotta", trim="bricks", win="glass", pattern="small", sill="brick", fire=True),
         dict(wall="black_concrete", trim="gray_concrete", win="light_blue_stained_glass", pattern="band"),
-        dict(wall="mud_bricks", trim="brick", win="glass", pattern="grid", sill="mud_brick", balc=True),
+        dict(wall="mud_bricks", trim="bricks", win="glass", pattern="grid", sill="mud_brick", balc=True),
         dict(wall="white_concrete", trim="light_gray_concrete", win="glass", pattern="band", shop=True),
     ]
     rest = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 1), (0, 2), (1, 2), (3, 2), (1, 4), (3, 4), (4, 4)]

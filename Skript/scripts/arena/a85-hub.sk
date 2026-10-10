@@ -614,3 +614,53 @@ command /컨텐츠 [<text>] [<text>]:
             send "&b[허브] &c게임 중에는 다른 컨텐츠로 갈 수 없습니다."
             stop
         bgHubMenu(player)
+
+# ─────────────────────────────────────────────────────────── 탭 목록 (Tab): 있는 곳끼리 묶기
+#  마크 탭 목록은 팀 이름 순서로 정렬됨 → 0hub(허브) · 1myth(신화쟁탈전 대기) · bg_*(신화쟁탈전 팀) · kd_*(경도) · os(온리소드)
+#  위(머리말)에 제목, 아래(꼬리말)에 곳마다 인원
+on load:
+    bgCmd("team add 0hub")
+    bgCmd("team add 1myth")
+    bgCmd("team add os_play")
+    bgCmd("team modify 0hub color aqua")
+    bgCmd("team modify 1myth color gold")
+    bgCmd("team modify os_play color red")
+    bgCmd("team modify 0hub prefix {text:""[허브] "",color:""aqua"",bold:true}")
+    bgCmd("team modify 1myth prefix {text:""[신화쟁탈전] "",color:""gold"",bold:true}")
+    bgCmd("team modify os_play prefix {text:""[온리소드] "",color:""red"",bold:true}")
+
+every 1 second:
+    set {_nh} to 0
+    set {_nm} to 0
+    set {_no} to 0
+    set {_nk} to 0
+    loop all players:
+        set {_pp} to loop-player
+        set {_ar} to bgArea({_pp})
+        set {_want} to ""
+        if {_ar} is "hub":
+            add 1 to {_nh}
+            set {_want} to "0hub"
+        else if {_ar} is "os":
+            add 1 to {_no}
+            set {_want} to "os_play"
+        else if {_ar} is "kd":
+            add 1 to {_nk}
+        else:
+            add 1 to {_nm}
+            if bgTeam({_pp}) is "none":
+                set {_want} to "1myth"
+        set {_u} to "%uuid of {_pp}%"
+        if {_want} is "":
+            delete {-bg::tabteam::%{_u}%}
+        else if {-bg::tabteam::%{_u}%} is not {_want}:
+            set {-bg::tabteam::%{_u}%} to {_want}
+            bgCmd("team join %{_want}% %name of {_pp}%")
+    set {_head} to colored "&b&l신화 아케이드&r\n&7오락기 앞 발판으로 컨텐츠 이동 · /허브"
+    set {_foot} to colored "&b허브 &f%{_nh}%명  &6신화쟁탈전 &f%{_nm}%명  &c온리소드 &f%{_no}%명  &9경도 &f%{_nk}%명"
+    loop all players:
+        set {_pp} to loop-player
+        {_pp}.setPlayerListHeaderFooter({_head}, {_foot})
+
+on quit:
+    delete {-bg::tabteam::%uuid of player%}
