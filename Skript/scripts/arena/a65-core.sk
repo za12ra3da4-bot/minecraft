@@ -28,11 +28,12 @@ function bgCoreText(t: text):
         set {_c} to "red"
     else if {_h} <= {_max} * 2 / 3:
         set {_c} to "gold"
+    # data merge 가 아니라 set: 합치기(merge)는 파괴 때 붙은 "점수 정지" 줄(extra)이 복구 뒤에도 남아 체력이 가려졌음
     if {-bg::core::%{_t}%::down} is true:
         set {_left} to bgCoreLeft({_t})
-        bgCmd("data merge entity @e[tag=bg_coretext_%{_t}%,limit=1] {text:[{text:""파괴됨 — %{_left}%초 뒤 복구"",color:""gray"",bold:true},{text:""\n점수 정지"",color:""red"",bold:true}]}")
+        bgCmd("execute as @e[tag=bg_coretext_%{_t}%] run data modify entity @s text set value [{text:""파괴됨 — %{_left}%초 뒤 복구"",color:""gray"",bold:true},{text:""\n점수 정지"",color:""red"",bold:true}]")
         stop
-    bgCmd("data merge entity @e[tag=bg_coretext_%{_t}%,limit=1] {text:{text:""%{_h}% / %{_max}%"",color:""%{_c}%"",bold:true}}")
+    bgCmd("execute as @e[tag=bg_coretext_%{_t}%] run data modify entity @s text set value {text:""%{_h}% / %{_max}%"",color:""%{_c}%"",bold:true}")
 
 # 부서지면 수정 · 빛기둥 숨기기
 function bgCoreShow(t: text, on: boolean):
@@ -206,6 +207,13 @@ function bgCoreFixBuy(p: player):
 # 코어 복구까지 남은 초
 function bgCoreLeft(t: text) :: number:
     return max(0, 90 - (({-bg::sec} ? 0) - ({-bg::core::%{_t}%::downsec} ? 0)))
+
+# 멀쩡한 코어 글씨도 5초마다 다시 씀 (안전망)
+every 5 seconds:
+    {-bg::on} is true
+    loop {-bg::teams::*}:
+        if {-bg::core::%loop-value%::down} is not true:
+            bgCoreText(loop-value)
 
 # 코어가 부서진 팀: 코어 글씨에 남은 시간 · 팀원에게 "점수 정지" 알림 (매초)
 every 1 second:
