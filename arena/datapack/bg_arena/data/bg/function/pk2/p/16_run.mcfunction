@@ -267,35 +267,35 @@ $execute positioned $(x) $(y) $(z) run setblock ~9 ~-11 ~17 minecraft:azalea
 $execute positioned $(x) $(y) $(z) run setblock ~11 ~-11 ~19 minecraft:flowering_azalea
 $execute positioned $(x) $(y) $(z) run setblock ~10 ~-11 ~21 minecraft:flowering_azalea
 $execute positioned $(x) $(y) $(z) run setblock ~10 ~-11 ~23 minecraft:short_grass
-$execute positioned $(x) $(y) $(z) run setblock ~13 ~-7 ~-1 minecraft:lantern[hanging=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~13 ~-6 ~-1 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~13 ~-5 ~-1 minecraft:coarse_dirt
-$execute positioned $(x) $(y) $(z) run fill ~13 ~-4 ~-2 ~13 ~0 ~0 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~12 ~-4 ~-1 ~12 ~0 ~-1 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~14 ~-4 ~-1 ~14 ~0 ~-1 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~12 ~-8 ~0 minecraft:lantern[hanging=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~12 ~-7 ~0 minecraft:iron_chain[axis=y,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~12 ~-6 ~0 minecraft:coarse_dirt
+$execute positioned $(x) $(y) $(z) run fill ~12 ~-5 ~-1 ~12 ~-2 ~1 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~11 ~-5 ~0 ~11 ~-2 ~0 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~13 ~-5 ~0 ~13 ~-2 ~0 minecraft:dirt
 $execute positioned $(x) $(y) $(z) run fill ~12 ~-3 ~-45 ~14 ~-3 ~-41 minecraft:snow_block
 $execute positioned $(x) $(y) $(z) run fill ~11 ~-3 ~-44 ~11 ~-3 ~-42 minecraft:snow_block
 $execute positioned $(x) $(y) $(z) run fill ~15 ~-3 ~-44 ~15 ~-3 ~-42 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~12 ~-2 ~-46 ~14 ~-2 ~-40 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~11 ~-2 ~-45 ~11 ~-2 ~-41 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~10 ~-2 ~-44 ~10 ~-2 ~-42 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~12 ~-2 ~-2 ~12 ~0 ~-2 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~14 ~-2 ~-2 ~14 ~0 ~-2 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~11 ~-3 ~-1 ~11 ~-2 ~-1 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~13 ~-3 ~-1 ~13 ~-2 ~-1 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~11 ~-3 ~1 ~11 ~-2 ~1 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~13 ~-3 ~1 ~13 ~-2 ~1 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~12 ~-2 ~-46 ~14 ~-2 ~-40 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~11 ~-2 ~-45 ~11 ~-2 ~-41 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~10 ~-2 ~-44 ~10 ~-2 ~-42 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~12 ~-2 ~-2 ~12 ~-1 ~-2 minecraft:dirt
 $execute positioned $(x) $(y) $(z) run fill ~8 ~-2 ~0 ~8 ~-1 ~0 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~12 ~-2 ~0 ~12 ~0 ~0 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~14 ~-2 ~0 ~14 ~0 ~0 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~12 ~-1 ~-45 ~14 ~-1 ~-41 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~11 ~-1 ~-44 ~11 ~-1 ~-42 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~15 ~-1 ~-44 ~15 ~-1 ~-42 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~13 ~-1 ~-3 ~13 ~0 ~-3 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~10 ~-2 ~0 ~10 ~-1 ~0 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~14 ~-2 ~0 ~14 ~-1 ~0 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~12 ~-2 ~2 ~12 ~-1 ~2 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~12 ~-1 ~-45 ~14 ~-1 ~-41 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~11 ~-1 ~-44 ~11 ~-1 ~-42 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~15 ~-1 ~-44 ~15 ~-1 ~-42 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~11 ~-1 ~-2 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~13 ~-1 ~-2 minecraft:dirt
 $execute positioned $(x) $(y) $(z) run setblock ~8 ~-1 ~-1 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~11 ~-1 ~-1 ~11 ~0 ~-1 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~15 ~-1 ~-1 ~15 ~0 ~-1 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~10 ~-1 ~-1 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~11 ~-1 ~-1 ~13 ~-1 ~1 minecraft:verdant_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~14 ~-1 ~-1 minecraft:dirt
 $execute positioned $(x) $(y) $(z) run setblock ~8 ~-1 ~1 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~13 ~-1 ~1 ~13 ~0 ~1 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run setblock ~12 ~0 ~-3 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run setblock ~14 ~0 ~-3 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run setblock ~11 ~0 ~-2 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run setblock ~15 ~0 ~-2 minecraft:dirt
-$execute positioned $(x) $(y) $(z) run fill ~8 ~0 ~-1 ~8 ~0 ~0 minecraft:grass_block[snowy=false]
 $execute positioned $(x) $(y) $(z) positioned ~-64 ~-22 ~-64 run kill @e[type=item,dx=128,dy=100,dz=128]

@@ -31,25 +31,51 @@ def pid(s):
 # 층마다 (바탕, 곁들임, 빛)
 SECT = [("moss_block", "mossy_stone_bricks", "verdant_froglight"),
         ("quartz_bricks", "smooth_quartz", "sea_lantern"),
-        ("white_wool", "snow_block", "pearlescent_froglight"),
+        ("snow_block", "white_concrete", "pearlescent_froglight"),
         ("amethyst_block", "purple_stained_glass", "pearlescent_froglight"),
         ("smooth_sandstone", "gold_block", "ochre_froglight")]
 LADDER = "ladder[facing={f},waterlogged=false]"
 FENCE = {0: "mangrove_fence", 1: "birch_fence", 2: "pale_oak_fence", 3: "crimson_fence", 4: "bamboo_fence"}
 
 
-# 층마다 난이도: (올라가는 점프 확률, 평지 틈(가장자리 사이 빈칸) 범위, 발판 종류 가중치)
-#  발판 = 큼직한 떠 있는 섬 (isle5 = 둥근 5칸 · sq3 = 3×3 · slab3 = 3×3 반블록) · 작은 발판 (single · pillar · fence)
-#  1층: 큰 섬 · 1~2칸 틈 → 5층: 1칸 발판 · 울타리 기둥 · 3칸 틈
-DIFF = [(0.35, (1, 2), {"isle5": 6, "sq3": 4}),
-        (0.40, (2, 2), {"sq3": 5, "isle5": 2, "slab3": 3}),
-        (0.40, (2, 3), {"sq3": 4, "single": 3, "pillar": 3}),
-        (0.45, (2, 3), {"single": 4, "pillar": 3, "sq3": 2, "fence": 2}),
-        (0.45, (3, 3), {"single": 5, "fence": 3, "sq3": 1, "pillar": 2})]
-HALFSZ = {"isle5": 2, "sq3": 1, "slab3": 1, "single": 0, "pillar": 0, "fence": 0}
+# 층마다 난이도: (올라가는 점프 확률, 평지 틈(가장자리 사이 빈칸) 범위, 발판 종류 가중치, 기믹)
+#  발판 = 큼직한 떠 있는 섬 (isle5 = 둥근 5칸 · sq3 = 3×3 · slab3 = 3×3 반블록) · 작은 발판 (single · pillar)
+#  층마다 기믹 하나 (층 가운데쯤):
+#   1층 pad   = 벚꽃 점프대 (라임 유약 테라코타) — 밟으면 다음 큰 섬으로 날려 보냄 (Skript: 표지 pad_k · 속도 padv_k)
+#   2층 ice   = 빙판 활주로 (청빙 7칸) → 5칸 틈 멀리뛰기
+#   3층 crumble = 무너지는 구름 (흰 양털 3×3 · 밟고 0.6초 뒤 그 사람에게만 사라짐 · 3.5초 뒤 돌아옴)
+#   4층 blink = 공명 수정 (A · B 번갈아 1.5초마다 켜지고 꺼짐 · 표지 blinkA_k / blinkB_k)
+#   5층 pad2  = 황금 점프대 두 번 연속
+DIFF = [(0.35, (1, 2), {"isle5": 6, "sq3": 4}, "pad"),
+        (0.40, (2, 2), {"sq3": 5, "isle5": 2, "slab3": 3}, "ice"),
+        (0.40, (2, 3), {"sq3": 4, "single": 3, "pillar": 3}, "crumble"),
+        (0.45, (2, 3), {"single": 4, "pillar": 3, "sq3": 3}, "blink"),
+        (0.45, (2, 3), {"single": 5, "sq3": 3, "pillar": 2}, "pad2")]
+HALFSZ = {"isle5": 2, "sq3": 1, "slab3": 1, "single": 0, "pillar": 0, "pad": 2, "land": 3, "ice": 3,
+          "crumble": 1, "blinkA": 1, "blinkB": 1}
 TIER_NAME = ["정원", "대리석", "구름", "수정", "황금"]
 ZSTEP = 9          # 층마다 남쪽으로 (다리 길이)
 END_R = 3          # 층 끝 섬 반지름 (둥근 7칸)
+PAD = "lime_glazed_terracotta"
+
+
+def launch(dist, dy):
+    """점프대 속도 (수평, 위): 입력 없이 수평 dist · 높이 dy 에 내려앉게 (앞으로 누르는 만큼 1.5칸 덜)"""
+    vy = 1.0
+    lo, hi = 0.1, 3.0
+    for _ in range(60):
+        m = (lo + hi) / 2
+        x = y = 0.0; vh, v = m, vy
+        for _t in range(200):
+            x += vh; y += v
+            v = (v - 0.08) * 0.98; vh *= 0.91
+            if v < 0 and y <= dy:
+                break
+        if x < dist - 1.5:
+            lo = m
+        else:
+            hi = m
+    return lo, vy
 
 
 def course():
@@ -59,26 +85,51 @@ def course():
     x, y, z = 0, 0, 0
     hprev = 2                      # 시작 발판 5×5
     for t in range(TIERS):
-        pup, (glo, ghi), wts = DIFF[t]
+        pup, (glo, ghi), wts, gim = DIFF[t]
         kinds, w = list(wts), np.array(list(wts.values()), float)
         d = 1 if t % 2 == 0 else -1
         zc = z
-        last = "start"
-        while (x < HALF if d > 0 else x > -HALF):
-            kind = str(rng.choice(kinds, p=w / w.sum()))
-            if kind == "fence" and last == "fence":
-                kind = "single"
-            up = last != "fence" and rng.random() < pup
-            gap = int(rng.integers(glo, ghi + 1))
-            if up or kind == "fence" or last == "fence":
-                gap = min(gap, 2)
+        done = False
+
+        def step(kind, gap, up):
+            nonlocal x, y, z, hprev
             h = HALFSZ[kind]
-            dz = 0 if gap >= 3 else int(rng.integers(-1, 2))
             x += d * (hprev + h + gap + 1)
             y += 1 if up else 0
-            z = max(zc - 1, min(zc + 1, z + dz))
             pts.append((x, y, z, kind, t))
-            last, hprev = kind, h
+            hprev = h
+
+        while (x < HALF if d > 0 else x > -HALF):
+            # 층 가운데를 지나면 기믹
+            if not done and (x * d >= (-HALF * 0.35 if t else 6)):
+                done = True
+                if gim in ("pad", "pad2"):
+                    for _k in range(1 if gim == "pad" else 2):
+                        step("pad", 1, False)
+                        step("land", 7, False)
+                        x_, y_, z_, k_, t_ = pts[-1]
+                        pts[-1] = (x_, y_ + 2, z_, k_, t_)
+                        y += 2
+                elif gim == "ice":
+                    step("ice", 1, False)
+                    step("sq3", 5, False)
+                elif gim == "crumble":
+                    for _k in range(3):
+                        step("crumble", 2, False)
+                    step("sq3", 2, False)
+                elif gim == "blink":
+                    for _k in range(4):
+                        step("blinkA" if _k % 2 == 0 else "blinkB", 2, False)
+                    step("sq3", 2, False)
+                continue
+            kind = str(rng.choice(kinds, p=w / w.sum()))
+            up = rng.random() < pup
+            gap = int(rng.integers(glo, ghi + 1))
+            if up:
+                gap = min(gap, 2)
+            dz = 0 if gap >= 3 else int(rng.integers(-1, 2))
+            z = max(zc - 1, min(zc + 1, z + dz))
+            step(kind, gap, up)
         # 끝 섬 (둥근 7칸) — 틈 1칸
         x += d * (hprev + END_R + 2)
         ends.append((x, y, z, t))
@@ -92,7 +143,7 @@ def course():
 # 층마다 발판 밑 매달린 작은 섬 (위 → 아래) · 매단 등
 UNDER = [["dirt", "dirt", "coarse_dirt"],
          ["smooth_quartz", "quartz_bricks", "chiseled_quartz_block"],
-         ["snow_block", "white_wool", "white_wool"],
+         ["snow_block", "white_concrete", "white_concrete"],
          ["amethyst_block", "budding_amethyst", "purple_stained_glass"],
          ["cut_sandstone", "smooth_sandstone", "gold_block"]]
 HANG = ["lantern[hanging=true,waterlogged=false]", "lantern[hanging=true,waterlogged=false]",
@@ -141,7 +192,7 @@ def build():
             elif t == 0:
                 top = TOP0[int(rngd.integers(0, 3))]
             elif t == 2:
-                top = "white_wool" if not edge else "snow_block"
+                top = "snow_block" if not edge else "white_concrete"
             else:
                 top = acc if edge else (base if (dx + dz) % 2 == 0 else (light if (dx, dz) == (0, 0) else base))
             put(x + dx, yy, z + dz, top, True)
@@ -172,7 +223,7 @@ def build():
             for dx, dz in cells:
                 for ox, oz in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     if (dx + ox) ** 2 + (dz + oz) ** 2 > rad * rad + 0.3 and rngd.random() < 0.5 and free(x + dx + ox, yy - 1, z + dz + oz):
-                        put(x + dx + ox, yy - 1, z + dz + oz, "white_wool", True)
+                        put(x + dx + ox, yy - 1, z + dz + oz, "snow_block", True)
         # 수정 층: 밑에 자수정 결정
         if t == 3:
             for dx, dz in cells:
@@ -188,6 +239,50 @@ def build():
             isle(x, yy, z, t, 1.5)
         elif kind == "slab3":
             isle(x, yy, z, t, 1.5, slab=True)
+        elif kind in ("pad", "land"):
+            isle(x, yy, z, t, 2.4 if kind == "pad" else 3.3)
+            if kind == "pad":
+                # 점프대: 가운데 3×3 라임 유약 테라코타 + 빛 테두리 · 다음 착지 섬까지 속도 (Skript 가 씀)
+                for dx in (-1, 0, 1):
+                    for dz in (-1, 0, 1):
+                        put(x + dx, yy, z + dz, PAD, True)
+                        put(x + dx, yy - 1, z + dz, "verdant_froglight" if t == 0 else "ochre_froglight", True)
+                nx, ny, nz = None, None, None
+                for j in range(len(pts)):
+                    if pts[j][:4] == (x, y, z, kind):
+                        nx, ny, nz = pts[j + 1][0], pts[j + 1][1], pts[j + 1][2]
+                        break
+                dist = math.hypot(nx - x, nz - z)
+                vh, vy = launch(dist, ny - y)
+                k = sum(1 for key in marks if key.startswith("pad_"))
+                marks[f"pad_{k}"] = (x + 0.5, y + 1, z + 0.5)
+                marks[f"padv_{k}"] = (round((nx - x) / dist * vh, 3), round(vy, 3), round((nz - z) / dist * vh, 3))
+                # 착지 쪽을 가리키는 빛 화살 (점프대 앞 공중 end_rod 줄)
+        elif kind == "ice":
+            # 청빙 활주로 7칸 (폭 3) · 양옆 얼음 난간 낮게 · 밑은 얼음 고깔
+            for dx in range(-3, 4):
+                for dz in (-1, 0, 1):
+                    put(x + dx, yy, z + dz, "blue_ice", True)
+                    put(x + dx, yy - 1, z + dz, "packed_ice" if dz else "sea_lantern", True)
+                for k in range(2, 4):
+                    put(x + dx, yy - k, z, "packed_ice", True)
+            put(x, yy - 4, z, HANG[t], True)
+        elif kind == "crumble":
+            # 무너지는 구름: 흰 양털 3×3 (이 층 다른 발판은 눈 블록) · 밑은 구름 덩이
+            for dx in (-1, 0, 1):
+                for dz in (-1, 0, 1):
+                    put(x + dx, yy, z + dz, "white_wool", True)
+            for ox, oz in ((-2, 0), (2, 0), (0, -2), (0, 2), (-1, -1), (1, 1)):
+                put(x + ox, yy - 1, z + oz, "white_wool")
+            put(x, yy - 1, z, "white_wool")
+        elif kind in ("blinkA", "blinkB"):
+            # 공명 수정 3×3 (A = 자수정 블록 · B = 보라 유리 처음엔 둘 다 놓고 Skript 가 번갈아 켜고 끔)
+            for dx in (-1, 0, 1):
+                for dz in (-1, 0, 1):
+                    put(x + dx, yy, z + dz, "amethyst_block" if kind == "blinkA" else "purple_stained_glass", True)
+            put(x, yy - 2, z, "amethyst_cluster[facing=down,waterlogged=false]", True)
+            k = sum(1 for key in marks if key.startswith(kind + "_"))
+            marks[f"{kind}_{k}"] = (x, y, z)
         elif kind == "single":
             put(x, yy, z, "grass_block[snowy=false]" if t == 0 else (acc if t == 4 else base), True)
             put(x, yy - 1, z, light, True)
@@ -320,7 +415,7 @@ def build():
                     for dy in range(-2, 3):
                         for dz in range(-4, 5):
                             if (dx / r) ** 2 + (dy / (r * 0.45)) ** 2 + (dz / r) ** 2 <= 1 and free(bx + dx, cy + dy, bz + dz):
-                                put(bx + dx, cy + dy, bz + dz, "white_wool" if dy >= 0 else "snow_block")
+                                put(bx + dx, cy + dy, bz + dz, "white_concrete" if dy >= 0 else "snow_block")
             break
     # 무너진 기둥 (떠 있는 신전 조각)
     for _ in range(10):

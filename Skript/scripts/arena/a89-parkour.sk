@@ -275,8 +275,9 @@ function bgPkMapItem(p: player, m: number) :: item:
     if {_m} is 2:
         set {_it} to cherry sapling
         add "&7구름 위 떠 있는 섬 5층을 지그재그로" to {_lore::*}
-        add "&7사다리 탑 · 울타리 기둥 · 꼭대기 황금 신전" to {_lore::*}
-        add "&e난이도 &a1층 쉬움 &7→ &c5층 어려움 &7(58단 · 큰 섬 발판)" to {_lore::*}
+        add "&7기믹: &a점프대 &7· &b빙판 멀리뛰기 &7· &f무너지는 구름" to {_lore::*}
+        add "&7      &d공명 수정 (켜졌다 꺼짐) &7· &6황금 연속 점프대" to {_lore::*}
+        add "&e난이도 &a1층 쉬움 &7→ &c5층 어려움" to {_lore::*}
     else:
         set {_it} to ender eye
         add "&7빛나는 행성 둘레를 돌며 올라가는 50단" to {_lore::*}
@@ -449,6 +450,116 @@ every tick:
                 if abs((x-coordinate of loop-player) - (x-coordinate of {_f})) <= 3.6:
                     if abs((z-coordinate of loop-player) - ((z-coordinate of {_f}) - 2)) <= 3.6:
                         bgPkFinish(loop-player)
+
+# ─────────────────────────────────────────────────────────── 천공의 정원 기믹 (pkgen2.py)
+#  점프대 (라임 유약 테라코타): 밟으면 표지 padv_<k> 속도로 다음 큰 섬까지 날아감
+#  무너지는 구름 (흰 양털): 밟고 0.6초 뒤 그 사람 화면에서만 사라짐 (진짜로 빠짐) → 3.5초 뒤 돌아옴
+#  공명 수정 (blinkA_<k> · blinkB_<k>): 1.5초마다 A ↔ B 번갈아 켜지고 꺼짐 · 꺼지기 0.5초 전 반짝 + 소리
+every tick:
+    loop all players:
+        bgPkOn(loop-player) is true
+        bgPkMap(loop-player) is 2
+        set {_p} to loop-player
+        set {_b} to block at bgUp(location of {_p}, -0.2)
+        if type of {_b} is lime glazed terracotta:
+            set {_u} to "%uuid of {_p}%"
+            set {_k} to 0
+            if {-bg::pk::padcd::%{_u}%} is set:
+                if difference between {-bg::pk::padcd::%{_u}%} and now < 0.6 seconds:
+                    set {_k} to 99
+            while {-bg::pk2mk::pad_%{_k}%::x} is set:
+                if bgDist2(location of {_p}, bgPkMkM(2, "pad_%{_k}%")) < 3:
+                    set {-bg::pk::padcd::%{_u}%} to now
+                    set velocity of {_p} to vector({-bg::pk2mk::padv_%{_k}%::x}, {-bg::pk2mk::padv_%{_k}%::y}, {-bg::pk2mk::padv_%{_k}%::z})
+                    play sound "entity.breeze.jump" with volume 1 and pitch 1.2 to {_p}
+                    play sound "block.amethyst_block.chime" with volume 1 and pitch 1.5 to {_p}
+                    bgParticle(location of {_p}, "cherry_leaves", 1.2, 0.3, 1.2, 0, 30)
+                    bgParticle(location of {_p}, "end_rod", 0.4, 0.2, 0.4, 0.15, 12)
+                    set {_k} to 99
+                add 1 to {_k}
+        else if type of {_b} is white wool:
+            set {_bl} to location of {_b}
+            set {_key} to "%floor(x-coordinate of {_bl})%_%floor(y-coordinate of {_bl})%_%floor(z-coordinate of {_bl})%"
+            if {-bg::pk::cr::%uuid of {_p}%::%{_key}%} is not set:
+                set {-bg::pk::cr::%uuid of {_p}%::%{_key}%} to true
+                bgPkCrumble({_p}, {_bl}, {_key})
+
+function bgPkCrumble(p: player, l: location, key: text):
+    play sound "block.wool.step" with volume 1 and pitch 0.6 to {_p}
+    bgParticle(bgUp({_l}, 1), "cloud", 0.6, 0.05, 0.6, 0.01, 6)
+    wait 12 ticks
+    set {_dx} to -2
+    while {_dx} <= 2:
+        set {_dz} to -2
+        while {_dz} <= 2:
+            set {_c} to location((x-coordinate of {_l}) + {_dx}, y-coordinate of {_l}, (z-coordinate of {_l}) + {_dz}, world of {_l})
+            if type of block at {_c} is white wool:
+                add {_c} to {_gone::*}
+                if {_p} is online:
+                    {_p}.sendBlockChange({_c}, Bukkit.createBlockData("minecraft:air"))
+            add 1 to {_dz}
+        add 1 to {_dx}
+    if {_p} is online:
+        play sound "block.wool.break" with volume 1 and pitch 0.7 to {_p}
+        bgParticle(bgUp({_l}, 0.5), "cloud", 1.2, 0.1, 1.2, 0.02, 30)
+    wait 70 ticks
+    if {_p} is online:
+        loop {_gone::*}:
+            {_p}.sendBlockChange(loop-value, (block at loop-value).getBlockData())
+    delete {-bg::pk::cr::%uuid of {_p}%::%{_key}%}
+
+function bgPkBlinkSet(on: text):
+    set {_k} to 0
+    while {-bg::pk2mk::blinkA_%{_k}%::x} is set:
+        loop "A" and "B":
+            set {_m} to "blink%loop-value%_%{_k}%"
+            set {_l} to bgPkAtM(2, {-bg::pk2mk::%{_m}%::x}, {-bg::pk2mk::%{_m}%::y}, {-bg::pk2mk::%{_m}%::z})
+            set {_x} to floor(x-coordinate of {_l})
+            set {_y} to floor(y-coordinate of {_l})
+            set {_z} to floor(z-coordinate of {_l})
+            set {_blk} to "minecraft:air"
+            if loop-value is {_on}:
+                set {_blk} to "minecraft:amethyst_block"
+                if loop-value is "B":
+                    set {_blk} to "minecraft:purple_stained_glass"
+            bgCmd("execute in %bgDim()% run fill %{_x} - 1% %{_y}% %{_z} - 1% %{_x} + 1% %{_y}% %{_z} + 1% %{_blk}%")
+        add 1 to {_k}
+
+function bgPkBlinkWarn(on: text):
+    set {_k} to 0
+    while {-bg::pk2mk::blink%{_on}%_%{_k}%::x} is set:
+        set {_m} to "blink%{_on}%_%{_k}%"
+        set {_l} to bgPkAtM(2, {-bg::pk2mk::%{_m}%::x} + 0.5, {-bg::pk2mk::%{_m}%::y} + 1.1, {-bg::pk2mk::%{_m}%::z} + 0.5)
+        bgParticle({_l}, "wax_off", 1.2, 0.05, 1.2, 0, 14)
+        add 1 to {_k}
+
+every 5 ticks:
+    {bg::pk2::built} is true
+    set {_n} to 0
+    loop all players:
+        if bgPkOn(loop-player) is true:
+            if bgPkMap(loop-player) is 2:
+                add 1 to {_n}
+                add loop-player to {_ps::*}
+    {_n} > 0
+    set {-bg::pk::blc} to mod(({-bg::pk::blc} ? 0) + 1, 12)
+    set {_c} to {-bg::pk::blc}
+    if {_c} is 0:
+        bgPkBlinkSet("A")
+        loop {_ps::*}:
+            play sound "block.amethyst_block.resonate" with volume 0.7 and pitch 1.4 to loop-value
+    else if {_c} is 6:
+        bgPkBlinkSet("B")
+        loop {_ps::*}:
+            play sound "block.amethyst_block.resonate" with volume 0.7 and pitch 1.0 to loop-value
+    else if {_c} is 4:
+        bgPkBlinkWarn("A")
+        loop {_ps::*}:
+            play sound "block.note_block.hat" with volume 0.5 and pitch 1.6 to loop-value
+    else if {_c} is 10:
+        bgPkBlinkWarn("B")
+        loop {_ps::*}:
+            play sound "block.note_block.hat" with volume 0.5 and pitch 1.6 to loop-value
 
 function bgPkFinish(p: player):
     set {_u} to "%uuid of {_p}%"

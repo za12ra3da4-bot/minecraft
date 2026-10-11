@@ -30,112 +30,76 @@ $execute positioned $(x) $(y) $(z) run setblock ~-6 ~-5 ~32 minecraft:cherry_lea
 $execute positioned $(x) $(y) $(z) run fill ~-9 ~-5 ~33 ~-7 ~-5 ~33 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-8 ~-4 ~30 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~0 ~-1 ~-2 ~0 ~2 minecraft:verdant_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~2 ~8 minecraft:lantern[hanging=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~3 ~8 minecraft:iron_chain[axis=y,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-1 ~4 ~-34 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~4 ~8 minecraft:chiseled_quartz_block
-$execute positioned $(x) $(y) $(z) run fill ~-3 ~5 ~7 ~-3 ~6 ~9 minecraft:quartz_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~5 ~8 ~-4 ~6 ~8 minecraft:quartz_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~5 ~8 ~-2 ~6 ~8 minecraft:quartz_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-8 ~7 ~7 ~-8 ~10 ~7 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~7 ~7 ~-2 ~9 ~9 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~8 ~6 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~8 ~8 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-1 ~8 ~8 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~8 ~10 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~9 ~6 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~9 ~6 ~-4 ~10 ~6 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~9 ~6 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~9 ~6 ~-2 ~10 ~6 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~9 ~7 ~-5 ~10 ~7 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~9 ~7 ~-1 ~10 ~7 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~9 ~8 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~9 ~8 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-1 ~9 ~8 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~9 ~9 ~-5 ~10 ~9 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~9 ~9 ~-1 ~10 ~9 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~9 ~10 ~-4 ~10 ~10 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~9 ~10 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~9 ~10 ~-2 ~10 ~10 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-10 ~10 ~6 ~-8 ~10 ~6 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~10 ~6 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~10 ~7 ~-2 ~10 ~9 minecraft:quartz_bricks
-$execute positioned $(x) $(y) $(z) run fill ~-10 ~10 ~8 ~-8 ~10 ~8 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~10 ~8 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-1 ~10 ~8 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~10 ~10 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~11 ~6 minecraft:white_candle[candles=2,lit=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-4 ~11 ~6 minecraft:white_candle[candles=2,lit=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~11 ~9 minecraft:white_candle[candles=2,lit=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~11 ~9 ~-2 ~11 ~10 minecraft:white_candle[candles=2,lit=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~11 ~10 minecraft:white_candle[candles=2,lit=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-6 ~12 ~16 minecraft:soul_lantern[hanging=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-6 ~13 ~16 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~14 ~16 ~-6 ~15 ~16 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~16 ~15 ~-6 ~18 ~17 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~16 ~16 ~-7 ~19 ~16 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~16 ~16 ~-5 ~19 ~16 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~16 ~16 ~-1 ~19 ~16 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~18 ~14 ~-5 ~18 ~14 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~18 ~15 ~-7 ~19 ~15 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~18 ~15 ~-5 ~19 ~15 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run setblock ~-4 ~18 ~15 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~18 ~15 ~-2 ~18 ~16 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~18 ~15 ~-1 ~19 ~15 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~18 ~16 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~18 ~17 ~-7 ~19 ~17 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~18 ~17 ~-5 ~19 ~17 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~18 ~17 ~-1 ~19 ~17 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run setblock ~-6 ~18 ~18 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~-6 ~19 ~15 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run setblock ~-6 ~19 ~16 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~-6 ~19 ~17 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~12 ~18 minecraft:soul_lantern[hanging=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~13 ~18 minecraft:iron_chain[axis=y,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~14 ~18 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-4 ~15 ~16 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-5 ~15 ~17 ~-5 ~16 ~17 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~15 ~18 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-6 ~15 ~18 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-4 ~15 ~18 ~-4 ~16 ~18 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-2 ~15 ~18 ~-1 ~15 ~18 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-3 ~15 ~19 ~-3 ~16 ~19 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~-4 ~15 ~20 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-4 ~16 ~17 ~-3 ~16 ~17 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~16 ~18 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run fill ~-5 ~16 ~18 ~-5 ~16 ~19 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~16 ~18 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~-4 ~16 ~19 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~22 ~27 minecraft:amethyst_cluster[facing=down,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~22 ~27 minecraft:amethyst_cluster[facing=down,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~22 ~61 ~-1 ~22 ~62 minecraft:dirt
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~23 ~60 ~-1 ~23 ~62 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run fill ~-9 ~24 ~26 ~-7 ~24 ~28 minecraft:amethyst_block
+$execute positioned $(x) $(y) $(z) run fill ~-4 ~24 ~26 ~-2 ~24 ~28 minecraft:purple_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-1 ~26 ~38 minecraft:lantern[hanging=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-1 ~27 ~38 minecraft:iron_chain[axis=y,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-1 ~28 ~38 minecraft:gold_block
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~28 ~60 ~-1 ~28 ~62 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~29 ~25 minecraft:amethyst_cluster[facing=down,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~29 ~26 minecraft:amethyst_cluster[facing=down,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-2 ~29 ~26 minecraft:amethyst_cluster[facing=down,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~30 ~25 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~30 ~26 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-2 ~30 ~26 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~31 ~25 minecraft:budding_amethyst
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~31 ~26 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-2 ~31 ~26 minecraft:budding_amethyst
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~32 ~25 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~32 ~26 minecraft:crimson_fence[east=false,north=false,south=false,west=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-2 ~32 ~26 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~33 ~25 minecraft:amethyst_block
-$execute positioned $(x) $(y) $(z) run setblock ~-2 ~33 ~26 minecraft:amethyst_block
-$execute positioned $(x) $(y) $(z) run setblock ~-1 ~35 ~34 minecraft:lantern[hanging=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-1 ~36 ~34 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~37 ~34 ~-1 ~41 ~34 minecraft:quartz_pillar[axis=y]
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~38 ~34 minecraft:lantern[hanging=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~38 ~34 minecraft:lantern[hanging=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-1 ~29 ~37 ~-1 ~30 ~39 minecraft:smooth_sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-2 ~29 ~38 ~-2 ~30 ~38 minecraft:smooth_sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-8 ~30 ~38 ~-8 ~32 ~38 minecraft:cut_sandstone
+$execute positioned $(x) $(y) $(z) run setblock ~-5 ~30 ~38 minecraft:lantern[hanging=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-5 ~31 ~38 minecraft:iron_chain[axis=y,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-1 ~32 ~36 minecraft:cut_sandstone
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~32 ~37 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-5 ~32 ~38 minecraft:smooth_sandstone
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~32 ~38 minecraft:cut_sandstone
+$execute positioned $(x) $(y) $(z) run setblock ~-8 ~32 ~39 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-1 ~32 ~40 minecraft:cut_sandstone
+$execute positioned $(x) $(y) $(z) run setblock ~-2 ~33 ~36 minecraft:cut_sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-1 ~33 ~36 ~-1 ~33 ~40 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-10 ~33 ~37 ~-8 ~33 ~37 minecraft:gold_block
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~33 ~37 minecraft:cut_sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-2 ~33 ~37 ~-2 ~33 ~39 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-8 ~33 ~38 ~-8 ~33 ~39 minecraft:gold_block
+$execute positioned $(x) $(y) $(z) run setblock ~-5 ~33 ~38 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~33 ~38 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~33 ~39 minecraft:cut_sandstone
+$execute positioned $(x) $(y) $(z) run setblock ~-2 ~33 ~40 minecraft:cut_sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-8 ~34 ~37 ~-8 ~34 ~38 minecraft:yellow_candle[candles=2,lit=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-3 ~34 ~37 ~-3 ~34 ~39 minecraft:gold_block
+$execute positioned $(x) $(y) $(z) run setblock ~-5 ~34 ~38 minecraft:gold_block
+$execute positioned $(x) $(y) $(z) run setblock ~-1 ~35 ~37 minecraft:yellow_candle[candles=2,lit=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~35 ~38 minecraft:yellow_candle[candles=2,lit=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-2 ~35 ~40 minecraft:yellow_candle[candles=2,lit=true,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-7 ~39 ~2 ~-5 ~39 ~6 minecraft:snow_block
 $execute positioned $(x) $(y) $(z) run fill ~-8 ~39 ~3 ~-8 ~39 ~5 minecraft:snow_block
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~39 ~3 ~-4 ~39 ~8 minecraft:snow_block
 $execute positioned $(x) $(y) $(z) run fill ~-3 ~39 ~5 ~-2 ~39 ~9 minecraft:snow_block
 $execute positioned $(x) $(y) $(z) run setblock ~-1 ~39 ~9 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~39 ~34 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~39 ~34 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~40 ~1 ~-5 ~40 ~7 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-8 ~40 ~2 ~-8 ~40 ~6 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~40 ~2 ~-4 ~40 ~9 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-3 ~40 ~3 ~-3 ~40 ~10 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~40 ~8 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~40 ~10 ~-1 ~40 ~10 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~40 ~34 minecraft:gold_block
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~40 ~34 minecraft:smooth_sandstone
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~41 ~2 ~-5 ~41 ~6 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-8 ~41 ~3 ~-8 ~41 ~5 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~41 ~3 ~-4 ~41 ~8 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-3 ~41 ~5 ~-2 ~41 ~9 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~-1 ~41 ~9 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~-8 ~41 ~34 minecraft:bamboo_fence[east=false,north=false,south=false,west=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~41 ~34 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~42 ~34 minecraft:gold_block
-$execute positioned $(x) $(y) $(z) run setblock ~-1 ~42 ~34 minecraft:smooth_sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-7 ~40 ~1 ~-5 ~40 ~7 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-8 ~40 ~2 ~-8 ~40 ~6 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-4 ~40 ~2 ~-4 ~40 ~9 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-3 ~40 ~3 ~-3 ~40 ~10 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-5 ~40 ~8 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-2 ~40 ~10 ~-1 ~40 ~10 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-7 ~41 ~2 ~-5 ~41 ~6 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-8 ~41 ~3 ~-8 ~41 ~5 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-4 ~41 ~3 ~-4 ~41 ~8 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-3 ~41 ~5 ~-2 ~41 ~9 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-1 ~41 ~9 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~43 ~-15 ~-1 ~44 ~-15 minecraft:andesite
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~44 ~-16 ~-1 ~45 ~-16 minecraft:andesite
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~44 ~-14 ~-1 ~45 ~-14 minecraft:stone
@@ -154,41 +118,41 @@ $execute positioned $(x) $(y) $(z) run fill ~-2 ~46 ~-13 ~-2 ~47 ~-13 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~-7 ~47 ~-22 ~-7 ~47 ~-19 minecraft:snow_block
 $execute positioned $(x) $(y) $(z) run fill ~-8 ~47 ~-21 ~-8 ~47 ~-19 minecraft:snow_block
 $execute positioned $(x) $(y) $(z) run fill ~-6 ~47 ~-21 ~-6 ~47 ~-19 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~47 ~-19 ~-4 ~47 ~-17 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~47 ~-19 ~-2 ~47 ~-18 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~47 ~-18 ~-6 ~47 ~-14 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~47 ~-18 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-8 ~47 ~-17 ~-8 ~47 ~-15 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-5 ~47 ~-19 ~-4 ~47 ~-17 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-2 ~47 ~-19 ~-2 ~47 ~-18 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-7 ~47 ~-18 ~-6 ~47 ~-14 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-3 ~47 ~-18 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-8 ~47 ~-17 ~-8 ~47 ~-15 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-3 ~47 ~-17 minecraft:andesite
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~47 ~-17 ~-2 ~48 ~-17 minecraft:stone
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~47 ~-16 ~-5 ~47 ~-13 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-5 ~47 ~-16 ~-5 ~47 ~-13 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~47 ~-16 ~-4 ~48 ~-16 minecraft:andesite
 $execute positioned $(x) $(y) $(z) run fill ~-3 ~47 ~-16 ~-3 ~48 ~-15 minecraft:stone
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~47 ~-16 ~-1 ~47 ~-13 minecraft:stone
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~47 ~-15 ~-4 ~48 ~-15 minecraft:stone
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~47 ~-15 ~-2 ~48 ~-15 minecraft:stone
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~47 ~-14 ~-4 ~47 ~-13 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~-6 ~47 ~-13 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-4 ~47 ~-14 ~-4 ~47 ~-13 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-6 ~47 ~-13 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-3 ~47 ~-13 ~-3 ~48 ~-13 minecraft:stone
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~47 ~-12 ~-2 ~48 ~-12 minecraft:andesite
-$execute positioned $(x) $(y) $(z) run fill ~-9 ~48 ~-23 ~-6 ~48 ~-18 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~48 ~-22 ~-5 ~48 ~-15 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-9 ~48 ~-23 ~-6 ~48 ~-18 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-5 ~48 ~-22 ~-5 ~48 ~-15 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~48 ~-18 ~-4 ~48 ~-17 minecraft:andesite
 $execute positioned $(x) $(y) $(z) run fill ~-3 ~48 ~-18 ~-3 ~48 ~-17 minecraft:stone
 $execute positioned $(x) $(y) $(z) run setblock ~-2 ~48 ~-18 minecraft:andesite
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~48 ~-18 ~-1 ~48 ~-15 minecraft:stone
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~48 ~-17 ~-6 ~48 ~-15 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-7 ~48 ~-17 ~-6 ~48 ~-15 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-2 ~48 ~-16 minecraft:andesite
-$execute positioned $(x) $(y) $(z) run setblock ~-6 ~48 ~-14 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~-6 ~48 ~-14 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-5 ~48 ~-14 ~-3 ~48 ~-14 minecraft:stone
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~48 ~-14 ~-1 ~48 ~-14 minecraft:andesite
 $execute positioned $(x) $(y) $(z) run setblock ~-4 ~48 ~-13 minecraft:andesite
 $execute positioned $(x) $(y) $(z) run setblock ~-2 ~48 ~-13 minecraft:stone
 $execute positioned $(x) $(y) $(z) run setblock ~-3 ~48 ~-12 minecraft:stone
 $execute positioned $(x) $(y) $(z) run setblock ~-1 ~48 ~-12 minecraft:stone
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~49 ~-22 ~-7 ~49 ~-19 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-8 ~49 ~-21 ~-8 ~49 ~-19 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~49 ~-21 ~-6 ~49 ~-19 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~-7 ~49 ~-22 ~-7 ~49 ~-19 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-8 ~49 ~-21 ~-8 ~49 ~-19 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-6 ~49 ~-21 ~-6 ~49 ~-19 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~49 ~-20 ~-1 ~50 ~-11 minecraft:dirt
 $execute positioned $(x) $(y) $(z) run fill ~-4 ~49 ~-19 ~-2 ~50 ~-11 minecraft:dirt
 $execute positioned $(x) $(y) $(z) run fill ~-5 ~49 ~-17 ~-5 ~50 ~-13 minecraft:dirt

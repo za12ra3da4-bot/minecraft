@@ -309,10 +309,40 @@ on load:
     set {-bg::pkmk::start::y} to 1
     set {-bg::pkmk::start::z} to 0.5
     set {-bg::pkmk::start::yaw} to 0.0
-    set {-bg::pk2mk::finish::x} to 42.5
-    set {-bg::pk2mk::finish::y} to 47
-    set {-bg::pk2mk::finish::z} to 36.5
+    set {-bg::pk2mk::blinkA_0::x} to 2
+    set {-bg::pk2mk::blinkA_0::y} to 24
+    set {-bg::pk2mk::blinkA_0::z} to 27
+    set {-bg::pk2mk::blinkA_1::x} to -8
+    set {-bg::pk2mk::blinkA_1::y} to 24
+    set {-bg::pk2mk::blinkA_1::z} to 27
+    set {-bg::pk2mk::blinkB_0::x} to -3
+    set {-bg::pk2mk::blinkB_0::y} to 24
+    set {-bg::pk2mk::blinkB_0::z} to 27
+    set {-bg::pk2mk::blinkB_1::x} to -13
+    set {-bg::pk2mk::blinkB_1::y} to 24
+    set {-bg::pk2mk::blinkB_1::z} to 27
+    set {-bg::pk2mk::finish::x} to 50.5
+    set {-bg::pk2mk::finish::y} to 42
+    set {-bg::pk2mk::finish::z} to 40.5
     set {-bg::pk2mk::finish::yaw} to 0.0
+    set {-bg::pk2mk::pad_0::x} to 12.5
+    set {-bg::pk2mk::pad_0::y} to 1
+    set {-bg::pk2mk::pad_0::z} to 0.5
+    set {-bg::pk2mk::pad_1::x} to -0.5
+    set {-bg::pk2mk::pad_1::y} to 35
+    set {-bg::pk2mk::pad_1::z} to 38.5
+    set {-bg::pk2mk::pad_2::x} to 19.5
+    set {-bg::pk2mk::pad_2::y} to 37
+    set {-bg::pk2mk::pad_2::z} to 38.5
+    set {-bg::pk2mk::padv_0::x} to 1.169
+    set {-bg::pk2mk::padv_0::y} to 1.0
+    set {-bg::pk2mk::padv_0::z} to 0.0
+    set {-bg::pk2mk::padv_1::x} to 1.169
+    set {-bg::pk2mk::padv_1::y} to 1.0
+    set {-bg::pk2mk::padv_1::z} to 0.0
+    set {-bg::pk2mk::padv_2::x} to 1.169
+    set {-bg::pk2mk::padv_2::y} to 1.0
+    set {-bg::pk2mk::padv_2::z} to 0.0
     set {-bg::pk2mk::start::x} to 0.5
     set {-bg::pk2mk::start::y} to 1
     set {-bg::pk2mk::start::z} to 0.5
