@@ -276,6 +276,7 @@ function bgPkMapItem(p: player, m: number) :: item:
         set {_it} to cherry sapling
         add "&7구름 위 떠 있는 섬 5층을 지그재그로" to {_lore::*}
         add "&7사다리 탑 · 울타리 기둥 · 꼭대기 황금 신전" to {_lore::*}
+        add "&e난이도 &a1층 쉬움 &7→ &c5층 어려움 &7(65단)" to {_lore::*}
     else:
         set {_it} to ender eye
         add "&7빛나는 행성 둘레를 돌며 올라가는 50단" to {_lore::*}
