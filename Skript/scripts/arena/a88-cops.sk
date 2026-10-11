@@ -10,7 +10,7 @@
 #         헬기는 돈가방을 1개 이상 들고 있는 도둑만 탈 수 있음 (가방 1개가 탑승권) → '탈출 성공' (전망대로) · 판은 계속
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 도둑 3명 중 1명꼴 (올림) 이상 탈출해야 도둑 승리
 #         사람이 많을수록 털이 장소 다시 털 수 있는 시간이 짧아짐 (40초 → 최소 20초)
-#         연막탄 2개 (던지면 주변 경찰 3초 실명) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
+#         연막탄 2개 (던지면 주변 경찰 3초 실명) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (보호 없이 순간 가속만)
 #   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉(네더라이트 검 성능)으로 도둑 체력을 다 깎으면 체포 (죽지 않고 감옥) · 무전기 · 레이더
 #         직급: 지금 감옥에 있는 (내가 잡은) 도둑 수 · 도둑 수에 비례 (경장 15% · 경사 30% · 경위 50%) · 탈옥하면 강등
 #         경장 신속 I · 경사 추격 진주 2 + 수갑 3 · 경위 도둑 추적기 + 신속 II
@@ -534,10 +534,9 @@ function bgKdRescue(r: player):
         if bgKdOn(loop-player) is true:
             if bgKdJailed(loop-player) is true:
                 delete {-bg::kd::jail::%uuid of loop-player%}
-                set {-bg::kd::imm::%uuid of loop-player%} to now
                 teleport loop-player to bgKdMk("jail_out")
                 bgKdBurst(loop-player)
-                bgTitleP(loop-player, "&a&l탈옥!", "&f%name of {_r}% 이(가) 구해 줬습니다 · 5초 보호 · 순간 가속!")
+                bgTitleP(loop-player, "&a&l탈옥!", "&f%name of {_r}% 이(가) 구해 줬습니다 · 순간 가속! (보호 없음 · 바로 도망)")
                 add 1 to {_n}
     {_n} > 0
     set {-bg::kd::rescd} to now
@@ -650,10 +649,6 @@ on damage of player:
     bgKdJailed({_t}) is false
     bgKdEsc({_t}) is false
     bgKdJailed({_c}) is false
-    if {-bg::kd::imm::%uuid of {_t}%} is set:
-        if difference between {-bg::kd::imm::%uuid of {_t}%} and now < 5 seconds:
-            send action bar "&7탈옥 직후 5초 보호 중" to {_c}
-            stop
     set {_hold} to {-bg::kd::hold} ? 0
     {_hold} <= 0
     # 마크 그대로 싸움: 경찰봉 = 네더라이트 검 성능 (공격력 8 · 공격 속도 1.6 · 치명타 · 덜 모은 타격은 약하게 — 전부 마크 기본)
