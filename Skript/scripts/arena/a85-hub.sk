@@ -600,6 +600,8 @@ command /허브 [<text>] [<text>]:
             stop
         if bgForced(player) is true:
             stop
+        if bgKdNoLeave(player) is true:
+            stop
         bgToHub(player)
         play sound "entity.enderman.teleport" to player
 
@@ -756,6 +758,8 @@ on right click:
     {_nm} contains "나가기"
     cancel event
     if bgForced(player) is true:
+        stop
+    if bgKdNoLeave(player) is true:
         stop
     set {_ar} to bgArea(player)
     if {_ar} is "kd":

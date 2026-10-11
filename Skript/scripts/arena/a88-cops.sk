@@ -228,6 +228,19 @@ function bgKdDrop(p: player):
     if bgKdState() is "play":
         bgKdCheck()
 
+# 판 중 (경찰 · 도둑 역할이 있는 사람) 에는 나가기 버튼 · /경도 나가기 · /허브 로 못 나감 → 안내
+function bgKdNoLeave(p: player) :: boolean:
+    if bgKdOn({_p}) is false:
+        return false
+    if bgKdState() is not "play":
+        return false
+    if bgKdRole({_p}) is "":
+        return false
+    send action bar "&c경도 판 중에는 나갈 수 없어요!" to {_p}
+    send "&9[경도] &c판이 진행 중이라 나갈 수 없어요. &7판이 끝나면 나가기 버튼으로 나갈 수 있어요." to {_p}
+    play sound "block.note_block.bass" to {_p}
+    return true
+
 function bgKdLeave(p: player):
     bgKdDrop({_p})
     bgToHub({_p})
@@ -1007,6 +1020,8 @@ command /경도 [<text>] [<text>]:
             stop
         if arg-1 is "나가기":
             if bgForced(player) is true:
+                stop
+            if bgKdNoLeave(player) is true:
                 stop
             if bgKdOn(player) is true:
                 bgKdLeave(player)
