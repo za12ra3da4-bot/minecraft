@@ -536,9 +536,6 @@ on damage of player:
         heal {_t}
         bgKdArrest({_t}, {_c})
         stop
-    bgCmd("effect give %name of {_t}% glowing 2 0 true")
-    set {_hp} to round((health of {_t} - damage) * 10) / 10
-    send action bar "&9명중! &f도둑 체력 &c%{_hp}%♥ &7— 다 닳으면 체포" to {_c}
 
 # 연막탄: 맞은 자리 주변 경찰 실명 · 느려짐
 on projectile hit:
