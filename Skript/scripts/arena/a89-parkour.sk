@@ -453,7 +453,7 @@ every tick:
 
 # ─────────────────────────────────────────────────────────── 천공의 정원 기믹 (pkgen2.py)
 #  점프대 (라임 유약 테라코타): 밟으면 표지 padv_<k> 속도로 다음 큰 섬까지 날아감
-#  무너지는 구름 (흰 양털): 밟고 0.6초 뒤 그 구름 전체 (윗면 + 밑 덩이) 가 그 사람 화면에서만 사라짐 (진짜로 빠짐) → 3.5초 뒤 돌아옴
+#  무너지는 구름 (흰 양털): 밟고 1초 뒤 그 구름 전체 (윗면 + 밑 덩이) 가 그 사람 화면에서만 사라짐 (진짜로 빠짐) → 3.5초 뒤 돌아옴
 #  공명 수정 (blinkA_<k> · blinkB_<k>): 1.5초마다 A ↔ B 번갈아 켜지고 꺼짐 · 꺼지기 0.5초 전 반짝 + 소리
 every tick:
     loop all players:
@@ -487,7 +487,7 @@ every tick:
 function bgPkCrumble(p: player, l: location, key: text):
     play sound "block.wool.step" with volume 1 and pitch 0.6 to {_p}
     bgParticle(bgUp({_l}, 1), "cloud", 0.6, 0.05, 0.6, 0.01, 6)
-    wait 12 ticks
+    wait 20 ticks
     # 이어진 흰 양털 구름 전체 (윗면 + 밑 덩이) — 둘레로 번지며 찾기 (처음 칸에서 4칸 안 · 최대 60칸)
     add {_l} to {_q::*}
     set {_seen::%floor(x-coordinate of {_l})%_%floor(y-coordinate of {_l})%_%floor(z-coordinate of {_l})%} to true
