@@ -10,7 +10,7 @@
 #         헬기는 돈가방을 1개 이상 들고 있는 도둑만 탈 수 있음 (가방 1개가 탑승권) → '탈출 성공' (전망대로) · 판은 계속
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 도둑 3명 중 1명꼴 (올림) 이상 탈출해야 도둑 승리
 #         사람이 많을수록 털이 장소 다시 털 수 있는 시간이 짧아짐 (40초 → 최소 20초)
-#         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
+#         연막탄 2개 (던지면 주변 경찰 3초 실명) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
 #   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉(네더라이트 검 성능)으로 도둑 체력을 다 깎으면 체포 (죽지 않고 감옥) · 무전기 · 레이더
 #         직급: 지금 감옥에 있는 (내가 잡은) 도둑 수 · 도둑 수에 비례 (경장 15% · 경사 30% · 경위 50%) · 탈옥하면 강등
 #         경장 신속 I · 경사 추격 진주 2 + 수갑 3 · 경위 도둑 추적기 + 신속 II
@@ -160,7 +160,7 @@ function bgKdThiefKit(p: player):
     set {_n} to name of {_p}
     bgCmd("item replace entity %{_n}% armor.head with leather_helmet[dyed_color=1315860,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=10040115,unbreakable={}]")
-    bgCmd("item replace entity %{_n}% hotbar.0 with snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true},lore=[{text:""던지면 주변 경찰이 3초 동안 앞이 안 보이고 느려짐"",color:""gray"",italic:false}]] 2")
+    bgCmd("item replace entity %{_n}% hotbar.0 with snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true},lore=[{text:""던지면 주변 경찰이 3초 동안 앞이 안 보임"",color:""gray"",italic:false}]] 2")
     bgCmd("item replace entity %{_n}% hotbar.1 with feather[item_model=""bg:kd/shoes"",item_name={text:""운동화"",color:""red"",bold:true},lore=[{text:""우클릭: 4초 질주 (20초마다)"",color:""gray"",italic:false}]]")
     set {-bg::kd::carry::%uuid of {_p}%} to 0
     bgCmd("team join kd_thief %{_n}%")
@@ -196,6 +196,11 @@ function bgKdJoin(p: player):
     delete {-bg::kd::jail::%uuid of {_p}%}
     delete {-bg::kd::esc::%uuid of {_p}%}
     bgKdClear({_p})
+    set {_u} to "%uuid of {_p}%"
+    if bgKdState() is "play":
+        if ({-bg::kd::rj::%{_u}%::round} ? -1) is ({-bg::kd::round} ? 0):
+            bgKdRestore({_p})
+            stop
     if bgKdState() is "play":
         # 판 중간에 오면 도둑으로 바로 참가
         set {-bg::kd::role::%uuid of {_p}%} to "thief"
@@ -212,11 +217,57 @@ function bgKdJoin(p: player):
         bgKdSay("&e%name of {_p}%&f 입장 &7(대기 %{_n}%명)")
     play sound "block.note_block.pling" to {_p}
 
+# 같은 판에 다시 들어온 사람: 나가기 전 상태 그대로 (경찰 · 도둑 · 감옥 · 탈출)
+function bgKdRestore(p: player):
+    set {_u} to "%uuid of {_p}%"
+    set {_r} to {-bg::kd::rj::%{_u}%::role} ? "thief"
+    set {-bg::kd::role::%{_u}%} to {_r}
+    if {_r} is "cop":
+        bgKdCopKit({_p})
+        teleport {_p} to bgKdMk("cop_spawn")
+        bgTitleP({_p}, "&9&l경찰로 복귀", "&f나가기 전 역할 그대로")
+    else:
+        bgKdThiefKit({_p})
+        if {-bg::kd::rj::%{_u}%::esc} is true:
+            set {-bg::kd::esc::%{_u}%} to true
+            teleport {_p} to bgKdMk("wait")
+            bgTitleP({_p}, "&a&l탈출한 상태로 복귀", "&f전망대에서 구경")
+        else if {-bg::kd::rj::%{_u}%::jail} is true:
+            set {-bg::kd::jail::%{_u}%} to true
+            if {-bg::kd::rj::%{_u}%::by} is set:
+                set {-bg::kd::by::%{_u}%} to {-bg::kd::rj::%{_u}%::by}
+            teleport {_p} to bgKdMk("jail")
+            bgTitleP({_p}, "&c&l다시 감옥으로", "&f나갔다 들어와도 감옥은 그대로예요")
+        else:
+            teleport {_p} to bgKdThiefSpot()
+            bgTitleP({_p}, "&c&l도둑으로 복귀", "&f나가기 전 역할 그대로")
+    delete {-bg::kd::rj::%{_u}%::*}
+    bgKdSay("&e%name of {_p}%&f 복귀 &7(나가기 전 상태 그대로)")
+
+# 서버에 다시 들어오면 (진행 중인 같은 판이면) 경도로 바로 돌려보냄
+on join:
+    set {_u} to "%uuid of player%"
+    {-bg::kd::rj::%{_u}%::round} is set
+    wait 40 ticks
+    player is online
+    bgKdState() is "play"
+    ({-bg::kd::rj::%{_u}%::round} ? -1) is ({-bg::kd::round} ? 0)
+    bgKdJoin(player)
+
 # 경도에서 빼기만 (순간이동 없음) · 판 중이면 승부 확인
 function bgKdDrop(p: player):
     if bgKdOn({_p}) is false:
         stop
     bgKdUnboard({_p})
+    # 판 중에 나가면 역할 · 감옥 · 탈출 상태를 기억 → 다시 들어오면 그대로 (감옥에서 나갔다 들어와 풀려나는 버그 막기)
+    if bgKdState() is "play":
+        if bgKdRole({_p}) is not "":
+            set {_u} to "%uuid of {_p}%"
+            set {-bg::kd::rj::%{_u}%::round} to {-bg::kd::round} ? 0
+            set {-bg::kd::rj::%{_u}%::role} to bgKdRole({_p})
+            set {-bg::kd::rj::%{_u}%::jail} to bgKdJailed({_p})
+            set {-bg::kd::rj::%{_u}%::esc} to bgKdEsc({_p})
+            set {-bg::kd::rj::%{_u}%::by} to {-bg::kd::by::%{_u}%}
     delete {-bg::kd::in::%uuid of {_p}%}
     delete {-bg::kd::role::%uuid of {_p}%}
     delete {-bg::kd::jail::%uuid of {_p}%}
@@ -304,6 +355,8 @@ function bgKdStart(s: command sender, cops: number = 0):
     delete {-bg::kd::rank::*}
     delete {-bg::kd::by::*}
     delete {-bg::kd::prog::*}
+    add 1 to {-bg::kd::round}
+    delete {-bg::kd::rj::*}
     set {-bg::kd::state} to "play"
     bgKdTexts()
     loop {_ps::*}:
@@ -511,7 +564,7 @@ function bgKdSteal(p: player, i: number):
     # 털이 보상 (무작위 하나)
     set {_rw} to random integer between 1 and 4
     if {_rw} is 1:
-        bgCmd("give %name of {_p}% snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true},lore=[{text:""던지면 주변 경찰이 3초 동안 앞이 안 보이고 느려짐"",color:""gray"",italic:false}]] 1")
+        bgCmd("give %name of {_p}% snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true},lore=[{text:""던지면 주변 경찰이 3초 동안 앞이 안 보임"",color:""gray"",italic:false}]] 1")
         send action bar "&6보상: &f연막탄 +1" to {_p}
     else if {_rw} is 2:
         bgKdDrink({_p}, "energy")
@@ -598,7 +651,7 @@ on damage of player:
     {_t}.playHurtAnimation(0)
     bgSoundAt(location of {_t}, "entity.player.hurt", 1, 1)
 
-# 연막탄: 맞은 자리 주변 경찰 실명 · 느려짐
+# 연막탄: 맞은 자리 주변 경찰 3초 실명 (느려짐 없음 → 연막 안에서도 뛰고 점프 가능)
 on projectile hit:
     event-projectile is a snowball
     set {_s} to shooter of event-projectile
@@ -614,7 +667,6 @@ on projectile hit:
             if bgKdRole(loop-player) is "cop":
                 if distance between loop-player and {_l} < 5:
                     bgCmd("effect give %name of loop-player% blindness 3 0 true")
-                    bgCmd("effect give %name of loop-player% slowness 3 2 true")
                     send action bar "&7연막탄! 앞이 안 보입니다" to loop-player
 
 # 매 5틱: 털이 진행 · 구출 발판 · 탈출
