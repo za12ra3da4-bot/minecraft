@@ -68,8 +68,25 @@ function bgBuilt(k: text) :: boolean:
     set {_o} to Bukkit.getScoreboardManager().getMainScoreboard().getObjective("bg_build")
     if {_o} is not set:
         return true
+    if {_o}.getScore({_k}).isScoreSet() is false:
+        return true
     if {_o}.getScore({_k}).getScore() >= 1:
         return true
+    return false
+
+# ── 구조물 짓기 시작: bg:<키>/build 실행 → 데이터팩에 그 함수가 없으면 (새 데이터팩을 안 넣었거나 /reload 안 함) false + 관리자에게 알림
+function bgBuildGo(k: text) :: boolean:
+    bgCmd("scoreboard objectives add bg_build dummy")
+    bgCmd("scoreboard players reset %{_k}% bg_build")
+    bgCmd("function bg:%{_k}%/build")
+    set {_o} to Bukkit.getScoreboardManager().getMainScoreboard().getObjective("bg_build")
+    if {_o} is set:
+        if {_o}.getScore({_k}).isScoreSet() is true:
+            return true
+    send "[전장] 데이터팩에 bg:%{_k}%/build 가 없습니다 — 새 데이터팩(arena/datapack/bg_arena)을 서버 world/datapacks 에 넣고 /reload" to console
+    loop all players:
+        if loop-player is op:
+            send "&c[전장] 데이터팩에 &ebg:%{_k}%/build &c가 없어요! &f새 데이터팩(bg_arena)을 world/datapacks 에 덮어쓰고 &e/reload &f한 뒤 다시 해 주세요." to loop-player
     return false
 
 # ── 숫자 → 명령용 텍스트 (소수 2자리)

@@ -267,12 +267,12 @@ function bgHubBuild(p: player, here: boolean = false):
     set {bg::pk::built} to true
     # 파쿠르 맵 2 천공의 정원 (포털 파쿠르 더 남쪽)
     bgCmd("data merge storage bg:pk2 {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y} + 10%,z:%{bg::hub::z} + 340%}}")
-    bgCmd("function bg:pk2/build")
-    loop 1200 times:
-        wait 10 ticks
-        if bgBuilt("pk2") is true:
-            exit loop
-    set {bg::pk2::built} to true
+    if bgBuildGo("pk2") is true:
+        loop 1200 times:
+            wait 10 ticks
+            if bgBuilt("pk2") is true:
+                exit loop
+        set {bg::pk2::built} to true
     send "&b[허브] &a온리소드 · 경도 · 파쿠르 2개도 완성! &7(경도 안내 글자는 처음 들어갈 때 /경도 글자)" to {_p}
     send "&b[허브] &7오락기 이름표가 안 보이면 &e/허브 글자 &7· 위치 확인 &e/허브 위치" to {_p}
 

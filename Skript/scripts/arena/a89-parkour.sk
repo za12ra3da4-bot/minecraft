@@ -402,15 +402,16 @@ function bgPkLeave(p: player):
 function bgPkBuild(p: player):
     {bg::hub::x} is set
     bgCmd("data merge storage bg:pk {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y} + 10%,z:%{bg::hub::z} + 200%}}")
-    bgCmd("function bg:pk/build")
-    loop 1200 times:
-        wait 10 ticks
-        if bgBuilt("pk") is true:
-            exit loop
-    set {bg::pk::built} to true
-    send "&d[파쿠르] &a1. 포털 파쿠르 완성! &7(2. 천공의 정원 짓는 중…)" to {_p}
+    if bgBuildGo("pk") is true:
+        loop 1200 times:
+            wait 10 ticks
+            if bgBuilt("pk") is true:
+                exit loop
+        set {bg::pk::built} to true
+        send "&d[파쿠르] &a1. 포털 파쿠르 완성! &7(2. 천공의 정원 짓는 중…)" to {_p}
     bgCmd("data merge storage bg:pk2 {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y} + 10%,z:%{bg::hub::z} + 340%}}")
-    bgCmd("function bg:pk2/build")
+    if bgBuildGo("pk2") is false:
+        stop
     loop 1200 times:
         wait 10 ticks
         if bgBuilt("pk2") is true:
