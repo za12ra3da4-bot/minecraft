@@ -144,7 +144,7 @@ function bgKdCopKit(p: player):
     bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=2052283,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=1381706,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=1381706,unbreakable={}]")
-    bgCmd("item replace entity %{_n}% hotbar.0 with blaze_rod[item_model=""bg:kd/baton"",item_name={text:""경찰봉"",color:""blue"",bold:true},lore=[{text:""도둑을 3대 때리면 체포 · 들고 있던 돈가방 압수"",color:""gray"",italic:false}]]")
+    bgCmd("item replace entity %{_n}% hotbar.0 with blaze_rod[item_model=""bg:kd/baton"",item_name={text:""경찰봉"",color:""blue"",bold:true},lore=[{text:""도둑을 3대 때리면 체포 · 들고 있던 돈가방 압수"",color:""gray"",italic:false},{text:""다이아몬드 검과 같은 공격 속도 (힘을 다 모아야 1대)"",color:""dark_gray"",italic:false}],attribute_modifiers=[{type:""minecraft:attack_damage"",id:""bg:baton_damage"",amount:6.0,operation:""add_value"",slot:""mainhand""},{type:""minecraft:attack_speed"",id:""bg:baton_speed"",amount:-2.4,operation:""add_value"",slot:""mainhand""}]]")
     bgCmd("item replace entity %{_n}% hotbar.1 with echo_shard[item_model=""bg:kd/radio"",item_name={text:""무전기"",color:""aqua"",bold:true},lore=[{text:""우클릭: 가장 가까운 도둑 방향 · 거리 (25초마다)"",color:""gray"",italic:false}]]")
     bgCmd("effect give %{_n}% speed infinite 0 true")
     bgCmd("team join kd_cop %{_n}%")
@@ -531,6 +531,11 @@ on damage of player:
     # 마크 그대로 때리기: 실제로 맞고 (하트 2칸) 밀려남 · 연타는 마크의 무적 시간이 막음 · 3대째 체포
     #  (대마다 8초 안에 이어서 — 8초 넘으면 처음부터 · 체포되면 체력 회복)
     uncancel event
+    # 다이아몬드 검 공격 속도 (경찰봉 속성): 힘을 다 모은 타격 = 데미지 7 (치명타면 더) · 덜 모은 타격은 체포 횟수에 안 셈
+    if damage < 6:
+        set damage to 1
+        send action bar "&7힘을 모아서 때리세요 &8(공격 게이지가 다 찰 때)" to {_c}
+        stop
     set damage to 4
     set {_u} to "%uuid of {_t}%"
     if {-bg::kd::hit::%{_u}%} is set:
