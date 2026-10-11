@@ -82,8 +82,10 @@ on tab complete of "/힐" or "/heal":
 
 on tab complete of "/허브" or "/hub" or "/스폰":
     player is op
-    set tab completions for position 1 to "건설", "전체", "글자" and "위치"
+    set tab completions for position 1 to "건설", "전체", "해제", "글자" and "위치"
     set {_a} to tab arg-1
+    if {_a} is "해제":
+        set tab completions for position 2 to all players
     if {_a} is "건설":
         set tab completions for position 2 to "여기"
 

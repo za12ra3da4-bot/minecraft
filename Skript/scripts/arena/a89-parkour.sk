@@ -401,9 +401,11 @@ command /파쿠르 [<text>]:
                 if bgPkOn(loop-player) is false:
                     if bgInGame(loop-player) is false:
                         if bgOptOut(loop-player) is false:
+                            delete {-bg::forced::%uuid of loop-player%}
                             bgToHub(loop-player)
                             bgBridgeOff(loop-player)
                             bgPkEnter(loop-player)
+                            bgForcedSet(loop-player, "pk")
                             add 1 to {_n}
             broadcast "&d[파쿠르] &f관리자가 &e%{_n}%명&f을 포털 파쿠르로 보냈습니다."
             stop
@@ -423,6 +425,8 @@ command /파쿠르 [<text>]:
         if sender is not a player:
             stop
         if arg-1 is "나가기":
+            if bgForced(player) is true:
+                stop
             if bgPkOn(player) is true:
                 bgPkLeave(player)
             stop

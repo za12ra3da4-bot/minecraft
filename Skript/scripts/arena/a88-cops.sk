@@ -918,7 +918,9 @@ command /경도 [<text>] [<text>]:
                     if bgKdOn(loop-player) is false:
                         if bgInGame(loop-player) is false:
                             if bgOptOut(loop-player) is false:
+                                delete {-bg::forced::%uuid of loop-player%}
                                 bgKdJoin(loop-player)
+                                bgForcedSet(loop-player, "kd")
                                 add 1 to {_n}
                 broadcast "&9[경도] &f관리자가 &e%{_n}%명&f을 경찰과 도둑으로 보냈습니다."
                 stop
@@ -951,6 +953,8 @@ command /경도 [<text>] [<text>]:
             send "&c사용법: /경도 시작 [경찰수] · 종료 · 시간 <분> · 목표 <개> · 랭킹"
             stop
         if arg-1 is "나가기":
+            if bgForced(player) is true:
+                stop
             if bgKdOn(player) is true:
                 bgKdLeave(player)
             else:

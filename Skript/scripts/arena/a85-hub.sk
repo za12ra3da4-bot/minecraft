@@ -175,7 +175,28 @@ function bgHubSoon(p: player):
     bgTitleP({_p}, "&7&l준비 중", "&f곧 새로운 컨텐츠가 열립니다!")
     play sound "block.note_block.bass" to {_p}
 
+# ─────────────────────────────────────────────────────────── 관리자가 보낸 사람 (전체 이동 · 지정 이동)
+#  {-bg::forced::<uuid>} = 보낸 컨텐츠 (myth · kd · pk) — 나가기 버튼 · /허브 · /경도 나가기 · 다른 컨텐츠 입장 모두 막힘
+#  풀림: 관리자의 /허브 전체 · /허브 해제 [플레이어] · 다른 전체 이동 (새로 덮어씀) · 접속 종료
+function bgForcedSet(p: player, k: text):
+    set {-bg::forced::%uuid of {_p}%} to {_k}
+
+function bgForced(p: player) :: boolean:
+    if {-bg::forced::%uuid of {_p}%} is not set:
+        return false
+    if {_p} is op:
+        return false
+    send action bar "&c관리자가 보낸 컨텐츠라 나갈 수 없어요" to {_p}
+    send "&c[안내] &f관리자가 보낸 컨텐츠라 마음대로 나갈 수 없어요. &7(관리자가 풀어 줄 때까지)" to {_p}
+    play sound "block.note_block.bass" to {_p}
+    return true
+
+on quit:
+    delete {-bg::forced::%uuid of player%}
+
 function bgHubGo(p: player, k: text):
+    if bgForced({_p}) is true:
+        stop
     if {_k} is "soon2":
         bgHubSoon({_p})
         stop
@@ -530,18 +551,34 @@ command /허브 [<text>] [<text>]:
                 loop all players:
                     if bgInGame(loop-player) is false:
                         if bgOptOut(loop-player) is false:
+                            delete {-bg::forced::%uuid of loop-player%}
                             bgToHub(loop-player)
                             add 1 to {_n}
                 broadcast "&b[허브] &f관리자가 &e%{_n}%명&f을 허브로 불렀습니다."
                 stop
+            if arg-1 is "해제":
+                if arg-2 is set:
+                    set {_t} to arg-2 parsed as player
+                    if {_t} is not set:
+                        send "&c플레이어를 찾을 수 없습니다: %arg-2%"
+                        stop
+                    delete {-bg::forced::%uuid of {_t}%}
+                    send "&b[허브] &f%name of {_t}% 은(는) 이제 스스로 나갈 수 있습니다."
+                    send "&a[안내] &f이제 나가기 버튼으로 나갈 수 있어요." to {_t}
+                    stop
+                delete {-bg::forced::*}
+                broadcast "&b[허브] &f관리자가 이동 고정을 풀었습니다 &7— 이제 나가기 버튼으로 나갈 수 있어요"
+                stop
         if sender is not a player:
-            send "&c사용법: /허브 전체 · /허브 위치 &7(컨텐츠별 전체 이동: /신화쟁탈전 전체 · /경도 전체 · /파쿠르 전체)"
+            send "&c사용법: /허브 전체 · /허브 해제 [플레이어] · /허브 위치 &7(컨텐츠별 전체 이동: /신화쟁탈전 전체 · /경도 전체 · /파쿠르 전체 — 보낸 사람은 못 나감)"
             stop
         if bgHubReady() is false:
             send "&b[허브] &c허브가 아직 없습니다. &7관리자가 &e/허브 건설 &7을 한 번 실행해 주세요."
             stop
         if bgInGame(player) is true:
             send "&b[허브] &c게임 중에는 허브로 갈 수 없습니다."
+            stop
+        if bgForced(player) is true:
             stop
         bgToHub(player)
         play sound "entity.enderman.teleport" to player
@@ -568,6 +605,7 @@ command /신화쟁탈전 [<text>]:
                 if bgInGame(loop-player) is false:
                     if bgOptOut(loop-player) is false:
                         bgMythJoin(loop-player)
+                        bgForcedSet(loop-player, "myth")
                         add 1 to {_n}
             broadcast "&6[신화쟁탈전] &f관리자가 &e%{_n}%명&f을 신화쟁탈전으로 보냈습니다."
             stop
@@ -579,6 +617,7 @@ command /신화쟁탈전 [<text>]:
             send "&6[신화쟁탈전] &7%name of {_t}% 은(는) 이미 게임 중입니다."
             stop
         bgMythJoin({_t})
+        bgForcedSet({_t}, "myth")
         send "&6[신화쟁탈전] &f%name of {_t}% 을(를) 신화쟁탈전으로 보냈습니다."
 
 command /컨텐츠 [<text>] [<text>]:
@@ -696,6 +735,8 @@ on right click:
     set {_nm} to uncolored name of player's tool
     {_nm} contains "나가기"
     cancel event
+    if bgForced(player) is true:
+        stop
     set {_ar} to bgArea(player)
     if {_ar} is "kd":
         bgKdLeave(player)

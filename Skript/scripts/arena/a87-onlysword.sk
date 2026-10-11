@@ -271,6 +271,8 @@ command /온리소드 [<text>]:
             send "&c사용법: /온리소드 랭킹 · 전적초기화"
             stop
         if arg-1 is "나가기":
+            if bgForced(player) is true:
+                stop
             if bgOsOn(player) is true:
                 bgOsLeave(player)
             else:
