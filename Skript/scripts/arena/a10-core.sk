@@ -63,6 +63,15 @@ function bgCmd(c: text):
         stop
     {_srv}.getCommands().performPrefixedCommand({_src}, {_c})
 
+# ── 구조물 다 지었는지 (데이터팩이 점수 bg_build <키> 를 0 → 1 로 바꿈) — 부르는 쪽에서 10틱마다 확인하며 기다림
+function bgBuilt(k: text) :: boolean:
+    set {_o} to Bukkit.getScoreboardManager().getMainScoreboard().getObjective("bg_build")
+    if {_o} is not set:
+        return true
+    if {_o}.getScore({_k}).getScore() >= 1:
+        return true
+    return false
+
 # ── 숫자 → 명령용 텍스트 (소수 2자리)
 function bgN(n: number) :: text:
     set {_r} to round({_n} * 100) / 100

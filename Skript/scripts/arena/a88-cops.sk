@@ -825,9 +825,12 @@ function bgKdBuild(p: player):
     loop all players:
         if bgKdOn(loop-player) is true:
             bgKdLeave(loop-player)
-    send "&9[경도] &f도시를 짓는 중... &7(배치를 새로 섞음 · 10초쯤)" to {_p}
+    send "&9[경도] &f도시를 짓는 중... &7(배치를 새로 섞음 · 30초쯤 · 렉 안 걸리게 조금씩)" to {_p}
     bgKdBuildRaw()
-    wait 360 ticks
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("kd%{bg::kd::layout}%") is true:
+            exit loop
     set {bg::kd::built} to true
     set {-bg::kd::state} to "wait"
     teleport {_p} to bgKdMk("wait")
@@ -1330,7 +1333,7 @@ function bgKdBeams():
     stop
 
 # ─────────────────────────────────────────────────────────── 판 끝나면 자동으로 맵 바꾸기
-#  결과 10초 뒤 → 경도에 있는 사람은 도시 위 하늘에서 관전 모드 → 다른 배치로 다시 짓기 (약 17초) → 대기실로
+#  결과 10초 뒤 → 경도에 있는 사람은 도시 위 하늘에서 관전 모드 → 다른 배치로 다시 짓기 (약 35초) → 대기실로
 #  끄기 · 켜기: /경도 자동맵
 function bgKdRemap():
     set {-bg::kd::state} to "remap"
@@ -1342,9 +1345,12 @@ function bgKdRemap():
             bgKdClear(loop-player)
             set gamemode of loop-player to spectator
             teleport loop-player to {_sky}
-            bgTitleP(loop-player, "&9&l다음 판 맵 섞는 중…", "&f건물 배치가 바뀝니다 &7(약 17초 · 하늘에서 구경)")
+            bgTitleP(loop-player, "&9&l다음 판 맵 섞는 중…", "&f건물 배치가 바뀝니다 &7(약 35초 · 하늘에서 구경)")
     bgKdBuildRaw()
-    wait 340 ticks
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("kd%{bg::kd::layout}%") is true:
+            exit loop
     set {-bg::kd::state} to "wait"
     loop all players:
         if bgKdOn(loop-player) is true:

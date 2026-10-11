@@ -280,7 +280,10 @@ function bgPkBuild(p: player):
     {bg::hub::x} is set
     bgCmd("data merge storage bg:pk {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y} + 10%,z:%{bg::hub::z} + 200%}}")
     bgCmd("function bg:pk/build")
-    wait 240 ticks
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("pk") is true:
+            exit loop
     set {bg::pk::built} to true
     send "&d[파쿠르] &a코스 완성!" to {_p}
 

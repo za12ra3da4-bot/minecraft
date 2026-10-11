@@ -1,80 +1,102 @@
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~69 ~-63 ~-2 ~69 ~-62 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~4 ~69 ~-63 ~5 ~69 ~-63 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~6 ~69 ~-63 ~6 ~71 ~-63 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~69 ~-62 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~69 ~-61 ~-2 ~70 ~-61 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~25 ~69 ~-46 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~37 ~69 ~-17 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~-20 ~-22 ~-49 ~75 ~19 minecraft:air strict
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~-20 ~20 ~-49 ~75 ~61 minecraft:air strict
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~-20 ~62 ~-49 ~75 ~63 minecraft:air strict
+$execute positioned $(x) $(y) $(z) run setblock ~-55 ~-9 ~3 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run setblock ~-49 ~-1 ~17 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run setblock ~-50 ~1 ~-27 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-50 ~5 ~-56 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~6 ~-9 ~-56 ~7 ~-7 minecraft:yellow_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-56 ~7 ~-10 minecraft:yellow_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-56 ~7 ~-6 minecraft:yellow_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-57 ~8 ~-10 ~-56 ~9 ~-6 minecraft:glowstone
+$execute positioned $(x) $(y) $(z) run setblock ~-55 ~8 ~-8 minecraft:glowstone
+$execute positioned $(x) $(y) $(z) run setblock ~-52 ~9 ~-54 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-51 ~9 ~-2 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~10 ~-9 ~-56 ~10 ~-7 minecraft:glowstone
+$execute positioned $(x) $(y) $(z) run setblock ~-56 ~20 ~-41 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run setblock ~-49 ~22 ~-42 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~23 ~-58 ~-51 ~24 ~-58 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~24 ~-61 ~-49 ~24 ~-59 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~24 ~-60 ~-54 ~24 ~-56 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~24 ~-58 ~-52 ~24 ~-55 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-50 ~24 ~-58 ~-49 ~24 ~-55 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~24 ~-57 ~-51 ~24 ~-55 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~25 ~-62 ~-49 ~26 ~-54 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~25 ~-61 ~-54 ~33 ~-55 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~25 ~-60 ~-55 ~25 ~-56 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~26 ~-63 ~-49 ~26 ~-63 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~26 ~-62 ~-54 ~27 ~-62 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~26 ~-61 ~-55 ~27 ~-54 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~26 ~-60 ~-56 ~27 ~-56 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~26 ~-54 ~-54 ~27 ~-54 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~26 ~-53 ~-49 ~26 ~-53 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~27 ~-64 ~-51 ~27 ~-52 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-50 ~27 ~-64 ~-49 ~27 ~-62 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-54 ~27 ~-63 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-56 ~27 ~-61 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-50 ~27 ~-61 ~-49 ~33 ~-55 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-56 ~27 ~-55 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-50 ~27 ~-54 ~-49 ~27 ~-52 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-54 ~27 ~-53 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~28 ~-63 ~-55 ~30 ~-61 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~28 ~-62 ~-56 ~31 ~-54 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~28 ~-62 ~-54 ~30 ~-62 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~28 ~-62 ~-49 ~32 ~-62 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~28 ~-61 ~-51 ~32 ~-54 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~28 ~-60 ~-55 ~33 ~-56 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~28 ~-55 ~-55 ~30 ~-53 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~28 ~-54 ~-54 ~30 ~-52 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-50 ~28 ~-54 ~-49 ~32 ~-54 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~28 ~-53 ~-49 ~29 ~-52 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-57 ~28 ~-50 ~-56 ~28 ~-50 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-58 ~28 ~-49 ~-56 ~28 ~-49 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~28 ~-49 ~-55 ~29 ~-49 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~28 ~-48 ~-55 ~28 ~-48 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~29 ~-49 ~-52 ~29 ~-49 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~29 ~-48 ~-52 ~29 ~-48 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~30 ~-64 ~-51 ~30 ~-63 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~30 ~-53 ~-51 ~30 ~-52 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-50 ~30 ~-53 ~-49 ~32 ~-52 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-51 ~30 ~-51 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-51 ~30 ~-48 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-51 ~30 ~-47 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-51 ~30 ~-38 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-49 ~30 ~18 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~31 ~-64 ~-51 ~32 ~-63 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~31 ~-63 ~-55 ~32 ~-61 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~31 ~-62 ~-54 ~33 ~-62 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~31 ~-55 ~-55 ~32 ~-53 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~31 ~-54 ~-54 ~32 ~-52 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~31 ~-53 ~-51 ~32 ~-52 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~32 ~-62 ~-56 ~32 ~-54 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~33 ~-64 ~-53 ~33 ~-52 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~33 ~-64 ~-49 ~33 ~-62 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-54 ~33 ~-63 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~33 ~-62 ~-55 ~33 ~-61 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~33 ~-61 ~-56 ~33 ~-55 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~33 ~-61 ~-51 ~33 ~-55 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~33 ~-55 ~-55 ~33 ~-54 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~33 ~-54 ~-54 ~33 ~-53 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~33 ~-54 ~-49 ~33 ~-52 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~34 ~-63 ~-49 ~34 ~-61 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~34 ~-62 ~-54 ~34 ~-54 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-56 ~34 ~-60 ~-56 ~34 ~-56 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~34 ~-60 ~-49 ~34 ~-56 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~34 ~-55 ~-49 ~34 ~-53 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~35 ~-62 ~-49 ~35 ~-54 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~35 ~-61 ~-54 ~35 ~-55 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-55 ~35 ~-60 ~-55 ~35 ~-56 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~36 ~-61 ~-52 ~36 ~-55 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~36 ~-61 ~-49 ~36 ~-55 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-54 ~36 ~-60 ~-54 ~36 ~-56 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-54 ~36 ~-23 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run setblock ~-51 ~37 ~-58 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-51 ~40 ~-11 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-55 ~42 ~-24 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run setblock ~-49 ~48 ~-47 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run setblock ~-53 ~48 ~-33 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-55 ~49 ~-37 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-54 ~61 ~-20 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-53 ~67 ~-6 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run setblock ~-50 ~69 ~-1 minecraft:end_rod[facing=up]
-$execute positioned $(x) $(y) $(z) run fill ~25 ~69 ~25 ~25 ~70 ~25 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~29 ~69 ~25 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~25 ~69 ~29 ~25 ~70 ~29 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~29 ~69 ~29 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~1 ~70 ~-64 ~5 ~72 ~-64 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~9 ~70 ~-64 ~9 ~71 ~-64 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~3 ~70 ~-63 ~5 ~72 ~-63 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~7 ~70 ~-63 ~7 ~71 ~-63 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~70 ~-62 ~-1 ~70 ~-62 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~70 ~-61 ~0 ~70 ~-61 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-1 ~70 ~-60 ~0 ~70 ~-60 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~1 ~70 ~-60 ~1 ~71 ~-60 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~21 ~70 ~-60 minecraft:end_rod[facing=up]
-$execute positioned $(x) $(y) $(z) run fill ~0 ~70 ~-59 ~1 ~70 ~-59 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-17 ~70 ~-58 minecraft:end_rod[facing=up]
-$execute positioned $(x) $(y) $(z) run setblock ~-48 ~70 ~-49 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~27 ~70 ~24 ~27 ~70 ~26 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~26 ~70 ~25 ~26 ~70 ~29 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~28 ~70 ~25 ~29 ~71 ~29 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~24 ~70 ~27 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~27 ~70 ~27 ~27 ~72 ~27 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~30 ~70 ~27 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~27 ~70 ~28 ~27 ~70 ~30 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~2 ~71 ~-63 ~2 ~72 ~-63 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~8 ~71 ~-63 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~2 ~71 ~-60 ~4 ~71 ~-60 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~1 ~71 ~-59 ~4 ~71 ~-59 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-48 ~71 ~11 minecraft:end_rod[facing=up]
-$execute positioned $(x) $(y) $(z) run fill ~25 ~71 ~25 ~27 ~71 ~26 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~25 ~71 ~27 ~26 ~71 ~29 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~27 ~71 ~28 ~27 ~72 ~29 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-31 ~71 ~35 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~6 ~72 ~-64 ~9 ~73 ~-64 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~6 ~72 ~-63 ~8 ~73 ~-63 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~16 ~72 ~-63 minecraft:end_rod[facing=up]
-$execute positioned $(x) $(y) $(z) run setblock ~5 ~72 ~-62 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~5 ~72 ~-60 ~8 ~72 ~-60 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~5 ~72 ~-59 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~6 ~72 ~-59 ~8 ~72 ~-59 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~5 ~72 ~-58 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~30 ~72 ~-55 minecraft:end_rod[facing=up]
-$execute positioned $(x) $(y) $(z) run setblock ~31 ~72 ~-43 minecraft:end_rod[facing=up]
-$execute positioned $(x) $(y) $(z) run setblock ~-20 ~72 ~19 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~26 ~72 ~25 ~28 ~72 ~26 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~25 ~72 ~26 ~25 ~72 ~28 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~29 ~72 ~26 ~29 ~72 ~28 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~26 ~72 ~27 ~26 ~72 ~29 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~28 ~72 ~27 ~28 ~72 ~29 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~1 ~73 ~-64 ~5 ~74 ~-64 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~2 ~73 ~-63 ~5 ~73 ~-63 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~10 ~73 ~-62 ~11 ~73 ~-62 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~9 ~73 ~-61 ~10 ~73 ~-61 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~11 ~73 ~-61 ~11 ~74 ~-61 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~8 ~73 ~-60 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~9 ~73 ~-60 ~10 ~73 ~-60 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~8 ~73 ~-59 ~9 ~73 ~-59 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-43 ~73 ~-56 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~31 ~73 ~-24 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-28 ~73 ~11 minecraft:end_rod[facing=up]
-$execute positioned $(x) $(y) $(z) run setblock ~27 ~73 ~27 minecraft:blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~6 ~74 ~-64 ~8 ~74 ~-64 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~9 ~74 ~-64 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~12 ~74 ~-64 ~12 ~74 ~-63 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~13 ~74 ~-64 ~14 ~74 ~-64 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~3 ~74 ~-63 ~7 ~74 ~-63 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~11 ~74 ~-63 ~11 ~74 ~-62 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~13 ~74 ~-63 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~12 ~74 ~-62 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~2 ~75 ~-64 ~3 ~75 ~-64 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~4 ~75 ~-64 ~8 ~75 ~-64 minecraft:purple_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~4 ~75 ~-63 ~6 ~75 ~-63 minecraft:purple_stained_glass
 $execute positioned $(x) $(y) $(z) positioned ~-64 ~-22 ~-64 run kill @e[type=item,dx=128,dy=100,dz=128]

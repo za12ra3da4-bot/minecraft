@@ -942,37 +942,65 @@ def pvp2_functions(dp_root):
 
 
 def struct_functions(dp_root, key, mod, label):
-    """떠 있는 구조물 짓기: bg:<key>/build → forceload → 2초 뒤 조각들 (맨 앞 조각은 자리 비우기) → forceload 풀기
+    """떠 있는 구조물 짓기: bg:<key>/build → forceload → 8초 뒤 띠마다 비우고 짓는 조각들 → forceload 풀기 (점수 bg_build 로 끝 알림)
     원점 = storage bg:<key> origin (구조물 가운데 바닥 칸)"""
     F = os.path.join(dp_root, "data", NS, "function", key)
     cmds = mod.commands(greedy_boxes)
     x0, z0, x1, z1 = mod.forceload_range()
-    # 맨 앞 조각: 자리를 먼저 비움 (다시 지을 때 예전 모양이 남지 않게) — fill 한 번에 32×32×32 이하
     N, H, FL, C = mod.N, mod.H, mod.FL, mod.C
-    clear = []
-    for bx in range(0, N, 32):
-        for by in range(0, H, 32):
-            for bz in range(0, N, 32):
-                ex, ey, ez = min(bx + 31, N - 1), min(by + 31, H - 1), min(bz + 31, N - 1)
-                clear.append(f"$execute positioned $(x) $(y) $(z) run fill ~{bx - C} ~{by - FL} ~{bz - C} ~{ex - C} ~{ey - FL} ~{ez - C} minecraft:air")
-    per = 1500
-    parts = [clear] + [cmds[i:i + per] for i in range(0, len(cmds), per)]
-    if hasattr(mod, "display_commands"):          # 블록 디스플레이 (헬기 등) — 블록을 다 놓은 뒤
+    # 렉 줄이기: 한꺼번에 다 지우고 다 올리지 않고, 서쪽 → 동쪽 띠(BAND 칸)마다 "그 띠 비우기 → 그 띠 짓기" 를 조금씩
+    #  · 비우기는 strict (이웃 갱신 없음 → 옆 띠의 사다리 · 횃불이 떨어지지 않음)
+    #  · 블록 상자는 서로 안 겹침 → 상자의 가장 동쪽 칸이 속한 띠에 넣으면 나중 띠 비우기에 지워지지 않음
+    #  · 한 조각 = 블록 BUDGET 개쯤 (비우기는 1/4 로 침) · 명령 최대 MAXC 줄 → STEP 틱마다 한 조각
+    BAND, BUDGET, MAXC, STEP = 8, 20000, 300, 2
+    nb = (N + BAND - 1) // BAND
+    dz = max(1, min(N, 32768 // (BAND * H)))
+    bands = [[] for _ in range(nb)]
+    for c in cmds:
+        t = c.split(" run ", 1)[1].split()
+        if t[0] == "fill":
+            vx = [int(t[1][1:]), int(t[4][1:])]
+            vol = (abs(vx[1] - vx[0]) + 1) * (abs(int(t[5][1:]) - int(t[2][1:])) + 1) * (abs(int(t[6][1:]) - int(t[3][1:])) + 1)
+        else:
+            vx, vol = [int(t[1][1:])], 1
+        b = min(nb - 1, max(0, (max(vx) + C) // BAND))
+        bands[b].append((int(t[2][1:]), c, vol))
+    parts, cur, wt = [], [], 0
+    for b in range(nb):
+        bx, ex = b * BAND, min(N - 1, b * BAND + BAND - 1)
+        todo = []
+        for bz in range(0, N, dz):
+            ez = min(N - 1, bz + dz - 1)
+            todo.append((f"$execute positioned $(x) $(y) $(z) run fill ~{bx - C} ~{-FL} ~{bz - C} ~{ex - C} ~{H - 1 - FL} ~{ez - C} minecraft:air strict",
+                         (ex - bx + 1) * H * (ez - bz + 1) // 4))
+        todo += [(c, vol) for _, c, vol in sorted(bands[b], key=lambda r: r[0])]      # 아래층부터
+        for c, vol in todo:
+            if cur and (wt + vol > BUDGET or len(cur) >= MAXC):
+                parts.append(cur)
+                cur, wt = [], 0
+            cur.append(c)
+            wt += vol
+    if cur:
+        parts.append(cur)
+    if hasattr(mod, "display_commands"):          # 블록 디스플레이 (헬기 등) — 블록을 다 놓은 뒤, 조금씩
         dc = mod.display_commands()
-        parts += [dc[i:i + 600] for i in range(0, len(dc), 600)]
+        parts += [dc[i:i + 150] for i in range(0, len(dc), 150)]
     # 지우거나 덮을 때 떨어지는 아이템 (사다리 · 랜턴 · 다락문 · 꽃 …) 은 조각마다 끝에 그 구역 안에서 지움
     kill_items = (f"$execute positioned $(x) $(y) $(z) positioned ~{-C} ~{-FL - 2} ~{-C} run "
                   f"kill @e[type=item,dx={N},dy={H + 4},dz={N}]")
     for i, part in enumerate(parts):
         w(os.path.join(F, "p", f"{i}_run.mcfunction"), part + [kill_items])
-        nxt = f"schedule function bg:{key}/p/{i + 1} 3t" if i + 1 < len(parts) else f"schedule function bg:{key}/fl_rm 20t"
+        nxt = f"schedule function bg:{key}/p/{i + 1} {STEP}t" if i + 1 < len(parts) else f"schedule function bg:{key}/fl_rm 20t"
         w(os.path.join(F, "p", f"{i}.mcfunction"), [f"function bg:{key}/p/{i}_run with storage bg:{key} origin", nxt])
-    w(os.path.join(F, "build.mcfunction"), [f"function bg:{key}/fl", f"schedule function bg:{key}/p/0 160t"])
+    # 다 지었는지: 점수 bg_build <key> = 0 (짓는 중) → 1 (끝) — 스크립트가 이걸 보고 기다림
+    w(os.path.join(F, "build.mcfunction"), ["scoreboard objectives add bg_build dummy", f"scoreboard players set {key} bg_build 0",
+                                            f"function bg:{key}/fl", f"schedule function bg:{key}/p/0 160t"])
     w(os.path.join(F, "fl_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}"])
-    w(os.path.join(F, "fl_rm_run.mcfunction"), [kill_items, f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
+    w(os.path.join(F, "fl_rm_run.mcfunction"), [kill_items, f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}",
+                                                f"scoreboard players set {key} bg_build 1"])
     for k in ("fl", "fl_rm"):
         w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:{key}/{k}_run with storage bg:{key} origin"])
-    print(f"[{key}] {label} 명령 {len(cmds)}줄 ({len(parts)} 조각, 다 짓는 데 약 {(40 + 3 * len(parts) + 20) / 20:.1f}초)")
+    print(f"[{key}] {label} 명령 {len(cmds)}줄 ({len(parts)} 조각, 다 짓는 데 약 {(160 + STEP * len(parts) + 20) / 20:.1f}초)")
     return len(parts)
 
 

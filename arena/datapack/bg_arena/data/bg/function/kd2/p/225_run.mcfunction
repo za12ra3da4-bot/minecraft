@@ -1,0 +1,19 @@
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-109 ~105 ~48 ~-101 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-100 ~102 ~21 ~-100 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~105 ~1 ~-100 ~105 ~51 ~-88 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-99 ~104 ~62 ~-99 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-98 ~104 ~62 ~-88 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-85 ~102 ~56 ~-85 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~104 ~1 ~-85 ~106 ~56 ~-85 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-84 ~102 ~56 ~-81 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~106 ~1 ~-84 ~106 ~56 ~-83 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~101 ~1 ~-80 ~102 ~56 ~-80 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~103 ~1 ~-78 ~103 ~56 ~-72 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~104 ~1 ~-77 ~105 ~56 ~-72 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~106 ~1 ~-76 ~106 ~56 ~-72 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-74 ~102 ~56 ~-72 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-70 ~108 ~55 ~-70 minecraft:cyan_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-69 ~108 ~55 ~-63 minecraft:cyan_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-61 ~109 ~42 ~-61 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-60 ~109 ~42 ~-49 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

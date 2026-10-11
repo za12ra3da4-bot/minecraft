@@ -1,0 +1,2 @@
+function bg:kd2/p/187_run with storage bg:kd2 origin
+schedule function bg:kd2/p/188 2t

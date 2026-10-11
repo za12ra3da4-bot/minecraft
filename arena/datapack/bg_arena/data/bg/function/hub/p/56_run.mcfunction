@@ -1,0 +1,301 @@
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-16 ~8 ~31 ~67 ~55 minecraft:air strict
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-16 ~56 ~31 ~67 ~87 minecraft:air strict
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-11 ~-8 ~24 ~-9 ~-4 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-10 ~-16 ~24 ~-10 ~-16 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~20 ~-10 ~-15 ~24 ~-10 ~-12 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-10 ~-15 ~26 ~-10 ~-15 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-10 ~-14 ~25 ~-10 ~0 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-10 ~-14 ~27 ~-10 ~-14 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-10 ~-13 ~27 ~-9 ~-2 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~-10 ~-13 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-10 ~-12 ~28 ~-9 ~-2 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~29 ~-10 ~-12 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-10 ~-11 ~24 ~-8 ~-10 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-10 ~-11 ~29 ~-8 ~-3 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-10 ~-9 ~24 ~-8 ~-9 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-10 ~-8 ~30 ~-8 ~-4 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-10 ~-5 ~31 ~-8 ~-5 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-10 ~-4 ~31 ~-10 ~0 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-10 ~-3 ~24 ~-10 ~0 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-10 ~-3 ~30 ~-10 ~1 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-10 ~-2 ~29 ~-10 ~3 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-10 ~-1 ~26 ~-9 ~-1 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-10 ~-1 ~28 ~-10 ~4 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-10 ~0 ~26 ~-10 ~9 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-10 ~1 ~25 ~-10 ~8 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-10 ~5 ~27 ~-10 ~10 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-10 ~9 ~25 ~-8 ~14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-10 ~10 ~26 ~-7 ~13 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-10 ~15 ~24 ~-8 ~17 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~-27 ~24 ~-9 ~-25 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-9 ~-26 ~25 ~-9 ~-24 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-9 ~-25 ~26 ~-9 ~-24 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-9 ~-24 ~24 ~-6 ~-18 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~27 ~-9 ~-24 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-9 ~-23 ~28 ~-9 ~-18 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-9 ~-20 ~29 ~-9 ~-17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~-17 ~28 ~-9 ~-14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~30 ~-9 ~-17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-9 ~-16 ~30 ~-7 ~-12 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-9 ~-15 ~31 ~-7 ~-6 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~-13 ~25 ~-8 ~-12 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-9 ~-13 ~28 ~-7 ~-13 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-9 ~-11 ~25 ~-9 ~-1 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-9 ~-11 ~30 ~-7 ~-9 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-9 ~-4 ~31 ~-8 ~-3 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~-3 ~24 ~-9 ~-1 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-9 ~-3 ~30 ~-9 ~-2 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~29 ~-9 ~-2 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-9 ~-2 ~31 ~-9 ~7 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-9 ~-1 ~28 ~-9 ~-1 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-9 ~-1 ~30 ~-9 ~6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~0 ~28 ~-9 ~5 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~6 ~24 ~-6 ~6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-9 ~6 ~27 ~-9 ~8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~-9 ~6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-9 ~7 ~24 ~-9 ~8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-9 ~7 ~29 ~-8 ~20 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~30 ~-9 ~7 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-9 ~8 ~31 ~-7 ~14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-9 ~9 ~27 ~-7 ~9 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-9 ~10 ~27 ~-9 ~22 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-9 ~14 ~26 ~-9 ~22 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-9 ~15 ~25 ~-9 ~22 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-9 ~15 ~30 ~-8 ~18 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~18 ~24 ~-9 ~22 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-9 ~21 ~28 ~-9 ~22 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~23 ~27 ~-5 ~23 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~24 ~26 ~-5 ~24 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~25 ~25 ~-5 ~26 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-9 ~27 ~24 ~-6 ~27 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~-37 ~26 ~-8 ~-30 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-8 ~-36 ~28 ~-8 ~-27 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-8 ~-35 ~29 ~-8 ~-26 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-8 ~-34 ~30 ~-8 ~-26 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-8 ~-32 ~31 ~-8 ~-26 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~-29 ~24 ~-5 ~-25 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~-29 ~26 ~-8 ~-29 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~-28 ~25 ~-6 ~-17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~26 ~-8 ~-28 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-8 ~-27 ~26 ~-5 ~-18 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-8 ~-26 ~28 ~-5 ~-19 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-8 ~-18 ~28 ~-8 ~-14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~-17 ~24 ~-6 ~-16 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-8 ~-17 ~26 ~-8 ~-5 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~-16 ~25 ~-8 ~-14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~-15 ~24 ~-8 ~-14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-8 ~-13 ~27 ~-8 ~-4 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-8 ~-12 ~28 ~-8 ~-3 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~-11 ~25 ~-8 ~-6 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~-8 ~24 ~-8 ~-6 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~-5 ~25 ~-6 ~5 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-8 ~-4 ~26 ~-5 ~5 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-8 ~-3 ~27 ~-5 ~5 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~30 ~-8 ~-3 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-8 ~4 ~29 ~-5 ~4 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-8 ~4 ~31 ~-8 ~7 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-8 ~5 ~29 ~-8 ~6 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~6 ~25 ~-6 ~6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-8 ~6 ~27 ~-8 ~8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-8 ~7 ~24 ~-6 ~7 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~7 ~25 ~-8 ~8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~24 ~-8 ~8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-8 ~10 ~27 ~-8 ~19 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-8 ~14 ~26 ~-8 ~19 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~15 ~25 ~-8 ~18 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-8 ~15 ~31 ~-8 ~21 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~18 ~24 ~-5 ~22 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~19 ~25 ~-5 ~22 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-8 ~19 ~30 ~-8 ~21 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-8 ~20 ~27 ~-4 ~22 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-8 ~21 ~29 ~-5 ~27 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-8 ~24 ~27 ~-5 ~28 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-8 ~25 ~26 ~-6 ~29 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-8 ~25 ~31 ~-8 ~27 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~27 ~25 ~-6 ~29 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~28 ~24 ~-6 ~30 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-8 ~28 ~30 ~-8 ~29 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-8 ~29 ~27 ~-8 ~32 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~30 ~26 ~-8 ~33 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-8 ~30 ~29 ~-7 ~30 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-8 ~31 ~24 ~-8 ~35 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-8 ~31 ~28 ~-7 ~31 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-8 ~34 ~25 ~-7 ~34 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-7 ~-43 ~24 ~-6 ~-31 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~-42 ~26 ~-6 ~-39 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~-41 ~28 ~-5 ~-41 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~-40 ~27 ~-5 ~-40 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~-40 ~29 ~-7 ~-32 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~-39 ~27 ~-7 ~-33 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~-39 ~31 ~-7 ~-30 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~-38 ~25 ~-6 ~-38 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~-38 ~26 ~-7 ~-34 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~-37 ~25 ~-7 ~-35 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~-34 ~25 ~-2 ~-29 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~-33 ~26 ~-4 ~-28 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~-32 ~27 ~-4 ~-27 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~-31 ~28 ~-4 ~-27 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~29 ~-7 ~-31 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-7 ~-30 ~24 ~-2 ~-30 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-7 ~-30 ~29 ~-5 ~-19 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~-29 ~30 ~-5 ~-19 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~31 ~-7 ~-29 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-7 ~-20 ~31 ~-4 ~-20 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-7 ~-19 ~31 ~-7 ~-17 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~-18 ~28 ~-5 ~-18 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-7 ~-18 ~30 ~-7 ~-17 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~-17 ~27 ~-6 ~-17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~-17 ~28 ~-7 ~-14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~-16 ~26 ~-6 ~-16 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~-16 ~27 ~-7 ~-9 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-7 ~-15 ~25 ~-6 ~-14 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~-15 ~26 ~-7 ~-11 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-7 ~-13 ~24 ~-6 ~-6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~-13 ~25 ~-7 ~-12 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~-12 ~28 ~-7 ~-9 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~-11 ~25 ~-2 ~-6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-7 ~-11 ~29 ~-7 ~-8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~-10 ~26 ~-4 ~-5 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~-8 ~28 ~-4 ~-4 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~-8 ~30 ~-7 ~-7 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-7 ~-7 ~29 ~-5 ~3 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~-6 ~30 ~-5 ~4 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-7 ~-5 ~31 ~-4 ~3 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~-3 ~28 ~-5 ~3 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-7 ~4 ~31 ~-7 ~7 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~5 ~29 ~-5 ~5 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~5 ~30 ~-7 ~7 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~6 ~27 ~-6 ~6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~6 ~29 ~-7 ~15 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~7 ~26 ~-6 ~7 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~7 ~27 ~-7 ~8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-7 ~8 ~25 ~-6 ~9 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~26 ~-7 ~8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-7 ~10 ~24 ~-6 ~17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~10 ~25 ~-7 ~11 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~10 ~27 ~-7 ~14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~12 ~25 ~-4 ~18 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~14 ~26 ~-4 ~19 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~15 ~27 ~-4 ~19 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~15 ~31 ~-7 ~16 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~16 ~28 ~-4 ~20 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~29 ~-7 ~16 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-7 ~17 ~30 ~-4 ~20 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~31 ~-7 ~17 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-7 ~18 ~31 ~-3 ~21 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~21 ~30 ~-4 ~21 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~27 ~30 ~-5 ~27 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~28 ~29 ~-5 ~28 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-7 ~28 ~30 ~-7 ~35 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~29 ~28 ~-5 ~29 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~29 ~-7 ~29 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~30 ~27 ~-6 ~30 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-7 ~31 ~26 ~-6 ~31 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~31 ~27 ~-7 ~37 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-7 ~31 ~29 ~-7 ~37 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-7 ~32 ~25 ~-6 ~32 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~32 ~26 ~-7 ~36 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-7 ~32 ~28 ~-7 ~38 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~22 ~-7 ~33 ~24 ~-6 ~42 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~25 ~-7 ~33 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-7 ~34 ~31 ~-6 ~34 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~25 ~-7 ~35 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-7 ~36 ~25 ~-1 ~41 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-7 ~37 ~26 ~-1 ~40 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-7 ~38 ~27 ~-1 ~39 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-6 ~-47 ~24 ~-6 ~-44 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-6 ~-46 ~28 ~-5 ~-43 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-6 ~-45 ~31 ~-5 ~-42 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-6 ~-42 ~28 ~-5 ~-42 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-6 ~-41 ~30 ~-5 ~-41 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-6 ~-41 ~31 ~-6 ~-35 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-6 ~-40 ~29 ~-5 ~-32 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~-40 ~30 ~-6 ~-36 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-6 ~-39 ~27 ~-5 ~-33 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-6 ~-38 ~26 ~-5 ~-34 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-6 ~-37 ~25 ~-6 ~-35 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~-35 ~30 ~-3 ~-30 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-6 ~-34 ~31 ~-3 ~-29 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-6 ~-31 ~29 ~-2 ~-31 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-6 ~-18 ~31 ~-5 ~-18 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-6 ~-17 ~30 ~-5 ~-17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~31 ~-6 ~-17 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-6 ~-16 ~29 ~-5 ~-9 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~-16 ~30 ~-6 ~-13 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-6 ~-15 ~26 ~-6 ~-11 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-6 ~-15 ~31 ~-6 ~-12 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-6 ~-13 ~25 ~-5 ~-12 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~-12 ~30 ~-3 ~-7 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-6 ~-11 ~31 ~-3 ~-6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-6 ~-8 ~29 ~-2 ~-8 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~5 ~31 ~-5 ~5 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-6 ~6 ~30 ~-5 ~6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-6 ~6 ~31 ~-6 ~12 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-6 ~7 ~29 ~-5 ~14 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~7 ~30 ~-6 ~10 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-6 ~8 ~26 ~-6 ~13 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-6 ~10 ~25 ~-5 ~11 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~11 ~30 ~-3 ~16 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-6 ~13 ~31 ~-3 ~17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-6 ~15 ~29 ~-2 ~15 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-6 ~16 ~29 ~-3 ~16 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~28 ~31 ~-5 ~28 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-6 ~29 ~30 ~-5 ~29 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-6 ~29 ~31 ~-6 ~33 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-6 ~30 ~29 ~-5 ~43 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~30 ~30 ~-6 ~34 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-6 ~31 ~27 ~-5 ~37 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-6 ~32 ~26 ~-5 ~36 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-6 ~33 ~25 ~-5 ~35 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-6 ~35 ~30 ~-3 ~42 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~31 ~-6 ~35 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-6 ~36 ~31 ~-3 ~42 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-6 ~40 ~27 ~-4 ~44 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-6 ~41 ~26 ~-4 ~45 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-6 ~42 ~25 ~-5 ~46 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-6 ~43 ~24 ~-5 ~47 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~28 ~-6 ~44 ~28 ~-4 ~44 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~-56 ~25 ~-5 ~-47 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-5 ~-55 ~26 ~-5 ~-47 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~27 ~-5 ~-54 ~28 ~-4 ~-47 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~29 ~-5 ~-53 ~29 ~-4 ~-46 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-5 ~-52 ~30 ~-4 ~-46 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-5 ~-51 ~31 ~-4 ~-46 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~-46 ~24 ~-5 ~-44 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~-43 ~24 ~-3 ~-36 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-5 ~-42 ~25 ~-3 ~-37 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~26 ~-5 ~-42 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-5 ~-41 ~26 ~-2 ~-39 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-5 ~-41 ~31 ~-4 ~-35 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-5 ~-40 ~30 ~-5 ~-36 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-5 ~-36 ~25 ~-5 ~-35 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~-35 ~24 ~-5 ~-31 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-5 ~-28 ~25 ~-5 ~-20 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~23 ~-5 ~-24 ~24 ~-5 ~-22 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~24 ~-5 ~-21 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~-20 ~24 ~-3 ~-13 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-5 ~-19 ~25 ~-3 ~-14 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-5 ~-17 ~26 ~-2 ~-15 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~27 ~-5 ~-17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-5 ~-17 ~31 ~-4 ~-12 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-5 ~-16 ~30 ~-4 ~-13 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-5 ~-14 ~26 ~-5 ~-11 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~-12 ~24 ~-5 ~3 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-5 ~-5 ~25 ~-5 ~4 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~4 ~24 ~-3 ~10 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-5 ~5 ~25 ~-3 ~9 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-5 ~6 ~26 ~-2 ~8 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~27 ~-5 ~6 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-5 ~6 ~31 ~-4 ~12 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-5 ~7 ~30 ~-5 ~10 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-5 ~9 ~26 ~-5 ~13 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~11 ~24 ~-5 ~17 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-5 ~25 ~26 ~-5 ~28 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~24 ~-5 ~27 ~24 ~-3 ~34 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run setblock ~25 ~-5 ~27 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~25 ~-5 ~28 ~25 ~-3 ~32 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~26 ~-5 ~29 ~26 ~-2 ~31 minecraft:dark_prismarine
+$execute positioned $(x) $(y) $(z) run fill ~31 ~-5 ~29 ~31 ~-4 ~35 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~27 ~-5 ~30 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~30 ~-5 ~30 ~30 ~-5 ~34 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) positioned ~-88 ~-18 ~-88 run kill @e[type=item,dx=176,dy=88,dz=176]

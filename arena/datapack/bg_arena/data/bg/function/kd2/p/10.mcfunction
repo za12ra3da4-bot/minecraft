@@ -1,2 +1,2 @@
 function bg:kd2/p/10_run with storage bg:kd2 origin
-schedule function bg:kd2/p/11 3t
+schedule function bg:kd2/p/11 2t

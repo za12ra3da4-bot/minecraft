@@ -4,7 +4,7 @@
 #     신화쟁탈전 (대기실) · PvP 온리소드 (전용 네온 경기장) · 경찰과 도둑 (밤 대도시) · 준비 중 1
 #   허브에 있는 동안은 그 사람 화면만 밤 · 맑음 (월드 시간은 그대로 → 다른 맵은 아침)
 #   /허브 (/hub, /스폰) : 허브로 돌아가기
-#   관리자: /허브 건설 [여기] (처음 한 번 · 약 6초) · /허브 전체 (모두 허브로) · /허브 글자 · /허브 위치
+#   관리자: /허브 건설 [여기] (처음 한 번 · 약 17초) · /허브 전체 (모두 허브로) · /허브 글자 · /허브 위치
 #           /컨텐츠 잠금|열기 <신화쟁탈전|온리소드|경도|준비2> (잠그면 관리자 말고는 못 들어감)
 #           /신화쟁탈전 [@a|플레이어] : 신화쟁탈전 대기실로 (@a = 접속한 모두, 게임 중인 사람 · 관전자 모드 제외)
 #   허브 모양: arena/tools/hubgen.py (데이터팩 bg:hub/build · 표지 좌표 a09-gen-hub.sk)
@@ -230,28 +230,40 @@ function bgHubBuild(p: player, here: boolean = false):
     # 섬 바닥(-16) ~ 안테나(+67) 가 월드 높이 안에 들어가게
     set {bg::hub::y} to max(-48, min(250, {bg::hub::y}))
     bgCmd("data merge storage bg:hub {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z}%}}")
-    send "&b[허브] &f신화 아케이드 허브를 짓는 중... &7(약 6초 · 큰 건물이라 잠깐 끊길 수 있음) &8위치 %{bg::hub::x}% %{bg::hub::y}% %{bg::hub::z}%" to {_p}
+    send "&b[허브] &f신화 아케이드 허브를 짓는 중... &7(약 17초 · 렉 안 걸리게 조금씩) &8위치 %{bg::hub::x}% %{bg::hub::y}% %{bg::hub::z}%" to {_p}
     bgCmd("function bg:hub/build")
-    wait 250 ticks
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("hub") is true:
+            exit loop
     set {bg::hub::built} to true
     teleport {_p} to bgHubMk("spawn")
     wait 40 ticks
     bgHubTexts()
     send "&b[허브] &a허브 완성! &f이제 접속하는 사람은 모두 여기로 옵니다." to {_p}
     # 이어서 온리소드 경기장 (허브 동쪽) · 경도 도시 (허브 북쪽)
-    send "&b[허브] &f온리소드 경기장 · 경도 도시 · 포털 파쿠르도 짓는 중... &7(약 35초)" to {_p}
+    send "&b[허브] &f온리소드 경기장 · 경도 도시 · 포털 파쿠르도 짓는 중... &7(약 1분 · 조금씩)" to {_p}
     bgCmd("data merge storage bg:os {origin:{x:%{bg::hub::x} + 230%,y:%{bg::hub::y}%,z:%{bg::hub::z}%}}")
     bgCmd("function bg:os/build")
-    wait 100 ticks
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("os") is true:
+            exit loop
     set {bg::os::built} to true
     bgKdBuildRaw()
-    wait 380 ticks
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("kd%{bg::kd::layout}%") is true:
+            exit loop
     set {bg::kd::built} to true
     set {-bg::kd::state} to "wait"
     # 포털 파쿠르 (허브 남쪽 하늘)
     bgCmd("data merge storage bg:pk {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y} + 10%,z:%{bg::hub::z} + 200%}}")
     bgCmd("function bg:pk/build")
-    wait 200 ticks
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("pk") is true:
+            exit loop
     set {bg::pk::built} to true
     send "&b[허브] &a온리소드 · 경도 · 포털 파쿠르도 완성! &7(경도 안내 글자는 처음 들어갈 때 /경도 글자)" to {_p}
     send "&b[허브] &7오락기 이름표가 안 보이면 &e/허브 글자 &7· 위치 확인 &e/허브 위치" to {_p}

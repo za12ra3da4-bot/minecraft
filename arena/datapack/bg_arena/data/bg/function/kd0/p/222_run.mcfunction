@@ -1,0 +1,22 @@
+$execute positioned $(x) $(y) $(z) run fill ~102 ~1 ~-100 ~102 ~24 ~-98 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~108 ~1 ~-99 ~108 ~24 ~-98 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~107 ~1 ~-98 ~107 ~24 ~-98 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-96 ~104 ~21 ~-96 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-95 ~104 ~21 ~-84 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-31 ~109 ~53 ~-31 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-30 ~109 ~53 ~-24 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-22 ~105 ~55 ~-21 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~102 ~1 ~-20 ~105 ~55 ~-12 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~106 ~1 ~-17 ~106 ~55 ~-12 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~107 ~1 ~-16 ~107 ~55 ~-12 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-9 ~109 ~54 ~-9 minecraft:cyan_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~-8 ~109 ~54 ~-3 minecraft:cyan_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~0 ~105 ~28 ~0 minecraft:brown_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~1 ~105 ~28 ~10 minecraft:brown_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~12 ~109 ~25 ~12 minecraft:cyan_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~13 ~109 ~25 ~20 minecraft:cyan_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~37 ~104 ~48 ~37 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~100 ~1 ~38 ~104 ~48 ~44 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~105 ~1 ~43 ~107 ~48 ~44 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~57 ~109 ~38 ~57 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

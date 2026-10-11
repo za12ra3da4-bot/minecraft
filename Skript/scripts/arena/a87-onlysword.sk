@@ -142,9 +142,12 @@ function bgOsBuild(p: player):
         send "&c[온리소드] &f허브 위치가 먼저 필요합니다. &e/허브 건설" to {_p}
         stop
     bgCmd("data merge storage bg:os {origin:{x:%{bg::hub::x} + 230%,y:%{bg::hub::y}%,z:%{bg::hub::z}%}}")
-    send "&c[온리소드] &f경기장을 짓는 중... &7(약 4초)" to {_p}
+    send "&c[온리소드] &f경기장을 짓는 중... &7(약 10초)" to {_p}
     bgCmd("function bg:os/build")
-    wait 90 ticks
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("os") is true:
+            exit loop
     set {bg::os::built} to true
     send "&c[온리소드] &a경기장 완성!" to {_p}
 
