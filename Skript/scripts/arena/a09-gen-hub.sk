@@ -210,6 +210,15 @@ on load:
     set {-bg::kdmk::valve_2::x} to 0.5
     set {-bg::kdmk::valve_2::y} to 1
     set {-bg::kdmk::valve_2::z} to -61.5
+    set {-bg::kdmk::valvepos_0::x} to -63.5
+    set {-bg::kdmk::valvepos_0::y} to 1
+    set {-bg::kdmk::valvepos_0::z} to -39.5
+    set {-bg::kdmk::valvepos_1::x} to 56.5
+    set {-bg::kdmk::valvepos_1::y} to 1
+    set {-bg::kdmk::valvepos_1::z} to 40.5
+    set {-bg::kdmk::valvepos_2::x} to 0.5
+    set {-bg::kdmk::valvepos_2::y} to 1
+    set {-bg::kdmk::valvepos_2::z} to -63.5
     set {-bg::kdmk::wait::x} to 0.5
     set {-bg::kdmk::wait::y} to 63
     set {-bg::kdmk::wait::z} to 3.5

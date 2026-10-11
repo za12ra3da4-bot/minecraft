@@ -1304,6 +1304,7 @@ def build(variant=None):
         DISPS.append(("valve_lamp", cx_ + lx, cy_ + ly, cz_ + lz, yaw, [f'"kd_vl{k}"']))
         ox, oz = OUT[toward]
         mark(f"valve_{k}", vx + ox * 2, 1, vz + oz * 2)
+        mark(f"valvepos_{k}", vx, 1, vz)               # 밸브 본체 (바로 옆에 서면 돌림)
 
     # ── 문 정하기: 문 앞 (문 폭 + 양옆 1칸 · 바깥 6칸) 에 다른 건물 · 주차장 · 공사장이 있으면 트인 면으로 옮기고 뚫음
     blocks_ = [tuple(e[0]) for e in BLDG] + OBST

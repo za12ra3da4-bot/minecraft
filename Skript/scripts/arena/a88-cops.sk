@@ -11,7 +11,7 @@
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 도둑 3명 중 1명꼴 (올림) 이상 탈출해야 도둑 승리
 #         사람이 많을수록 털이 장소 다시 털 수 있는 시간이 짧아짐 (40초 → 최소 20초)
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
-#   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉으로 3대 때리면 체포 (대마다 5초 안 · 경찰마다 타격 쿨타임 1.5초) · 무전기 · 레이더
+#   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉으로 3대 때리면 체포 (마크처럼 실제로 맞고 밀려남 · 대마다 8초 안) · 무전기 · 레이더
 #         실적: 내가 잡은 도둑이 감옥에 있는 동안 5초마다 +1 → 직급 (도둑 수 × 2 마다 한 단계)
 #         경장 신속 I · 경사 추격 진주 2 + 수갑 3 · 경위 도둑 추적기 + 신속 II
 #   탈옥하면 신속 IV 에서 4초에 걸쳐 점점 느려지는 가속
@@ -300,6 +300,10 @@ function bgKdEnd(win: text, why: text):
     if bgKdState() is not "play":
         stop
     set {-bg::kd::state} to "end"
+    delete {-bg::kd::loot::*}
+    delete {-bg::kd::srch::*}
+    delete {-bg::kd::srchloc::*}
+    delete {-bg::kd::srchp::*}
     delete {-bg::kd::sewer}
     bgKdValveReset()
     bgKdCover(false)
@@ -523,22 +527,21 @@ on damage of player:
             stop
     set {_hold} to {-bg::kd::hold} ? 0
     {_hold} <= 0
-    # 3대 맞아야 체포 (대마다 5초 안에 이어서) · 경찰은 한 번 때리면 1.5초 쿨타임 (경찰마다 따로) · 밀치기 없음
-    set {_cu} to "%uuid of {_c}%"
-    if {-bg::kd::hitcd::%{_cu}%} is set:
-        if difference between {-bg::kd::hitcd::%{_cu}%} and now < 1.5 seconds:
-            send action bar "&7경찰봉 재충전 중…" to {_c}
-            stop
-    set {-bg::kd::hitcd::%{_cu}%} to now
+    # 마크 그대로 때리기: 실제로 맞고 (하트 2칸) 밀려남 · 연타는 마크의 무적 시간이 막음 · 3대째 체포
+    #  (대마다 8초 안에 이어서 — 8초 넘으면 처음부터 · 체포되면 체력 회복)
+    uncancel event
+    set damage to 4
     set {_u} to "%uuid of {_t}%"
     if {-bg::kd::hit::%{_u}%} is set:
-        if difference between {-bg::kd::hit::%{_u}%} and now > 5 seconds:
+        if difference between {-bg::kd::hit::%{_u}%} and now > 8 seconds:
             delete {-bg::kd::hits::%{_u}%}
     add 1 to {-bg::kd::hits::%{_u}%}
     set {-bg::kd::hit::%{_u}%} to now
     if {-bg::kd::hits::%{_u}%} >= 3:
         delete {-bg::kd::hit::%{_u}%}
         delete {-bg::kd::hits::%{_u}%}
+        cancel event
+        heal {_t}
         bgKdArrest({_t}, {_c})
         stop
     set {_n} to {-bg::kd::hits::%{_u}%}
@@ -547,7 +550,7 @@ on damage of player:
         send title " " with subtitle "&c⚠ 한 대 맞음! &f(1/3) &7— 3대 맞으면 체포" to {_t} for 30 ticks with fade in 0 ticks and fade out 6 ticks
     else:
         send title " " with subtitle "&4⚠ 두 대 맞음! &f(2/3) &c— 한 대 더 맞으면 체포!" to {_t} for 30 ticks with fade in 0 ticks and fade out 6 ticks
-    send action bar "&9%{_n}%대! &f(%{_n}%/3) &75초 안에 이어서 · 다음 타격까지 1.5초" to {_c}
+    send action bar "&9%{_n}%대! &f(%{_n}%/3) &78초 안에 이어서 때리면 체포" to {_c}
     play sound "entity.player.hurt" with volume 1 and pitch 1.4 to {_t}
     play sound "block.anvil.place" with volume 0.4 and pitch (1.6 + {_n} * 0.2) to {_c}
 
@@ -632,15 +635,23 @@ every 5 ticks:
                 if bgDist2(location of {_p}, bgKdMk("sewer")) < 2.2:
                     if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("sewer"))) < 3:
                         bgKdEscape({_p})
-            # 밸브 돌리기 (4초 서 있기) — 3개 다 돌리면 하수구 맨홀이 40초 열림
-            set {_vat} to -1
-            loop 3 times:
-                set {_vi} to loop-number - 1
-                if {-bg::kd::valve::%{_vi}%} is not set:
-                    if bgDist2(location of {_p}, bgKdMk("valve_%{_vi}%")) < 1.8:
-                        if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("valve_%{_vi}%"))) < 2:
-                            set {_vat} to {_vi}
-            if {_vat} >= 0:
+        # 밸브 돌리기 (밸브 바로 옆 · 4초) — 3개 다 돌리면 하수구 맨홀이 40초 열림 (돈가방 목표를 채운 뒤부터)
+        set {_vat} to -1
+        loop 3 times:
+            set {_vi} to loop-number - 1
+            set {_vl} to bgKdMk("valvepos_%{_vi}%")
+            if bgDist2(location of {_p}, {_vl}) < 2.4:
+                if abs((y-coordinate of {_p}) - (y-coordinate of {_vl})) < 2:
+                    set {_vat} to {_vi}
+        if {_vat} >= 0:
+            if {-bg::kd::open} is not true:
+                send action bar "&7🔧 밸브는 돈가방 목표 &6%{-bg::kd::bags} ? 0%/%{-bg::kd::goal} ? 0% &7를 채우면 돌릴 수 있어요" to {_p}
+                delete {-bg::kd::vp::%{_u}%}
+            else if {-bg::kd::sewer} is set:
+                send action bar "&b하수구가 이미 열려 있어요 — 도로 가운데 맨홀로!" to {_p}
+            else if {-bg::kd::valve::%{_vat}%} is set:
+                send action bar "&a밸브 %{_vat} + 1%은(는) 이미 돌렸어요 &7(%bgKdValves()%/3)" to {_p}
+            else:
                 add 5 to {-bg::kd::vp::%{_u}%}
                 set {_vp} to {-bg::kd::vp::%{_u}%}
                 send action bar "&b밸브 %{_vat} + 1% 돌리는 중… &f%floor({_vp} / 80 * 100)%%%" to {_p}
@@ -649,8 +660,8 @@ every 5 ticks:
                 if {_vp} >= 80:
                     delete {-bg::kd::vp::%{_u}%}
                     bgKdValve({_vat}, {_p})
-            else:
-                delete {-bg::kd::vp::%{_u}%}
+        else:
+            delete {-bg::kd::vp::%{_u}%}
 
 # 위쪽 보스바: 남은 시간 · 돈가방 · 남은 도둑 (경도에 있는 사람만 = 태그 bgkd)
 function bgKdBar():
@@ -1059,7 +1070,8 @@ every 2 ticks:
     bgCmd("execute as @e[type=block_display,tag=kd_trot] run data merge entity @s {start_interpolation:0,interpolation_duration:2,transformation:{left_rotation:{angle:%bgN({-bg::kd::tra})%f,axis:[1f,0f,0f]}}}")
 
 # ─────────────────────────────────────────────────────────── 파밍: 건물 안 통(배럴) 뒤지기 (도둑 · 판 중)
-#  통마다 45초에 한 번 · 해킹 칩(털이에 필요 · 1개 씀) 45% · 연막탄 · 신속 · 점프 · 꽝
+#  우클릭하고 통 옆에서 3초 뒤지면 나옴 (멀어지면 취소) · 통마다 45초에 한 번 (판 끝나면 초기화)
+#  해킹 칩(털이에 필요 · 1개 씀) 45% · 연막탄 · 신속 · 점프 · 꽝
 on right click on barrel:
     bgKdOn(player) is true
     cancel event
@@ -1071,25 +1083,76 @@ on right click on barrel:
         if difference between {-bg::kd::loot::%{_k}%} and now < 45 seconds:
             send action bar "&7이미 뒤진 통이에요 — 다른 건물로!" to player
             stop
-    set {-bg::kd::loot::%{_k}%} to now
+    set {_u} to "%uuid of player%"
+    if {-bg::kd::srch::%{_u}%} is {_k}:
+        stop
+    # 뒤지기 시작 — 통 옆(2.5칸 안)에 3초 있어야 나옴 · 멀어지면 취소
+    set {-bg::kd::srch::%{_u}%} to {_k}
+    set {-bg::kd::srchloc::%{_u}%} to location of event-block
+    set {-bg::kd::srchp::%{_u}%} to 0
     play sound "block.barrel.open" to player
-    bgParticle(location of event-block, "happy_villager", 0.4, 0.4, 0.4, 0, 8)
+
+every 5 ticks:
+    loop all players:
+        set {_p} to loop-player
+        set {_u} to "%uuid of {_p}%"
+        {-bg::kd::srch::%{_u}%} is set
+        set {_ok} to true
+        if bgKdOn({_p}) is false:
+            set {_ok} to false
+        else if bgKdState() is not "play":
+            set {_ok} to false
+        else if bgKdJailed({_p}) is true:
+            set {_ok} to false
+        else if distance between {_p} and {-bg::kd::srchloc::%{_u}%} > 2.8:
+            set {_ok} to false
+            send action bar "&7통에서 멀어져서 뒤지기를 그만뒀어요" to {_p}
+        if {_ok} is false:
+            delete {-bg::kd::srch::%{_u}%}
+            delete {-bg::kd::srchloc::%{_u}%}
+            delete {-bg::kd::srchp::%{_u}%}
+        else:
+            add 5 to {-bg::kd::srchp::%{_u}%}
+            set {_pr} to {-bg::kd::srchp::%{_u}%}
+            set {_bar} to ""
+            set {_n} to 0
+            while {_n} < 12:
+                add 1 to {_n}
+                if {_n} * 5 <= {_pr}:
+                    set {_bar} to "%{_bar}%&e■"
+                else:
+                    set {_bar} to "%{_bar}%&8■"
+            send action bar "&6통 뒤지는 중 %{_bar}%" to {_p}
+            if mod({_pr}, 15) is 0:
+                play sound "block.barrel.close" with volume 0.4 and pitch (0.8 + {_pr} / 100) to {_p}
+            if {_pr} >= 60:
+                set {_bk} to {-bg::kd::srch::%{_u}%}
+                set {-bg::kd::loot::%{_bk}%} to now
+                set {_l} to {-bg::kd::srchloc::%{_u}%}
+                delete {-bg::kd::srch::%{_u}%}
+                delete {-bg::kd::srchloc::%{_u}%}
+                delete {-bg::kd::srchp::%{_u}%}
+                bgKdLoot({_p}, {_l})
+
+# 통에서 나오는 것 (해킹 칩 45% · 연막탄 · 신속 · 점프 · 꽝)
+function bgKdLoot(p: player, l: location):
+    bgParticle({_l}, "happy_villager", 0.4, 0.4, 0.4, 0, 8)
     set {_r} to random integer between 1 and 100
     if {_r} <= 45:
-        bgCmd("give %name of player% tripwire_hook[item_name={text:""해킹 칩"",color:""aqua"",bold:true},lore=[{text:""털이 장소에서 금고를 열 때 1개 씀"",color:""gray"",italic:false}]] 1")
-        send action bar "&b✦ 해킹 칩 발견! &7— 털이 장소를 찾아가세요" to player
-        play sound "entity.experience_orb.pickup" with volume 1 and pitch 1.4 to player
+        bgCmd("give %name of {_p}% tripwire_hook[item_name={text:""해킹 칩"",color:""aqua"",bold:true},lore=[{text:""털이 장소에서 금고를 열 때 1개 씀"",color:""gray"",italic:false}]] 1")
+        send action bar "&b✦ 해킹 칩 발견! &7— 털이 장소를 찾아가세요" to {_p}
+        play sound "entity.experience_orb.pickup" with volume 1 and pitch 1.4 to {_p}
     else if {_r} <= 60:
-        bgCmd("give %name of player% snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true}] 1")
-        send action bar "&6연막탄 +1" to player
+        bgCmd("give %name of {_p}% snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true}] 1")
+        send action bar "&6연막탄 +1" to {_p}
     else if {_r} <= 72:
-        bgCmd("effect give %name of player% speed 6 1 true")
-        send action bar "&b6초 신속 II" to player
+        bgCmd("effect give %name of {_p}% speed 6 1 true")
+        send action bar "&b6초 신속 II" to {_p}
     else if {_r} <= 82:
-        bgCmd("effect give %name of player% jump_boost 8 1 true")
-        send action bar "&a8초 점프 강화" to player
+        bgCmd("effect give %name of {_p}% jump_boost 8 1 true")
+        send action bar "&a8초 점프 강화" to {_p}
     else:
-        send action bar "&8꽝… 빈 통이에요" to player
+        send action bar "&8꽝… 빈 통이에요" to {_p}
 
 # ─────────────────────────────────────────────────────────── 경찰 실적 · 직급
 #  내가 잡은 도둑이 감옥에 있는 동안 5초마다 실적 +1 (도둑 한 명당)
