@@ -530,12 +530,14 @@ on damage of player:
     {_hold} <= 0
     # 마크 그대로 싸움: 경찰봉 = 네더라이트 검 성능 (공격력 8 · 공격 속도 1.6 · 치명타 · 덜 모은 타격은 약하게 — 전부 마크 기본)
     #  도둑 체력이 다 닳는 순간 = 체포 (죽지 않음: 그 한 대는 막고 체력 회복 → 감옥)
-    uncancel event
+    #  밀치기 없음: 이벤트는 막아 둔 채 데미지만 직접 깎음 (차지·치명타 반영된 값 그대로)
     if damage >= health of {_t}:
-        cancel event
         heal {_t}
         bgKdArrest({_t}, {_c})
         stop
+    set health of {_t} to health of {_t} - damage
+    {_t}.playHurtAnimation(0)
+    bgSoundAt(location of {_t}, "entity.player.hurt", 1, 1)
 
 # 연막탄: 맞은 자리 주변 경찰 실명 · 느려짐
 on projectile hit:
