@@ -123,6 +123,8 @@ on tab complete of "/경도" or "/kd":
 
 on tab complete of "/파쿠르" or "/parkour" or "/pk":
     if player is op:
-        set tab completions for position 1 to "처음", "나가기", "랭킹", "전체" and "건설"
+        set tab completions for position 1 to "처음", "나가기", "랭킹", "기록삭제", "전체" and "건설"
+        if tab arg-1 is "기록삭제":
+            set tab completions for position 2 to "전체" and all players
     else:
-        set tab completions for position 1 to "처음", "나가기" and "랭킹"
+        set tab completions for position 1 to "처음", "나가기", "랭킹" and "기록삭제"

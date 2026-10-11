@@ -335,6 +335,7 @@ function bgPkFinish(p: player):
     play sound "ui.toast.challenge_complete" to {_p}
     bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 80)
     broadcast "&d[파쿠르] &e%name of {_p}%&f 님이 포털 파쿠르 완주! &6%{_tt}%"
+    bgPkBoard()
     wait 3 seconds
     if {_p} is online:
         if bgPkOn({_p}) is false:
@@ -378,7 +379,7 @@ on place:
     gamemode of player is not creative
     cancel event
 
-command /파쿠르 [<text>]:
+command /파쿠르 [<text>] [<text>]:
     aliases: /parkour, /pk
     trigger:
         if arg-1 is "건설":
@@ -409,6 +410,36 @@ command /파쿠르 [<text>]:
                             add 1 to {_n}
             broadcast "&d[파쿠르] &f관리자가 &e%{_n}%명&f을 포털 파쿠르로 보냈습니다."
             stop
+        # 기록 지우기: /파쿠르 기록삭제 (내 기록) · 관리자: /파쿠르 기록삭제 <플레이어|전체>
+        if arg-1 is "기록삭제" or "기록지우기":
+            if arg-2 is set:
+                if sender is a player:
+                    if player is not op:
+                        send "&c다른 사람 기록은 관리자만 지울 수 있습니다."
+                        stop
+                if arg-2 is "전체" or "all":
+                    delete {bg::pk::best::*}
+                    delete {bg::pk::clears::*}
+                    broadcast "&d[파쿠르] &f관리자가 랭킹을 모두 지웠습니다."
+                    bgPkBoard()
+                    stop
+                set {_t} to arg-2 parsed as offline player
+                set {_tu} to "%uuid of {_t}%"
+                if {bg::pk::best::%{_tu}%} is not set:
+                    send "&d[파쿠르] &7%arg-2% 의 기록이 없습니다."
+                    stop
+                delete {bg::pk::best::%{_tu}%}
+                delete {bg::pk::clears::%{_tu}%}
+                send "&d[파쿠르] &f%arg-2% 의 기록을 지웠습니다."
+                bgPkBoard()
+                stop
+            if sender is not a player:
+                stop
+            delete {bg::pk::best::%uuid of player%}
+            delete {bg::pk::clears::%uuid of player%}
+            send "&d[파쿠르] &f내 기록을 지웠습니다."
+            bgPkBoard()
+            stop
         if arg-1 is "랭킹" or "순위":
             set {_ids::*} to sorted indices of {bg::pk::best::*} in ascending order
             send "&d&l[포털 파쿠르 랭킹] &7가장 빠른 기록 10위"
@@ -435,3 +466,36 @@ command /파쿠르 [<text>]:
                 bgPkRestart(player)
             stop
         send "&d[파쿠르] &f허브 가운데 앞 하늘색 발판을 밟고 다리를 건너 로봇의 고리로 들어가세요. &7(/파쿠르 랭킹 · 처음 · 나가기)"
+
+# ─────────────────────────────────────────────────────────── 랭킹판 (로봇 고리 안 · 가장 빠른 기록 10위)
+#  완주 · 기록 지우기 · 허브 짓기 뒤 · 1분마다 다시 그림
+function bgPkBoard():
+    bgHubReady() is true
+    bgCmd("kill @e[type=text_display,tag=bg_pkrank]")
+    set {_ids::*} to sorted indices of {bg::pk::best::*} in ascending order
+    set {_t} to "§d§l🏆 포털 파쿠르 랭킹§r\n§7가장 빠른 기록\n"
+    set {_i} to 0
+    loop {_ids::*}:
+        add 1 to {_i}
+        if {_i} <= 10:
+            set {_u} to loop-value
+            set {_nm} to {bg::pk::name::%{_u}%} ? "?"
+            set {_c} to "§f"
+            if {_i} is 1:
+                set {_c} to "§6§l"
+            else if {_i} is 2:
+                set {_c} to "§e"
+            else if {_i} is 3:
+                set {_c} to "§b"
+            set {_t} to "%{_t}%\n%{_c}%%{_i}%위 §f%{_nm}% §7· §a%bgPkTime({bg::pk::best::%{_u}%})%"
+    if {_i} is 0:
+        set {_t} to "%{_t}%\n§7아직 기록이 없습니다\n§8첫 완주에 도전!"
+    set {_l} to bgHubMk("portal")
+    bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) - 2.2)% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bg_pkrank""],billboard:""vertical"",shadow:1b,background:1342177280,line_width:260,brightness:{sky:15,block:15},view_range:1f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.15f,1.15f,1.15f]},text:""%{_t}%""}")
+
+on load:
+    wait 100 ticks
+    bgPkBoard()
+
+every 60 seconds:
+    bgPkBoard()

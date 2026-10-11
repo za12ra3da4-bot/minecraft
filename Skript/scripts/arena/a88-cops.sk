@@ -618,33 +618,6 @@ every 5 ticks:
                 if bgDist2(location of {_p}, bgKdMk("sewer")) < 2.2:
                     if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("sewer"))) < 3:
                         bgKdEscape({_p})
-        # 밸브 돌리기 (밸브 바로 옆 · 4초) — 3개 다 돌리면 하수구 맨홀이 40초 열림 (돈가방 목표를 채운 뒤부터)
-        set {_vat} to -1
-        loop 3 times:
-            set {_vi} to loop-number - 1
-            set {_vl} to bgKdValvePos({_vi})
-            if bgDist2(location of {_p}, {_vl}) < 2.4:
-                if abs((y-coordinate of {_p}) - (y-coordinate of {_vl})) < 2:
-                    set {_vat} to {_vi}
-        if {_vat} >= 0:
-            if {-bg::kd::open} is not true:
-                send action bar "&7🔧 밸브는 돈가방 목표 &6%{-bg::kd::bags} ? 0%/%{-bg::kd::goal} ? 0% &7를 채우면 돌릴 수 있어요" to {_p}
-                delete {-bg::kd::vp::%{_u}%}
-            else if {-bg::kd::sewer} is set:
-                send action bar "&b하수구가 이미 열려 있어요 — 도로 가운데 맨홀로!" to {_p}
-            else if {-bg::kd::valve::%{_vat}%} is set:
-                send action bar "&a밸브 %{_vat} + 1%은(는) 이미 돌렸어요 &7(%bgKdValves()%/3)" to {_p}
-            else:
-                add 5 to {-bg::kd::vp::%{_u}%}
-                set {_vp} to {-bg::kd::vp::%{_u}%}
-                send action bar "&b밸브 %{_vat} + 1% 돌리는 중… &f%floor({_vp} / 80 * 100)%%%" to {_p}
-                bgCmd("execute as @e[type=block_display,tag=kd_vw%{_vat}%] at @s run tp @s ~ ~ ~ ~30 ~")
-                play sound "block.chain.step" with volume 0.6 and pitch (0.6 + {_vp} / 100) to {_p}
-                if {_vp} >= 80:
-                    delete {-bg::kd::vp::%{_u}%}
-                    bgKdValve({_vat}, {_p})
-        else:
-            delete {-bg::kd::vp::%{_u}%}
 
 # 위쪽 보스바: 남은 시간 · 돈가방 · 남은 도둑 (경도에 있는 사람만 = 태그 bgkd)
 function bgKdBar():
@@ -807,7 +780,7 @@ function bgKdTexts():
             if {-bg::kd::valve::%{_vi}%} is set:
                 bgKdText("v%{_vi}%", bgKdValvePos({_vi}), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""green"",bold:true},{text:""\n돌아감"",color:""white""}]")
             else:
-                bgKdText("v%{_vi}%", bgKdValvePos({_vi}), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""aqua"",bold:true},{text:""\n4초 서 있으면 돌림 (3개 → 하수구)"",color:""white""}]")
+                bgKdText("v%{_vi}%", bgKdValvePos({_vi}), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""aqua"",bold:true},{text:""\n우클릭 연타로 돌리기 (3개 → 하수구)"",color:""white""}]")
         if {-bg::kd::sewer} is set:
             bgKdPillar(bgKdMk("sewer"), "light_blue_stained_glass", 3394815, 80)
             bgKdText("sewer", bgKdMk("sewer"), "[{text:""🕳 하수구 열림!"",color:""aqua"",bold:true},{text:""\n맨홀로 들어가면 탈출"",color:""green""}]")
@@ -1306,6 +1279,7 @@ function bgKdValveLamp(i: number, on: boolean):
 
 function bgKdValveReset():
     delete {-bg::kd::valve::*}
+    delete {-bg::kd::vclk::*}
     loop 3 times:
         bgKdValveLamp(loop-number - 1, false)
 
@@ -1388,6 +1362,8 @@ function bgKdValvePos(i: number) :: location:
     return bgKdMk("vc_%{_c}%")
 
 function bgKdValveMove(i: number, c: number):
+    set {_c0} to bgKdMk("vc_%{_c}%")
+    bgCmd("execute in %bgDim()% run tp @e[type=interaction,tag=kd_vi%{_i}%] %bgC(x-coordinate of {_c0})% %bgN(y-coordinate of {_c0})% %bgC(z-coordinate of {_c0})%")
     loop "vb", "vw" and "vl":
         set {_m} to "vc"
         if loop-value is "vw":
@@ -1405,3 +1381,63 @@ function bgKdValvesPlace():
         set {_pick} to random element out of {_pool::*}
         remove {_pick} from {_pool::*}
         bgKdValveMove(loop-number - 1, {_pick})
+
+# ─────────────────────────────────────────────────────────── 밸브 돌리기: 우클릭 연타 (밸브의 보이지 않는 클릭 판정 kd_vi<번호>)
+#  한 번 클릭 = 바퀴가 한 칸 돌고 게이지 +1 (한 사람당 0.1초에 한 번까지) · 24번이면 돌아감 · 여럿이 같이 돌려도 됨
+#  2초 동안 아무도 안 돌리면 게이지가 조금씩 줄어듦 · 돈가방 목표를 채운 뒤부터
+on right click on entity:
+    bgKdOn(player) is true
+    event-entity is not a player
+    set {_vi} to -1
+    loop 3 times:
+        if distance between event-entity and bgKdValvePos(loop-number - 1) < 1.2:
+            set {_vi} to loop-number - 1
+    {_vi} >= 0
+    cancel event
+    bgKdState() is "play"
+    if bgKdRole(player) is not "thief":
+        send action bar "&7밸브는 도둑만 돌릴 수 있어요" to player
+        stop
+    if bgKdJailed(player) is true:
+        stop
+    if {-bg::kd::open} is not true:
+        send action bar "&7🔧 밸브는 돈가방 목표 &6%{-bg::kd::bags} ? 0%/%{-bg::kd::goal} ? 0% &7를 채우면 돌릴 수 있어요" to player
+        stop
+    if {-bg::kd::sewer} is set:
+        send action bar "&b하수구가 이미 열려 있어요 — 도로 가운데 맨홀로!" to player
+        stop
+    if {-bg::kd::valve::%{_vi}%} is set:
+        send action bar "&a밸브 %{_vi} + 1%은(는) 이미 돌렸어요 &7(%bgKdValves()%/3)" to player
+        stop
+    set {_u} to "%uuid of player%"
+    if {-bg::kd::vclkt::%{_u}%} is set:
+        if difference between {-bg::kd::vclkt::%{_u}%} and now < 0.1 seconds:
+            stop
+    set {-bg::kd::vclkt::%{_u}%} to now
+    add 1 to {-bg::kd::vclk::%{_vi}%}
+    set {-bg::kd::vlast::%{_vi}%} to now
+    set {_n} to {-bg::kd::vclk::%{_vi}%}
+    bgCmd("execute as @e[type=block_display,tag=kd_vw%{_vi}%] at @s run tp @s ~ ~ ~ ~22 ~")
+    play sound "block.chain.step" with volume 0.7 and pitch (0.6 + {_n} / 24) at location of event-entity
+    set {_bar} to ""
+    set {_k} to 0
+    while {_k} < 12:
+        add 1 to {_k}
+        if {_k} * 2 <= {_n}:
+            set {_bar} to "%{_bar}%&b■"
+        else:
+            set {_bar} to "%{_bar}%&8■"
+    send action bar "&b🔧 밸브 %{_vi} + 1% 돌리는 중 %{_bar}% &7(우클릭 연타)" to player
+    if {_n} >= 24:
+        delete {-bg::kd::vclk::%{_vi}%}
+        bgKdValve({_vi}, player)
+
+every 1 second:
+    bgKdState() is "play"
+    loop 3 times:
+        set {_vi} to loop-number - 1
+        if ({-bg::kd::vclk::%{_vi}%} ? 0) > 0:
+            if difference between {-bg::kd::vlast::%{_vi}%} and now > 2 seconds:
+                remove 3 from {-bg::kd::vclk::%{_vi}%}
+                if {-bg::kd::vclk::%{_vi}%} <= 0:
+                    delete {-bg::kd::vclk::%{_vi}%}

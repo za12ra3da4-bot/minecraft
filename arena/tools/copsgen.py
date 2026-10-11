@@ -1396,6 +1396,8 @@ def build(variant=None):
               (-17, 80), (17, 40), (-80, 17), (80, 17)]
     for i, (x, z) in enumerate(starts):
         mark(f"thief_{i}", x, 1, z)
+    MARKS_CACHE.clear()
+    MARKS_CACHE.update(marks)
     return v, marks
 
 
@@ -1421,6 +1423,9 @@ def commands(greedy_boxes):
     return cmds
 
 
+MARKS_CACHE = {}
+
+
 def disp_models():
     import streetbd
     return {"tl_green": streetbd.traffic_light("green"), "tl_red": streetbd.traffic_light("red"),
@@ -1437,12 +1442,16 @@ def display_commands():
     import streetbd
     at = "$execute positioned $(x) $(y) $(z) run summon"
     h = HELI_AT
-    out = ["kill @e[type=block_display,tag=kd_heli]", "kill @e[type=block_display,tag=kd_bd]"]
+    out = ["kill @e[type=block_display,tag=kd_heli]", "kill @e[type=block_display,tag=kd_bd]", "kill @e[type=interaction,tag=kd_bd]"]
     out += heli.summon_all(at, h["x"], h["y"], h["z"], h["yaw"], ['"kd_heli"'])
     models = disp_models()
     for name, x, y, z, yaw, tags in DISPS:
         sc = VALVE_SCALE if name.startswith("valve") else 1.0
         out += bdkit.summon_lines(models[name], at, x, y - FL, z, yaw, sc, ['"kd_bd"'] + tags, view=1.2)
+    # 밸브 클릭 판정 (보이지 않는 interaction — 우클릭 연타로 돌림 · 밸브와 같이 옮겨 다님)
+    for k in range(3):
+        x, _, z, _ = MARKS_CACHE[f"vc_{k}"]
+        out.append(f'{at} interaction ~{x:.3f} ~1 ~{z:.3f} {{Tags:["kd_bd","kd_vi{k}"],width:1.3f,height:1.7f,response:1b}}')
     return out
 
 
