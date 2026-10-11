@@ -226,6 +226,12 @@ def export(pack):
         provs.append({"type": "bitmap", "file": f"{NS}:font/hubscr_{key}.png", "height": h, "ascent": h, "chars": [ch]})
     provs.append({"type": "space", "advances": {" ": 4}})          # 이어지는 공백이 이 글꼴을 물려받아도 □ 가 안 뜨게
     pack.put(f"assets/{NS}/font/hubscr.json", {"providers": provs})
+    # 오락실 글꼴 (파쿠르 랭킹판 등): 갈무리9 픽셀 · 없는 글자 (이모지 등) 는 기본 글꼴
+    with open(FONT9, "rb") as f:
+        pack.files[f"assets/{NS}/font/galmuri9.ttf"] = f.read()
+    pack.put(f"assets/{NS}/font/arcade.json", {"providers": [
+        {"type": "ttf", "file": f"{NS}:galmuri9.ttf", "shift": [0, 1], "size": 10, "oversample": 4},
+        {"type": "reference", "id": "minecraft:default"}]})
 
 
 def sizes():
