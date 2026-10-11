@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~69 ~15 ~70 ~69 ~15 ~71 minecraft:li
 $execute positioned $(x) $(y) $(z) run fill ~71 ~15 ~70 ~92 ~15 ~87 minecraft:smooth_stone
 $execute positioned $(x) $(y) $(z) run fill ~93 ~15 ~70 ~93 ~15 ~71 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~15 ~71 ~-99 ~16 ~72 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

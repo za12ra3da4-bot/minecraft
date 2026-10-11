@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~-3 ~0 ~-2 ~-3 ~0 ~1 minecraft:black
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~0 ~-2 ~1 ~0 ~1 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~2 ~0 ~-2 ~2 ~0 ~1 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run fill ~3 ~0 ~-2 ~3 ~0 ~1 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) positioned ~-88 ~-18 ~-88 run kill @e[type=item,dx=176,dy=88,dz=176]

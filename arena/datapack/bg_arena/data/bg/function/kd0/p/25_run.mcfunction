@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~11 ~11 ~74 ~11 ~14 ~75 minecraft:cy
 $execute positioned $(x) $(y) $(z) run fill ~-89 ~11 ~75 ~-89 ~12 ~75 minecraft:barrel[facing=up,open=false]
 $execute positioned $(x) $(y) $(z) run fill ~-73 ~11 ~75 ~-71 ~12 ~75 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-28 ~11 ~75 minecraft:brick_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

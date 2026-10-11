@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~-52 ~16 ~-39 minecraft:smooth_q
 $execute positioned $(x) $(y) $(z) run setblock ~-29 ~16 ~-39 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-11 ~16 ~-39 ~-4 ~16 ~-39 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run setblock ~2 ~16 ~-39 minecraft:brick_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

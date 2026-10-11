@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~5 ~0 ~-8 minecraft:polished_and
 $execute positioned $(x) $(y) $(z) run setblock ~7 ~0 ~-8 minecraft:polished_andesite
 $execute positioned $(x) $(y) $(z) run setblock ~8 ~0 ~-8 minecraft:polished_diorite
 $execute positioned $(x) $(y) $(z) run fill ~9 ~0 ~-8 ~11 ~0 ~-8 minecraft:polished_andesite
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

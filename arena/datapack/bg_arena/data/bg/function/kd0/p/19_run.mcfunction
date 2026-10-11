@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~-38 ~1 ~69 ~-38 ~15 ~69 minecraft:l
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~1 ~69 ~-29 ~1 ~72 minecraft:terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~69 ~-12 ~3 ~71 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~-11 ~1 ~69 ~-11 ~5 ~69 minecraft:ladder[facing=south,waterlogged=false]
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

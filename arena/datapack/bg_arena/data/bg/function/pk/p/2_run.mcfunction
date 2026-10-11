@@ -77,3 +77,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~12 ~74 ~-62 minecraft:sea_lante
 $execute positioned $(x) $(y) $(z) run fill ~2 ~75 ~-64 ~3 ~75 ~-64 minecraft:pearlescent_froglight
 $execute positioned $(x) $(y) $(z) run fill ~4 ~75 ~-64 ~8 ~75 ~-64 minecraft:purple_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~4 ~75 ~-63 ~6 ~75 ~-63 minecraft:purple_stained_glass
+$execute positioned $(x) $(y) $(z) positioned ~-64 ~-22 ~-64 run kill @e[type=item,dx=128,dy=100,dz=128]

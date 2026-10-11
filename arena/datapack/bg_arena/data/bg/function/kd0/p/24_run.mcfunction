@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~37 ~10 ~2 ~37 ~10 ~10 minecraft:bri
 $execute positioned $(x) $(y) $(z) run fill ~41 ~10 ~2 ~41 ~10 ~10 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~43 ~10 ~2 ~50 ~10 ~10 minecraft:polished_andesite
 $execute positioned $(x) $(y) $(z) run fill ~51 ~10 ~2 ~51 ~10 ~10 minecraft:smooth_quartz
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

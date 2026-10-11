@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~2 ~69 ~-64 ~5 ~69 ~-64 minecraft:pe
 $execute positioned $(x) $(y) $(z) run fill ~6 ~69 ~-64 ~8 ~71 ~-64 minecraft:purple_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-9 ~69 ~-63 minecraft:end_rod[facing=up]
 $execute positioned $(x) $(y) $(z) run setblock ~-4 ~69 ~-63 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) positioned ~-64 ~-22 ~-64 run kill @e[type=item,dx=128,dy=100,dz=128]

@@ -190,3 +190,4 @@ $execute positioned $(x) $(y) $(z) run fill ~110 ~48 ~14 ~114 ~79 ~45 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~110 ~48 ~46 ~114 ~79 ~77 minecraft:air
 $execute positioned $(x) $(y) $(z) run fill ~110 ~48 ~78 ~114 ~79 ~109 minecraft:air
 $execute positioned $(x) $(y) $(z) run fill ~110 ~48 ~110 ~114 ~79 ~114 minecraft:air
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

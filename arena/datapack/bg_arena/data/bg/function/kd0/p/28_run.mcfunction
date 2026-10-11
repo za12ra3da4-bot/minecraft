@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~12 minecraft:ochre_fro
 $execute positioned $(x) $(y) $(z) run fill ~-93 ~17 ~12 ~-93 ~18 ~12 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~17 ~12 ~-90 ~18 ~12 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-87 ~17 ~12 ~-87 ~18 ~12 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

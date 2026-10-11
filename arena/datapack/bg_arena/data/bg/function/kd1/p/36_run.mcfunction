@@ -212,3 +212,4 @@ $execute positioned $(x) $(y) $(z) run fill ~0 ~67 ~0 ~0 ~69 ~0 minecraft:iron_b
 $execute positioned $(x) $(y) $(z) run setblock ~-106 ~68 ~-103 minecraft:redstone_lamp[lit=true]
 $execute positioned $(x) $(y) $(z) run fill ~0 ~70 ~0 ~0 ~73 ~0 minecraft:iron_chain[axis=y,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~0 ~74 ~0 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

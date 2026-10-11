@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~92 ~11 ~27 minecraft:iron_bars[
 $execute positioned $(x) $(y) $(z) run fill ~28 ~11 ~28 ~29 ~11 ~28 minecraft:light_blue_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~30 ~11 ~28 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~31 ~11 ~28 minecraft:light_blue_concrete
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

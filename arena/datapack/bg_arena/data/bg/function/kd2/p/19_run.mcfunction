@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~-52 ~1 ~72 ~-52 ~3 ~72 minecraft:br
 $execute positioned $(x) $(y) $(z) run setblock ~-49 ~1 ~72 minecraft:spruce_planks
 $execute positioned $(x) $(y) $(z) run fill ~-43 ~1 ~72 ~-43 ~3 ~74 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~72 ~-12 ~3 ~72 minecraft:lime_concrete
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

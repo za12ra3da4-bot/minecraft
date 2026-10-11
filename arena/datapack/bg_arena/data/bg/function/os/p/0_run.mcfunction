@@ -16,3 +16,4 @@ $execute positioned $(x) $(y) $(z) run fill ~22 ~-12 ~22 ~41 ~19 ~41 minecraft:a
 $execute positioned $(x) $(y) $(z) run fill ~22 ~20 ~-42 ~41 ~31 ~-11 minecraft:air
 $execute positioned $(x) $(y) $(z) run fill ~22 ~20 ~-10 ~41 ~31 ~21 minecraft:air
 $execute positioned $(x) $(y) $(z) run fill ~22 ~20 ~22 ~41 ~31 ~41 minecraft:air
+$execute positioned $(x) $(y) $(z) positioned ~-42 ~-14 ~-42 run kill @e[type=item,dx=84,dy=48,dz=84]

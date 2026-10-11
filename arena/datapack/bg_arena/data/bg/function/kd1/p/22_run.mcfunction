@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~70 ~6 ~11 ~77 ~6 ~11 minecraft:ochr
 $execute positioned $(x) $(y) $(z) run fill ~78 ~6 ~11 ~78 ~9 ~11 minecraft:terracotta
 $execute positioned $(x) $(y) $(z) run fill ~84 ~6 ~11 ~93 ~6 ~11 minecraft:mud_bricks
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~6 ~12 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

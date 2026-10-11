@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~-18 ~1 ~-33 minecraft:smooth_qu
 $execute positioned $(x) $(y) $(z) run setblock ~18 ~1 ~-33 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run setblock ~28 ~1 ~-33 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~-76 ~1 ~-31 ~-76 ~19 ~-29 minecraft:barrier
+$execute positioned $(x) $(y) $(z) positioned ~-88 ~-18 ~-88 run kill @e[type=item,dx=176,dy=88,dz=176]

@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~53 ~2 ~99 minecraft:black_stain
 $execute positioned $(x) $(y) $(z) run setblock ~61 ~2 ~99 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run setblock ~63 ~2 ~99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~66 ~2 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

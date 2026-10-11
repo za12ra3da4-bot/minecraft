@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~-14 ~5 ~-68 minecraft:sea_lante
 $execute positioned $(x) $(y) $(z) run fill ~-14 ~5 ~-67 ~-14 ~11 ~-67 minecraft:brain_coral_block
 $execute positioned $(x) $(y) $(z) run setblock ~-46 ~5 ~-61 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~-46 ~5 ~-60 ~-46 ~9 ~-60 minecraft:horn_coral_block
+$execute positioned $(x) $(y) $(z) positioned ~-88 ~-18 ~-88 run kill @e[type=item,dx=176,dy=88,dz=176]

@@ -644,3 +644,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~-19 ~63 ~66 minecraft:ochre_fro
 $execute positioned $(x) $(y) $(z) run fill ~1 ~64 ~-72 ~2 ~64 ~-69 minecraft:glowstone
 $execute positioned $(x) $(y) $(z) run fill ~0 ~64 ~-71 ~0 ~64 ~-70 minecraft:glowstone
 $execute positioned $(x) $(y) $(z) run fill ~3 ~64 ~-71 ~3 ~64 ~-70 minecraft:glowstone
+$execute positioned $(x) $(y) $(z) positioned ~-88 ~-18 ~-88 run kill @e[type=item,dx=176,dy=88,dz=176]

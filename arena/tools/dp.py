@@ -906,7 +906,7 @@ def pvp_functions(dp_root):
     x0, z0, x1, z1 = pvparena.forceload_range()
     w(os.path.join(F, "build_run.mcfunction"), cmds)
     w(os.path.join(F, "fl_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}"])
-    w(os.path.join(F, "fl_rm_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
+    w(os.path.join(F, "fl_rm_run.mcfunction"), [kill_items, f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
     for k in ("build", "fl", "fl_rm"):
         w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:pvp/{k}_run with storage bg:map origin"])
     print(f"[pvp] 연습장 명령 {len(cmds)}줄")
@@ -925,13 +925,16 @@ def pvp2_functions(dp_root):
     per = 1500
     parts = [early[i:i + per] for i in range(0, len(early), per)] + [late]
     # bg:pvp2/build → 2초 뒤 p/0 → 3틱마다 다음 조각 → 마지막에 forceload 풀기 (Skript 는 build 만 부름)
+    # 지우거나 덮을 때 떨어지는 아이템 (사다리 · 랜턴 · 다락문 · 꽃 …) 은 조각마다 끝에 그 구역 안에서 지움
+    kill_items = (f"$execute positioned $(x) $(y) $(z) positioned ~{-C} ~{-FL - 2} ~{-C} run "
+                  f"kill @e[type=item,dx={N},dy={H + 4},dz={N}]")
     for i, part in enumerate(parts):
-        w(os.path.join(F, "p", f"{i}_run.mcfunction"), part)
+        w(os.path.join(F, "p", f"{i}_run.mcfunction"), part + [kill_items])
         nxt = f"schedule function bg:pvp2/p/{i + 1} 3t" if i + 1 < len(parts) else "schedule function bg:pvp2/fl_rm 20t"
         w(os.path.join(F, "p", f"{i}.mcfunction"), [f"function bg:pvp2/p/{i}_run with storage bg:map origin", nxt])
     w(os.path.join(F, "build.mcfunction"), ["function bg:pvp2/fl", "schedule function bg:pvp2/p/0 40t"])
     w(os.path.join(F, "fl_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}"])
-    w(os.path.join(F, "fl_rm_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
+    w(os.path.join(F, "fl_rm_run.mcfunction"), [kill_items, f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
     for k in ("fl", "fl_rm"):
         w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:pvp2/{k}_run with storage bg:map origin"])
     print(f"[pvp2] 용암 투기장 명령 {len(cmds)}줄 ({len(parts)} 조각)")
@@ -957,13 +960,16 @@ def struct_functions(dp_root, key, mod, label):
     if hasattr(mod, "display_commands"):          # 블록 디스플레이 (헬기 등) — 블록을 다 놓은 뒤
         dc = mod.display_commands()
         parts += [dc[i:i + 600] for i in range(0, len(dc), 600)]
+    # 지우거나 덮을 때 떨어지는 아이템 (사다리 · 랜턴 · 다락문 · 꽃 …) 은 조각마다 끝에 그 구역 안에서 지움
+    kill_items = (f"$execute positioned $(x) $(y) $(z) positioned ~{-C} ~{-FL - 2} ~{-C} run "
+                  f"kill @e[type=item,dx={N},dy={H + 4},dz={N}]")
     for i, part in enumerate(parts):
-        w(os.path.join(F, "p", f"{i}_run.mcfunction"), part)
+        w(os.path.join(F, "p", f"{i}_run.mcfunction"), part + [kill_items])
         nxt = f"schedule function bg:{key}/p/{i + 1} 3t" if i + 1 < len(parts) else f"schedule function bg:{key}/fl_rm 20t"
         w(os.path.join(F, "p", f"{i}.mcfunction"), [f"function bg:{key}/p/{i}_run with storage bg:{key} origin", nxt])
     w(os.path.join(F, "build.mcfunction"), [f"function bg:{key}/fl", f"schedule function bg:{key}/p/0 160t"])
     w(os.path.join(F, "fl_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload add ~{x0} ~{z0} ~{x1} ~{z1}"])
-    w(os.path.join(F, "fl_rm_run.mcfunction"), [f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
+    w(os.path.join(F, "fl_rm_run.mcfunction"), [kill_items, f"$execute positioned $(x) $(y) $(z) run forceload remove ~{x0} ~{z0} ~{x1} ~{z1}"])
     for k in ("fl", "fl_rm"):
         w(os.path.join(F, f"{k}.mcfunction"), [f"function bg:{key}/{k}_run with storage bg:{key} origin"])
     print(f"[{key}] {label} 명령 {len(cmds)}줄 ({len(parts)} 조각, 다 짓는 데 약 {(40 + 3 * len(parts) + 20) / 20:.1f}초)")

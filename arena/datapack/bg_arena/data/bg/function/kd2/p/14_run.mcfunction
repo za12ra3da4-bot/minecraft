@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~90 ~-1 ~45 ~90 ~-1 ~56 minecraft:bl
 $execute positioned $(x) $(y) $(z) run fill ~-82 ~-1 ~46 ~-80 ~-1 ~46 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-65 ~-1 ~46 ~-65 ~-1 ~49 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-57 ~-1 ~46 ~-57 ~-1 ~50 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

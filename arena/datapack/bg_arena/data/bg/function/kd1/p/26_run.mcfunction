@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~-51 ~14 ~-34 ~-30 ~14 ~-34 minecraf
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~14 ~-34 ~-12 ~14 ~-33 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~1 ~14 ~-34 ~1 ~14 ~-33 minecraft:mud_bricks
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~14 ~-33 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

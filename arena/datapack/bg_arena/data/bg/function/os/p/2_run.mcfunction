@@ -1203,3 +1203,4 @@ $execute positioned $(x) $(y) $(z) run fill ~-8 ~24 ~15 ~-6 ~24 ~15 minecraft:pe
 $execute positioned $(x) $(y) $(z) run fill ~5 ~24 ~15 ~7 ~24 ~15 minecraft:pearlescent_froglight
 $execute positioned $(x) $(y) $(z) run fill ~-6 ~24 ~16 ~5 ~24 ~16 minecraft:pearlescent_froglight
 $execute positioned $(x) $(y) $(z) run setblock ~0 ~24 ~17 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) positioned ~-42 ~-14 ~-42 run kill @e[type=item,dx=84,dy=48,dz=84]

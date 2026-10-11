@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~28 ~16 ~-31 minecraft:purpur_sl
 $execute positioned $(x) $(y) $(z) run setblock ~32 ~16 ~-31 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~35 ~16 ~-31 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~38 ~16 ~-31 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

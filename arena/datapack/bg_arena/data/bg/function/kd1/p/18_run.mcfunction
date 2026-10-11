@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run fill ~95 ~1 ~-66 ~95 ~3 ~-54 minecraft:st
 $execute positioned $(x) $(y) $(z) run setblock ~99 ~1 ~-66 minecraft:pearlescent_froglight
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~1 ~-65 ~-99 ~17 ~-65 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-88 ~1 ~-65 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

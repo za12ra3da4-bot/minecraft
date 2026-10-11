@@ -1498,3 +1498,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~78 ~34 ~99 minecraft:ochre_frog
 $execute positioned $(x) $(y) $(z) run setblock ~79 ~34 ~99 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~81 ~34 ~99 ~82 ~34 ~99 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run setblock ~84 ~34 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]
