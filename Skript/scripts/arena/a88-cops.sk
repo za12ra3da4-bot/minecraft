@@ -11,7 +11,7 @@
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 도둑 3명 중 1명꼴 (올림) 이상 탈출해야 도둑 승리
 #         사람이 많을수록 털이 장소 다시 털 수 있는 시간이 짧아짐 (40초 → 최소 20초)
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
-#   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉으로 3대 때리면 체포 (마크처럼 실제로 맞고 밀려남 · 대마다 8초 안) · 무전기 · 레이더
+#   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉(네더라이트 검 성능)으로 도둑 체력을 다 깎으면 체포 (죽지 않고 감옥) · 무전기 · 레이더
 #         실적: 내가 잡은 도둑이 감옥에 있는 동안 5초마다 +1 → 직급 (도둑 수 × 2 마다 한 단계)
 #         경장 신속 I · 경사 추격 진주 2 + 수갑 3 · 경위 도둑 추적기 + 신속 II
 #   탈옥하면 신속 IV 에서 4초에 걸쳐 점점 느려지는 가속
@@ -144,7 +144,7 @@ function bgKdCopKit(p: player):
     bgCmd("item replace entity %{_n}% armor.chest with leather_chestplate[dyed_color=2052283,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=1381706,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=1381706,unbreakable={}]")
-    bgCmd("item replace entity %{_n}% hotbar.0 with blaze_rod[item_model=""bg:kd/baton"",item_name={text:""경찰봉"",color:""blue"",bold:true},lore=[{text:""도둑을 3대 때리면 체포 · 들고 있던 돈가방 압수"",color:""gray"",italic:false},{text:""다이아몬드 검과 같은 공격 속도 (힘을 다 모아야 1대)"",color:""dark_gray"",italic:false}],attribute_modifiers=[{type:""minecraft:attack_damage"",id:""bg:baton_damage"",amount:6.0,operation:""add_value"",slot:""mainhand""},{type:""minecraft:attack_speed"",id:""bg:baton_speed"",amount:-2.4,operation:""add_value"",slot:""mainhand""}]]")
+    bgCmd("item replace entity %{_n}% hotbar.0 with blaze_rod[item_model=""bg:kd/baton"",item_name={text:""경찰봉"",color:""blue"",bold:true},lore=[{text:""도둑 체력을 다 깎으면 체포 · 들고 있던 돈가방 압수"",color:""gray"",italic:false},{text:""네더라이트 검 성능 (공격력 8 · 공격 속도 1.6)"",color:""dark_gray"",italic:false}],attribute_modifiers=[{type:""minecraft:attack_damage"",id:""bg:baton_damage"",amount:7.0,operation:""add_value"",slot:""mainhand""},{type:""minecraft:attack_speed"",id:""bg:baton_speed"",amount:-2.4,operation:""add_value"",slot:""mainhand""}]]")
     bgCmd("item replace entity %{_n}% hotbar.1 with echo_shard[item_model=""bg:kd/radio"",item_name={text:""무전기"",color:""aqua"",bold:true},lore=[{text:""우클릭: 가장 가까운 도둑 방향 · 거리 (25초마다)"",color:""gray"",italic:false}]]")
     bgCmd("effect give %{_n}% speed infinite 0 true")
     bgCmd("team join kd_cop %{_n}%")
@@ -528,37 +528,17 @@ on damage of player:
             stop
     set {_hold} to {-bg::kd::hold} ? 0
     {_hold} <= 0
-    # 마크 그대로 때리기: 실제로 맞고 (하트 2칸) 밀려남 · 연타는 마크의 무적 시간이 막음 · 3대째 체포
-    #  (대마다 8초 안에 이어서 — 8초 넘으면 처음부터 · 체포되면 체력 회복)
+    # 마크 그대로 싸움: 경찰봉 = 네더라이트 검 성능 (공격력 8 · 공격 속도 1.6 · 치명타 · 덜 모은 타격은 약하게 — 전부 마크 기본)
+    #  도둑 체력이 다 닳는 순간 = 체포 (죽지 않음: 그 한 대는 막고 체력 회복 → 감옥)
     uncancel event
-    # 다이아몬드 검 공격 속도 (경찰봉 속성): 힘을 다 모은 타격 = 데미지 7 (치명타면 더) · 덜 모은 타격은 체포 횟수에 안 셈
-    if damage < 6:
-        set damage to 1
-        send action bar "&7힘을 모아서 때리세요 &8(공격 게이지가 다 찰 때)" to {_c}
-        stop
-    set damage to 4
-    set {_u} to "%uuid of {_t}%"
-    if {-bg::kd::hit::%{_u}%} is set:
-        if difference between {-bg::kd::hit::%{_u}%} and now > 8 seconds:
-            delete {-bg::kd::hits::%{_u}%}
-    add 1 to {-bg::kd::hits::%{_u}%}
-    set {-bg::kd::hit::%{_u}%} to now
-    if {-bg::kd::hits::%{_u}%} >= 3:
-        delete {-bg::kd::hit::%{_u}%}
-        delete {-bg::kd::hits::%{_u}%}
+    if damage >= health of {_t}:
         cancel event
         heal {_t}
         bgKdArrest({_t}, {_c})
         stop
-    set {_n} to {-bg::kd::hits::%{_u}%}
-    bgCmd("effect give %name of {_t}% glowing 3 0 true")
-    if {_n} is 1:
-        send title " " with subtitle "&c⚠ 한 대 맞음! &f(1/3) &7— 3대 맞으면 체포" to {_t} for 30 ticks with fade in 0 ticks and fade out 6 ticks
-    else:
-        send title " " with subtitle "&4⚠ 두 대 맞음! &f(2/3) &c— 한 대 더 맞으면 체포!" to {_t} for 30 ticks with fade in 0 ticks and fade out 6 ticks
-    send action bar "&9%{_n}%대! &f(%{_n}%/3) &78초 안에 이어서 때리면 체포" to {_c}
-    play sound "entity.player.hurt" with volume 1 and pitch 1.4 to {_t}
-    play sound "block.anvil.place" with volume 0.4 and pitch (1.6 + {_n} * 0.2) to {_c}
+    bgCmd("effect give %name of {_t}% glowing 2 0 true")
+    set {_hp} to round((health of {_t} - damage) * 10) / 10
+    send action bar "&9명중! &f도둑 체력 &c%{_hp}%♥ &7— 다 닳으면 체포" to {_c}
 
 # 연막탄: 맞은 자리 주변 경찰 실명 · 느려짐
 on projectile hit:
