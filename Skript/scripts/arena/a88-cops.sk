@@ -292,7 +292,7 @@ function bgKdStart(s: command sender, cops: number = 0):
         else:
             bgKdCopKit(loop-value)
             teleport loop-value to bgKdMk("cop_spawn")
-            bgTitleP(loop-value, "&9&l당신은 경찰!", "&f바로 출동! · 경찰봉으로 도둑을 3대 때리면 체포")
+            bgTitleP(loop-value, "&9&l당신은 경찰!", "&f바로 출동! · 경찰봉으로 도둑 체력을 다 깎으면 체포")
     bgKdSay("&f판 시작! &9경찰 %{_c}%명 &7vs &c도둑 %{_t}%명 &7· 팀 목표 돈가방 &6%{-bg::kd::goal}%개 &7· 도둑 승리 = &a%{-bg::kd::need}%명 탈출 &7· 제한 %bgKdTime({-bg::kd::left})%")
     bgKdSay("&7감옥 · 구출 발판 · 탈출 헬기는 빛 기둥으로 보여요 · &e털이 장소는 직접 찾기 &7· 털려면 &b해킹 칩&7 (건물 안 통을 뒤지면 나옴)")
     bgKdSound("entity.ender_dragon.growl", 1.4)
