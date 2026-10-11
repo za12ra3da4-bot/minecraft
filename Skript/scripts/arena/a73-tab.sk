@@ -108,12 +108,16 @@ on tab complete of "/온리소드" or "/os" or "/onlysword":
 
 on tab complete of "/경도" or "/kd":
     if player is op:
-        set tab completions for position 1 to "시작", "종료", "시간", "목표", "전체", "나가기", "전적", "랭킹", "건설", "맵바꾸기", "자동맵", "글자" and "전적초기화"
+        set tab completions for position 1 to "시작", "인원", "종료", "시간", "목표", "전체", "나가기", "전적", "랭킹", "건설", "맵바꾸기", "자동맵", "글자" and "전적초기화"
     else:
         set tab completions for position 1 to "나가기", "전적" and "랭킹"
     set {_a} to tab arg-1
     if {_a} is "시작":
         set tab completions for position 2 to "1", "2", "3" and "4"
+        set tab completions for position 3 to "3", "5", "8" and "10"
+    else if {_a} is "인원":
+        set tab completions for position 2 to "자동", "1", "2", "3" and "4"
+        set tab completions for position 3 to "자동", "3", "5", "8" and "10"
     else if {_a} is "시간":
         set tab completions for position 2 to "5", "8", "10" and "15"
     else if {_a} is "목표":
