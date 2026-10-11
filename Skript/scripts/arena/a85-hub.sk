@@ -681,7 +681,7 @@ on load:
     bgCmd("team modify 0hubpk collisionRule never")
     bgCmd("team modify 0hubpk nametagVisibility never")
     bgCmd("team modify 0hubpk seeFriendlyInvisibles false")
-    bgCmd("team modify 0hubpk prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
+    bgCmd("team modify 0hubpk prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
     bgCmd("team modify 1myth prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
     bgCmd("team modify os_play prefix [{text:"""",font:""bg:hubscr"",color:""white""},{text:"" "",font:""minecraft:default""}]")
 

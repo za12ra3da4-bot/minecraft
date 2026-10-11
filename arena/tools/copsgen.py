@@ -111,6 +111,7 @@ HELI_AT = {}       # 처음 헬기 자리 (= HELIS[0])
 HELIS = []         # 헬기장 빌딩 옥상 자리들: dict(x, y(바닥 기준), z, yaw, name) — 헬기가 판 중에 이 사이를 옮겨 다님
 VARIANT = 0        # 배치 번호 (0 · 1 · 2 …) — 일반 건물 자리만 바뀜 (특수 건물 · 도로 · 표지는 늘 같음)
 N_VARIANTS = 3
+VALVE_SCALE = 0.72  # 밸브 블록 디스플레이 크기 (1 = 원래)
 
 # 랜덤 구역에 놓을 건물 종류별 개수 (합 = 랜덤 구역 수 14) — 숫자만 바꾸면 조절됨
 #  편의점: 털이 편의점(고정 1) + 여기 수만큼 더 → 기본 총 2 · 같은 종류는 바로 옆 구역(대각선 포함)에 못 옴
@@ -1297,12 +1298,37 @@ def build(variant=None):
         R_ = _bk._ry(-yaw)
         cx_, cy_, cz_ = vx + 0.5, FL + 1, vz + 0.5
         DISPS.append(("valve_base", cx_, cy_, cz_, yaw, []))
-        wx, wy, wz = R_ @ (np.array(_sb.WHEEL_AT) / 16)
+        wx, wy, wz = R_ @ (np.array(_sb.WHEEL_AT) / 16 * VALVE_SCALE)
         DISPS.append(("valve_wheel", cx_ + wx, cy_ + wy, cz_ + wz, yaw, [f'"kd_vw{k}"']))
-        lx, ly, lz = R_ @ (np.array(_sb.LAMP_AT) / 16)
+        lx, ly, lz = R_ @ (np.array(_sb.LAMP_AT) / 16 * VALVE_SCALE)
         DISPS.append(("valve_lamp", cx_ + lx, cy_ + ly, cz_ + lz, yaw, [f'"kd_vl{k}"']))
         ox, oz = OUT[toward]
         mark(f"valve_{k}", vx + ox * 2, 1, vz + oz * 2)
+
+    # ── 멀리서도 보이는 빛줄기 (신호기 = 렌더 거리 끝까지 보임) — 땅 위엔 색유리 한 칸, 그 밑에 신호기, 그 밑에 3×3 받침
+    #   감옥(빨강) · 구출 발판(초록) 은 늘 켜짐. 헬기 옥상 3(노랑) · 밸브 3(청록) · 하수구(하늘) 은 받침이 꺼진 블록으로 지어지고
+    #   Skript 가 받침을 철 블록으로 바꿔 켬 (땅속이라 겉모습은 그대로)
+    def beam(x, y_glass, z, glass, on, off_blk="blue_terracotta"):
+        put(x, y_glass, z, glass)
+        put(x, y_glass - 1, z, "beacon")
+        for dx in range(-1, 2):
+            for dz in range(-1, 2):
+                put(x + dx, y_glass - 2, z + dz, "iron_block" if on else off_blk)
+    jx_, _, jz_ = marks["jail"][:3]
+    ptop = FL + 15
+    for dx in range(-1, 2):
+        for dz in range(-1, 2):
+            for y in range(ptop + 1, ptop + 4):
+                put(int(jx_ - 0.5) + dx, y, int(jz_ - 0.5) + dz, "air")
+    beam(int(jx_ - 0.5), ptop + 2, int(jz_ - 0.5), "red_stained_glass", True)
+    rx_, _, rz_ = marks["rescue"][:3]
+    beam(int(rx_ - 0.5), FL, int(rz_ - 0.5), "lime_stained_glass", True)
+    for k, h in enumerate(HELIS):
+        beam(int(math.floor(h["x"])), FL + h["y"] - 1, int(math.floor(h["z"])), "yellow_stained_glass", False, "gray_concrete")
+    for k in range(3):
+        vx_, _, vz_ = marks[f"valve_{k}"][:3]
+        beam(int(math.floor(vx_)), FL, int(math.floor(vz_)), "cyan_stained_glass", False)
+    beam(mx_, FL, mz_, "light_blue_stained_glass", False)
 
     # ── 문 정하기: 문 앞 (문 폭 + 양옆 1칸 · 바깥 6칸) 에 다른 건물 · 주차장 · 공사장이 있으면 트인 면으로 옮기고 뚫음
     blocks_ = [tuple(e[0]) for e in BLDG] + OBST
@@ -1435,7 +1461,8 @@ def display_commands():
     out += heli.summon_all(at, h["x"], h["y"], h["z"], h["yaw"], ['"kd_heli"'])
     models = disp_models()
     for name, x, y, z, yaw, tags in DISPS:
-        out += bdkit.summon_lines(models[name], at, x, y - FL, z, yaw, 1.0, ['"kd_bd"'] + tags, view=1.2)
+        sc = VALVE_SCALE if name.startswith("valve") else 1.0
+        out += bdkit.summon_lines(models[name], at, x, y - FL, z, yaw, sc, ['"kd_bd"'] + tags, view=1.2)
     return out
 
 
@@ -1504,7 +1531,7 @@ def _shot(args):
     tlm = disp_models()
     for name, x, y, z, yaw, _tags in DISPS:
         if abs(x - cam[0]) + abs(z - cam[2]) < 90:
-            bdkit.add_to_mesh(mesh, tlm[name], np.array([C + x, y, C + z]), yaw, 1.0, sun)
+            bdkit.add_to_mesh(mesh, tlm[name], np.array([C + x, y, C + z]), yaw, VALVE_SCALE if name.startswith("valve") else 1.0, sun)
     W, Hh = 1000, 560
     c = (C + cam[0], FL + cam[1], C + cam[2]); t = (C + tgt[0], FL + tgt[1], C + tgt[2])
     im = R.render(v2, pal, W, Hh, c, t, fov=fov, ss=2, fog_dist=900, mesh=mesh, **hubgen.NIGHT)

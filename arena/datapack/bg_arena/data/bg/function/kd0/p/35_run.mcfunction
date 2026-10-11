@@ -1,3 +1,42 @@
+$execute positioned $(x) $(y) $(z) run fill ~67 ~45 ~-99 ~67 ~46 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~45 ~-64 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~45 ~-63 ~-99 ~46 ~-63 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~45 ~-61 ~-99 ~45 ~-60 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~45 ~-57 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~45 ~-56 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~45 ~-54 ~-99 ~45 ~-53 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~45 ~-30 ~99 ~46 ~-30 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~45 ~-29 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~45 ~-27 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~45 ~-26 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~99 ~45 ~-21 ~99 ~46 ~-20 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~45 ~-18 ~99 ~46 ~-18 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~45 ~-17 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~99 ~45 ~-15 ~99 ~45 ~-14 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-53 ~45 ~-13 ~-53 ~45 ~-2 minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~45 ~-13 ~-29 ~45 ~-13 minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-28 ~45 ~-13 ~-28 ~45 ~-2 minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~67 ~45 ~-13 ~67 ~45 ~12 minecraft:polished_blackstone_stairs[facing=east,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~68 ~45 ~-13 ~79 ~45 ~-13 minecraft:polished_blackstone_stairs[facing=south,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~80 ~45 ~-13 ~80 ~45 ~12 minecraft:polished_blackstone_stairs[facing=west,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~82 ~45 ~-13 ~82 ~45 ~12 minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~83 ~45 ~-13 ~94 ~45 ~-13 minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~95 ~45 ~-13 ~95 ~45 ~12 minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~45 ~-12 ~-30 ~45 ~-12 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~69 ~45 ~-12 ~69 ~46 ~-12 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~71 ~45 ~-12 ~72 ~45 ~10 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~74 ~45 ~-12 ~75 ~45 ~10 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~77 ~45 ~-12 ~78 ~45 ~10 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~84 ~45 ~-12 ~93 ~45 ~-12 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~45 ~-11 ~-99 ~46 ~-10 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~45 ~-11 ~-52 ~45 ~-4 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-50 ~45 ~-11 ~-29 ~45 ~-4 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~68 ~45 ~-11 ~68 ~45 ~-10 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~70 ~45 ~-11 ~70 ~45 ~11 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~73 ~45 ~-11 ~73 ~45 ~11 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~76 ~45 ~-11 ~76 ~45 ~11 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~79 ~45 ~-11 ~79 ~46 ~-11 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~83 ~45 ~-11 ~83 ~45 ~10 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~85 ~45 ~-11 ~94 ~45 ~10 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-51 ~45 ~-10 ~-51 ~45 ~-3 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~69 ~45 ~-10 ~69 ~45 ~11 minecraft:polished_blackstone
