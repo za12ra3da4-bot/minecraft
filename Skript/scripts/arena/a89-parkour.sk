@@ -453,7 +453,7 @@ every tick:
 
 # ─────────────────────────────────────────────────────────── 천공의 정원 기믹 (pkgen2.py)
 #  점프대 (라임 유약 테라코타): 밟으면 표지 padv_<k> 속도로 다음 큰 섬까지 날아감
-#  무너지는 구름 (흰 양털): 밟고 0.6초 뒤 그 사람 화면에서만 사라짐 (진짜로 빠짐) → 3.5초 뒤 돌아옴
+#  무너지는 구름 (흰 양털): 밟고 0.6초 뒤 그 구름 전체 (윗면 + 밑 덩이) 가 그 사람 화면에서만 사라짐 (진짜로 빠짐) → 3.5초 뒤 돌아옴
 #  공명 수정 (blinkA_<k> · blinkB_<k>): 1.5초마다 A ↔ B 번갈아 켜지고 꺼짐 · 꺼지기 0.5초 전 반짝 + 소리
 every tick:
     loop all players:
@@ -488,17 +488,37 @@ function bgPkCrumble(p: player, l: location, key: text):
     play sound "block.wool.step" with volume 1 and pitch 0.6 to {_p}
     bgParticle(bgUp({_l}, 1), "cloud", 0.6, 0.05, 0.6, 0.01, 6)
     wait 12 ticks
-    set {_dx} to -2
-    while {_dx} <= 2:
-        set {_dz} to -2
-        while {_dz} <= 2:
-            set {_c} to location((x-coordinate of {_l}) + {_dx}, y-coordinate of {_l}, (z-coordinate of {_l}) + {_dz}, world of {_l})
-            if type of block at {_c} is white wool:
-                add {_c} to {_gone::*}
-                if {_p} is online:
-                    {_p}.sendBlockChange({_c}, Bukkit.createBlockData("minecraft:air"))
-            add 1 to {_dz}
-        add 1 to {_dx}
+    # 이어진 흰 양털 구름 전체 (윗면 + 밑 덩이) — 둘레로 번지며 찾기 (처음 칸에서 4칸 안 · 최대 60칸)
+    add {_l} to {_q::*}
+    set {_seen::%floor(x-coordinate of {_l})%_%floor(y-coordinate of {_l})%_%floor(z-coordinate of {_l})%} to true
+    set {_i} to 1
+    while {_i} <= size of {_q::*}:
+        set {_c} to {_q::%{_i}%}
+        add 1 to {_i}
+        add {_c} to {_gone::*}
+        if size of {_gone::*} >= 60:
+            exit loop
+        # 둘레 26칸 (대각선 포함 — 밑 구름 덩이는 윗면과 모서리로만 붙어 있음)
+        set {_ox} to -1
+        while {_ox} <= 1:
+            set {_oy} to -1
+            while {_oy} <= 1:
+                set {_oz} to -1
+                while {_oz} <= 1:
+                    set {_nb} to location((x-coordinate of {_c}) + {_ox}, (y-coordinate of {_c}) + {_oy}, (z-coordinate of {_c}) + {_oz}, world of {_l})
+                    set {_nk} to "%floor(x-coordinate of {_nb})%_%floor(y-coordinate of {_nb})%_%floor(z-coordinate of {_nb})%"
+                    if {_seen::%{_nk}%} is not set:
+                        set {_seen::%{_nk}%} to true
+                        if type of block at {_nb} is white wool:
+                            if abs((x-coordinate of {_nb}) - (x-coordinate of {_l})) <= 4:
+                                if abs((z-coordinate of {_nb}) - (z-coordinate of {_l})) <= 4:
+                                    add {_nb} to {_q::*}
+                    add 1 to {_oz}
+                add 1 to {_oy}
+            add 1 to {_ox}
+    if {_p} is online:
+        loop {_gone::*}:
+            {_p}.sendBlockChange(loop-value, Bukkit.createBlockData("minecraft:air"))
     if {_p} is online:
         play sound "block.wool.break" with volume 1 and pitch 0.7 to {_p}
         bgParticle(bgUp({_l}, 0.5), "cloud", 1.2, 0.1, 1.2, 0.02, 30)
