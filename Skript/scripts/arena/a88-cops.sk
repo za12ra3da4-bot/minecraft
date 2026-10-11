@@ -10,7 +10,7 @@
 #         헬기는 돈가방을 1개 이상 들고 있는 도둑만 탈 수 있음 (가방 1개가 탑승권) → '탈출 성공' (전망대로) · 판은 계속
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 도둑 3명 중 1명꼴 (올림) 이상 탈출해야 도둑 승리
 #         사람이 많을수록 털이 장소 다시 털 수 있는 시간이 짧아짐 (40초 → 최소 20초)
-#         연막탄 2개 (던지면 주변 경찰 3초 실명) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (보호 없이 순간 가속만)
+#         연막탄 2개 (던지면 주변 경찰 3초 실명) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 → 경찰서 밖 (40칸 넘게 떨어진 곳) 으로 순간이동 + 순간 가속 (보호 없음)
 #   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉(네더라이트 검 성능)으로 도둑 체력을 다 깎으면 체포 (죽지 않고 감옥) · 무전기 · 레이더
 #         직급: 지금 감옥에 있는 (내가 잡은) 도둑 수 · 도둑 수에 비례 (경장 15% · 경사 30% · 경위 50%) · 탈옥하면 강등
 #         경장 신속 I · 경사 추격 진주 2 + 수갑 3 · 경위 도둑 추적기 + 신속 II
@@ -528,15 +528,25 @@ function bgKdBurst(p: player):
         remove 1 from {_a}
     bgCmd("effect clear %name of {_p}% speed")
 
+# 탈옥한 도둑이 나올 자리: 경찰서(감옥)에서 40칸 넘게 떨어진 도둑 출발 자리 중 무작위 (경찰서 앞에서 바로 다시 잡히지 않게)
+function bgKdFarSpot() :: location:
+    set {_j} to bgKdMk("jail")
+    loop 24 times:
+        set {_l} to bgKdMk("thief_%random integer between 0 and 11%")
+        if distance between {_l} and {_j} > 40:
+            return bgKdSafe({_l})
+    return bgKdThiefSpot()
+
 function bgKdRescue(r: player):
     set {_n} to 0
     loop all players:
         if bgKdOn(loop-player) is true:
             if bgKdJailed(loop-player) is true:
                 delete {-bg::kd::jail::%uuid of loop-player%}
-                teleport loop-player to bgKdMk("jail_out")
+                teleport loop-player to bgKdFarSpot()
                 bgKdBurst(loop-player)
-                bgTitleP(loop-player, "&a&l탈옥!", "&f%name of {_r}% 이(가) 구해 줬습니다 · 순간 가속! (보호 없음 · 바로 도망)")
+                bgParticle(location of loop-player, "reverse_portal", 0.5, 1, 0.5, 0.1, 40)
+                bgTitleP(loop-player, "&a&l탈옥!", "&f%name of {_r}% 이(가) 구해 줬습니다 · 경찰서 밖으로 이동 · 순간 가속!")
                 add 1 to {_n}
     {_n} > 0
     set {-bg::kd::rescd} to now
