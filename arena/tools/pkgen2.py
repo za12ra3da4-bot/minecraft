@@ -15,7 +15,7 @@ H = 96
 FL = 20
 C = N // 2
 TIERS = 5
-HALF = 19          # 층마다 x -19 ~ +19 를 가로지름
+HALF = 24          # 층마다 x -24 ~ +24 를 가로지름
 
 PAL = ["air"]
 P = {"air": 0}
@@ -38,49 +38,54 @@ LADDER = "ladder[facing={f},waterlogged=false]"
 FENCE = {0: "mangrove_fence", 1: "birch_fence", 2: "pale_oak_fence", 3: "crimson_fence", 4: "bamboo_fence"}
 
 
-# 층마다 난이도: (올라가는 점프 확률, 평지 거리 범위, 종류 가중치)
-#  1층 쉬움 (넓은 2×2 · 짧은 거리) → 5층 어려움 (1칸 블록 · 울타리 기둥 · 3칸 틈 점프)
-DIFF = [(0.35, (2, 3), {"block2": 6, "block": 4}),
-        (0.40, (3, 3), {"block": 5, "block2": 2, "slab": 3}),
-        (0.40, (3, 4), {"block": 4, "slab": 2, "pillar": 2, "fence": 2}),
-        (0.45, (3, 4), {"block": 4, "pillar": 3, "fence": 2, "slab": 1}),
-        (0.45, (4, 4), {"block": 5, "fence": 3, "pillar": 2})]
+# 층마다 난이도: (올라가는 점프 확률, 평지 틈(가장자리 사이 빈칸) 범위, 발판 종류 가중치)
+#  발판 = 큼직한 떠 있는 섬 (isle5 = 둥근 5칸 · sq3 = 3×3 · slab3 = 3×3 반블록) · 작은 발판 (single · pillar · fence)
+#  1층: 큰 섬 · 1~2칸 틈 → 5층: 1칸 발판 · 울타리 기둥 · 3칸 틈
+DIFF = [(0.35, (1, 2), {"isle5": 6, "sq3": 4}),
+        (0.40, (2, 2), {"sq3": 5, "isle5": 2, "slab3": 3}),
+        (0.40, (2, 3), {"sq3": 4, "single": 3, "pillar": 3}),
+        (0.45, (2, 3), {"single": 4, "pillar": 3, "sq3": 2, "fence": 2}),
+        (0.45, (3, 3), {"single": 5, "fence": 3, "sq3": 1, "pillar": 2})]
+HALFSZ = {"isle5": 2, "sq3": 1, "slab3": 1, "single": 0, "pillar": 0, "fence": 0}
 TIER_NAME = ["정원", "대리석", "구름", "수정", "황금"]
+ZSTEP = 9          # 층마다 남쪽으로 (다리 길이)
+END_R = 3          # 층 끝 섬 반지름 (둥근 7칸)
 
 
 def course():
     """점프 자리: (x, y, z, 종류, 층) 목록 + 층 끝 섬 (x, y, z, 층) 목록. y = 발판 블록 높이 (FL 기준 0)"""
-    rng = np.random.default_rng(23)
+    rng = np.random.default_rng(29)
     pts, ends = [], []
     x, y, z = 0, 0, 0
+    hprev = 2                      # 시작 발판 5×5
     for t in range(TIERS):
-        pup, (dlo, dhi), wts = DIFF[t]
+        pup, (glo, ghi), wts = DIFF[t]
         kinds, w = list(wts), np.array(list(wts.values()), float)
         d = 1 if t % 2 == 0 else -1
         zc = z
         last = "start"
         while (x < HALF if d > 0 else x > -HALF):
-            up = last != "fence" and rng.random() < pup
-            dist = (min(3, dhi) if up else int(rng.integers(dlo, dhi + 1)))
-            if up and t < 2:
-                dist = 2 if rng.random() < 0.5 else 3
             kind = str(rng.choice(kinds, p=w / w.sum()))
             if kind == "fence" and last == "fence":
-                kind = "block"
-            if kind == "fence" or last == "fence":
-                dist = min(dist, 3)
-            dz = 0 if dist >= 4 else int(rng.integers(-1, 2))
-            x += d * dist
+                kind = "single"
+            up = last != "fence" and rng.random() < pup
+            gap = int(rng.integers(glo, ghi + 1))
+            if up or kind == "fence" or last == "fence":
+                gap = min(gap, 2)
+            h = HALFSZ[kind]
+            dz = 0 if gap >= 3 else int(rng.integers(-1, 2))
+            x += d * (hprev + h + gap + 1)
             y += 1 if up else 0
-            z = max(zc - 2, min(zc + 2, z + dz))
+            z = max(zc - 1, min(zc + 1, z + dz))
             pts.append((x, y, z, kind, t))
-            last = kind
-        # 끝 섬 (5×5) — 한 칸 더 가서
-        x += d * 4
+            last, hprev = kind, h
+        # 끝 섬 (둥근 7칸) — 틈 1칸
+        x += d * (hprev + END_R + 2)
         ends.append((x, y, z, t))
-        # 사다리 탑: 섬 남쪽 끝 기둥 (높이 5) · 북쪽 면 사다리 → 꼭대기 발판 (기둥 위 · 남쪽으로 5칸) 에서 다음 층
+        # 사다리 탑 (섬 남쪽 끝) → 꼭대기 다리 (3칸 폭 · 남쪽으로) 끝에서 다음 층
         y += 5
-        z += 5
+        z += ZSTEP
+        hprev = 1
     return pts, ends
 
 
@@ -119,93 +124,127 @@ def build():
             put(dx, FL, dz, "verdant_froglight" if edge else "moss_block", True)
             put(dx, FL - 1, dz, "mossy_stone_bricks", True)
     marks["start"] = (0.5, 1, 0.5, -90.0)
-    # 코스 블록
+    # 코스 발판
+    rngd = np.random.default_rng(41)
+    TOP0 = ["grass_block[snowy=false]", "grass_block[snowy=false]", "moss_block"]
+
+    def isle(x, yy, z, t, rad, slab=False):
+        """둥근 / 네모 떠 있는 섬 발판: 윗면 (층 재료 · 가장자리 곁들임) + 아래로 좁아지는 고깔 + 매단 등"""
+        base, acc, light = SECT[t]
+        ud = UNDER[t]
+        r = int(math.ceil(rad))
+        cells = [(dx, dz) for dx in range(-r, r + 1) for dz in range(-r, r + 1) if dx * dx + dz * dz <= rad * rad + 0.3]
+        for dx, dz in cells:
+            edge = any((dx + ex) ** 2 + (dz + ez) ** 2 > rad * rad + 0.3 for ex, ez in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+            if slab:
+                top = "smooth_quartz_slab[type=top,waterlogged=false]"
+            elif t == 0:
+                top = TOP0[int(rngd.integers(0, 3))]
+            elif t == 2:
+                top = "white_wool" if not edge else "snow_block"
+            else:
+                top = acc if edge else (base if (dx + dz) % 2 == 0 else (light if (dx, dz) == (0, 0) else base))
+            put(x + dx, yy, z + dz, top, True)
+            put(x + dx, yy - 1, z + dz, (light if edge and t in (1, 3, 4) and (dx + dz) % 2 == 0 else ud[0]), True)
+        # 고깔
+        depth = int(rad * 2) + 2
+        for k in range(2, depth + 1):
+            rr = rad * (1 - (k - 1) / (depth + 0.5))
+            for dx, dz in cells:
+                if dx * dx + dz * dz <= rr * rr + 0.2:
+                    put(x + dx, yy - k, z + dz, ud[min(2, (k - 2) * 3 // max(1, depth - 1))], True)
+        put(x, yy - depth - 1, z, "iron_chain[axis=y,waterlogged=false]", True)
+        put(x, yy - depth - 2, z, HANG[t], True)
+        # 윗면 장식 (밟아도 되는 것만: 꽃잎 · 꽃 · 촛불)
+        for dx, dz in cells:
+            if (dx, dz) == (0, 0) or rngd.random() > 0.22:
+                continue
+            if t == 0:
+                deco = str(rngd.choice(["pink_petals[facing=north,flower_amount=4]", "pink_petals[facing=east,flower_amount=3]",
+                                        "short_grass", "allium", "azure_bluet", "cornflower"]))
+            elif t == 2 or slab:
+                continue
+            else:
+                deco = ["", "white_candle", "", "magenta_candle", "yellow_candle"][t] + "[candles=2,lit=true,waterlogged=false]"
+            put(x + dx, yy + 1, z + dz, deco, True)
+        # 구름 층: 옆으로 구름 덩이
+        if t == 2:
+            for dx, dz in cells:
+                for ox, oz in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    if (dx + ox) ** 2 + (dz + oz) ** 2 > rad * rad + 0.3 and rngd.random() < 0.5 and free(x + dx + ox, yy - 1, z + dz + oz):
+                        put(x + dx + ox, yy - 1, z + dz + oz, "white_wool", True)
+        # 수정 층: 밑에 자수정 결정
+        if t == 3:
+            for dx, dz in cells:
+                if rngd.random() < 0.3 and free(x + dx, yy - 2, z + dz):
+                    put(x + dx, yy - 2, z + dz, "amethyst_cluster[facing=down,waterlogged=false]", True)
+
     for x, y, z, kind, t in pts:
         base, acc, light = SECT[t]
         yy = FL + y
-        if kind == "block":
-            put(x, yy, z, ("grass_block[snowy=false]" if t == 0 else base), True)
+        if kind == "isle5":
+            isle(x, yy, z, t, 2.4)
+        elif kind == "sq3":
+            isle(x, yy, z, t, 1.5)
+        elif kind == "slab3":
+            isle(x, yy, z, t, 1.5, slab=True)
+        elif kind == "single":
+            put(x, yy, z, "grass_block[snowy=false]" if t == 0 else (acc if t == 4 else base), True)
             put(x, yy - 1, z, light, True)
-            # 매달린 작은 섬 (가운데가 길게) + 등
-            ud = UNDER[t]
-            put(x, yy - 2, z, ud[0], True)
-            put(x, yy - 3, z, ud[2], True)
+            put(x, yy - 2, z, UNDER[t][1], True)
+            put(x, yy - 3, z, "iron_chain[axis=y,waterlogged=false]", True)
             put(x, yy - 4, z, HANG[t], True)
-        elif kind == "block2":
-            for dx in (0, 1):
-                for dz in (0, 1):
-                    put(x + dx, yy, z + dz, ("grass_block[snowy=false]" if t == 0 else (base if (dx + dz) % 2 == 0 else acc)), True)
-                    put(x + dx, yy - 1, z + dz, UNDER[t][0], True)
-            ud = UNDER[t]
-            put(x, yy - 2, z, ud[1], True)
-            put(x + 1, yy - 2, z + 1, ud[1], True)
-            put(x, yy - 3, z, ud[2], True)
-            put(x, yy - 4, z, HANG[t], True)
-            if t == 0:
-                put(x + 1, yy + 1, z, "pink_petals[facing=east,flower_amount=4]", True)
-        elif kind == "slab":
-            put(x, yy, z, "smooth_quartz_slab[type=top,waterlogged=false]" if t != 4 else "smooth_sandstone_slab[type=top,waterlogged=false]", True)
-            put(x, yy - 1, z, light, True)
         elif kind == "pillar":
-            for k in range(0, 5):
-                put(x, yy - k, z, base if k == 0 else acc, True)
-            put(x, yy - 5, z, light, True)
+            for k in range(0, 6):
+                put(x, yy - k, z, base if k == 0 else ("quartz_pillar[axis=y]" if t != 3 else "purpur_pillar[axis=y]"), True)
+            put(x, yy - 6, z, light, True)
+            put(x, yy - 7, z, HANG[t], True)
         elif kind == "fence":
             # 울타리 기둥 꼭대기 (1.5칸) 가 발판 높이 + 0.5 → 한 칸 아래에 둠
             put(x, yy - 1, z, FENCE[t] + "[east=false,north=false,south=false,west=false,waterlogged=false]", True)
             put(x, yy - 2, z, acc, True)
             put(x, yy - 3, z, light, True)
+            put(x, yy - 4, z, HANG[t], True)
     # 층 끝 섬 + 사다리 탑
     for i, (x, y, z, t) in enumerate(ends):
         base, acc, light = SECT[t]
         yy = FL + y
-        for dx in range(-2, 3):
-            for dz in range(-2, 3):
-                edge = abs(dx) == 2 or abs(dz) == 2
-                put(x + dx, yy, z + dz, light if (edge and (dx + dz) % 2 == 0) else base, True)
-                put(x + dx, yy - 1, z + dz, acc, True)
-        # 섬 밑 (층 재료로 떠 있는 고깔 · 끝에 매단 등)
-        ud = UNDER[t]
-        for k in range(2, 8):
-            r = 3.0 - k * 0.4
-            for dx in range(-3, 4):
-                for dz in range(-3, 4):
-                    if dx * dx + dz * dz <= r * r:
-                        put(x + dx, yy - k, z + dz, ud[min(2, (k - 2) // 2)])
-        put(x, yy - 8, z, HANG[t])
-        # 북쪽 모서리 가로등 (울타리 2 + 등) · 북쪽 줄 꽃 / 촛불
+        isle(x, yy, z, t, END_R + 0.3)
+        # 북쪽 모서리 가로등 (울타리 2 + 등)
         for cx in (-2, 2):
             put(x + cx, yy + 1, z - 2, FENCE[t] + "[east=false,north=false,south=false,west=false,waterlogged=false]", True)
             put(x + cx, yy + 2, z - 2, FENCE[t] + "[east=false,north=false,south=false,west=false,waterlogged=false]", True)
             put(x + cx, yy + 3, z - 2, "lantern[hanging=false,waterlogged=false]", True)
-        for cx in (-1, 0, 1):
-            if t == 0:
-                put(x + cx, yy + 1, z - 2, ["pink_tulip", "allium", "azure_bluet"][cx + 1], True)
-            else:
-                put(x + cx, yy + 1, z - 2, ["white", "light_blue", "white", "magenta", "yellow"][t] + "_candle[candles=3,lit=true,waterlogged=false]", True)
         if i == len(ends) - 1:
             continue
-        # 사다리 탑: 기둥 (x, yy+1..yy+5, z+2) · 사다리 (z+1, 북쪽 면 = facing north) · 꼭대기 발판 (기둥 위 + 남쪽 2칸)
+        # 사다리 탑: 기둥 (x, yy+1..yy+5, z+3) · 사다리 (z+2, 북쪽 면) · 꼭대기 다리 (3칸 폭 · z+3 ~ 다음 층 시작 + 1)
         nb, na, nl = SECT[t + 1]
+        zt = z + 3
         for k in range(1, 6):
-            put(x, yy + k, z + 2, acc if k < 5 else nb, True)
-            put(x, yy + k, z + 1, LADDER.format(f="north"), True)
+            put(x, yy + k, zt, acc if k < 5 else nb, True)
+            put(x, yy + k, zt - 1, LADDER.format(f="north"), True)
         for dx in (-1, 0, 1):
-            for dz in range(2, 7):
-                if (dx, dz) != (0, 2):
-                    put(x + dx, yy + 5, z + dz, nb if (dx + dz) % 2 == 0 else na, True)
-                    put(x + dx, yy + 4, z + dz, nl, True)
-        # 사다리 옆 빛 기둥 (탑 표시)
+            for dz in range(0, ZSTEP - 1):
+                if (dx, dz) != (0, 0):
+                    put(x + dx, yy + 5, zt + dz, nb if (dx + dz) % 2 == 0 else na, True)
+                    put(x + dx, yy + 4, zt + dz, nl if dx == 0 else UNDER[t + 1][0], True)
+            # 다리 난간 기둥 (양옆 · 2칸마다 등)
+        for dz in range(1, ZSTEP - 1, 2):
+            for sx in (-2, 2):
+                put(x + sx, yy + 5, zt + dz, FENCE[t + 1] + "[east=false,north=false,south=false,west=false,waterlogged=false]", True)
+                put(x + sx, yy + 6, zt + dz, "lantern[hanging=false,waterlogged=false]" if dz % 4 == 1 else FENCE[t + 1] + "[east=false,north=false,south=false,west=false,waterlogged=false]", True)
+        # 탑 옆 빛 기둥
         for k in range(1, 9):
-            put(x - 2, yy + k, z + 2, "end_rod[facing=up]" if k == 8 else "quartz_pillar[axis=y]")
-            put(x + 2, yy + k, z + 2, "end_rod[facing=up]" if k == 8 else "quartz_pillar[axis=y]")
+            put(x - 2, yy + k, zt, "end_rod[facing=up]" if k == 8 else "quartz_pillar[axis=y]")
+            put(x + 2, yy + k, zt, "end_rod[facing=up]" if k == 8 else "quartz_pillar[axis=y]")
     # 결승: 마지막 섬에서 황금 신전 (7×7 금 발판 + 기둥 4 + 지붕 고리 + 신호 기둥)
     lx, ly, lz, _ = ends[-1]
     d = 1 if (TIERS - 1) % 2 == 0 else -1
     # 마지막 섬 → 신전까지 금 계단 (한 칸씩 위로 2번)
     for k in range(1, 3):
-        put(lx + d * (2 + k * 2), FL + ly + k, lz, "gold_block", True)
-        put(lx + d * (2 + k * 2), FL + ly + k - 1, lz, "ochre_froglight", True)
+        for dz in (-1, 0, 1):
+            put(lx + d * (2 + k * 2), FL + ly + k, lz + dz, "gold_block" if dz == 0 else "smooth_sandstone", True)
+            put(lx + d * (2 + k * 2), FL + ly + k - 1, lz + dz, "ochre_froglight", True)
     fx, fz = lx + d * 10, lz
     fy = FL + ly + 3
     for dx in range(-3, 4):
@@ -332,7 +371,7 @@ def preview(path):
     pal = R.Palette(PAL)
     W, Hh = 1000, 560
     shots = [((C + 10, FL + 46, C - 62), (C + 2, FL + 26, C + 12), 66, "천공의 정원 — 떠 있는 섬을 지그재그로 오르는 5층 · 사다리 탑 · 꼭대기 황금 신전"),
-             ((C + 0.5, FL + 3, C + 0.5), (C + 14, FL + 3, C + 0.5), 80, "시작 발판에서 (동쪽으로 출발)")]
+             ((C - 5, FL + 7, C - 6), (C + 16, FL + 2, C + 2), 75, "시작 발판에서 (동쪽으로 출발) · 큼직한 떠 있는 섬 발판")]
     font = ImageFont.truetype("/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc", 24)
     out = Image.new("RGB", (W, Hh * len(shots)))
     for i, (cam, tgt, fov, lab) in enumerate(shots):

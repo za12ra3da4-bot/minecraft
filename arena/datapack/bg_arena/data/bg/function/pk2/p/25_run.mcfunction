@@ -1,27 +1,91 @@
-$execute positioned $(x) $(y) $(z) run fill ~56 ~-20 ~-22 ~63 ~75 ~19 minecraft:air strict
-$execute positioned $(x) $(y) $(z) run fill ~56 ~-20 ~20 ~63 ~75 ~61 minecraft:air strict
-$execute positioned $(x) $(y) $(z) run fill ~56 ~-20 ~62 ~63 ~75 ~63 minecraft:air strict
-$execute positioned $(x) $(y) $(z) run fill ~56 ~-8 ~6 ~58 ~-8 ~8 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~55 ~-7 ~5 ~59 ~-7 ~9 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~56 ~-6 ~6 ~58 ~-6 ~8 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~54 ~10 ~44 ~56 ~10 ~48 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~57 ~10 ~45 ~57 ~10 ~47 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~54 ~11 ~43 ~56 ~11 ~49 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~57 ~11 ~44 ~57 ~11 ~48 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~58 ~11 ~45 ~58 ~11 ~47 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~54 ~12 ~44 ~56 ~12 ~48 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~57 ~12 ~45 ~57 ~12 ~47 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~57 ~14 ~41 ~57 ~14 ~45 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~56 ~14 ~42 ~56 ~14 ~45 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~58 ~14 ~42 ~58 ~14 ~44 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run setblock ~59 ~14 ~43 minecraft:snow_block
-$execute positioned $(x) $(y) $(z) run fill ~57 ~15 ~40 ~57 ~15 ~46 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~54 ~15 ~41 ~56 ~15 ~45 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~58 ~15 ~41 ~59 ~15 ~45 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~60 ~15 ~43 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~55 ~15 ~46 ~56 ~15 ~46 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~57 ~16 ~41 ~57 ~16 ~45 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~56 ~16 ~42 ~56 ~16 ~45 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run fill ~58 ~16 ~42 ~58 ~16 ~44 minecraft:white_wool
-$execute positioned $(x) $(y) $(z) run setblock ~59 ~16 ~43 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~48 ~-20 ~20 ~55 ~75 ~61 minecraft:air strict
+$execute positioned $(x) $(y) $(z) run fill ~48 ~-20 ~62 ~55 ~75 ~63 minecraft:air strict
+$execute positioned $(x) $(y) $(z) run fill ~53 ~-13 ~23 ~53 ~-13 ~26 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~-13 ~25 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~-13 ~27 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run fill ~53 ~-12 ~22 ~53 ~-12 ~27 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~52 ~-12 ~23 ~52 ~-12 ~27 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~-12 ~25 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~-12 ~28 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~53 ~-11 ~23 ~53 ~-11 ~26 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~-11 ~25 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~-11 ~27 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~50 ~-1 ~-12 ~52 ~-1 ~-8 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run fill ~49 ~-1 ~-11 ~49 ~-1 ~-9 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run fill ~53 ~-1 ~-11 ~53 ~-1 ~-9 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run fill ~52 ~0 ~-21 ~52 ~2 ~-21 minecraft:stone
+$execute positioned $(x) $(y) $(z) run fill ~49 ~0 ~-13 ~52 ~0 ~-7 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~48 ~0 ~-12 ~48 ~0 ~-8 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~53 ~0 ~-12 ~53 ~0 ~-8 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~54 ~0 ~-11 ~54 ~0 ~-9 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~1 ~-20 minecraft:andesite
+$execute positioned $(x) $(y) $(z) run fill ~50 ~1 ~-12 ~52 ~1 ~-8 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~49 ~1 ~-11 ~49 ~1 ~-9 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~53 ~1 ~-11 ~53 ~1 ~-9 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~2 ~-23 minecraft:stone
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~2 ~-23 minecraft:andesite
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~2 ~-22 minecraft:andesite
+$execute positioned $(x) $(y) $(z) run fill ~52 ~2 ~-22 ~53 ~2 ~-22 minecraft:stone
+$execute positioned $(x) $(y) $(z) run fill ~51 ~2 ~-21 ~51 ~2 ~-20 minecraft:stone
+$execute positioned $(x) $(y) $(z) run fill ~53 ~2 ~-21 ~53 ~2 ~-20 minecraft:stone
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~2 ~-21 minecraft:andesite
+$execute positioned $(x) $(y) $(z) run setblock ~50 ~2 ~-20 minecraft:stone
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~2 ~-20 minecraft:stone
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~2 ~-19 minecraft:andesite
+$execute positioned $(x) $(y) $(z) run fill ~51 ~3 ~-23 ~53 ~4 ~-19 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~49 ~3 ~-22 ~50 ~4 ~-21 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~54 ~3 ~-22 ~54 ~4 ~-20 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~50 ~3 ~-20 ~50 ~4 ~-19 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~52 ~3 ~-18 ~52 ~4 ~-18 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~51 ~4 ~-24 ~53 ~4 ~-24 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~50 ~4 ~-23 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~4 ~-23 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run fill ~55 ~4 ~-22 ~55 ~4 ~-20 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~49 ~4 ~-20 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~4 ~-19 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~4 ~-18 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~53 ~4 ~-18 minecraft:dirt
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~5 ~-24 minecraft:moss_block
+$execute positioned $(x) $(y) $(z) run fill ~52 ~5 ~-24 ~53 ~5 ~-22 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run fill ~50 ~5 ~-23 ~51 ~5 ~-19 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~5 ~-23 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run setblock ~49 ~5 ~-22 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~5 ~-22 minecraft:moss_block
+$execute positioned $(x) $(y) $(z) run fill ~55 ~5 ~-22 ~55 ~5 ~-20 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run setblock ~49 ~5 ~-21 minecraft:moss_block
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~5 ~-21 minecraft:moss_block
+$execute positioned $(x) $(y) $(z) run fill ~53 ~5 ~-21 ~54 ~5 ~-19 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run setblock ~49 ~5 ~-20 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run fill ~52 ~5 ~-20 ~52 ~5 ~-18 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~5 ~-18 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run setblock ~53 ~5 ~-18 minecraft:grass_block[snowy=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~6 ~-21 minecraft:short_grass
+$execute positioned $(x) $(y) $(z) run fill ~52 ~6 ~-21 ~52 ~10 ~-21 minecraft:cherry_log[axis=y]
+$execute positioned $(x) $(y) $(z) run setblock ~53 ~6 ~-21 minecraft:flowering_azalea
+$execute positioned $(x) $(y) $(z) run setblock ~53 ~6 ~-20 minecraft:pink_petals[facing=north,flower_amount=4]
+$execute positioned $(x) $(y) $(z) run fill ~51 ~9 ~-23 ~53 ~11 ~-22 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~50 ~9 ~-22 ~50 ~11 ~-20 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~54 ~9 ~-22 ~54 ~11 ~-20 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~51 ~9 ~-21 ~51 ~11 ~-19 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~53 ~9 ~-21 ~53 ~11 ~-19 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~52 ~9 ~-20 ~52 ~11 ~-19 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~51 ~10 ~-24 ~53 ~10 ~-24 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~50 ~10 ~-23 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~10 ~-23 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~49 ~10 ~-22 ~49 ~10 ~-20 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~55 ~10 ~-22 ~55 ~10 ~-20 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~50 ~10 ~-19 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~54 ~10 ~-19 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~51 ~10 ~-18 ~53 ~10 ~-18 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~52 ~11 ~-21 minecraft:cherry_leaves[distance=7,persistent=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~52 ~19 ~-32 ~52 ~19 ~-30 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~19 ~-31 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run fill ~51 ~20 ~-33 ~52 ~20 ~-29 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~50 ~20 ~-31 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~52 ~21 ~-32 ~52 ~21 ~-30 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~21 ~-31 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~54 ~43 ~-15 ~54 ~43 ~-13 minecraft:snow_block
+$execute positioned $(x) $(y) $(z) run fill ~53 ~44 ~-20 ~53 ~44 ~-12 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~54 ~45 ~-15 ~54 ~45 ~-13 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run fill ~56 ~-20 ~-64 ~63 ~75 ~-23 minecraft:air strict
 $execute positioned $(x) $(y) $(z) positioned ~-64 ~-22 ~-64 run kill @e[type=item,dx=128,dy=100,dz=128]

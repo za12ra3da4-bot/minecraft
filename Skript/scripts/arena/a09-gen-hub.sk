@@ -309,9 +309,9 @@ on load:
     set {-bg::pkmk::start::y} to 1
     set {-bg::pkmk::start::z} to 0.5
     set {-bg::pkmk::start::yaw} to 0.0
-    set {-bg::pk2mk::finish::x} to 34.5
-    set {-bg::pk2mk::finish::y} to 45
-    set {-bg::pk2mk::finish::z} to 24.5
+    set {-bg::pk2mk::finish::x} to 42.5
+    set {-bg::pk2mk::finish::y} to 47
+    set {-bg::pk2mk::finish::z} to 36.5
     set {-bg::pk2mk::finish::yaw} to 0.0
     set {-bg::pk2mk::start::x} to 0.5
     set {-bg::pk2mk::start::y} to 1
