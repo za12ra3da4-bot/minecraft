@@ -12,7 +12,7 @@
 #         사람이 많을수록 털이 장소 다시 털 수 있는 시간이 짧아짐 (40초 → 최소 20초)
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
 #   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉(네더라이트 검 성능)으로 도둑 체력을 다 깎으면 체포 (죽지 않고 감옥) · 무전기 · 레이더
-#         실적: 내가 잡은 도둑이 감옥에 있는 동안 5초마다 +1 → 직급 (도둑 수 × 2 마다 한 단계)
+#         직급: 지금 감옥에 있는 (내가 잡은) 도둑 수 · 도둑 수에 비례 (경장 15% · 경사 30% · 경위 50%) · 탈옥하면 강등
 #         경장 신속 I · 경사 추격 진주 2 + 수갑 3 · 경위 도둑 추적기 + 신속 II
 #   탈옥하면 신속 IV 에서 4초에 걸쳐 점점 느려지는 가속
 #         도둑 전원 체포 또는 시간 종료 → 경찰 승리
@@ -463,6 +463,33 @@ function bgKdRescue(r: player):
     bgKdSay("&a%name of {_r}%&f 이(가) 감옥을 부쉈다! &a%{_n}%명 탈옥")
     bgKdSound("block.iron_door.open", 1.2)
 
+# 도둑 보상 음료 (마시면 효과 · 빈 병 안 남음 · 빨리 마심)
+#  energy = 에너지 드링크 (8초 신속 II) · jump = 점프 드링크 (10초 점프 강화 II) · stealth = 스텔스 드링크 (4초 투명)
+function bgKdDrink(p: player, k: text):
+    set {_nm} to "에너지 드링크"
+    set {_col} to "gold"
+    set {_rgb} to 16747546
+    set {_ef} to "speed"
+    set {_amp} to 1
+    set {_dur} to 160
+    set {_desc} to "마시면 8초 동안 신속 II"
+    if {_k} is "jump":
+        set {_nm} to "점프 드링크"
+        set {_col} to "green"
+        set {_rgb} to 8191744
+        set {_ef} to "jump_boost"
+        set {_dur} to 200
+        set {_desc} to "마시면 10초 동안 점프 강화 II"
+    else if {_k} is "stealth":
+        set {_nm} to "스텔스 드링크"
+        set {_col} to "white"
+        set {_rgb} to 12632272
+        set {_ef} to "invisibility"
+        set {_amp} to 0
+        set {_dur} to 80
+        set {_desc} to "마시면 4초 동안 투명"
+    bgCmd("give %name of {_p}% potion[!use_remainder,consumable={consume_seconds:0.6f,animation:""drink"",sound:""entity.generic.drink"",has_consume_particles:false},potion_contents={custom_color:%{_rgb}%,custom_effects:[{id:""minecraft:%{_ef}%"",amplifier:%{_amp}%b,duration:%{_dur}%,show_particles:false,show_icon:true}]},item_name={text:""%{_nm}%"",color:""%{_col}%"",bold:true},lore=[{text:""%{_desc}%"",color:""gray"",italic:false}]] 1")
+
 function bgKdSteal(p: player, i: number):
     add 1 to {-bg::kd::bags}
     add 1 to {-bg::kd::carry::%uuid of {_p}%}
@@ -474,15 +501,15 @@ function bgKdSteal(p: player, i: number):
         bgCmd("give %name of {_p}% snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true},lore=[{text:""던지면 주변 경찰이 3초 동안 앞이 안 보이고 느려짐"",color:""gray"",italic:false}]] 1")
         send action bar "&6보상: &f연막탄 +1" to {_p}
     else if {_rw} is 2:
-        bgCmd("effect give %name of {_p}% speed 10 1 true")
-        send action bar "&6보상: &b10초 신속 II" to {_p}
+        bgKdDrink({_p}, "energy")
+        send action bar "&6보상: &6에너지 드링크 &7(마시면 8초 신속 II)" to {_p}
     else if {_rw} is 3:
-        bgCmd("effect give %name of {_p}% invisibility 3 0 true")
-        send action bar "&6보상: &f3초 투명" to {_p}
+        bgKdDrink({_p}, "stealth")
+        send action bar "&6보상: &f스텔스 드링크 &7(마시면 4초 투명)" to {_p}
     else:
         delete {-bg::kd::cds::%uuid of {_p}%}
-        bgCmd("effect give %name of {_p}% jump_boost 10 1 true")
-        send action bar "&6보상: &a10초 점프 강화 &7+ 운동화 재충전" to {_p}
+        bgKdDrink({_p}, "jump")
+        send action bar "&6보상: &a점프 드링크 &7+ 운동화 재충전" to {_p}
     add 1 to {bg::kd::steals::%uuid of {_p}%}
     set {bg::kd::name::%uuid of {_p}%} to name of {_p}
     bgParticle(location of {_p}, "wax_on", 0.6, 1, 0.6, 0, 30)
@@ -1166,17 +1193,17 @@ function bgKdLoot(p: player, l: location):
         bgCmd("give %name of {_p}% snowball[item_model=""bg:kd/smoke"",item_name={text:""연막탄"",color:""gray"",bold:true}] 1")
         send action bar "&6연막탄 +1" to {_p}
     else if {_r} <= 72:
-        bgCmd("effect give %name of {_p}% speed 6 1 true")
-        send action bar "&b6초 신속 II" to {_p}
+        bgKdDrink({_p}, "energy")
+        send action bar "&6에너지 드링크 +1 &7(마시면 8초 신속 II)" to {_p}
     else if {_r} <= 82:
-        bgCmd("effect give %name of {_p}% jump_boost 8 1 true")
-        send action bar "&a8초 점프 강화" to {_p}
+        bgKdDrink({_p}, "jump")
+        send action bar "&a점프 드링크 +1 &7(마시면 10초 점프 강화)" to {_p}
     else:
         send action bar "&8꽝… 빈 통이에요" to {_p}
 
-# ─────────────────────────────────────────────────────────── 경찰 실적 · 직급
-#  내가 잡은 도둑이 감옥에 있는 동안 5초마다 실적 +1 (도둑 한 명당)
-#  직급 기준 = 도둑 수에 비례: 한 단계마다 max(12, 도둑 수 × 6) 실적 (도둑 1명을 계속 가둬 두면 1분에 한 단계)
+# ─────────────────────────────────────────────────────────── 경찰 직급 (지금 감옥에 있는, 내가 잡은 도둑 수)
+#  기준은 판의 도둑 수에 비례: 경장 = max(1, 도둑×15%) · 경사 = max(2, 도둑×30%) · 경위 = max(3, 도둑×50%) 명 (올림)
+#  도둑이 탈옥해 수가 줄면 그 자리에서 강등 (아이템도 회수) · 1초마다 확인
 #  순경(0) → 경장(1): 상시 신속 I → 경사(2): 추격 진주 2 + 수갑 3 (던지면 맞은 도둑 3초 느려짐)
 #  → 경위(3): 도둑 추적기 (우클릭: 가장 가까운 도둑 4초 발광 · 30초) + 상시 신속 II
 function bgKdRankName(r: number) :: text:
@@ -1188,9 +1215,17 @@ function bgKdRankName(r: number) :: text:
         return "&b경장"
     return "&7순경"
 
+function bgKdRankNeed(r: number) :: number:
+    set {_t} to bgKdCount("thief")
+    if {_r} >= 3:
+        return max(3, ceil({_t} * 0.5))
+    if {_r} is 2:
+        return max(2, ceil({_t} * 0.3))
+    return max(1, ceil({_t} * 0.15))
+
+# 실적 기록 (통계) — 내가 잡은 도둑이 감옥에 있는 동안 5초마다 +1
 every 5 seconds:
     bgKdState() is "play"
-    set {_step} to max(12, bgKdCount("thief") * 6)
     loop all players:
         bgKdOn(loop-player) is true
         bgKdRole(loop-player) is "thief"
@@ -1199,28 +1234,60 @@ every 5 seconds:
         {_c} is set
         add 1 to {-bg::kd::merit::%{_c}%}
         add 1 to {bg::kd::meritall::%{_c}%}
+
+every 1 second:
+    bgKdState() is "play"
+    delete {_jn::*}
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            if bgKdRole(loop-player) is "thief":
+                if bgKdJailed(loop-player) is true:
+                    set {_c} to {-bg::kd::by::%uuid of loop-player%}
+                    if {_c} is set:
+                        add 1 to {_jn::%{_c}%}
+    set {_n1} to bgKdRankNeed(1)
+    set {_n2} to bgKdRankNeed(2)
+    set {_n3} to bgKdRankNeed(3)
     loop all players:
         bgKdOn(loop-player) is true
         bgKdRole(loop-player) is "cop"
         set {_u} to "%uuid of loop-player%"
-        set {_m} to {-bg::kd::merit::%{_u}%} ? 0
-        set {_r} to min(3, floor({_m} / {_step}))
+        set {_j} to {_jn::%{_u}%} ? 0
+        set {_r} to 0
+        if {_j} >= {_n3}:
+            set {_r} to 3
+        else if {_j} >= {_n2}:
+            set {_r} to 2
+        else if {_j} >= {_n1}:
+            set {_r} to 1
         set {_old} to {-bg::kd::rank::%{_u}%} ? 0
         if {_r} >= 3:
-            bgCmd("effect give %name of loop-player% speed 7 1 true")
+            bgCmd("effect give %name of loop-player% speed 3 1 true")
         else if {_r} >= 1:
-            bgCmd("effect give %name of loop-player% speed 7 0 true")
+            bgCmd("effect give %name of loop-player% speed 3 0 true")
         if {_r} > {_old}:
             set {-bg::kd::rank::%{_u}%} to {_r}
-            bgTitleP(loop-player, "&9&l진급! %bgKdRankName({_r})%", "&f실적 %{_m}% · 잡은 도둑이 감옥에 있을수록 실적이 오름")
+            bgTitleP(loop-player, "&9&l진급! %bgKdRankName({_r})%", "&f내가 가둔 도둑 %{_j}%명 &7· 탈옥하면 강등")
             play sound "ui.toast.challenge_complete" to loop-player
             if {_r} >= 2:
                 if {_old} < 2:
                     bgCmd("give %name of loop-player% ender_pearl[item_name={text:""추격 진주"",color:""dark_aqua"",bold:true}] 2")
                     bgCmd("give %name of loop-player% snowball[item_name={text:""수갑"",color:""blue"",bold:true},lore=[{text:""던져 맞히면 도둑이 3초 동안 느려짐"",color:""gray"",italic:false}]] 3")
             if {_r} >= 3:
-                bgCmd("give %name of loop-player% recovery_compass[item_name={text:""도둑 추적기"",color:""gold"",bold:true},lore=[{text:""우클릭: 가장 가까운 도둑 4초 발광 (30초마다)"",color:""gray"",italic:false}]] 1")
+                if {_old} < 3:
+                    bgCmd("give %name of loop-player% recovery_compass[item_name={text:""도둑 추적기"",color:""gold"",bold:true},lore=[{text:""우클릭: 가장 가까운 도둑 4초 발광 (30초마다)"",color:""gray"",italic:false}]] 1")
             bgKdSay("&9%name of loop-player%&f 경찰이 %bgKdRankName({_r})%&f(으)로 진급!")
+        else if {_r} < {_old}:
+            set {-bg::kd::rank::%{_u}%} to {_r}
+            bgTitleP(loop-player, "&c&l강등… %bgKdRankName({_r})%", "&f가둔 도둑이 빠져나갔습니다 &7(지금 %{_j}%명)")
+            play sound "entity.villager.no" to loop-player
+            if {_r} < 3:
+                bgCmd("clear %name of loop-player% recovery_compass")
+            if {_r} < 2:
+                bgCmd("clear %name of loop-player% ender_pearl")
+                bgCmd("clear %name of loop-player% snowball")
+            if {_r} is 0:
+                bgCmd("effect clear %name of loop-player% speed")
 
 # 경위: 도둑 추적기 — 가장 가까운 (안 잡힌 · 탈출 안 한) 도둑을 4초 발광 · 30초마다
 on right click:
@@ -1379,8 +1446,8 @@ function bgKdHeliDepart():
         if mod(loop-number, 2) is 0:
             bgParticle({_p0}, "cloud", 3.5, 0.1, 3.5, 0.15, 30)
             bgParticle({_p0}, "poof", 2.5, 0.1, 2.5, 0.1, 10)
-        if mod(loop-number, 3) is 0:
-            bgSoundAt({-bg::kd::hloc}, "entity.ender_dragon.flap", 3, 0.7)
+        if mod(loop-number, 6) is 0:
+            bgSoundAt({-bg::kd::hloc}, "entity.ender_dragon.flap", 1.2, 0.7)
         wait 2 ticks
     # 2) 기수 숙이며 도시 가운데 쪽 (35° 꺾어) 으로 돌아 가속 · 상승 (7초)
     set {_c} to bgKdAt(0, 0, 0)
@@ -1405,12 +1472,11 @@ function bgKdHeliDepart():
         set {_pz} to {_pz} + cos({_yw}) * {_st}
         set {_l} to location({_px}, {_y0} + 55 * ({_u} ^ 1.6), {_pz}, {_w})
         bgKdRig({_l}, {_yw}, {_pt})
-        if mod(loop-number, 3) is 0:
-            bgSoundAt({_l}, "entity.ender_dragon.flap", 4, 0.75)
+        if mod(loop-number, 8) is 0:
+            if loop-number <= 32:
+                bgSoundAt({_l}, "entity.ender_dragon.flap", 1.2, 0.75)
         if mod(loop-number, 2) is 0:
             bgParticle(location({_px} + sin({_yw}) * 6, (y-coordinate of {_l}) + 2.5, {_pz} - cos({_yw}) * 6, {_w}), "campfire_cosy_smoke", 0.2, 0.2, 0.2, 0.01, 2)
-        if loop-number is 1 or 20 or 40:
-            bgSoundAt({_l}, "item.elytra.flying", 3, 0.6)
         wait 2 ticks
     # 3) 구름 속으로 사라짐
     bgParticle({-bg::kd::hloc}, "cloud", 4, 2.5, 4, 0.05, 160)
@@ -1467,10 +1533,9 @@ function bgKdHeliArrive(to: number):
         set {_pt} to 14 - 24 * bgKdSmooth({_u} / 0.8) + 10 * bgKdSmooth(({_u} - 0.8) / 0.2)
         set {_l} to location({_sx} + ((x-coordinate of {_p1}) - {_sx}) * {_e}, {_sy} + ({_hy} - {_sy}) * {_e}, {_sz} + ((z-coordinate of {_p1}) - {_sz}) * {_e}, {_w})
         bgKdRig({_l}, {_yw}, {_pt})
-        if mod(loop-number, 3) is 0:
-            bgSoundAt({_l}, "entity.ender_dragon.flap", 4, 0.75)
-        if loop-number is 1 or 30:
-            bgSoundAt({_l}, "item.elytra.flying", 3, 0.6)
+        if mod(loop-number, 8) is 0:
+            if loop-number >= 32:
+                bgSoundAt({_l}, "entity.ender_dragon.flap", 1.2, 0.75)
         wait 2 ticks
     loop 30 times:
         if ({-bg::kd::hgen} ? 0) is not {_g}:
@@ -1480,8 +1545,8 @@ function bgKdHeliArrive(to: number):
         if mod(loop-number, 2) is 0:
             bgParticle({_p1}, "cloud", 3.5, 0.1, 3.5, 0.15, 30)
             bgParticle({_p1}, "poof", 2.5, 0.1, 2.5, 0.1, 10)
-        if mod(loop-number, 3) is 0:
-            bgSoundAt({_p1}, "entity.ender_dragon.flap", 3, 0.7)
+        if mod(loop-number, 6) is 0:
+            bgSoundAt({_p1}, "entity.ender_dragon.flap", 1.2, 0.7)
         wait 2 ticks
     bgKdRig({_p1}, 90, 0)
     bgParticle({_p1}, "poof", 3, 0.1, 3, 0.12, 40)
@@ -1512,7 +1577,6 @@ every 1 second:
         if {-bg::kd::helit} <= 10:
             if {-bg::kd::helit} > 0:
                 set {-bg::kd::rotsp} to 37 + (10 - {-bg::kd::helit}) * 2.1
-                bgSoundAt(bgKdMk("heli_%{bg::kd::helipos} ? 0%"), "entity.ender_dragon.flap", 2, 0.6 + (10 - {-bg::kd::helit}) * 0.02)
                 bgParticle(bgKdMk("heli_%{bg::kd::helipos} ? 0%"), "cloud", 2.5, 0.1, 2.5, 0.05 + (10 - {-bg::kd::helit}) * 0.01, 8)
         if {-bg::kd::helit} <= 0:
             bgKdHeliDepart()
