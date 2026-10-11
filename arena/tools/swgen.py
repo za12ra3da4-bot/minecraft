@@ -174,7 +174,8 @@ def wolf_skull():
     for ex in (-16, 16):
         m.cbox("black_concrete", (ex, 42, -23.2), (14, 12, 2))
         m.cbox("redstone_block", (ex, 42, -23.6), (6, 6, 2), glow=True)
-        m.rod("bone_block", (ex * 1.2, 56, -6), (ex * 2.0, 84, 4), 10, 7)  # 귀뼈
+        m.rod("bone_block", (ex * 1.3, 56, 2), (ex * 1.7, 66, 10), 9, 6)   # 짧은 귀뼈
+        m.cbox("bone_block", (ex, 50, -22), (20, 5, 6), roll=(-12 if ex < 0 else 12))  # 눈썹뼈
     m.cbox("black_concrete", (0, 26, -46.2), (10, 6, 1.5))  # 콧구멍
     for fx in (-11, -4, 4, 11):
         ln = 26 if abs(fx) == 11 else 14
@@ -243,11 +244,11 @@ def build():
             h = 1.1 * math.sin(x * 0.07) * math.cos(z * 0.09) + 0.9 * math.sin(x * 0.031 + z * 0.05) + 0.5 * math.sin(x * 0.17 + z * 0.13)
             dz = abs(z) - 56
             if dz > 0:
-                h += dz ** 1.35 * 0.95 + 2.5 * math.sin(x * 0.11 + z * 0.3) * min(1, dz / 6)
-            if x < -102:
-                h += (-102 - x) ** 1.3 * 0.9
-            if x > 104:                                    # 늑대 뒤 바위 절벽
-                h += (x - 104) ** 1.25 * 1.6 + 3 * abs(math.sin(z * 0.21))
+                h += min(16, dz ** 1.2 * 0.8) + 2.0 * math.sin(x * 0.11 + z * 0.3) * min(1, dz / 6)
+            if x < -108:
+                h += min(14, (-108 - x) ** 1.2 * 0.8)
+            if x > 106:                                    # 늑대 뒤 바위 절벽
+                h += min(20, (x - 106) ** 1.2 * 1.3) + 2.5 * abs(math.sin(z * 0.21))
             if 30 < x < 104:                               # 늑대 쪽 바위 언덕들
                 for hx, hz, hr, hh in ((80, -46, 14, 10), (88, 44, 12, 8), (40, -50, 9, 5)):
                     d = math.hypot(x - hx, z - hz) / hr
@@ -645,11 +646,12 @@ def build():
                     put(x1, y0 + hh + k, z, wall)
 
     hall(KX0, KX1, KZ0, KZ1, FL + 1, 10, "white_concrete", "light_blue_concrete", "cyan_concrete", "z")
-    for z in range(-2, 3):
-        for y in range(FL + 1, FL + 6):
-            put(KX1, y, z, "air")
-    for z in (-3, 3):
+    for z in range(-6, 7):
         for y in range(FL + 1, FL + 8):
+            put(KX1, y, z, "air" if z % 3 else "quartz_pillar")
+        put(KX1, FL + 8, z, "chiseled_quartz_block")
+    for z in (-7, 7):
+        for y in range(FL + 1, FL + 9):
             put(KX1 + 1, y, z, "quartz_pillar")
     # 가운데 높은 탑 (본성 뒤쪽)
     ktx, ktz = -88, 0
@@ -983,8 +985,8 @@ def build():
     for dz in (-3, 3):
         for y in range(FL + 4, FL + 7):
             put(ex - 4, y, ez + dz, "crying_obsidian")
-    disp(howling_wolf(), ex + 0.5, FL + 4, ez + 0.5, 90, 5.0)
-    disp(moon_model(), ex + 0.5, FL + 58, ez + 0.5, 0, 6.0)
+    disp(howling_wolf(), ex + 0.5, FL + 4, ez + 0.5, -90, 5.0)
+    disp(moon_model(), ex + 8.5, FL + 38, ez + 0.5, 0, 3.0)
     # 진영 안 영혼 등 기둥
     for x, z in ((60, -18), (60, 18), (84, -28), (84, 28), (102, -12), (102, 12)):
         for y in range(FL + 1, FL + 4):
@@ -1002,11 +1004,13 @@ def label(img, xy, text, col, font):
     d.text((x - tw / 2, y - 15), text, font=font, fill=col)
 
 
-def make_mesh(sun):
+def make_mesh(sun, skip_high=False):
     import render as R
     import bdkit as K
     mesh = R.Mesh()
     for model, x, y, z, yaw, sc in DISPLAYS:
+        if skip_high and y > FL + 40:
+            continue
         K.add_to_mesh(mesh, model, np.array([CX + x, y, CZ + z]), yaw, sc, sun)
     return mesh
 
@@ -1024,11 +1028,11 @@ def preview(path):
     sun = np.array(GOLD["sun"], float); sun /= np.linalg.norm(sun)
     mesh = make_mesh(sun)
     shots = [
-        ((CX - 6, FL + 120, CZ + 168), (CX, FL - 4, CZ - 4), 50, "양과 늑대 — 1:1 공성전 맵  ·  서: 하얀 목장 왕국   ·   가운데: 강과 다리 3개   ·   동: 달그림자 굴"),
-        ((CX - 40, FL + 34, CZ + 56), (CX - 80, FL + 6, CZ), 60, "양 진영 — 해자 · 도개교 · 쌍둥이 성문탑 · 하얀 성벽과 깃발 · 원뿔 지붕 망루 · 본성과 높은 탑"),
-        ((CX - 60, FL + 14, CZ + 16), (CX - 82, FL + 5, CZ), 66, "양 진영 안 — 황금 양털 제단 · 분수 광장 · 시장 천막 · 목조 집 · 양 우리"),
+        ((CX - 4, FL + 150, CZ + 150), (CX, FL, CZ - 8), 56, "양과 늑대 — 1:1 공성전 맵  ·  서: 하얀 목장 왕국   ·   가운데: 강과 다리 3개   ·   동: 달그림자 굴"),
+        ((CX - 30, FL + 42, CZ + 70), (CX - 76, FL + 6, CZ + 2), 58, "양 진영 — 해자 · 도개교 · 쌍둥이 성문탑 · 하얀 성벽과 깃발 · 원뿔 지붕 망루 · 본성과 높은 탑"),
+        ((CX - 52, FL + 20, CZ + 24), (CX - 74, FL + 3, CZ - 2), 70, "양 진영 안 — 황금 양털 제단 · 분수 광장 · 시장 천막 · 목조 집 · 양 우리"),
         ((CX + 36, FL + 32, CZ + 52), (CX + 78, FL + 6, CZ), 60, "늑대 진영 — 뾰족 통나무 울타리 · 망대 · 거대 늑대 해골 성문 · 천막 · 토템 · 늑대 무리"),
-        ((CX + 62, FL + 12, CZ + 30), (CX + 92, FL + 22, CZ), 64, "달의 제단 — 거대 하울링 늑대 석상 · 떠 있는 달 · 우는 흑요석 기둥 고리"),
+        ((CX + 64, FL + 9, CZ + 12), (CX + 93, FL + 23, CZ), 74, "달의 제단 — 거대 하울링 늑대 석상 · 떠 있는 달 · 우는 흑요석 기둥 고리"),
         ((CX + 18, FL + 14, CZ + 30), (CX, FL + 5, CZ), 62, "가운데 — 폐허 망루 섬의 넓은 다리 · 아치 돌다리 · 갈대와 연잎 (부딪히는 곳)"),
     ]
     out = Image.new("RGB", (W, Hh * (len(shots) + 1)))
@@ -1039,7 +1043,7 @@ def preview(path):
         d.text((16, 10), lab, font=fs, fill=(255, 232, 170))
         out.paste(im, (0, Hh * i))
     sc = W / (NX * 1.02)
-    im = R.render(v, pal, W, Hh, (CX + 0.01, FL + 160, CZ + 0.5), (CX, FL, CZ), ortho_scale=sc, mesh=mesh, ss=2, fog_dist=3000, **GOLD)
+    im = R.render(v, pal, W, Hh, (CX + 0.01, FL + 160, CZ + 0.5), (CX, FL, CZ), ortho_scale=sc, mesh=make_mesh(sun, True), ss=2, fog_dist=3000, **GOLD)
     d = ImageDraw.Draw(im)
     d.rectangle((0, 0, W, 48), fill=(12, 16, 30))
     d.text((16, 10), "위에서 본 지도  (왼쪽 = 양 · 오른쪽 = 늑대)", font=fs, fill=(255, 232, 170))
