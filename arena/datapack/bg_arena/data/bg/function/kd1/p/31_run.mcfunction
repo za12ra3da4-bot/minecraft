@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~28 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~29 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~1 ~22 ~29 ~1 ~24 ~29 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~11 ~22 ~29 ~11 ~24 ~30 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~68 ~22 ~29 ~68 ~23 ~36 minecraft:light_blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~94 ~22 ~29 ~94 ~23 ~36 minecraft:light_blue_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~29 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~22 ~30 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~1 ~22 ~30 ~1 ~23 ~30 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~1 ~22 ~31 ~1 ~24 ~31 minecraft:terracotta
 $execute positioned $(x) $(y) $(z) run fill ~11 ~22 ~31 ~11 ~23 ~31 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~44 ~22 ~31 ~44 ~25 ~31 minecraft:iron_chain[axis=y,waterlogged=false]
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run setblock ~99 ~26 ~-76 minecraft:ochre_fro
 $execute positioned $(x) $(y) $(z) run fill ~-92 ~26 ~-75 ~-92 ~29 ~-72 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-75 ~26 ~-75 minecraft:end_rod[facing=up]
 $execute positioned $(x) $(y) $(z) run setblock ~-70 ~26 ~-75 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~79 ~26 ~-75 ~79 ~27 ~-75 minecraft:bookshelf
+$execute positioned $(x) $(y) $(z) run fill ~83 ~26 ~-75 ~85 ~27 ~-75 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~93 ~26 ~-75 ~93 ~29 ~-74 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-93 ~26 ~-74 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-80 ~26 ~-74 ~-79 ~26 ~-74 minecraft:end_rod[facing=up]
+$execute positioned $(x) $(y) $(z) run setblock ~-70 ~26 ~-74 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~69 ~26 ~-74 ~69 ~26 ~-73 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~78 ~26 ~-74 ~78 ~27 ~-74 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-93 ~26 ~-73 minecraft:polished_blackstone

@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-29 ~14 ~-11 ~-29 ~14 ~-4 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run fill ~83 ~14 ~-11 ~83 ~14 ~10 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run fill ~94 ~14 ~-11 ~94 ~14 ~10 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~14 ~-10 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~14 ~-10 ~-94 ~14 ~-9 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~14 ~-10 ~-84 ~14 ~-9 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~14 ~-10 ~-80 ~14 ~-9 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~14 ~-10 ~-69 ~14 ~-9 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run setblock ~28 ~14 ~-10 minecraft:terracotta
 $execute positioned $(x) $(y) $(z) run fill ~41 ~14 ~-10 ~41 ~14 ~-9 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run setblock ~37 ~14 ~-9 minecraft:terracotta
 $execute positioned $(x) $(y) $(z) run fill ~51 ~14 ~-9 ~51 ~14 ~-8 minecraft:bricks
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run setblock ~27 ~16 ~-34 minecraft:redstone_
 $execute positioned $(x) $(y) $(z) run setblock ~28 ~16 ~-34 minecraft:purpur_block
 $execute positioned $(x) $(y) $(z) run fill ~33 ~16 ~-34 ~46 ~16 ~-34 minecraft:daylight_detector[inverted=false,power=0]
 $execute positioned $(x) $(y) $(z) run setblock ~51 ~16 ~-34 minecraft:purpur_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~16 ~-33 minecraft:purpur_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~16 ~-33 minecraft:purpur_block
+$execute positioned $(x) $(y) $(z) run setblock ~27 ~16 ~-32 minecraft:redstone_lamp[lit=true]
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~16 ~-32 minecraft:purpur_block
+$execute positioned $(x) $(y) $(z) run setblock ~51 ~16 ~-32 minecraft:purpur_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~16 ~-31 minecraft:purpur_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~32 ~16 ~-31 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~35 ~16 ~-31 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~38 ~16 ~-31 minecraft:light_gray_concrete

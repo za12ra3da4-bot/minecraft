@@ -1,11 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~-12 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-11 ~0 ~53 minecraft:stone_bricks
-$execute positioned $(x) $(y) $(z) run setblock ~-10 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-5 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-4 ~0 ~53 minecraft:stone_bricks
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~2 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~3 ~0 ~53 minecraft:stone_bricks
 $execute positioned $(x) $(y) $(z) run setblock ~4 ~0 ~53 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~10 ~0 ~53 minecraft:stone_bricks
 $execute positioned $(x) $(y) $(z) run setblock ~11 ~0 ~53 minecraft:light_gray_concrete
@@ -1498,3 +1490,11 @@ $execute positioned $(x) $(y) $(z) run fill ~0 ~1 ~-72 ~0 ~4 ~-72 minecraft:stri
 $execute positioned $(x) $(y) $(z) run fill ~5 ~1 ~-72 ~5 ~4 ~-72 minecraft:stripped_oak_log[axis=y]
 $execute positioned $(x) $(y) $(z) run setblock ~8 ~1 ~-72 minecraft:yellow_concrete
 $execute positioned $(x) $(y) $(z) run fill ~28 ~1 ~-72 ~28 ~3 ~-72 minecraft:lime_concrete
+$execute positioned $(x) $(y) $(z) run fill ~37 ~1 ~-72 ~37 ~3 ~-70 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~41 ~1 ~-72 ~41 ~4 ~-71 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~47 ~1 ~-72 ~47 ~2 ~-72 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~51 ~1 ~-72 ~51 ~30 ~-72 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~69 ~1 ~-72 ~69 ~35 ~-72 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~85 ~1 ~-72 ~87 ~2 ~-72 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~93 ~1 ~-72 ~93 ~4 ~-71 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~1 ~-72 minecraft:black_stained_glass

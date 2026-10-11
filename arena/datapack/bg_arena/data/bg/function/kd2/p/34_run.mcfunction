@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~33 ~-3 ~-99 ~34 ~-3 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~-3 ~99 ~34 ~-3 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~33 ~-2 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~33 ~-2 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~33 ~0 ~-99 ~33 ~1 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~0 ~99 ~34 ~0 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~1 ~99 ~34 ~1 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~33 ~3 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~3 ~99 ~33 ~4 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~33 ~4 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~8 ~99 ~33 ~9 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~33 ~9 ~-99 ~34 ~9 minecraft:black_stained_glass
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run fill ~64 ~39 ~99 ~65 ~40 ~99 minecraft:li
 $execute positioned $(x) $(y) $(z) run fill ~70 ~39 ~99 ~71 ~40 ~99 minecraft:deepslate_tiles
 $execute positioned $(x) $(y) $(z) run fill ~73 ~39 ~99 ~74 ~40 ~99 minecraft:deepslate_tiles
 $execute positioned $(x) $(y) $(z) run fill ~76 ~39 ~99 ~77 ~40 ~99 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~79 ~39 ~99 ~80 ~40 ~99 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~86 ~39 ~99 ~87 ~40 ~99 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~89 ~39 ~99 ~90 ~40 ~99 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~104 ~39 ~99 ~105 ~40 ~99 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~107 ~39 ~99 ~108 ~40 ~99 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~91 ~40 ~-91 ~91 ~46 ~-91 minecraft:iron_bars[east=false,west=false,north=false,south=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~89 ~40 ~-87 minecraft:orange_wool
+$execute positioned $(x) $(y) $(z) run setblock ~90 ~40 ~-87 minecraft:white_wool
+$execute positioned $(x) $(y) $(z) run setblock ~91 ~40 ~-87 minecraft:orange_wool

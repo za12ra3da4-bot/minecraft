@@ -106,7 +106,7 @@ LOTS = lot_ranges()
 
 
 STATS = {}
-DISPS = []         # 블록 디스플레이로 놓을 것: (모델, x, y(격자), z, yaw) — 도시 좌표
+DISPS = []         # 블록 디스플레이로 놓을 것: (모델, x, y(격자), z, yaw, 추가 태그들) — 도시 좌표
 HELI_AT = {}       # 처음 헬기 자리 (= HELIS[0])
 HELIS = []         # 헬기장 빌딩 옥상 자리들: dict(x, y(바닥 기준), z, yaw, name) — 헬기가 판 중에 이 사이를 옮겨 다님
 VARIANT = 0        # 배치 번호 (0 · 1 · 2 …) — 일반 건물 자리만 바뀜 (특수 건물 · 도로 · 표지는 늘 같음)
@@ -318,7 +318,7 @@ def build(variant=None):
     def traffic_light(x, z, face):
         """블록 디스플레이 신호등 (streetbd.py) — 도로 위로 팔이 뻗고 신호 상자가 매달림 · 남북 = 초록 · 동서 = 빨강"""
         yaw = {"s": 0.0, "n": 180.0, "e": -90.0, "w": 90.0}[face]
-        DISPS.append(("tl_green" if face in "ns" else "tl_red", x + 0.5, FL + 1, z + 0.5, yaw))
+        DISPS.append(("tl_green" if face in "ns" else "tl_red", x + 0.5, FL + 1, z + 0.5, yaw, []))
 
     @prop
     def hydrant(x, z):
@@ -1283,20 +1283,24 @@ def build(variant=None):
                     put(cx + dx, y, cz + dz, "air")
     mx_, mz_ = -21, 40
     clear_area(mx_, mz_, 2)
-    for dx in range(-2, 3):
-        for dz in range(-2, 3):
-            ring = max(abs(dx), abs(dz)) == 2
-            put(mx_ + dx, FL, mz_ + dz, "polished_deepslate" if ring else "black_concrete")
-            put(mx_ + dx, FL - 1, mz_ + dz, "polished_deepslate")
-            if not ring:
-                put(mx_ + dx, FL + 1, mz_ + dz, trapdoor("iron", "north"))
-    for dx, dz in ((-2, -2), (2, -2), (-2, 2), (2, 2)):
-        put(mx_ + dx, FL, mz_ + dz, "yellow_concrete")
+    # 맨홀 = 블록 디스플레이 (테두리 · 구멍 · 고깔 + 따로 움직이는 주철 뚜껑 kd_mcover) — 바닥 블록은 그대로 아스팔트
+    DISPS.append(("manhole_frame", mx_ + 0.5, FL + 1, mz_ + 0.5, 0.0, []))
+    DISPS.append(("manhole_cover", mx_ + 0.5, FL + 1, mz_ + 0.5, 0.0, ['"kd_mcover"']))
     mark("sewer", mx_, 1, mz_)
     valves = [(-64, -40, "e"), (56, 40, "e"), (0, -64, "s")]
     for k, (vx, vz, toward) in enumerate(valves):
         clear_area(vx, vz, 1)
-        DISPS.append(("valve", vx + 0.5, FL + 1, vz + 0.5, 0.0))      # 블록 디스플레이 밸브 (streetbd.valve)
+        # 블록 디스플레이 밸브: 몸체 · 바퀴 (kd_vw<k> — 돌리는 동안 Skript 가 돌림) · 경고등 (kd_vl<k> — 빨강 → 초록)
+        import bdkit as _bk
+        import streetbd as _sb
+        yaw = {"e": -90.0, "w": 90.0, "s": 0.0, "n": 180.0}[toward]
+        R_ = _bk._ry(-yaw)
+        cx_, cy_, cz_ = vx + 0.5, FL + 1, vz + 0.5
+        DISPS.append(("valve_base", cx_, cy_, cz_, yaw, []))
+        wx, wy, wz = R_ @ (np.array(_sb.WHEEL_AT) / 16)
+        DISPS.append(("valve_wheel", cx_ + wx, cy_ + wy, cz_ + wz, yaw, [f'"kd_vw{k}"']))
+        lx, ly, lz = R_ @ (np.array(_sb.LAMP_AT) / 16)
+        DISPS.append(("valve_lamp", cx_ + lx, cy_ + ly, cz_ + lz, yaw, [f'"kd_vl{k}"']))
         ox, oz = OUT[toward]
         mark(f"valve_{k}", vx + ox * 2, 1, vz + oz * 2)
 
@@ -1411,6 +1415,13 @@ def commands(greedy_boxes):
     return cmds
 
 
+def disp_models():
+    import streetbd
+    return {"tl_green": streetbd.traffic_light("green"), "tl_red": streetbd.traffic_light("red"),
+            "valve_base": streetbd.valve_base(), "valve_wheel": streetbd.valve_wheel(), "valve_lamp": streetbd.valve_lamp(),
+            "manhole_frame": streetbd.manhole_frame(), "manhole_cover": streetbd.manhole_cover()}
+
+
 def display_commands():
     """블록 디스플레이 (헬기) 소환 — 데이터팩 마지막 조각에서 (예전 것은 지우고)"""
     import heli
@@ -1422,9 +1433,9 @@ def display_commands():
     h = HELI_AT
     out = ["kill @e[type=block_display,tag=kd_heli]", "kill @e[type=block_display,tag=kd_bd]"]
     out += heli.summon_all(at, h["x"], h["y"], h["z"], h["yaw"], ['"kd_heli"'])
-    models = {"tl_green": streetbd.traffic_light("green"), "tl_red": streetbd.traffic_light("red"), "valve": streetbd.valve()}
-    for name, x, y, z, yaw in DISPS:
-        out += bdkit.summon_lines(models[name], at, x, y - FL, z, yaw, 1.0, ['"kd_bd"'], view=1.2)
+    models = disp_models()
+    for name, x, y, z, yaw, tags in DISPS:
+        out += bdkit.summon_lines(models[name], at, x, y - FL, z, yaw, 1.0, ['"kd_bd"'] + tags, view=1.2)
     return out
 
 
@@ -1490,8 +1501,8 @@ def _shot(args):
     mx, my, mz = bdkit._ry(-h["yaw"]) @ (np.array(heli.MAST) / 16)
     bdkit.add_to_mesh(mesh, heli.main_rotor(), o + np.array([mx, my, mz]), h["yaw"] + 20, 1.0, sun)
     import streetbd
-    tlm = {"tl_green": streetbd.traffic_light("green"), "tl_red": streetbd.traffic_light("red"), "valve": streetbd.valve()}
-    for name, x, y, z, yaw in DISPS:
+    tlm = disp_models()
+    for name, x, y, z, yaw, _tags in DISPS:
         if abs(x - cam[0]) + abs(z - cam[2]) < 90:
             bdkit.add_to_mesh(mesh, tlm[name], np.array([C + x, y, C + z]), yaw, 1.0, sun)
     W, Hh = 1000, 560

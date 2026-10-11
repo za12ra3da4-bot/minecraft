@@ -1,11 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~44 ~1 ~-71 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~48 ~1 ~-71 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~49 ~1 ~-71 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~50 ~1 ~-71 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run fill ~69 ~1 ~-71 ~69 ~4 ~-71 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-111 ~1 ~-70 ~-100 ~34 ~-61 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~1 ~-70 ~-99 ~1 ~-69 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-93 ~1 ~-70 ~-93 ~25 ~-70 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~-92 ~1 ~-70 ~-91 ~4 ~-70 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~1 ~-70 ~-90 ~16 ~-70 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~-89 ~1 ~-70 ~-88 ~4 ~-70 minecraft:light_blue_stained_glass
@@ -1167,7 +1159,6 @@ $execute positioned $(x) $(y) $(z) run setblock ~64 ~1 ~38 minecraft:black_concr
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~1 ~39 ~-99 ~2 ~39 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-82 ~1 ~39 ~-82 ~3 ~39 minecraft:quartz_pillar[axis=y]
 $execute positioned $(x) $(y) $(z) run fill ~-58 ~1 ~39 ~-56 ~1 ~41 minecraft:yellow_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-22 ~1 ~39 ~-20 ~1 ~41 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~39 ~-12 ~1 ~41 minecraft:smooth_quartz_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-1 ~1 ~39 ~-1 ~3 ~39 minecraft:quartz_pillar[axis=y]
 $execute positioned $(x) $(y) $(z) run fill ~22 ~1 ~39 ~24 ~1 ~41 minecraft:orange_concrete
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run fill ~-3 ~1 ~71 ~-3 ~3 ~71 minecraft:lime
 $execute positioned $(x) $(y) $(z) run fill ~1 ~1 ~71 ~1 ~30 ~71 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~11 ~1 ~71 ~11 ~4 ~72 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~32 ~1 ~71 ~32 ~2 ~71 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run fill ~51 ~1 ~71 ~51 ~3 ~71 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~71 ~99 ~60 ~71 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~1 ~72 ~-99 ~2 ~72 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-93 ~1 ~72 ~-83 ~4 ~72 minecraft:stone_bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-81 ~1 ~72 minecraft:potted_fern
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~1 ~72 ~-52 ~3 ~72 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-49 ~1 ~72 minecraft:spruce_planks
+$execute positioned $(x) $(y) $(z) run fill ~-43 ~1 ~72 ~-43 ~3 ~74 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-12 ~1 ~72 ~-12 ~3 ~72 minecraft:lime_concrete

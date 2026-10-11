@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~69 ~20 ~70 ~69 ~20 ~71 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~71 ~20 ~70 ~92 ~20 ~89 minecraft:smooth_stone
-$execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~70 ~93 ~20 ~71 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~11 ~20 ~71 ~11 ~20 ~72 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~70 ~20 ~71 ~70 ~20 ~92 minecraft:smooth_stone
-$execute positioned $(x) $(y) $(z) run fill ~1 ~20 ~72 ~1 ~20 ~73 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~73 ~93 ~20 ~74 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~11 ~20 ~74 ~11 ~20 ~75 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~1 ~20 ~75 ~1 ~20 ~76 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~76 ~93 ~20 ~77 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~11 ~20 ~77 ~11 ~20 ~78 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~1 ~20 ~78 ~1 ~20 ~79 minecraft:polished_blackstone
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run fill ~-38 ~22 ~39 ~-38 ~22 ~40 minecraft:
 $execute positioned $(x) $(y) $(z) run setblock ~-43 ~22 ~40 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-42 ~22 ~40 ~-42 ~22 ~42 minecraft:oxidized_copper
 $execute positioned $(x) $(y) $(z) run fill ~-40 ~22 ~40 ~-40 ~22 ~42 minecraft:oxidized_copper
+$execute positioned $(x) $(y) $(z) run setblock ~-39 ~22 ~40 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-44 ~22 ~41 ~-43 ~22 ~41 minecraft:oxidized_copper
+$execute positioned $(x) $(y) $(z) run fill ~-39 ~22 ~41 ~-38 ~22 ~41 minecraft:oxidized_copper
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~41 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-44 ~22 ~42 ~-43 ~22 ~42 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-41 ~22 ~42 ~-41 ~22 ~44 minecraft:oxidized_copper
+$execute positioned $(x) $(y) $(z) run fill ~-39 ~22 ~42 ~-38 ~22 ~42 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~22 ~42 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-43 ~22 ~43 minecraft:oxidized_copper

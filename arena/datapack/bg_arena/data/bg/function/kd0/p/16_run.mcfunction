@@ -1,3 +1,6 @@
+$execute positioned $(x) $(y) $(z) run fill ~108 ~0 ~-69 ~108 ~0 ~-52 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-103 ~0 ~-68 ~-103 ~0 ~-53 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-96 ~0 ~-68 ~-94 ~0 ~-68 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-93 ~0 ~-68 minecraft:stone_bricks
 $execute positioned $(x) $(y) $(z) run fill ~-92 ~0 ~-68 ~-87 ~0 ~-68 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-86 ~0 ~-68 minecraft:stone_bricks
@@ -1495,6 +1498,3 @@ $execute positioned $(x) $(y) $(z) run setblock ~-5 ~0 ~-9 minecraft:polished_di
 $execute positioned $(x) $(y) $(z) run setblock ~-3 ~0 ~-9 minecraft:polished_diorite
 $execute positioned $(x) $(y) $(z) run fill ~-2 ~0 ~-9 ~-2 ~0 ~-7 minecraft:polished_andesite
 $execute positioned $(x) $(y) $(z) run setblock ~-1 ~0 ~-9 minecraft:polished_diorite
-$execute positioned $(x) $(y) $(z) run setblock ~1 ~0 ~-9 minecraft:polished_diorite
-$execute positioned $(x) $(y) $(z) run fill ~2 ~0 ~-9 ~2 ~0 ~-7 minecraft:polished_andesite
-$execute positioned $(x) $(y) $(z) run setblock ~3 ~0 ~-9 minecraft:polished_diorite

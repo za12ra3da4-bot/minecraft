@@ -1,3 +1,6 @@
+$execute positioned $(x) $(y) $(z) run fill ~109 ~0 ~-70 ~110 ~0 ~-51 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-102 ~0 ~-69 ~-101 ~0 ~-52 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-65 ~0 ~-69 ~-65 ~0 ~96 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-64 ~0 ~-69 ~-64 ~0 ~-67 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-63 ~0 ~-69 ~-63 ~0 ~-67 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-62 ~0 ~-69 ~-62 ~0 ~-67 minecraft:white_concrete
@@ -1495,6 +1498,3 @@ $execute positioned $(x) $(y) $(z) run fill ~2 ~0 ~-9 ~2 ~0 ~-7 minecraft:polish
 $execute positioned $(x) $(y) $(z) run setblock ~3 ~0 ~-9 minecraft:polished_diorite
 $execute positioned $(x) $(y) $(z) run setblock ~5 ~0 ~-9 minecraft:polished_diorite
 $execute positioned $(x) $(y) $(z) run fill ~6 ~0 ~-9 ~6 ~0 ~-7 minecraft:polished_andesite
-$execute positioned $(x) $(y) $(z) run setblock ~7 ~0 ~-9 minecraft:polished_diorite
-$execute positioned $(x) $(y) $(z) run setblock ~9 ~0 ~-9 minecraft:podzol[snowy=false]
-$execute positioned $(x) $(y) $(z) run setblock ~11 ~0 ~-9 minecraft:polished_diorite

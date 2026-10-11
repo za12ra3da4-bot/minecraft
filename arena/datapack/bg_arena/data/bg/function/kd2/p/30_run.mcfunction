@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~-90 ~93 ~20 ~-89 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-93 ~20 ~-89 ~-93 ~20 ~-88 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~-28 ~20 ~-89 ~-27 ~20 ~-87 minecraft:smooth_stone_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~11 ~20 ~-89 ~11 ~20 ~-88 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~69 ~20 ~-89 ~69 ~20 ~-88 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~20 ~-87 ~-69 ~23 ~-87 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~1 ~20 ~-87 ~1 ~20 ~-86 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~-87 ~93 ~20 ~-86 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-93 ~20 ~-86 ~-93 ~20 ~-85 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~11 ~20 ~-86 ~11 ~20 ~-85 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~69 ~20 ~-86 ~69 ~20 ~-85 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-51 ~20 ~-84 ~-44 ~20 ~-84 minecraft:bricks
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run setblock ~51 ~22 ~-99 minecraft:black_sta
 $execute positioned $(x) $(y) $(z) run setblock ~53 ~22 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~54 ~22 ~-99 minecraft:pearlescent_froglight
 $execute positioned $(x) $(y) $(z) run setblock ~57 ~22 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~59 ~22 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~60 ~22 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~64 ~22 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~65 ~22 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~70 ~22 ~-99 ~71 ~22 ~-99 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~75 ~22 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~76 ~22 ~-99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~78 ~22 ~-99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~79 ~22 ~-99 minecraft:ochre_froglight

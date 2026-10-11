@@ -1,3 +1,6 @@
+$execute positioned $(x) $(y) $(z) run fill ~55 ~0 ~-69 ~55 ~0 ~96 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~56 ~0 ~-69 ~56 ~0 ~-67 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~57 ~0 ~-69 ~57 ~0 ~-67 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~58 ~0 ~-69 ~58 ~0 ~-67 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~59 ~0 ~-69 ~59 ~0 ~-67 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~60 ~0 ~-69 ~60 ~0 ~-67 minecraft:white_concrete
@@ -1495,6 +1498,3 @@ $execute positioned $(x) $(y) $(z) run setblock ~5 ~0 ~-8 minecraft:polished_and
 $execute positioned $(x) $(y) $(z) run setblock ~7 ~0 ~-8 minecraft:polished_andesite
 $execute positioned $(x) $(y) $(z) run setblock ~8 ~0 ~-8 minecraft:polished_diorite
 $execute positioned $(x) $(y) $(z) run fill ~9 ~0 ~-8 ~11 ~0 ~-8 minecraft:polished_andesite
-$execute positioned $(x) $(y) $(z) run setblock ~12 ~0 ~-8 minecraft:polished_diorite
-$execute positioned $(x) $(y) $(z) run setblock ~13 ~0 ~-8 minecraft:polished_andesite
-$execute positioned $(x) $(y) $(z) run fill ~106 ~0 ~-8 ~107 ~0 ~7 minecraft:blue_terracotta

@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-46 ~17 ~-94 ~-46 ~19 ~-94 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-45 ~17 ~-94 ~-45 ~18 ~-94 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-44 ~17 ~-94 ~-44 ~19 ~-94 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-38 ~17 ~-94 ~-38 ~19 ~-94 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-37 ~17 ~-94 ~-37 ~18 ~-94 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-36 ~17 ~-94 ~-36 ~19 ~-94 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-35 ~17 ~-94 ~-34 ~18 ~-94 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-33 ~17 ~-94 ~-33 ~19 ~-94 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-32 ~17 ~-94 ~-31 ~18 ~-94 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~-30 ~17 ~-94 ~-30 ~19 ~-94 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run fill ~-11 ~17 ~-94 ~-10 ~19 ~-94 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run fill ~-9 ~17 ~-94 ~-8 ~18 ~-94 minecraft:glass
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run fill ~32 ~20 ~-91 ~51 ~20 ~-69 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~70 ~20 ~-91 ~70 ~20 ~-71 minecraft:smooth_stone
 $execute positioned $(x) $(y) $(z) run fill ~1 ~20 ~-90 ~1 ~20 ~-89 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~31 ~20 ~-90 ~31 ~20 ~-69 minecraft:smooth_stone
+$execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~-90 ~93 ~20 ~-89 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-93 ~20 ~-89 ~-93 ~20 ~-88 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-28 ~20 ~-89 ~-27 ~20 ~-87 minecraft:smooth_stone_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~11 ~20 ~-89 ~11 ~20 ~-88 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~69 ~20 ~-89 ~69 ~20 ~-88 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-69 ~20 ~-87 ~-69 ~23 ~-87 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~1 ~20 ~-87 ~1 ~20 ~-86 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~-87 ~93 ~20 ~-86 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-93 ~20 ~-86 ~-93 ~20 ~-85 minecraft:polished_blackstone

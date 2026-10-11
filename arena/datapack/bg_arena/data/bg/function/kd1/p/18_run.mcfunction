@@ -1,11 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~-87 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-82 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-81 ~0 ~53 minecraft:stone_bricks
-$execute positioned $(x) $(y) $(z) run setblock ~-80 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-75 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-74 ~0 ~53 minecraft:stone_bricks
-$execute positioned $(x) $(y) $(z) run setblock ~-73 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-67 ~0 ~53 minecraft:stone_bricks
 $execute positioned $(x) $(y) $(z) run setblock ~-53 ~0 ~53 minecraft:stone_bricks
 $execute positioned $(x) $(y) $(z) run setblock ~-52 ~0 ~53 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-47 ~0 ~53 minecraft:light_gray_concrete
@@ -1498,3 +1490,11 @@ $execute positioned $(x) $(y) $(z) run fill ~-79 ~1 ~-67 ~-79 ~5 ~-67 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~-43 ~1 ~-67 ~-43 ~5 ~-67 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-7 ~1 ~-67 ~-7 ~5 ~-67 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~5 ~1 ~-67 ~5 ~5 ~-67 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~41 ~1 ~-67 ~41 ~5 ~-67 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~77 ~1 ~-67 ~77 ~5 ~-67 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~89 ~1 ~-67 ~89 ~5 ~-67 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~99 ~1 ~-67 ~99 ~40 ~-67 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~95 ~1 ~-66 ~95 ~3 ~-54 minecraft:stone_bricks
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~1 ~-66 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~1 ~-65 ~-99 ~17 ~-65 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-88 ~1 ~-65 minecraft:black_concrete

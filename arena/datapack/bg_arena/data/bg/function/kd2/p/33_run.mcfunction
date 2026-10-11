@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~99 ~29 ~-84 ~99 ~29 ~-83 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~29 ~-83 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~29 ~-82 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~68 ~29 ~-81 ~68 ~29 ~-79 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~99 ~29 ~-81 ~99 ~30 ~-81 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~29 ~-80 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~29 ~-80 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~29 ~-79 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~29 ~-78 ~99 ~30 ~-78 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~29 ~-77 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~68 ~29 ~-77 ~68 ~29 ~-75 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run fill ~99 ~29 ~-77 ~99 ~30 ~-77 minecraft:sea_lantern
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run setblock ~-99 ~33 ~-22 minecraft:black_st
 $execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~-21 ~99 ~33 ~-20 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~33 ~-6 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~33 ~-5 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~33 ~-3 ~-99 ~34 ~-3 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~-3 ~99 ~34 ~-3 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~33 ~-2 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~33 ~-2 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~33 ~0 ~-99 ~33 ~1 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~0 ~99 ~34 ~0 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~1 ~99 ~34 ~1 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~33 ~3 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~99 ~33 ~3 ~99 ~33 ~4 minecraft:black_stained_glass

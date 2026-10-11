@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~81 ~41 ~46 minecraft:iron_block
-$execute positioned $(x) $(y) $(z) run fill ~89 ~41 ~46 ~89 ~42 ~46 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~91 ~41 ~46 ~91 ~42 ~46 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~94 ~41 ~46 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~94 ~41 ~47 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~68 ~41 ~48 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~94 ~41 ~48 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~68 ~41 ~49 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~72 ~41 ~49 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~75 ~41 ~49 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~78 ~41 ~49 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~94 ~41 ~49 minecraft:gray_concrete
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run fill ~-99 ~57 ~-97 ~-99 ~57 ~-96 minecraf
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~57 ~-94 ~-99 ~57 ~-93 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~57 ~-91 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~57 ~-90 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~57 ~-60 ~99 ~57 ~-59 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~57 ~-57 ~99 ~57 ~-56 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~57 ~-28 ~99 ~58 ~-28 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~57 ~-27 ~99 ~58 ~-27 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~99 ~57 ~-25 ~99 ~58 ~-24 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~57 ~-24 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~57 ~-23 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~57 ~-22 ~99 ~58 ~-22 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~57 ~-21 minecraft:ochre_froglight

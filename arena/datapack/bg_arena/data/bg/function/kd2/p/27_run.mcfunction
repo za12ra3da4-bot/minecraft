@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-38 ~13 ~-99 ~-37 ~13 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-35 ~13 ~-99 ~-34 ~14 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-32 ~13 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-28 ~13 ~-99 ~-27 ~13 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-25 ~13 ~-99 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-24 ~13 ~-99 ~-24 ~14 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-22 ~13 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-21 ~13 ~-99 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-19 ~13 ~-99 ~-19 ~14 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-15 ~13 ~-99 ~-14 ~14 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~13 ~-99 ~-12 ~14 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-11 ~13 ~-99 minecraft:sea_lantern
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run fill ~82 ~15 ~69 ~83 ~15 ~69 minecraft:li
 $execute positioned $(x) $(y) $(z) run fill ~85 ~15 ~69 ~86 ~15 ~69 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~88 ~15 ~69 ~89 ~15 ~69 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~91 ~15 ~69 ~92 ~15 ~69 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~99 ~15 ~69 ~99 ~16 ~70 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-93 ~15 ~70 ~-93 ~15 ~88 minecraft:blue_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~15 ~70 ~-51 ~15 ~79 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-38 ~15 ~70 ~-38 ~15 ~78 minecraft:polished_andesite
+$execute positioned $(x) $(y) $(z) run fill ~2 ~15 ~70 ~2 ~15 ~93 minecraft:polished_andesite
+$execute positioned $(x) $(y) $(z) run fill ~69 ~15 ~70 ~69 ~15 ~71 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~71 ~15 ~70 ~92 ~15 ~87 minecraft:smooth_stone
+$execute positioned $(x) $(y) $(z) run fill ~93 ~15 ~70 ~93 ~15 ~71 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~15 ~71 ~-99 ~16 ~72 minecraft:deepslate_tiles

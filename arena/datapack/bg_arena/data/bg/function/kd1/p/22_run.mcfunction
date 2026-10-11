@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-77 ~5 ~-34 ~-77 ~5 ~-33 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-51 ~5 ~-34 ~-30 ~5 ~-34 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run fill ~94 ~5 ~-34 ~94 ~5 ~-33 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~5 ~-34 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~5 ~-33 ~-99 ~6 ~-33 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~5 ~-33 ~-94 ~5 ~-32 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~68 ~5 ~-33 ~68 ~5 ~-32 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~52 ~5 ~-32 ~52 ~14 ~-32 minecraft:purpur_block
-$execute positioned $(x) $(y) $(z) run fill ~95 ~5 ~-32 ~95 ~44 ~-32 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~5 ~-31 ~-99 ~6 ~-30 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-77 ~5 ~-31 ~-77 ~5 ~-30 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~94 ~5 ~-31 ~94 ~5 ~-30 minecraft:gray_concrete
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run setblock ~8 ~6 ~11 minecraft:oak_leaves[p
 $execute positioned $(x) $(y) $(z) run setblock ~10 ~6 ~11 minecraft:oak_leaves[persistent=true,distance=1,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~29 ~6 ~11 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~30 ~6 ~11 ~35 ~6 ~11 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~36 ~6 ~11 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~42 ~6 ~11 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~43 ~6 ~11 ~49 ~6 ~11 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~50 ~6 ~11 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~69 ~6 ~11 ~69 ~9 ~11 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~70 ~6 ~11 ~77 ~6 ~11 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~78 ~6 ~11 ~78 ~9 ~11 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~84 ~6 ~11 ~93 ~6 ~11 minecraft:mud_bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~6 ~12 minecraft:ochre_froglight

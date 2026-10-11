@@ -1,11 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~82 ~0 ~52 ~84 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~86 ~0 ~52 ~87 ~0 ~52 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~88 ~0 ~52 minecraft:stone_bricks
-$execute positioned $(x) $(y) $(z) run fill ~89 ~0 ~52 ~91 ~0 ~53 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~94 ~0 ~52 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~95 ~0 ~52 ~95 ~3 ~52 minecraft:stone_bricks
-$execute positioned $(x) $(y) $(z) run fill ~106 ~0 ~52 ~106 ~0 ~66 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-104 ~0 ~53 ~-104 ~0 ~66 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run setblock ~-96 ~0 ~53 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-95 ~0 ~53 minecraft:stone_bricks
 $execute positioned $(x) $(y) $(z) run fill ~-94 ~0 ~53 ~-89 ~0 ~53 minecraft:light_gray_concrete
@@ -1498,3 +1490,11 @@ $execute positioned $(x) $(y) $(z) run setblock ~37 ~1 ~-71 minecraft:redstone_l
 $execute positioned $(x) $(y) $(z) run setblock ~38 ~1 ~-71 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~42 ~1 ~-71 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~43 ~1 ~-71 minecraft:redstone_lamp[lit=true]
+$execute positioned $(x) $(y) $(z) run setblock ~44 ~1 ~-71 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~48 ~1 ~-71 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~49 ~1 ~-71 minecraft:redstone_lamp[lit=true]
+$execute positioned $(x) $(y) $(z) run setblock ~50 ~1 ~-71 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~69 ~1 ~-71 ~69 ~4 ~-71 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-111 ~1 ~-70 ~-100 ~34 ~-61 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~1 ~-70 ~-99 ~1 ~-69 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-93 ~1 ~-70 ~-93 ~25 ~-70 minecraft:polished_blackstone

@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~33 ~16 ~-40 ~46 ~16 ~-40 minecraft:daylight_detector[inverted=false,power=0]
-$execute positioned $(x) $(y) $(z) run setblock ~51 ~16 ~-40 minecraft:purpur_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~82 ~16 ~-40 minecraft:potted_fern
-$execute positioned $(x) $(y) $(z) run fill ~91 ~16 ~-40 ~91 ~17 ~-40 minecraft:bookshelf
-$execute positioned $(x) $(y) $(z) run fill ~94 ~16 ~-40 ~94 ~19 ~-39 minecraft:light_blue_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-52 ~16 ~-39 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-29 ~16 ~-39 minecraft:smooth_quartz_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-11 ~16 ~-39 ~-4 ~16 ~-39 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run setblock ~2 ~16 ~-39 minecraft:brick_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~3 ~16 ~-39 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run setblock ~4 ~16 ~-39 minecraft:brick_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~5 ~16 ~-39 minecraft:bricks
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run fill ~94 ~17 ~-5 ~94 ~19 ~-5 minecraft:mu
 $execute positioned $(x) $(y) $(z) run fill ~95 ~17 ~-5 ~95 ~18 ~-5 minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~-4 minecraft:pearlescent_froglight
 $execute positioned $(x) $(y) $(z) run fill ~68 ~17 ~-4 ~68 ~18 ~-4 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~79 ~17 ~-4 ~79 ~19 ~-4 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~83 ~17 ~-4 ~83 ~18 ~-3 minecraft:glass
+$execute positioned $(x) $(y) $(z) run setblock ~89 ~17 ~-4 minecraft:spruce_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~94 ~17 ~-4 ~94 ~18 ~-3 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~17 ~-3 ~-99 ~18 ~-3 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~67 ~17 ~-3 ~67 ~18 ~-3 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~68 ~17 ~-3 ~68 ~19 ~-3 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~79 ~17 ~-3 ~79 ~18 ~-3 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~17 ~-3 ~99 ~18 ~-2 minecraft:black_stained_glass

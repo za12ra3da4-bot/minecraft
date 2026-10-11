@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~10 ~-56 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~10 ~-56 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run fill ~-95 ~10 ~-53 ~-95 ~10 ~-28 minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~10 ~-53 ~-77 ~10 ~-53 minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~10 ~-53 ~-76 ~10 ~-28 minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~10 ~-52 ~-77 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-51 ~10 ~-52 ~-30 ~10 ~-52 minecraft:smooth_quartz
-$execute positioned $(x) $(y) $(z) run setblock ~-11 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-9 ~10 ~-52 ~-8 ~10 ~-52 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-6 ~10 ~-52 ~-5 ~10 ~-52 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-3 ~10 ~-52 ~-2 ~10 ~-52 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~0 ~10 ~-52 ~1 ~10 ~-52 minecraft:gray_concrete
@@ -1498,3 +1489,12 @@ $execute positioned $(x) $(y) $(z) run setblock ~79 ~11 ~27 minecraft:smooth_qua
 $execute positioned $(x) $(y) $(z) run setblock ~80 ~11 ~27 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~82 ~11 ~27 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~83 ~11 ~27 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~85 ~11 ~27 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~86 ~11 ~27 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~88 ~11 ~27 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~89 ~11 ~27 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~91 ~11 ~27 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~92 ~11 ~27 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~28 ~11 ~28 ~29 ~11 ~28 minecraft:light_blue_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~30 ~11 ~28 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~31 ~11 ~28 minecraft:light_blue_concrete
