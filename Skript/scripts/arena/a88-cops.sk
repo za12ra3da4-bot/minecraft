@@ -216,6 +216,7 @@ function bgKdJoin(p: player):
 function bgKdDrop(p: player):
     if bgKdOn({_p}) is false:
         stop
+    bgKdUnboard({_p})
     delete {-bg::kd::in::%uuid of {_p}%}
     delete {-bg::kd::role::%uuid of {_p}%}
     delete {-bg::kd::jail::%uuid of {_p}%}
@@ -282,6 +283,7 @@ function bgKdStart(s: command sender, cops: number = 0):
     delete {-bg::kd::vp::*}
     delete {-bg::kd::sewer}
     delete {-bg::kd::hitcd::*}
+    bgCmd("function bg:kd%{bg::kd::layout} ? 0%/fl")
     bgKdHeliHome()
     bgKdCover(false)
     bgKdBeams()
@@ -359,6 +361,11 @@ function bgKdEnd(win: text, why: text):
     bgKdTexts()
     bgKdBeams()
     wait 10 seconds
+    loop all players:
+        bgKdUnboard(loop-player)
+    delete {-bg::kd::abd::*}
+    bgCmd("kill @e[type=item_display,tag=bgkd_hcam]")
+    bgCmd("function bg:kd%{bg::kd::layout} ? 0%/fl_rm")
     loop all players:
         if bgKdOn(loop-player) is true:
             delete {-bg::kd::role::%uuid of loop-player%}
@@ -485,20 +492,25 @@ function bgKdSteal(p: player, i: number):
         if {-bg::kd::open} is not true:
             set {-bg::kd::open} to true
             set {-bg::kd::helit} to 60
+            set {-bg::kd::hstate} to "land"
             bgKdBeams()
-            bgKdTitle("&6&l탈출 헬기 시동!", "&f헬기: &e%bgKdHeliName({bg::kd::helipos} ? 0)% &7· 밸브 3개 → 하수구도 열림 · 헬기는 계속 옮겨 다님")
+            bgKdTitle("&6&l탈출 헬기 시동!", "&e%bgKdHeliName({bg::kd::helipos} ? 0)% &f· 60초 안에 타면 이륙 때 탈출 &7· 밸브 3개 → 하수구")
             bgKdSound("entity.wither.spawn", 1.6)
             bgKdTexts()
 
-function bgKdEscape(p: player):
+# heli = 헬기 이륙 (탄 사람은 헬기를 따라 날다가 사라질 때 전망대로 · bgKdHeliDepart)
+function bgKdEscape(p: player, heli: boolean = false):
     set {-bg::kd::esc::%uuid of {_p}%} to true
     delete {-bg::kd::prog::%uuid of {_p}%}
     add 1 to {bg::kd::escapes::%uuid of {_p}%}
     set {bg::kd::name::%uuid of {_p}%} to name of {_p}
-    bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 60)
-    bgCmd("effect clear %name of {_p}%")
-    teleport {_p} to bgKdMk("wait")
-    bgTitleP({_p}, "&a&l탈출 성공!", "&f헬기로 빠져나왔습니다 &7· 도둑 %{-bg::kd::need} ? 1%명이 탈출하면 승리 · 전망대에서 구경")
+    if {_heli} is true:
+        bgTitleP({_p}, "&a&l탈출 성공!", "&f헬기가 이륙합니다 &7· 도둑 %{-bg::kd::need} ? 1%명이 탈출하면 승리")
+    else:
+        bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 60)
+        bgCmd("effect clear %name of {_p}%")
+        teleport {_p} to bgKdMk("wait")
+        bgTitleP({_p}, "&a&l탈출 성공!", "&f하수구로 빠져나왔습니다 &7· 도둑 %{-bg::kd::need} ? 1%명이 탈출하면 승리 · 전망대에서 구경")
     play sound "ui.toast.challenge_complete" to {_p}
     set {_e} to bgKdCount("esc")
     set {_f} to bgKdCount("free")
@@ -573,6 +585,7 @@ every 5 ticks:
         bgKdRole(loop-player) is "thief"
         bgKdJailed(loop-player) is false
         bgKdEsc(loop-player) is false
+        bgKdAboard(loop-player) is false
         set {_p} to loop-player
         set {_u} to "%uuid of {_p}%"
         # 털이 장소
@@ -617,12 +630,12 @@ every 5 ticks:
                 bgKdRescue({_p})
         # 탈출
         if {-bg::kd::open} is true:
-            # 옥상 헬기 타는 문 앞 (아래층에서 겹치지 않게 높이도 확인)
-            if {-bg::kd::heliflying} is not true:
+            # 옥상 헬기 타는 문 앞 (아래층에서 겹치지 않게 높이도 확인) → 탑승 (이륙할 때 탈출)
+            if ({-bg::kd::hstate} ? "land") is "land":
                 set {_el} to bgKdHeliEsc()
                 if bgDist2(location of {_p}, {_el}) < 4:
                     if abs((y-coordinate of {_p}) - (y-coordinate of {_el})) < 3:
-                        bgKdEscape({_p})
+                        bgKdBoard({_p})
             if {-bg::kd::sewer} is set:
                 if bgDist2(location of {_p}, bgKdMk("sewer")) < 2.2:
                     if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("sewer"))) < 3:
@@ -720,6 +733,14 @@ every 1 second:
             if ({-bg::kd::hold} ? 0) > 0:
                 set {_hold} to " &8| &e출동까지 %{-bg::kd::hold}%초"
             send action bar "&9&l경찰 &8| &f남은 도둑 &c%{_nf}%/%{_nt}% &8| %{_bags}% &8| &f%{_tm}% &8| &b레이더 %{-bg::kd::radar}%초%{_hold}%" to loop-player
+        else if bgKdAboard(loop-player) is true:
+            if bgKdEsc(loop-player) is true:
+                send action bar "&a&l🚁 탈출 성공! &8| &f헬기를 타고 떠나는 중…" to loop-player
+            else:
+                send action bar "&a&l🚁 탑승 중 &8| &f이륙까지 &e%{-bg::kd::helit} ? 0%초 &8| &7탑승 %bgKdAboardN()%명 &8| &f%{_tm}%" to loop-player
+            # 웅크려서 카메라에서 떨어지면 다시 붙임
+            if loop-player.getSpectatorTarget() is not set:
+                bgCmd("spectate @e[type=item_display,tag=bgkd_hcam,limit=1] %name of loop-player%")
         else if bgKdEsc(loop-player) is true:
             send action bar "&a&l탈출 성공 &8| &f판이 끝나길 기다리는 중 &8| &f%{_tm}%" to loop-player
         else if bgKdJailed(loop-player) is true:
@@ -729,10 +750,13 @@ every 1 second:
             set {_sw} to "&7하수구: 밸브 %bgKdValves()%/3"
             if {-bg::kd::sewer} is set:
                 set {_sw} to "&b&l하수구 열림!"
-            if {-bg::kd::heliflying} is true:
-                send action bar "&e🚁 헬기 이동 중… &8| %{_sw}% &8| &f%{_tm}%" to loop-player
+            set {_hs} to {-bg::kd::hstate} ? "land"
+            if {_hs} is "away":
+                send action bar "&e🚁 &f%{-bg::kd::helit} ? 0%초 뒤 &e%bgKdHeliName({-bg::kd::helito} ? 1)%&f에 헬기 착륙 &8| %{_sw}% &8| &f%{_tm}%" to loop-player
+            else if {_hs} is "fly":
+                send action bar "&e🚁 헬기 비행 중… &8| %{_sw}% &8| &f%{_tm}%" to loop-player
             else:
-                send action bar "&e&l🚁 %bgKdHeliName({bg::kd::helipos} ? 0)% &f까지 &e%{_hd}%m &8| %{_sw}% &8| &f%{_tm}%" to loop-player
+                send action bar "&e&l🚁 %bgKdHeliName({bg::kd::helipos} ? 0)% &f%{_hd}%m &8| &c이륙까지 %{-bg::kd::helit} ? 0%초 &8| %{_sw}% &8| &f%{_tm}%" to loop-player
         else if {-bg::kd::prog::%uuid of loop-player%} is not set:
             send action bar "&c&l도둑 &8| %{_bags}% &8| &f남은 시간 %{_tm}% &8| &9경찰 %{_nc}%명 &8| &7레이더 %{-bg::kd::radar}%초" to loop-player
         # 도시 밖으로 떨어지면 제자리로
@@ -801,7 +825,7 @@ function bgKdTexts():
     bgKdText("rescue", bgKdMk("rescue"), "[{text:""🔓 구출 발판"",color:""green"",bold:true},{text:""\n밟으면 감옥 전원 탈옥"",color:""white"",bold:false}]")
     if {-bg::kd::heliflying} is not true:
         if {-bg::kd::open} is true:
-            bgKdText("escape", bgKdHeliEsc(), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n시동 걸림! 타면 탈출 성공"",color:""green"",bold:true}]")
+            bgKdText("escape", bgKdHeliEsc(), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n시동 걸림! 타고 있으면 이륙 때 탈출"",color:""green"",bold:true}]")
         else:
             bgKdText("escape", bgKdHeliEsc(), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n잠김 · 돈가방을 다 모으면 시동"",color:""gray"",bold:false}]")
     loop 3 times:
@@ -817,6 +841,11 @@ function bgKdBuildRaw():
         set {_v} to mod({_v} + 1, 3)
     set {bg::kd::layout} to {_v}
     set {bg::kd::helipos} to 0
+    add 1 to {-bg::kd::hgen}
+    set {-bg::kd::hstate} to "land"
+    delete {-bg::kd::heliflying}
+    delete {-bg::kd::rotsp}
+    delete {-bg::kd::hloc}
     delete {bg::kd::mcover}
     delete {bg::kd::vsel::*}
     bgCmd("data merge storage bg:kd%{_v}% {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
@@ -1034,6 +1063,8 @@ every 2 ticks:
     set {_sp} to 17
     if {-bg::kd::open} is true:
         set {_sp} to 37
+    if {-bg::kd::rotsp} is set:
+        set {_sp} to {-bg::kd::rotsp}
     bgCmd("execute as @e[type=block_display,tag=kd_rotor] at @s run tp @s ~ ~ ~ ~%{_sp}% ~")
     set {-bg::kd::tra} to mod(({-bg::kd::tra} ? 0) + 1.1, 6.2832)
     bgCmd("execute as @e[type=block_display,tag=kd_trot] run data merge entity @s {start_interpolation:0,interpolation_duration:2,transformation:{left_rotation:{angle:%bgN({-bg::kd::tra})%f,axis:[1f,0f,0f]}}}")
@@ -1200,9 +1231,13 @@ on right click:
     send action bar "&c삐빅… 경위 추적기에 잡혔다! (4초)" to {_t}
     play sound "block.note_block.pling" with volume 1 and pitch 1.8 to player
 
-# ─────────────────────────────────────────────────────────── 헬기장 여러 곳 · 헬기 이동 (헬기장 빌딩 3곳: 북동 · 북서 · 남동)
-#  헬기 시동 뒤 60초마다 다른 옥상으로 날아감 (15초 전 예고) · 나는 동안 (약 5초) 못 탐
-#  헬기 = 블록 디스플레이 (태그 kd_heli) — 칸마다 상대 순간이동 (teleport_duration 2 → 부드럽게)
+# ─────────────────────────────────────────────────────────── 탈출 헬기 (옥상 헬기장 3곳: 북동 · 북서 · 남동)
+#  돈가방을 다 모으면 지금 헬기장에서 60초 동안 탑승 → 이륙 (탄 사람 전원 탈출 · 못 탄 사람은 두고 감)
+#  → 도시 위를 날아 구름 속으로 사라짐 → 20초 뒤 다른 옥상에 내려와 다시 60초 탑승 … (날거나 없는 동안은 못 탐)
+#  탄 사람 = 관전 모드로 헬기 뒤를 따라가는 카메라 (item_display bgkd_hcam) 를 봄
+#  헬기 = 블록 디스플레이 (몸체 kd_heli · 메인 로터 kd_rotor · 꼬리 로터 kd_trot)
+#   몸체 기준점 하나의 위치 · 방향(yaw) · 기울기(pitch, + = 기수 숙임) 로 로터 축 자리를 계산해 절대 좌표로 순간이동
+#   (teleport_duration 2 · 2틱마다 = 부드럽게) · {-bg::kd::hgen} 이 바뀌면 (판 시작 · 다시 짓기) 진행 중 애니메이션은 멈춤
 function bgKdHeliName(i: number) :: text:
     if {_i} is 1:
         return "북서 빌딩 옥상"
@@ -1213,66 +1248,259 @@ function bgKdHeliName(i: number) :: text:
 function bgKdHeliEsc() :: location:
     return bgKdMk("escape_%{bg::kd::helipos} ? 0%")
 
-function bgKdHeliShift(dx: number, dy: number, dz: number):
-    bgCmd("execute as @e[type=block_display,tag=kd_heli] at @s run tp @s ~%bgN({_dx})% ~%bgN({_dy})% ~%bgN({_dz})%")
+function bgKdAboard(p: player) :: boolean:
+    if {-bg::kd::abd::%uuid of {_p}%} is true:
+        return true
+    return false
 
-# 판 시작 · 다시 지을 때: 순간이동으로 처음 자리 (북동) 로
+function bgKdAboardN() :: number:
+    set {_n} to 0
+    loop all players:
+        if bgKdAboard(loop-player) is true:
+            add 1 to {_n}
+    return {_n}
+
+function bgKdRig(l: location, yw: number, pt: number):
+    set {_cy} to cos({_yw})
+    set {_sy} to sin({_yw})
+    set {_cp} to cos({_pt})
+    set {_sp} to sin({_pt})
+    set {_x} to x-coordinate of {_l}
+    set {_y} to y-coordinate of {_l}
+    set {_z} to z-coordinate of {_l}
+    bgCmd("execute as @e[type=block_display,tag=kd_heli,tag=!kd_rotor,tag=!kd_trot] at @s run tp @s %bgC({_x})% %bgN({_y})% %bgC({_z})% %bgN({_yw})% %bgN({_pt})%")
+    # 메인 로터 축 (0, 4.125, -0.25) · 꼬리 로터 축 (0.406, 3.125, -6.875) — 몸체 기준 (블록 · 앞 = +z)
+    set {_my} to 4.125 * {_cp} + 0.25 * {_sp}
+    set {_mz} to 4.125 * {_sp} - 0.25 * {_cp}
+    bgCmd("execute as @e[type=block_display,tag=kd_rotor] at @s run tp @s %bgC({_x} - {_mz} * {_sy})% %bgN({_y} + {_my})% %bgC({_z} + {_mz} * {_cy})% ~ 0")
+    set {_ty} to 3.125 * {_cp} + 6.875 * {_sp}
+    set {_tz} to 3.125 * {_sp} - 6.875 * {_cp}
+    bgCmd("execute as @e[type=block_display,tag=kd_trot] at @s run tp @s %bgC({_x} + 0.406 * {_cy} - {_tz} * {_sy})% %bgN({_y} + {_ty})% %bgC({_z} + 0.406 * {_sy} + {_tz} * {_cy})% %bgN({_yw})% %bgN({_pt})%")
+    # 뒤따라가는 카메라 (꼬리 뒤 17 · 위 5.5 · 살짝 내려다봄)
+    bgCmd("execute as @e[type=item_display,tag=bgkd_hcam] at @s run tp @s %bgC({_x} + 17 * {_sy})% %bgN({_y} + 5.5)% %bgC({_z} - 17 * {_cy})% %bgN({_yw})% 12")
+    set {-bg::kd::hloc} to {_l}
+    set {-bg::kd::hyaw} to {_yw}
+    set {-bg::kd::hpit} to {_pt}
+
+function bgKdHeliVis(on: boolean):
+    set {_v} to "0f"
+    if {_on} is true:
+        set {_v} to "3f"
+    bgCmd("execute as @e[type=block_display,tag=kd_heli] run data merge entity @s {view_range:%{_v}%}")
+
+function bgKdSmooth(t: number) :: number:
+    set {_t} to max(0, min(1, {_t}))
+    return {_t} * {_t} * (3 - 2 * {_t})
+
+# 판 시작 · 다시 지을 때: 처음 자리 (북동) 에 내려앉은 모습으로
 function bgKdHeliHome():
-    set {_f} to {bg::kd::helipos} ? 0
-    {_f} is not 0
-    set {_a} to bgKdMk("heli_%{_f}%")
-    set {_b} to bgKdMk("heli_0")
-    bgKdHeliShift((x-coordinate of {_b}) - (x-coordinate of {_a}), (y-coordinate of {_b}) - (y-coordinate of {_a}), (z-coordinate of {_b}) - (z-coordinate of {_a}))
+    add 1 to {-bg::kd::hgen}
     set {bg::kd::helipos} to 0
+    set {-bg::kd::hstate} to "land"
     delete {-bg::kd::heliflying}
+    delete {-bg::kd::rotsp}
+    delete {-bg::kd::abd::*}
+    bgCmd("kill @e[type=item_display,tag=bgkd_hcam]")
+    bgKdRig(bgKdMk("heli_0"), 90, 0)
+    bgKdHeliVis(true)
 
-function bgKdHeliFly(to: number):
-    set {_f} to {bg::kd::helipos} ? 0
-    {_f} is not {_to}
+# 헬기 타기: 관전 모드로 헬기 뒤 카메라에 붙음 (이륙하면 탈출 성공)
+function bgKdBoard(p: player):
+    set {-bg::kd::abd::%uuid of {_p}%} to true
+    delete {-bg::kd::prog::%uuid of {_p}%}
+    bgCmd("effect clear %name of {_p}%")
+    if {-bg::kd::hloc} is not set:
+        set {-bg::kd::hloc} to bgKdMk("heli_%{bg::kd::helipos} ? 0%")
+        set {-bg::kd::hyaw} to 90
+        set {-bg::kd::hpit} to 0
+    bgCmd("kill @e[type=item_display,tag=bgkd_hcam]")
+    bgCmd("execute in %bgDim()% run summon item_display %bgC(x-coordinate of {-bg::kd::hloc})% %bgN(y-coordinate of {-bg::kd::hloc})% %bgC(z-coordinate of {-bg::kd::hloc})% {Tags:[""bgkd_hcam""],teleport_duration:2}")
+    bgKdRig({-bg::kd::hloc}, {-bg::kd::hyaw}, {-bg::kd::hpit})
+    set gamemode of {_p} to spectator
+    wait 1 tick
+    bgCmd("spectate @e[type=item_display,tag=bgkd_hcam,limit=1] %name of {_p}%")
+    bgTitleP({_p}, "&a&l🚁 탑승!", "&f이륙까지 &e%{-bg::kd::helit} ? 0%초 &7· 헬기가 뜨는 순간 탈출 성공")
+    play sound "block.iron_door.close" with volume 1 and pitch 0.8 to {_p}
+    bgKdSay("&e🚁 %name of {_p}% 헬기 탑승! &7(탑승 %bgKdAboardN()%명 · 이륙까지 %{-bg::kd::helit} ? 0%초)")
+
+function bgKdUnboard(p: player):
+    {-bg::kd::abd::%uuid of {_p}%} is true
+    delete {-bg::kd::abd::%uuid of {_p}%}
+    bgCmd("execute as %name of {_p}% run spectate")
+    set gamemode of {_p} to adventure
+
+# 이륙 → 도시 위로 날아 구름 속으로 (약 9초)
+function bgKdHeliDepart():
+    set {_g} to {-bg::kd::hgen} ? 0
+    set {-bg::kd::hstate} to "fly"
     set {-bg::kd::heliflying} to true
+    set {-bg::kd::rotsp} to 58
+    set {_f} to {bg::kd::helipos} ? 0
+    set {_p0} to bgKdMk("heli_%{_f}%")
+    set {_w} to world of {_p0}
+    # 탄 사람 전원 탈출 (뜨는 순간)
+    set {_n} to 0
+    loop all players:
+        if bgKdAboard(loop-player) is true:
+            if bgKdOn(loop-player) is true:
+                add 1 to {_n}
+                bgKdEscape(loop-player, true)
+    if {_n} > 0:
+        bgKdTitle("&a&l🚁 헬기 이륙!", "&f도둑 &a%{_n}%명&f 탈출 · 못 탄 도둑은 다음 헬기를 기다리세요")
+    else:
+        bgKdTitle("&e&l🚁 헬기 이륙", "&7아무도 타지 않았습니다 · 20초 뒤 다른 옥상에 다시 옴")
     bgKdTexts()
-    bgKdBeams()
-    bgKdSay("&e🚁 헬기가 이륙! &f→ &e%bgKdHeliName({_to})%")
-    set {_a} to bgKdMk("heli_%{_f}%")
-    set {_b} to bgKdMk("heli_%{_to}%")
-    set {_dx} to (x-coordinate of {_b}) - (x-coordinate of {_a})
-    set {_dy} to (y-coordinate of {_b}) - (y-coordinate of {_a})
-    set {_dz} to (z-coordinate of {_b}) - (z-coordinate of {_a})
-    set {_n} to max(20, min(80, ceil(sqrt({_dx} * {_dx} + {_dz} * {_dz}) / 2.5)))
-    # 명령에 들어가는 수는 소수 둘째 자리까지라 칸마다 반올림한 값으로 움직이고, 끝에 남은 만큼 한 번 더 (날 때마다 어긋나지 않게)
-    set {_sx} to round({_dx} / {_n} * 100) / 100
-    set {_sz} to round({_dz} / {_n} * 100) / 100
-    set {_sy} to round(({_dy} - 14) / 10 * 100) / 100
-    loop 10 times:
-        bgKdHeliShift(0, 1.4, 0)
+    # 1) 떠오르기 (6칸 · 2.4초): 아래로 바람 · 살짝 흔들림
+    loop 24 times:
+        if ({-bg::kd::hgen} ? 0) is not {_g}:
+            stop
+        set {_e} to bgKdSmooth(loop-number / 24)
+        bgKdRig(bgUp({_p0}, 6 * {_e}), 90 + 2.5 * sin(loop-number * 30) * (1 - {_e}), 1.5 * sin(loop-number * 20))
+        if mod(loop-number, 2) is 0:
+            bgParticle({_p0}, "cloud", 3.5, 0.1, 3.5, 0.15, 30)
+            bgParticle({_p0}, "poof", 2.5, 0.1, 2.5, 0.1, 10)
+        if mod(loop-number, 3) is 0:
+            bgSoundAt({-bg::kd::hloc}, "entity.ender_dragon.flap", 3, 0.7)
         wait 2 ticks
-    loop {_n} times:
-        bgKdHeliShift({_sx}, 0, {_sz})
+    # 2) 기수 숙이며 도시 가운데 쪽 (35° 꺾어) 으로 돌아 가속 · 상승 (7초)
+    set {_c} to bgKdAt(0, 0, 0)
+    set {_dx} to (x-coordinate of {_c}) - (x-coordinate of {_p0})
+    set {_dz} to (z-coordinate of {_c}) - (z-coordinate of {_p0})
+    set {_hd} to atan2({_dz}, -1 * {_dx}) + 35
+    set {_turn} to mod({_hd} - 90 + 540, 360) - 180
+    set {_px} to x-coordinate of {_p0}
+    set {_pz} to z-coordinate of {_p0}
+    set {_y0} to (y-coordinate of {_p0}) + 6
+    set {_prev} to 0
+    loop 70 times:
+        if ({-bg::kd::hgen} ? 0) is not {_g}:
+            stop
+        set {_u} to loop-number / 70
+        set {_yw} to 90 + {_turn} * bgKdSmooth({_u} * 3)
+        set {_pt} to 17 * bgKdSmooth({_u} * 2)
+        set {_d} to 90 * {_u} * {_u}
+        set {_st} to {_d} - {_prev}
+        set {_prev} to {_d}
+        set {_px} to {_px} - sin({_yw}) * {_st}
+        set {_pz} to {_pz} + cos({_yw}) * {_st}
+        set {_l} to location({_px}, {_y0} + 55 * ({_u} ^ 1.6), {_pz}, {_w})
+        bgKdRig({_l}, {_yw}, {_pt})
+        if mod(loop-number, 3) is 0:
+            bgSoundAt({_l}, "entity.ender_dragon.flap", 4, 0.75)
+        if mod(loop-number, 2) is 0:
+            bgParticle(location({_px} + sin({_yw}) * 6, (y-coordinate of {_l}) + 2.5, {_pz} - cos({_yw}) * 6, {_w}), "campfire_cosy_smoke", 0.2, 0.2, 0.2, 0.01, 2)
+        if loop-number is 1 or 20 or 40:
+            bgSoundAt({_l}, "item.elytra.flying", 3, 0.6)
         wait 2 ticks
-    loop 10 times:
-        bgKdHeliShift(0, {_sy}, 0)
-        wait 2 ticks
-    bgKdHeliShift({_dx} - {_sx} * {_n}, {_dy} - 14 - {_sy} * 10, {_dz} - {_sz} * {_n})
-    set {bg::kd::helipos} to {_to}
-    delete {-bg::kd::heliflying}
-    bgKdTexts()
-    bgKdBeams()
-    bgKdSay("&e🚁 헬기 착륙: &f%bgKdHeliName({_to})% &7— 지금 타면 탈출!")
-    bgKdSound("entity.firework_rocket.launch", 0.8)
+    # 3) 구름 속으로 사라짐
+    bgParticle({-bg::kd::hloc}, "cloud", 4, 2.5, 4, 0.05, 160)
+    bgParticle({-bg::kd::hloc}, "white_smoke", 3, 2, 3, 0.02, 60)
+    bgKdHeliVis(false)
+    delete {-bg::kd::rotsp}
+    wait 10 ticks
+    loop all players:
+        if bgKdAboard(loop-player) is true:
+            bgKdUnboard(loop-player)
+            if bgKdOn(loop-player) is true:
+                teleport loop-player to bgKdMk("wait")
+                bgParticle(location of loop-player, "firework", 1, 2, 1, 0.1, 60)
+                bgTitleP(loop-player, "&a&l탈출 성공!", "&f헬기로 빠져나왔습니다 &7· 전망대에서 구경")
+    bgCmd("kill @e[type=item_display,tag=bgkd_hcam]")
+    if ({-bg::kd::hgen} ? 0) is not {_g}:
+        stop
+    set {-bg::kd::hstate} to "away"
+    set {-bg::kd::helit} to 20
+    if {-bg::kd::lastcall} is true:
+        set {-bg::kd::helit} to 8
+    set {-bg::kd::helito} to mod({_f} + (random integer between 1 and 2), 3)
+    if bgKdState() is "play":
+        bgKdSay("&e🚁 헬기가 구름 속으로 사라졌습니다 &7— &f%{-bg::kd::helit}%초 뒤 &e%bgKdHeliName({-bg::kd::helito})%&f에 다시 내려옵니다")
 
+# 구름 속에서 나타나 새 옥상으로 (약 9.5초): 다가오며 감속 → 기수 들기 → 내려앉기
+function bgKdHeliArrive(to: number):
+    set {_g} to {-bg::kd::hgen} ? 0
+    set {-bg::kd::hstate} to "fly"
+    set {-bg::kd::rotsp} to 52
+    set {_p1} to bgKdMk("heli_%{_to}%")
+    set {_w} to world of {_p1}
+    set {_c} to bgKdAt(0, 0, 0)
+    set {_dx} to (x-coordinate of {_c}) - (x-coordinate of {_p1})
+    set {_dz} to (z-coordinate of {_c}) - (z-coordinate of {_p1})
+    set {_ln} to max(1, sqrt({_dx} * {_dx} + {_dz} * {_dz}))
+    set {_sx} to (x-coordinate of {_p1}) + {_dx} / {_ln} * 65
+    set {_sz} to (z-coordinate of {_p1}) + {_dz} / {_ln} * 65
+    set {_sy} to (y-coordinate of {_p1}) + 50
+    set {_ay} to atan2(-1 * {_dz}, {_dx})
+    set {_turn} to mod(90 - {_ay} + 540, 360) - 180
+    set {_hy} to (y-coordinate of {_p1}) + 7
+    bgKdRig(location({_sx}, {_sy}, {_sz}, {_w}), {_ay}, 14)
+    wait 3 ticks
+    bgKdHeliVis(true)
+    bgParticle(location({_sx}, {_sy}, {_sz}, {_w}), "cloud", 4, 2.5, 4, 0.05, 160)
+    bgKdSay("&e🚁 헬기가 &f%bgKdHeliName({_to})%&e(으)로 내려오고 있습니다!")
+    loop 64 times:
+        if ({-bg::kd::hgen} ? 0) is not {_g}:
+            stop
+        set {_u} to loop-number / 64
+        set {_e} to 1 - ((1 - {_u}) ^ 3)
+        set {_yw} to {_ay} + {_turn} * bgKdSmooth(({_u} - 0.5) / 0.5)
+        set {_pt} to 14 - 24 * bgKdSmooth({_u} / 0.8) + 10 * bgKdSmooth(({_u} - 0.8) / 0.2)
+        set {_l} to location({_sx} + ((x-coordinate of {_p1}) - {_sx}) * {_e}, {_sy} + ({_hy} - {_sy}) * {_e}, {_sz} + ((z-coordinate of {_p1}) - {_sz}) * {_e}, {_w})
+        bgKdRig({_l}, {_yw}, {_pt})
+        if mod(loop-number, 3) is 0:
+            bgSoundAt({_l}, "entity.ender_dragon.flap", 4, 0.75)
+        if loop-number is 1 or 30:
+            bgSoundAt({_l}, "item.elytra.flying", 3, 0.6)
+        wait 2 ticks
+    loop 30 times:
+        if ({-bg::kd::hgen} ? 0) is not {_g}:
+            stop
+        set {_e} to bgKdSmooth(loop-number / 30)
+        bgKdRig(bgUp({_p1}, 7 * (1 - {_e})), 90 + 2 * sin(loop-number * 25) * (1 - {_e}), 1.5 * sin(loop-number * 20) * (1 - {_e}))
+        if mod(loop-number, 2) is 0:
+            bgParticle({_p1}, "cloud", 3.5, 0.1, 3.5, 0.15, 30)
+            bgParticle({_p1}, "poof", 2.5, 0.1, 2.5, 0.1, 10)
+        if mod(loop-number, 3) is 0:
+            bgSoundAt({_p1}, "entity.ender_dragon.flap", 3, 0.7)
+        wait 2 ticks
+    bgKdRig({_p1}, 90, 0)
+    bgParticle({_p1}, "poof", 3, 0.1, 3, 0.12, 40)
+    bgSoundAt({_p1}, "block.anvil.land", 0.6, 0.6)
+    delete {-bg::kd::rotsp}
+    set {bg::kd::helipos} to {_to}
+    set {-bg::kd::hstate} to "land"
+    delete {-bg::kd::heliflying}
+    set {-bg::kd::helit} to 60
+    if {-bg::kd::lastcall} is true:
+        set {-bg::kd::helit} to max(10, min(60, ({-bg::kd::left} ? 60) - 5))
+    bgKdTexts()
+    bgKdSay("&a🚁 헬기 착륙: &f%bgKdHeliName({_to})% &7— &e%{-bg::kd::helit}%초&f 안에 타면 이륙 때 탈출!")
+    bgKdSound("block.beacon.activate", 1.2)
+
+# 매초: 탑승 시간 · 이륙 · 다시 오기
 every 1 second:
     bgKdState() is "play"
     {-bg::kd::open} is true
-    {-bg::kd::heliflying} is not true
-    remove 1 from {-bg::kd::helit}
-    if {-bg::kd::helit} is 15:
-        set {_c} to {bg::kd::helipos} ? 0
-        set {_to} to mod({_c} + random integer between 1 and 2, 3)
-        set {-bg::kd::helito} to {_to}
-        bgKdSay("&e🚁 15초 뒤 헬기가 &f%bgKdHeliName({_to})%&e(으)로 옮겨 갑니다!")
-    if {-bg::kd::helit} <= 0:
-        set {-bg::kd::helit} to 60
-        bgKdHeliFly({-bg::kd::helito} ? 1)
+    set {_hs} to {-bg::kd::hstate} ? "land"
+    if {_hs} is "land":
+        remove 1 from {-bg::kd::helit}
+        # 판이 끝나기 전에 꼭 뜸 (탄 사람이 억울하지 않게)
+        if {-bg::kd::helit} > ({-bg::kd::left} ? 999) - 3:
+            set {-bg::kd::helit} to max(0, ({-bg::kd::left} ? 999) - 3)
+        if {-bg::kd::helit} is 10:
+            bgKdSay("&e🚁 10초 뒤 이륙! &f아직 안 탄 도둑은 서두르세요")
+        if {-bg::kd::helit} <= 10:
+            if {-bg::kd::helit} > 0:
+                set {-bg::kd::rotsp} to 37 + (10 - {-bg::kd::helit}) * 2.1
+                bgSoundAt(bgKdMk("heli_%{bg::kd::helipos} ? 0%"), "entity.ender_dragon.flap", 2, 0.6 + (10 - {-bg::kd::helit}) * 0.02)
+                bgParticle(bgKdMk("heli_%{bg::kd::helipos} ? 0%"), "cloud", 2.5, 0.1, 2.5, 0.05 + (10 - {-bg::kd::helit}) * 0.01, 8)
+        if {-bg::kd::helit} <= 0:
+            bgKdHeliDepart()
+    else if {_hs} is "away":
+        remove 1 from {-bg::kd::helit}
+        if {-bg::kd::helit} <= 0:
+            set {-bg::kd::hstate} to "fly"
+            bgKdHeliArrive({-bg::kd::helito} ? 1)
 
 # ─────────────────────────────────────────────────────────── 하수구 밸브
 function bgKdValves() :: number:
