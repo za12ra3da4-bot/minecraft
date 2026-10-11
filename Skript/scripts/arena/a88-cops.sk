@@ -151,7 +151,7 @@ function bgKdCopKit(p: player):
     bgCmd("item replace entity %{_n}% armor.legs with leather_leggings[dyed_color=1381706,unbreakable={}]")
     bgCmd("item replace entity %{_n}% armor.feet with leather_boots[dyed_color=1381706,unbreakable={}]")
     bgCmd("item replace entity %{_n}% hotbar.0 with blaze_rod[item_model=""bg:kd/baton"",item_name={text:""경찰봉"",color:""blue"",bold:true},lore=[{text:""도둑 체력을 다 깎으면 체포 · 들고 있던 돈가방 압수"",color:""gray"",italic:false},{text:""네더라이트 검 성능 (공격력 8 · 공격 속도 1.6)"",color:""dark_gray"",italic:false}],attribute_modifiers=[{type:""minecraft:attack_damage"",id:""bg:baton_damage"",amount:7.0,operation:""add_value"",slot:""mainhand""},{type:""minecraft:attack_speed"",id:""bg:baton_speed"",amount:-2.4,operation:""add_value"",slot:""mainhand""}]]")
-    bgCmd("item replace entity %{_n}% hotbar.1 with echo_shard[item_model=""bg:kd/radio"",item_name={text:""무전기"",color:""aqua"",bold:true},lore=[{text:""우클릭: 가장 가까운 도둑 방향 · 거리 (25초마다)"",color:""gray"",italic:false}]]")
+    bgCmd("item replace entity %{_n}% hotbar.1 with echo_shard[item_model=""bg:kd/radio"",item_name={text:""무전기"",color:""aqua"",bold:true},lore=[{text:""우클릭: 5초 동안 가장 가까운 도둑 방향 · 거리 (25초마다)"",color:""gray"",italic:false}]]")
     bgCmd("effect give %{_n}% speed infinite 0 true")
     bgCmd("team join kd_cop %{_n}%")
 
@@ -1009,10 +1009,31 @@ function bgKdArrow(p: player, l: location) :: text:
     set {_dz} to (z-coordinate of {_l}) - (z-coordinate of {_p})
     set {_ty} to atan2({_dz}, -1 * {_dx})
     set {_py} to {_p}.getLocation().getYaw()
-    set {_d} to mod({_ty} - 90 - {_py} + 540, 360) - 180
+    # 내가 보는 방향 기준 (오른쪽으로 돌면 + ) · 마크 기본 글꼴에 있는 화살표만
+    set {_d} to mod({_ty} - {_py} + 540, 360) - 180
     set {_i} to mod(round({_d} / 45) + 8, 8)
-    set {_ar::*} to "⬆", "⬈", "➡", "⬊", "⬇", "⬋", "⬅" and "⬉"
+    set {_ar::*} to "↑", "↗", "→", "↘", "↓", "↙", "←" and "↖"
     return {_ar::%{_i} + 1%}
+
+# 무전기: 5초 동안 화살표 · 거리를 계속 갱신 (도둑이 움직여도 따라감)
+function bgKdRadioTrack(p: player, tg: player):
+    loop 50 times:
+        if {_p} is not online:
+            stop
+        if {_tg} is not online:
+            stop
+        if bgKdJailed({_tg}) is true:
+            send title "&a✔" with subtitle "&7그 도둑은 이미 잡혔어요" to {_p} for 20 ticks with fade in 0 ticks and fade out 10 ticks
+            stop
+        if bgKdEsc({_tg}) is true:
+            stop
+        set {_a} to bgKdArrow({_p}, location of {_tg})
+        set {_dd} to round(distance between {_p} and {_tg})
+        if loop-number < 50:
+            send title "&b&l%{_a}%" with subtitle "&b📡 가장 가까운 도둑 &f%{_dd}%m &7(%ceil((50 - loop-number) / 10)%초)" to {_p} for 6 ticks with fade in 0 ticks and fade out 0 ticks
+        else:
+            send title "&b&l%{_a}%" with subtitle "&b📡 가장 가까운 도둑 &f%{_dd}%m" to {_p} for 4 ticks with fade in 0 ticks and fade out 10 ticks
+        wait 2 ticks
 
 on right click:
     bgKdOn(player) is true
@@ -1038,8 +1059,7 @@ on right click:
             send action bar "&7잡을 도둑이 없습니다" to player
             stop
         set {-bg::kd::cdr::%uuid of player%} to now
-        set {_a} to bgKdArrow(player, location of {_tg})
-        send title "&b%{_a}%" with subtitle "&b📡 가장 가까운 도둑 &f%round({_best})%m" to player for 40 ticks with fade in 0 ticks and fade out 10 ticks
+        bgKdRadioTrack(player, {_tg})
         play sound "block.note_block.bit" with volume 1 and pitch 1.6 to player
         play sound "block.note_block.bit" with volume 0.4 and pitch 0.8 to {_tg}
         send action bar "&c삐빅… 경찰 무전기에 위치가 잡혔다!" to {_tg}
@@ -1156,7 +1176,7 @@ function bgKdLoot(p: player, l: location):
 
 # ─────────────────────────────────────────────────────────── 경찰 실적 · 직급
 #  내가 잡은 도둑이 감옥에 있는 동안 5초마다 실적 +1 (도둑 한 명당)
-#  직급 기준 = 도둑 수에 비례: 한 단계마다 max(3, 도둑 수 × 2) 실적
+#  직급 기준 = 도둑 수에 비례: 한 단계마다 max(12, 도둑 수 × 6) 실적 (도둑 1명을 계속 가둬 두면 1분에 한 단계)
 #  순경(0) → 경장(1): 상시 신속 I → 경사(2): 추격 진주 2 + 수갑 3 (던지면 맞은 도둑 3초 느려짐)
 #  → 경위(3): 도둑 추적기 (우클릭: 가장 가까운 도둑 4초 발광 · 30초) + 상시 신속 II
 function bgKdRankName(r: number) :: text:
@@ -1170,7 +1190,7 @@ function bgKdRankName(r: number) :: text:
 
 every 5 seconds:
     bgKdState() is "play"
-    set {_step} to max(3, bgKdCount("thief") * 2)
+    set {_step} to max(12, bgKdCount("thief") * 6)
     loop all players:
         bgKdOn(loop-player) is true
         bgKdRole(loop-player) is "thief"
