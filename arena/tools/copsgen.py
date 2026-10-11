@@ -1305,31 +1305,6 @@ def build(variant=None):
         ox, oz = OUT[toward]
         mark(f"valve_{k}", vx + ox * 2, 1, vz + oz * 2)
 
-    # ── 멀리서도 보이는 빛줄기 (신호기 = 렌더 거리 끝까지 보임) — 땅 위엔 색유리 한 칸, 그 밑에 신호기, 그 밑에 3×3 받침
-    #   감옥(빨강) · 구출 발판(초록) 은 늘 켜짐. 헬기 옥상 3(노랑) · 밸브 3(청록) · 하수구(하늘) 은 받침이 꺼진 블록으로 지어지고
-    #   Skript 가 받침을 철 블록으로 바꿔 켬 (땅속이라 겉모습은 그대로)
-    def beam(x, y_glass, z, glass, on, off_blk="blue_terracotta"):
-        put(x, y_glass, z, glass)
-        put(x, y_glass - 1, z, "beacon")
-        for dx in range(-1, 2):
-            for dz in range(-1, 2):
-                put(x + dx, y_glass - 2, z + dz, "iron_block" if on else off_blk)
-    jx_, _, jz_ = marks["jail"][:3]
-    ptop = FL + 15
-    for dx in range(-1, 2):
-        for dz in range(-1, 2):
-            for y in range(ptop + 1, ptop + 4):
-                put(int(jx_ - 0.5) + dx, y, int(jz_ - 0.5) + dz, "air")
-    beam(int(jx_ - 0.5), ptop + 2, int(jz_ - 0.5), "red_stained_glass", True)
-    rx_, _, rz_ = marks["rescue"][:3]
-    beam(int(rx_ - 0.5), FL, int(rz_ - 0.5), "lime_stained_glass", True)
-    for k, h in enumerate(HELIS):
-        beam(int(math.floor(h["x"])), FL + h["y"] - 1, int(math.floor(h["z"])), "yellow_stained_glass", False, "gray_concrete")
-    for k in range(3):
-        vx_, _, vz_ = marks[f"valve_{k}"][:3]
-        beam(int(math.floor(vx_)), FL, int(math.floor(vz_)), "cyan_stained_glass", False)
-    beam(mx_, FL, mz_, "light_blue_stained_glass", False)
-
     # ── 문 정하기: 문 앞 (문 폭 + 양옆 1칸 · 바깥 6칸) 에 다른 건물 · 주차장 · 공사장이 있으면 트인 면으로 옮기고 뚫음
     blocks_ = [tuple(e[0]) for e in BLDG] + OBST
 

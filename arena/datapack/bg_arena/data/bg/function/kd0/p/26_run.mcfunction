@@ -1,24 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~1 ~11 ~72 ~1 ~14 ~73 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~11 ~72 ~99 ~12 ~73 minecraft:brown_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-88 ~11 ~73 ~-88 ~12 ~73 minecraft:bookshelf
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~11 ~73 ~-53 ~11 ~74 minecraft:stone_brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-42 ~11 ~73 ~-42 ~14 ~73 minecraft:ladder[facing=east,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-34 ~11 ~73 ~-34 ~12 ~73 minecraft:bookshelf
-$execute positioned $(x) $(y) $(z) run setblock ~-33 ~11 ~73 minecraft:potted_fern
-$execute positioned $(x) $(y) $(z) run setblock ~-28 ~11 ~73 minecraft:brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~4 ~11 ~73 ~4 ~12 ~73 minecraft:barrel[facing=up,open=false]
-$execute positioned $(x) $(y) $(z) run fill ~69 ~11 ~73 ~69 ~14 ~74 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~93 ~11 ~73 ~93 ~14 ~74 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~11 ~74 ~-99 ~12 ~75 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-76 ~11 ~74 ~-74 ~12 ~74 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-50 ~11 ~74 ~-50 ~12 ~74 minecraft:barrel[facing=up,open=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-42 ~11 ~74 minecraft:stone_brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-40 ~11 ~74 minecraft:brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-33 ~11 ~74 minecraft:spruce_planks
-$execute positioned $(x) $(y) $(z) run fill ~11 ~11 ~74 ~11 ~14 ~75 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-89 ~11 ~75 ~-89 ~12 ~75 minecraft:barrel[facing=up,open=false]
-$execute positioned $(x) $(y) $(z) run fill ~-73 ~11 ~75 ~-71 ~12 ~75 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-28 ~11 ~75 minecraft:brick_slab[type=top,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~1 ~11 ~75 ~1 ~14 ~76 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~6 ~11 ~75 minecraft:potted_fern
 $execute positioned $(x) $(y) $(z) run setblock ~86 ~11 ~75 minecraft:spruce_planks
@@ -1498,3 +1477,24 @@ $execute positioned $(x) $(y) $(z) run fill ~99 ~14 ~-15 ~99 ~14 ~-14 minecraft:
 $execute positioned $(x) $(y) $(z) run setblock ~-92 ~14 ~-12 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~14 ~-12 ~-89 ~14 ~-12 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run fill ~-87 ~14 ~-12 ~-86 ~14 ~-12 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-78 ~14 ~-12 ~-77 ~14 ~-12 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-75 ~14 ~-12 ~-74 ~14 ~-12 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-72 ~14 ~-12 ~-71 ~14 ~-12 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~14 ~-12 ~-30 ~14 ~-12 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~31 ~14 ~-12 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~33 ~14 ~-12 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~35 ~14 ~-12 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~43 ~14 ~-12 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~45 ~14 ~-12 ~46 ~14 ~-12 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~48 ~14 ~-12 ~49 ~14 ~-12 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~84 ~14 ~-12 ~93 ~14 ~-12 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-52 ~14 ~-11 ~-52 ~14 ~-4 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-29 ~14 ~-11 ~-29 ~14 ~-4 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~83 ~14 ~-11 ~83 ~14 ~10 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~94 ~14 ~-11 ~94 ~14 ~10 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~14 ~-10 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-94 ~14 ~-10 ~-94 ~14 ~-9 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~14 ~-10 ~-84 ~14 ~-9 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-80 ~14 ~-10 ~-80 ~14 ~-9 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-69 ~14 ~-10 ~-69 ~14 ~-9 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~14 ~-10 minecraft:terracotta

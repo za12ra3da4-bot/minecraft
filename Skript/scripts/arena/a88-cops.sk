@@ -789,35 +789,33 @@ every 1 second:
 
 # 떠 있는 안내 글자 (털이 장소 · 구출 발판 · 헬기장 · 감옥)
 function bgKdText(id: text, l: location, txt: text):
-    # 털이 장소(h0~h5) 글자는 가까이 가야 보임 (벽 너머 X) — 직접 찾아다니게
-    if first character of {_id} is "h":
+    # 털이 장소(h0~h5) · 밸브(v0~v2) 글자는 가까이 가야 보임 (벽 너머 X) — 직접 찾아다니게
+    if first character of {_id} is "h" or "v":
         bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 2.6)% %bgC(z-coordinate of {_l})% {Tags:[""bgkd"",""bgkd_%{_id}%""],billboard:""center"",shadow:1b,background:1073741824,brightness:{sky:15,block:15},view_range:0.5f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.4f,1.4f,1.4f]},text:%{_txt}%}")
         stop
     bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) + 2.6)% %bgC(z-coordinate of {_l})% {Tags:[""bgkd"",""bgkd_%{_id}%""],billboard:""center"",shadow:1b,see_through:1b,background:1073741824,brightness:{sky:15,block:15},view_range:4f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.4f,1.4f,1.4f]},text:%{_txt}%}")
 
 # 위치 빛 기둥: 가늘고 긴 발광 블록 디스플레이 (발광 테두리는 건물 너머로도 보임)
 function bgKdPillar(l: location, blk: text, col: number, h: number):
-    bgCmd("execute in %bgDim()% run summon block_display %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% {Tags:[""bgkd"",""bgkd_pillar""],block_state:{Name:""minecraft:%{_blk}%""},Glowing:1b,glow_color_override:%{_col}%,brightness:{sky:15,block:15},view_range:16f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.12f,0f,-0.12f],scale:[0.24f,%{_h}%f,0.24f]}}")
+    bgCmd("execute in %bgDim()% run summon block_display %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% {Tags:[""bgkd"",""bgkd_pillar""],block_state:{Name:""minecraft:%{_blk}%""},Glowing:1b,glow_color_override:%{_col}%,brightness:{sky:15,block:15},view_range:64f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.2f,0f,-0.2f],scale:[0.4f,%{_h}%f,0.4f]}}")
 
 function bgKdTexts():
     bgKdReady() is true
     bgCmd("kill @e[type=text_display,tag=bgkd]")
     bgCmd("kill @e[type=block_display,tag=bgkd_pillar]")
-    bgKdPillar(bgKdMk("jail"), "red_stained_glass", 16724016, 30)
-    bgKdPillar(bgKdMk("rescue"), "lime_stained_glass", 5635925, 30)
+    bgKdPillar(bgKdMk("jail"), "red_stained_glass", 16724016, 80)
+    bgKdPillar(bgKdMk("rescue"), "lime_stained_glass", 5635925, 80)
     if {-bg::kd::open} is true:
         if {-bg::kd::heliflying} is not true:
-            bgKdPillar(bgKdHeliEsc(), "yellow_stained_glass", 16776960, 40)
+            bgKdPillar(bgKdHeliEsc(), "yellow_stained_glass", 16776960, 80)
         loop 3 times:
             set {_vi} to loop-number - 1
             if {-bg::kd::valve::%{_vi}%} is set:
-                bgKdPillar(bgKdMk("valve_%{_vi}%"), "lime_stained_glass", 5635925, 16)
                 bgKdText("v%{_vi}%", bgKdMk("valve_%{_vi}%"), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""green"",bold:true},{text:""\n돌아감"",color:""white""}]")
             else:
-                bgKdPillar(bgKdMk("valve_%{_vi}%"), "cyan_stained_glass", 65535, 16)
                 bgKdText("v%{_vi}%", bgKdMk("valve_%{_vi}%"), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""aqua"",bold:true},{text:""\n4초 서 있으면 돌림 (3개 → 하수구)"",color:""white""}]")
         if {-bg::kd::sewer} is set:
-            bgKdPillar(bgKdMk("sewer"), "light_blue_stained_glass", 3394815, 30)
+            bgKdPillar(bgKdMk("sewer"), "light_blue_stained_glass", 3394815, 80)
             bgKdText("sewer", bgKdMk("sewer"), "[{text:""🕳 하수구 열림!"",color:""aqua"",bold:true},{text:""\n맨홀로 들어가면 탈출"",color:""green""}]")
         else:
             bgKdText("sewer", bgKdMk("sewer"), "[{text:""🕳 하수구 맨홀"",color:""gray"",bold:true},{text:""\n밸브 3개를 돌리면 열림"",color:""gray""}]")
@@ -1304,43 +1302,9 @@ every 1 second:
     bgKdSay("&7🕳 하수구가 다시 닫혔다 — 밸브 3개를 다시 돌려야 열림")
     bgKdTexts()
 
-# ─────────────────────────────────────────────────────────── 신호기 빛줄기 (렌더 거리 끝까지 보임)
-#  표지 바로 밑: 색유리 (땅) → 신호기 → 3×3 받침. 받침을 철 블록으로 바꾸면 켜지고, 다른 블록이면 꺼짐 (땅속이라 겉은 그대로)
-#  감옥(빨강) · 구출 발판(초록) 은 늘 켜짐 · 헬기(노랑) 는 지금 앉은 옥상만 · 밸브(청록) 는 안 돌린 것만 · 하수구(하늘) 는 열렸을 때
-function bgKdBeam(l: location, on: boolean, off: text):
-    set {_x} to floor(x-coordinate of {_l})
-    set {_y} to floor(y-coordinate of {_l}) - 3
-    set {_z} to floor(z-coordinate of {_l})
-    set {_b} to {_off}
-    if {_on} is true:
-        set {_b} to "iron_block"
-    bgCmd("execute in %bgDim()% run fill %{_x} - 1% %{_y}% %{_z} - 1% %{_x} + 1% %{_y}% %{_z} + 1% minecraft:%{_b}%")
-
+# (빛줄기 신호기는 쓰지 않음 — 위치 표시는 발광 기둥만. 예전 호출이 남아 있어도 아무 일 없게)
 function bgKdBeams():
-    bgKdReady() is true
-    set {_open} to false
-    if bgKdState() is "play":
-        if {-bg::kd::open} is true:
-            set {_open} to true
-    loop 3 times:
-        set {_k} to loop-number - 1
-        set {_h} to false
-        if {_open} is true:
-            if {-bg::kd::heliflying} is not true:
-                if ({bg::kd::helipos} ? 0) is {_k}:
-                    set {_h} to true
-        bgKdBeam(bgKdMk("heli_%{_k}%"), {_h}, "gray_concrete")
-        set {_v} to false
-        if {_open} is true:
-            if {-bg::kd::sewer} is not set:
-                if {-bg::kd::valve::%{_k}%} is not set:
-                    set {_v} to true
-        bgKdBeam(bgKdMk("valve_%{_k}%"), {_v}, "blue_terracotta")
-    set {_s} to false
-    if {_open} is true:
-        if {-bg::kd::sewer} is set:
-            set {_s} to true
-    bgKdBeam(bgKdMk("sewer"), {_s}, "blue_terracotta")
+    stop
 
 # ─────────────────────────────────────────────────────────── 판 끝나면 자동으로 맵 바꾸기
 #  결과 10초 뒤 → 경도에 있는 사람은 도시 위 하늘에서 관전 모드 → 다른 배치로 다시 짓기 (약 17초) → 대기실로
