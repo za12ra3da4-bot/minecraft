@@ -536,30 +536,33 @@ function bgPkBlinkWarn(on: text):
 every 5 ticks:
     {bg::pk2::built} is true
     set {_n} to 0
+    # 소리는 공명 수정 근처 (16칸) 사람에게만 · 작게 (멀리서 계속 디딩 탁 들리지 않게)
+    set {_bc} to bgPkAtM(2, {-bg::pk2mk::blinkA_0::x} ? 0, {-bg::pk2mk::blinkA_0::y} ? 0, {-bg::pk2mk::blinkA_0::z} ? 0)
     loop all players:
         if bgPkOn(loop-player) is true:
             if bgPkMap(loop-player) is 2:
                 add 1 to {_n}
-                add loop-player to {_ps::*}
+                if distance between loop-player and {_bc} < 16:
+                    add loop-player to {_ps::*}
     {_n} > 0
     set {-bg::pk::blc} to mod(({-bg::pk::blc} ? 0) + 1, 12)
     set {_c} to {-bg::pk::blc}
     if {_c} is 0:
         bgPkBlinkSet("A")
         loop {_ps::*}:
-            play sound "block.amethyst_block.resonate" with volume 0.7 and pitch 1.4 to loop-value
+            play sound "block.amethyst_block.chime" with volume 0.35 and pitch 1.4 to loop-value
     else if {_c} is 6:
         bgPkBlinkSet("B")
         loop {_ps::*}:
-            play sound "block.amethyst_block.resonate" with volume 0.7 and pitch 1.0 to loop-value
+            play sound "block.amethyst_block.chime" with volume 0.35 and pitch 1.0 to loop-value
     else if {_c} is 4:
         bgPkBlinkWarn("A")
         loop {_ps::*}:
-            play sound "block.note_block.hat" with volume 0.5 and pitch 1.6 to loop-value
+            play sound "block.note_block.hat" with volume 0.2 and pitch 1.6 to loop-value
     else if {_c} is 10:
         bgPkBlinkWarn("B")
         loop {_ps::*}:
-            play sound "block.note_block.hat" with volume 0.5 and pitch 1.6 to loop-value
+            play sound "block.note_block.hat" with volume 0.2 and pitch 1.6 to loop-value
 
 function bgPkFinish(p: player):
     set {_u} to "%uuid of {_p}%"
