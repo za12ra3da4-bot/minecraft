@@ -228,7 +228,8 @@ def write_hub(path):
     import osarena
     import copsgen
     import pkgen
-    for pre, mk in (("osmk", osarena.markers()), ("kdmk", copsgen.markers()), ("pkmk", pkgen.markers())):
+    import pkgen2
+    for pre, mk in (("osmk", osarena.markers()), ("kdmk", copsgen.markers()), ("pkmk", pkgen.markers()), ("pk2mk", pkgen2.markers())):
         for name, pos in sorted(mk.items()):
             if isinstance(pos, str):
                 continue

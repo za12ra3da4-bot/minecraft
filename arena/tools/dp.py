@@ -1015,4 +1015,6 @@ def hub_functions(dp_root):
         struct_functions(dp_root, f"kd{v}", copsgen.Variant(v), f"경도 도시 배치 {v}")
     import pkgen
     struct_functions(dp_root, "pk", pkgen, "포털 파쿠르")
+    import pkgen2
+    struct_functions(dp_root, "pk2", pkgen2, "천공의 정원 파쿠르")
     return n

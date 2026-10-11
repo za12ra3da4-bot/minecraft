@@ -8,6 +8,8 @@
 #     체크포인트 없음 — 떨어지면 처음부터 (기록도 다시) · 기록 타이머 · 최고 기록 · /파쿠르 랭킹 · 9번 칸 나가기 버튼 (허브로)
 #     다른 사람은 안 보이고 안 밀림: 팀 0hubpk (충돌 없음 · 이름표 숨김 · 같은 팀 투명 안 보임) + 파티클 없는 투명 효과
 #   파쿠르 원점 = 허브 원점 + (0, 10, 200)  (storage bg:pk origin, arena/tools/pkgen.py)
+#   맵 2 천공의 정원 = 허브 원점 + (0, 10, 340)  (storage bg:pk2 origin, arena/tools/pkgen2.py) — 떠 있는 섬 5층 지그재그 · 사다리 탑 · 황금 신전
+#   고리에 들어가면 맵 고르는 창 (닫으면 지난번 맵) · 기록 · 랭킹은 맵마다 따로 ({bg::pk::best::*} · {bg::pk2::best::*})
 # ═════════════════════════════════════════════════════════════════════════════
 
 import:
@@ -177,8 +179,8 @@ every 5 ticks:
             if {-bg::bridge::%uuid of {_p}%} is set:
                 # 고리 통과 → 파쿠르
                 if bgInPortal({_p}) is true:
-                    bgBridgeOff({_p})
-                    bgPkEnter({_p})
+                    if {-bg::pkgui::%uuid of {_p}%} is not set:
+                        bgPkChoose({_p})
                 else:
                     # 다리 근처에서 벗어나거나 60초 지나면 다리 닫기
                     set {_hx} to (x-coordinate of {_p}) - {bg::hub::x}
@@ -221,13 +223,128 @@ function bgPkOn(p: player) :: boolean:
         return true
     return false
 
-function bgPkAt(dx: number, dy: number, dz: number) :: location:
-    return location({bg::hub::x} + {_dx}, {bg::hub::y} + 10 + {_dy}, {bg::hub::z} + 200 + {_dz}, bgWorld())
+# 맵 1 = 포털 파쿠르 (pk) · 맵 2 = 천공의 정원 (pk2)
+function bgPkMap(p: player) :: number:
+    return {-bg::pk::map::%uuid of {_p}%} ? 1
 
-function bgPkMk(n: text) :: location:
-    set {_l} to bgPkAt({-bg::pkmk::%{_n}%::x}, {-bg::pkmk::%{_n}%::y}, {-bg::pkmk::%{_n}%::z})
-    set yaw of {_l} to {-bg::pkmk::%{_n}%::yaw} ? 0
+function bgPkKey(m: number) :: text:
+    if {_m} is 2:
+        return "pk2"
+    return "pk"
+
+function bgPkName(m: number) :: text:
+    if {_m} is 2:
+        return "천공의 정원"
+    return "포털 파쿠르"
+
+function bgPkCol(m: number) :: text:
+    if {_m} is 2:
+        return "&a"
+    return "&d"
+
+function bgPkAtM(m: number, dx: number, dy: number, dz: number) :: location:
+    set {_oz} to 200
+    if {_m} is 2:
+        set {_oz} to 340
+    return location({bg::hub::x} + {_dx}, {bg::hub::y} + 10 + {_dy}, {bg::hub::z} + {_oz} + {_dz}, bgWorld())
+
+function bgPkMkM(m: number, n: text) :: location:
+    set {_k} to "pkmk"
+    if {_m} is 2:
+        set {_k} to "pk2mk"
+    set {_l} to bgPkAtM({_m}, {-bg::%{_k}%::%{_n}%::x}, {-bg::%{_k}%::%{_n}%::y}, {-bg::%{_k}%::%{_n}%::z})
+    set yaw of {_l} to {-bg::%{_k}%::%{_n}%::yaw} ? 0
     return {_l}
+
+# 그 사람이 있는 맵의 표지
+function bgPkMk2(p: player, n: text) :: location:
+    return bgPkMkM(bgPkMap({_p}), {_n})
+
+function bgPkBest(m: number, u: text) :: number:
+    set {_k} to bgPkKey({_m})
+    return {bg::%{_k}%::best::%{_u}%}
+
+function bgPkBuilt(m: number) :: boolean:
+    set {_k} to bgPkKey({_m})
+    if {bg::%{_k}%::built} is true:
+        return true
+    return false
+
+# ─────────────────────────────────────────────────────────── 맵 고르기 (고리에 들어갔을 때)
+function bgPkMapItem(p: player, m: number) :: item:
+    if {_m} is 2:
+        set {_it} to cherry sapling
+        add "&7구름 위 떠 있는 섬 5층을 지그재그로" to {_lore::*}
+        add "&7사다리 탑 · 울타리 기둥 · 꼭대기 황금 신전" to {_lore::*}
+    else:
+        set {_it} to ender eye
+        add "&7빛나는 행성 둘레를 돌며 올라가는 50단" to {_lore::*}
+        add "&7우주 배경 · 꼭대기 트로피" to {_lore::*}
+    add "" to {_lore::*}
+    set {_b} to bgPkBest({_m}, "%uuid of {_p}%")
+    if {_b} is set:
+        add "&f내 최고 &6%bgPkTime({_b})%" to {_lore::*}
+    else:
+        add "&f내 최고 &7아직 없음" to {_lore::*}
+    set {_k} to bgPkKey({_m})
+    set {_ids::*} to sorted indices of {bg::%{_k}%::best::*} in ascending order
+    if {_ids::1} is set:
+        set {_u1} to {_ids::1}
+        set {_n1} to {bg::pk::name::%{_u1}%} ? "?"
+        add "&f1위 &e%{_n1}% &7· &a%bgPkTime(bgPkBest({_m}, {_u1}))%" to {_lore::*}
+    if bgPkBuilt({_m}) is false:
+        add "&c아직 안 지어짐 &7(관리자 /파쿠르 건설)" to {_lore::*}
+    add "" to {_lore::*}
+    add "&a▶ 클릭해서 출발" to {_lore::*}
+    set name of {_it} to "%bgPkCol({_m})%&l%{_m}%. %bgPkName({_m})%"
+    set lore of {_it} to {_lore::*}
+    return {_it}
+
+function bgPkChoose(p: player):
+    set {_gui} to chest inventory with 3 rows named "&8&l파쿠르 &8| &7맵 고르기"
+    set {_pane} to black stained glass pane named " "
+    loop 27 times:
+        set slot loop-number - 1 of {_gui} to {_pane}
+    set slot 11 of {_gui} to bgPkMapItem({_p}, 1)
+    set slot 15 of {_gui} to bgPkMapItem({_p}, 2)
+    open {_gui} to {_p}
+    set {-bg::pkgui::%uuid of {_p}%} to true
+    play sound "block.portal.trigger" with volume 0.3 and pitch 1.8 to {_p}
+
+function bgPkGo(p: player, m: number):
+    delete {-bg::pkgui::%uuid of {_p}%}
+    bgBridgeOff({_p})
+    bgPkEnter({_p}, {_m})
+
+on inventory click:
+    {-bg::pkgui::%uuid of player%} is true
+    cancel event
+    set {_s} to raw index of event-slot
+    set {_m} to 0
+    if {_s} is 11:
+        set {_m} to 1
+    else if {_s} is 15:
+        set {_m} to 2
+    {_m} > 0
+    delete {-bg::pkgui::%uuid of player%}
+    close player's inventory
+    play sound "ui.button.click" to player
+    wait 1 tick
+    bgPkGo(player, {_m})
+
+on inventory drag:
+    {-bg::pkgui::%uuid of player%} is true
+    cancel event
+
+# 고르지 않고 닫으면 지난번 맵으로 (다리 위 공중에 남지 않게)
+on inventory close:
+    {-bg::pkgui::%uuid of player%} is true
+    delete {-bg::pkgui::%uuid of player%}
+    wait 1 tick
+    if player is online:
+        if bgPkOn(player) is false:
+            if {-bg::bridge::%uuid of player%} is set:
+                bgPkGo(player, bgPkMap(player))
 
 function bgPkTime(ms: number) :: text:
     set {_s} to floor({_ms} / 1000)
@@ -246,17 +363,20 @@ function bgPkElapsed(p: player) :: number:
 # 처음부터 (떨어졌을 때 · /파쿠르 처음)
 function bgPkRestart(p: player):
     set {-bg::pk::t0::%uuid of {_p}%} to now
-    set {-bg::pk::top::%uuid of {_p}%} to y-coordinate of bgPkMk("start")
-    teleport {_p} to bgPkMk("start")
+    set {-bg::pk::top::%uuid of {_p}%} to y-coordinate of bgPkMk2({_p}, "start")
+    teleport {_p} to bgPkMk2({_p}, "start")
 
-function bgPkEnter(p: player):
-    if {bg::pk::built} is not true:
+function bgPkEnter(p: player, m: number = 0):
+    if {_m} is 0:
+        set {_m} to bgPkMap({_p})
+    if bgPkBuilt({_m}) is false:
         if {_p} is op:
             send "&d[파쿠르] &f코스가 없어서 지금 짓습니다..." to {_p}
             bgPkBuild({_p})
             stop
         send "&d[파쿠르] &f아직 코스가 없습니다. &7관리자가 &e/파쿠르 건설" to {_p}
         stop
+    set {-bg::pk::map::%uuid of {_p}%} to {_m}
     set {-bg::pk::in::%uuid of {_p}%} to true
     set {-bg::where::%uuid of {_p}%} to "pk"
     set {bg::pk::name::%uuid of {_p}%} to name of {_p}
@@ -269,7 +389,10 @@ function bgPkEnter(p: player):
     bgCmd("team join 0hubpk %name of {_p}%")
     set {-bg::tabteam::%uuid of {_p}%} to "0hubpk"
     play sound "block.portal.travel" with volume 0.4 and pitch 1.6 to {_p}
-    bgTitleP({_p}, "&d&l포털 파쿠르", "&f행성 둘레를 돌아 꼭대기 트로피까지! &7· 떨어지면 처음부터")
+    if {_m} is 2:
+        bgTitleP({_p}, "&a&l천공의 정원", "&f떠 있는 섬을 올라 꼭대기 황금 신전까지! &7· 떨어지면 처음부터")
+    else:
+        bgTitleP({_p}, "&d&l포털 파쿠르", "&f행성 둘레를 돌아 꼭대기 트로피까지! &7· 떨어지면 처음부터")
 
 function bgPkLeave(p: player):
     delete {-bg::pk::in::%uuid of {_p}%}
@@ -285,7 +408,15 @@ function bgPkBuild(p: player):
         if bgBuilt("pk") is true:
             exit loop
     set {bg::pk::built} to true
-    send "&d[파쿠르] &a코스 완성!" to {_p}
+    send "&d[파쿠르] &a1. 포털 파쿠르 완성! &7(2. 천공의 정원 짓는 중…)" to {_p}
+    bgCmd("data merge storage bg:pk2 {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y} + 10%,z:%{bg::hub::z} + 340%}}")
+    bgCmd("function bg:pk2/build")
+    loop 1200 times:
+        wait 10 ticks
+        if bgBuilt("pk2") is true:
+            exit loop
+    set {bg::pk2::built} to true
+    send "&d[파쿠르] &a2. 천공의 정원 완성!" to {_p}
 
 every 5 ticks:
     loop all players:
@@ -295,7 +426,7 @@ every 5 ticks:
         set food level of {_p} to 20
         # 가장 높이 올라간 자리보다 6칸 넘게 떨어지면 → 처음부터 (코스는 계속 올라가기만 함)
         set {_y} to y-coordinate of {_p}
-        set {_top} to {-bg::pk::top::%{_u}%} ? (y-coordinate of bgPkMk("start"))
+        set {_top} to {-bg::pk::top::%{_u}%} ? (y-coordinate of bgPkMk2({_p}, "start"))
         if {_y} > {_top}:
             if {_p} is on ground:
                 set {-bg::pk::top::%{_u}%} to {_y}
@@ -309,7 +440,7 @@ every 5 ticks:
 every tick:
     loop all players:
         bgPkOn(loop-player) is true
-        set {_f} to bgPkMk("finish")
+        set {_f} to bgPkMk2(loop-player, "finish")
         set {_dy} to (y-coordinate of loop-player) - (y-coordinate of {_f})
         if {_dy} > -0.3:
             if {_dy} < 1.6:
@@ -323,21 +454,23 @@ function bgPkFinish(p: player):
     set {_ms} to bgPkElapsed({_p})
     delete {-bg::pk::in::%{_u}%}
     delete {-bg::pk::top::%{_u}%}
-    set {_best} to {bg::pk::best::%{_u}%}
+    set {_m} to bgPkMap({_p})
+    set {_k} to bgPkKey({_m})
+    set {_best} to {bg::%{_k}%::best::%{_u}%}
     set {_tt} to bgPkTime({_ms})
     if {_best} is not set:
-        set {bg::pk::best::%{_u}%} to {_ms}
+        set {bg::%{_k}%::best::%{_u}%} to {_ms}
         set {_msg} to "&6첫 완주!"
     else if {_ms} < {_best}:
-        set {bg::pk::best::%{_u}%} to {_ms}
+        set {bg::%{_k}%::best::%{_u}%} to {_ms}
         set {_msg} to "&6&l최고 기록 경신!"
     else:
         set {_msg} to "&7최고 기록 %bgPkTime({_best})%"
-    add 1 to {bg::pk::clears::%{_u}%}
+    add 1 to {bg::%{_k}%::clears::%{_u}%}
     bgTitleP({_p}, "&e&l완주! &f%{_tt}%", "%{_msg}%")
     play sound "ui.toast.challenge_complete" to {_p}
     bgParticle(location of {_p}, "firework", 1, 2, 1, 0.1, 80)
-    broadcast "&d[파쿠르] &e%name of {_p}%&f 님이 포털 파쿠르 완주! &6%{_tt}%"
+    broadcast "&d[파쿠르] &e%name of {_p}%&f 님이 %bgPkCol({_m})%%bgPkName({_m})%&f 완주! &6%{_tt}%"
     bgPkBoard()
     wait 3 seconds
     if {_p} is online:
@@ -360,13 +493,15 @@ every 2 ticks:
         bgPkOn(loop-player) is true
         set {_u} to "%uuid of loop-player%"
         set {_ms} to bgPkElapsed(loop-player)
-        set {_h} to floor((y-coordinate of loop-player) - (y-coordinate of bgPkMk("start")))
-        set {_hm} to floor({-bg::pkmk::finish::y} - 1)
-        set {_best} to {bg::pk::best::%{_u}%}
+        set {_m} to bgPkMap(loop-player)
+        set {_h} to floor((y-coordinate of loop-player) - (y-coordinate of bgPkMkM({_m}, "start")))
+        set {_hm} to floor((y-coordinate of bgPkMkM({_m}, "finish")) - (y-coordinate of bgPkMkM({_m}, "start")))
+        set {_best} to bgPkBest({_m}, {_u})
+        set {_nm} to "%bgPkCol({_m})%&l%bgPkName({_m})%"
         if {_best} is set:
-            send action bar "&d&l포털 파쿠르 &8| &f%bgPkTime({_ms})% &8| &b높이 %{_h}%/%{_hm}% &8| &7최고 &6%bgPkTime({_best})%" to loop-player
+            send action bar "%{_nm}% &8| &f%bgPkTime({_ms})% &8| &b높이 %{_h}%/%{_hm}% &8| &7최고 &6%bgPkTime({_best})%" to loop-player
         else:
-            send action bar "&d&l포털 파쿠르 &8| &f%bgPkTime({_ms})% &8| &b높이 %{_h}%/%{_hm}% &8| &7첫 완주에 도전!" to loop-player
+            send action bar "%{_nm}% &8| &f%bgPkTime({_ms})% &8| &b높이 %{_h}%/%{_hm}% &8| &7첫 완주에 도전!" to loop-player
 
 on damage of player:
     bgPkOn(victim) is true
@@ -382,22 +517,25 @@ on place:
     gamemode of player is not creative
     cancel event
 
-command /파쿠르 [<text>] [<text>]:
+command /파쿠르 [<text>] [<text>] [<text>]:
     aliases: /parkour, /pk
     trigger:
         if arg-1 is "건설":
             if sender is a player:
                 if player is op:
                     bgPkBuild(player)
-                    send "&d[파쿠르] &f코스를 짓는 중... (12초)"
+                    send "&d[파쿠르] &f코스 2개를 짓는 중... (약 25초)"
             stop
-        # 전체 이동 (관리자): 서버의 모든 사람 (신화쟁탈전 게임 중 · 관전 끔 제외) → 파쿠르 시작 발판
+        # 전체 이동 (관리자): 서버의 모든 사람 (신화쟁탈전 게임 중 · 관전 끔 제외) → 파쿠르 시작 발판 (/파쿠르 전체 [1|2])
         if arg-1 is "전체" or "@a" or "all":
             if sender is a player:
                 if player is not op:
                     send "&c다른 사람을 보내는 건 관리자만 할 수 있습니다."
                     stop
-            if {bg::pk::built} is not true:
+            set {_m} to 1
+            if arg-2 is "2":
+                set {_m} to 2
+            if bgPkBuilt({_m}) is false:
                 send "&d[파쿠르] &c코스가 아직 없습니다. &e/파쿠르 건설 &7을 먼저 해 주세요"
                 stop
             set {_n} to 0
@@ -408,53 +546,100 @@ command /파쿠르 [<text>] [<text>]:
                             delete {-bg::forced::%uuid of loop-player%}
                             bgToHub(loop-player)
                             bgBridgeOff(loop-player)
-                            bgPkEnter(loop-player)
+                            bgPkEnter(loop-player, {_m})
                             bgForcedSet(loop-player, "pk")
                             add 1 to {_n}
-            broadcast "&d[파쿠르] &f관리자가 &e%{_n}%명&f을 포털 파쿠르로 보냈습니다."
+            broadcast "&d[파쿠르] &f관리자가 &e%{_n}%명&f을 %bgPkCol({_m})%%bgPkName({_m})%&f(으)로 보냈습니다."
             stop
-        # 기록 지우기: /파쿠르 기록삭제 (내 기록) · 관리자: /파쿠르 기록삭제 <플레이어|전체>
+        # 기록 지우기: /파쿠르 기록삭제 (내 기록 · 두 맵) · 관리자: /파쿠르 기록삭제 <플레이어|전체> [1|2] (맵 안 쓰면 두 맵 다)
         if arg-1 is "기록삭제" or "기록지우기":
+            set {_ms::*} to 1 and 2
+            if arg-3 is "1" or "2":
+                set {_ms::*} to arg-3 parsed as integer
             if arg-2 is set:
+                if arg-2 is "1" or "2":
+                    if sender is a player:
+                        set {_ms::*} to arg-2 parsed as integer
+                        loop {_ms::*}:
+                            set {_k} to bgPkKey(loop-value)
+                            delete {bg::%{_k}%::best::%uuid of player%}
+                            delete {bg::%{_k}%::clears::%uuid of player%}
+                        send "&d[파쿠르] &f내 %bgPkName(arg-2 parsed as integer)% 기록을 지웠습니다."
+                        bgPkBoard()
+                    stop
                 if sender is a player:
                     if player is not op:
                         send "&c다른 사람 기록은 관리자만 지울 수 있습니다."
                         stop
                 if arg-2 is "전체" or "all":
-                    delete {bg::pk::best::*}
-                    delete {bg::pk::clears::*}
-                    broadcast "&d[파쿠르] &f관리자가 랭킹을 모두 지웠습니다."
+                    loop {_ms::*}:
+                        set {_k} to bgPkKey(loop-value)
+                        delete {bg::%{_k}%::best::*}
+                        delete {bg::%{_k}%::clears::*}
+                    broadcast "&d[파쿠르] &f관리자가 랭킹을 지웠습니다. &7(%size of {_ms::*}%개 맵)"
                     bgPkBoard()
                     stop
                 set {_t} to arg-2 parsed as offline player
                 set {_tu} to "%uuid of {_t}%"
-                if {bg::pk::best::%{_tu}%} is not set:
+                set {_had} to false
+                loop {_ms::*}:
+                    set {_k} to bgPkKey(loop-value)
+                    if {bg::%{_k}%::best::%{_tu}%} is set:
+                        set {_had} to true
+                    delete {bg::%{_k}%::best::%{_tu}%}
+                    delete {bg::%{_k}%::clears::%{_tu}%}
+                if {_had} is false:
                     send "&d[파쿠르] &7%arg-2% 의 기록이 없습니다."
                     stop
-                delete {bg::pk::best::%{_tu}%}
-                delete {bg::pk::clears::%{_tu}%}
                 send "&d[파쿠르] &f%arg-2% 의 기록을 지웠습니다."
                 bgPkBoard()
                 stop
             if sender is not a player:
                 stop
-            delete {bg::pk::best::%uuid of player%}
-            delete {bg::pk::clears::%uuid of player%}
-            send "&d[파쿠르] &f내 기록을 지웠습니다."
+            loop {_ms::*}:
+                set {_k} to bgPkKey(loop-value)
+                delete {bg::%{_k}%::best::%uuid of player%}
+                delete {bg::%{_k}%::clears::%uuid of player%}
+            send "&d[파쿠르] &f내 기록을 지웠습니다. &7(두 맵)"
             bgPkBoard()
             stop
         if arg-1 is "랭킹" or "순위":
-            set {_ids::*} to sorted indices of {bg::pk::best::*} in ascending order
-            send "&d&l[포털 파쿠르 랭킹] &7가장 빠른 기록 10위"
+            set {_m} to 1
+            if arg-2 is "2":
+                set {_m} to 2
+            else if arg-2 is not set:
+                if sender is a player:
+                    set {_m} to bgPkMap(player)
+            set {_k} to bgPkKey({_m})
+            set {_ids::*} to sorted indices of {bg::%{_k}%::best::*} in ascending order
+            send "%bgPkCol({_m})%&l[%bgPkName({_m})% 랭킹] &7가장 빠른 기록 10위 &8(/파쿠르 랭킹 1 · 2)"
             set {_i} to 0
             loop {_ids::*}:
                 add 1 to {_i}
                 if {_i} <= 10:
                     set {_u} to loop-value
                     set {_nm} to {bg::pk::name::%{_u}%} ? "?"
-                    send "&e  %{_i}%위 &f%{_nm}% &7— &6%bgPkTime({bg::pk::best::%{_u}%})%"
+                    send "&e  %{_i}%위 &f%{_nm}% &7— &6%bgPkTime(bgPkBest({_m}, {_u}))%"
             if {_i} is 0:
                 send "&7  아직 기록이 없습니다."
+            stop
+        # 맵 바꾸기 (파쿠르 안에서 · 허브에서): /파쿠르 맵 [1|2]
+        if arg-1 is "맵" or "1" or "2":
+            if sender is not a player:
+                stop
+            set {_m} to 0
+            if arg-1 is "1" or "2":
+                set {_m} to arg-1 parsed as integer
+            else if arg-2 is "1" or "2":
+                set {_m} to arg-2 parsed as integer
+            if {_m} is 0:
+                send "&d[파쿠르] &f맵: &d1. 포털 파쿠르 &7· &a2. 천공의 정원 &7— &e/파쿠르 맵 2"
+                stop
+            if bgPkOn(player) is false:
+                if bgArea(player) is not "hub":
+                    send "&d[파쿠르] &7허브에서만 바로 갈 수 있어요."
+                    stop
+            bgPkEnter(player, {_m})
             stop
         if sender is not a player:
             stop
@@ -468,15 +653,23 @@ command /파쿠르 [<text>] [<text>]:
             if bgPkOn(player) is true:
                 bgPkRestart(player)
             stop
-        send "&d[파쿠르] &f허브 가운데 앞 하늘색 발판을 밟고 다리를 건너 로봇의 고리로 들어가세요. &7(/파쿠르 랭킹 · 처음 · 나가기)"
+        send "&d[파쿠르] &f허브 가운데 앞 하늘색 발판을 밟고 다리를 건너 로봇의 고리로 들어가세요. &7(/파쿠르 맵 · 랭킹 · 처음 · 나가기)"
 
-# ─────────────────────────────────────────────────────────── 랭킹판 (로봇 고리 안 · 가장 빠른 기록 10위)
+# ─────────────────────────────────────────────────────────── 랭킹판 (로봇 고리 안 · 맵마다 가장 빠른 기록 10위 · 왼쪽 맵 1 · 오른쪽 맵 2)
 #  완주 · 기록 지우기 · 허브 짓기 뒤 · 1분마다 다시 그림
 function bgPkBoard():
     bgHubReady() is true
     bgCmd("kill @e[type=text_display,tag=bg_pkrank]")
-    set {_ids::*} to sorted indices of {bg::pk::best::*} in ascending order
-    set {_t} to "§d§l🏆 포털 파쿠르 랭킹§r\n§7가장 빠른 기록\n"
+    bgPkBoardOne(1, -2.15)
+    bgPkBoardOne(2, 2.15)
+
+function bgPkBoardOne(m: number, ox: number):
+    set {_k} to bgPkKey({_m})
+    set {_ids::*} to sorted indices of {bg::%{_k}%::best::*} in ascending order
+    set {_hc} to "§d"
+    if {_m} is 2:
+        set {_hc} to "§a"
+    set {_t} to "%{_hc}%§l🏆 %bgPkName({_m})%§r\n§7가장 빠른 기록\n"
     set {_i} to 0
     loop {_ids::*}:
         add 1 to {_i}
@@ -490,11 +683,11 @@ function bgPkBoard():
                 set {_c} to "§e"
             else if {_i} is 3:
                 set {_c} to "§b"
-            set {_t} to "%{_t}%\n%{_c}%%{_i}%위 §f%{_nm}% §7· §a%bgPkTime({bg::pk::best::%{_u}%})%"
+            set {_t} to "%{_t}%\n%{_c}%%{_i}%위 §f%{_nm}% §7· §a%bgPkTime(bgPkBest({_m}, {_u}))%"
     if {_i} is 0:
         set {_t} to "%{_t}%\n§7아직 기록이 없습니다\n§8첫 완주에 도전!"
     set {_l} to bgHubMk("portal")
-    bgCmd("execute in %bgDim()% run summon text_display %bgC(x-coordinate of {_l})% %bgN((y-coordinate of {_l}) - 2.2)% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bg_pkrank""],billboard:""vertical"",shadow:1b,background:1342177280,line_width:260,brightness:{sky:15,block:15},view_range:1f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1.15f,1.15f,1.15f]},text:""%{_t}%""}")
+    bgCmd("execute in %bgDim()% run summon text_display %bgC((x-coordinate of {_l}) + {_ox})% %bgN((y-coordinate of {_l}) - 2.2)% %bgC(z-coordinate of {_l})% {Tags:[""bg"",""bg_pkrank""],billboard:""vertical"",shadow:1b,background:1342177280,line_width:200,brightness:{sky:15,block:15},view_range:1f,transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.85f,0.85f,0.85f]},text:""%{_t}%""}")
 
 on load:
     wait 100 ticks
