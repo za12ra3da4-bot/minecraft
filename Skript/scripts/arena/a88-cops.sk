@@ -830,11 +830,9 @@ function bgKdTexts():
     bgKdReady() is true
     bgCmd("kill @e[type=text_display,tag=bgkd]")
     bgCmd("kill @e[type=block_display,tag=bgkd_pillar]")
-    bgKdPillar(bgKdMk("jail"), "red_stained_glass", 16724016, 80)
-    bgKdPillar(bgKdMk("rescue"), "lime_stained_glass", 5635925, 80)
+    # 위치 표시 = 신호기 빛줄기 (발광 디스플레이 기둥 대신)
+    bgKdBeams()
     if {-bg::kd::open} is true:
-        if {-bg::kd::heliflying} is not true:
-            bgKdPillar(bgKdHeliEsc(), "yellow_stained_glass", 16776960, 80)
         loop 3 times:
             set {_vi} to loop-number - 1
             if {-bg::kd::valve::%{_vi}%} is set:
@@ -842,7 +840,6 @@ function bgKdTexts():
             else:
                 bgKdText("v%{_vi}%", bgKdValvePos({_vi}), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""aqua"",bold:true},{text:""\n우클릭 연타로 돌리기 (3개 → 하수구)"",color:""white""}]")
         if {-bg::kd::sewer} is set:
-            bgKdPillar(bgKdMk("sewer"), "light_blue_stained_glass", 3394815, 80)
             bgKdText("sewer", bgKdMk("sewer"), "[{text:""🕳 하수구 열림!"",color:""aqua"",bold:true},{text:""\n맨홀로 들어가면 탈출"",color:""green""}]")
         else:
             bgKdText("sewer", bgKdMk("sewer"), "[{text:""🕳 하수구 맨홀"",color:""gray"",bold:true},{text:""\n밸브 3개를 돌리면 열림"",color:""gray""}]")
@@ -1648,8 +1645,36 @@ every 1 second:
     bgKdTexts()
 
 # (빛줄기 신호기는 쓰지 않음 — 위치 표시는 발광 기둥만. 예전 호출이 남아 있어도 아무 일 없게)
+# 신호기 빛줄기 켜고 끄기 (copsgen.py beam: 표지 아래 3칸에 3×3 받침 — 철 블록 = 켜짐)
+#  감옥 · 구출 발판 = 늘 켜짐 (지을 때) · 헬기 옥상 = 탈출이 열리고 헬기가 그 옥상에 앉아 있을 때 · 하수구 = 열렸을 때
+function bgKdBeam(l: location, on: boolean, off: text):
+    set {_x} to floor(x-coordinate of {_l})
+    set {_y} to floor(y-coordinate of {_l}) - 3
+    set {_z} to floor(z-coordinate of {_l})
+    set {_b} to {_off}
+    if {_on} is true:
+        set {_b} to "iron_block"
+    bgCmd("execute in %bgDim()% run fill %{_x} - 1% %{_y}% %{_z} - 1% %{_x} + 1% %{_y}% %{_z} + 1% minecraft:%{_b}%")
+
 function bgKdBeams():
-    stop
+    bgKdReady() is true
+    set {_open} to false
+    if bgKdState() is "play":
+        if {-bg::kd::open} is true:
+            set {_open} to true
+    loop 3 times:
+        set {_k} to loop-number - 1
+        set {_h} to false
+        if {_open} is true:
+            if ({-bg::kd::hstate} ? "land") is "land":
+                if ({bg::kd::helipos} ? 0) is {_k}:
+                    set {_h} to true
+        bgKdBeam(bgKdMk("heli_%{_k}%"), {_h}, "gray_concrete")
+    set {_s} to false
+    if {_open} is true:
+        if {-bg::kd::sewer} is set:
+            set {_s} to true
+    bgKdBeam(bgKdMk("sewer"), {_s}, "blue_terracotta")
 
 # ─────────────────────────────────────────────────────────── 판 끝나면 자동으로 맵 바꾸기
 #  결과 10초 뒤 → 경도에 있는 사람은 도시 위 하늘에서 관전 모드 → 다른 배치로 다시 짓기 (약 35초) → 대기실로

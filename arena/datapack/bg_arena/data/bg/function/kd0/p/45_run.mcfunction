@@ -1,3 +1,4 @@
+$execute positioned $(x) $(y) $(z) run fill ~-69 ~19 ~-1 ~-69 ~19 ~0 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~19 ~2 ~-69 ~19 ~3 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~19 ~5 ~-69 ~19 ~6 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~19 ~8 ~-69 ~19 ~9 minecraft:white_terracotta

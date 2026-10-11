@@ -1,3 +1,4 @@
+$execute positioned $(x) $(y) $(z) run fill ~-68 ~17 ~83 ~-68 ~17 ~85 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~-68 ~17 ~89 ~-68 ~21 ~89 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run fill ~-74 ~17 ~99 ~-73 ~17 ~99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-71 ~17 ~99 minecraft:ochre_froglight
@@ -297,5 +298,4 @@ $execute positioned $(x) $(y) $(z) run fill ~-79 ~35 ~-12 ~-70 ~35 ~-12 minecraf
 $execute positioned $(x) $(y) $(z) run fill ~-78 ~35 ~-11 ~-70 ~35 ~10 minecraft:polished_andesite
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~35 ~-11 ~-69 ~35 ~10 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-79 ~35 ~11 ~-70 ~35 ~11 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-74 ~35 ~99 ~-73 ~36 ~99 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

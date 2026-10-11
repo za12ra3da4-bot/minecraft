@@ -1,3 +1,11 @@
+$execute positioned $(x) $(y) $(z) run fill ~80 ~36 ~-31 ~82 ~37 ~-31 minecraft:white_concrete
+$execute positioned $(x) $(y) $(z) run fill ~78 ~36 ~-29 ~79 ~39 ~-29 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~81 ~36 ~-29 ~82 ~39 ~-29 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~84 ~36 ~-29 ~85 ~39 ~-29 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~77 ~36 ~41 ~78 ~39 ~41 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~80 ~36 ~41 ~81 ~39 ~41 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~83 ~36 ~41 ~84 ~39 ~41 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~80 ~36 ~47 ~81 ~37 ~47 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~82 ~36 ~47 minecraft:spruce_planks
 $execute positioned $(x) $(y) $(z) run fill ~78 ~36 ~51 ~79 ~39 ~51 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~81 ~36 ~51 ~82 ~39 ~51 minecraft:light_blue_stained_glass

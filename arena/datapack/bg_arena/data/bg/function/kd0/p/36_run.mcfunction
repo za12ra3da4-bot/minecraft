@@ -1,4 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-80 ~11 ~-11 ~-80 ~11 ~10 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-82 ~11 ~-10 ~-82 ~11 ~-7 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-81 ~11 ~-10 ~-81 ~11 ~-9 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-76 ~11 ~-9 ~-76 ~12 ~-9 minecraft:barrel[facing=up,open=false]
@@ -298,4 +297,5 @@ $execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~5 ~-80 ~23 ~6 minecraft:gl
 $execute positioned $(x) $(y) $(z) run setblock ~-75 ~22 ~6 minecraft:spruce_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-81 ~22 ~7 ~-81 ~23 ~7 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~7 ~-80 ~24 ~7 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-80 ~22 ~8 ~-80 ~23 ~9 minecraft:glass
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

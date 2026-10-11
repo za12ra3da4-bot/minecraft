@@ -93,8 +93,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-80 ~0 ~67 ~-75 ~0 ~95 minecraft:li
 $execute positioned $(x) $(y) $(z) run fill ~-81 ~0 ~68 ~-81 ~0 ~95 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-82 ~0 ~73 ~-82 ~0 ~95 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-87 ~0 ~96 ~-79 ~0 ~96 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~0 ~97 ~-79 ~0 ~97 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-83 ~0 ~98 ~-79 ~0 ~98 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-83 ~0 ~97 ~-79 ~0 ~98 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-82 ~0 ~99 ~-79 ~0 ~99 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-80 ~0 ~100 ~-79 ~0 ~107 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-85 ~1 ~-104 ~-77 ~33 ~-100 minecraft:gray_concrete
@@ -298,4 +297,5 @@ $execute positioned $(x) $(y) $(z) run setblock ~-77 ~4 ~-43 minecraft:light_gra
 $execute positioned $(x) $(y) $(z) run fill ~-77 ~4 ~-41 ~-77 ~6 ~-41 minecraft:iron_block
 $execute positioned $(x) $(y) $(z) run setblock ~-77 ~4 ~-39 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-77 ~4 ~-37 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-77 ~4 ~-35 ~-77 ~6 ~-35 minecraft:iron_block
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

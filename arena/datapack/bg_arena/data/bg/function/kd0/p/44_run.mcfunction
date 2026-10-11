@@ -157,8 +157,9 @@ $execute positioned $(x) $(y) $(z) run fill ~-79 ~15 ~11 ~-70 ~15 ~11 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~-94 ~15 ~67 ~-69 ~15 ~67 minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-68 ~15 ~67 ~-68 ~15 ~89 minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-93 ~15 ~68 ~-70 ~15 ~68 minecraft:blue_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-92 ~15 ~69 ~-69 ~15 ~87 minecraft:blue_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-92 ~15 ~88 ~-70 ~15 ~88 minecraft:blue_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-92 ~15 ~69 ~-69 ~15 ~74 minecraft:blue_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-86 ~15 ~75 ~-69 ~15 ~87 minecraft:blue_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-86 ~15 ~88 ~-70 ~15 ~88 minecraft:blue_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-94 ~15 ~89 ~-69 ~15 ~89 minecraft:stone_brick_stairs[facing=north,half=top,shape=straight,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-74 ~15 ~99 ~-73 ~16 ~99 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-71 ~15 ~99 ~-70 ~16 ~99 minecraft:light_gray_concrete
@@ -208,7 +209,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-72 ~16 ~71 ~-72 ~17 ~71 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~-74 ~16 ~73 ~-74 ~17 ~73 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-72 ~16 ~73 ~-72 ~17 ~73 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-89 ~16 ~74 ~-74 ~16 ~74 minecraft:daylight_detector[inverted=false,power=0]
-$execute positioned $(x) $(y) $(z) run fill ~-89 ~16 ~77 ~-74 ~16 ~77 minecraft:daylight_detector[inverted=false,power=0]
+$execute positioned $(x) $(y) $(z) run fill ~-86 ~16 ~77 ~-74 ~16 ~77 minecraft:daylight_detector[inverted=false,power=0]
 $execute positioned $(x) $(y) $(z) run fill ~-89 ~16 ~80 ~-74 ~16 ~80 minecraft:daylight_detector[inverted=false,power=0]
 $execute positioned $(x) $(y) $(z) run fill ~-89 ~16 ~83 ~-74 ~16 ~83 minecraft:daylight_detector[inverted=false,power=0]
 $execute positioned $(x) $(y) $(z) run setblock ~-74 ~16 ~88 minecraft:blue_concrete
@@ -297,5 +298,4 @@ $execute positioned $(x) $(y) $(z) run fill ~-72 ~19 ~-12 ~-71 ~19 ~-12 minecraf
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~19 ~-10 ~-69 ~19 ~-9 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~19 ~-7 ~-69 ~19 ~-6 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~19 ~-4 ~-69 ~19 ~-3 minecraft:white_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-69 ~19 ~-1 ~-69 ~19 ~0 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

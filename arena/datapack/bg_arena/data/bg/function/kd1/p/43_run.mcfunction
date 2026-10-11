@@ -1,3 +1,12 @@
+$execute positioned $(x) $(y) $(z) run fill ~-70 ~17 ~-71 ~-70 ~19 ~-71 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-91 ~17 ~-70 ~-73 ~17 ~-70 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-68 ~17 ~67 ~-68 ~17 ~69 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-68 ~17 ~71 ~-68 ~17 ~73 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-68 ~17 ~75 ~-68 ~17 ~77 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-68 ~17 ~79 ~-68 ~17 ~81 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-68 ~17 ~83 ~-68 ~17 ~85 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-68 ~17 ~89 ~-68 ~21 ~89 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-74 ~17 ~99 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run fill ~-73 ~17 ~99 ~-73 ~18 ~99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-71 ~17 ~99 ~-70 ~17 ~99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-68 ~17 ~99 minecraft:sea_lantern
@@ -289,13 +298,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~-73 ~30 ~99 minecraft:black_sta
 $execute positioned $(x) $(y) $(z) run setblock ~-70 ~30 ~99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-68 ~30 ~99 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run setblock ~-67 ~30 ~99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-71 ~31 ~-71 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-74 ~31 ~28 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-73 ~31 ~28 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run setblock ~-72 ~31 ~28 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-71 ~31 ~28 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~-70 ~31 ~28 ~-69 ~31 ~28 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-69 ~31 ~30 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-74 ~31 ~31 ~-74 ~32 ~31 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-72 ~31 ~31 ~-72 ~32 ~31 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

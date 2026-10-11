@@ -1,3 +1,15 @@
+$execute positioned $(x) $(y) $(z) run setblock ~-84 ~22 ~-69 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~-89 ~22 ~-1 minecraft:andesite_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-90 ~22 ~9 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-87 ~22 ~9 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-89 ~22 ~99 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-88 ~22 ~99 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-91 ~23 ~-99 ~-90 ~24 ~-99 minecraft:brown_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-88 ~23 ~-99 ~-87 ~24 ~-99 minecraft:brown_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~23 ~-99 ~-83 ~24 ~-99 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-88 ~23 ~-75 ~-88 ~23 ~-74 minecraft:polished_andesite_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-87 ~23 ~-75 ~-86 ~23 ~-74 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~23 ~-69 ~-83 ~23 ~-69 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run fill ~-89 ~23 ~-10 ~-87 ~25 ~-10 minecraft:spruce_planks
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~23 ~-9 ~-90 ~25 ~-7 minecraft:spruce_planks
 $execute positioned $(x) $(y) $(z) run fill ~-86 ~23 ~-9 ~-86 ~25 ~-7 minecraft:spruce_planks

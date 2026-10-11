@@ -125,19 +125,19 @@ $execute positioned $(x) $(y) $(z) run fill ~-21 ~-1 ~36 ~-21 ~-1 ~37 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~-22 ~-1 ~37 ~-22 ~-1 ~38 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-19 ~-1 ~37 ~-19 ~-1 ~40 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-23 ~-1 ~38 ~-23 ~-1 ~39 minecraft:dark_prismarine
-$execute positioned $(x) $(y) $(z) run fill ~-21 ~-1 ~38 ~-20 ~-1 ~38 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-21 ~-1 ~38 ~-20 ~-1 ~39 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run setblock ~-24 ~-1 ~39 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-22 ~-1 ~39 ~-22 ~-1 ~43 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run setblock ~-20 ~-1 ~39 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-26 ~-1 ~40 ~-25 ~-1 ~40 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-24 ~-1 ~40 ~-23 ~-1 ~43 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~-21 ~-1 ~40 minecraft:beacon
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~-1 ~41 ~-25 ~-1 ~41 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-21 ~-1 ~41 ~-21 ~-1 ~50 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-27 ~-1 ~42 ~-26 ~-1 ~48 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-25 ~-1 ~43 ~-25 ~-1 ~48 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-24 ~-1 ~44 ~-24 ~-1 ~48 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-23 ~-1 ~45 ~-23 ~-1 ~49 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-22 ~-1 ~46 ~-22 ~-1 ~50 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-21 ~-1 ~47 ~-21 ~-1 ~50 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-20 ~-1 ~48 ~-19 ~-1 ~51 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~-1 ~49 ~-24 ~-1 ~51 minecraft:dark_prismarine
 $execute positioned $(x) $(y) $(z) run fill ~-23 ~-1 ~50 ~-23 ~-1 ~56 minecraft:dark_prismarine

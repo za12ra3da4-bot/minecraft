@@ -1,3 +1,4 @@
+$execute positioned $(x) $(y) $(z) run fill ~-74 ~35 ~99 ~-73 ~36 ~99 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-71 ~35 ~99 ~-70 ~36 ~99 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-68 ~35 ~99 ~-67 ~36 ~99 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-79 ~36 ~-12 ~-70 ~36 ~-12 minecraft:black_concrete

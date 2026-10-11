@@ -109,8 +109,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-80 ~0 ~67 ~-75 ~0 ~95 minecraft:li
 $execute positioned $(x) $(y) $(z) run fill ~-81 ~0 ~68 ~-81 ~0 ~95 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-82 ~0 ~73 ~-82 ~0 ~95 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-87 ~0 ~96 ~-79 ~0 ~96 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~0 ~97 ~-79 ~0 ~97 minecraft:blue_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-83 ~0 ~98 ~-79 ~0 ~98 minecraft:blue_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-83 ~0 ~97 ~-79 ~0 ~98 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-82 ~0 ~99 ~-79 ~0 ~99 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-80 ~0 ~100 ~-79 ~0 ~107 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-92 ~1 ~-107 ~-81 ~33 ~-100 minecraft:light_gray_concrete
@@ -298,4 +297,5 @@ $execute positioned $(x) $(y) $(z) run setblock ~-78 ~4 ~83 minecraft:red_staine
 $execute positioned $(x) $(y) $(z) run setblock ~-77 ~4 ~83 minecraft:blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-83 ~4 ~89 ~-80 ~4 ~89 minecraft:smooth_stone_slab[type=top,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-75 ~4 ~91 minecraft:red_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-82 ~5 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

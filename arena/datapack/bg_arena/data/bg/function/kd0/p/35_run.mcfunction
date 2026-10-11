@@ -1,4 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-77 ~4 ~-35 ~-77 ~6 ~-35 minecraft:iron_block
 $execute positioned $(x) $(y) $(z) run setblock ~-77 ~4 ~-33 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-77 ~4 ~-31 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-82 ~4 ~-29 ~-82 ~6 ~-29 minecraft:iron_block
@@ -298,4 +297,5 @@ $execute positioned $(x) $(y) $(z) run setblock ~-80 ~11 ~-29 minecraft:gray_con
 $execute positioned $(x) $(y) $(z) run setblock ~-79 ~11 ~-29 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-78 ~11 ~-29 ~-77 ~11 ~-29 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-78 ~11 ~-13 ~-77 ~11 ~-13 minecraft:smooth_quartz_slab[type=top,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-80 ~11 ~-11 ~-80 ~11 ~10 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

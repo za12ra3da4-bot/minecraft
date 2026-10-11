@@ -1,4 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~-82 ~5 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-78 ~5 ~-99 ~-77 ~5 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-79 ~5 ~-94 ~-79 ~24 ~-94 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~-81 ~5 ~-93 ~-80 ~5 ~-93 minecraft:polished_blackstone
@@ -298,4 +297,5 @@ $execute positioned $(x) $(y) $(z) run fill ~-80 ~15 ~47 ~-80 ~15 ~48 minecraft:
 $execute positioned $(x) $(y) $(z) run setblock ~-80 ~15 ~50 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~-79 ~15 ~51 ~-78 ~15 ~51 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~-76 ~15 ~51 ~-75 ~15 ~51 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-82 ~15 ~99 ~-81 ~16 ~99 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

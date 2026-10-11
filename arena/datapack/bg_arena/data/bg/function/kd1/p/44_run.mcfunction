@@ -1,3 +1,12 @@
+$execute positioned $(x) $(y) $(z) run setblock ~-71 ~31 ~-71 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-74 ~31 ~28 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-73 ~31 ~28 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run setblock ~-72 ~31 ~28 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-71 ~31 ~28 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-70 ~31 ~28 ~-69 ~31 ~28 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-69 ~31 ~30 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-74 ~31 ~31 ~-74 ~32 ~31 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-72 ~31 ~31 ~-72 ~32 ~31 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-69 ~31 ~31 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run setblock ~-69 ~31 ~32 minecraft:polished_blackstone_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-74 ~31 ~33 ~-74 ~32 ~33 minecraft:cobblestone_wall[up=true,east=none,west=none,north=none,south=none,waterlogged=false]

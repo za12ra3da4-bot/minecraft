@@ -1,3 +1,10 @@
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~1 ~-93 ~-83 ~4 ~-93 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-86 ~1 ~-84 ~-86 ~2 ~-84 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run fill ~-90 ~1 ~-82 ~-90 ~2 ~-81 minecraft:bookshelf
+$execute positioned $(x) $(y) $(z) run setblock ~-89 ~1 ~-81 minecraft:spruce_planks
+$execute positioned $(x) $(y) $(z) run fill ~-83 ~1 ~-81 ~-83 ~2 ~-81 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run fill ~-90 ~1 ~-75 ~-90 ~1 ~-74 minecraft:polished_andesite_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-89 ~1 ~-75 ~-86 ~1 ~-74 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~1 ~-70 ~-90 ~16 ~-70 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~-89 ~1 ~-70 ~-88 ~4 ~-70 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-87 ~1 ~-70 ~-87 ~16 ~-70 minecraft:polished_blackstone
@@ -291,11 +298,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~-89 ~6 ~3 minecraft:oak_leaves[
 $execute positioned $(x) $(y) $(z) run setblock ~-90 ~6 ~4 minecraft:oak_leaves[persistent=true,distance=1,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~6 ~8 ~-90 ~7 ~8 minecraft:oak_leaves[persistent=true,distance=1,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~6 ~27 ~-90 ~7 ~27 minecraft:verdant_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-88 ~6 ~27 ~-88 ~10 ~27 minecraft:verdant_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-94 ~6 ~28 ~-84 ~10 ~28 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-84 ~6 ~29 minecraft:lime_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-84 ~6 ~30 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-84 ~6 ~31 minecraft:lime_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-84 ~6 ~32 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-84 ~6 ~33 minecraft:lime_concrete
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

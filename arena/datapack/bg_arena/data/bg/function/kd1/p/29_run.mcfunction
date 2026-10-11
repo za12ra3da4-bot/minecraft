@@ -1,3 +1,14 @@
+$execute positioned $(x) $(y) $(z) run fill ~-90 ~17 ~-73 ~-88 ~17 ~-72 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-87 ~17 ~-73 ~-87 ~17 ~-72 minecraft:polished_andesite_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-88 ~17 ~41 ~-88 ~18 ~41 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-85 ~17 ~41 ~-85 ~18 ~41 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-90 ~17 ~42 ~-89 ~18 ~42 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-88 ~17 ~42 ~-88 ~19 ~42 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-87 ~17 ~42 ~-86 ~18 ~42 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-85 ~17 ~42 ~-85 ~19 ~42 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~17 ~43 ~-84 ~19 ~44 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~17 ~45 ~-84 ~18 ~46 minecraft:glass
+$execute positioned $(x) $(y) $(z) run setblock ~-90 ~17 ~47 minecraft:spruce_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-84 ~17 ~47 ~-84 ~19 ~47 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run fill ~-84 ~17 ~48 ~-84 ~18 ~49 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~-84 ~17 ~50 ~-84 ~19 ~50 minecraft:bricks
@@ -9,6 +20,7 @@ $execute positioned $(x) $(y) $(z) run fill ~-86 ~17 ~51 ~-86 ~18 ~51 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~-85 ~17 ~51 ~-85 ~19 ~51 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~17 ~52 ~-90 ~18 ~52 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-87 ~17 ~52 ~-87 ~18 ~52 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-88 ~17 ~76 minecraft:red_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-90 ~17 ~86 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-87 ~17 ~86 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-84 ~17 ~86 minecraft:iron_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]

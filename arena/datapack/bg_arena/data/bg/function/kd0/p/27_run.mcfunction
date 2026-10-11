@@ -1,3 +1,10 @@
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~1 ~-70 ~-84 ~16 ~-70 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-83 ~1 ~-70 ~-83 ~4 ~-70 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-88 ~1 ~-65 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-87 ~1 ~-65 ~-85 ~1 ~-63 minecraft:red_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-84 ~1 ~-65 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-88 ~1 ~-64 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-84 ~1 ~-64 minecraft:redstone_lamp[lit=true]
 $execute positioned $(x) $(y) $(z) run setblock ~-88 ~1 ~-63 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-84 ~1 ~-63 minecraft:black_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~-88 ~1 ~-54 minecraft:red_concrete
@@ -291,11 +298,4 @@ $execute positioned $(x) $(y) $(z) run setblock ~-86 ~6 ~34 minecraft:spruce_pla
 $execute positioned $(x) $(y) $(z) run fill ~-93 ~6 ~37 ~-85 ~6 ~37 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-93 ~6 ~41 ~-85 ~6 ~41 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-84 ~6 ~42 ~-84 ~6 ~50 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-90 ~6 ~49 ~-90 ~7 ~49 minecraft:bookshelf
-$execute positioned $(x) $(y) $(z) run fill ~-92 ~6 ~51 ~-86 ~6 ~51 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-85 ~6 ~51 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-92 ~6 ~52 ~-86 ~6 ~52 minecraft:yellow_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-90 ~6 ~67 ~-90 ~14 ~67 minecraft:blue_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~6 ~67 ~-84 ~14 ~67 minecraft:blue_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-87 ~6 ~74 ~-87 ~7 ~74 minecraft:bookshelf
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

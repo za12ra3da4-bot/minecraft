@@ -1,4 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~-75 ~4 ~29 minecraft:oak_leaves[persistent=true,distance=1,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-76 ~4 ~30 ~-76 ~6 ~31 minecraft:oak_leaves[persistent=true,distance=1,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-77 ~4 ~31 ~-77 ~6 ~34 minecraft:oak_leaves[persistent=true,distance=1,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-75 ~4 ~31 ~-75 ~6 ~33 minecraft:oak_leaves[persistent=true,distance=1,waterlogged=false]
@@ -298,4 +297,5 @@ $execute positioned $(x) $(y) $(z) run fill ~-83 ~16 ~-70 ~-82 ~16 ~-70 minecraf
 $execute positioned $(x) $(y) $(z) run fill ~-80 ~16 ~-70 ~-79 ~16 ~-70 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-77 ~16 ~-70 ~-76 ~16 ~-70 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-80 ~16 ~-11 ~-80 ~16 ~10 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-78 ~16 ~-8 minecraft:spruce_planks
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

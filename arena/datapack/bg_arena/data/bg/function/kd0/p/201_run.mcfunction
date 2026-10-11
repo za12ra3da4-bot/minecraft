@@ -1,3 +1,11 @@
+$execute positioned $(x) $(y) $(z) run setblock ~85 ~36 ~-70 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~77 ~36 ~-12 ~78 ~39 ~-12 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~79 ~36 ~-11 ~79 ~39 ~-11 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~83 ~36 ~-11 ~83 ~36 ~10 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~79 ~36 ~-9 ~79 ~39 ~-8 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~79 ~36 ~-6 ~79 ~39 ~-5 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~79 ~36 ~-3 ~79 ~39 ~-2 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~85 ~36 ~-1 ~85 ~37 ~-1 minecraft:barrel[facing=up,open=false]
 $execute positioned $(x) $(y) $(z) run fill ~79 ~36 ~0 ~79 ~39 ~1 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~79 ~36 ~3 ~79 ~39 ~4 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~79 ~36 ~6 ~79 ~39 ~7 minecraft:cyan_stained_glass
