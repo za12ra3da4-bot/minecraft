@@ -97,8 +97,9 @@ def fxz(side, x0, z0, x1, z1, t, out=0):
     return x0 - out, z0 + t
 
 
-def main():
-    v, marks = G.build()
+def main(variant=0):
+    v, marks = G.build(variant)
+    print(f"── 배치 {variant}: " + " ".join(f"{k}={t}" for k, t in sorted(G.LAYOUT.items()) if k in G.RANDOM_LOTS))
     pal = G.PAL
     C, FL = G.C, G.FL
 
@@ -158,4 +159,5 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(1 if main() else 0)
+    bad = sum(main(v) for v in range(G.N_VARIANTS))
+    sys.exit(1 if bad else 0)

@@ -50,6 +50,32 @@ def traffic_light(lit="green"):
     return m
 
 
+def valve():
+    """하수구 밸브: 땅에서 올라온 굵은 관 · 플랜지 · 빨간 바퀴 (살 6 · 테두리 12조각 · 손잡이) · 노란 경고 띠"""
+    import math
+    import numpy as np
+    m = K.Model()
+    b = m.box
+    b("gray_concrete", -6, 0, -6, 6, 2, 6)
+    b("yellow_concrete", -6.2, 0.6, -6.2, 6.2, 1.4, 6.2)
+    m.rod("light_gray_concrete", (0, 2, 0), (0, 15, 0), 5.5)
+    b("gray_concrete", -4.5, 13, -4.5, 4.5, 15, 4.5)
+    m.rod("iron_block", (0, 15, 0), (0, 21, 0), 3)
+    cy = 21.5
+    R = 7.5
+    for k in range(12):
+        a0, a1 = math.radians(k * 30), math.radians(k * 30 + 30)
+        p0 = (math.cos(a0) * R, cy, math.sin(a0) * R)
+        p1 = (math.cos(a1) * R, cy, math.sin(a1) * R)
+        m.rod("red_concrete", p0, p1, 1.8)
+    for k in range(6):
+        a = math.radians(k * 60 + 15)
+        m.rod("red_terracotta", (0, cy, 0), (math.cos(a) * R, cy, math.sin(a) * R), 1.1)
+    m.box("redstone_block", -2, cy - 1, -2, 2, cy + 1.2, 2, glow=True)
+    m.rod("red_concrete", (R, cy, 0), (R, cy + 4, 0), 1.6)
+    return m
+
+
 def preview(path):
     import math
     import numpy as np

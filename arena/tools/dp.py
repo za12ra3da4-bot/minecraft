@@ -977,7 +977,8 @@ def hub_functions(dp_root):
     import copsgen
     n = struct_functions(dp_root, "hub", hubgen, "아케이드 허브")
     struct_functions(dp_root, "os", osarena, "온리소드 경기장")
-    struct_functions(dp_root, "kd", copsgen, "경도 도시")
+    for v in range(copsgen.N_VARIANTS):          # 경도 도시: 배치 여러 벌 (일반 건물 자리만 다름) → bg:kd0 · kd1 · kd2
+        struct_functions(dp_root, f"kd{v}", copsgen.Variant(v), f"경도 도시 배치 {v}")
     import pkgen
     struct_functions(dp_root, "pk", pkgen, "포털 파쿠르")
     return n

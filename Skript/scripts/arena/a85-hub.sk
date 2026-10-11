@@ -223,8 +223,7 @@ function bgHubBuild(p: player, here: boolean = false):
     bgCmd("function bg:os/build")
     wait 100 ticks
     set {bg::os::built} to true
-    bgCmd("data merge storage bg:kd {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
-    bgCmd("function bg:kd/build")
+    bgKdBuildRaw()
     wait 380 ticks
     set {bg::kd::built} to true
     set {-bg::kd::state} to "wait"

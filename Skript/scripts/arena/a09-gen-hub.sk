@@ -103,6 +103,15 @@ on load:
     set {-bg::kdmk::escape::x} to 84.07
     set {-bg::kdmk::escape::y} to 36
     set {-bg::kdmk::escape::z} to -80.34
+    set {-bg::kdmk::escape_0::x} to 84.07
+    set {-bg::kdmk::escape_0::y} to 36
+    set {-bg::kdmk::escape_0::z} to -80.34
+    set {-bg::kdmk::escape_1::x} to -78.93
+    set {-bg::kdmk::escape_1::y} to 26
+    set {-bg::kdmk::escape_1::z} to -80.34
+    set {-bg::kdmk::escape_2::x} to 84.07
+    set {-bg::kdmk::escape_2::y} to 26
+    set {-bg::kdmk::escape_2::z} to 81.66
     set {-bg::kdmk::heist_0::x} to -40.5
     set {-bg::kdmk::heist_0::y} to 1
     set {-bg::kdmk::heist_0::z} to -44.5
@@ -121,9 +130,27 @@ on load:
     set {-bg::kdmk::heist_5::x} to -7.5
     set {-bg::kdmk::heist_5::y} to 1
     set {-bg::kdmk::heist_5::z} to 72.5
+    set {-bg::kdmk::heli_0::x} to 84.5
+    set {-bg::kdmk::heli_0::y} to 36
+    set {-bg::kdmk::heli_0::z} to -82.5
+    set {-bg::kdmk::heli_1::x} to -78.5
+    set {-bg::kdmk::heli_1::y} to 26
+    set {-bg::kdmk::heli_1::z} to -82.5
+    set {-bg::kdmk::heli_2::x} to 84.5
+    set {-bg::kdmk::heli_2::y} to 26
+    set {-bg::kdmk::heli_2::z} to 79.5
     set {-bg::kdmk::heli_gate::x} to 80.5
     set {-bg::kdmk::heli_gate::y} to 1
     set {-bg::kdmk::heli_gate::z} to -66.5
+    set {-bg::kdmk::heli_gate_0::x} to 80.5
+    set {-bg::kdmk::heli_gate_0::y} to 1
+    set {-bg::kdmk::heli_gate_0::z} to -66.5
+    set {-bg::kdmk::heli_gate_1::x} to -81.5
+    set {-bg::kdmk::heli_gate_1::y} to 1
+    set {-bg::kdmk::heli_gate_1::z} to -66.5
+    set {-bg::kdmk::heli_gate_2::x} to 82.5
+    set {-bg::kdmk::heli_gate_2::y} to 1
+    set {-bg::kdmk::heli_gate_2::z} to 66.5
     set {-bg::kdmk::jail::x} to -87.5
     set {-bg::kdmk::jail::y} to 1
     set {-bg::kdmk::jail::z} to 76.5
@@ -135,6 +162,9 @@ on load:
     set {-bg::kdmk::rescue::x} to -87.5
     set {-bg::kdmk::rescue::y} to 1
     set {-bg::kdmk::rescue::z} to 91.5
+    set {-bg::kdmk::sewer::x} to -20.5
+    set {-bg::kdmk::sewer::y} to 1
+    set {-bg::kdmk::sewer::z} to 40.5
     set {-bg::kdmk::thief_0::x} to -79.5
     set {-bg::kdmk::thief_0::y} to 1
     set {-bg::kdmk::thief_0::z} to -56.5
@@ -171,6 +201,15 @@ on load:
     set {-bg::kdmk::thief_9::x} to 17.5
     set {-bg::kdmk::thief_9::y} to 1
     set {-bg::kdmk::thief_9::z} to 40.5
+    set {-bg::kdmk::valve_0::x} to -61.5
+    set {-bg::kdmk::valve_0::y} to 1
+    set {-bg::kdmk::valve_0::z} to -39.5
+    set {-bg::kdmk::valve_1::x} to 58.5
+    set {-bg::kdmk::valve_1::y} to 1
+    set {-bg::kdmk::valve_1::z} to 40.5
+    set {-bg::kdmk::valve_2::x} to 0.5
+    set {-bg::kdmk::valve_2::y} to 1
+    set {-bg::kdmk::valve_2::z} to -61.5
     set {-bg::kdmk::wait::x} to 0.5
     set {-bg::kdmk::wait::y} to 63
     set {-bg::kdmk::wait::z} to 3.5

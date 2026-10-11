@@ -2,17 +2,24 @@
 #  경찰과 도둑 (경도) — 허브 보라 오락기로 들어가는 시참 컨텐츠 (밤 네온 대도시, arena/tools/copsgen.py)
 #   대기실 = 랜드마크 타워 꼭대기 전망대. 관리자가 /경도 시작 [경찰 수] → 역할 배정
 #   도둑: 도시 곳곳으로 흩어짐 · 털이 장소 6곳 (은행 · 카지노 · 보석상 · 창고 · 박물관 · 편의점) 앞에 6초 서 있으면 돈가방 +1 (경찰 출동 전엔 못 텀)
-#         팀 목표 돈가방(도둑 수에 맞게 늘어남)을 채우면 북동쪽 헬기장 타워 옥상(35칸 · 계단)의 탈출 헬기가 열림
+#         건물 안 통(배럴)을 뒤져 해킹 칩을 찾고 → 털이 장소(숨겨짐)에서 칩 1개로 털기
+#         팀 목표 돈가방(도둑 수 × 1.5)을 채우면 탈출 시작:
+#           · 헬기: 헬기장 빌딩 3곳(북동 7층 · 북서 · 남동 5층) 옥상 중 한 곳 — 60초마다 다른 옥상으로 날아감 (15초 전 예고)
+#           · 하수구: 도로 가장자리 밸브 3개를 4초씩 돌리면 도로 가운데 맨홀이 40초 열림 (경찰에게도 알림)
+#         맵: 일반 건물 자리가 배치 3벌 중 무작위 (/경도 건설 · /경도 맵바꾸기) — 특수 건물 · 탈출구 · 털이 장소는 늘 같은 자리
 #         헬기는 돈가방을 1개 이상 들고 있는 도둑만 탈 수 있음 (가방 1개가 탑승권) → '탈출 성공' (전망대로) · 판은 계속
 #         판 끝: 탈출 성공 / 탈출 실패 명단을 따로 · 도둑 3명 중 1명꼴 (올림) 이상 탈출해야 도둑 승리
 #         사람이 많을수록 털이 장소 다시 털 수 있는 시간이 짧아짐 (40초 → 최소 20초)
 #         연막탄 2개 (던지면 주변 경찰 실명 · 느려짐) · 잡히면 감옥 → 동료가 초록 구출 발판을 밟으면 전원 탈옥 (5초 보호)
-#   경찰: 20초 뒤 출동 (경찰서) · 빠름 · 경찰봉으로 3대 때리면 체포 (대마다 5초 안 · 맞으면 뒤로 밀려남) (들고 있던 돈가방 압수) · 무전기 · 60초마다 레이더 (도둑 3초 빛남)
+#   경찰: 도둑과 동시에 출발 (경찰서) · 경찰봉으로 3대 때리면 체포 (대마다 5초 안 · 경찰마다 타격 쿨타임 1.5초) · 무전기 · 레이더
+#         실적: 내가 잡은 도둑이 감옥에 있는 동안 5초마다 +1 → 직급 (도둑 수 × 2 마다 한 단계)
+#         경장 신속 I · 경사 추격 진주 2 + 수갑 3 · 경위 도둑 추적기 + 신속 II
+#   탈옥하면 신속 IV 에서 4초에 걸쳐 점점 느려지는 가속
 #         도둑 전원 체포 또는 시간 종료 → 경찰 승리
 #   허브 · 신화쟁탈전과 별개 서버처럼: 피해 없음 (체포만) · 블록 못 부숨 · 밤 · 이름표는 같은 편만
 #   /경도 (/kd) 들어가기 · /경도 나가기 · /경도 전적 [플레이어] · /경도 랭킹
 #   관리자: /경도 시작 [경찰수] · /경도 종료 · /경도 시간 <분> · /경도 목표 <개|자동> · /경도 건설 · /경도 글자
-#   도시 원점 = 허브 원점 + (0, 0, -260)  (storage bg:kd origin)
+#   도시 원점 = 허브 원점 + (0, 0, -260)  (storage bg:kd0 · kd1 · kd2 origin — 배치마다)
 # ═════════════════════════════════════════════════════════════════════════════
 
 function bgKdOn(p: player) :: boolean:
@@ -257,6 +264,11 @@ function bgKdStart(s: command sender, cops: number = 0):
     set {-bg::kd::radar} to 60
     delete {-bg::kd::hcd::*}
     delete {-bg::kd::loot::*}
+    delete {-bg::kd::valve::*}
+    delete {-bg::kd::vp::*}
+    delete {-bg::kd::sewer}
+    delete {-bg::kd::hitcd::*}
+    bgKdHeliHome()
     delete {-bg::kd::merit::*}
     delete {-bg::kd::rank::*}
     delete {-bg::kd::by::*}
@@ -280,6 +292,8 @@ function bgKdEnd(win: text, why: text):
     if bgKdState() is not "play":
         stop
     set {-bg::kd::state} to "end"
+    delete {-bg::kd::sewer}
+    delete {-bg::kd::valve::*}
     loop all players:
         if bgKdOn(loop-player) is true:
             if bgKdRole(loop-player) is "thief":
@@ -385,6 +399,19 @@ function bgKdArrest(t: player, c: player):
     bgKdSay("&9%name of {_c}%&f 이(가) &c%name of {_t}%&f 체포! &7(남은 도둑 %{_f}%/%{_a}%)")
     bgKdCheck()
 
+# 탈옥 가속: 신속 IV 로 튀어 나가서 1초마다 한 단계씩 약해지다 4초 뒤 끝 (높은 단계는 낮은 단계로 안 덮이므로 매번 지우고 다시)
+function bgKdBurst(p: player):
+    set {_a} to 3
+    while {_a} >= 0:
+        if {_p} is not online:
+            stop
+        bgCmd("effect clear %name of {_p}% speed")
+        bgCmd("effect give %name of {_p}% speed 2 %{_a}% true")
+        bgParticle(location of {_p}, "cloud", 0.3, 0.1, 0.3, 0.02, 4 + {_a} * 3)
+        wait 20 ticks
+        remove 1 from {_a}
+    bgCmd("effect clear %name of {_p}% speed")
+
 function bgKdRescue(r: player):
     set {_n} to 0
     loop all players:
@@ -393,8 +420,8 @@ function bgKdRescue(r: player):
                 delete {-bg::kd::jail::%uuid of loop-player%}
                 set {-bg::kd::imm::%uuid of loop-player%} to now
                 teleport loop-player to bgKdMk("jail_out")
-                bgCmd("effect give %name of loop-player% speed 5 1 true")
-                bgTitleP(loop-player, "&a&l탈옥!", "&f%name of {_r}% 이(가) 구해 줬습니다 · 5초 보호")
+                bgKdBurst(loop-player)
+                bgTitleP(loop-player, "&a&l탈옥!", "&f%name of {_r}% 이(가) 구해 줬습니다 · 5초 보호 · 순간 가속!")
                 add 1 to {_n}
     {_n} > 0
     set {-bg::kd::rescd} to now
@@ -430,7 +457,8 @@ function bgKdSteal(p: player, i: number):
     if {-bg::kd::bags} >= {-bg::kd::goal}:
         if {-bg::kd::open} is not true:
             set {-bg::kd::open} to true
-            bgKdTitle("&6&l탈출 헬기 시동!", "&f도둑은 북동쪽 헬기장 타워 옥상으로! · 경찰은 막으세요")
+            set {-bg::kd::helit} to 60
+            bgKdTitle("&6&l탈출 헬기 시동!", "&f헬기: &e%bgKdHeliName({bg::kd::helipos} ? 0)% &7· 밸브 3개 → 하수구도 열림 · 헬기는 계속 옮겨 다님")
             bgKdSound("entity.wither.spawn", 1.6)
             bgKdTexts()
 
@@ -453,6 +481,17 @@ on damage of player:
     bgKdOn(victim) is true
     cancel event
     attacker is a player
+    if damage cause is projectile:
+        bgKdState() is "play"
+        bgKdRole(attacker) is "cop"
+        bgKdRole(victim) is "thief"
+        bgKdJailed(victim) is false
+        bgCmd("effect give %name of victim% slowness 3 2 true")
+        bgCmd("effect give %name of victim% glowing 3 0 true")
+        send title " " with subtitle "&9⛓ 수갑에 맞았다! &f3초 동안 느려짐" to victim for 30 ticks with fade in 0 ticks and fade out 6 ticks
+        send action bar "&9⛓ 수갑 명중!" to attacker
+        play sound "block.chain.place" with volume 1 and pitch 1.2 at location of victim
+        stop
     bgKdState() is "play"
     set {_c} to attacker
     set {_t} to victim
@@ -467,11 +506,15 @@ on damage of player:
             stop
     set {_hold} to {-bg::kd::hold} ? 0
     {_hold} <= 0
-    # 3대 맞아야 체포 (대마다 5초 안에 이어서 · 너무 빠른 연타는 0.4초에 한 대만) — 맞을 때마다 뒤로 밀려남 → 도망칠 기회
+    # 3대 맞아야 체포 (대마다 5초 안에 이어서) · 경찰은 한 번 때리면 1.5초 쿨타임 (경찰마다 따로) · 밀치기 없음
+    set {_cu} to "%uuid of {_c}%"
+    if {-bg::kd::hitcd::%{_cu}%} is set:
+        if difference between {-bg::kd::hitcd::%{_cu}%} and now < 1.5 seconds:
+            send action bar "&7경찰봉 재충전 중…" to {_c}
+            stop
+    set {-bg::kd::hitcd::%{_cu}%} to now
     set {_u} to "%uuid of {_t}%"
     if {-bg::kd::hit::%{_u}%} is set:
-        if difference between {-bg::kd::hit::%{_u}%} and now < 0.4 seconds:
-            stop
         if difference between {-bg::kd::hit::%{_u}%} and now > 5 seconds:
             delete {-bg::kd::hits::%{_u}%}
     add 1 to {-bg::kd::hits::%{_u}%}
@@ -481,22 +524,13 @@ on damage of player:
         delete {-bg::kd::hits::%{_u}%}
         bgKdArrest({_t}, {_c})
         stop
-    # 밀치기: 경찰 → 도둑 방향으로 (수평) + 살짝 위로
-    set {_dx} to (x-coordinate of {_t}) - (x-coordinate of {_c})
-    set {_dz} to (z-coordinate of {_t}) - (z-coordinate of {_c})
-    set {_len} to sqrt({_dx} * {_dx} + {_dz} * {_dz})
-    if {_len} < 0.01:
-        set {_dx} to 0
-        set {_dz} to 1
-        set {_len} to 1
-    set velocity of {_t} to vector({_dx} / {_len} * 0.85, 0.38, {_dz} / {_len} * 0.85)
     set {_n} to {-bg::kd::hits::%{_u}%}
     bgCmd("effect give %name of {_t}% glowing 3 0 true")
     if {_n} is 1:
         send title " " with subtitle "&c⚠ 한 대 맞음! &f(1/3) &7— 3대 맞으면 체포" to {_t} for 30 ticks with fade in 0 ticks and fade out 6 ticks
     else:
         send title " " with subtitle "&4⚠ 두 대 맞음! &f(2/3) &c— 한 대 더 맞으면 체포!" to {_t} for 30 ticks with fade in 0 ticks and fade out 6 ticks
-    send action bar "&9%{_n}%대! &f(%{_n}%/3) &75초 안에 이어서 때리면 체포" to {_c}
+    send action bar "&9%{_n}%대! &f(%{_n}%/3) &75초 안에 이어서 · 다음 타격까지 1.5초" to {_c}
     play sound "entity.player.hurt" with volume 1 and pitch 1.4 to {_t}
     play sound "block.anvil.place" with volume 0.4 and pitch (1.6 + {_n} * 0.2) to {_c}
 
@@ -506,6 +540,7 @@ on projectile hit:
     set {_s} to shooter of event-projectile
     {_s} is a player
     bgKdOn({_s}) is true
+    bgKdRole({_s}) is "thief"
     set {_l} to location of event-projectile
     bgParticle({_l}, "campfire_cosy_smoke", 1.6, 1.2, 1.6, 0.01, 60)
     bgParticle({_l}, "large_smoke", 2, 1, 2, 0.02, 40)
@@ -571,13 +606,33 @@ every 5 ticks:
         # 탈출
         if {-bg::kd::open} is true:
             # 옥상 헬기 타는 문 앞 (아래층에서 겹치지 않게 높이도 확인)
-            loop "thief_8" and "thief_10":
-                if bgDist2(location of {_p}, bgKdMk(loop-value-2)) < 2.5:
-                    if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk(loop-value-2))) < 3:
+            if {-bg::kd::heliflying} is not true:
+                set {_el} to bgKdHeliEsc()
+                if bgDist2(location of {_p}, {_el}) < 4:
+                    if abs((y-coordinate of {_p}) - (y-coordinate of {_el})) < 3:
                         bgKdEscape({_p})
-            if bgDist2(location of {_p}, bgKdMk("escape")) < 4:
-                if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("escape"))) < 3:
-                    bgKdEscape({_p})
+            if {-bg::kd::sewer} is set:
+                if bgDist2(location of {_p}, bgKdMk("sewer")) < 2.2:
+                    if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("sewer"))) < 3:
+                        bgKdEscape({_p})
+            # 밸브 돌리기 (4초 서 있기) — 3개 다 돌리면 하수구 맨홀이 40초 열림
+            set {_vat} to -1
+            loop 3 times:
+                set {_vi} to loop-number - 1
+                if {-bg::kd::valve::%{_vi}%} is not set:
+                    if bgDist2(location of {_p}, bgKdMk("valve_%{_vi}%")) < 1.8:
+                        if abs((y-coordinate of {_p}) - (y-coordinate of bgKdMk("valve_%{_vi}%"))) < 2:
+                            set {_vat} to {_vi}
+            if {_vat} >= 0:
+                add 5 to {-bg::kd::vp::%{_u}%}
+                set {_vp} to {-bg::kd::vp::%{_u}%}
+                send action bar "&b밸브 %{_vat} + 1% 돌리는 중… &f%floor({_vp} / 80 * 100)%%%" to {_p}
+                play sound "block.chain.step" with volume 0.6 and pitch (0.6 + {_vp} / 100) to {_p}
+                if {_vp} >= 80:
+                    delete {-bg::kd::vp::%{_u}%}
+                    bgKdValve({_vat}, {_p})
+            else:
+                delete {-bg::kd::vp::%{_u}%}
 
 # 위쪽 보스바: 남은 시간 · 돈가방 · 남은 도둑 (경도에 있는 사람만 = 태그 bgkd)
 function bgKdBar():
@@ -676,8 +731,14 @@ every 1 second:
         else if bgKdJailed(loop-player) is true:
             send action bar "&7&l감옥 &8| &f동료가 초록 구출 발판을 밟으면 탈옥 &8| %{_bags}% &8| &f%{_tm}%" to loop-player
         else if {-bg::kd::open} is true:
-            set {_hd} to round(distance between loop-player and bgKdMk("escape"))
-            send action bar "&e&l🚁 헬기 시동! &f북동쪽 헬기장 타워 옥상까지 &e%{_hd}%m &8| &f%{_tm}%" to loop-player
+            set {_hd} to round(distance between loop-player and bgKdHeliEsc())
+            set {_sw} to "&7하수구: 밸브 %bgKdValves()%/3"
+            if {-bg::kd::sewer} is set:
+                set {_sw} to "&b&l하수구 열림!"
+            if {-bg::kd::heliflying} is true:
+                send action bar "&e🚁 헬기 이동 중… &8| %{_sw}% &8| &f%{_tm}%" to loop-player
+            else:
+                send action bar "&e&l🚁 %bgKdHeliName({bg::kd::helipos} ? 0)% &f까지 &e%{_hd}%m &8| %{_sw}% &8| &f%{_tm}%" to loop-player
         else if {-bg::kd::prog::%uuid of loop-player%} is not set:
             send action bar "&c&l도둑 &8| %{_bags}% &8| &f남은 시간 %{_tm}% &8| &9경찰 %{_nc}%명 &8| &7레이더 %{-bg::kd::radar}%초" to loop-player
         # 도시 밖으로 떨어지면 제자리로
@@ -702,7 +763,10 @@ every 1 second:
         else:
             bgParticle(bgUp({_h}, 1), "wax_on", 0.6, 0.6, 0.6, 0, 6)
     if {-bg::kd::open} is true:
-        bgParticle(bgUp(bgKdMk("escape"), 1), "end_rod", 2, 4, 2, 0.02, 30)
+        if {-bg::kd::heliflying} is not true:
+            bgParticle(bgUp(bgKdHeliEsc(), 1), "end_rod", 2, 4, 2, 0.02, 30)
+        if {-bg::kd::sewer} is set:
+            bgParticle(bgUp(bgKdMk("sewer"), 0.5), "bubble_column_up", 0.8, 0.5, 0.8, 0.05, 20)
     bgParticle(bgUp(bgKdMk("rescue"), 1), "happy_villager", 0.8, 0.3, 0.8, 0, 6)
 
 # 떠 있는 안내 글자 (털이 장소 · 구출 발판 · 헬기장 · 감옥)
@@ -724,31 +788,58 @@ function bgKdTexts():
     bgKdPillar(bgKdMk("jail"), "red_stained_glass", 16724016, 30)
     bgKdPillar(bgKdMk("rescue"), "lime_stained_glass", 5635925, 30)
     if {-bg::kd::open} is true:
-        bgKdPillar(bgKdMk("escape"), "yellow_stained_glass", 16776960, 40)
-        bgKdPillar(bgKdMk("thief_8"), "cyan_stained_glass", 65535, 30)
-        bgKdPillar(bgKdMk("thief_10"), "cyan_stained_glass", 65535, 30)
-        bgKdText("x1", bgKdMk("thief_8"), "[{text:""🕳 하수구 탈출구"",color:""aqua"",bold:true},{text:""\n열림! 들어오면 탈출"",color:""green""}]")
-        bgKdText("x2", bgKdMk("thief_10"), "[{text:""🚇 지하철 탈출구"",color:""aqua"",bold:true},{text:""\n열림! 들어오면 탈출"",color:""green""}]")
-    else:
-        bgKdPillar(bgKdMk("escape"), "light_gray_stained_glass", 10066329, 40)
+        if {-bg::kd::heliflying} is not true:
+            bgKdPillar(bgKdHeliEsc(), "yellow_stained_glass", 16776960, 40)
+        loop 3 times:
+            set {_vi} to loop-number - 1
+            if {-bg::kd::valve::%{_vi}%} is set:
+                bgKdPillar(bgKdMk("valve_%{_vi}%"), "lime_stained_glass", 5635925, 16)
+                bgKdText("v%{_vi}%", bgKdMk("valve_%{_vi}%"), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""green"",bold:true},{text:""\n돌아감"",color:""white""}]")
+            else:
+                bgKdPillar(bgKdMk("valve_%{_vi}%"), "cyan_stained_glass", 65535, 16)
+                bgKdText("v%{_vi}%", bgKdMk("valve_%{_vi}%"), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""aqua"",bold:true},{text:""\n4초 서 있으면 돌림 (3개 → 하수구)"",color:""white""}]")
+        if {-bg::kd::sewer} is set:
+            bgKdPillar(bgKdMk("sewer"), "light_blue_stained_glass", 3394815, 30)
+            bgKdText("sewer", bgKdMk("sewer"), "[{text:""🕳 하수구 열림!"",color:""aqua"",bold:true},{text:""\n맨홀로 들어가면 탈출"",color:""green""}]")
+        else:
+            bgKdText("sewer", bgKdMk("sewer"), "[{text:""🕳 하수구 맨홀"",color:""gray"",bold:true},{text:""\n밸브 3개를 돌리면 열림"",color:""gray""}]")
     loop 6 times:
         set {_i} to loop-number - 1
         bgKdText("h%{_i}%", bgKdMk("heist_%{_i}%"), "[{text:""💰 %{-bg::kd::heistname::%{_i}%}%"",color:""gold"",bold:true},{text:""\n6초 서 있으면 털기"",color:""white"",bold:false}]")
     bgKdText("rescue", bgKdMk("rescue"), "[{text:""🔓 구출 발판"",color:""green"",bold:true},{text:""\n밟으면 감옥 전원 탈옥"",color:""white"",bold:false}]")
-    if {-bg::kd::open} is true:
-        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n시동 걸림! 타면 탈출 성공"",color:""green"",bold:true}]")
-    else:
-        bgKdText("escape", bgKdMk("escape"), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n잠김 · 돈가방을 다 모으면 시동"",color:""gray"",bold:false}]")
-    bgKdText("gate", bgKdMk("heli_gate"), "[{text:""🚁 헬기장 타워"",color:""gold"",bold:true},{text:""\n안쪽 계단으로 옥상까지 (7층)"",color:""white"",bold:false}]")
+    if {-bg::kd::heliflying} is not true:
+        if {-bg::kd::open} is true:
+            bgKdText("escape", bgKdHeliEsc(), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n시동 걸림! 타면 탈출 성공"",color:""green"",bold:true}]")
+        else:
+            bgKdText("escape", bgKdHeliEsc(), "[{text:""🚁 탈출 헬기"",color:""gold"",bold:true},{text:""\n잠김 · 돈가방을 다 모으면 시동"",color:""gray"",bold:false}]")
+    loop 3 times:
+        set {_gi} to loop-number - 1
+        bgKdText("gate%{_gi}%", bgKdMk("heli_gate_%{_gi}%"), "[{text:""🚁 %bgKdHeliName({_gi})%"",color:""gold"",bold:true},{text:""\n안쪽 계단으로 옥상까지 (헬기가 올 수 있음)"",color:""white"",bold:false}]")
     bgKdText("jail", bgKdMk("jail"), "{text:""감옥"",color:""red"",bold:true}")
+
+# 배치 3벌 (일반 건물 자리만 다름 · 특수 건물 · 도로 · 표지는 같음) 중 지난번과 다른 하나
+function bgKdBuildRaw():
+    set {_old} to {bg::kd::layout} ? -1
+    set {_v} to random integer between 0 and 2
+    if {_v} is {_old}:
+        set {_v} to mod({_v} + 1, 3)
+    set {bg::kd::layout} to {_v}
+    set {bg::kd::helipos} to 0
+    bgCmd("data merge storage bg:kd%{_v}% {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
+    bgCmd("function bg:kd%{_v}%/build")
 
 function bgKdBuild(p: player):
     if {bg::hub::x} is not set:
         send "&9[경도] &f허브 위치가 먼저 필요합니다. &e/허브 건설" to {_p}
         stop
-    bgCmd("data merge storage bg:kd {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
-    send "&9[경도] &f도시를 짓는 중... &7(큰 도시라 10초쯤 · 잠깐 끊길 수 있음)" to {_p}
-    bgCmd("function bg:kd/build")
+    if bgKdState() is "play":
+        send "&9[경도] &c판이 진행 중에는 도시를 다시 지을 수 없습니다. &7(/경도 종료 먼저)" to {_p}
+        stop
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            bgKdLeave(loop-player)
+    send "&9[경도] &f도시를 짓는 중... &7(배치를 새로 섞음 · 10초쯤)" to {_p}
+    bgKdBuildRaw()
     wait 360 ticks
     set {bg::kd::built} to true
     set {-bg::kd::state} to "wait"
@@ -808,7 +899,7 @@ command /경도 [<text>] [<text>]:
                     set {_g} to "%{bg::cfg::kd_goal}%개"
                 send "&9[경도] &f목표 돈가방: &e%{_g}%"
                 stop
-            if arg-1 is "건설":
+            if arg-1 is "건설" or "맵바꾸기":
                 if sender is a player:
                     bgKdBuild(player)
                 stop
@@ -974,7 +1065,8 @@ on right click on barrel:
 # ─────────────────────────────────────────────────────────── 경찰 실적 · 직급
 #  내가 잡은 도둑이 감옥에 있는 동안 5초마다 실적 +1 (도둑 한 명당)
 #  직급 기준 = 도둑 수에 비례: 한 단계마다 max(3, 도둑 수 × 2) 실적
-#  순경(0) → 경장(1): 상시 신속 I → 경사(2): 엔더 진주 2개 (추격) → 경위(3): 망원경 + 상시 신속 II
+#  순경(0) → 경장(1): 상시 신속 I → 경사(2): 추격 진주 2 + 수갑 3 (던지면 맞은 도둑 3초 느려짐)
+#  → 경위(3): 도둑 추적기 (우클릭: 가장 가까운 도둑 4초 발광 · 30초) + 상시 신속 II
 function bgKdRankName(r: number) :: text:
     if {_r} >= 3:
         return "&6경위"
@@ -1010,8 +1102,139 @@ every 5 seconds:
             set {-bg::kd::rank::%{_u}%} to {_r}
             bgTitleP(loop-player, "&9&l진급! %bgKdRankName({_r})%", "&f실적 %{_m}% · 잡은 도둑이 감옥에 있을수록 실적이 오름")
             play sound "ui.toast.challenge_complete" to loop-player
-            if {_r} is 2:
-                bgCmd("give %name of loop-player% ender_pearl[item_name={text:""추격 진주"",color:""dark_aqua"",bold:true}] 2")
-            if {_r} is 3:
-                bgCmd("give %name of loop-player% spyglass[item_name={text:""경위 망원경"",color:""gold"",bold:true}] 1")
+            if {_r} >= 2:
+                if {_old} < 2:
+                    bgCmd("give %name of loop-player% ender_pearl[item_name={text:""추격 진주"",color:""dark_aqua"",bold:true}] 2")
+                    bgCmd("give %name of loop-player% snowball[item_name={text:""수갑"",color:""blue"",bold:true},lore=[{text:""던져 맞히면 도둑이 3초 동안 느려짐"",color:""gray"",italic:false}]] 3")
+            if {_r} >= 3:
+                bgCmd("give %name of loop-player% recovery_compass[item_name={text:""도둑 추적기"",color:""gold"",bold:true},lore=[{text:""우클릭: 가장 가까운 도둑 4초 발광 (30초마다)"",color:""gray"",italic:false}]] 1")
             bgKdSay("&9%name of loop-player%&f 경찰이 %bgKdRankName({_r})%&f(으)로 진급!")
+
+# 경위: 도둑 추적기 — 가장 가까운 (안 잡힌 · 탈출 안 한) 도둑을 4초 발광 · 30초마다
+on right click:
+    bgKdOn(player) is true
+    player's tool is recovery compass
+    cancel event
+    bgKdRole(player) is "cop"
+    bgKdState() is "play"
+    set {_u} to "%uuid of player%"
+    if {-bg::kd::trk::%{_u}%} is set:
+        if difference between {-bg::kd::trk::%{_u}%} and now < 30 seconds:
+            send action bar "&7추적기 재충전 중…" to player
+            stop
+    set {_best} to 9999
+    loop all players:
+        if bgKdOn(loop-player) is true:
+            if bgKdRole(loop-player) is "thief":
+                if bgKdJailed(loop-player) is false:
+                    if bgKdEsc(loop-player) is false:
+                        set {_d} to distance between player and loop-player
+                        if {_d} < {_best}:
+                            set {_best} to {_d}
+                            set {_t} to loop-player
+    {_t} is set
+    set {-bg::kd::trk::%{_u}%} to now
+    bgCmd("effect give %name of {_t}% glowing 4 0 true")
+    send action bar "&6📡 추적! &f%name of {_t}% &7— &e%round({_best})%m" to player
+    send action bar "&c삐빅… 경위 추적기에 잡혔다! (4초)" to {_t}
+    play sound "block.note_block.pling" with volume 1 and pitch 1.8 to player
+
+# ─────────────────────────────────────────────────────────── 헬기장 여러 곳 · 헬기 이동 (헬기장 빌딩 3곳: 북동 · 북서 · 남동)
+#  헬기 시동 뒤 60초마다 다른 옥상으로 날아감 (15초 전 예고) · 나는 동안 (약 5초) 못 탐
+#  헬기 = 블록 디스플레이 (태그 kd_heli) — 칸마다 상대 순간이동 (teleport_duration 2 → 부드럽게)
+function bgKdHeliName(i: number) :: text:
+    if {_i} is 1:
+        return "북서 빌딩 옥상"
+    if {_i} is 2:
+        return "남동 빌딩 옥상"
+    return "북동 헬기장 타워"
+
+function bgKdHeliEsc() :: location:
+    return bgKdMk("escape_%{bg::kd::helipos} ? 0%")
+
+function bgKdHeliShift(dx: number, dy: number, dz: number):
+    bgCmd("execute as @e[type=block_display,tag=kd_heli] at @s run tp @s ~%bgN({_dx})% ~%bgN({_dy})% ~%bgN({_dz})%")
+
+# 판 시작 · 다시 지을 때: 순간이동으로 처음 자리 (북동) 로
+function bgKdHeliHome():
+    set {_f} to {bg::kd::helipos} ? 0
+    {_f} is not 0
+    set {_a} to bgKdMk("heli_%{_f}%")
+    set {_b} to bgKdMk("heli_0")
+    bgKdHeliShift((x-coordinate of {_b}) - (x-coordinate of {_a}), (y-coordinate of {_b}) - (y-coordinate of {_a}), (z-coordinate of {_b}) - (z-coordinate of {_a}))
+    set {bg::kd::helipos} to 0
+    delete {-bg::kd::heliflying}
+
+function bgKdHeliFly(to: number):
+    set {_f} to {bg::kd::helipos} ? 0
+    {_f} is not {_to}
+    set {-bg::kd::heliflying} to true
+    bgKdTexts()
+    bgKdSay("&e🚁 헬기가 이륙! &f→ &e%bgKdHeliName({_to})%")
+    set {_a} to bgKdMk("heli_%{_f}%")
+    set {_b} to bgKdMk("heli_%{_to}%")
+    set {_dx} to (x-coordinate of {_b}) - (x-coordinate of {_a})
+    set {_dy} to (y-coordinate of {_b}) - (y-coordinate of {_a})
+    set {_dz} to (z-coordinate of {_b}) - (z-coordinate of {_a})
+    set {_n} to max(20, min(80, ceil(sqrt({_dx} * {_dx} + {_dz} * {_dz}) / 2.5)))
+    # 명령에 들어가는 수는 소수 둘째 자리까지라 칸마다 반올림한 값으로 움직이고, 끝에 남은 만큼 한 번 더 (날 때마다 어긋나지 않게)
+    set {_sx} to round({_dx} / {_n} * 100) / 100
+    set {_sz} to round({_dz} / {_n} * 100) / 100
+    set {_sy} to round(({_dy} - 14) / 10 * 100) / 100
+    loop 10 times:
+        bgKdHeliShift(0, 1.4, 0)
+        wait 2 ticks
+    loop {_n} times:
+        bgKdHeliShift({_sx}, 0, {_sz})
+        wait 2 ticks
+    loop 10 times:
+        bgKdHeliShift(0, {_sy}, 0)
+        wait 2 ticks
+    bgKdHeliShift({_dx} - {_sx} * {_n}, {_dy} - 14 - {_sy} * 10, {_dz} - {_sz} * {_n})
+    set {bg::kd::helipos} to {_to}
+    delete {-bg::kd::heliflying}
+    bgKdTexts()
+    bgKdSay("&e🚁 헬기 착륙: &f%bgKdHeliName({_to})% &7— 지금 타면 탈출!")
+    bgKdSound("entity.firework_rocket.launch", 0.8)
+
+every 1 second:
+    bgKdState() is "play"
+    {-bg::kd::open} is true
+    {-bg::kd::heliflying} is not true
+    remove 1 from {-bg::kd::helit}
+    if {-bg::kd::helit} is 15:
+        set {_c} to {bg::kd::helipos} ? 0
+        set {_to} to mod({_c} + random integer between 1 and 2, 3)
+        set {-bg::kd::helito} to {_to}
+        bgKdSay("&e🚁 15초 뒤 헬기가 &f%bgKdHeliName({_to})%&e(으)로 옮겨 갑니다!")
+    if {-bg::kd::helit} <= 0:
+        set {-bg::kd::helit} to 60
+        bgKdHeliFly({-bg::kd::helito} ? 1)
+
+# ─────────────────────────────────────────────────────────── 하수구 밸브
+function bgKdValves() :: number:
+    set {_n} to 0
+    loop 3 times:
+        if {-bg::kd::valve::%loop-number - 1%} is set:
+            add 1 to {_n}
+    return {_n}
+
+function bgKdValve(i: number, p: player):
+    set {-bg::kd::valve::%{_i}%} to true
+    set {_n} to bgKdValves()
+    play sound "block.iron_door.open" with volume 1 and pitch 0.6 at location of {_p}
+    if {_n} >= 3:
+        set {-bg::kd::sewer} to now
+        bgKdTitle("&b&l하수구 열림!", "&f40초 동안 맨홀로 탈출 가능 &7(도로 가운데 · 하늘색 빛 기둥)")
+        bgKdSound("block.water.ambient", 1)
+    else:
+        bgKdSay("&b🔧 %name of {_p}%&f 이(가) 밸브 %{_i} + 1%을(를) 돌렸다! &7(%{_n}%/3) &9경찰은 밸브를 지키세요")
+    bgKdTexts()
+
+every 1 second:
+    {-bg::kd::sewer} is set
+    difference between {-bg::kd::sewer} and now > 40 seconds
+    delete {-bg::kd::sewer}
+    delete {-bg::kd::valve::*}
+    bgKdSay("&7🕳 하수구가 다시 닫혔다 — 밸브 3개를 다시 돌려야 열림")
+    bgKdTexts()
