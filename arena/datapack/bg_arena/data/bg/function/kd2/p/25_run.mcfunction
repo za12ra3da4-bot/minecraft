@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~10 ~-52 ~-5 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-3 ~10 ~-52 ~-2 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~0 ~10 ~-52 ~1 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~3 ~10 ~-52 ~4 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~6 ~10 ~-52 ~7 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~9 ~10 ~-52 ~10 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~29 ~10 ~-52 ~50 ~10 ~-52 minecraft:purpur_block
-$execute positioned $(x) $(y) $(z) run setblock ~69 ~10 ~-52 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~71 ~10 ~-52 ~72 ~10 ~-52 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~74 ~10 ~-52 ~75 ~10 ~-52 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~77 ~10 ~-52 ~78 ~10 ~-52 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~80 ~10 ~-52 ~81 ~10 ~-52 minecraft:gray_concrete
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run setblock ~92 ~11 ~27 minecraft:iron_bars[
 $execute positioned $(x) $(y) $(z) run fill ~28 ~11 ~28 ~29 ~11 ~28 minecraft:light_blue_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~30 ~11 ~28 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~31 ~11 ~28 minecraft:light_blue_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~32 ~11 ~28 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~33 ~11 ~28 minecraft:light_blue_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~34 ~11 ~28 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~35 ~11 ~28 minecraft:light_blue_concrete
+$execute positioned $(x) $(y) $(z) run fill ~36 ~11 ~28 ~37 ~11 ~28 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~42 ~11 ~28 ~50 ~11 ~28 minecraft:orange_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~69 ~11 ~28 ~93 ~11 ~28 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~11 ~29 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~37 ~11 ~29 minecraft:light_blue_concrete
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

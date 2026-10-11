@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~73 ~11 ~69 ~74 ~14 ~69 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~76 ~11 ~69 ~77 ~14 ~69 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~79 ~11 ~69 ~80 ~14 ~69 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~82 ~11 ~69 ~83 ~14 ~69 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~85 ~11 ~69 ~86 ~14 ~69 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~88 ~11 ~69 ~89 ~14 ~69 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~91 ~11 ~69 ~92 ~14 ~69 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~11 ~69 ~99 ~12 ~70 minecraft:deepslate_tiles
-$execute positioned $(x) $(y) $(z) run fill ~-48 ~11 ~70 ~-46 ~12 ~70 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~69 ~11 ~70 ~69 ~14 ~71 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~93 ~11 ~70 ~93 ~14 ~71 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~11 ~71 ~-99 ~12 ~72 minecraft:cyan_terracotta
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run fill ~-51 ~14 ~-34 ~-30 ~14 ~-34 minecraf
 $execute positioned $(x) $(y) $(z) run fill ~-12 ~14 ~-34 ~-12 ~14 ~-33 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~1 ~14 ~-34 ~1 ~14 ~-33 minecraft:mud_bricks
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~14 ~-33 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~14 ~-33 ~-30 ~14 ~-33 minecraft:yellow_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-3 ~14 ~-32 ~-3 ~14 ~-31 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~11 ~14 ~-32 ~11 ~14 ~-31 minecraft:mud_bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-12 ~14 ~-31 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~1 ~14 ~-31 minecraft:mud_bricks
+$execute positioned $(x) $(y) $(z) run fill ~-48 ~14 ~-30 ~-47 ~14 ~-30 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-44 ~14 ~-30 ~-44 ~17 ~-30 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-42 ~14 ~-30 ~-42 ~17 ~-30 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-40 ~14 ~-30 ~-40 ~18 ~-30 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

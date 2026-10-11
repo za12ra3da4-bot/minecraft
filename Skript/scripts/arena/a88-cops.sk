@@ -271,6 +271,7 @@ function bgKdStart(s: command sender, cops: number = 0):
     delete {-bg::kd::hcd::*}
     delete {-bg::kd::loot::*}
     bgKdValveReset()
+    bgKdValvesPlace()
     delete {-bg::kd::vp::*}
     delete {-bg::kd::sewer}
     delete {-bg::kd::hitcd::*}
@@ -639,7 +640,7 @@ every 5 ticks:
         set {_vat} to -1
         loop 3 times:
             set {_vi} to loop-number - 1
-            set {_vl} to bgKdMk("valvepos_%{_vi}%")
+            set {_vl} to bgKdValvePos({_vi})
             if bgDist2(location of {_p}, {_vl}) < 2.4:
                 if abs((y-coordinate of {_p}) - (y-coordinate of {_vl})) < 2:
                     set {_vat} to {_vi}
@@ -822,9 +823,9 @@ function bgKdTexts():
         loop 3 times:
             set {_vi} to loop-number - 1
             if {-bg::kd::valve::%{_vi}%} is set:
-                bgKdText("v%{_vi}%", bgKdMk("valve_%{_vi}%"), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""green"",bold:true},{text:""\n돌아감"",color:""white""}]")
+                bgKdText("v%{_vi}%", bgKdValvePos({_vi}), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""green"",bold:true},{text:""\n돌아감"",color:""white""}]")
             else:
-                bgKdText("v%{_vi}%", bgKdMk("valve_%{_vi}%"), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""aqua"",bold:true},{text:""\n4초 서 있으면 돌림 (3개 → 하수구)"",color:""white""}]")
+                bgKdText("v%{_vi}%", bgKdValvePos({_vi}), "[{text:""🔧 밸브 %{_vi} + 1%"",color:""aqua"",bold:true},{text:""\n4초 서 있으면 돌림 (3개 → 하수구)"",color:""white""}]")
         if {-bg::kd::sewer} is set:
             bgKdPillar(bgKdMk("sewer"), "light_blue_stained_glass", 3394815, 80)
             bgKdText("sewer", bgKdMk("sewer"), "[{text:""🕳 하수구 열림!"",color:""aqua"",bold:true},{text:""\n맨홀로 들어가면 탈출"",color:""green""}]")
@@ -853,6 +854,7 @@ function bgKdBuildRaw():
     set {bg::kd::layout} to {_v}
     set {bg::kd::helipos} to 0
     delete {bg::kd::mcover}
+    delete {bg::kd::vsel::*}
     bgCmd("data merge storage bg:kd%{_v}% {origin:{x:%{bg::hub::x}%,y:%{bg::hub::y}%,z:%{bg::hub::z} - 260%}}")
     bgCmd("function bg:kd%{_v}%/build")
 
@@ -1395,3 +1397,29 @@ function bgKdRemap():
     wait 40 ticks
     bgKdTexts()
     bgKdSay("&f새 맵 완성! &7(배치 %({bg::kd::layout} ? 0) + 1%) &f다음 판은 관리자가 &e/경도 시작")
+
+# ─────────────────────────────────────────────────────────── 밸브 자리 랜덤 (후보 8곳 중 3곳 · 판마다)
+#  후보 표지 vc_<k> (본체) · vcw_<k> (바퀴) · vcl_<k> (경고등) — 블록 디스플레이 kd_vb · kd_vw · kd_vl <밸브번호> 를 순간이동
+#  지금 자리는 {bg::kd::vsel::<밸브번호>} (다시 지으면 0 · 1 · 2 = 처음 자리)
+function bgKdValvePos(i: number) :: location:
+    set {_c} to {bg::kd::vsel::%{_i}%} ? {_i}
+    return bgKdMk("vc_%{_c}%")
+
+function bgKdValveMove(i: number, c: number):
+    loop "vb", "vw" and "vl":
+        set {_m} to "vc"
+        if loop-value is "vw":
+            set {_m} to "vcw"
+        else if loop-value is "vl":
+            set {_m} to "vcl"
+        set {_l} to bgKdMk("%{_m}%_%{_c}%")
+        bgCmd("execute in %bgDim()% run tp @e[type=block_display,tag=kd_%loop-value%%{_i}%] %bgC(x-coordinate of {_l})% %bgN(y-coordinate of {_l})% %bgC(z-coordinate of {_l})% %bgN(yaw of {_l})% 0")
+    set {bg::kd::vsel::%{_i}%} to {_c}
+
+function bgKdValvesPlace():
+    bgKdReady() is true
+    set {_pool::*} to 0, 1, 2, 3, 4, 5, 6 and 7
+    loop 3 times:
+        set {_pick} to random element out of {_pool::*}
+        remove {_pick} from {_pool::*}
+        bgKdValveMove(loop-number - 1, {_pick})

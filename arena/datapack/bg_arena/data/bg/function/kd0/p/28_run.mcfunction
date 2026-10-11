@@ -1,21 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~51 ~16 ~-31 minecraft:purpur_block
-$execute positioned $(x) $(y) $(z) run setblock ~-47 ~16 ~-30 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-43 ~16 ~-30 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-39 ~16 ~-30 ~-39 ~17 ~-30 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~27 ~16 ~-30 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~28 ~16 ~-30 minecraft:purpur_block
-$execute positioned $(x) $(y) $(z) run setblock ~51 ~16 ~-30 minecraft:purpur_slab[type=bottom,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~28 ~16 ~-29 ~51 ~23 ~-29 minecraft:black_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~28 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~30 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~32 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~34 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~36 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~38 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~40 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~42 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~44 ~16 ~-28 minecraft:redstone_lamp[lit=true]
-$execute positioned $(x) $(y) $(z) run setblock ~46 ~16 ~-28 minecraft:redstone_lamp[lit=true]
 $execute positioned $(x) $(y) $(z) run setblock ~48 ~16 ~-28 minecraft:redstone_lamp[lit=true]
 $execute positioned $(x) $(y) $(z) run setblock ~50 ~16 ~-28 minecraft:redstone_lamp[lit=true]
 $execute positioned $(x) $(y) $(z) run fill ~43 ~16 ~-14 ~48 ~16 ~-14 minecraft:iron_bars[east=true,west=true,north=false,south=false,waterlogged=false]
@@ -1498,4 +1480,22 @@ $execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~12 minecraft:ochre_fro
 $execute positioned $(x) $(y) $(z) run fill ~-93 ~17 ~12 ~-93 ~18 ~12 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-90 ~17 ~12 ~-90 ~18 ~12 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-87 ~17 ~12 ~-87 ~18 ~12 minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-79 ~17 ~12 ~-79 ~18 ~12 minecraft:birch_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-76 ~17 ~12 ~-76 ~18 ~12 minecraft:birch_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~42 ~17 ~12 ~42 ~18 ~12 minecraft:birch_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~48 ~17 ~12 ~48 ~18 ~12 minecraft:birch_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~99 ~17 ~13 ~99 ~18 ~14 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~14 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~15 minecraft:pearlescent_froglight
+$execute positioned $(x) $(y) $(z) run fill ~99 ~17 ~16 ~99 ~17 ~17 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~17 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~99 ~17 ~19 ~99 ~18 ~19 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~22 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~23 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~17 ~23 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~17 ~24 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~17 ~25 ~-99 ~18 ~25 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~17 ~26 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~99 ~17 ~26 ~99 ~18 ~27 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~47 ~17 ~27 ~47 ~18 ~27 minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

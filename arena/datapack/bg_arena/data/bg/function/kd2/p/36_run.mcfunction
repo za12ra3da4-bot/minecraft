@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~53 ~-41 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~99 ~53 ~-40 ~99 ~54 ~-40 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~53 ~-36 ~99 ~54 ~-35 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~53 ~-33 ~99 ~54 ~-32 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~99 ~53 ~-30 ~99 ~54 ~-30 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~104 ~53 ~13 ~104 ~57 ~13 minecraft:iron_chain[axis=y,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~53 ~42 ~-99 ~53 ~43 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~53 ~45 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~53 ~46 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~53 ~48 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run setblock ~-99 ~53 ~49 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~53 ~53 ~-99 ~53 ~54 minecraft:black_stained_glass

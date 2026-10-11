@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~87 ~34 ~99 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~88 ~34 ~99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~93 ~34 ~99 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~94 ~34 ~99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~34 ~99 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~102 ~34 ~99 ~110 ~34 ~99 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-110 ~34 ~100 ~-110 ~34 ~112 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~102 ~34 ~100 ~110 ~34 ~100 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~34 ~101 minecraft:pearlescent_froglight
 $execute positioned $(x) $(y) $(z) run fill ~109 ~34 ~101 ~110 ~34 ~110 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~99 ~34 ~102 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run fill ~-109 ~34 ~103 ~-99 ~34 ~103 minecraft:gray_concrete
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run setblock ~68 ~41 ~48 minecraft:smooth_sto
 $execute positioned $(x) $(y) $(z) run setblock ~94 ~41 ~48 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~68 ~41 ~49 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~72 ~41 ~49 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~75 ~41 ~49 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~78 ~41 ~49 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~94 ~41 ~49 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~41 ~50 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~68 ~41 ~50 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~94 ~41 ~50 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~41 ~51 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~68 ~41 ~51 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~69 ~41 ~51 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

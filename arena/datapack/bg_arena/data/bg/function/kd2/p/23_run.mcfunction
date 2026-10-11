@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~6 ~-2 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-89 ~6 ~-1 minecraft:potted_fern
-$execute positioned $(x) $(y) $(z) run setblock ~-75 ~6 ~-1 minecraft:barrel[facing=up,open=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~6 ~0 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-84 ~6 ~0 ~-84 ~9 ~1 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-73 ~6 ~0 minecraft:potted_fern
-$execute positioned $(x) $(y) $(z) run fill ~-3 ~6 ~0 ~-3 ~7 ~0 minecraft:barrel[facing=up,open=false]
-$execute positioned $(x) $(y) $(z) run fill ~30 ~6 ~0 ~30 ~9 ~0 minecraft:stripped_oak_log[axis=y]
-$execute positioned $(x) $(y) $(z) run fill ~35 ~6 ~0 ~35 ~9 ~0 minecraft:stripped_oak_log[axis=y]
 $execute positioned $(x) $(y) $(z) run fill ~40 ~6 ~0 ~40 ~9 ~0 minecraft:stripped_oak_log[axis=y]
 $execute positioned $(x) $(y) $(z) run fill ~45 ~6 ~0 ~45 ~9 ~0 minecraft:stripped_oak_log[axis=y]
 $execute positioned $(x) $(y) $(z) run setblock ~99 ~6 ~0 minecraft:sea_lantern
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run setblock ~-67 ~7 ~41 minecraft:smooth_sto
 $execute positioned $(x) $(y) $(z) run setblock ~-54 ~7 ~41 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~7 ~41 ~-29 ~9 ~41 minecraft:sandstone
 $execute positioned $(x) $(y) $(z) run setblock ~-27 ~7 ~41 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-14 ~7 ~41 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~13 ~7 ~41 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run setblock ~26 ~7 ~41 minecraft:smooth_stone_slab[type=bottom,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~29 ~7 ~41 ~30 ~9 ~41 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~31 ~7 ~41 ~32 ~8 ~41 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~33 ~7 ~41 ~33 ~9 ~41 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~34 ~7 ~41 ~35 ~8 ~41 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~36 ~7 ~41 ~36 ~9 ~41 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~42 ~7 ~41 ~42 ~9 ~41 minecraft:cyan_terracotta
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

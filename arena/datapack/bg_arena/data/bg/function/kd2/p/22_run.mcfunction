@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~5 ~-29 ~-4 ~5 ~-29 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~5 ~-29 ~-1 ~5 ~-29 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~1 ~5 ~-29 ~2 ~5 ~-29 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~4 ~5 ~-29 ~5 ~5 ~-29 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~7 ~5 ~-29 ~8 ~5 ~-29 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~10 ~5 ~-29 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~29 ~5 ~-29 ~50 ~5 ~-29 minecraft:purpur_block
-$execute positioned $(x) $(y) $(z) run fill ~69 ~5 ~-29 ~70 ~5 ~-29 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~72 ~5 ~-29 ~73 ~5 ~-29 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~75 ~5 ~-29 ~76 ~5 ~-29 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~78 ~5 ~-29 ~79 ~5 ~-29 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~81 ~5 ~-29 ~82 ~5 ~-29 minecraft:gray_concrete
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run fill ~-94 ~6 ~-2 ~-94 ~9 ~-1 minecraft:cy
 $execute positioned $(x) $(y) $(z) run fill ~-6 ~6 ~-2 ~-6 ~9 ~-1 minecraft:light_blue_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~-4 ~6 ~-2 minecraft:spruce_planks
 $execute positioned $(x) $(y) $(z) run fill ~6 ~6 ~-2 ~6 ~9 ~-1 minecraft:light_blue_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~6 ~-2 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run setblock ~-89 ~6 ~-1 minecraft:potted_fern
+$execute positioned $(x) $(y) $(z) run setblock ~-75 ~6 ~-1 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~6 ~0 minecraft:ochre_froglight
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~6 ~0 ~-84 ~9 ~1 minecraft:cyan_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~-73 ~6 ~0 minecraft:potted_fern
+$execute positioned $(x) $(y) $(z) run fill ~-3 ~6 ~0 ~-3 ~7 ~0 minecraft:barrel[facing=up,open=false]
+$execute positioned $(x) $(y) $(z) run fill ~30 ~6 ~0 ~30 ~9 ~0 minecraft:stripped_oak_log[axis=y]
+$execute positioned $(x) $(y) $(z) run fill ~35 ~6 ~0 ~35 ~9 ~0 minecraft:stripped_oak_log[axis=y]
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

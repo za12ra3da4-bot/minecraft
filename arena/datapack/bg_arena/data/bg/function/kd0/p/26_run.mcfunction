@@ -1,21 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~1 ~11 ~75 ~1 ~14 ~76 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~6 ~11 ~75 minecraft:potted_fern
-$execute positioned $(x) $(y) $(z) run setblock ~86 ~11 ~75 minecraft:spruce_planks
-$execute positioned $(x) $(y) $(z) run fill ~99 ~11 ~75 ~99 ~12 ~76 minecraft:brown_terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-53 ~11 ~76 ~-53 ~11 ~77 minecraft:stone_brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-45 ~11 ~76 minecraft:spruce_planks
-$execute positioned $(x) $(y) $(z) run fill ~-42 ~11 ~76 ~-42 ~11 ~77 minecraft:stone_brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-40 ~11 ~76 minecraft:brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run fill ~69 ~11 ~76 ~69 ~14 ~77 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~93 ~11 ~76 ~93 ~14 ~77 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~11 ~77 ~-99 ~12 ~78 minecraft:light_gray_concrete
-$execute positioned $(x) $(y) $(z) run setblock ~-48 ~11 ~77 minecraft:potted_fern
-$execute positioned $(x) $(y) $(z) run setblock ~-28 ~11 ~77 minecraft:brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~5 ~11 ~77 minecraft:potted_fern
-$execute positioned $(x) $(y) $(z) run fill ~11 ~11 ~77 ~11 ~14 ~78 minecraft:cyan_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~76 ~11 ~77 ~76 ~12 ~77 minecraft:barrel[facing=up,open=false]
-$execute positioned $(x) $(y) $(z) run fill ~85 ~11 ~77 ~85 ~12 ~77 minecraft:barrel[facing=up,open=false]
-$execute positioned $(x) $(y) $(z) run fill ~87 ~11 ~77 ~87 ~12 ~77 minecraft:barrel[facing=up,open=false]
 $execute positioned $(x) $(y) $(z) run fill ~1 ~11 ~78 ~1 ~14 ~79 minecraft:cyan_stained_glass
 $execute positioned $(x) $(y) $(z) run fill ~5 ~11 ~78 ~7 ~12 ~78 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run setblock ~74 ~11 ~78 minecraft:potted_fern
@@ -1498,4 +1480,22 @@ $execute positioned $(x) $(y) $(z) run fill ~-84 ~14 ~-10 ~-84 ~14 ~-9 minecraft
 $execute positioned $(x) $(y) $(z) run fill ~-80 ~14 ~-10 ~-80 ~14 ~-9 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-69 ~14 ~-10 ~-69 ~14 ~-9 minecraft:white_terracotta
 $execute positioned $(x) $(y) $(z) run setblock ~28 ~14 ~-10 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~41 ~14 ~-10 ~41 ~14 ~-9 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~37 ~14 ~-9 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~51 ~14 ~-9 ~51 ~14 ~-8 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~14 ~-8 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~14 ~-8 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~-99 ~14 ~-7 minecraft:sea_lantern
+$execute positioned $(x) $(y) $(z) run fill ~-94 ~14 ~-7 ~-94 ~14 ~-6 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~14 ~-7 ~-84 ~14 ~-6 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-80 ~14 ~-7 ~-80 ~14 ~-6 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-69 ~14 ~-7 ~-69 ~14 ~-6 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~37 ~14 ~-7 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~41 ~14 ~-7 ~41 ~14 ~-6 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~99 ~14 ~-7 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run setblock ~28 ~14 ~-6 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~51 ~14 ~-6 ~51 ~14 ~-5 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run setblock ~37 ~14 ~-5 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-94 ~14 ~-4 ~-94 ~14 ~-3 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~14 ~-4 ~-84 ~14 ~-3 minecraft:bricks
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

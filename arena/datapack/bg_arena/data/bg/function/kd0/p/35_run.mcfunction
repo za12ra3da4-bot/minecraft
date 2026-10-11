@@ -1,21 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~85 ~45 ~-11 ~94 ~45 ~10 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-51 ~45 ~-10 ~-51 ~45 ~-3 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~69 ~45 ~-10 ~69 ~45 ~11 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~84 ~45 ~-10 ~84 ~45 ~11 minecraft:gray_concrete
-$execute positioned $(x) $(y) $(z) run fill ~79 ~45 ~-9 ~79 ~45 ~-8 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run fill ~-99 ~45 ~-8 ~-99 ~46 ~-8 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~68 ~45 ~-8 ~68 ~45 ~-7 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~45 ~-8 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~45 ~-7 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~99 ~45 ~-7 ~99 ~46 ~-7 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-5 ~45 ~-6 ~-4 ~45 ~-6 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-2 ~45 ~-6 ~-1 ~45 ~-6 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~1 ~45 ~-6 ~2 ~45 ~-6 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~4 ~45 ~-6 ~5 ~45 ~-6 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~79 ~45 ~-6 ~79 ~45 ~-5 minecraft:polished_blackstone
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~45 ~-5 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~45 ~-5 ~-6 ~45 ~-4 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~45 ~-5 ~5 ~45 ~5 minecraft:smooth_quartz
 $execute positioned $(x) $(y) $(z) run fill ~6 ~45 ~-5 ~6 ~45 ~-4 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~68 ~45 ~-5 ~68 ~45 ~-4 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run setblock ~99 ~45 ~-5 minecraft:ochre_froglight

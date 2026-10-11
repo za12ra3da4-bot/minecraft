@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-15 ~13 ~-99 ~-14 ~14 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-12 ~13 ~-99 ~-12 ~14 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-11 ~13 ~-99 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~-9 ~13 ~-99 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~-8 ~13 ~-99 ~-8 ~14 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~13 ~-99 ~-6 ~14 ~-99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-3 ~13 ~-99 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-2 ~13 ~-99 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run fill ~0 ~13 ~-99 ~0 ~14 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~1 ~13 ~-99 minecraft:ochre_froglight
 $execute positioned $(x) $(y) $(z) run fill ~3 ~13 ~-99 ~3 ~14 ~-99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~4 ~13 ~-99 minecraft:ochre_froglight
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run fill ~69 ~15 ~70 ~69 ~15 ~71 minecraft:li
 $execute positioned $(x) $(y) $(z) run fill ~71 ~15 ~70 ~92 ~15 ~87 minecraft:smooth_stone
 $execute positioned $(x) $(y) $(z) run fill ~93 ~15 ~70 ~93 ~15 ~71 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~15 ~71 ~-99 ~16 ~72 minecraft:deepslate_tiles
+$execute positioned $(x) $(y) $(z) run fill ~11 ~15 ~71 ~11 ~15 ~72 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~70 ~15 ~71 ~70 ~15 ~92 minecraft:smooth_stone
+$execute positioned $(x) $(y) $(z) run fill ~1 ~15 ~72 ~1 ~15 ~73 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~99 ~15 ~72 ~99 ~16 ~73 minecraft:black_concrete
+$execute positioned $(x) $(y) $(z) run fill ~69 ~15 ~73 ~69 ~15 ~74 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~93 ~15 ~73 ~93 ~15 ~74 minecraft:light_gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~11 ~15 ~74 ~11 ~15 ~75 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~15 ~75 ~-99 ~16 ~76 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~1 ~15 ~75 ~1 ~15 ~76 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

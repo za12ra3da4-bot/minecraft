@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-30 ~17 ~-94 ~-30 ~19 ~-94 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-11 ~17 ~-94 ~-10 ~19 ~-94 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-9 ~17 ~-94 ~-8 ~18 ~-94 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-7 ~17 ~-94 ~-7 ~19 ~-94 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~-6 ~17 ~-94 ~-5 ~18 ~-94 minecraft:glass
-$execute positioned $(x) $(y) $(z) run fill ~-4 ~17 ~-94 ~-4 ~19 ~-94 minecraft:bricks
-$execute positioned $(x) $(y) $(z) run fill ~99 ~17 ~-94 ~99 ~18 ~-94 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-52 ~17 ~-93 ~-52 ~19 ~-93 minecraft:terracotta
-$execute positioned $(x) $(y) $(z) run fill ~-43 ~17 ~-93 ~-43 ~19 ~-93 minecraft:terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-40 ~17 ~-93 ~-40 ~18 ~-93 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~-39 ~17 ~-93 ~-39 ~19 ~-93 minecraft:bricks
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~17 ~-93 ~-29 ~19 ~-93 minecraft:bricks
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run fill ~-69 ~20 ~-87 ~-69 ~23 ~-87 minecraf
 $execute positioned $(x) $(y) $(z) run fill ~1 ~20 ~-87 ~1 ~20 ~-86 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~-87 ~93 ~20 ~-86 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-93 ~20 ~-86 ~-93 ~20 ~-85 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~11 ~20 ~-86 ~11 ~20 ~-85 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~69 ~20 ~-86 ~69 ~20 ~-85 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-51 ~20 ~-84 ~-44 ~20 ~-84 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~-38 ~20 ~-84 ~-30 ~20 ~-84 minecraft:stone_bricks
+$execute positioned $(x) $(y) $(z) run fill ~1 ~20 ~-84 ~1 ~20 ~-83 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~93 ~20 ~-84 ~93 ~20 ~-83 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-93 ~20 ~-83 ~-93 ~20 ~-82 minecraft:polished_blackstone
+$execute positioned $(x) $(y) $(z) run fill ~-10 ~20 ~-83 ~-4 ~20 ~-83 minecraft:stone_bricks
+$execute positioned $(x) $(y) $(z) run fill ~11 ~20 ~-83 ~11 ~20 ~-82 minecraft:polished_blackstone
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

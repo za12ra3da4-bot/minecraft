@@ -1288,23 +1288,27 @@ def build(variant=None):
     DISPS.append(("manhole_frame", mx_ + 0.5, FL + 1, mz_ + 0.5, 0.0, []))
     DISPS.append(("manhole_cover", mx_ + 0.5, FL + 1, mz_ + 0.5, 0.0, ['"kd_mcover"']))
     mark("sewer", mx_, 1, mz_)
-    valves = [(-64, -40, "e"), (56, 40, "e"), (0, -64, "s")]
-    for k, (vx, vz, toward) in enumerate(valves):
+    # 밸브 자리 후보 8곳 (도로 가장자리 · 교차로 · 맨홀에서 떨어진 곳) — 판이 시작될 때 Skript 가 3곳을 골라 밸브 3개를 옮김
+    #  표지: vc_<k> (밸브 본체 가운데 + 방향) · vcw_<k> (바퀴 자리) · vcl_<k> (경고등 자리) — 바퀴 · 등은 방향에 맞춰 미리 계산
+    import bdkit as _bk
+    import streetbd as _sb
+    VALVE_CANDS = [(-64, -40, "e"), (56, 40, "e"), (0, -64, "s"), (-24, 80, "e"),
+                   (16, -80, "e"), (-80, 16, "s"), (80, -24, "s"), (40, 56, "s")]
+    for k, (vx, vz, toward) in enumerate(VALVE_CANDS):
         clear_area(vx, vz, 1)
-        # 블록 디스플레이 밸브: 몸체 · 바퀴 (kd_vw<k> — 돌리는 동안 Skript 가 돌림) · 경고등 (kd_vl<k> — 빨강 → 초록)
-        import bdkit as _bk
-        import streetbd as _sb
         yaw = {"e": -90.0, "w": 90.0, "s": 0.0, "n": 180.0}[toward]
         R_ = _bk._ry(-yaw)
         cx_, cy_, cz_ = vx + 0.5, FL + 1, vz + 0.5
-        DISPS.append(("valve_base", cx_, cy_, cz_, yaw, []))
         wx, wy, wz = R_ @ (np.array(_sb.WHEEL_AT) / 16 * VALVE_SCALE)
-        DISPS.append(("valve_wheel", cx_ + wx, cy_ + wy, cz_ + wz, yaw, [f'"kd_vw{k}"']))
         lx, ly, lz = R_ @ (np.array(_sb.LAMP_AT) / 16 * VALVE_SCALE)
-        DISPS.append(("valve_lamp", cx_ + lx, cy_ + ly, cz_ + lz, yaw, [f'"kd_vl{k}"']))
-        ox, oz = OUT[toward]
-        mark(f"valve_{k}", vx + ox * 2, 1, vz + oz * 2)
-        mark(f"valvepos_{k}", vx, 1, vz)               # 밸브 본체 (바로 옆에 서면 돌림)
+        marks[f"vc_{k}"] = (cx_, 1, cz_, yaw)
+        marks[f"vcw_{k}"] = (round(float(cx_ + wx), 3), round(float(1 + wy), 3), round(float(cz_ + wz), 3), yaw)
+        marks[f"vcl_{k}"] = (round(float(cx_ + lx), 3), round(float(1 + ly), 3), round(float(cz_ + lz), 3), yaw)
+        if k < 3:
+            # 처음 자리 (판 시작 전) — 블록 디스플레이: 몸체 kd_vb<k> · 바퀴 kd_vw<k> (돌리면 돎) · 경고등 kd_vl<k> (빨강 → 초록)
+            DISPS.append(("valve_base", cx_, cy_, cz_, yaw, [f'"kd_vb{k}"']))
+            DISPS.append(("valve_wheel", cx_ + wx, cy_ + wy, cz_ + wz, yaw, [f'"kd_vw{k}"']))
+            DISPS.append(("valve_lamp", cx_ + lx, cy_ + ly, cz_ + lz, yaw, [f'"kd_vl{k}"']))
 
     # ── 문 정하기: 문 앞 (문 폭 + 양옆 1칸 · 바깥 6칸) 에 다른 건물 · 주차장 · 공사장이 있으면 트인 면으로 옮기고 뚫음
     blocks_ = [tuple(e[0]) for e in BLDG] + OBST

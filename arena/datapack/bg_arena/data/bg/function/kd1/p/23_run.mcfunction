@@ -1,12 +1,3 @@
-$execute positioned $(x) $(y) $(z) run fill ~-50 ~6 ~12 ~-45 ~6 ~12 minecraft:yellow_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~-37 ~6 ~12 ~-31 ~6 ~12 minecraft:light_blue_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~30 ~6 ~12 ~35 ~6 ~12 minecraft:lime_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~43 ~6 ~12 ~49 ~6 ~12 minecraft:lime_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~70 ~6 ~12 ~77 ~6 ~12 minecraft:pink_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~85 ~6 ~12 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~86 ~6 ~12 minecraft:mud_brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~88 ~6 ~12 minecraft:mud_brick_slab[type=top,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~89 ~6 ~12 minecraft:iron_bars[east=false,west=false,north=true,south=true,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run fill ~91 ~6 ~12 ~92 ~6 ~12 minecraft:mud_brick_slab[type=top,waterlogged=false]
 $execute positioned $(x) $(y) $(z) run setblock ~-91 ~6 ~13 minecraft:shroomlight
 $execute positioned $(x) $(y) $(z) run setblock ~-79 ~6 ~13 minecraft:shroomlight
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run fill ~37 ~7 ~34 ~37 ~8 ~35 minecraft:glas
 $execute positioned $(x) $(y) $(z) run fill ~51 ~7 ~34 ~51 ~8 ~35 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~99 ~7 ~34 ~99 ~8 ~35 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-29 ~7 ~35 ~-29 ~9 ~35 minecraft:sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-13 ~7 ~35 ~-13 ~8 ~35 minecraft:birch_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~-12 ~7 ~35 ~-12 ~9 ~35 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-3 ~7 ~35 ~-3 ~9 ~35 minecraft:white_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~-2 ~7 ~35 ~-2 ~8 ~35 minecraft:birch_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~0 ~7 ~35 ~0 ~8 ~35 minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]
+$execute positioned $(x) $(y) $(z) run fill ~1 ~7 ~35 ~1 ~9 ~35 minecraft:terracotta
+$execute positioned $(x) $(y) $(z) run fill ~11 ~7 ~35 ~11 ~8 ~35 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~41 ~7 ~35 ~41 ~9 ~36 minecraft:orange_terracotta
+$execute positioned $(x) $(y) $(z) run setblock ~78 ~7 ~35 minecraft:spruce_slab[type=bottom,waterlogged=false]
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

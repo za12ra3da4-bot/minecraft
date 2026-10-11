@@ -1,11 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~67 ~2 ~99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~71 ~2 ~99 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~72 ~2 ~99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~79 ~2 ~99 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~81 ~2 ~99 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~82 ~2 ~99 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~84 ~2 ~99 minecraft:sea_lantern
-$execute positioned $(x) $(y) $(z) run setblock ~85 ~2 ~99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~88 ~2 ~99 minecraft:black_stained_glass
 $execute positioned $(x) $(y) $(z) run setblock ~93 ~2 ~99 minecraft:pearlescent_froglight
 $execute positioned $(x) $(y) $(z) run setblock ~94 ~2 ~99 minecraft:sea_lantern
@@ -330,7 +322,6 @@ $execute positioned $(x) $(y) $(z) run fill ~99 ~3 ~54 ~99 ~4 ~55 minecraft:brow
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~3 ~56 ~-99 ~4 ~56 minecraft:light_gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-73 ~3 ~56 ~-71 ~3 ~56 minecraft:white_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-31 ~3 ~56 ~-29 ~3 ~56 minecraft:white_concrete
-$execute positioned $(x) $(y) $(z) run fill ~39 ~3 ~56 ~41 ~3 ~56 minecraft:yellow_concrete
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~3 ~60 ~-99 ~4 ~61 minecraft:blue_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~99 ~3 ~60 ~99 ~4 ~61 minecraft:cyan_terracotta
 $execute positioned $(x) $(y) $(z) run fill ~-99 ~3 ~63 ~-99 ~4 ~64 minecraft:blue_terracotta
@@ -1498,4 +1489,13 @@ $execute positioned $(x) $(y) $(z) run fill ~-94 ~5 ~-33 ~-94 ~5 ~-32 minecraft:
 $execute positioned $(x) $(y) $(z) run fill ~68 ~5 ~-33 ~68 ~5 ~-32 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) run fill ~52 ~5 ~-32 ~52 ~14 ~-32 minecraft:purpur_block
 $execute positioned $(x) $(y) $(z) run fill ~95 ~5 ~-32 ~95 ~44 ~-32 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-99 ~5 ~-31 ~-99 ~6 ~-30 minecraft:black_stained_glass
+$execute positioned $(x) $(y) $(z) run fill ~-77 ~5 ~-31 ~-77 ~5 ~-30 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~94 ~5 ~-31 ~94 ~5 ~-30 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~-94 ~5 ~-30 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run setblock ~68 ~5 ~-30 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-93 ~5 ~-29 ~-92 ~5 ~-29 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-90 ~5 ~-29 ~-89 ~5 ~-29 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-87 ~5 ~-29 ~-86 ~5 ~-29 minecraft:gray_concrete
+$execute positioned $(x) $(y) $(z) run fill ~-84 ~5 ~-29 ~-83 ~5 ~-29 minecraft:gray_concrete
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]

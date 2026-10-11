@@ -1,21 +1,3 @@
-$execute positioned $(x) $(y) $(z) run setblock ~-91 ~6 ~13 minecraft:iron_bars[east=true,west=true,north=false,south=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-79 ~6 ~13 minecraft:shroomlight
-$execute positioned $(x) $(y) $(z) run fill ~-77 ~6 ~13 ~-76 ~6 ~13 minecraft:iron_bars[east=true,west=true,north=false,south=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~-43 ~6 ~13 minecraft:shroomlight
-$execute positioned $(x) $(y) $(z) run setblock ~-7 ~6 ~13 minecraft:shroomlight
-$execute positioned $(x) $(y) $(z) run setblock ~5 ~6 ~13 minecraft:shroomlight
-$execute positioned $(x) $(y) $(z) run setblock ~31 ~6 ~13 minecraft:iron_bars[east=true,west=true,north=false,south=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~41 ~6 ~13 minecraft:shroomlight
-$execute positioned $(x) $(y) $(z) run setblock ~44 ~6 ~13 minecraft:iron_bars[east=true,west=true,north=false,south=false,waterlogged=false]
-$execute positioned $(x) $(y) $(z) run setblock ~77 ~6 ~13 minecraft:shroomlight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~6 ~14 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~6 ~16 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~6 ~17 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~6 ~17 minecraft:pearlescent_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~6 ~23 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run setblock ~99 ~6 ~24 minecraft:ochre_froglight
-$execute positioned $(x) $(y) $(z) run setblock ~-99 ~6 ~25 minecraft:black_stained_glass
-$execute positioned $(x) $(y) $(z) run fill ~27 ~6 ~25 ~27 ~9 ~25 minecraft:sea_lantern
 $execute positioned $(x) $(y) $(z) run setblock ~-91 ~6 ~26 minecraft:shroomlight
 $execute positioned $(x) $(y) $(z) run setblock ~-79 ~6 ~26 minecraft:shroomlight
 $execute positioned $(x) $(y) $(z) run setblock ~-43 ~6 ~26 minecraft:shroomlight
@@ -1498,4 +1480,22 @@ $execute positioned $(x) $(y) $(z) run fill ~-48 ~7 ~51 ~-48 ~9 ~51 minecraft:sa
 $execute positioned $(x) $(y) $(z) run fill ~-47 ~7 ~51 ~-46 ~8 ~51 minecraft:glass
 $execute positioned $(x) $(y) $(z) run fill ~-45 ~7 ~51 ~-45 ~9 ~51 minecraft:sandstone
 $execute positioned $(x) $(y) $(z) run fill ~-44 ~7 ~51 ~-43 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-42 ~7 ~51 ~-42 ~9 ~51 minecraft:sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-41 ~7 ~51 ~-40 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-39 ~7 ~51 ~-39 ~9 ~51 minecraft:sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-38 ~7 ~51 ~-37 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-36 ~7 ~51 ~-36 ~9 ~51 minecraft:sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-35 ~7 ~51 ~-34 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-33 ~7 ~51 ~-33 ~9 ~51 minecraft:sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-32 ~7 ~51 ~-31 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~-30 ~7 ~51 ~-30 ~9 ~51 minecraft:sandstone
+$execute positioned $(x) $(y) $(z) run fill ~-11 ~7 ~51 ~10 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~29 ~7 ~51 ~29 ~9 ~51 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~30 ~7 ~51 ~31 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~32 ~7 ~51 ~32 ~9 ~51 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~33 ~7 ~51 ~34 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~35 ~7 ~51 ~36 ~9 ~51 minecraft:bricks
+$execute positioned $(x) $(y) $(z) run fill ~42 ~7 ~51 ~42 ~9 ~51 minecraft:cyan_terracotta
+$execute positioned $(x) $(y) $(z) run fill ~43 ~7 ~51 ~44 ~8 ~51 minecraft:glass
+$execute positioned $(x) $(y) $(z) run fill ~45 ~7 ~51 ~45 ~9 ~51 minecraft:cyan_terracotta
 $execute positioned $(x) $(y) $(z) positioned ~-114 ~-18 ~-114 run kill @e[type=item,dx=229,dy=100,dz=229]
